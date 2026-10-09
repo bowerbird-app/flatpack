@@ -130,6 +130,23 @@ test('top corners hide actions downward and skip nav offset', () => {
   assert.equal(actions[0].style.transform, 'translateY(-12px) scale(0.8)')
 })
 
+test('contained FAB only measures a Bottom Nav in its container', () => {
+  const { controller, element } = buildController({ contained: true })
+  element.offsetParent = { querySelector() { return null } }
+  controller.connect()
+
+  assert.equal(element.style.props['--fp-fab-nav-offset'], '0px')
+})
+
+test('contained top-right skips Bottom Nav offset', () => {
+  const { controller, element, actions } = buildController({ contained: true })
+  element.dataset.fpPosition = 'top_right'
+  controller.connect()
+
+  assert.equal(element.style.props['--fp-fab-nav-offset'], undefined)
+  assert.equal(actions[0].style.transform, 'translateY(-12px) scale(0.8)')
+})
+
 test('close from a DOM event still restores focus', () => {
   const { controller, trigger } = buildController()
   controller.connect()

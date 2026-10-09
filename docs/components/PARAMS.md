@@ -25,6 +25,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
 | FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
+| FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |

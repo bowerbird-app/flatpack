@@ -23,10 +23,15 @@ module FlatPack
       assert_includes css, ".fp-toast-region"
       assert_includes css, ".fp-bottom-nav"
       assert_includes css, ".fp-fab"
+      assert_includes css, ".fp-fab--contained"
+      assert_includes css, "position: absolute"
       assert_includes css, "--fab-z-index"
+      assert_includes css, "--fab-size-sm"
+      assert_includes css, '[data-fp-size="sm"] .fp-fab__trigger--extended'
       assert_includes css, "env(safe-area-inset-bottom, 0px)"
       assert_includes css, "--fp-fab-nav-offset"
       assert_includes css, '[data-fp-position="top_right"] .fp-fab__cluster'
+      assert_includes css, '.fp-fab__action[data-fp-style="danger"]'
       assert_includes css, ".fp-sidebar-drawer"
       assert_includes css, "overscroll-behavior: contain"
       assert_includes css, "env(safe-area-inset-top, 0px)"

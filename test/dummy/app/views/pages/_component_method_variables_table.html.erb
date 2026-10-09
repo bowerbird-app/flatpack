@@ -658,13 +658,13 @@
         { variable: "label", accepts: "String or nil", example: "label: \"New note\"" },
         { variable: "href", accepts: "String or nil", example: "href: \"/notes/new\"" },
         { variable: "position", accepts: ":bottom_right, :bottom_left, :top_right, :top_left", example: "position: :bottom_right" },
-        { variable: "size", accepts: ":md, :lg", example: "size: :md" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" },
         { variable: "layout", accepts: ":stack", example: "layout: :stack" },
         { variable: "backdrop", accepts: "true, false", example: "backdrop: true" },
         { variable: "hide_on_scroll", accepts: "true, false", example: "hide_on_scroll: false" },
         { variable: "contained", accepts: "true, false", example: "contained: true" },
         { variable: "offset", accepts: "CSS length or nil", example: "offset: \"1rem\"" },
-        { variable: "with_action", accepts: "slot", example: "fab.with_action(icon: :pencil, label: \"Note\", href: \"/notes/new\", data: { modal_id: \"invite\" })" },
+        { variable: "with_action", accepts: "slot", example: "fab.with_action(icon: :trash, label: \"Trash\", style: :danger)" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"compose-fab\", data: { turbo_method: \"post\" }" }
       ]
     },

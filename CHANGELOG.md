@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.222] - 2026-10-09
+
+### Added
+- FAB `size: :sm` is a 40px main control with matching speed-dial glyphs, label pills, and icons. `:md` (56px) and `:lg` (64px) are unchanged.
+- Speed-dial `with_action(..., style: :danger)` paints the round glyph (rest, hover, and focus) with `--button-danger-*`, the same tokens TrashButton uses. Omit `style:` for today’s surface glyph.
+
+### Changed
+- Bumped the gem version to `0.1.222`.
+
+### Upgrade notes
+- Existing FAB calls are unchanged. Pass `size: :sm` for the smaller control. Pass `style: :danger` on a speed-dial action for Trash and other destructive items.
+- `contained: true` already shipped in `0.1.221`. It pins the FAB inside the nearest positioned ancestor (`position: absolute`), opens the stack inside that box, and does not lift for a page Bottom Nav. Top corners open downward. Rebuild host CSS if you `@import` kit sources.
+- Redeploy so `meta.gem_version` shows `0.1.222`.
+
 ## [0.1.221] - 2026-10-09
 
 ### Added

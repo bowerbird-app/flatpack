@@ -76,6 +76,21 @@ module FlatPack
         assert_selector "[data-fp-position='top_left'][data-fp-size='lg']"
       end
 
+      def test_small_size
+        render_inline(Component.new(size: :sm, label: "Add"))
+
+        assert_selector "[data-fp-size='sm']"
+        assert_selector ".fp-fab__icon .w-5.h-5"
+      end
+
+      def test_default_size_is_md
+        render_inline(Component.new(label: "Add"))
+
+        assert_selector "[data-fp-size='md']"
+        refute_selector "[data-fp-size='sm']"
+        assert_selector ".fp-fab__icon .w-6.h-6"
+      end
+
       def test_layout_stack_is_the_default
         render_inline(Component.new(label: "Add"))
 
@@ -96,9 +111,9 @@ module FlatPack
       end
 
       def test_rejects_unknown_size
-        error = assert_raises(ArgumentError) { Component.new(size: :sm) }
+        error = assert_raises(ArgumentError) { Component.new(size: :xs) }
 
-        assert_includes error.message, "Invalid size: sm"
+        assert_includes error.message, "Invalid size: xs"
       end
 
       def test_rejects_invalid_offset
@@ -127,7 +142,41 @@ module FlatPack
         render_inline(Component.new(contained: true, offset: "1.5rem", label: "Add"))
 
         assert_selector "div.fp-fab--contained"
+        refute_selector "div.fp-fab--viewport"
         assert_includes page.native.to_html, "--fp-fab-offset: 1.5rem"
+      end
+
+      def test_contained_small_top_right_opens_without_backdrop
+        render_inline(Component.new(contained: true, size: :sm, position: :top_right, backdrop: false)) do |fab|
+          fab.with_action(icon: :pencil, label: "Edit title")
+          fab.with_action(icon: :trash, label: "Trash", style: :danger)
+        end
+
+        assert_selector "div.fp-fab--contained[data-fp-position='top_right'][data-fp-size='sm']"
+        refute_selector ".fp-fab__backdrop", visible: :all
+        assert_selector "[role='menuitem'][aria-label='Trash'][data-fp-style='danger']", visible: :hidden
+        refute_selector "[role='menuitem'][aria-label='Edit title'][data-fp-style]", visible: :hidden
+      end
+
+      def test_danger_action_style
+        render_inline(Component.new) do |fab|
+          fab.with_action(icon: :pencil, label: "Note")
+          fab.with_action(icon: :trash, label: "Trash", style: :danger)
+        end
+
+        assert_selector "[role='menuitem'][aria-label='Note']", visible: :hidden
+        refute_selector "[role='menuitem'][aria-label='Note'][data-fp-style]", visible: :hidden
+        assert_selector "[role='menuitem'][aria-label='Trash'][data-fp-style='danger']", visible: :hidden
+      end
+
+      def test_rejects_unknown_action_style
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |fab|
+            fab.with_action(icon: :trash, label: "Trash", style: :warning)
+          end
+        end
+
+        assert_includes error.message, "Invalid style: warning"
       end
 
       def test_rejects_unsafe_href
