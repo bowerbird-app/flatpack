@@ -20,6 +20,7 @@ module FlatPack
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
+      assert_includes names, "Modal::Screen"
     end
 
     test "list excludes internals, shared helpers, and non-components" do

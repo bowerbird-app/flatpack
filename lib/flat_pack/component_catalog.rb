@@ -21,7 +21,8 @@ module FlatPack
 
     EXTRA_RELATIVE_PATHS = [
       "chat/message.rb",
-      "masonry/image.rb"
+      "masonry/image.rb",
+      "modal/screen.rb"
     ].freeze
 
     PUBLICITY_RULES = [

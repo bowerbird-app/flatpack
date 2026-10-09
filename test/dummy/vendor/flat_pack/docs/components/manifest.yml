@@ -412,6 +412,8 @@ components:
     title: Modal
     doc: docs/components/modal.md
     primary_class: FlatPack::Modal::Component
+    related_classes:
+      - FlatPack::Modal::Screen
     status: documented
 
   - key: modal_filter

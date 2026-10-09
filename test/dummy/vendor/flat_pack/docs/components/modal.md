@@ -9,6 +9,9 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 ## Class
 - Primary: `FlatPack::Modal::Component`
 
+## Related classes
+- `FlatPack::Modal::Screen` — turbo-frame wrapper for a navigable screen. Helper: `flat_pack_modal_screen`.
+
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
@@ -21,6 +24,8 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 | `body_height` | String | `nil` | conditional | Required when `body_height_mode` is `:fixed` or `:min`; validated for safe CSS-length/expression characters. In `:page` mode these still size the body; they do not add a viewport cap. |
 | `close_on_backdrop` | Boolean | `true` | no | Allow closing when clicking backdrop. |
 | `close_on_escape` | Boolean | `true` | no | Allow closing on Escape. |
+| `navigable` | Boolean | `false` | no | Opt-in multi-screen navigation. Off keeps today’s markup and behaviour. |
+| `src` | String | `nil` | with `navigable` | Turbo Frame URL loaded lazily on open. Required when `navigable: true`. Relative, `http`, and `https` only. Not a clickable `href`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into modal root element. |
 
 ## Slots
@@ -70,6 +75,43 @@ Page-scroll overlay with pinned actions:
 <% end %>
 ```
 
+Navigable screens (opt-in). Default calls are unchanged. The body becomes a Turbo Frame whose id is `#{id}-screen`. Each screen is a server-rendered URL wrapped in `flat_pack_modal_screen` (or `FlatPack::Modal::Screen`). Links and forms inside use `data-fp-nav` — hosts do not write custom JavaScript.
+
+```erb
+<%= render FlatPack::Modal::Component.new(
+  id: "gallery-editor",
+  title: "Gallery",
+  size: :lg,
+  navigable: true,
+  src: gallery_path
+) %>
+```
+
+```erb
+<%= flat_pack_modal_screen(modal_id: "gallery-editor", title: "Edit image") do |screen| %>
+  <% screen.header_actions do %>
+    <%# Optional controls next to the close button. %>
+  <% end %>
+  <% screen.footer do %>
+    <%= render FlatPack::Button::Component.new(text: "Save", data: {fp_nav: "back"}) %>
+  <% end %>
+
+  <%= render FlatPack::Button::Component.new(
+    text: "Edit photographer",
+    href: photographer_path,
+    data: {fp_nav: "push"}
+  ) %>
+<% end %>
+```
+
+`data-fp-nav` values: `push` (load into the frame and stack the URL), `back` (re-fetch the previous URL; DOM is not cached), `close` (clear history and close), `replace` (update the current URL without growing the stack), `reset` (clear the stack and make this URL the root). Closing the dialog clears history. Reopening starts at `src`. Browser history is not used (`pushState` is not called).
+
+The header is managed: title comes from the current screen, a back arrow appears only when the stack has a previous URL, and close stays. Title changes are announced (`aria-live`). Focus moves to the heading (or the remembered control on back). One dialog and one focus trap for the whole flow. Escape still closes.
+
+While a screen loads, the kit spinner and skeleton sit over the body. If the frame request fails (missing frame, network, or non-2xx), an error state with **Try again** is shown.
+
+Navigation lives in `flat-pack--navigable`, attached next to `flat-pack--modal` only when `navigable: true`. Drawer can reuse that controller later. `header` and `body` slots are invalid with `navigable: true`; screens supply title, body, and actions.
+
 ## Overlay scroll and insets
 Opening a modal locks `document.body` (`overflow: hidden` and `overscroll-behavior: none`, same lock count as Drawer and Command palette). The overlay itself is `overflow-y-auto` and uses `overscroll-behavior: contain`, so a fling does not scroll the page underneath.
 
@@ -87,7 +129,9 @@ The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem
 - Tab cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown` even when Escape close is off. The dialog itself is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
 - Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse. Motion writes the Tailwind v4 `scale` property (not `transform`).
+- Navigable modals keep one `role="dialog"` and update `aria-labelledby` through the stable title id. A polite live region announces the new title. The back button is omitted from the tab order until there is a previous screen.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controller: `flat-pack--modal`.
+- Navigable only: Stimulus controller `flat-pack--navigable`, Turbo Frames, and `src` responses that include a matching `<turbo-frame id="{modal_id}-screen">`.

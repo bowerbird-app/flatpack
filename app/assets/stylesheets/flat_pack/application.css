@@ -570,6 +570,24 @@
   box-shadow: 0 1px 0 var(--modal-border-color);
 }
 
+/* Navigable overlay chrome: loading/error sit on the body without shifting layout. */
+[data-controller~="flat-pack--navigable"] .flat-pack-modal__body,
+[data-controller~="flat-pack--navigable"] .fp-drawer-body {
+  position: relative;
+}
+
+[data-controller~="flat-pack--navigable"] [data-flat-pack--navigable-target="loading"]:not([hidden]),
+[data-controller~="flat-pack--navigable"] [data-flat-pack--navigable-target="error"]:not([hidden]) {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+}
+
+[data-controller~="flat-pack--navigable"][data-fp-navigable-busy] .flat-pack-modal__body,
+[data-controller~="flat-pack--navigable"][data-fp-navigable-busy] .fp-drawer-body {
+  overflow: hidden;
+}
+
 .fp-modal-sticky-footer {
   position: sticky;
   bottom: 0;

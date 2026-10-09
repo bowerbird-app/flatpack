@@ -157,6 +157,11 @@ fr:
       invalid_value: Valeur invalide.
     modal:
       close: Fermer
+      back: Retour
+      loading: Chargement
+      load_error: Impossible de charger cet écran
+      load_error_hint: Vérifiez la connexion, puis réessayez.
+      retry: Réessayer
     modal_filter:
       trigger: Filtrer
       title: Filtres

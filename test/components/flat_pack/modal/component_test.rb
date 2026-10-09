@@ -320,6 +320,108 @@ module FlatPack
 
         assert_match(/sticky_footer must be true or false/, error.message)
       end
+
+      def test_default_markup_omits_navigable_chrome
+        render_inline(Component.new(id: "my-modal", title: "Confirm Action")) do |component|
+          component.body { "Are you sure?" }
+        end
+
+        html = page.native.to_html
+        assert_selector "div[data-controller='flat-pack--modal']"
+        refute_includes html, "flat-pack--navigable"
+        refute_includes html, "turbo-frame"
+        refute_includes html, "data-fp-nav"
+        refute_includes html, "gallery-editor-screen"
+        refute_includes html, "data-flat-pack--navigable"
+        refute_selector "[data-fp-screen]"
+        assert_no_selector "button[aria-label='Back']"
+      end
+
+      def test_navigable_false_matches_omitted_navigable
+        render_inline(Component.new(id: "my-modal", title: "Same")) do |modal|
+          modal.body { "Body" }
+        end
+        omitted = page.native.to_html.dup
+
+        render_inline(Component.new(id: "my-modal", title: "Same", navigable: false)) do |modal|
+          modal.body { "Body" }
+        end
+
+        assert_equal omitted, page.native.to_html
+      end
+
+      def test_navigable_markup_uses_turbo_frame_and_managed_header
+        render_inline(Component.new(id: "gallery-editor", title: "Gallery", navigable: true, src: "/demo/modals/gallery_editor"))
+
+        assert_selector "div[data-controller='flat-pack--modal flat-pack--navigable']"
+        assert_selector "[data-flat-pack--navigable-src-value='/demo/modals/gallery_editor']"
+        assert_selector "turbo-frame#gallery-editor-screen[src='/demo/modals/gallery_editor'][loading='lazy']"
+        assert_selector "[data-flat-pack--navigable-target='frame']"
+        assert_selector "[data-flat-pack--navigable-target='title']", text: "Gallery"
+        assert_selector "[data-flat-pack--navigable-target='backButton'][hidden][data-fp-nav='back']", visible: :all
+        assert_selector "[data-flat-pack--navigable-target='headerActions']"
+        assert_selector "[data-flat-pack--navigable-target='footer'][hidden]", visible: :all
+        assert_selector "[data-flat-pack--navigable-target='loading'][hidden]", visible: :all
+        assert_selector "[data-flat-pack--navigable-target='error'][hidden]", visible: :all
+        assert_selector "[data-flat-pack--navigable-target='liveRegion'][aria-live='polite']", visible: :all
+        assert_selector "button[aria-label='Close']"
+        assert_includes page.native.to_html, "Try again"
+      end
+
+      def test_navigable_keeps_size_scroll_and_sticky_footer
+        render_inline(Component.new(
+          id: "gallery-editor",
+          title: "Gallery",
+          navigable: true,
+          src: "/demo/modals/gallery_editor",
+          size: :lg,
+          scroll: :page,
+          sticky_footer: true
+        ))
+
+        assert_selector "div.max-w-2xl"
+        assert_selector "[data-fp-modal-scroll='page']"
+        assert_includes page.native.to_html, "fp-modal-page-sticky"
+        assert_includes page.native.to_html, "fp-modal-sticky-footer"
+      end
+
+      def test_navigable_requires_src_and_rejects_body_or_header_slots
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "gallery-editor", navigable: true)
+        end
+        assert_match(/src is required/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "gallery-editor", src: "/gallery")
+        end
+        assert_match(/src is only valid when navigable/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "gallery-editor", navigable: "yes", src: "/gallery")
+        end
+        assert_match(/navigable must be true or false/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(id: "gallery-editor", navigable: true, src: "/gallery")) do |modal|
+            modal.body { "nope" }
+          end
+        end
+        assert_match(/body slot is not used/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(id: "gallery-editor", navigable: true, src: "/gallery")) do |modal|
+            modal.header { "nope" }
+          end
+        end
+        assert_match(/header slot is not used/, error.message)
+      end
+
+      def test_navigable_rejects_unsafe_src
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "gallery-editor", navigable: true, src: "javascript:alert(1)")
+        end
+        assert_match(/Unsafe src/, error.message)
+      end
     end
   end
 end
