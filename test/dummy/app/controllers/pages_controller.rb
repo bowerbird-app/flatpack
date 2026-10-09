@@ -47,6 +47,7 @@ class PagesController < ApplicationController
     {action: /\Aoverflow_row\z/, title: "Overflow Row", patterns: [/\A--overflow-row-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
     {action: /\Ahero(_.*)?\z/, title: "Hero", patterns: [/\A--hero-/]},
+    {action: /\Atype_scale\z/, title: "Type", patterns: [/\A--(font-|text-|leading-|display-)/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
     {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
     {action: /\Asidebar(_.*)?\z/, title: "Sidebar", patterns: [/\A--sidebar-/]},
@@ -617,6 +618,13 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def page_title_display
+    render layout: "fullpage"
+  end
+
+  def type_scale
+  end
+
   def section_title
   end
 
@@ -946,6 +954,10 @@ class PagesController < ApplicationController
   end
 
   def hero_offset_image
+    render layout: "fullpage"
+  end
+
+  def hero_display
     render layout: "fullpage"
   end
 

@@ -7,7 +7,7 @@ FlatPack uses CSS variables for theming, allowing you to customize the appearanc
 ```text
 Brand primitives (--brand-hue, --brand-chroma, --brand-lightness)
     ↓
-    Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --icon-*)
+    Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --display-*, --duration-*, --easing-*, --icon-*)
     ↓
 Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semantic)
     ↓
@@ -247,15 +247,26 @@ Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `
 --text-3xl: 1.875rem
 --text-4xl: 2.25rem
 --text-5xl: 3rem
+--text-6xl: 3.75rem
+--text-7xl: 4.5rem
+
+--text-6xl--line-height: 1
+--text-7xl--line-height: 1
 
 --leading-tight: 1.25
 --leading-snug: 1.375
 --leading-normal: 1.5
+
+--display-size: clamp(var(--text-5xl), 2rem + 3.5vw, var(--text-7xl))
+--display-tracking: -0.03em
+--display-leading: 1.1
 ```
 
 `--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` and the kit `--radius-*` values on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit face and the kit radii (rich-text chrome follows `--radius-md`).
 
-`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). Do not add `--text-6xl` or `--text-7xl`; a theme that wants a larger hero sets `--hero-headline-size` to a rem.
+`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). `--text-6xl` (3.75rem / 60px) and `--text-7xl` (4.5rem / 72px) are the display rungs; `@theme inline` maps them so `text-6xl` / `text-7xl` work after a Tailwind rebuild. Pairing `--text-6xl--line-height` and `--text-7xl--line-height` are `1`. Product PageTitle and Hero stay on `5xl` and below unless you pass `size: :display`.
+
+`--display-size` is a theme-tunable fluid cover size: about `--text-5xl` (48px) on small viewports and `--text-7xl` (72px) on desktop. Override the whole token on a named theme (`--display-size: 4rem`, or another `clamp()`). `--display-tracking` is `-0.03em`. `--display-leading` is `1.1`, tighter than `--leading-tight`. Kit CSS ships `.fp-display` so hosts do not need a Tailwind rebuild to use the display tokens.
 
 Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-text-balance`, and `.fp-text-pretty`. Use tabular nums on live numbers (pagination, meters, timestamps, chart axes). Use balance on titles. Use pretty on short supporting copy. Labels are sentence case — do not force `uppercase tracking-widest` on taglines, table headers, or section titles. Avatar initials may stay `uppercase`.
 

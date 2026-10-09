@@ -24,6 +24,7 @@ class DemoCatalogTest < ActiveSupport::TestCase
     assert_includes titles, "Chip Groups"
     assert_includes titles, "Date Range Input"
     assert_includes titles, "Page Nav"
+    assert_includes titles, "Type scale"
     assert_includes titles, "Articles"
     assert_includes titles, "Brand on body"
   end

@@ -5,6 +5,7 @@ class ThemesController < ApplicationController
     "Brand primitives" => [/\A--brand-/],
     "Color Swatch" => [/\A--color-swatch-/],
     "Font Swatch" => [/\A--font-swatch-/],
+    "Type" => [/\A--(font-|text-|leading-|display-)/],
     "Overflow Row" => [/\A--overflow-row-/],
     "Core Colors and Surfaces" => [/\A--(color-|surface-)/],
     "Badges" => [/\A--badge-/],
@@ -310,6 +311,8 @@ class ThemesController < ApplicationController
       "Color Swatch"
     when /\A--font-swatch-/
       "Font Swatch"
+    when /\A--(font-|text-|leading-|display-)/
+      "Type"
     when /\A--overflow-row-/
       "Overflow Row"
     when /\A--top-nav-/

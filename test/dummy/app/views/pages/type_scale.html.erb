@@ -1,0 +1,59 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Type scale",
+  subtitle: "Kit rungs from xs through 7xl, plus the fluid display cover size."
+) %>
+
+<%# Tailwind scan: text-xs text-sm text-base text-lg text-xl text-2xl text-3xl text-4xl text-5xl text-6xl text-7xl %>
+<%
+  type_scale_steps = [
+    ["text-xs", "xs", "0.75rem / 12px"],
+    ["text-sm", "sm", "0.875rem / 14px"],
+    ["text-base", "base", "1rem / 16px"],
+    ["text-lg", "lg", "1.125rem / 18px"],
+    ["text-xl", "xl", "1.25rem / 20px"],
+    ["text-2xl", "2xl", "1.5rem / 24px"],
+    ["text-3xl", "3xl", "1.875rem / 30px"],
+    ["text-4xl", "4xl", "2.25rem / 36px"],
+    ["text-5xl", "5xl", "3rem / 48px"],
+    ["text-6xl", "6xl", "3.75rem / 60px"],
+    ["text-7xl", "7xl", "4.5rem / 72px"]
+  ]
+%>
+
+<section class="mb-12" id="scale">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Scale",
+    anchor_link: true,
+    subtitle: "Tailwind utilities mapped from --text-*. 6xl and 7xl are the new rungs."
+  ) %>
+
+  <div class="space-y-8">
+    <% type_scale_steps.each do |utility, name, measure| %>
+      <div>
+        <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]"><%= name %> · <%= measure %> · <%= utility %></p>
+        <p class="<%= utility %> font-semibold leading-tight text-[var(--surface-content-color)]">Northlight collection</p>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="display">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Display",
+    anchor_link: true,
+    subtitle: "Fluid cover size. About 48px on a phone, 72px on a wide screen. A theme can pick a different cover size."
+  ) %>
+
+  <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]">display · clamp(5xl, 2rem + 3.5vw, 7xl) · fp-display</p>
+  <p class="fp-display font-semibold fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
+</section>
+
+<section class="mb-12" id="display-dark" data-theme="dark">
+  <div class="rounded-[var(--radius-lg)] bg-[var(--surface-page-background-color)] p-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Display on dark",
+      subtitle: "Same cover size on the dark theme."
+    ) %>
+    <p class="fp-display font-semibold fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
+  </div>
+</section>

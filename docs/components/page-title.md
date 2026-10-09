@@ -15,6 +15,7 @@ Use Page Title for page-level headings when you do not want the bordered visual 
 | `title` | String | `nil` | yes | Primary page heading text. |
 | `subtitle` | String | `nil` | no | Supporting text rendered below title. |
 | `variant` | Symbol, String | `:h1` | no | Semantic heading tag. One of `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`. |
+| `size` | Symbol, String | `:default` | no | Type scale. `:default` uses `--page-title-h*-size`. `:display` uses `--display-size`, `--display-tracking`, `--display-leading`, and `fp-text-balance` for cover titles. Invalid values raise `ArgumentError`. |
 | `large_subtitle` | Boolean | `false` | no | When `true`, subtitle matches the selected heading variant size (`h1`-`h6`), uses bold weight, and removes top margin. |
 | `title_color` | String | `nil` | no | Optional CSS color override for the rendered heading tag (`h1`-`h6`). |
 | `subtitle_color` | String | `nil` | no | Optional CSS color override for subtitle `p` text. |
@@ -27,6 +28,7 @@ Use Page Title for page-level headings when you do not want the bordered visual 
 
 ## Variants
 - Heading level variants: `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`
+- Size: `:default`, `:display`
 
 ## Example
 ```erb
@@ -44,9 +46,20 @@ Use Page Title for page-level headings when you do not want the bordered visual 
 <% end %>
 ```
 
+### Display cover title
+
+```erb
+<%= render FlatPack::PageTitle::Component.new(
+  title: "A press kit for the Northlight collection",
+  subtitle: "Stills, credits, and download packs",
+  size: :display
+) %>
+```
+
 ## Behavior
 - `slot` renders immediately below the subtitle when `subtitle` is present.
 - `slot` renders immediately below the title when `subtitle` is omitted.
+- `size: :display` is opt-in. Default PageTitle output is unchanged. Display titles use `.fp-display`, wrap with `fp-text-balance`, and give the subtitle `0.4em` of space so the gap scales with the cover size.
 
 ## Accessibility
 - Uses semantic heading tags via `variant` (`h1`-`h6`).

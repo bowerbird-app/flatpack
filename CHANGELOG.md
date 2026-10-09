@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.223] - 2026-10-09
+
+### Added
+- Type scale tokens `--text-6xl` (3.75rem / 60px) and `--text-7xl` (4.5rem / 72px), with `--text-6xl--line-height` / `--text-7xl--line-height` of `1`, mapped in `@theme inline` so `text-6xl` / `text-7xl` utilities work after a Tailwind rebuild.
+- Theme-tunable display tokens `--display-size` (fluid clamp from `--text-5xl` / 48px to `--text-7xl` / 72px), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.1`). Kit CSS ships `.fp-display`.
+- `FlatPack::PageTitle::Component` and `FlatPack::Hero::Component` accept opt-in `size: :display` for cover titles. Default output is unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.223`.
+
+### Upgrade notes
+- Existing PageTitle and Hero calls are unchanged. Pass `size: :display` for cover type.
+- Rebuild host Tailwind so `text-6xl` / `text-7xl` generate. Reload kit CSS for `--display-*` and `.fp-display`.
+- Themes override `--display-size` (and tracking / leading) on a named `data-theme` block. Product chrome stays on `--text-5xl` and below unless a component opts in.
+- Redeploy so `meta.gem_version` shows `0.1.223`.
+
 ## [0.1.222] - 2026-10-09
 
 ### Added
