@@ -1063,6 +1063,22 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: var(--fp-button-hover-background);
 }
 
+.flat-pack-radio-group-wrapper label.fp-button:has(:checked) {
+  --fp-button-background: var(--button-primary-background-color);
+  --fp-button-hover-background: var(--button-primary-hover-background-color);
+  --fp-button-text: var(--button-primary-text-color);
+  --fp-button-border: var(--button-primary-border-color);
+  box-shadow: var(--button-shadow);
+}
+
+.flat-pack-radio-group-wrapper label.fp-button:has(:checked):hover {
+  box-shadow: var(--button-shadow-hover);
+}
+
+.flat-pack-radio-group-wrapper label.fp-button:has(:checked):active {
+  box-shadow: var(--button-shadow-active);
+}
+
 [data-fp-style="default"] {
   --fp-button-background: var(--button-default-background-color);
   --fp-button-hover-background: var(--button-default-hover-background-color);

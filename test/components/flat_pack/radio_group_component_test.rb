@@ -279,8 +279,8 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "rounded-[var(--button-border-radius)]"
         assert_includes html, "px-[var(--button-padding-x-md)]"
-        assert_includes html, "--button-secondary-background-color"
-        assert_includes html, "--button-primary-background-color"
+        assert_includes html, "has-[:checked]:bg-[var(--button-primary-background-color)]"
+        assert_includes html, "has-[:checked]:text-[var(--button-primary-text-color)]"
       end
 
       def test_inline_variant_hides_descriptions

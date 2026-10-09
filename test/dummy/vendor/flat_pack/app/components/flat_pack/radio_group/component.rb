@@ -28,14 +28,10 @@ module FlatPack
       # "px-[var(--button-padding-x-sm)]" "py-[var(--button-padding-y-sm)]" "text-xs"
       # "px-[var(--button-padding-x-md)]" "py-[var(--button-padding-y-md)]" "text-sm"
       # "px-[var(--button-padding-x-lg)]" "py-[var(--button-padding-y-lg)]" "text-base"
-      # "[--fp-button-background:var(--button-secondary-background-color)]"
-      # "[--fp-button-hover-background:var(--button-secondary-hover-background-color)]"
-      # "[--fp-button-text:var(--button-secondary-text-color)]"
-      # "[--fp-button-border:var(--button-secondary-border-color)]"
-      # "has-[:checked]:[--fp-button-background:var(--button-primary-background-color)]"
-      # "has-[:checked]:[--fp-button-hover-background:var(--button-primary-hover-background-color)]"
-      # "has-[:checked]:[--fp-button-text:var(--button-primary-text-color)]"
-      # "has-[:checked]:[--fp-button-border:var(--button-primary-border-color)]"
+      # "has-[:checked]:bg-[var(--button-primary-background-color)]"
+      # "has-[:checked]:text-[var(--button-primary-text-color)]"
+      # "has-[:checked]:border-[var(--button-primary-border-color)]"
+      # "has-[:checked]:hover:bg-[var(--button-primary-hover-background-color)]"
       # "has-[:checked]:shadow-[var(--button-shadow)]"
       # "has-[:checked]:hover:shadow-[var(--button-shadow-hover)]"
       # "has-[:checked]:active:shadow-[var(--button-shadow-active)]"
@@ -336,14 +332,12 @@ module FlatPack
           "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "motion-reduce:transform-none motion-reduce:transition-none",
           FlatPack::Button::Component::SIZES.fetch(@size),
-          "[--fp-button-background:var(--button-secondary-background-color)]",
-          "[--fp-button-hover-background:var(--button-secondary-hover-background-color)]",
-          "[--fp-button-text:var(--button-secondary-text-color)]",
-          "[--fp-button-border:var(--button-secondary-border-color)]",
-          "has-[:checked]:[--fp-button-background:var(--button-primary-background-color)]",
-          "has-[:checked]:[--fp-button-hover-background:var(--button-primary-hover-background-color)]",
-          "has-[:checked]:[--fp-button-text:var(--button-primary-text-color)]",
-          "has-[:checked]:[--fp-button-border:var(--button-primary-border-color)]",
+          "has-[:checked]:bg-[var(--button-primary-background-color)]",
+          "has-[:checked]:text-[var(--button-primary-text-color)]",
+          "has-[:checked]:border-[var(--button-primary-border-color)]",
+          (unless option_disabled
+             "has-[:checked]:hover:bg-[var(--button-primary-hover-background-color)]"
+           end),
           "has-[:checked]:shadow-[var(--button-shadow)]",
           (unless option_disabled
              "has-[:checked]:hover:shadow-[var(--button-shadow-hover)]"
