@@ -506,6 +506,8 @@
   --color-swatch-selected-ring-color: var(--color-swatch-selected-ring-color);
   --color-swatch-ring-offset-color: var(--color-swatch-ring-offset-color);
   --color-swatch-shadow: var(--color-swatch-shadow);
+  --color-swatch-check-on-dark: var(--color-swatch-check-on-dark);
+  --color-swatch-check-on-light: var(--color-swatch-check-on-light);
   --font-swatch-radius: var(--font-swatch-radius);
   --font-swatch-border-color: var(--font-swatch-border-color);
   --font-swatch-selected-ring-color: var(--font-swatch-selected-ring-color);
@@ -1149,6 +1151,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-swatch-selected-ring-color: var(--color-ring);
   --color-swatch-ring-offset-color: var(--surface-background-color);
   --color-swatch-shadow: var(--shadow-sm);
+  --color-swatch-check-on-dark: oklch(1 0 0);
+  --color-swatch-check-on-light: oklch(0.22 0 0);
   --font-swatch-radius: 9999px;
   --font-swatch-border-color: var(--surface-border-color);
   --font-swatch-selected-ring-color: var(--color-ring);

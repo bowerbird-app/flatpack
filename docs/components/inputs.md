@@ -53,14 +53,16 @@ Component-specific props:
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
-| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name) and `description:` (shown on `variant: :cards`). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
+| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
 | `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
-| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. |
-| `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description). Invalid names raise `ArgumentError`. |
+| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. On `variant: :swatches` it maps to ColorSwatch circle sizes (`:sm` 2rem, `:md` 2.5rem, `:lg` 3rem). |
+| `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description), `:swatches` (wrapping colour circles). Invalid names raise `ArgumentError`. |
+| `show_tooltip` | Boolean | `true` | no | RadioGroup `variant: :swatches` only. Wraps each circle in `FlatPack::Tooltip::Component` when the option `label` is present. Other variants ignore it. |
+| `tooltip_placement` | Symbol | `:top` | no | RadioGroup `variant: :swatches` only. Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
 
 ## Slots
 None.
@@ -68,7 +70,7 @@ None.
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
-- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards. Inline and cards hide the radio dot visually, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, primary when selected (`--button-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Help and error copy under inline and cards uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
+- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, primary when selected (`--button-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
@@ -288,6 +290,20 @@ or:
     {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
     {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
     {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."}
+  ]
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "cover_color",
+  variant: :swatches,
+  label: "Cover colour",
+  value: "#1d4ed8",
+  options: [
+    {label: "Ocean", value: "#1d4ed8"},
+    {label: "Snow", value: "#ffffff"},
+    {label: "Ink", value: "#0a0a0a"}
   ]
 ) %>
 ```
@@ -666,6 +682,7 @@ Always sanitize HTML output before rendering it back to users:
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
 - Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`. Invalid borders and helper text use `--color-error` (danger red), not `--color-warning`. Character-count thresholds still use `--color-warning-border`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
+- RadioGroup `variant: :swatches` keeps a native radio per colour. The option `label` is the accessible name (visually hidden) and the default tooltip copy.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Password show/hide is `aria-pressed` with “Show password” / “Hide password”. The two icons crossfade on `--duration-fast` in a fixed box; they do not snap `hidden`.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.
@@ -676,6 +693,7 @@ Always sanitize HTML output before rendering it back to users:
 ## Dependencies
 - Core install: `rails generate flat_pack:install`
 - Stimulus controllers used by input components:
+  - `flat-pack--tooltip` (`RadioGroup` when `variant: :swatches` and tooltips are on)
   - `flat-pack--password-input` (`PasswordInput`)
   - `flat-pack--search-input` (`SearchInput`)
   - `flat-pack--text-area` (`TextArea` plain mode)

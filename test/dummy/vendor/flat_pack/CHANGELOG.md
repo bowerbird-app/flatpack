@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.220] - 2026-10-09
+
+### Added
+- `FlatPack::RadioGroup::Component` accepts `variant: :swatches` for a fixed colour palette. Each option is a filled circle with a visually hidden radio, a selected offset ring (ColorSwatch tokens), a check that flips ink on light vs dark fills, and a name tooltip. Pass `options: [{ label:, value:, color: }]` — `color:` defaults to `value` when that is a CSS colour. `size:` maps to ColorSwatch `:sm` / `:md` / `:lg`. `show_tooltip:` defaults to true. Existing `:default`, `:inline`, and `:cards` markup is unchanged. ColorSwatch stays the native `<input type="color">` picker.
+
+### Changed
+- Bumped the gem version to `0.1.220`.
+
+### Upgrade notes
+- Existing RadioGroup and ColorSwatch calls are unchanged. Pass `variant: :swatches` only when the person picks one colour from a host-supplied palette.
+- Hash options may add `color:`. A hex (or other safe CSS colour) `value` is enough; otherwise `color:` is required.
+- Rebuild host Tailwind so swatch size, ring, and `sr-only` utilities generate. Reload kit CSS if you ship ColorSwatch tokens already.
+- Redeploy so `meta.gem_version` shows `0.1.220`.
+
 ## [0.1.219] - 2026-10-09
 
 ### Added

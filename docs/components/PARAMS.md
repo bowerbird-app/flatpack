@@ -7,6 +7,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Concept | Param | Use for |
 | --- | --- | --- |
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
+| Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
 | Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. |
