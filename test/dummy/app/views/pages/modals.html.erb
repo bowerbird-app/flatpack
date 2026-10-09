@@ -304,13 +304,13 @@
 
 <!-- Long Content Modal -->
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Long Content Modal", anchor_link: true, subtitle: "Examples for Long Content Modal.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Long Content Modal", anchor_link: true, subtitle: "The card stays viewport-tall. The copy scrolls inside.") %>
   <p class="text-(--surface-muted-content-color) mb-4">
-    This example includes a large amount of text to test modal body scrolling and overall behavior with long-form content.
+    Default <code>scroll: :body</code>. Header and actions stay put. Only the body moves.
   </p>
   <div class="mb-4">
     <%= render FlatPack::Button::Component.new(
-      text: "Open Long Content Modal",
+      text: "Scroll inside",
       style: :secondary,
       data: { action: "click->flat-pack--modal#open", "flat-pack--modal-target": "trigger", "modal-id": "long-content-modal" }
     ) %>
@@ -394,6 +394,128 @@
   ) %>
 </section>
 
+<!-- Page scroll -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Scroll the overlay", anchor_link: true, subtitle: "The card is as tall as the copy. You scroll the dimmed layer.") %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    <code>scroll: :page</code> drops the viewport cap. Pin the actions with <code>sticky_footer: true</code> when the form is long.
+  </p>
+  <div class="flex flex-wrap gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Long note",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "modal-id": "page-scroll-modal" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Long form, pinned actions",
+      style: :primary,
+      data: { action: "click->flat-pack--modal#open", "modal-id": "page-scroll-sticky-modal" }
+    ) %>
+  </div>
+
+  <%= render FlatPack::Modal::Component.new(id: "page-scroll-modal", size: :lg, scroll: :page) do |modal| %>
+    <% modal.header do %>
+      <h2 class="text-xl font-semibold">Long content (page)</h2>
+    <% end %>
+    <% modal.body do %>
+      <div class="space-y-4 text-(--surface-content-color)">
+        <p>This card grows with the copy. Scroll the overlay, not a box inside the card.</p>
+        <% 24.times do |i| %>
+          <p>
+            <strong>Paragraph <%= i + 1 %>.</strong>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+            minim veniam, quis nostrud exercitation ullamco laboris.
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Cancel",
+        style: :secondary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Save changes",
+        style: :primary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(
+    id: "page-scroll-sticky-modal",
+    size: :lg,
+    scroll: :page,
+    sticky_footer: true
+  ) do |modal| %>
+    <% modal.header do %>
+      <h2 class="text-xl font-semibold">Workspace policy</h2>
+    <% end %>
+    <% modal.body do %>
+      <form class="space-y-4">
+        <%= render FlatPack::TextInput::Component.new(
+          name: "policy[title]",
+          label: "Title",
+          placeholder: "Public notes",
+          required: true
+        ) %>
+        <%= render FlatPack::TextArea::Component.new(
+          name: "policy[summary]",
+          label: "Summary",
+          placeholder: "What this policy covers…",
+          rows: 4,
+          required: true
+        ) %>
+        <% 8.times do |i| %>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "policy[section_#{i + 1}]",
+            label: "Section #{i + 1}",
+            placeholder: "Details for this section…",
+            rows: 3
+          ) %>
+        <% end %>
+      </form>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Cancel",
+        style: :secondary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Save changes",
+        style: :primary,
+        data: { action: "click->flat-pack--modal#close" }
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Modal::Component.new(id: "page-scroll-modal", size: :lg, scroll: :page) do |modal| %&gt;
+        &lt;% modal.body do %&gt;
+          <p>The overlay scrolls. The card is as tall as this copy.</p>
+        &lt;% end %&gt;
+        &lt;% modal.footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Save changes") %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+
+      &lt;%= render FlatPack::Modal::Component.new(id: "policy-modal", size: :lg, scroll: :page, sticky_footer: true) do |modal| %&gt;
+        &lt;% modal.body do %&gt;
+          <p>Long form. Save stays on screen.</p>
+        &lt;% end %&gt;
+        &lt;% modal.footer do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Save changes") %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
@@ -402,7 +524,8 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Focus Restoration:</strong> Returns focus to the trigger element on close<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>ESC to Close:</strong> Press ESC key to dismiss the modal<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Backdrop Click:</strong> Click outside the modal to close (configurable)<% end %>
-    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Scroll Prevention:</strong> Prevents page scrolling while modal is open<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Scroll Prevention:</strong> Prevents page scrolling while modal is open. The overlay can still scroll when <code>scroll: :page</code>.<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Page scroll:</strong> <code>scroll: :page</code> sizes the card to its content. <code>sticky_footer: true</code> pins the actions.<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessibility:</strong> Full ARIA support with role="dialog" and aria-modal="true"<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Animations:</strong> Fade and scale on open and close. Under Reduce Motion, fade only and no close delay.<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Works seamlessly with Turbo navigation<% end %>

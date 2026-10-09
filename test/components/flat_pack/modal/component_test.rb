@@ -210,6 +210,8 @@ module FlatPack
         assert_includes html, "duration-[var(--duration-slow)]"
         assert_includes html, "ease-[var(--easing-enter)]"
         assert_includes html, "motion-reduce:scale-100"
+        assert_includes html, "transition-[opacity,scale]"
+        refute_includes html, "transition-[opacity,transform]"
         refute_includes html, "duration-300"
         refute_includes html, "transition-all"
         refute_includes html, "ease-in-out"
@@ -219,6 +221,104 @@ module FlatPack
         assert_raises(ArgumentError) do
           Component.new(id: "my-modal", body_height_mode: :fixed)
         end
+      end
+
+      def test_default_scroll_is_body
+        render_inline(Component.new(id: "my-modal")) do |component|
+          component.body { "Content" }
+        end
+
+        html = page.native.to_html
+        assert_selector "[data-fp-modal-scroll='body']"
+        assert_includes html, "fp-modal-dialog-cap"
+        assert_includes html, "overflow-hidden"
+        assert_includes html, "fp-modal-overlay-min"
+        refute_includes html, "fp-modal-page-sticky"
+        refute_includes html, "sm:my-auto"
+      end
+
+      def test_page_scroll_drops_dialog_cap_and_body_overflow
+        render_inline(Component.new(id: "my-modal", scroll: :page, title: "Page scroll")) do |component|
+          component.body { "Tall content" }
+          component.footer { "Actions" }
+        end
+
+        html = page.native.to_html
+        dialog = page.find("[data-flat-pack--modal-target='dialog']")[:class]
+        body = page.find(".flat-pack-modal__body")[:class]
+
+        assert_selector "[data-fp-modal-scroll='page']"
+        refute_includes dialog, "fp-modal-dialog-cap"
+        refute_includes dialog, "overflow-hidden"
+        assert_includes dialog, "sm:my-auto"
+        refute_includes body, "overflow-y-auto"
+        assert_includes html, "fp-modal-overlay-min"
+        assert_selector ".flat-pack-modal__footer"
+        refute_selector ".fp-modal-sticky-footer"
+      end
+
+      def test_page_scroll_keeps_fixed_body_height_and_internal_scroll
+        render_inline(Component.new(id: "my-modal", scroll: :page, body_height_mode: :fixed, body_height: "24rem")) do |component|
+          component.body { "Content" }
+        end
+
+        assert_selector "div[style*='--flatpack-modal-body-height: 24rem'][style*='height: var(--flatpack-modal-body-height)']"
+        assert_includes page.find(".flat-pack-modal__body")[:class], "overflow-y-auto"
+      end
+
+      def test_page_scroll_min_body_height_does_not_cap_overflow
+        render_inline(Component.new(id: "my-modal", scroll: :page, body_height_mode: :min, body_height: "20rem")) do |component|
+          component.body { "Content" }
+        end
+
+        assert_selector "div[style*='min-height: var(--flatpack-modal-body-height)']"
+        refute_includes page.find(".flat-pack-modal__body")[:class], "overflow-y-auto"
+      end
+
+      def test_sticky_footer_on_page_scroll
+        render_inline(Component.new(id: "my-modal", scroll: :page, sticky_footer: true, title: "Pinned")) do |component|
+          component.body { "Form fields" }
+          component.footer { "Save" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "fp-modal-page-sticky"
+        assert_includes html, "fp-modal-sticky-footer"
+        assert_includes html, "fp-modal-sticky-header"
+      end
+
+      def test_sticky_footer_without_footer_slot_is_a_no_op
+        render_inline(Component.new(id: "my-modal", scroll: :page, sticky_footer: true, title: "No actions")) do |component|
+          component.body { "Just reading" }
+        end
+
+        html = page.native.to_html
+        refute_includes html, "fp-modal-page-sticky"
+        refute_includes html, "fp-modal-sticky-footer"
+      end
+
+      def test_raises_error_for_invalid_scroll
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "my-modal", scroll: :overlay)
+        end
+
+        assert_match(/Invalid scroll/, error.message)
+      end
+
+      def test_raises_error_for_sticky_footer_on_body_scroll
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "my-modal", sticky_footer: true)
+        end
+
+        assert_match(/sticky_footer requires scroll: :page/, error.message)
+      end
+
+      def test_raises_error_for_non_boolean_sticky_footer
+        error = assert_raises(ArgumentError) do
+          Component.new(id: "my-modal", scroll: :page, sticky_footer: "yes")
+        end
+
+        assert_match(/sticky_footer must be true or false/, error.message)
       end
     end
   end
