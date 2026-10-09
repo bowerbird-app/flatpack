@@ -98,6 +98,44 @@
   ) %>
 </section>
 
+<section class="mb-12" id="sliding-pills">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sliding pill", anchor_link: true, subtitle: "The fill follows the selected tab.") %>
+  <%= render FlatPack::Tabs::Component.new(variant: :pills, indicator: :slide) do |tabs| %>
+    <% tabs.tab(id: "slide-account", label: "Account") %>
+    <% tabs.tab(id: "slide-billing", label: "Billing") %>
+    <% tabs.tab(id: "slide-members", label: "Team") %>
+
+    <% tabs.panel(id: "slide-account") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Account</h3>
+        <p class="text-[var(--surface-content-color)]">The filled pill slides. Text colour is the only change on the tab itself.</p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "slide-billing") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Billing</h3>
+        <p class="text-[var(--surface-content-color)]">Same tokens as the instant pills above. This one just moves.</p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "slide-members") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Team</h3>
+        <p class="text-[var(--surface-content-color)]">Pass <code>indicator: :slide</code> on the pills variant.</p>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new(variant: :pills, indicator: :slide) do |tabs| %&gt;
+        &lt;% tabs.tab(id: "account", label: "Account") %&gt;
+        &lt;% tabs.tab(id: "billing", label: "Billing") %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
   <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>

@@ -144,6 +144,58 @@
     ) %>
   </div>
 
+  <% slide_pill = %w[account billing members].include?(params[:slide].to_s) ? params[:slide].to_s : "account" %>
+  <div class="mt-8" id="sliding-pills">
+    <h3 class="text-lg font-semibold text-(--surface-content-color) mb-2">Sliding pills</h3>
+    <p class="text-(--surface-muted-content-color) mb-4">
+      The fill slides, then the link goes. Modifier-click still opens immediately.
+    </p>
+
+    <%= render FlatPack::Button::Pill::Component.new(
+      indicator: :slide,
+      class: "mb-4",
+      items: [
+        {
+          text: "Account",
+          href: demo_buttons_pills_path(slide: "account", anchor: "sliding-pills"),
+          active: slide_pill == "account",
+          id: "slide-pill-account"
+        },
+        {
+          text: "Billing",
+          href: demo_buttons_pills_path(slide: "billing", anchor: "sliding-pills"),
+          active: slide_pill == "billing",
+          id: "slide-pill-billing"
+        },
+        {
+          text: "Team",
+          href: demo_buttons_pills_path(slide: "members", anchor: "sliding-pills"),
+          active: slide_pill == "members",
+          id: "slide-pill-members"
+        }
+      ]
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg, class: "mb-4") do %>
+      <h4 class="text-lg font-semibold mb-2"><%= slide_pill.capitalize %></h4>
+      <p class="text-(--surface-content-color)">
+        Active pill is <code>aria-current="page"</code> after the visit. Pass <code>indicator: :slide</code>.
+      </p>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Pill::Component.new(
+          indicator: :slide,
+          items: [
+            {text: "Account", href: account_path, active: true},
+            {text: "Billing", href: billing_path}
+          ]
+        ) %&gt;
+      CODE
+    ) %>
+  </div>
+
   <div class="mt-8">
     <h3 class="text-lg font-semibold text-(--surface-content-color) mb-2">Direct-link example</h3>
     <p class="text-(--surface-muted-content-color) mb-4">
