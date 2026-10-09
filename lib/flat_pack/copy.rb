@@ -12,6 +12,7 @@ module FlatPack
       password.show
       password.hide
       chip.remove
+      collection_editor.already_joined
       collection_editor.create_failed
       collection_editor.load_failed
       collection_editor.save_failed

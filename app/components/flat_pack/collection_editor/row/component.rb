@@ -5,6 +5,7 @@ module FlatPack
     module Row
       class Component < FlatPack::BaseComponent
         renders_one :entity, "FlatPack::CollectionEditor::Entity::Component"
+        renders_one :image, "FlatPack::CollectionEditor::Image::Component"
         renders_many :fields
         renders_many :actions
 
@@ -37,6 +38,7 @@ module FlatPack
               hidden_destroy_field,
               render_handle,
               (entity if entity?),
+              (image if image?),
               render_fields,
               render_actions
             ].compact)
@@ -71,22 +73,23 @@ module FlatPack
         end
 
         def picker_data
-          return {} unless entity?
+          record = record_source
+          return {} unless record
 
           {
-            search_url: entity.search_url,
-            search_param: entity.search_param,
-            min_search_length: entity.min_search_length,
-            create_url: entity.create_url,
-            create_label: entity.create_label,
-            create_title: (entity.create_title if entity.create_url.present? || entity.update_url.present?),
-            empty_text: entity.empty_text,
-            edit_url_template: entity.edit_url_template,
-            update_url: entity.update_url,
-            edit_title: (entity.edit_title if entity.update_url.present?),
-            edit_label: (entity.edit_label if entity.update_url.present?),
-            update_label: (entity.update_label if entity.update_url.present?),
-            items: entity.items_json
+            search_url: record.search_url,
+            search_param: record.search_param,
+            min_search_length: record.min_search_length,
+            create_url: record.create_url,
+            create_label: record.create_label,
+            create_title: (record.create_title if record.create_url.present? || record.update_url.present?),
+            empty_text: record.empty_text,
+            edit_url_template: record.edit_url_template,
+            update_url: record.update_url,
+            edit_title: (record.edit_title if record.update_url.present?),
+            edit_label: (record.edit_label if record.update_url.present?),
+            update_label: (record.update_label if record.update_url.present?),
+            items: record.items_json
           }.compact
         end
 
@@ -176,10 +179,14 @@ module FlatPack
           object.id if object.respond_to?(:id)
         end
 
-        def summary_title
-          return unless entity?
+        def record_source
+          return entity if entity?
 
-          entity.title
+          image if image?
+        end
+
+        def summary_title
+          record_source&.title
         end
 
         def reorder_label

@@ -231,7 +231,13 @@ Rails.application.routes.draw do
     get "collection_editor/people/:id/edit", to: "collection_editors#edit_person", as: :edit_collection_editor_person
     get "collection_editor/people/:id", to: "collection_editors#show_person"
     patch "collection_editor/people/:id", to: "collection_editors#update_person", as: :collection_editor_person
+    get "collection_editor/images", to: "collection_editors#search_images", as: :collection_editor_images
+    post "collection_editor/images", to: "collection_editors#create_image"
+    get "collection_editor/images/:id", to: "collection_editors#show_image"
+    patch "collection_editor/images/:id", to: "collection_editors#update_image", as: :collection_editor_image
     patch "collection_editor/:id/reorder", to: "collection_editors#reorder", as: :reorder_collection_editor
+    patch "collection_editor/:id/reorder_gallery", to: "collection_editors#reorder_gallery", as: :reorder_collection_editor_gallery
+    patch "collection_editor/:id/gallery", to: "collection_editors#update_gallery", as: :collection_editor_gallery
     patch "collection_editor/:id", to: "collection_editors#update", as: :collection_editor_project
 
     resources :comments, only: [:create] do

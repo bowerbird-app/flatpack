@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_061408) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_08_220000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -145,12 +145,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_061408) do
     t.index ["parent_comment_id"], name: "index_demo_comments_on_parent_comment_id"
   end
 
+  create_table "demo_images", force: :cascade do |t|
+    t.string "alt_text", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "swatch", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_demo_images_on_name", unique: true
+  end
+
   create_table "demo_people", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_demo_people_on_email", unique: true
+  end
+
+  create_table "demo_project_images", force: :cascade do |t|
+    t.string "caption"
+    t.datetime "created_at", null: false
+    t.string "credit"
+    t.bigint "image_id", null: false
+    t.integer "position", null: false
+    t.bigint "project_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["image_id"], name: "index_demo_project_images_on_image_id"
+    t.index ["project_id", "image_id"], name: "index_demo_project_images_on_project_id_and_image_id", unique: true
+    t.index ["project_id", "position"], name: "index_demo_project_images_on_project_id_and_position"
+    t.index ["project_id"], name: "index_demo_project_images_on_project_id"
   end
 
   create_table "demo_project_people", force: :cascade do |t|
@@ -604,6 +627,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_061408) do
   add_foreign_key "chat_item_attachments", "chat_items"
   add_foreign_key "chat_items", "chat_groups"
   add_foreign_key "demo_comments", "demo_comments", column: "parent_comment_id"
+  add_foreign_key "demo_project_images", "demo_images", column: "image_id"
+  add_foreign_key "demo_project_images", "demo_projects", column: "project_id"
   add_foreign_key "demo_project_people", "demo_people", column: "person_id"
   add_foreign_key "demo_project_people", "demo_projects", column: "project_id"
   add_foreign_key "recording_studio_access_invitations", "recording_studio_recordings", column: "recording_id"

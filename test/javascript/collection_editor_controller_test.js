@@ -11,7 +11,7 @@ function loadController(overrides = {}) {
     .replace('import { Controller } from "@hotwired/stimulus"', "class Controller {}")
     .replace(
       'import { flatPackCopy } from "flat_pack/copy"',
-      "const flatPackCopy = (key) => ({'collection_editor.create_failed': 'Could not create the record', 'collection_editor.load_failed': 'Could not load the record', 'collection_editor.save_failed': 'Could not save the record'})[key] || key"
+      "const flatPackCopy = (key) => ({'collection_editor.already_joined': 'This image is already on this page', 'collection_editor.create_failed': 'Could not create the record', 'collection_editor.load_failed': 'Could not load the record', 'collection_editor.save_failed': 'Could not save the record'})[key] || key"
     )
     .replace("export default class extends Controller", "class CollectionEditorController extends Controller") + "\nmodule.exports = CollectionEditorController\n"
 
@@ -826,7 +826,7 @@ test("create ignores a second submit while the first is in flight", async () => 
 
 test("template index replacement leaves visible text alone", () => {
   const controller = harness()
-  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><div data-results-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-results" data-create-modal-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-create"></div><p>Code NEW_RECORD</p>'
+  const html = '<label for="role_NEW_RECORD">Role</label><input name="project[project_people_attributes][NEW_RECORD][role]" id="role_NEW_RECORD" value="NEW_RECORD"><div data-results-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-results" data-create-modal-id="fp-collection-editor-demo_project_project_people_attributes_NEW_RECORD_person_id-create" data-library-modal-id="fp-collection-editor-demo_project_gallery_images_attributes_NEW_RECORD_image_id-library"></div><p>Code NEW_RECORD</p>'
   const replaced = controller.replaceTemplateIndex(html, "NEW_RECORD", "42")
 
   assert.match(replaced, /name="project\[project_people_attributes\]\[42\]\[role\]"/)
@@ -834,6 +834,7 @@ test("template index replacement leaves visible text alone", () => {
   assert.match(replaced, /for="role_42"/)
   assert.match(replaced, /data-results-id="fp-collection-editor-demo_project_project_people_attributes_42_person_id-results"/)
   assert.match(replaced, /data-create-modal-id="fp-collection-editor-demo_project_project_people_attributes_42_person_id-create"/)
+  assert.match(replaced, /data-library-modal-id="fp-collection-editor-demo_project_gallery_images_attributes_42_image_id-library"/)
   assert.match(replaced, /value="NEW_RECORD"/)
   assert.match(replaced, /<p>Code NEW_RECORD<\/p>/)
 })
@@ -851,4 +852,178 @@ test("reorder announcement names the row and the position", () => {
   controller.announceReorder({detail: {id: "12", position: 2}})
 
   assert.equal(status.textContent, "Moved Alice Chen to position 2")
+})
+
+function attachImage(row, {modalId = "library-modal"} = {}) {
+  const image = buildNode("div")
+  mark(image, "data-collection-editor-image")
+  mark(image, "data-library-modal-id")
+  image.setAttribute("data-library-modal-id", modalId)
+
+  const choose = buildNode("button")
+  mark(choose, "data-collection-editor-image-choose")
+  const placeholder = buildNode("span")
+  mark(placeholder, "data-collection-editor-image-placeholder")
+  const preview = buildNode("img")
+  mark(preview, "data-collection-editor-image-preview")
+  preview.hidden = true
+  choose.append(placeholder, preview)
+
+  const modal = buildNode("div")
+  mark(modal, "data-collection-editor-library-modal")
+  modal.id = modalId
+  modal.classList.add("hidden")
+  const search = buildNode("input")
+  mark(search, "data-collection-editor-library-search")
+  const empty = buildNode("p")
+  mark(empty, "data-collection-editor-library-empty")
+  empty.hidden = true
+  const error = buildNode("p")
+  mark(error, "data-collection-editor-library-error")
+  error.hidden = true
+  const grid = buildNode("div")
+  mark(grid, "data-collection-editor-library")
+  const create = buildNode("button")
+  create.textContent = "+ New"
+  modal.append(search, empty, error, grid, create)
+  image.append(choose, modal)
+  row.append(image)
+  return {image, choose, placeholder, preview, modal, search, empty, error, grid, create}
+}
+
+test("choosing a library image sets the join id and thumbnail", async () => {
+  const calls = []
+  const controller = harness(async (url) => {
+    calls.push(url)
+    return {
+      ok: true,
+      json: async () => ({
+        items: [{id: "9", title: "North window", description: "A north-facing window", thumbnail_url: "data:image/svg+xml,north"}]
+      })
+    }
+  })
+  const row = buildRow()
+  row.dataset.searchUrl = "http://example.test/images"
+  row.dataset.searchParam = "q"
+  row.dataset.editLabel = "Edit"
+  const {choose, placeholder, preview, modal, grid} = attachImage(row)
+  controller.listTarget.append(row)
+
+  await controller.loadLibrary(row, "north")
+
+  assert.equal(calls[0], "http://example.test/images?q=north")
+  assert.equal(grid.children.length, 1)
+  assert.equal(grid.children[0].dataset.id, "9")
+  assert.equal(grid.children[0].dataset.thumbnailUrl, "data:image/svg+xml,north")
+  assert.equal(grid.children[0].children.at(-1).textContent, "North window")
+
+  controller.applySelection(row, grid.children[0].dataset)
+
+  assert.equal(row.querySelector("[data-collection-editor-association]").value, "9")
+  assert.equal(preview.src, "data:image/svg+xml,north")
+  assert.equal(preview.hidden, false)
+  assert.equal(placeholder.hidden, true)
+  assert.equal(choose.attrs["aria-label"], "Edit North window")
+  assert.equal(choose.focused, true)
+  assert.equal(modal.classList.contains("hidden"), true)
+  assert.equal(row.events[0].detail.thumbnailUrl, "data:image/svg+xml,north")
+})
+
+test("choosing an image that is already joined focuses that row", () => {
+  const controller = harness()
+  const status = buildNode("p")
+  controller.statusTarget = status
+  controller.hasStatusTarget = true
+  const joined = buildRow({id: "1", persisted: true})
+  const incoming = buildRow({id: "2"})
+  joined.dataset.editLabel = "Edit"
+  const existing = attachImage(joined)
+  const next = attachImage(incoming, {modalId: "library-modal-2"})
+  joined.querySelector("[data-collection-editor-association]").value = "9"
+  controller.listTarget.append(joined, incoming)
+  controller.openLibrary({preventDefault() {}, target: next.choose})
+
+  controller.applySelection(incoming, {id: "9", title: "North window", thumbnailUrl: "data:image/svg+xml,north"})
+
+  assert.equal(incoming.querySelector("[data-collection-editor-association]").value, "")
+  assert.equal(next.preview.hidden, true)
+  assert.equal(existing.choose.focused, true)
+  assert.equal(status.textContent, "This image is already on this page")
+  assert.equal(next.modal.classList.contains("hidden"), true)
+  assert.equal(incoming.events.length, 0)
+})
+
+test("a filled thumbnail with update_url loads the library record", async () => {
+  const calls = []
+  const controller = harness(async (url, options = {}) => {
+    calls.push({url, method: options.method})
+    return {
+      ok: true,
+      json: async () => ({
+        item: {id: "9", title: "North window", thumbnail_url: "data:image/svg+xml,north"},
+        fields: {name: "North window", alt_text: "A north-facing window"}
+      })
+    }
+  })
+  const row = buildRow({id: "3", persisted: true})
+  row.dataset.updateUrl = "/images/:id"
+  row.dataset.editTitle = "Edit Image"
+  row.querySelector("[data-collection-editor-association]").value = "9"
+  const {choose} = attachImage(row)
+  const {modal, submit} = attachCreateModal(row, "image-create")
+  const heading = buildNode("h2")
+  mark(heading, "data-collection-editor-modal-title")
+  modal.append(heading)
+  const submitLabel = buildNode("span")
+  submit.append(submitLabel)
+  controller.listTarget.append(row)
+
+  await controller.openImage({preventDefault() {}, target: choose})
+
+  assert.equal(calls[0].method, "GET")
+  assert.equal(calls[0].url, "/images/9")
+  assert.equal(heading.textContent, "Edit Image")
+  assert.equal(modal.querySelector("[data-create-field]").value, "North window")
+})
+
+test("an empty thumbnail opens the library and new creates from that search", () => {
+  const controller = harness()
+  const row = buildRow()
+  row.dataset.items = JSON.stringify([
+    {id: "4", title: "Lens", thumbnail_url: "data:image/svg+xml,lens"},
+    {id: "5", title: "Night set", thumbnail_url: "data:image/svg+xml,night"}
+  ])
+  const {choose, modal, search, grid, create} = attachImage(row)
+  controller.listTarget.append(row)
+
+  controller.openImage({preventDefault() {}, target: choose})
+
+  assert.equal(modal.parentNode.tag, "body")
+  assert.equal(modal.classList.contains("flex"), true)
+  assert.equal(grid.children.length, 2)
+  assert.equal(search.focused, true)
+
+  search.value = "Lens"
+  controller.createFromLibrary({preventDefault() {}, target: create})
+
+  assert.equal(modal.classList.contains("hidden"), true)
+  assert.equal(row.contains(modal), true)
+  assert.equal(row.querySelector("[data-fill-from-query]").value, "Lens")
+  assert.equal(row.querySelector("[data-collection-editor-create-fields]").hidden, false)
+})
+
+test("library search enter does not submit the parent form", () => {
+  const controller = harness()
+  const row = buildRow()
+  attachImage(row)
+  controller.listTarget.append(row)
+  let prevented = false
+
+  controller.searchLibraryKeydown({
+    key: "Enter",
+    preventDefault() { prevented = true },
+    target: row.querySelector("[data-collection-editor-library-search]")
+  })
+
+  assert.equal(prevented, true)
 })

@@ -104,7 +104,7 @@ class DemoCatalog
             {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radio group examples", icon: :square},
             {title: "Select", path: "/demo/forms/select", description: "Dropdown select input examples", icon: :chevron_down},
             {title: "Combobox", path: "/demo/forms/combobox", description: "Searchable single-choice field with a typed filter", icon: :search},
-            {title: "Collection Editor", path: "/demo/collection_editor", description: "Ordered related records with a person picker and join fields", icon: :users},
+            {title: "Collection Editor", path: "/demo/collection_editor", description: "Ordered related records with a person picker, a library image join, and join fields", icon: :users},
             {title: "Nested Multiselect", path: "/demo/forms/nested_multiselect", description: "Parent and child checkbox multiselect examples", icon: :square},
             {title: "Picker", path: "/demo/picker", description: "Reusable file and image picker for any workflow", icon: :image},
             {title: "Switch", path: "/demo/forms/switch", description: "Toggle switch input examples", icon: :settings},

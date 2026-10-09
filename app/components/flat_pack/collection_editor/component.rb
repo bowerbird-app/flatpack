@@ -13,6 +13,7 @@ module FlatPack
         add_label: "Row",
         empty_text: "Nothing here yet",
         headers: nil,
+        column_widths: nil,
         orderable: false,
         orderable_url: nil,
         orderable_method: :patch,
@@ -26,6 +27,7 @@ module FlatPack
         @add_label = add_label.to_s.presence || "Row"
         @empty_text = empty_text.to_s.presence || "Nothing here yet"
         @headers = Array(headers).map { |header| header.to_s }.presence
+        @column_widths = validated_column_widths!(column_widths)
         @orderable = orderable
         @orderable_url = orderable_url
         @orderable_method = orderable_method
@@ -71,12 +73,40 @@ module FlatPack
       end
 
       def column_template
-        content_count = @headers.present? ? @headers.length : 2
         parts = []
         parts << "auto" if @orderable
-        content_count.times { |index| parts << (index.zero? ? "minmax(0, 1.4fr)" : "minmax(8rem, 1fr)") }
+        parts.concat(content_tracks)
         parts << "auto"
         parts.join(" ")
+      end
+
+      def content_tracks
+        return @column_widths if @column_widths
+
+        count = @headers.present? ? @headers.length : 2
+        Array.new(count) { |index| index.zero? ? "minmax(0, 1.4fr)" : "minmax(8rem, 1fr)" }
+      end
+
+      def validated_column_widths!(column_widths)
+        return if column_widths.nil?
+
+        tracks = Array(column_widths).map { |track| track.to_s.strip }
+        return if tracks.empty?
+
+        sanitized = tracks.map { |track| sanitize_column_width!(track) }
+        if @headers.present? && sanitized.length != @headers.length
+          entries = "entry".pluralize(sanitized.length)
+          raise ArgumentError, "column_widths has #{sanitized.length} #{entries} and headers has #{@headers.length}."
+        end
+
+        sanitized
+      end
+
+      def sanitize_column_width!(track)
+        safe = FlatPack::AttributeSanitizer.sanitize_css_grid_track(track)
+        return safe if safe
+
+        raise ArgumentError, "Invalid column_widths: #{track.inspect}. Must be a CSS grid track such as \"minmax(8rem, 1fr)\" or \"max-content\"."
       end
 
       def section_classes

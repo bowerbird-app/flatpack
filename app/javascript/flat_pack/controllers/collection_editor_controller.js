@@ -29,6 +29,7 @@ export default class extends Controller {
     this.element.querySelectorAll("[data-collection-editor-row]").forEach((row) => {
       this.restoreResults(row)
       this.restoreModal(this.createModal(row))
+      this.restoreModal(this.libraryModal(row))
     })
   }
 
@@ -45,6 +46,10 @@ export default class extends Controller {
 
     this.listTarget.append(row)
     this.refreshEmpty()
+    if (row.querySelector("[data-collection-editor-image]")) {
+      this.openLibrary({preventDefault() {}, target: row})
+      return
+    }
     this.showPanel(row)
     row.querySelector("[data-collection-editor-search]")?.focus()
   }
@@ -55,6 +60,7 @@ export default class extends Controller {
     if (!row) return
 
     this.discardCreateModal(row)
+    this.discardLibraryModal(row)
 
     if (row.dataset.persisted === "true") {
       const field = row.querySelector("[data-collection-editor-destroy]")
@@ -131,7 +137,9 @@ export default class extends Controller {
     if (!row) return
 
     const fields = this.createScope(row).querySelector("[data-collection-editor-create-fields]")
-    const query = row.querySelector("[data-collection-editor-search]")?.value || ""
+    const query = row.querySelector("[data-collection-editor-search]")?.value
+      || this.libraryModal(row)?.querySelector("[data-collection-editor-library-search]")?.value
+      || ""
     if (!fields || !fields.querySelector("[data-create-field]")) {
       this.create(event)
       return
@@ -415,22 +423,170 @@ export default class extends Controller {
     this.applySelection(row, option.dataset)
   }
 
+  openImage(event) {
+    event.preventDefault()
+    const row = this.rowFrom(event)
+    if (!row) return
+
+    const id = row.querySelector("[data-collection-editor-association]")?.value
+    if (id && row.dataset.updateUrl) return this.edit(event)
+
+    return this.openLibrary(event)
+  }
+
+  openLibrary(event) {
+    event?.preventDefault?.()
+    const row = this.rowFrom(event)
+    if (!row) return
+
+    const modal = this.libraryModal(row)
+    if (!modal) return
+
+    const search = modal.querySelector("[data-collection-editor-library-search]")
+    if (search) search.value = ""
+    const portaled = this.placeModal(modal)
+    const open = () => {
+      this.showCreateModal(modal)
+      this.loadLibrary(row, "")
+      window.setTimeout(() => search?.focus(), 150)
+    }
+    if (portaled) window.setTimeout(open, 0)
+    else open()
+  }
+
+  searchLibrary(event) {
+    const row = this.rowFrom(event)
+    if (!row) return
+
+    const query = event.currentTarget?.value || ""
+    window.clearTimeout(row._libraryTimer)
+    row._libraryTimer = window.setTimeout(() => this.loadLibrary(row, query), 250)
+  }
+
+  searchLibraryKeydown(event) {
+    if (event.key !== "Enter" && event.key !== "Escape") return
+    event.preventDefault()
+    if (event.key !== "Escape") return
+
+    const row = this.rowFrom(event)
+    if (row) this.closeLibrary(row)
+  }
+
+  createFromLibrary(event) {
+    event.preventDefault()
+    const row = this.rowFrom(event)
+    if (!row) return
+
+    this.closeLibrary(row)
+    this.promptCreate(event)
+  }
+
+  async loadLibrary(row, query = "") {
+    const grid = this.libraryGrid(row)
+    if (!grid) return
+
+    this.toggleLibraryMessage(row, "empty", false)
+    this.toggleLibraryMessage(row, "error", false)
+
+    if (!row.dataset.searchUrl) {
+      const needle = query.trim().toLowerCase()
+      const matches = this.localItems(row).filter((item) => {
+        if (!needle) return true
+        return `${item.title} ${item.description}`.toLowerCase().includes(needle)
+      })
+      this.renderLibrary(row, matches)
+      this.toggleLibraryMessage(row, "empty", matches.length === 0)
+      return
+    }
+
+    if (row._libraryAbort) row._libraryAbort.abort()
+    const controller = new AbortController()
+    row._libraryAbort = controller
+    const url = new URL(row.dataset.searchUrl, window.location.origin)
+    const typed = query.trim()
+    if (typed) url.searchParams.set(row.dataset.searchParam || "q", typed)
+
+    try {
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: {Accept: "application/json"},
+        signal: controller.signal,
+        credentials: "same-origin"
+      })
+      const payload = await response.json()
+      const items = this.normalizeItems(payload)
+      this.renderLibrary(row, items)
+      this.toggleLibraryMessage(row, "empty", items.length === 0)
+    } catch (error) {
+      if (error?.name === "AbortError") return
+      this.renderLibrary(row, [])
+      this.toggleLibraryMessage(row, "error", true)
+    }
+  }
+
+  renderLibrary(row, items) {
+    const grid = this.libraryGrid(row)
+    if (!grid) return
+
+    grid.replaceChildren()
+    items.forEach((item) => grid.append(this.libraryItem(row, item)))
+  }
+
+  libraryItem(row, item) {
+    const button = document.createElement("button")
+    button.type = "button"
+    button.className = "flat-pack-collection-editor-library-item"
+    button.dataset.id = item.id
+    button.dataset.title = item.title
+    button.dataset.description = item.description || ""
+    if (item.thumbnailUrl) button.dataset.thumbnailUrl = item.thumbnailUrl
+
+    if (item.thumbnailUrl) {
+      const image = document.createElement("img")
+      image.src = item.thumbnailUrl
+      image.alt = ""
+      button.append(image)
+    }
+
+    const label = document.createElement("span")
+    label.textContent = item.title
+    button.append(label)
+    button.addEventListener("click", (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+      this.applySelection(row, {
+        id: item.id,
+        title: item.title,
+        description: item.description,
+        thumbnailUrl: item.thumbnailUrl
+      })
+    })
+    return button
+  }
+
   applySelection(row, item) {
     const id = item.id || item.value || ""
     const title = item.title || item.label || ""
     const description = item.description || ""
+    const thumbnailUrl = item.thumbnailUrl || item.thumbnail_url || ""
+    if (this.duplicateImage(row, id)) {
+      this.focusJoinedImage(row, id)
+      return
+    }
+
     const association = row.querySelector("[data-collection-editor-association]")
     if (association) association.value = id
 
-    this.writeSummary(row, {title, description})
+    this.writeSummary(row, {title, description, thumbnailUrl})
     this.clearCreateError(row)
+    this.closeLibrary(row)
     this.closeCreateModal(row)
     this.closePanel(row, {force: true})
-    row.querySelector("[data-collection-editor-chip-remove]")?.focus()
+    this.focusSelection(row)
 
     row.dispatchEvent(new CustomEvent("collection-editor:selected", {
       bubbles: true,
-      detail: {id, title, description}
+      detail: {id, title, description, thumbnailUrl}
     }))
   }
 
@@ -438,19 +594,21 @@ export default class extends Controller {
     const id = row.querySelector("[data-collection-editor-association]")?.value || item.id
     const title = item.title || ""
     const description = item.description || ""
+    const thumbnailUrl = item.thumbnailUrl || ""
 
     this.element.querySelectorAll("[data-collection-editor-row]").forEach((match) => {
       const association = match.querySelector("[data-collection-editor-association]")
       if (!association || association.value !== String(id)) return
-      this.writeSummary(match, {title, description})
+      this.writeSummary(match, {title, description, thumbnailUrl})
     })
 
     this.clearCreateError(row)
+    this.closeLibrary(row)
     this.closeCreateModal(row)
-    row.querySelector("[data-collection-editor-chip-remove]")?.focus()
+    this.focusSelection(row)
     row.dispatchEvent(new CustomEvent("collection-editor:updated", {
       bubbles: true,
-      detail: {id: String(id), title, description}
+      detail: {id: String(id), title, description, thumbnailUrl}
     }))
   }
 
@@ -477,6 +635,20 @@ export default class extends Controller {
 
     const edit = row.querySelector("[data-collection-editor-edit]")
     if (edit && title) edit.setAttribute("aria-label", `${row.dataset.editLabel || "Edit"} ${title}`)
+
+    const choose = row.querySelector("[data-collection-editor-image-choose]")
+    if (choose && title) {
+      const prefix = row.dataset.editLabel
+      choose.setAttribute("aria-label", prefix ? `${prefix} ${title}` : title)
+    }
+
+    const preview = row.querySelector("[data-collection-editor-image-preview]")
+    if (preview && item.thumbnailUrl) {
+      preview.src = item.thumbnailUrl
+      preview.hidden = false
+      const placeholder = row.querySelector("[data-collection-editor-image-placeholder]")
+      if (placeholder) placeholder.hidden = true
+    }
 
     const handle = row.querySelector("[data-collection-editor-handle]")
     if (handle && title) handle.setAttribute("aria-label", `Reorder ${title}`)
@@ -635,9 +807,10 @@ export default class extends Controller {
     const id = String(item.id ?? item.value ?? "").trim()
     const title = String(item.title ?? item.label ?? item.name ?? "").trim()
     const description = String(item.description ?? item.secondary ?? "").trim()
+    const thumbnailUrl = String(item.thumbnailUrl ?? item.thumbnail_url ?? "").trim()
     if (!id || !title) return null
 
-    return {id, title, description}
+    return {id, title, description, thumbnailUrl}
   }
 
   options(row) {
@@ -727,6 +900,13 @@ export default class extends Controller {
     const row = target?.closest?.("[data-collection-editor-row]")
     if (row) return row
 
+    const library = target?.closest?.("[data-collection-editor-library-modal]")
+    if (library?.id && this.element) {
+      const image = this.element.querySelector(`[data-library-modal-id="${library.id}"]`)
+      const owner = image?.closest?.("[data-collection-editor-row]")
+      if (owner) return owner
+    }
+
     const modal = target?.closest?.("[data-collection-editor-create-modal]")
     if (modal?.id && this.element) {
       const entity = this.element.querySelector(`[data-create-modal-id="${modal.id}"]`)
@@ -814,6 +994,77 @@ export default class extends Controller {
     this.createModal(row)?.remove()
   }
 
+  libraryModal(row) {
+    if (!row) return null
+
+    const nested = row.querySelector("[data-collection-editor-library-modal]")
+    if (nested) return nested
+
+    const marker = row.querySelector("[data-library-modal-id]")
+    const id = marker?.getAttribute?.("data-library-modal-id")
+    if (!id || typeof document.getElementById !== "function") return null
+
+    return document.getElementById(id)
+  }
+
+  libraryGrid(row) {
+    return this.libraryModal(row)?.querySelector("[data-collection-editor-library]")
+  }
+
+  closeLibrary(row) {
+    const modal = this.libraryModal(row)
+    if (!modal) return
+
+    const controller = this.application?.getControllerForElementAndIdentifier?.(modal, "flat-pack--modal")
+    if (controller?.close) controller.close()
+    else {
+      modal.classList?.remove("flex")
+      modal.classList?.add("hidden")
+      modal.setAttribute?.("aria-hidden", "true")
+    }
+
+    window.setTimeout(() => this.restoreModal(modal), 250)
+  }
+
+  discardLibraryModal(row) {
+    this.libraryModal(row)?.remove()
+  }
+
+  toggleLibraryMessage(row, kind, show) {
+    const name = kind === "error" ? "data-collection-editor-library-error" : "data-collection-editor-library-empty"
+    const node = this.libraryModal(row)?.querySelector(`[${name}]`)
+    if (node) node.hidden = !show
+  }
+
+  duplicateImage(row, id) {
+    if (!id || !row.querySelector("[data-collection-editor-image]")) return false
+
+    return this.visibleRows().some((other) => {
+      if (other === row) return false
+      return other.querySelector("[data-collection-editor-association]")?.value === String(id)
+    })
+  }
+
+  focusJoinedImage(row, id) {
+    this.closeLibrary(row)
+    this.closeCreateModal(row)
+    const match = this.visibleRows().find((other) => {
+      return other !== row && other.querySelector("[data-collection-editor-association]")?.value === String(id)
+    })
+    const choose = match?.querySelector("[data-collection-editor-image-choose]")
+    window.setTimeout(() => choose?.focus(), 260)
+    if (this.hasStatusTarget) this.statusTarget.textContent = flatPackCopy("collection_editor.already_joined")
+  }
+
+  visibleRows() {
+    return Array.from(this.element.querySelectorAll("[data-collection-editor-row]:not([hidden])"))
+  }
+
+  focusSelection(row) {
+    const target = row.querySelector("[data-collection-editor-chip-remove]") || row.querySelector("[data-collection-editor-image-choose]")
+    target?.focus()
+  }
+
   setActive(row, index) {
     const options = this.options(row)
     const input = row.querySelector("[data-collection-editor-search]")
@@ -847,7 +1098,7 @@ export default class extends Controller {
   replaceTemplateIndex(html, token, index) {
     if (!token) return html
 
-    const pattern = /(\s(?:name|id|for|data-id|data-results-id|data-create-modal-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
+    const pattern = /(\s(?:name|id|for|data-id|data-results-id|data-create-modal-id|data-library-modal-id|aria-controls|aria-labelledby|aria-describedby|aria-activedescendant)\s*=\s*)(["'])([\s\S]*?)\2/gi
     return html.replace(pattern, (match, prefix, quote, value) => {
       if (!value.includes(token)) return match
       return `${prefix}${quote}${value.split(token).join(index)}${quote}`

@@ -55,6 +55,8 @@ fr:
     collection_editor:
       new_record: Nouveau %{label}
       edit_record: Modifier %{label}
+      choose_image: Choisir une image
+      already_joined: Cette image est déjà sur cette page
       create_failed: Impossible de créer l'enregistrement
       load_failed: Impossible de charger l'enregistrement
       save_failed: Impossible d'enregistrer l'enregistrement
