@@ -444,6 +444,7 @@ import CollapseController         from "${controllersDir}/collapse_controller.js
 import CollectionEditorController from "${controllersDir}/collection_editor_controller.js";
 import ContentEditorController    from "${controllersDir}/content_editor_controller.js";
 import DateInputController        from "${controllersDir}/date_input_controller.js";
+import FabController              from "${controllersDir}/fab_controller.js";
 import FileInputController        from "${controllersDir}/file_input_controller.js";
 import FormValidationController   from "${controllersDir}/form_validation_controller.js";
 import GridSortableController     from "${controllersDir}/grid_sortable_controller.js";
@@ -493,6 +494,7 @@ application.register("flat-pack--collapse",            CollapseController);
 application.register("flat-pack--collection-editor",   CollectionEditorController);
 application.register("flat-pack--content-editor",      ContentEditorController);
 application.register("flat-pack--date-input",          DateInputController);
+application.register("flat-pack--fab",                 FabController);
 application.register("flat-pack--file-input",          FileInputController);
 application.register("flat-pack--form-validation",     FormValidationController);
 application.register("flat-pack--grid-sortable",       GridSortableController);

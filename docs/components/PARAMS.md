@@ -23,6 +23,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
 | Masonry column count | `columns` | Masonry only. Integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Do not use Grid's `cols` here. |
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
+| FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
+| FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |

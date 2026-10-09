@@ -17,6 +17,7 @@ class ThemesController < ApplicationController
     "Collapse" => [/\A--collapse-/],
     "Breadcrumbs" => [/\A--breadcrumb-/],
     "Bottom Nav" => [/\A--bottom-nav-/],
+    "FAB" => [/\A--fab-/],
     "Code Blocks" => [/\A--code-block-/],
     "Comments" => [/\A--comments-/],
     "Content" => [/\A--content-/],
@@ -263,6 +264,8 @@ class ThemesController < ApplicationController
       "Breadcrumbs"
     when /\A--bottom-nav-/
       "Bottom nav"
+    when /\A--fab-/
+      "FAB"
     when /\A--modal-/
       "Modal"
     when /\A--drawer-/

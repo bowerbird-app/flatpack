@@ -373,6 +373,10 @@ en:
       usage_meter:
         unlimited: "%{used} · Unlimited"
         of: "%{used} of %{limit}"
+    fab:
+      label: Add
+      open_actions: Open actions
+      menu: Actions
     clipboard:
       nothing: Nothing to copy
       copied: Copied to clipboard

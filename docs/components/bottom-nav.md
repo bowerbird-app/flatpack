@@ -43,7 +43,7 @@ None.
 <% end %>
 ```
 
-The bar is `position: fixed` at the bottom with `.fp-bottom-nav` and `pb-[env(safe-area-inset-bottom)]` so items sit above the home indicator. Items include `.fp-touch-manipulation`. Hosts need `viewport-fit=cover` for the inset to apply. See [Installation](../installation.md).
+The bar is `position: fixed` at the bottom with `.fp-bottom-nav` and `pb-[env(safe-area-inset-bottom)]` so items sit above the home indicator. Items include `.fp-touch-manipulation`. Hosts need `viewport-fit=cover` for the inset to apply. See [Installation](../installation.md). A FAB in a bottom corner measures this bar and sits above it (`--fp-fab-nav-offset`).
 
 ## Accessibility
 - Renders semantic `<nav>` with `aria-label="Bottom navigation"`.

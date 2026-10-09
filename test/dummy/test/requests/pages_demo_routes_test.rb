@@ -96,6 +96,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/grid
     /demo/grid/movable_cards
     /demo/masonry
+    /demo/fab
     /demo/pagination
     /demo/admin
     /demo/charts
@@ -138,6 +139,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/notification
     /mobile
     /mobile/bottom_nav
+    /mobile/fab
   ].freeze
 
   test "unsaved changes demo wires the form controller and a default save button" do
