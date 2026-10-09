@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_08_220000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_09_101301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -412,6 +412,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_220000) do
     t.index ["root_recording_id"], name: "index_rs_attachable_attachments_on_root_recording_id"
   end
 
+  create_table "recording_studio_attachable_libraries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", default: "default", null: false
+    t.index ["key"], name: "index_recording_studio_attachable_libraries_on_key"
+  end
+
+  create_table "recording_studio_attachable_placements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "attachment_recording_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["attachment_recording_id"], name: "idx_on_attachment_recording_id_76c6286907"
+  end
+
   create_table "recording_studio_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "action", null: false
     t.uuid "actor_id"
@@ -613,7 +625,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_08_220000) do
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.check_constraint "registered_with::text = ANY (ARRAY['password'::character varying, 'otp'::character varying]::text[])", name: "users_registered_with_check"
+    t.check_constraint "registered_with::text = ANY (ARRAY['password'::character varying::text, 'otp'::character varying::text])", name: "users_registered_with_check"
   end
 
   create_table "workspaces", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

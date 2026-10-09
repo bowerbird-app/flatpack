@@ -7,9 +7,9 @@ The deployable app in `test/dummy` is still the FlatPack component catalog. It a
 Pinned in `test/dummy/Gemfile.common`:
 
 - `recording_studio` (`v4.4.0`)
-- `recording_studio_accessible`
+- `recording_studio_accessible` (`v0.13.0`)
 - `recording_studio_user`
-- `recording_studio_attachable`
+- `recording_studio_attachable` (`v0.13.0`)
 - `recording_studio_site_settings`
 - `recording_studio_admin`
 - `recording_studio_api` (`v0.5.4`)
@@ -80,7 +80,7 @@ Cursor resource identity is the MCP URL (`…/recording_studio_mcp`), not API `/
 
 ## Recordables
 
-Host models: `Workspace`, `Folder`, `Page`, `AdminRoot`, plus Users `People` / `Profile` and Site Settings / Attachable types. See `config/initializers/recording_studio.rb`.
+Host models: `Workspace`, `Folder`, `Page`, `AdminRoot`, plus Users `People` / `Profile` and Site Settings / Attachable types (`Attachment`, `Library`, `Placement`). Attachable `0.12+` registers `Library` and `Placement` as capability children, so both must appear in `config.recordable_types` for the dummy to boot. See `config/initializers/recording_studio.rb`.
 
 ## FlatPack component catalog API
 
