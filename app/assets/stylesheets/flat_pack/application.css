@@ -646,7 +646,6 @@
 .fp-fab__trigger {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.75rem;
   width: var(--fab-size);
   height: var(--fab-size);
@@ -692,7 +691,6 @@
 .fp-fab__icon {
   display: flex;
   align-items: center;
-  justify-content: center;
   transition: transform var(--duration-fast) var(--easing-standard);
 }
 
@@ -762,7 +760,6 @@
 .fp-fab__action-glyph {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   width: var(--fab-action-size);
   height: var(--fab-action-size);
   border-radius: 9999px;

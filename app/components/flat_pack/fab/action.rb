@@ -28,7 +28,7 @@ module FlatPack
       def item_content
         safe_join([
           content_tag(:span, @label, class: "fp-fab__action-label"),
-          content_tag(:span, render_icon, class: "fp-fab__action-glyph", aria: {hidden: true})
+          content_tag(:span, render_icon, class: "fp-fab__action-glyph justify-center", aria: {hidden: true})
         ])
       end
 

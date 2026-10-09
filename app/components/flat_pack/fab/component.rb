@@ -157,7 +157,7 @@ module FlatPack
       end
 
       def trigger_content
-        parts = [content_tag(:span, render_icon, class: "fp-fab__icon", aria: {hidden: true})]
+        parts = [content_tag(:span, render_icon, class: "fp-fab__icon justify-center", aria: {hidden: true})]
         parts << content_tag(:span, @label, class: "fp-fab__text") if extended?
         safe_join(parts)
       end
@@ -202,6 +202,7 @@ module FlatPack
           "fp-fab__trigger",
           "fp-hit-target",
           "fp-touch-manipulation",
+          "justify-center",
           ("fp-fab__trigger--extended" if extended?)
         ].compact.join(" ")
       end

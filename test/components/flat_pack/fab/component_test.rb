@@ -11,8 +11,8 @@ module FlatPack
         assert_selector "div.fp-fab.fp-fab--viewport[data-fp-position='bottom_right']"
         assert_selector "button.fp-fab__trigger[aria-label='Add'][type='button']"
         refute_selector "[data-controller='flat-pack--fab']"
-        refute_selector "[role='menu']"
-        refute_selector ".fp-fab__backdrop"
+        refute_selector "[role='menu']", visible: :all
+        refute_selector ".fp-fab__backdrop", visible: :all
       end
 
       def test_single_action_link_uses_href
@@ -38,14 +38,14 @@ module FlatPack
 
         assert_selector "[data-controller='flat-pack--fab']"
         assert_selector "button.fp-fab__trigger[aria-expanded='false'][aria-haspopup='menu']"
-        assert_selector "ul.fp-fab__actions[role='menu'][hidden]"
-        assert_selector "[role='menuitem'][aria-label='Note'][href='/notes/new']", count: 1
-        assert_selector "button[role='menuitem'][aria-label='Photo']"
+        assert_selector "ul.fp-fab__actions[role='menu'][hidden]", visible: :hidden
+        assert_selector "[role='menuitem'][aria-label='Note'][href='/notes/new']", visible: :hidden, count: 1
+        assert_selector "button[role='menuitem'][aria-label='Photo']", visible: :hidden
         trigger = page.find("button.fp-fab__trigger")
         menu_id = trigger["aria-controls"]
 
         assert menu_id.present?
-        assert_selector "ul##{menu_id}[role='menu']"
+        assert_selector "ul##{menu_id}[role='menu']", visible: :hidden
       end
 
       def test_speed_dial_system_arguments_land_on_root
@@ -66,8 +66,8 @@ module FlatPack
           )
         end
 
-        assert_selector "[role='menuitem'][data-modal-id='invite'][data-testid='invite-action']"
-        assert_includes page.native.to_html, "click->flat-pack--fab#choose"
+        assert_selector "[role='menuitem'][data-modal-id='invite'][data-testid='invite-action']", visible: :hidden
+        assert_selector "[data-action*='flat-pack--fab#choose']", visible: :hidden
       end
 
       def test_positions_and_sizes
@@ -112,7 +112,7 @@ module FlatPack
           fab.with_action(icon: :pencil, label: "Note")
         end
 
-        refute_selector ".fp-fab__backdrop"
+        refute_selector ".fp-fab__backdrop", visible: :all
       end
 
       def test_hide_on_scroll_wires_the_controller
@@ -120,7 +120,7 @@ module FlatPack
 
         assert_selector "[data-controller='flat-pack--fab']"
         assert_selector "[data-flat-pack--fab-hide-on-scroll-value='true']"
-        assert_includes page.native.to_html, "scroll@window->flat-pack--fab#onScroll"
+        assert_selector "[data-action*='flat-pack--fab#onScroll']"
       end
 
       def test_contained_and_offset
@@ -168,7 +168,7 @@ module FlatPack
         end
 
         assert_selector "button.fp-fab__trigger[aria-label='Open actions']"
-        assert_selector "ul[role='menu'][aria-label='Actions']"
+        assert_selector "ul[role='menu'][aria-label='Actions']", visible: :hidden
       end
     end
   end

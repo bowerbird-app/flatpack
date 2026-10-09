@@ -167,7 +167,17 @@ test('close reverses and restores focus to the trigger', () => {
   assert.equal(trigger.focused, true)
   assert.equal(menu.hidden, true)
   assert.equal(actions[0].tabIndex, -1)
+  assert.equal(actions[0].style.opacity, '0')
+})
+
+test('close stagger runs the nearest action last', () => {
+  const { controller, actions } = buildController()
+  controller.connect()
+  controller.open()
+  controller.closeStack()
+
   assert.equal(actions[0].style.transitionDelay, '60ms')
+  assert.equal(actions[2].style.transitionDelay, '0ms')
 })
 
 test('choose closes without restoring focus', () => {
