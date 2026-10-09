@@ -15,6 +15,8 @@ module FlatPack
       --collection-editor-columns
       --flatpack-modal-body-height
       --flatpack-picker-items-height
+      --fp-masonry-gap
+      --fp-masonry-row
       --range-progress
       --spacing
     ].freeze

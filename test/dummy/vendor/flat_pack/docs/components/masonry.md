@@ -60,3 +60,4 @@ DOM order is reading order. In `order: :columns`, the visual stack goes down eac
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Tailwind must see the `columns-*`, `grid-cols-*`, and `gap-*` class literals in the component.
 - `order: :rows` uses Stimulus controller `flat-pack--masonry` (`app/javascript/flat_pack/controllers/masonry_controller.js`). Without JavaScript it still packs with CSS columns (or native masonry where supported).
+- `--fp-masonry-gap` and `--fp-masonry-row` are runtime layout properties on the container (from `gap:` and the row-span unit). They are not theme tokens.

@@ -31,7 +31,7 @@ module FlatPack
         lg: "1.5rem"
       }.freeze
       BREAKPOINTS = %i[base sm md lg xl].freeze
-      COLUMN_COUNTS = (1..6).freeze
+      COLUMN_COUNTS = (1..6)
       DEFAULT_COLUMNS = {base: 2, md: 3, lg: 4}.freeze
       COLUMN_COUNT_CLASSES = {
         base: {
