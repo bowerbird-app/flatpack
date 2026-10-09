@@ -811,6 +811,24 @@
         { variable: "error", accepts: "String or nil", example: "error: \"Image must be chosen\"" }
       ]
     },
+    radio_group: {
+      label: "Radio Group",
+      method_call: "render FlatPack::RadioGroup::Component.new(name: \"plan\", options: [\"One\", \"Two\"], variant: :inline)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"plan\"" },
+        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [{ label: \"Email\", value: \"email\", icon: \"envelope\", description: \"A note in the inbox.\" }]" },
+        { variable: "variant", accepts: ":default, :inline, :cards", example: "variant: :cards" },
+        { variable: "value", accepts: "String or nil", example: "value: \"email\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"How should we send this?\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"You can change this later.\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Pick a plan to continue.\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" },
+        { variable: "icon", accepts: "String or Symbol on a hash option", example: "icon: \"envelope\"" },
+        { variable: "description", accepts: "String on a hash option (cards variant)", example: "description: \"A note in the inbox.\"" }
+      ]
+    },
     text_input: {
       label: "Input",
       method_call: "render FlatPack::TextInput::Component.new(name: \"username\", label: \"Username\")",

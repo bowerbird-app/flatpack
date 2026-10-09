@@ -6,8 +6,27 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-error)]" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]"
+      # "sr-only" "peer" "flex" "flex-wrap" "gap-2" "grid" "grid-cols-1"
+      # "sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]" "gap-3"
+      # "min-h-10" "min-h-[7rem]" "rounded-full" "rounded-[var(--radius-lg)]"
+      # "border-2" "border-[var(--surface-border-color)]" "border-[var(--color-primary)]"
+      # "border-[var(--color-error)]" "bg-[var(--surface-background-color)]"
+      # "bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))]"
+      # "has-[:checked]:border-[var(--color-primary)]"
+      # "has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))]"
+      # "has-[:focus-visible]:outline-none" "has-[:focus-visible]:ring-2"
+      # "has-[:focus-visible]:ring-ring" "has-[:focus-visible]:ring-offset-2"
+      # "has-[:focus-visible]:ring-offset-[var(--surface-background-color)]"
+      # "has-[:disabled]:opacity-50" "has-[:disabled]:cursor-not-allowed"
+      # "has-[:disabled]:pointer-events-none" "hover:bg-[var(--surface-muted-background-color)]"
+      # "hover:border-[var(--surface-border-hover-color)]" "active:translate-y-px"
+      # "motion-reduce:transform-none" "motion-reduce:transition-none"
+      # "group-has-[:checked]:text-[var(--color-primary)]"
+      # "bg-[var(--surface-muted-background-color)]"
+      # "group-has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_18%,var(--surface-background-color))]"
 
       SIZES = FlatPack::Shared::ControlSize::SIZES
+      VARIANTS = %i[default inline cards].freeze
 
       def initialize(
         name:,
@@ -19,6 +38,7 @@ module FlatPack
         error: nil,
         help_text: nil,
         size: :md,
+        variant: :default,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -33,9 +53,11 @@ module FlatPack
         @error = error
         @help_text = normalize_help_text!(help_text)
         @size = FlatPack::Shared::ControlSize.normalize!(size)
+        @variant = (variant || :default).to_sym
 
         validate_name!
         validate_options!
+        validate_variant!
       end
 
       def call
@@ -58,6 +80,8 @@ module FlatPack
       end
 
       def render_radio_group
+        return render_visual_radio_group unless default_variant?
+
         content_tag(:fieldset, class: "space-y-2") do
           safe_join(@options.map { |option| render_radio_option(option) })
         end
@@ -77,6 +101,96 @@ module FlatPack
         end
       end
 
+      def render_visual_radio_group
+        content_tag(:fieldset, class: visual_group_classes) do
+          safe_join(@options.map { |option| render_visual_option(option) })
+        end
+      end
+
+      def render_visual_option(option)
+        option_value = option[:value]
+        option_disabled = option[:disabled] || @disabled
+        checked = @value.to_s == option_value.to_s
+        option_id = radio_id(option_value)
+
+        content_tag(:label, for: option_id, class: visual_option_classes(option_disabled)) do
+          safe_join([
+            tag.input(**visual_radio_attributes(option_value, checked, option_disabled)),
+            render_visual_face(option)
+          ])
+        end
+      end
+
+      def render_visual_face(option)
+        if cards_variant?
+          render_card_face(option)
+        else
+          render_inline_face(option)
+        end
+      end
+
+      def render_inline_face(option)
+        content_tag(:span, class: "inline-flex items-center gap-1.5 pointer-events-none") do
+          safe_join([
+            render_option_icon(option, size: :sm),
+            content_tag(:span, option[:label], class: "text-sm font-medium text-[var(--surface-content-color)]")
+          ].compact)
+        end
+      end
+
+      def render_card_face(option)
+        content_tag(:span, class: "flex h-full min-w-0 flex-col items-start gap-3 pointer-events-none") do
+          safe_join([
+            render_card_icon_well(option),
+            render_card_copy(option)
+          ].compact)
+        end
+      end
+
+      def render_card_icon_well(option)
+        icon = render_option_icon(option, size: :md)
+        return unless icon
+
+        content_tag(
+          :span,
+          icon,
+          class: "inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] " \
+            "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] " \
+            "group-has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_18%,var(--surface-background-color))] " \
+            "group-has-[:checked]:text-[var(--color-primary)]"
+        )
+      end
+
+      def render_card_copy(option)
+        content_tag(:span, class: "min-w-0") do
+          safe_join([
+            content_tag(
+              :span,
+              option[:label],
+              class: "block text-sm font-semibold text-[var(--surface-content-color)] fp-text-balance"
+            ),
+            (if option[:description].present?
+               content_tag(
+                 :span,
+                 option[:description],
+                 class: "mt-1 block text-xs text-[var(--surface-muted-content-color)] fp-text-pretty"
+               )
+             end)
+          ].compact)
+        end
+      end
+
+      def render_option_icon(option, size:)
+        name = option[:icon]
+        return unless name.present?
+
+        render FlatPack::Shared::IconComponent.new(
+          name: name,
+          size: size,
+          class: "pointer-events-none"
+        )
+      end
+
       def render_error
         return unless @error
 
@@ -94,6 +208,25 @@ module FlatPack
           required: @required,
           class: radio_classes,
           style: size_style
+        }
+
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
+        attrs[:aria][:invalid] = "true" if @error
+
+        apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?)
+      end
+
+      def visual_radio_attributes(option_value, checked, option_disabled)
+        attrs = {
+          type: "radio",
+          name: @name,
+          id: radio_id(option_value),
+          value: option_value,
+          checked: checked,
+          disabled: option_disabled,
+          required: @required,
+          class: visual_radio_input_classes
         }
 
         describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
@@ -153,6 +286,71 @@ module FlatPack
         classes(*base_classes, @custom_class)
       end
 
+      def visual_radio_input_classes
+        ["sr-only", "peer", @custom_class].compact.join(" ")
+      end
+
+      def visual_group_classes
+        if cards_variant?
+          "grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-3"
+        else
+          "flex flex-wrap gap-2"
+        end
+      end
+
+      def visual_option_classes(option_disabled)
+        [
+          "group relative",
+          "border-2",
+          visual_option_layout_classes,
+          visual_option_surface_classes(option_disabled: option_disabled),
+          visual_option_motion_classes,
+          visual_option_selected_classes,
+          visual_option_focus_classes,
+          (option_disabled ? visual_option_disabled_classes : "cursor-pointer")
+        ].compact.join(" ")
+      end
+
+      def visual_option_layout_classes
+        if cards_variant?
+          "flex min-h-[7rem] flex-col p-4 rounded-[var(--radius-lg)]"
+        else
+          "inline-flex min-h-10 items-center px-3 py-1.5 rounded-full"
+        end
+      end
+
+      def visual_option_surface_classes(option_disabled: false)
+        border = @error ? "border-[var(--color-error)]" : "border-[var(--surface-border-color)]"
+        hover = if option_disabled
+          nil
+        else
+          "hover:bg-[var(--surface-muted-background-color)] hover:border-[var(--surface-border-hover-color)]"
+        end
+        [border, "bg-[var(--surface-background-color)]", hover].compact.join(" ")
+      end
+
+      def visual_option_motion_classes
+        "transition-[color,background-color,border-color,box-shadow,transform] " \
+          "duration-[var(--duration-fast)] ease-[var(--easing-standard)] " \
+          "active:translate-y-px motion-reduce:transform-none motion-reduce:transition-none"
+      end
+
+      def visual_option_selected_classes
+        "has-[:checked]:border-[var(--color-primary)] " \
+          "has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))] " \
+          "has-[:checked]:hover:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))]"
+      end
+
+      def visual_option_focus_classes
+        "has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 " \
+          "has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 " \
+          "has-[:focus-visible]:ring-offset-[var(--surface-background-color)]"
+      end
+
+      def visual_option_disabled_classes
+        "opacity-50 cursor-not-allowed pointer-events-none"
+      end
+
       def error_classes
         "mt-2 text-sm text-[var(--color-error)]"
       end
@@ -182,7 +380,9 @@ module FlatPack
             {
               label: option[:label] || option["label"],
               value: option[:value] || option["value"],
-              disabled: option[:disabled] || option["disabled"] || false
+              disabled: option[:disabled] || option["disabled"] || false,
+              icon: option[:icon] || option["icon"],
+              description: option[:description] || option["description"]
             }
           else
             raise ArgumentError, "Invalid option format: #{option.inspect}"
@@ -198,6 +398,20 @@ module FlatPack
         raise ArgumentError, "options is required" if @raw_options.nil?
         raise ArgumentError, "options must be an array" unless @raw_options.is_a?(Array)
         raise ArgumentError, "options cannot be empty" if @raw_options.empty?
+      end
+
+      def validate_variant!
+        return if VARIANTS.include?(@variant)
+
+        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def default_variant?
+        @variant == :default
+      end
+
+      def cards_variant?
+        @variant == :cards
       end
     end
   end
