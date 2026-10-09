@@ -11,7 +11,9 @@ RecordingStudio.configure do |config|
     "RecordingStudioUser::People",
     "RecordingStudioUser::Profile",
     "RecordingStudioSiteSettings::SiteSetting",
-    "RecordingStudioAttachable::Attachment"
+    "RecordingStudioAttachable::Attachment",
+    "RecordingStudioAttachable::Library",
+    "RecordingStudioAttachable::Placement"
   ]
   config.require_recordable_declarations = true
   config.app_name = "FlatPack" if config.respond_to?(:app_name=)
