@@ -239,6 +239,8 @@ module FlatPack
         refute_text "Warm"
         refute_includes page.native.to_html, "flex-wrap"
         refute_includes page.native.to_html, "min-h-[7rem]"
+        refute_includes page.native.to_html, "fp-button"
+        refute_includes page.native.to_html, "mt-4"
       end
 
       def test_raises_error_for_invalid_variant
@@ -270,10 +272,15 @@ module FlatPack
         assert_selector "input.sr-only.peer[value='daily'][checked]"
         refute_selector "input.flat-pack-radio"
         assert_selector "fieldset.flex.flex-wrap"
-        assert_selector "label[for='cadence_daily']"
+        assert_selector "label.fp-button[for='cadence_daily'][data-fp-style='secondary']"
         assert_selector "svg[data-flat-pack--icon-name-value='sun']"
         assert_selector "label", text: "Weekly"
         refute_selector "svg[data-flat-pack--icon-name-value='calendar-days']"
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--button-border-radius)]"
+        assert_includes html, "px-[var(--button-padding-x-md)]"
+        assert_includes html, "--button-secondary-background-color"
+        assert_includes html, "--button-primary-background-color"
       end
 
       def test_inline_variant_hides_descriptions
@@ -303,6 +310,12 @@ module FlatPack
         assert_text "A note in your inbox"
         assert_text "A short message"
         refute_selector "svg[data-flat-pack--icon-name-value='chat-bubble-left']"
+        html = page.native.to_html
+        assert_includes html, "items-center"
+        assert_includes html, "text-center"
+        assert_includes html, "w-6 h-6"
+        refute_includes html, "h-10 w-10"
+        refute_includes html, "group-has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_18%"
       end
 
       def test_visual_variants_keep_string_and_array_options
@@ -345,6 +358,34 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "border-[var(--color-error)]"
         assert_includes html, "has-[:checked]:border-[var(--color-primary)]"
+        assert_includes html, "mt-4 text-sm text-[var(--color-error)]"
+        assert_includes html, "mt-4 text-xs text-[var(--surface-muted-content-color)]"
+      end
+
+      def test_default_variant_keeps_tight_help_and_error_spacing
+        render_inline(Component.new(
+          name: "color",
+          options: ["Red"],
+          help_text: "Pick one.",
+          error: "Need a colour."
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "mt-1 text-xs text-[var(--surface-muted-content-color)]"
+        assert_includes html, "mt-2 text-sm text-[var(--color-error)]"
+        refute_includes html, "mt-4"
+      end
+
+      def test_inline_variant_uses_looser_help_spacing
+        render_inline(Component.new(
+          name: "cadence",
+          options: ["Daily"],
+          variant: :inline,
+          help_text: "Pick the cadence that fits this project."
+        ))
+
+        assert_includes page.native.to_html, "mt-4 text-xs text-[var(--surface-muted-content-color)]"
+        refute_includes page.native.to_html, "mt-1 text-xs"
       end
 
       def test_inline_variant_respects_group_disabled

@@ -68,7 +68,7 @@ None.
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
-- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards. Inline and cards hide the radio dot visually, keep a native radio for form submit and keyboard, and paint selected state with `--color-primary` plus `--surface-*`.
+- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards. Inline and cards hide the radio dot visually, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, primary when selected (`--button-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Help and error copy under inline and cards uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)

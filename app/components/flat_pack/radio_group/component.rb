@@ -8,7 +8,7 @@ module FlatPack
       # "text-[var(--color-error)]" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]"
       # "sr-only" "peer" "flex" "flex-wrap" "gap-2" "grid" "grid-cols-1"
       # "sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]" "gap-3"
-      # "min-h-10" "min-h-[7rem]" "rounded-full" "rounded-[var(--radius-lg)]"
+      # "min-h-[7rem]" "rounded-[var(--radius-lg)]" "rounded-[var(--button-border-radius)]"
       # "border-2" "border-[var(--surface-border-color)]" "border-[var(--color-primary)]"
       # "border-[var(--color-error)]" "bg-[var(--surface-background-color)]"
       # "bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))]"
@@ -17,13 +17,29 @@ module FlatPack
       # "has-[:focus-visible]:outline-none" "has-[:focus-visible]:ring-2"
       # "has-[:focus-visible]:ring-ring" "has-[:focus-visible]:ring-offset-2"
       # "has-[:focus-visible]:ring-offset-[var(--surface-background-color)]"
+      # "has-[:focus-visible]:ring-[var(--button-focus-ring-color)]"
+      # "has-[:focus-visible]:ring-offset-[var(--button-focus-ring-offset-color)]"
       # "has-[:disabled]:opacity-50" "has-[:disabled]:cursor-not-allowed"
       # "has-[:disabled]:pointer-events-none" "hover:bg-[var(--surface-muted-background-color)]"
       # "hover:border-[var(--surface-border-hover-color)]" "active:translate-y-px"
       # "motion-reduce:transform-none" "motion-reduce:transition-none"
       # "group-has-[:checked]:text-[var(--color-primary)]"
-      # "bg-[var(--surface-muted-background-color)]"
-      # "group-has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_18%,var(--surface-background-color))]"
+      # "fp-button" "fp-touch-manipulation" "items-center" "text-center" "justify-center"
+      # "px-[var(--button-padding-x-sm)]" "py-[var(--button-padding-y-sm)]" "text-xs"
+      # "px-[var(--button-padding-x-md)]" "py-[var(--button-padding-y-md)]" "text-sm"
+      # "px-[var(--button-padding-x-lg)]" "py-[var(--button-padding-y-lg)]" "text-base"
+      # "[--fp-button-background:var(--button-secondary-background-color)]"
+      # "[--fp-button-hover-background:var(--button-secondary-hover-background-color)]"
+      # "[--fp-button-text:var(--button-secondary-text-color)]"
+      # "[--fp-button-border:var(--button-secondary-border-color)]"
+      # "has-[:checked]:[--fp-button-background:var(--button-primary-background-color)]"
+      # "has-[:checked]:[--fp-button-hover-background:var(--button-primary-hover-background-color)]"
+      # "has-[:checked]:[--fp-button-text:var(--button-primary-text-color)]"
+      # "has-[:checked]:[--fp-button-border:var(--button-primary-border-color)]"
+      # "has-[:checked]:shadow-[var(--button-shadow)]"
+      # "has-[:checked]:hover:shadow-[var(--button-shadow-hover)]"
+      # "has-[:checked]:active:shadow-[var(--button-shadow-active)]"
+      # "opacity-[var(--button-disabled-opacity)]" "mt-4"
 
       SIZES = FlatPack::Shared::ControlSize::SIZES
       VARIANTS = %i[default inline cards].freeze
@@ -113,12 +129,18 @@ module FlatPack
         checked = @value.to_s == option_value.to_s
         option_id = radio_id(option_value)
 
-        content_tag(:label, for: option_id, class: visual_option_classes(option_disabled)) do
+        content_tag(:label, **visual_option_tag_attributes(option_id, option_disabled)) do
           safe_join([
             tag.input(**visual_radio_attributes(option_value, checked, option_disabled)),
             render_visual_face(option)
           ])
         end
+      end
+
+      def visual_option_tag_attributes(option_id, option_disabled)
+        attrs = {for: option_id, class: visual_option_classes(option_disabled)}
+        attrs[:data] = {fp_style: "secondary"} if inline_variant?
+        attrs
       end
 
       def render_visual_face(option)
@@ -130,39 +152,29 @@ module FlatPack
       end
 
       def render_inline_face(option)
-        content_tag(:span, class: "inline-flex items-center gap-1.5 pointer-events-none") do
+        content_tag(:span, class: "inline-flex items-center gap-2 pointer-events-none") do
           safe_join([
-            render_option_icon(option, size: :sm),
-            content_tag(:span, option[:label], class: "text-sm font-medium text-[var(--surface-content-color)]")
+            render_option_icon(option, size: @size),
+            content_tag(:span, option[:label])
           ].compact)
         end
       end
 
       def render_card_face(option)
-        content_tag(:span, class: "flex h-full min-w-0 flex-col items-start gap-3 pointer-events-none") do
+        content_tag(:span, class: "flex h-full min-w-0 flex-col items-center text-center gap-2 pointer-events-none") do
           safe_join([
-            render_card_icon_well(option),
+            render_option_icon(
+              option,
+              size: :lg,
+              extra_class: "text-[var(--surface-content-color)] group-has-[:checked]:text-[var(--color-primary)]"
+            ),
             render_card_copy(option)
           ].compact)
         end
       end
 
-      def render_card_icon_well(option)
-        icon = render_option_icon(option, size: :md)
-        return unless icon
-
-        content_tag(
-          :span,
-          icon,
-          class: "inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] " \
-            "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] " \
-            "group-has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_18%,var(--surface-background-color))] " \
-            "group-has-[:checked]:text-[var(--color-primary)]"
-        )
-      end
-
       def render_card_copy(option)
-        content_tag(:span, class: "min-w-0") do
+        content_tag(:span, class: "min-w-0 w-full text-center") do
           safe_join([
             content_tag(
               :span,
@@ -180,14 +192,14 @@ module FlatPack
         end
       end
 
-      def render_option_icon(option, size:)
+      def render_option_icon(option, size:, extra_class: nil)
         name = option[:icon]
         return unless name.present?
 
         render FlatPack::Shared::IconComponent.new(
           name: name,
           size: size,
-          class: "pointer-events-none"
+          class: ["pointer-events-none", extra_class].compact.join(" ")
         )
       end
 
@@ -299,6 +311,8 @@ module FlatPack
       end
 
       def visual_option_classes(option_disabled)
+        return inline_option_classes(option_disabled) if inline_variant?
+
         [
           "group relative",
           "border-2",
@@ -311,12 +325,39 @@ module FlatPack
         ].compact.join(" ")
       end
 
+      def inline_option_classes(option_disabled)
+        [
+          "fp-button relative",
+          "inline-flex items-center justify-center gap-2",
+          "rounded-[var(--button-border-radius)]",
+          "font-medium",
+          "border",
+          "fp-touch-manipulation",
+          "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
+          "motion-reduce:transform-none motion-reduce:transition-none",
+          FlatPack::Button::Component::SIZES.fetch(@size),
+          "[--fp-button-background:var(--button-secondary-background-color)]",
+          "[--fp-button-hover-background:var(--button-secondary-hover-background-color)]",
+          "[--fp-button-text:var(--button-secondary-text-color)]",
+          "[--fp-button-border:var(--button-secondary-border-color)]",
+          "has-[:checked]:[--fp-button-background:var(--button-primary-background-color)]",
+          "has-[:checked]:[--fp-button-hover-background:var(--button-primary-hover-background-color)]",
+          "has-[:checked]:[--fp-button-text:var(--button-primary-text-color)]",
+          "has-[:checked]:[--fp-button-border:var(--button-primary-border-color)]",
+          "has-[:checked]:shadow-[var(--button-shadow)]",
+          (unless option_disabled
+             "has-[:checked]:hover:shadow-[var(--button-shadow-hover)]"
+           end),
+          "has-[:checked]:active:shadow-[var(--button-shadow-active)]",
+          "has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset",
+          "has-[:focus-visible]:ring-[var(--button-focus-ring-color)] has-[:focus-visible]:ring-offset-2",
+          "has-[:focus-visible]:ring-offset-[var(--button-focus-ring-offset-color)]",
+          (option_disabled ? "opacity-[var(--button-disabled-opacity)] cursor-not-allowed pointer-events-none" : "cursor-pointer")
+        ].compact.join(" ")
+      end
+
       def visual_option_layout_classes
-        if cards_variant?
-          "flex min-h-[7rem] flex-col p-4 rounded-[var(--radius-lg)]"
-        else
-          "inline-flex min-h-10 items-center px-3 py-1.5 rounded-full"
-        end
+        "flex min-h-[7rem] flex-col items-center justify-center p-4 rounded-[var(--radius-lg)]"
       end
 
       def visual_option_surface_classes(option_disabled: false)
@@ -352,7 +393,15 @@ module FlatPack
       end
 
       def error_classes
-        "mt-2 text-sm text-[var(--color-error)]"
+        return "mt-2 text-sm text-[var(--color-error)]" if default_variant?
+
+        "mt-4 text-sm text-[var(--color-error)]"
+      end
+
+      def help_text_classes
+        return super if default_variant?
+
+        "mt-4 text-xs text-[var(--surface-muted-content-color)]"
       end
 
       def radio_id(option_value)
@@ -412,6 +461,10 @@ module FlatPack
 
       def cards_variant?
         @variant == :cards
+      end
+
+      def inline_variant?
+        @variant == :inline
       end
     end
   end
