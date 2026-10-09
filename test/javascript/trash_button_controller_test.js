@@ -242,6 +242,21 @@ test('escape and outside pointer restore rest', async () => {
   assert.equal(arm.focused, true)
 })
 
+test('clicking another trash button disarms without stealing focus', async () => {
+  const { controller, arm, listeners } = buildController()
+  controller.arm({ preventDefault() {}, stopPropagation() {} })
+  await new Promise((resolve) => setTimeout(resolve, 0))
+  arm.focused = false
+
+  const other = {
+    closest(selector) { return selector === ".fp-trash-button" ? other : null }
+  }
+  ;[...listeners.pointerdown].forEach((handler) => handler({ target: other }))
+
+  assert.equal(controller.armedValue, false)
+  assert.equal(arm.focused, false)
+})
+
 test('auto-revert disarms after the timeout', async () => {
   const { controller, arm } = buildController({ timeout: 20 })
   controller.arm({ preventDefault() {}, stopPropagation() {} })
