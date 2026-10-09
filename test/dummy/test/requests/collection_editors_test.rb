@@ -307,6 +307,8 @@ class CollectionEditorsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-collection-editor-library-modal="true"'
     assert_includes response.body, "Save gallery"
     assert_includes response.body, "Edit North window"
+    assert_includes response.body, "--collection-editor-columns: auto max-content minmax(8rem, 1fr) minmax(8rem, 1fr) auto"
+    assert_includes response.body, "--collection-editor-columns: auto minmax(0, 1.4fr) minmax(8rem, 1fr) auto"
 
     get demo_collection_editor_images_path, params: {q: "lens"}, as: :json
 

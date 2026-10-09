@@ -13,17 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.210] - 2026-10-08
+## [0.1.211] - 2026-10-08
 
 ### Added
 - A collection editor row can join a library image. The identity cell is a thumbnail. An empty cell opens a library modal and stores the chosen image id on the row. Choosing an image that is already joined focuses that row. Caption and the other cells stay on the join. With `update_url`, the thumbnail edits the library record. `+ New` creates a library image, then joins it.
+- `column_widths` sets one CSS grid track per content cell. Omit it and the first content column stays `minmax(0, 1.4fr)` and each later column stays `minmax(8rem, 1fr)`. The gallery demo sizes the image column with `max-content`.
 
 ### Changed
-- Bumped the gem version to `0.1.210`.
+- Bumped the gem version to `0.1.211`.
 
 ### Upgrade notes
 - Call `with_image` with `search_url` for the library and `thumbnail_url` for the current join. Include `:id` in `update_url` when the thumbnail should edit the library record. Search items accept `thumbnail_url`.
-- Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.210`.
+- Pass `column_widths` with one grid track per header when a content column should differ from the default. Omit it and the columns stay as they are. A bad track, or a list that does not match `headers`, raises `ArgumentError`.
+- Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.211`.
 
 ## [0.1.209] - 2026-10-08
 

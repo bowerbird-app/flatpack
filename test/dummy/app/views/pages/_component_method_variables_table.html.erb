@@ -729,6 +729,7 @@
         { variable: "add_label", accepts: "String", example: "add_label: \"Row\"" },
         { variable: "empty_text", accepts: "String", example: "empty_text: \"No collaborators yet\"" },
         { variable: "headers", accepts: "Array of String or nil. One label per content cell. The entity comes first when the row has one. Otherwise one label per field.", example: "headers: [\"Person\", \"Role\"]" },
+        { variable: "column_widths", accepts: "Array of CSS grid tracks or nil. One track per content cell, in header order. Omit it for the default tracks.", example: "column_widths: [\"max-content\", \"minmax(8rem, 1fr)\", \"minmax(8rem, 1fr)\"]" },
         { variable: "orderable", accepts: "true, false", example: "orderable: true" },
         { variable: "orderable_url", accepts: "String or nil", example: "orderable_url: demo_reorder_collection_editor_path(project)" },
         { variable: "orderable_method", accepts: ":patch, :put", example: "orderable_method: :patch" },

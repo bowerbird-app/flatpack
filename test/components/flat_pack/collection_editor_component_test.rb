@@ -280,7 +280,37 @@ module FlatPack
         assert_includes page.native.to_html, "--collection-editor-columns: minmax(0, 1.4fr) minmax(8rem, 1fr) auto"
       end
 
-      private
+      def test_column_widths_replace_the_default_content_tracks
+        render_inline(Component.new(
+          headers: ["Image", "Caption", "Credit"],
+          column_widths: ["max-content", "minmax(8rem, 1fr)", "minmax(8rem, 1fr)"],
+          orderable: true
+        ))
+
+        assert_includes page.native.to_html, "--collection-editor-columns: auto max-content minmax(8rem, 1fr) minmax(8rem, 1fr) auto"
+      end
+
+      def test_column_widths_set_the_content_count_when_headers_are_omitted
+        render_inline(Component.new(column_widths: ["max-content", "1fr"]))
+
+        assert_includes page.native.to_html, "--collection-editor-columns: max-content 1fr auto"
+      end
+
+      def test_column_widths_raise_when_a_track_is_unsafe
+        error = assert_raises(ArgumentError) do
+          Component.new(headers: ["Image"], column_widths: ["16rem; background: url(evil.png)"])
+        end
+
+        assert_includes error.message, "Invalid column_widths"
+      end
+
+      def test_column_widths_raise_when_the_count_does_not_match_headers
+        error = assert_raises(ArgumentError) do
+          Component.new(headers: ["Image", "Caption", "Credit"], column_widths: ["max-content"])
+        end
+
+        assert_includes error.message, "column_widths has 1 entry and headers has 3."
+      end
 
       def test_image_cell_joins_a_library_image
         join = Record.new(id: 3, image_id: 9, caption: "Opening still", credit: "Ada Lorne")
@@ -337,6 +367,8 @@ module FlatPack
         assert_no_selector "[data-update-url]"
         assert_no_selector ".flat-pack-collection-editor-edit"
       end
+
+      private
 
       def builder(object_name, object)
         ActionView::Helpers::FormBuilder.new(object_name, object, vc_test_controller.view_context, {})

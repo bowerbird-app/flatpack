@@ -21,6 +21,7 @@ Each cell edits one value. The row is not a calculated spreadsheet. Do not use i
 | `add_label` | String | `"Row"` | no | Label on the full-width ghost row at the bottom of the table. The plus icon stays, so the default reads "+ Row". |
 | `empty_text` | String | `"Nothing here yet"` | no | Copy shown when every row is gone. |
 | `headers` | Array | `nil` | no | One desktop label per content cell. With an entity, that cell comes first, then each field. A row of only fields uses one header per field. The handle and the remove control stay unlabeled. Without headers the desktop grid still reserves two content columns. |
+| `column_widths` | Array | `nil` | no | One CSS grid track per content cell, in the same order as `headers`. A length, `auto`, `min-content`, `max-content`, a CSS variable, or `minmax()`, `clamp()`, or `fit-content()`. The handle and the remove control stay `auto`. Omit it and the first content column is `minmax(0, 1.4fr)` and each later column is `minmax(8rem, 1fr)`. A track the sanitizer rejects, or a list whose length differs from `headers`, raises `ArgumentError`. |
 | `orderable` | Boolean | `false` | no | Shows a drag handle and mounts `flat-pack--list-orderable`. |
 | `orderable_url` | String | `nil` | no | PATCH endpoint for a persisted row. Same contract as List. |
 | `orderable_method` | String/Symbol | `:patch` | no | Request method for the reorder request. |
@@ -229,7 +230,7 @@ Search `GET search_url` with a blank query lists the library. Each item is `{ "i
 
 A row can skip the entity and hold only fields. The dummy Text fields section does that with three single-line text inputs, each passed `chrome: :cell`. There is no person picker and no dropdown. Below 40rem those inputs use the same bordered control as the other relationship fields. Those rows are unsaved, so a drag stays on the page.
 
-`headers` lines up with those content cells. A second `with_field` needs a third header. The section sets `--collection-editor-columns` from that count so the header and the rows share one grid. That property is runtime layout, not a theme token. `--collection-editor-row-padding` pads the empty state. Cell text keeps horizontal `--form-control-padding`.
+`headers` lines up with those content cells. A second `with_field` needs a third header. Pass `column_widths` with one CSS grid track per content cell, in that same order, when a column should differ from the default. The handle and the remove control stay `auto` and stay out of the list. Omit `column_widths` and the first content column is `minmax(0, 1.4fr)` and each later column is `minmax(8rem, 1fr)`. The section writes `--collection-editor-columns` from that list so the header and the rows share one grid. That property is runtime layout, not a theme token. These tracks apply from 40rem up. Keep one flexible track so the row still fills the card. The gallery sizes the thumbnail with `max-content` and leaves caption and credit on `minmax(8rem, 1fr)`. `--collection-editor-row-padding` pads the empty state. Cell text keeps horizontal `--form-control-padding`.
 
 Tokens alias the surface, list, and primary tokens. Override them on a parent to recolor this component without a new theme.
 
