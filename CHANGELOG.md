@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.214] - 2026-10-09
+
+### Added
+- `FlatPack::Masonry::Component` stacks mixed-ratio items without empty holes. `columns:` takes an integer or a breakpoint hash. `gap:` uses the same `:sm` / `:md` / `:lg` scale as Grid. `order: :columns` (default) is CSS multi-column layout with no JavaScript. `order: :rows` keeps left-to-right reading order: native CSS masonry where the browser has it, otherwise a Stimulus controller (`flat-pack--masonry`) measures heights and sets grid-row spans. `with_item` takes arbitrary content. `with_image` takes `src`, `alt`, `width`, `height`, and optional `href` / `caption`. Images set `aspect-ratio` from width/height, plus `loading="lazy"` and `decoding="async"`.
+
+### Changed
+- Bumped the gem version to `0.1.214`.
+
+### Upgrade notes
+- New component. Existing Grid calls are unchanged. Use Masonry when portraits and landscapes should keep their shape.
+- Rebuild host Tailwind so `columns-*`, `grid-cols-*`, and the gap classes generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.214`.
+- In `order: :columns`, assistive tech follows DOM order while the visual stack goes down each column. Prefer `order: :rows` when those should match.
+
 ## [0.1.213] - 2026-10-09
 
 ### Added

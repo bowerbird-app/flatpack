@@ -13,6 +13,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.212] - 2026-10-09
+
+### Added
+- `FlatPack::Masonry::Component` stacks mixed-ratio items without empty holes. `columns:` takes an integer or a breakpoint hash. `gap:` uses the same `:sm` / `:md` / `:lg` scale as Grid. `order: :columns` (default) is CSS multi-column layout with no JavaScript. `order: :rows` keeps left-to-right reading order: native CSS masonry where the browser has it, otherwise a Stimulus controller (`flat-pack--masonry`) measures heights and sets grid-row spans. `with_item` takes arbitrary content. `with_image` takes `src`, `alt`, `width`, `height`, and optional `href` / `caption`. Images set `aspect-ratio` from width/height, plus `loading="lazy"` and `decoding="async"`.
+
+### Changed
+- Bumped the gem version to `0.1.212`.
+
+### Upgrade notes
+- New component. Existing Grid calls are unchanged. Use Masonry when portraits and landscapes should keep their shape.
+- Rebuild host Tailwind so `columns-*`, `grid-cols-*`, and the gap classes generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.212`.
+- In `order: :columns`, assistive tech follows DOM order while the visual stack goes down each column. Prefer `order: :rows` when those should match.
+
+## [0.1.211] - 2026-10-08
+
+### Added
+- A collection editor row can join a library image. The identity cell is a thumbnail. An empty cell opens a library modal and stores the chosen image id on the row. Choosing an image that is already joined focuses that row. Caption and the other cells stay on the join. With `update_url`, the thumbnail edits the library record. `+ New` creates a library image, then joins it.
+- `column_widths` sets one CSS grid track per content cell. Omit it and the first content column stays `minmax(0, 1.4fr)` and each later column stays `minmax(8rem, 1fr)`. The gallery demo sizes the image column with `max-content`.
+
+### Changed
+- Bumped the gem version to `0.1.211`.
+
+### Upgrade notes
+- Call `with_image` with `search_url` for the library and `thumbnail_url` for the current join. Include `:id` in `update_url` when the thumbnail should edit the library record. Search items accept `thumbnail_url`.
+- Pass `column_widths` with one grid track per header when a content column should differ from the default. Omit it and the columns stay as they are. A bad track, or a list that does not match `headers`, raises `ArgumentError`.
+- Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.211`.
+
 ## [0.1.210] - 2026-10-08
 
 ### Added
@@ -28,6 +56,151 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Existing SectionTitle calls are unchanged. Pass `size:`, `spacing:`, and `level:` only when you want a smaller heading, tighter or no wrapper margin, or a different heading tag.
 - Caller `class: "mb-2"` still cannot override the default `my-8`. Use `spacing: :none` when the caller should own the margin.
 - Rebuild host Tailwind so `my-6`, `my-4`, and the smaller type sizes are generated. Redeploy so `meta.gem_version` shows `0.1.210`.
+
+## [0.1.209] - 2026-10-08
+
+### Changed
+- Below 40rem a collection editor row drops the table lines. The drag handle, the name, and remove sit on one line. Relationship fields sit underneath, lined up with the name, and use a normal bordered control. Focus and an invalid value ring that control. The chip's own remove control hides, so the row remove is the only one. A row with no person keeps its first field on that top line. The same handle still drags the whole row. Wide screens keep the table.
+- Bumped the gem version to `0.1.209`.
+
+### Upgrade notes
+- Reload kit CSS. Wide screens keep the table. Redeploy so `meta.gem_version` shows `0.1.209`.
+
+## [0.1.208] - 2026-10-08
+
+### Added
+- The collection editor chip name edits the selected record when `update_url` includes an `:id` token. The name is a button whose hit target fills the chip, so a click on the pill opens edit. Remove stays its own button. Edit loads the record with GET and saves it with PATCH through the same modal used for create. The person id stays on the row. Other chips with that id update too. Join fields such as role stay on the row until the parent form is saved.
+
+### Changed
+- Bumped the gem version to `0.1.208`.
+
+### Upgrade notes
+- Pass `update_url: "/people/:id"` and keep the entity fields marked `data-create-field`. GET returns `{ "item": { "id", "title", "description" }, "fields": { "name": "Alice Chen" } }`. PATCH accepts those same fields and returns `{ "ok": true, "item": { "id", "title", "description" } }`.
+- `edit_label` defaults to the kit string for Edit. `update_label` defaults to Save. The modal titles use `flatpack.collection_editor.new_record` and `flatpack.collection_editor.edit_record`.
+- Omit `update_url` and the chip name stays plain text.
+- Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.208`.
+
+## [0.1.207] - 2026-10-08
+
+### Added
+- `--overlay-backdrop-color` (modal/drawer dim) and `--overlay-scrim-color` (on-media chrome such as carousel chevrons). Dark and ocean set these instead of the component tokens.
+
+### Changed
+- `--color-primary-hover` follows `--color-primary` with CSS relative colour syntax (`oklch(from var(--color-primary) calc(l - 0.1) c h)`). Browsers without that syntax keep the existing brand-knob fallback (`l - 0.10` on `--brand-*`). Setting `--brand-*` still recolors primary and hover. `--color-primary-text` stays `#fff` unless a theme overrides it.
+- Secondary, ghost, chip-remove hover, and modal/carousel overlay paints derive from semantic surface/content/overlay tokens on `:root, [data-theme]`. `[data-theme="dark"]` no longer restates those component colours. It still sets `--color-primary-hover` (a lift, not `l - 0.10`), hairline shadows, inverted bottom-nav / top-nav / sidebar fills, and `--modal-backdrop-blur: 3px`.
+- Bumped the gem version to `0.1.207`.
+
+### Upgrade notes
+- A named brand theme that sets an exact `--color-primary` no longer needs `--color-primary-hover` unless hover should diverge (for example dark themes that lighten on hover).
+- A brand dark theme can set `color-scheme: dark` plus `--surface-*` and `--color-primary*` and inherit ghost/secondary/list/chip/switch colours. Optional: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`.
+- Component token names are unchanged. Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.207`.
+
+## [0.1.206] - 2026-10-08
+
+### Added
+- Kit chrome copy lives under `flatpack.*`. The gem ships English only, in `config/locales/flatpack.en.yml`. Hosts add their own locale files (for example `config/locales/flatpack.fr.yml`) and own the language list.
+- Components read omitted string props from I18n. An explicit prop, including `nil`, still wins.
+- JavaScript copy uses `data-fp-copy` on `<html>` (`flat_pack_copy_data`) with English fallbacks in `flat_pack/copy.js`.
+- The Rails 8 dummy app demonstrates locale switching with `recording_studio_internationalization`, a host `flatpack.fr.yml` that covers every gem English key, and a language selector in the catalog top nav (left of the theme control). Catalog full-page HTML cache keys include the current locale.
+
+### Changed
+- Bumped the gem version to `0.1.206`.
+
+### Upgrade notes
+- Put `<%= tag.attributes(data: flat_pack_copy_data) %>` (and `lang="<%= I18n.locale %>"`) on the host `<html>` tag so Stimulus copy follows the current locale.
+- Pin `flat_pack/copy` if you rerun `rails generate flat_pack:install`.
+- Do not expect a French (or other) locale file from the gem. Copy `config/locales/flatpack.en.yml` into the host app as `flatpack.<locale>.yml` and translate it. `RecordingStudio_Internationalization` is optional and stays a host dependency.
+- Dummy-rails-7 does not use the internationalization gem.
+- Redeploy so `meta.gem_version` shows `0.1.206`.
+
+## [0.1.205] - 2026-10-08
+
+### Added
+- HTML carousel slides accept `thumb_src` or `thumb`. With `show_thumbs: true`, that URL is the thumbnail. A missing or rejected URL keeps the numbered placeholder.
+- `FlatPack::Carousel::Component` accepts `show_border` and `show_background`. Both default to `true`. Pass `false` to drop the viewport border, the viewport fill, or both. `:logo_slider` stays borderless and transparent.
+- Bumped the gem version to `0.1.205`.
+
+### Upgrade notes
+- No call-site changes are required. Image thumbs still prefer `thumb_src`, then `src`. Video thumbs still use `poster`.
+- An HTML slide that already passed `thumb` or `thumb_src` will now show that picture. Those keys were ignored before.
+- Existing carousels keep the viewport border and fill. Pass `show_border: false` or `show_background: false` to turn a piece off. `--carousel-viewport-border-color` and `--carousel-viewport-background-color` still paint the pieces that stay on.
+- This is a Ruby render change. Reload the app so the new carousel code is loaded.
+- Redeploy so `meta.gem_version` shows `0.1.205`.
+
+## [0.1.204] - 2026-10-08
+
+### Added
+- `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record as an info chip and leaves relationship fields to the host. Add clones a `fields_for` template and replaces the child-index token in identifier attributes. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Enter selects the highlighted result, or the only result. Several matches stay in the menu and do not create a record. No matches shows "+ New" when create is configured. A failed search stays in the picker. Moves are announced in a polite status.
+- List orderable accepts `handle_selector`. Arrow keys on that handle move the row. A row with `data-orderable-unsaved="true"` does not PATCH. A saved row's `target_position` ignores unsaved rows. Rows marked `data-collection-editor-destroyed` stay out of the order.
+- Collection editor tokens alias surface, list, and primary colors. See `docs/components/collection-editor.md`.
+- Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`. A second section, Text fields, shows three single-line text inputs per row with `chrome: :cell` and no person picker or dropdown.
+- Bumped the gem version to `0.1.204`.
+
+### Changed
+- The collection editor heading sits outside the bordered list. The list frame is `.flat-pack-collection-editor-card`.
+- Collection editor rows are a grid of cells. Each `with_field` block is its own column. Text input, Select, and the other controls that share `FormField::ControlStyles` accept `chrome: :cell` and drop their own border, radius, and background. Focus and errors draw an inset ring on the cell. The person search uses the same cell treatment. Create fields stay bordered.
+- Collection editor remove is a ghost button with a trash icon. It was a danger button with an X.
+- A single-line collection editor cell is one line. Vertical field padding no longer stacks on the 44px remove control, so the value lines up with the trash icon.
+- The collection editor add control is a full-width ghost row at the bottom of the table. The default label is `Row`, and the plus icon stays, so it reads "+ Row".
+- Select's field wrapper includes `flat-pack-input-wrapper` as well as `flat-pack-select-wrapper`, so a role select fills its collection editor cell.
+- A selected collection editor record is an info chip showing the name. The chip remove control drops the row. Search results open in a menu. "+ New" is at the bottom of that menu when the query has no matches, and it opens the create form in a modal. The search cell stays one line. Cancel, Escape, and the backdrop leave the row unselected. Validation errors stay in the modal.
+
+### Fixed
+- `FlatPack::Chip::Component` renders a custom `remove_button`. That control replaces the default remove button.
+- A modal click on the dimmed area reaches the backdrop. The dialog wrapper no longer sits on top of that click.
+
+### Upgrade notes
+- The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading is outside that card. The add control is the last row inside it. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class. `add_label` defaults to `Row`. Select's wrapper now includes `flat-pack-input-wrapper` alongside `flat-pack-select-wrapper`. The entity summary is an info chip. `edit_url_template`, `edit_label`, and `change_label` are accepted and no longer rendered. Create starts from "+ New" in the search menu and opens a modal titled `New {label}`. `create_label` is that modal's submit button. Host CSS that targeted `.flat-pack-collection-editor-create-fields` inside the cell should target the modal body.
+- Card padding and the gap between cells are gone. Cells draw the lines with `--collection-editor-border-color`. `--collection-editor-row-padding` pads the empty state. Pass one header per content cell (the entity, then each field). The section sets `--collection-editor-columns` from that count. It is not a theme token. `chrome:` defaults to `:field`, so a normal form keeps its bordered controls. Pass `chrome: :cell` on a control inside a collection editor cell. Host CSS that targeted a single `.flat-pack-collection-editor-fields` wrapper should expect one cell per field. Inside the editor, those controls keep horizontal `--form-control-padding` and use no vertical padding. A row of single-line fields is the height of the remove button.
+- `orderable:` on List still drags the whole row when `handle_selector` is omitted.
+- Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
+- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, `data-results-id`, `data-create-modal-id`, and the aria attributes that point at those ids. Text in the row is left as written.
+- FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
+- Reload kit CSS and JavaScript. Modal backdrop clicks pass through the dialog wrapper.
+- Redeploy so `meta.gem_version` shows `0.1.204`.
+
+## [0.1.203] - 2026-10-07
+
+### Changed
+- Focus rings (`--color-ring`) and active sidebar / top-nav fills now follow `--color-primary`. Matching text and icons stay on `--color-primary-text`.
+- Default palette wiring is declared on `:root, [data-theme]` so a named theme on `<body>` (or another descendant) re-resolves derived tokens.
+- Dark and ocean no longer freeze `--color-ring`; they follow `--color-primary` (same colour they already set).
+- The bottom nav bar stays a surface (`#2f2f2f` by default), not a brand fill.
+- Bumped the gem version to `0.1.203`.
+
+### Upgrade notes
+- Reload kit CSS.
+- Hosts that overrode `--color-ring`, `--sidebar-item-active-background-color`, or `--top-nav-item-active-background-color` to match charcoal can drop those overrides. Keep them only if those chrome pieces should stay independent of primary.
+- `data-theme` on `<body>` now re-resolves component aliases. Prefer `<html>` when you can; either placement works.
+- Dark and ocean ring / active nav colours now track `--color-primary`. Override those tokens only if they should diverge.
+- Redeploy so `meta.gem_version` shows `0.1.203`.
+
+## [0.1.202] - 2026-10-07
+
+### Changed
+- `FlatPack::SegmentedButtons::Component` accepts `style:` and defaults to `:primary`. The selected button uses that Button style. Unselected buttons stay `:secondary`.
+- Unknown style names raise the same `ArgumentError` as `Button`. Passing `style:` on a segment raises `ArgumentError`.
+- Bumped the gem version to `0.1.202`.
+
+### Upgrade notes
+- `style:` defaults to `:primary`. Unselected segments stay `:secondary`.
+- Reload is not required for the Ruby API.
+- A host that toggles selection in JavaScript must set `data-fp-style`, not swap colour classes.
+
+## [0.1.201] - 2026-10-07
+
+### Changed
+- `style:` on pill tabs, stacked tabs, and `Button::Pill` defaults to `:primary`. Omitted calls stay on the pill tokens.
+- Active pill colour for other built-in styles comes from the button slots.
+- Bumped the gem version to `0.1.201`.
+
+### Upgrade notes
+- Hosts that set `--fp-button-*` only on `.fp-button[data-fp-style="name"]` should use `[data-fp-style="name"]` if that colourway should also paint pills. Built-in styles need no host CSS change.
+- `style:` on Tabs is no longer an HTML style attribute. Pass a button style name. A CSS string in that keyword raises `ArgumentError`.
+- Host overrides of `--tabs-pill-active-*` still win for the default primary pills.
+- Reload kit CSS.
 
 ## [0.1.200] - 2026-10-07
 

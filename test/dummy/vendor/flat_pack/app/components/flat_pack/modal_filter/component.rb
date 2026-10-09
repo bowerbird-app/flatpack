@@ -19,11 +19,11 @@ module FlatPack
         turbo_frame:,
         form_method: :get,
         active_count: 0,
-        trigger_label: "Filter",
+        trigger_label: FlatPack::Copy::OMITTED,
         button_size: :sm,
-        modal_title: "Filters",
-        submit_label: "Apply",
-        reset_label: "Reset",
+        modal_title: FlatPack::Copy::OMITTED,
+        submit_label: FlatPack::Copy::OMITTED,
+        reset_label: FlatPack::Copy::OMITTED,
         reset_url: nil,
         mobile_form_class: nil,
         **system_arguments
@@ -34,11 +34,11 @@ module FlatPack
         @turbo_frame = turbo_frame
         @form_method = form_method
         @active_count = active_count.to_i
-        @trigger_label = trigger_label
+        @trigger_label = fp_text(trigger_label, "modal_filter.trigger")
         @button_size = button_size.to_sym
-        @modal_title = modal_title
-        @submit_label = submit_label
-        @reset_label = reset_label
+        @modal_title = fp_text(modal_title, "modal_filter.title")
+        @submit_label = fp_text(submit_label, "modal_filter.apply")
+        @reset_label = fp_text(reset_label, "modal_filter.reset")
         @reset_url = reset_url
         @mobile_form_class = mobile_form_class
 

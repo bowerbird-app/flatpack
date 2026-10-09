@@ -93,6 +93,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/empty_state
     /demo/grid
     /demo/grid/movable_cards
+    /demo/masonry
     /demo/pagination
     /demo/admin
     /demo/charts

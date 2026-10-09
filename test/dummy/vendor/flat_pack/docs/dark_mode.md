@@ -6,8 +6,8 @@ FlatPack ships a rounded / charcoal light palette by default and supports dark o
 
 FlatPack theme behavior is split into two layers:
 
-- **CSS defaults** - `:root {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens. `:root` also sets `color-scheme: light`.
-- **Theme variants** - selectors such as `[data-theme="dark"]` and `[data-theme="ocean"]` override only tokens that differ from `:root`. `[data-theme="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. `[data-theme="rounded"]` is an empty alias of the default. Component aliases inherit unless you override them.
+- **CSS defaults** - `:root, [data-theme] {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens. Repeating the wiring on `[data-theme]` re-resolves those aliases when the attribute is on `<body>` or another descendant. `:root` also sets `color-scheme: light`.
+- **Theme variants** - selectors such as `[data-theme="dark"]` and `[data-theme="ocean"]` override only tokens that differ from the default. `[data-theme="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. `[data-theme="rounded"]` is an empty alias of the default. Focus rings and active nav fills follow `--color-primary`. Component aliases re-resolve unless you override them.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
@@ -66,7 +66,11 @@ You can define additional custom themes the same way. Prefer brand primitives wh
 }
 ```
 
-Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit. For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
+Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit.
+
+A brand dark theme does not copy `[data-theme="dark"]`. Set `color-scheme: dark` and the surface / primary tokens; ghost buttons, secondary, list hover, chip remove, and switch track follow those semantics. Optional extras: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`. See [Custom Theming](custom_theming.md#minimal-brand-themes) for the minimal token list and a `[data-theme="featured-in-dark"]` example. `data-theme` on `<body>` works because component aliases are declared on `:root, [data-theme]`.
+
+For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 
 ## Testing Themes
 

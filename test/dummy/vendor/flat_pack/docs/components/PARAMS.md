@@ -18,6 +18,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
+| Masonry column count | `columns` | Masonry only. Integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Do not use Grid's `cols` here. |
+| Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |

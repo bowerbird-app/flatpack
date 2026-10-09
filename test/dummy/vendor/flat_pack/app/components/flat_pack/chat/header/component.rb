@@ -20,7 +20,7 @@ module FlatPack
           title:,
           subtitle: nil,
           back_href: nil,
-          back_label: "Back",
+          back_label: FlatPack::Copy::OMITTED,
           back_tooltip: nil,
           content_url: nil,
           avatar_mode: :auto,
@@ -34,7 +34,7 @@ module FlatPack
           @title = title
           @subtitle = subtitle
           @back_href = back_href
-          @back_label = back_label
+          @back_label = fp_text(back_label, "chat.back")
           @back_tooltip = back_tooltip
           @content_url = sanitize_url(content_url)
           @avatar_mode = avatar_mode.to_sym

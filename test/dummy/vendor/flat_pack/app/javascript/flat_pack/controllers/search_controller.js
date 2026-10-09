@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["input", "dropdown", "results", "noResults", "loading"]
@@ -160,7 +161,7 @@ export default class extends Controller {
 
     const title = document.createElement("div")
     title.className = "text-sm font-medium text-[var(--search-result-title-color)]"
-    title.textContent = result.title || result.label || "Result"
+    title.textContent = result.title || result.label || flatPackCopy("search.result_fallback")
     link.append(title)
 
     if (result.description) {

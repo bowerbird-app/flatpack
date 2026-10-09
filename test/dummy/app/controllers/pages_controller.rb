@@ -637,6 +637,9 @@ class PagesController < ApplicationController
     @movable_cards_version = demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
   end
 
+  def masonry
+  end
+
   def pagination
     records = Array.new(100) do |i|
       OpenStruct.new(

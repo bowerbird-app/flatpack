@@ -11,11 +11,11 @@ module FlatPack
         undef_method :with_footer, :with_footer_content
 
         STATUSES = {
-          active: {text: "Active", style: :success},
-          trialing: {text: "Trial", style: :info},
-          past_due: {text: "Past due", style: :warning},
-          canceled: {text: "Canceled", style: :default},
-          incomplete: {text: "Incomplete", style: :warning}
+          active: {key: "active", style: :success},
+          trialing: {key: "trial", style: :info},
+          past_due: {key: "past_due", style: :warning},
+          canceled: {key: "canceled", style: :default},
+          incomplete: {key: "incomplete", style: :warning}
         }.freeze
 
         def initialize(
@@ -80,7 +80,7 @@ module FlatPack
             safe_join([
               content_tag(:h3, @plan_name, class: "text-lg font-semibold text-[var(--surface-content-color)]"),
               render(FlatPack::Badge::Component.new(
-                text: status_config.fetch(:text),
+                text: fp_t("billing.plan_summary.#{status_config.fetch(:key)}"),
                 style: status_config.fetch(:style),
                 size: :sm
               ))

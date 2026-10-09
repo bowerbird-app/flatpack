@@ -52,7 +52,7 @@ module FlatPack
         @src = src
         @provided_alt = alt
         @tooltip_text = name.presence || alt.presence
-        @alt = alt || name || "Avatar"
+        @alt = alt || name || fp_t("avatar.alt")
         @name = name
         @initials = initials
         @icon = icon

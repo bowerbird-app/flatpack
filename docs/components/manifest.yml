@@ -399,6 +399,15 @@ components:
     primary_class: FlatPack::List::Component
     status: documented
 
+  - key: masonry
+    title: Masonry
+    doc: docs/components/masonry.md
+    primary_class: FlatPack::Masonry::Component
+    related_classes:
+      - FlatPack::Masonry::Item
+      - FlatPack::Masonry::Image
+    status: documented
+
   - key: modal
     title: Modal
     doc: docs/components/modal.md

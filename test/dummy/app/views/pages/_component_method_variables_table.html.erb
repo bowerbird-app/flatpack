@@ -672,6 +672,18 @@
         { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
       ]
     },
+    masonry: {
+      label: "Masonry",
+      method_call: "render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md, order: :columns) do |masonry| ... end",
+      variables: [
+        { variable: "columns", accepts: "Integer 1-6, or Hash of base/sm/md/lg/xl", example: "columns: {base: 2, md: 3, lg: 4}" },
+        { variable: "gap", accepts: ":sm, :md, :lg", example: "gap: :md" },
+        { variable: "order", accepts: ":columns, :rows", example: "order: :rows" },
+        { variable: "with_item", accepts: "slot block", example: "masonry.with_item { render FlatPack::Card::Component.new { \"Note\" } }" },
+        { variable: "with_image", accepts: "src, alt, width, height, optional href and caption", example: "masonry.with_image(src: \"/photos/harbour.jpg\", alt: \"Harbour\", width: 400, height: 600)" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"studio-wall\"" }
+      ]
+    },
     hero: {
       label: "Hero",
       method_call: "render FlatPack::Hero::Component.new(variant: :centered, headline: \"Title\") do |hero| ... end",

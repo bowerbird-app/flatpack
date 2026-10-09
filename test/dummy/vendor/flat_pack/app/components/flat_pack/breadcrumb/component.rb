@@ -23,13 +23,13 @@ module FlatPack
         separator: :chevron,
         separator_icon: nil,
         show_back: false,
-        back_text: "Back",
+        back_text: FlatPack::Copy::OMITTED,
         back_icon: "chevron-left",
         back_href: nil,
         back_fallback_href: "/",
         show_home: false,
         home_href: "/",
-        home_text: "Home",
+        home_text: FlatPack::Copy::OMITTED,
         home_icon: "home",
         max_items: nil,
         items: nil,
@@ -40,13 +40,13 @@ module FlatPack
         @separator = separator.to_sym
         @separator_icon = separator_icon
         @show_back = show_back
-        @back_text = back_text
+        @back_text = fp_text(back_text, "breadcrumb.back")
         @back_icon = back_icon
         @back_href_override = back_href
         @back_fallback_href = back_fallback_href
         @show_home = show_home
         @home_href = home_href
-        @home_text = home_text
+        @home_text = fp_text(home_text, "breadcrumb.home")
         @home_icon = home_icon
         @max_items = max_items
 
@@ -174,7 +174,7 @@ module FlatPack
       def nav_attributes
         attrs = {
           class: wrapper_classes,
-          aria: {label: "Breadcrumb"}
+          aria: {label: fp_t("breadcrumb.label")}
         }
         merge_attributes(**attrs)
       end

@@ -1,0 +1,134 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Masonry",
+  subtitle: "Photos keep their shape. Short ones sit tight under tall ones. No empty boxes."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :masonry %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  masonry_photos = [
+    {src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 400, height: 600, caption: "Harbour"},
+    {src: "/masonry/cliff.svg", alt: "Sea cliff in late light", width: 600, height: 400, caption: "Cliff"},
+    {src: "/masonry/studio.svg", alt: "Studio window", width: 500, height: 500, caption: "Studio"},
+    {src: "/masonry/orchard.svg", alt: "Orchard path", width: 450, height: 600, caption: "Orchard"},
+    {src: "/masonry/jetty.svg", alt: "Jetty at blue hour", width: 640, height: 360, caption: "Jetty"},
+    {src: "/masonry/kiln.svg", alt: "Kiln yard", width: 500, height: 300, caption: "Kiln"},
+    {src: "/masonry/lantern.svg", alt: "Lantern on a porch", width: 360, height: 540, caption: "Lantern"},
+    {src: "/masonry/quay.svg", alt: "Quay stones", width: 520, height: 520, caption: "Quay"},
+    {src: "/masonry/meadow.svg", alt: "Meadow edge", width: 600, height: 450, caption: "Meadow"},
+    {src: "/masonry/well.svg", alt: "Stone well", width: 400, height: 520, caption: "Well"},
+    {src: "/masonry/loft.svg", alt: "Loft beams", width: 480, height: 320, caption: "Loft"},
+    {src: "/masonry/tide.svg", alt: "Tide line", width: 360, height: 480, caption: "Tide"}
+  ]
+%>
+
+<section class="mb-12" id="down-the-column">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Down the column",
+    anchor_link: true,
+    subtitle: "Default order. Eyes go down a column, then the next. No JavaScript."
+  ) %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4 max-w-2xl">
+    Screen readers follow the order you wrote. On screen the stack runs down each column. Use this when a tight pack matters more than left-to-right reading.
+  </p>
+  <div id="masonry-columns-demo">
+    <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
+      <% masonry_photos.each do |photo| %>
+        <% masonry.with_image(src: photo[:src], alt: photo[:alt], width: photo[:width], height: photo[:height]) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Down the column (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}) do |masonry| #{erb_tag_close}
+        #{erb_output_open} masonry.with_image(src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 400, height: 600) #{erb_tag_close}
+        #{erb_output_open} masonry.with_image(src: "/masonry/cliff.svg", alt: "Sea cliff", width: 600, height: 400) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="across-the-row">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Across the row",
+    anchor_link: true,
+    subtitle: "Left to right, still no holes. JavaScript measures; without it the pack still holds."
+  ) %>
+  <div id="masonry-rows-demo">
+    <%= render FlatPack::Masonry::Component.new(order: :rows, columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
+      <% masonry_photos.each do |photo| %>
+        <% masonry.with_image(src: photo[:src], alt: photo[:alt], width: photo[:width], height: photo[:height]) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Across the row (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Masonry::Component.new(order: :rows, columns: {base: 2, md: 3, lg: 4}) do |masonry| #{erb_tag_close}
+        #{erb_output_open} masonry.with_image(src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 400, height: 600) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="captions">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Names under the photos",
+    anchor_link: true,
+    subtitle: "Optional caption and link. The cell still keeps the photo's shape."
+  ) %>
+  <div id="masonry-captions-demo">
+    <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3}, gap: :md) do |masonry| %>
+      <% masonry_photos.first(6).each do |photo| %>
+        <% masonry.with_image(
+          src: photo[:src],
+          alt: photo[:alt],
+          width: photo[:width],
+          height: photo[:height],
+          href: photo[:src],
+          caption: photo[:caption]
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="mixed-content">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Photos and a note",
+    anchor_link: true,
+    subtitle: "Any cell works. A card sits in the same pack as the pictures."
+  ) %>
+  <div id="masonry-mixed-demo">
+    <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3}, gap: :md) do |masonry| %>
+      <% masonry.with_image(src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 400, height: 600) %>
+      <% masonry.with_item do %>
+        <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+          <% card.body do %>
+            <h3 class="font-semibold mb-2">Jetty notes</h3>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
+              Tall and wide tiles share one gutter. The note keeps its own height.
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% masonry.with_image(src: "/masonry/cliff.svg", alt: "Sea cliff in late light", width: 600, height: 400) %>
+      <% masonry.with_image(src: "/masonry/studio.svg", alt: "Studio window", width: 500, height: 500) %>
+    <% end %>
+  </div>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Grid", href: "/demo/grid"},
+  {text: "Cards", href: "/demo/cards/media"},
+  {text: "Carousel", href: "/demo/carousel"}
+] %>

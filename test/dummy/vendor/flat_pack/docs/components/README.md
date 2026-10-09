@@ -41,6 +41,7 @@ divider | FlatPack::Divider::Component | docs/components/divider.md
 drawer | FlatPack::Drawer::Component | docs/components/drawer.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
+collection_editor | FlatPack::CollectionEditor::Component | docs/components/collection-editor.md
 combobox | FlatPack::Combobox::Component | docs/components/combobox.md
 command_palette | FlatPack::CommandPalette::Component | docs/components/command-palette.md
 content | FlatPack::Content::Component | docs/components/content.md
@@ -65,6 +66,7 @@ date_time_input | FlatPack::DateTimeInput::Component | docs/components/inputs.md
 time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
 list | FlatPack::List::Component | docs/components/list.md
+masonry | FlatPack::Masonry::Component | docs/components/masonry.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
 notification | FlatPack::Notification::Component | docs/components/notification.md

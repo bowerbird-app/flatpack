@@ -20,7 +20,8 @@ module FlatPack
     ].freeze
 
     EXTRA_RELATIVE_PATHS = [
-      "chat/message.rb"
+      "chat/message.rb",
+      "masonry/image.rb"
     ].freeze
 
     PUBLICITY_RULES = [
@@ -47,6 +48,7 @@ module FlatPack
       {constant: :MODES, kwargs: %i[mode]},
       {constant: :STATUSES, kwargs: %i[status]},
       {constant: :GAPS, kwargs: %i[gap]},
+      {constant: :ORDERS, kwargs: %i[order]},
       {constant: :COLS, kwargs: %i[cols]},
       {constant: :ALIGNS, kwargs: %i[align]},
       {constant: :ONS, kwargs: %i[on]},

@@ -27,8 +27,10 @@ module FlatPack
         max_characters: nil,
         rich_text: false,
         rich_text_options: {},
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -123,7 +125,7 @@ module FlatPack
             action: "click->flat-pack--text-area#copyFromButton",
             flat_pack__text_area_target: "copyButton"
           },
-          aria: {label: "Copy textarea value"}
+          aria: {label: fp_t("text.copy_textarea")}
         ) do
           render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
         end
@@ -169,7 +171,7 @@ module FlatPack
           class: "flat-pack-richtext-toolbar",
           role: "toolbar",
           data: {flat_pack__tiptap_target: "toolbar"},
-          aria: {label: "Formatting toolbar"}
+          aria: {label: fp_t("text.formatting_toolbar")}
         )
       end
 
@@ -214,7 +216,7 @@ module FlatPack
 
         content_tag(
           :p,
-          "0 characters",
+          fp_t("text.characters", count: 0),
           id: character_count_id,
           class: character_count_classes,
           data: {flat_pack__tiptap_target: "characterCount"}
@@ -289,6 +291,17 @@ module FlatPack
       end
 
       def rich_text_editor_container_classes
+        if cell_chrome?
+          return classes(
+            "flat-pack-richtext-editor",
+            "flat-pack-richtext-editor--cell",
+            "border-0",
+            "bg-transparent",
+            "rounded-none",
+            *form_control_padding_classes
+          )
+        end
+
         classes(
           "flat-pack-richtext-editor",
           *form_control_border_classes(error: @error),
@@ -365,9 +378,9 @@ module FlatPack
         count = (@value || "").to_s.length
 
         if @max_characters
-          "#{count}/#{@max_characters} characters"
+          fp_t("text.characters_with_limit", count: count, limit: @max_characters)
         else
-          "#{count} characters"
+          fp_t("text.characters", count: count)
         end
       end
 
