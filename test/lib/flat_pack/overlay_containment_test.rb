@@ -65,6 +65,7 @@ module FlatPack
       assert_includes css, ".fp-modal-dialog-cap"
       assert_includes css, ".fp-modal-page-sticky"
       assert_includes css, ".fp-modal-sticky-footer"
+      assert_includes css, ".fp-modal-sticky-header"
       assert_includes css, "min-height: 100vh;"
       assert_includes css, "min-height: 100dvh;"
       assert_includes css, "max-height: calc(100vh - 2rem);"
