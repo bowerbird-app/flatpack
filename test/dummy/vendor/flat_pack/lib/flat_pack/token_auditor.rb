@@ -17,6 +17,7 @@ module FlatPack
       --flatpack-picker-items-height
       --fp-masonry-gap
       --fp-masonry-row
+      --fp-trash-button-size
       --range-progress
       --spacing
     ].freeze

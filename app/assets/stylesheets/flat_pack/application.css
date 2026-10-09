@@ -1236,6 +1236,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 /* TrashButton only. Do not reuse these rules on other buttons.
  * Height matches an icon-only Button of the same size, including --hit-target-min.
  * Icon boxes: sm 1rem (w-4), md 1.25rem (w-5), lg 1.5rem (w-6).
+ * Do not scale the chrome: scale() shrinks getBoundingClientRect and jumps rest vs armed.
  */
 .fp-trash-button {
   --fp-trash-button-size: max(
@@ -1246,6 +1247,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   align-items: center;
   position: relative;
   max-width: 100%;
+  min-height: var(--fp-trash-button-size);
+  height: var(--fp-trash-button-size);
   vertical-align: middle;
 }
 
@@ -1276,6 +1279,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   box-sizing: border-box;
   height: var(--fp-trash-button-size);
   min-height: var(--fp-trash-button-size);
+  max-height: var(--fp-trash-button-size);
   padding-block: 0;
   line-height: 1;
   flex-shrink: 0;
@@ -1285,6 +1289,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-trash-button .fp-trash-button__cancel-btn {
   width: var(--fp-trash-button-size);
   min-width: var(--fp-trash-button-size);
+  max-width: var(--fp-trash-button-size);
   padding-inline: 0;
 }
 
@@ -1296,6 +1301,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   position: relative;
   display: inline-flex;
   align-items: center;
+  height: var(--fp-trash-button-size);
   overflow: hidden;
 }
 
@@ -1307,9 +1313,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-trash-button__confirm {
   display: flex;
   align-items: center;
-  transition:
-    opacity var(--duration-base) var(--easing-standard),
-    transform var(--duration-base) var(--easing-standard);
+  height: var(--fp-trash-button-size);
+  transition: opacity var(--duration-base) var(--easing-standard);
 }
 
 .fp-trash-button__rest {
@@ -1321,18 +1326,15 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   position: absolute;
   top: 0;
   opacity: 0;
-  transform: scale(0.96);
   pointer-events: none;
 }
 
 .fp-trash-button[data-fp-expand="right"] .fp-trash-button__confirm {
   left: 0;
-  transform-origin: left center;
 }
 
 .fp-trash-button[data-fp-expand="left"] .fp-trash-button__confirm {
   right: 0;
-  transform-origin: right center;
 }
 
 .fp-trash-button[data-fp-armed="true"] .fp-trash-button__rest {
@@ -1340,18 +1342,15 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   top: 0;
   z-index: 0;
   opacity: 0;
-  transform: scale(0.96);
   pointer-events: none;
 }
 
 .fp-trash-button[data-fp-expand="right"][data-fp-armed="true"] .fp-trash-button__rest {
   left: 0;
-  transform-origin: left center;
 }
 
 .fp-trash-button[data-fp-expand="left"][data-fp-armed="true"] .fp-trash-button__rest {
   right: 0;
-  transform-origin: right center;
 }
 
 .fp-trash-button[data-fp-armed="true"] .fp-trash-button__confirm {
@@ -1360,7 +1359,6 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   left: auto;
   right: auto;
   opacity: 1;
-  transform: scale(1);
   pointer-events: auto;
 }
 
@@ -1374,6 +1372,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-trash-button__cancel-slot {
   display: grid;
   grid-template-columns: 0fr;
+  height: var(--fp-trash-button-size);
   opacity: 0;
   pointer-events: none;
   transition:
@@ -1389,24 +1388,18 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-trash-button__cancel-inner {
   display: flex;
+  align-items: center;
   min-width: 0;
+  height: var(--fp-trash-button-size);
   overflow: hidden;
-  transform: scale(0.96);
-  transition: transform var(--duration-base) var(--easing-standard);
-}
-
-.fp-trash-button[data-fp-armed="true"] .fp-trash-button__cancel-inner {
-  transform: scale(1);
 }
 
 .fp-trash-button[data-fp-expand="right"] .fp-trash-button__cancel-inner {
   padding-left: 0.5rem;
-  transform-origin: left center;
 }
 
 .fp-trash-button[data-fp-expand="left"] .fp-trash-button__cancel-inner {
   padding-right: 0.5rem;
-  transform-origin: right center;
 }
 
 .flat-pack-collection-editor {

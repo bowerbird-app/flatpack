@@ -27,9 +27,9 @@ Use this for row actions and other tight delete controls where a modal would be 
 None.
 
 ## Variants
-- Icon-only (default) or labelled (`text:`). Both keep the same control height as Cancel.
+- Icon-only (default) or labelled (`text:`). Rest, Confirm, and Cancel share that size’s icon-only height. Cancel is the square footprint of the icon-only trash control.
 - Expand `:right` or `:left`
-- Rest, hover/focus (danger tokens), and armed (Confirm + Cancel)
+- Rest, hover/focus (danger tokens), and armed (Confirm + Cancel). The swap is opacity plus Cancel sliding in; the buttons do not scale, so height does not jump.
 - Form confirm (`url:`) or JS-only (`flat-pack:trash-button:confirm`)
 
 ## Example
@@ -58,7 +58,7 @@ element.addEventListener("flat-pack:trash-button:confirm", (event) => {
 ```
 
 ## Accessibility
-Icon-only uses an accessible name (`text:` or the locale trash copy). Hover and keyboard focus both use the theme danger button tokens. Clicking the trash control moves focus to Confirm. Cancel, Escape, or a click outside returns focus to the trash control. A polite live region announces the armed and restored states. Confirm ignores clicks for 300ms after it appears so a double-click cannot submit. `prefers-reduced-motion` makes the swap instant (`--duration-*` collapses to `0ms`).
+Icon-only uses an accessible name (`text:` or the locale trash copy). Hover and keyboard focus both use the theme danger button tokens. Clicking the trash control moves focus to Confirm. Cancel, Escape, or a click outside returns focus to the trash control. A polite live region announces the armed and restored states. Confirm ignores clicks for 300ms after it appears so a double-click cannot submit. `prefers-reduced-motion` makes the swap instant (`--duration-*` collapses to `0ms`). Rest, Confirm, and Cancel stay one height for the chosen `size:` so arming and cancelling do not jump.
 
 ## Dependencies
 - FlatPack Button (`style: :default` at rest, `style: :danger` on confirm). Hover/focus danger colour is scoped to `.fp-trash-button__arm` and does not change other buttons.

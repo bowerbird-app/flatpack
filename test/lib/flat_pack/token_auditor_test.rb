@@ -15,6 +15,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--collection-editor-columns"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-gap"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-row"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-trash-button-size"
     end
 
     test "brand primitives and transition aliases are defined" do

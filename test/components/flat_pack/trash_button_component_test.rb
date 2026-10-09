@@ -61,6 +61,23 @@ module FlatPack
         assert_includes page.native.to_html, "p-[var(--button-icon-only-padding-sm)]"
       end
 
+      def test_styles_lock_shared_height_without_scaling_the_chrome
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        start_at = css.index(".fp-trash-button {")
+        stop_at = css.index(".flat-pack-collection-editor {")
+
+        refute_nil start_at
+        refute_nil stop_at
+        trash = css[start_at...stop_at]
+
+        assert_includes trash, "--fp-trash-button-size"
+        assert_includes trash, "height: var(--fp-trash-button-size)"
+        assert_includes trash, "max-height: var(--fp-trash-button-size)"
+        assert_includes trash, "max-width: var(--fp-trash-button-size)"
+        refute_includes trash, "scale("
+        refute_includes trash, "transform:"
+      end
+
       def test_armed_starts_in_confirm_state
         render_inline(Component.new(armed: true, timeout: 0))
 
