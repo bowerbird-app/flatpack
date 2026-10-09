@@ -13,19 +13,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.218] - 2026-10-09
+## [0.1.219] - 2026-10-09
 
 ### Added
 - `FlatPack::RadioGroup::Component` accepts `variant: :swatches` for a fixed colour palette. Each option is a filled circle with a visually hidden radio, a selected offset ring (ColorSwatch tokens), a check that flips ink on light vs dark fills, and a name tooltip. Pass `options: [{ label:, value:, color: }]` — `color:` defaults to `value` when that is a CSS colour. `size:` maps to ColorSwatch `:sm` / `:md` / `:lg`. `show_tooltip:` defaults to true. Existing `:default`, `:inline`, and `:cards` markup is unchanged. ColorSwatch stays the native `<input type="color">` picker.
 
 ### Changed
-- Bumped the gem version to `0.1.218`.
+- Bumped the gem version to `0.1.219`.
 
 ### Upgrade notes
 - Existing RadioGroup and ColorSwatch calls are unchanged. Pass `variant: :swatches` only when the person picks one colour from a host-supplied palette.
 - Hash options may add `color:`. A hex (or other safe CSS colour) `value` is enough; otherwise `color:` is required.
 - Rebuild host Tailwind so swatch size, ring, and `sr-only` utilities generate. Reload kit CSS if you ship ColorSwatch tokens already.
-- Redeploy so `meta.gem_version` shows `0.1.218`.
+- Redeploy so `meta.gem_version` shows `0.1.219`.
+
+## [0.1.218] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `origin: :trigger` so the dialog can grow out of the control that opened it and shrink back on close. Default `origin: :center` keeps today’s fade and scale, including markup. Motion lives in `trigger_origin.js` for later Drawer reuse. Picker, Modal Filter, Drawer, and other hosts are unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.218`.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. Pass `origin: :trigger` only when the dialog should grow from the opening control.
+- `:trigger` falls back to today’s motion when no trigger is known, the trigger is gone or off-screen, motion is reduced, or the viewport is under `640px`.
+- With `navigable: true`, only the first open and the final close use the trigger motion.
+- Reload kit JavaScript. Redeploy so `meta.gem_version` shows `0.1.218`.
+
+## [0.1.217] - 2026-10-09
+
+### Added
+- Tabs and Button::Pill accept `indicator: :slide`. Default stays today’s instant active swap. `:slide` renders one marker per list (underline bar or pill fill) that follows the active item on `--duration-base` / `--easing-standard`. Items keep the text colour change. A shared Stimulus controller (`flat-pack--slide-indicator`) measures the active item, tracks resize and font load, and snaps under `prefers-reduced-motion`. Pill links slide first, then visit (`Turbo.visit` when present). Modifier-clicks, middle-click, and `target: :_blank` are not intercepted.
+
+### Changed
+- Bumped the gem version to `0.1.217`.
+
+### Upgrade notes
+- Existing Tabs and Pill calls are unchanged. Omit `indicator:` for today’s markup and behaviour.
+- Pass `indicator: :slide` to opt in. Unknown names raise `ArgumentError`.
+- Reload kit CSS and JavaScript so `.fp-slide-indicator` and `flat-pack--slide-indicator` load. Bundled esbuild hosts add `SlideIndicatorController` from `docs/installation.md`.
+- Redeploy so `meta.gem_version` shows `0.1.217`.
 
 ## [0.1.216] - 2026-10-09
 

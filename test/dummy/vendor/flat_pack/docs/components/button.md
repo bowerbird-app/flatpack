@@ -78,6 +78,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 | `items` | Array<Hash> | none | yes | One or more pill definitions. Each item requires `text` and `href`, and may include `id`, `active`, `target`, `class`, `data`, and `aria`. |
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Tabs via Button size tokens). |
 | `style` | Symbol | `:primary` | no | Active pill colour. Same names as Button `style` above. `:primary` keeps the pill colour. Any other name uses that button colour on the active pill. |
+| `indicator` | Symbol | `nil` | no | Omit for today’s instant active swap. `:slide` renders one filled marker that follows the active pill, then follows the link. Unknown names raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria for the outer group wrapper. |
 
 ```erb
@@ -94,6 +95,18 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 ```erb
 <%= render FlatPack::Button::Pill::Component.new(
   style: :default,
+  items: [
+    {text: "All products", href: products_path, active: true},
+    {text: "On sale", href: sale_products_path}
+  ]
+) %>
+```
+
+Pass `indicator: :slide` for a sliding fill. Items keep text colour. A normal left click slides first (~200ms), then visits with `Turbo.visit` when Turbo is present. Modifier clicks, middle-click, and `target: :_blank` go straight to the link. `prefers-reduced-motion` skips the wait.
+
+```erb
+<%= render FlatPack::Button::Pill::Component.new(
+  indicator: :slide,
   items: [
     {text: "All products", href: products_path, active: true},
     {text: "On sale", href: sale_products_path}
@@ -138,3 +151,4 @@ A save button can switch between `:default` and `:primary` while the form is edi
 - `FlatPack::Spinner::Component` for the loading mark.
 - `FlatPack::Shared::IconComponent` for icon and spinner sizing.
 - `FlatPack::AttributeSanitizer` for URL sanitization and protocol allowlisting (`http`, `https`, `mailto`, `tel`, relative URLs).
+- Sliding pill groups (`indicator: :slide`) use Stimulus controller `flat-pack--slide-indicator`.

@@ -43,6 +43,7 @@ module FlatPack
 
       BODY_HEIGHT_MODES = %i[auto fixed min].freeze
       SCROLL_MODES = %i[body page].freeze
+      ORIGINS = %i[center trigger].freeze
 
       def self.screen_frame_id(modal_id)
         "#{modal_id}-screen"
@@ -60,6 +61,7 @@ module FlatPack
         close_on_escape: true,
         navigable: false,
         src: nil,
+        origin: :center,
         **system_arguments
       )
         super(**system_arguments)
@@ -74,6 +76,7 @@ module FlatPack
         @close_on_escape = close_on_escape
         @navigable = navigable
         @src = src
+        @origin = (origin || :center).to_sym
 
         validate_id!
         validate_size!
@@ -83,6 +86,7 @@ module FlatPack
         validate_body_height!
         validate_navigable!
         validate_src!
+        validate_origin!
       end
 
       def call
@@ -101,6 +105,10 @@ module FlatPack
 
       def navigable?
         @navigable == true
+      end
+
+      def trigger_origin?
+        @origin == :trigger
       end
 
       def sticky_footer?
@@ -127,6 +135,7 @@ module FlatPack
           action: action_attributes
         }
         data["flat-pack--navigable-src-value"] = @src if navigable?
+        data["flat-pack--modal-origin-value"] = "trigger" if trigger_origin?
         data
       end
 
@@ -577,6 +586,12 @@ module FlatPack
         return if @body_height.present? && @body_height.match?(/\A[0-9a-zA-Z\s\-+*%.,()\[\]_]+\z/)
 
         raise ArgumentError, "body_height is required for non-auto body_height_mode and may only contain CSS length/expression characters"
+      end
+
+      def validate_origin!
+        return if ORIGINS.include?(@origin)
+
+        raise ArgumentError, "Invalid origin: #{@origin}. Must be one of: #{ORIGINS.join(", ")}"
       end
 
       def validate_navigable!

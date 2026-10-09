@@ -64,6 +64,7 @@ module FlatPack
         assert_selector "div#demo-picker[data-controller='flat-pack--modal']"
         assert_selector "div[data-controller='flat-pack--picker'][data-flat-pack--picker-modal-value='true']"
         assert_includes rendered_content, "demo-picker"
+        refute_includes rendered_content, "flat-pack--modal-origin-value"
       end
 
       def test_renders_inline_picker_without_modal_wrapper_by_default

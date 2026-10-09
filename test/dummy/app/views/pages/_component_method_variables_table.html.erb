@@ -979,7 +979,8 @@
         { variable: "sticky_footer", accepts: "true, false", example: "sticky_footer: true" },
         { variable: "close_on_escape", accepts: "true, false", example: "close_on_escape: true" },
         { variable: "navigable", accepts: "true, false", example: "navigable: true" },
-        { variable: "src", accepts: "String URL when navigable: true", example: "src: edit_image_path" }
+        { variable: "src", accepts: "String URL when navigable: true", example: "src: edit_image_path" },
+        { variable: "origin", accepts: ":center, :trigger", example: "origin: :trigger" }
       ]
     },
     drawer: {
@@ -1212,6 +1213,7 @@
       variables: [
         { variable: "variant", accepts: ":underline, :pills, :stacked", example: "variant: :stacked" },
         { variable: "style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :default" },
+        { variable: "indicator", accepts: ":slide or omit", example: "indicator: :slide" },
         { variable: "default_tab", accepts: "Integer", example: "default_tab: 1" },
         { variable: "tab / panel", accepts: "id:, label:, block", example: "tabs.tab(id: \"overview\", label: \"Overview\")" }
       ]

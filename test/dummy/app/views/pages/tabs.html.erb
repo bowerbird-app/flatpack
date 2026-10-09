@@ -56,6 +56,44 @@
   ) %>
 </section>
 
+<section class="mb-12" id="sliding-underline">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sliding underline", anchor_link: true, subtitle: "The bar follows the selected tab.") %>
+  <%= render FlatPack::Tabs::Component.new(indicator: :slide) do |tabs| %>
+    <% tabs.tab(id: "slide-overview", label: "Overview") %>
+    <% tabs.tab(id: "slide-details", label: "Details") %>
+    <% tabs.tab(id: "slide-settings", label: "Settings") %>
+
+    <% tabs.panel(id: "slide-overview") do %>
+      <div class="p-6 bg-[var(--surface-muted-background-color)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Overview</h3>
+        <p class="text-[var(--surface-content-color)]">Click around. The underline slides instead of jumping.</p>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "slide-details") do %>
+      <div class="p-6 bg-[var(--surface-muted-background-color)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Details</h3>
+        <p class="text-[var(--surface-content-color)]">Keyboard arrows still move the selection. The bar follows.</p>
+      </div>
+    <% end %>
+    <% tabs.panel(id: "slide-settings") do %>
+      <div class="p-6 bg-[var(--surface-muted-background-color)] rounded-b-lg">
+        <h3 class="text-lg font-semibold mb-2">Settings</h3>
+        <p class="text-[var(--surface-content-color)]">Pass <code>indicator: :slide</code>. Leave it off for the instant swap above.</p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new(indicator: :slide) do |tabs| %&gt;
+        &lt;% tabs.tab(id: "overview", label: "Overview") %&gt;
+        &lt;% tabs.tab(id: "details", label: "Details") %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
 <!-- Tabs with Default Tab -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Tabs with a Non-First Default", anchor_link: true, subtitle: "Examples for Tabs with a Non-First Default.") %>

@@ -560,6 +560,154 @@
   ) %>
 </section>
 
+<!-- Grow from the button -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Grow from the button",
+    anchor_link: true,
+    subtitle: "Opt-in. The dialog starts on the control you clicked, then settles. Close sends it back."
+  ) %>
+  <p class="text-(--surface-muted-content-color) mb-4">
+    Pass <code>origin: :trigger</code>. Off keeps today’s fade and scale. Phones under 640px wide fall back to that fade.
+  </p>
+
+  <div class="relative mb-6 min-h-72 rounded-[var(--radius-lg)] border border-(--surface-border-color) bg-(--surface-muted-background-color) p-4">
+    <div class="absolute left-4 top-4">
+      <%= render FlatPack::Button::Component.new(
+        text: "Top left",
+        style: :secondary,
+        data: {action: "click->flat-pack--modal#open", "modal-id": "origin-top-left"}
+      ) %>
+    </div>
+    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <%= render FlatPack::Button::Component.new(
+        text: "Centre",
+        style: :primary,
+        data: {action: "click->flat-pack--modal#open", "modal-id": "origin-centre"}
+      ) %>
+    </div>
+    <div class="absolute bottom-4 right-4">
+      <%= render FlatPack::Button::Component.new(
+        text: "Bottom right",
+        style: :secondary,
+        data: {action: "click->flat-pack--modal#open", "modal-id": "origin-bottom-right"}
+      ) %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3 mb-6">
+    <%= render FlatPack::Button::Component.new(
+      text: "Long note, from here",
+      style: :secondary,
+      data: {action: "click->flat-pack--modal#open", "modal-id": "origin-page-scroll"}
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Open gallery from here",
+      style: :primary,
+      data: {action: "click->flat-pack--modal#open", "modal-id": "gallery-editor-from-button"}
+    ) %>
+  </div>
+
+  <%= render FlatPack::Table::Component.new(
+    data: [
+      {name: "Harbour at dusk", kind: "Photo"},
+      {name: "Studio lights", kind: "Photo"},
+      {name: "Field notes", kind: "Doc"}
+    ],
+    min_width: :sm
+  ) do |table| %>
+    <% table.column(title: "Name", html: ->(row) { row[:name] }) %>
+    <% table.column(title: "Kind", html: ->(row) { row[:kind] }) %>
+    <% table.column(title: "", html: ->(_row) {
+      render FlatPack::Button::Component.new(
+        text: "Open",
+        style: :ghost,
+        data: {action: "click->flat-pack--modal#open", "modal-id": "origin-table-row"}
+      )
+    }) %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(id: "origin-top-left", title: "From the top left", origin: :trigger) do |modal| %>
+    <% modal.body do %>
+      <p class="text-(--surface-content-color)">This card grew out of the top-left button.</p>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: {action: "click->flat-pack--modal#close"}) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(id: "origin-centre", title: "From the centre", origin: :trigger) do |modal| %>
+    <% modal.body do %>
+      <p class="text-(--surface-content-color)">Same motion, from the middle of the page.</p>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: {action: "click->flat-pack--modal#close"}) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(id: "origin-bottom-right", title: "From the bottom right", origin: :trigger) do |modal| %>
+    <% modal.body do %>
+      <p class="text-(--surface-content-color)">Close it and it shrinks back into that corner.</p>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: {action: "click->flat-pack--modal#close"}) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(id: "origin-table-row", title: "From a table row", origin: :trigger) do |modal| %>
+    <% modal.body do %>
+      <p class="text-(--surface-content-color)">Useful when the open control sits in a dense row.</p>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: {action: "click->flat-pack--modal#close"}) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(
+    id: "origin-page-scroll",
+    title: "Long note",
+    size: :lg,
+    scroll: :page,
+    sticky_footer: true,
+    origin: :trigger
+  ) do |modal| %>
+    <% modal.body do %>
+      <div class="space-y-4 text-(--surface-content-color)">
+        <p>Page scroll and a pinned footer still grow from the button.</p>
+        <% 12.times do |i| %>
+          <p>
+            <strong>Note <%= i + 1 %>.</strong>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+    <% modal.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary, data: {action: "click->flat-pack--modal#close"}) %>
+      <%= render FlatPack::Button::Component.new(text: "Save", style: :primary, data: {action: "click->flat-pack--modal#close"}) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(
+    id: "gallery-editor-from-button",
+    title: "Gallery",
+    size: :lg,
+    navigable: true,
+    src: demo_gallery_editor_path,
+    origin: :trigger
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Modal::Component.new(id: "invite-modal", title: "Invite member", origin: :trigger) do |modal| %&gt;
+        &lt;% modal.body do %&gt;
+          <p>This card grew out of the button.</p>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
@@ -572,6 +720,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Page scroll:</strong> <code>scroll: :page</code> sizes the card to its content. <code>sticky_footer: true</code> pins the actions.<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Accessibility:</strong> Full ARIA support with role="dialog" and aria-modal="true"<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Animations:</strong> Fade and scale on open and close. Under Reduce Motion, fade only and no close delay.<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Grow from the button:</strong> Opt-in. Pass <code>origin: :trigger</code>. Off keeps today’s motion.<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Turbo Compatible:</strong> Works seamlessly with Turbo navigation<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Navigable screens:</strong> Opt-in. Pass <code>navigable: true</code> and <code>src</code>. Default modals stay as they are.<% end %>
   <% end %>
