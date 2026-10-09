@@ -111,6 +111,10 @@ module FlatPack
       assert_includes modal, "style.scale"
       assert_includes modal, "this.element.scrollTop = 0"
       refute_includes modal, "style.transform"
+
+      helper = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/trigger_origin.js").read
+      assert_includes helper, "style.transform"
+      assert_includes helper, "translate("
     end
 
     test "modal body lock also sets overscroll-behavior none" do

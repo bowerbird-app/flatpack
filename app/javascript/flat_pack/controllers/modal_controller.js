@@ -1,18 +1,30 @@
 // FlatPack Modal Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
+import {
+  applyTriggerOriginStart,
+  canUseTriggerOrigin,
+  clearTriggerOriginStyles,
+  isTriggerOrigin,
+  playTriggerOriginEnter,
+  playTriggerOriginExit,
+  resolveTrigger
+} from "controllers/flat_pack/trigger_origin"
 
 export default class extends Controller {
   static targets = ["dialog"]
   static values = {
     closeOnBackdrop: { type: Boolean, default: true },
-    closeOnEscape: { type: Boolean, default: true }
+    closeOnEscape: { type: Boolean, default: true },
+    origin: { type: String, default: "center" }
   }
 
   connect() {
     this.previousActiveElement = null
+    this.triggerElement = null
     this.hideTimeout = null
     this.closing = false
+    this.usedTriggerOrigin = false
     this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
     document.addEventListener("click", this.handleDocumentTriggerClick)
 
@@ -44,6 +56,7 @@ export default class extends Controller {
       this.previousActiveElement = document.activeElement
     }
 
+    this.rememberTrigger()
     this.preventBodyScroll()
     this.element.classList.remove("hidden")
     this.element.classList.add("flex")
@@ -51,15 +64,31 @@ export default class extends Controller {
     this.element.scrollTop = 0
     this.element.offsetHeight
 
-    this.applyEnterMotion()
-    this.element.style.opacity = "1"
+    const resumeTriggerOrigin = this.usedTriggerOrigin && wasClosing
+    this.usedTriggerOrigin = resumeTriggerOrigin || this.shouldUseTriggerOrigin()
 
-    requestAnimationFrame(() => {
-      if (!this.hasDialogTarget) return
+    if (this.usedTriggerOrigin && this.hasDialogTarget) {
+      this.applyEnterMotion()
+      this.element.style.opacity = "1"
+      if (!resumeTriggerOrigin) {
+        applyTriggerOriginStart(this.dialogTarget, this.triggerElement)
+      }
+      requestAnimationFrame(() => {
+        if (!this.hasDialogTarget) return
 
-      this.dialogTarget.style.opacity = "1"
-      this.dialogTarget.style.scale = prefersReducedMotion() ? "none" : "1"
-    })
+        playTriggerOriginEnter(this.dialogTarget)
+      })
+    } else {
+      this.applyEnterMotion()
+      this.element.style.opacity = "1"
+
+      requestAnimationFrame(() => {
+        if (!this.hasDialogTarget) return
+
+        this.dialogTarget.style.opacity = "1"
+        this.dialogTarget.style.scale = prefersReducedMotion() ? "none" : "1"
+      })
+    }
 
     setTimeout(() => this.trapFocus(), 100)
   }
@@ -74,7 +103,12 @@ export default class extends Controller {
     this.element.style.opacity = "0"
     this.restoreBodyScroll()
 
-    if (this.hasDialogTarget) {
+    const closedFromTrigger = this.usedTriggerOrigin &&
+      this.hasDialogTarget &&
+      playTriggerOriginExit(this.dialogTarget, this.triggerElement)
+
+    if (this.hasDialogTarget && !closedFromTrigger) {
+      if (this.usedTriggerOrigin) clearTriggerOriginStyles(this.dialogTarget)
       this.dialogTarget.style.opacity = "0"
       if (!prefersReducedMotion()) {
         this.dialogTarget.style.scale = "0.95"
@@ -84,6 +118,8 @@ export default class extends Controller {
     this.hideTimeout = setTimeout(() => {
       this.hideTimeout = null
       this.closing = false
+      this.usedTriggerOrigin = false
+      if (this.hasDialogTarget) clearTriggerOriginStyles(this.dialogTarget)
       this.element.classList.remove("flex")
       this.element.classList.add("hidden")
       this.element.setAttribute("aria-hidden", "true")
@@ -107,7 +143,19 @@ export default class extends Controller {
     if (!modalId || modalId !== this.element.id) return
 
     this.previousActiveElement = trigger
+    this.triggerElement = trigger
     this.open()
+  }
+
+  rememberTrigger() {
+    this.triggerElement = resolveTrigger(this.triggerElement, this.previousActiveElement)
+  }
+
+  shouldUseTriggerOrigin() {
+    if (!isTriggerOrigin(this.originValue)) return false
+    if (!this.hasDialogTarget) return false
+
+    return canUseTriggerOrigin(this.triggerElement, this.dialogTarget)
   }
 
   clickBackdrop(event) {

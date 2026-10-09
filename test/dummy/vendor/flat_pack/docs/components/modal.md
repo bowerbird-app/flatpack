@@ -26,6 +26,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 | `close_on_escape` | Boolean | `true` | no | Allow closing on Escape. |
 | `navigable` | Boolean | `false` | no | Opt-in multi-screen navigation. Off keeps today’s markup and behaviour. |
 | `src` | String | `nil` | with `navigable` | Turbo Frame URL loaded lazily on open. Required when `navigable: true`. Relative, `http`, and `https` only. Not a clickable `href`. |
+| `origin` | Symbol | `:center` | no | Enter/exit origin. `:center` is today’s fade and scale (markup unchanged). `:trigger` grows the panel out of the control that opened it and shrinks back on close. Not a shape morph. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into modal root element. |
 
 ## Slots
@@ -39,6 +40,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 - Size variants via `size`.
 - Scroll variants via `scroll` (`:body`, `:page`).
 - Body sizing variants via `body_height_mode` (`:auto`, `:fixed`, `:min`).
+- Origin variants via `origin` (`:center`, `:trigger`).
 
 ## Example
 ```erb
@@ -104,6 +106,29 @@ Navigable screens (opt-in). Default calls are unchanged. The body becomes a Turb
 <% end %>
 ```
 
+Grow from the control that opened it. Default calls stay on `:center`. Logic lives in `trigger_origin.js` so Drawer can reuse it later. Picker, Modal Filter, and other Modal hosts stay on `:center` unless they pass `origin:`.
+
+```erb
+<%= render FlatPack::Modal::Component.new(id: "invite-modal", title: "Invite member", origin: :trigger) do |modal| %>
+  <% modal.body do %>
+    <p class="text-sm">Send access to a new collaborator.</p>
+  <% end %>
+<% end %>
+```
+
+`origin: :trigger` measures the opening control (the click target or its closest `[data-modal-id]`, or `document.activeElement` for a keyboard open). The panel starts translated and scaled over that rect, then eases to identity on `--duration-slow` / `--easing-enter`. Close remeasures the control and reverses on `--duration-base` / `--easing-exit`. Only `transform` and `opacity` animate. Backdrop fade is unchanged.
+
+It falls back to the `:center` fade and scale when:
+
+- No trigger is known (programmatic open, Turbo Stream, or open on page load)
+- The trigger was removed or is fully off-screen
+- `prefers-reduced-motion: reduce` (fade only, same as today)
+- The viewport is narrower than `640px` (`sm`). Near-full-width cards growing from a corner look wrong on a phone.
+
+Works with every `size`, `scroll: :body`, and `scroll: :page` (including `sticky_footer: true`). Focus still moves into the dialog and back to the trigger.
+
+With `navigable: true`, only the first open and the final close use the trigger motion. Screen-to-screen navigation is unchanged.
+
 `data-fp-nav` values: `push` (load into the frame and stack the URL), `back` (re-fetch the previous URL; DOM is not cached), `close` (clear history and close), `replace` (update the current URL without growing the stack), `reset` (clear the stack and make this URL the root). Closing the dialog clears history. Reopening starts at `src`. Browser history is not used (`pushState` is not called).
 
 The header is managed: title comes from the current screen, a back arrow appears only when the stack has a previous URL, and close stays. Title changes are announced (`aria-live`). Focus moves to the heading (or the remembered control on back). One dialog and one focus trap for the whole flow. Escape still closes.
@@ -128,7 +153,7 @@ The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem
 - Escape/backdrop close controls are configurable.
 - Tab cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown` even when Escape close is off. The dialog itself is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
-- Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse. Motion writes the Tailwind v4 `scale` property (not `transform`).
+- Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse. `:center` writes the Tailwind v4 `scale` property (not `transform`). `:trigger` writes `transform` and `opacity` from `trigger_origin.js` and falls back to that fade when the trigger cannot be used.
 - Navigable modals keep one `role="dialog"` and update `aria-labelledby` through the stable title id. A polite live region announces the new title. The back button is omitted from the tab order until there is a previous screen.
 
 ## Dependencies

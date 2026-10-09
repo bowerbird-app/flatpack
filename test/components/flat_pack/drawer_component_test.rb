@@ -13,6 +13,8 @@ module FlatPack
         html = page.native.to_html
 
         assert_includes html, "data-controller=\"flat-pack--drawer\""
+        refute_includes html, "flat-pack--modal-origin-value"
+        refute_includes html, "trigger_origin"
         assert_includes html, "z-[70]"
         refute_includes html, "fixed inset-0 z-50 hidden"
         assert_includes html, "fp-drawer-body"
