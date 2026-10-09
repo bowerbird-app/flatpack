@@ -12,7 +12,9 @@ class PagesGalleryEditorDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="flat-pack--modal flat-pack--navigable"'
     assert_includes response.body, "turbo-frame"
     assert_includes response.body, "gallery-editor-screen"
-    assert_includes response.body, 'data-fp-nav="push"'
+    assert_includes response.body, 'data-fp-nav="back"'
+    assert_includes response.body, 'data-fp-nav="retry"'
+    refute_includes response.body, 'data-fp-nav="push"'
     assert_select "#basic-modal[data-controller='flat-pack--modal']"
     assert_select "#gallery-editor[data-controller='flat-pack--modal flat-pack--navigable']"
   end
