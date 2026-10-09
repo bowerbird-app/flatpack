@@ -420,6 +420,12 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
 - Card stat trends: `--color-success-background-color`, `--color-danger-background-color`
 
+### FAB
+- Main control: `--fab-size` (56px `:md`), `--fab-size-sm` (40px), `--fab-size-lg` (64px)
+- Speed-dial glyphs: `--fab-action-size`, `--fab-action-size-sm`, `--fab-action-size-lg`
+- Stack gap: `--fab-action-gap` (sm uses `--fab-action-gap-sm`)
+- `style: :danger` on a speed-dial action uses `--button-danger-background-color`, `--button-danger-hover-background-color`, and `--button-danger-text-color` — the same tokens TrashButton uses. Default actions keep `--fab-action-*`.
+
 ## Dark mode and named themes
 
 See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from the default palette. `rounded` is an alias of the default. Component aliases are declared on `:root, [data-theme]` and re-resolve against that element's semantic tokens.

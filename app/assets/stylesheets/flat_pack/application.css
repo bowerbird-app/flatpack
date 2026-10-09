@@ -670,6 +670,16 @@
   height: var(--fab-size-lg);
 }
 
+.fp-fab[data-fp-size="sm"] {
+  --fab-action-gap: var(--fab-action-gap-sm);
+}
+
+.fp-fab[data-fp-size="sm"] .fp-fab__trigger {
+  width: var(--fab-size-sm);
+  height: var(--fab-size-sm);
+  gap: 0.5rem;
+}
+
 .fp-fab__trigger:hover {
   background-color: var(--fab-hover-background-color);
   box-shadow: var(--fab-shadow-hover);
@@ -716,6 +726,11 @@
 
   .fp-fab[data-fp-size="lg"] .fp-fab__trigger--extended {
     min-width: var(--fab-size-lg);
+  }
+
+  .fp-fab[data-fp-size="sm"] .fp-fab__trigger--extended {
+    min-width: var(--fab-size-sm);
+    padding: 0 1rem 0 0.75rem;
   }
 
   .fp-fab__trigger--extended .fp-fab__text {
@@ -777,6 +792,20 @@
   height: var(--fab-action-size-lg);
 }
 
+.fp-fab[data-fp-size="sm"] .fp-fab__action-glyph {
+  width: var(--fab-action-size-sm);
+  height: var(--fab-action-size-sm);
+}
+
+.fp-fab[data-fp-size="sm"] .fp-fab__action-glyph svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.fp-fab[data-fp-size="sm"] .fp-fab__action {
+  gap: 0.5rem;
+}
+
 .fp-fab__action:hover .fp-fab__action-glyph {
   background-color: var(--fab-action-hover-background-color);
   box-shadow: var(--fab-shadow-hover);
@@ -795,6 +824,28 @@
     var(--fab-action-shadow),
     0 0 0 2px var(--fab-focus-ring-offset-color),
     0 0 0 4px var(--fab-focus-ring-color);
+}
+
+.fp-fab__action[data-fp-style="danger"] .fp-fab__action-glyph {
+  background-color: var(--button-danger-background-color);
+  color: var(--button-danger-text-color);
+}
+
+.fp-fab__action[data-fp-style="danger"]:hover .fp-fab__action-glyph,
+.fp-fab__action[data-fp-style="danger"]:focus-visible .fp-fab__action-glyph {
+  background-color: var(--button-danger-hover-background-color);
+  color: var(--button-danger-text-color);
+}
+
+.fp-fab__action[data-fp-style="danger"]:focus-visible .fp-fab__action-glyph {
+  box-shadow:
+    var(--fab-action-shadow),
+    0 0 0 2px var(--fab-focus-ring-offset-color),
+    0 0 0 4px var(--button-danger-background-color);
+}
+
+.fp-fab[data-fp-size="sm"] .fp-fab__action-label {
+  padding: 0.25rem 0.5rem;
 }
 
 .fp-fab__action-label {

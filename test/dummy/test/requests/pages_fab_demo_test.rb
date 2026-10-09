@@ -18,6 +18,12 @@ class PagesFabDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open the phone layout"
     assert_includes response.body, "with_action"
     assert_includes response.body, "layout"
+    assert_includes response.body, 'data-fp-size="sm"'
+    assert_includes response.body, 'data-fp-style="danger"'
+    assert_includes response.body, "Edit title"
+    assert_includes response.body, "Trash"
+    assert_includes response.body, "Add section"
+    assert_includes response.body, "contained-editor"
   end
 
   test "fab demo honors a corner query" do

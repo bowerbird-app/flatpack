@@ -12,7 +12,7 @@ module FlatPack
 
       POSITIONS = %i[bottom_right bottom_left top_right top_left].freeze
       LAYOUTS = %i[stack].freeze
-      SIZES = %i[md lg].freeze
+      SIZES = %i[sm md lg].freeze
       OFFSET_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em)\z/
 
       def initialize(
@@ -167,7 +167,11 @@ module FlatPack
       end
 
       def trigger_icon_size
-        (@size == :lg) ? :xl : :lg
+        case @size
+        when :lg then :xl
+        when :sm then :md
+        else :lg
+        end
       end
 
       def extended?

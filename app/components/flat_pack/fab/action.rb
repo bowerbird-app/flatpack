@@ -3,13 +3,17 @@
 module FlatPack
   module Fab
     class Action < FlatPack::BaseComponent
-      def initialize(icon:, label:, href: nil, **system_arguments)
+      STYLES = %i[default danger].freeze
+
+      def initialize(icon:, label:, href: nil, style: :default, **system_arguments)
         super(**system_arguments)
         @icon = icon
         @label = label.to_s
+        @style = style.to_sym
         @href = href ? FlatPack::AttributeSanitizer.sanitize_url(href) : nil
 
         validate_label!
+        validate_style!
         validate_href!(href) if href
       end
 
@@ -50,16 +54,28 @@ module FlatPack
       end
 
       def item_data
-        {
+        data = {
           flat_pack__fab_target: "action",
           action: "click->flat-pack--fab#choose"
         }
+        data[:fp_style] = "danger" if danger?
+        data
+      end
+
+      def danger?
+        @style == :danger
       end
 
       def validate_label!
         return if @label.present?
 
         raise ArgumentError, "FAB actions need a label."
+      end
+
+      def validate_style!
+        return if STYLES.include?(@style)
+
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.join(", ")}"
       end
 
       def validate_href!(original_url)

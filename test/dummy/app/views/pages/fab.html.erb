@@ -142,20 +142,73 @@
   </p>
 </section>
 
-<section class="mb-24" id="sizes">
+<section class="mb-12" id="sizes">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Sizes",
     anchor_link: true,
-    subtitle: "Medium is 56px. Large is a bit bigger."
+    subtitle: "Small is 40px. Medium is 56px. Large is a bit bigger."
   ) %>
-  <div class="grid gap-4 sm:grid-cols-2">
-    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden">
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden" id="size-sm-stage">
+      <%= render FlatPack::Fab::Component.new(contained: true, size: :sm, label: "Small") %>
+    </div>
+    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden" id="size-md-stage">
       <%= render FlatPack::Fab::Component.new(contained: true, size: :md, label: "Medium") %>
     </div>
-    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden">
+    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden" id="size-lg-stage">
       <%= render FlatPack::Fab::Component.new(contained: true, size: :lg, label: "Large") %>
     </div>
   </div>
+</section>
+
+<section class="mb-24" id="contained-editor">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "In a section",
+    anchor_link: true,
+    subtitle: "A small plus in the corner of each block. Trash is the red action."
+  ) %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4 max-w-2xl">
+    Pin a FAB inside a block with <code class="text-sm">contained: true</code>. It stays in that block, not on the page. Top-right opens the list downward.
+  </p>
+  <div class="flex flex-col gap-4" id="editor-stack">
+    <% [
+      {title: "Show title", body: "Harbour lights. A short heading the kit can change."},
+      {title: "The story", body: "Two paragraphs of copy sit in this block. The plus in the corner opens edit, reorder, trash, and add."},
+      {title: "Credits", body: "Director, camera, and a short list of names."}
+    ].each_with_index do |section, index| %>
+      <div class="relative rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-5 pr-16 min-h-72" id="editor-section-<%= index %>">
+        <p class="text-sm font-semibold text-[var(--surface-content-color)]"><%= section[:title] %></p>
+        <p class="mt-2 text-sm text-[var(--surface-muted-content-color)] max-w-xl"><%= section[:body] %></p>
+        <%= render FlatPack::Fab::Component.new(
+          contained: true,
+          position: :top_right,
+          size: :sm,
+          backdrop: false,
+          offset: "0.75rem"
+        ) do |fab| %>
+          <% fab.with_action(icon: :pencil, label: "Edit title") %>
+          <% fab.with_action(icon: :document_text, label: "Edit content") %>
+          <% fab.with_action(icon: :arrows_up_down, label: "Reorder") %>
+          <% fab.with_action(icon: :trash, label: "Trash", style: :danger) %>
+          <% fab.with_action(icon: :plus, label: "Add section") %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Contained small FAB (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Fab::Component.new(contained: true, position: :top_right, size: :sm, backdrop: false) do |fab| #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :pencil, label: "Edit title") #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :document_text, label: "Edit content") #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :arrows_up_down, label: "Reorder") #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :trash, label: "Trash", style: :danger) #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :plus, label: "Add section") #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
 </section>
 
 <%= render "shared/related_demos", links: [

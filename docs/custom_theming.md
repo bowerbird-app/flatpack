@@ -187,11 +187,14 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --fab-focus-ring-color: var(--color-ring);
   --fab-focus-ring-offset-color: var(--surface-background-color);
   --fab-size: 3.5rem;
+  --fab-size-sm: 2.5rem;
   --fab-size-lg: 4rem;
   --fab-action-size: 2.5rem;
+  --fab-action-size-sm: 1.75rem;
   --fab-action-size-lg: 3rem;
   --fab-inset: 1rem;
   --fab-action-gap: 0.75rem;
+  --fab-action-gap-sm: 0.5rem;
   --fab-z-index: 45;
   --quote-border-color: var(--surface-border-color);
   --quote-border-width: 4px;

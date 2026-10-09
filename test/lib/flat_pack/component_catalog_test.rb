@@ -120,6 +120,26 @@ module FlatPack
       assert_includes examples.first.fetch(:erb), "FlatPack::TrashButton::Component"
     end
 
+    test "show Fab binds SIZES POSITIONS LAYOUTS and Action STYLES" do
+      payload = FlatPack::ComponentCatalog.show("Fab::Component")
+      size = parameter_named(payload, "size")
+      position = parameter_named(payload, "position")
+      layout = parameter_named(payload, "layout")
+
+      assert_equal %w[sm md lg], size.fetch(:enum)
+      assert_equal "md", size.fetch(:default)
+      assert_equal %w[bottom_right bottom_left top_right top_left], position.fetch(:enum)
+      assert_equal "bottom_right", position.fetch(:default)
+      assert_equal %w[stack], layout.fetch(:enum)
+      assert_equal "stack", layout.fetch(:default)
+
+      action = FlatPack::ComponentCatalog.show("Fab::Action")
+      style = parameter_named(action, "style")
+
+      assert_equal %w[default danger], style.fetch(:enum)
+      assert_equal "default", style.fetch(:default)
+    end
+
     test "show Masonry binds ORDERS to order and GAPS to gap" do
       payload = FlatPack::ComponentCatalog.show("Masonry::Component")
       order = parameter_named(payload, "order")
