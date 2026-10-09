@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.215] - 2026-10-09
+
+### Fixed
+- RangeInput’s slider thumb uses `--color-primary` so the handle is visible in the default light theme. The ring stays `--surface-background-color` (plus the existing thumb shadow) so it still reads on the primary fill and the grey track, in light and dark, WebKit and Firefox.
+
+### Changed
+- Bumped the gem version to `0.1.215`.
+
+### Upgrade notes
+- `--range-thumb-color` now aliases `--color-primary` instead of `--surface-background-color`. `--range-thumb-border-color` is still `--surface-background-color`. Token names are unchanged, so a host override of either name still wins.
+- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.215`.
+
 ## [0.1.214] - 2026-10-09
 
 ### Added

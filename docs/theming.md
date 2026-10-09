@@ -44,7 +44,7 @@ These follow `--color-primary` (and `--color-primary-text` for text or icons on 
 
 - `--color-ring` — focus rings
 - `--sidebar-item-active-background-color` / `--top-nav-item-active-background-color` — selected nav fills
-- `--button-primary-*`, `--badge-primary-*`, `--tabs-pill-active-*`, `--progress-fill-color`, `--range-fill-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, and other primary-filled controls
+- `--button-primary-*`, `--badge-primary-*`, `--tabs-pill-active-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, and other primary-filled controls
 
 The bottom nav bar (`--bottom-nav-background-color`) is a dark surface, not a brand fill. Dark and ocean set their own bar colours. Active bottom-nav *items* use `--bottom-nav-item-active-color` (contrast on that bar), not `--color-primary`.
 
@@ -389,6 +389,7 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 ### Range Input
 - Kit class: `.fp-range-input`
 - Track / fill / thumb: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`
+- Thumb fill aliases `--color-primary` so it tracks brand and `data-theme`. The ring aliases `--surface-background-color` so the handle reads on both the primary fill and the grey track. Disabled uses the native input’s reduced opacity, so the thumb stays muted rather than full primary.
 - Size: `--range-track-height`, `--range-thumb-size` (hit target is `--hit-target-min`)
 - Runtime fill: `--range-progress` on the input (percentage). Not a theme token.
 
