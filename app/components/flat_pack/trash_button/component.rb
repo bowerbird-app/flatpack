@@ -146,6 +146,7 @@ module FlatPack
           data: {
             controller: "flat-pack--trash-button",
             fp_armed: @armed ? "true" : "false",
+            fp_size: @size.to_s,
             fp_expand: @expand.to_s,
             "flat-pack--trash-button-armed-value": @armed,
             "flat-pack--trash-button-timeout-value": @timeout,

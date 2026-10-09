@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Bumped the gem version to `0.1.219`.
 
+### Fixed
+- Rest, Confirm, and Cancel share one height for each `size:` (`:sm` / `:md` / `:lg`). Cancel is the icon-only square. Labelled rest and Confirm use that same height so arming does not jump. Scoped to `.fp-trash-button`; other Buttons are unchanged.
+
 ### Upgrade notes
 - New component. Existing Button calls, markup, and styles are unchanged.
 - Pass `url:` only when Confirm should submit a form. JS-only callers listen for `flat-pack:trash-button:confirm` and may `preventDefault` to skip the submit.

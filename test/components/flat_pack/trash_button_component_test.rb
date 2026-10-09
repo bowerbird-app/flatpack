@@ -10,6 +10,7 @@ module FlatPack
 
         assert_selector ".fp-trash-button[data-controller='flat-pack--trash-button']"
         assert_selector ".fp-trash-button[data-fp-armed='false']"
+        assert_selector ".fp-trash-button[data-fp-size='md']"
         assert_selector ".fp-trash-button[data-fp-expand='right']"
         assert_selector ".fp-trash-button[role='group'][aria-label='Trash']"
         assert_selector "button.fp-trash-button__arm[data-fp-style='default'][aria-label='Trash']"
@@ -41,12 +42,23 @@ module FlatPack
       def test_sizes_match_button_tokens
         render_inline(Component.new(size: :sm))
 
+        assert_selector ".fp-trash-button[data-fp-size='sm']"
         assert_includes page.native.to_html, "p-[var(--button-icon-only-padding-sm)]"
+        assert_includes page.native.to_html, "fp-hit-target"
 
         render_inline(Component.new(text: "Trash", size: :lg))
 
+        assert_selector ".fp-trash-button[data-fp-size='lg']"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
         assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "p-[var(--button-icon-only-padding-lg)]"
+      end
+
+      def test_cancel_is_icon_only_at_the_same_size
+        render_inline(Component.new(text: "Trash", size: :sm))
+
+        assert_selector "button.fp-trash-button__cancel-btn.fp-hit-target[aria-label='Cancel']"
+        assert_includes page.native.to_html, "p-[var(--button-icon-only-padding-sm)]"
       end
 
       def test_armed_starts_in_confirm_state

@@ -1233,13 +1233,59 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.08);
 }
 
-/* TrashButton only. Do not reuse these rules on other buttons. */
+/* TrashButton only. Do not reuse these rules on other buttons.
+ * Height matches an icon-only Button of the same size, including --hit-target-min.
+ * Icon boxes: sm 1rem (w-4), md 1.25rem (w-5), lg 1.5rem (w-6).
+ */
 .fp-trash-button {
+  --fp-trash-button-size: max(
+    var(--hit-target-min),
+    calc((var(--button-icon-only-padding-md) * 2) + 1.25rem + 2px)
+  );
   display: inline-flex;
   align-items: center;
   position: relative;
   max-width: 100%;
   vertical-align: middle;
+}
+
+.fp-trash-button[data-fp-size="sm"] {
+  --fp-trash-button-size: max(
+    var(--hit-target-min),
+    calc((var(--button-icon-only-padding-sm) * 2) + 1rem + 2px)
+  );
+}
+
+.fp-trash-button[data-fp-size="md"] {
+  --fp-trash-button-size: max(
+    var(--hit-target-min),
+    calc((var(--button-icon-only-padding-md) * 2) + 1.25rem + 2px)
+  );
+}
+
+.fp-trash-button[data-fp-size="lg"] {
+  --fp-trash-button-size: max(
+    var(--hit-target-min),
+    calc((var(--button-icon-only-padding-lg) * 2) + 1.5rem + 2px)
+  );
+}
+
+.fp-trash-button .fp-trash-button__arm,
+.fp-trash-button .fp-trash-button__confirm-btn,
+.fp-trash-button .fp-trash-button__cancel-btn {
+  box-sizing: border-box;
+  height: var(--fp-trash-button-size);
+  min-height: var(--fp-trash-button-size);
+  padding-block: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.fp-trash-button .fp-trash-button__arm.fp-hit-target,
+.fp-trash-button .fp-trash-button__cancel-btn {
+  width: var(--fp-trash-button-size);
+  min-width: var(--fp-trash-button-size);
+  padding-inline: 0;
 }
 
 .fp-trash-button[data-fp-expand="left"] {

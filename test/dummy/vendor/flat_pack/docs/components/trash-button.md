@@ -18,7 +18,7 @@ Use this for row actions and other tight delete controls where a modal would be 
 | `url` | String, nil | `nil` | no | Form action for confirm. Relative or `http`/`https`/`mailto`/`tel` only. When set, confirm submits like `button_to` (Turbo-friendly). |
 | `method` | Symbol | `:delete` | no | Form method when `url` is set. Allowed: `:delete`, `:post`, `:put`, `:patch`, `:get`. |
 | `expand` | Symbol | `:right` | no | Where Cancel slides in, so the confirm button stays under the pointer. Allowed: `:right`, `:left`. Use `:left` in a right-aligned table cell. |
-| `size` | Symbol | `:md` | no | Same scale as Button: `:sm`, `:md`, `:lg`. |
+| `size` | Symbol | `:md` | no | Same scale as Button: `:sm`, `:md`, `:lg`. Rest, Confirm, and Cancel share that size’s icon-only height. Cancel is the square footprint. |
 | `timeout` | Integer, false | `4000` | no | Milliseconds before it returns to rest. `0` or `false` disables auto-revert. |
 | `armed` | Boolean | `false` | no | Start on the Confirm + Cancel step. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded to the outer group (`class`, `id`, `data`, `aria`). |
@@ -27,7 +27,7 @@ Use this for row actions and other tight delete controls where a modal would be 
 None.
 
 ## Variants
-- Icon-only (default) or labelled (`text:`)
+- Icon-only (default) or labelled (`text:`). Both keep the same control height as Cancel.
 - Expand `:right` or `:left`
 - Rest, hover/focus (danger tokens), and armed (Confirm + Cancel)
 - Form confirm (`url:`) or JS-only (`flat-pack:trash-button:confirm`)

@@ -32,14 +32,35 @@
 </section>
 
 <section class="mb-12" id="trash-sizes">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Same sm / md / lg scale as Button.") %>
-  <div class="flex flex-wrap items-center gap-3 mb-4">
-    <%= render FlatPack::TrashButton::Component.new(size: :sm, timeout: 0) %>
-    <%= render FlatPack::TrashButton::Component.new(size: :md, timeout: 0) %>
-    <%= render FlatPack::TrashButton::Component.new(size: :lg, timeout: 0) %>
-    <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: :sm, timeout: 0) %>
-    <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: :md, timeout: 0) %>
-    <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: :lg, timeout: 0) %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Rest, Confirm, and Cancel share one height. Cancel is the icon-only square.") %>
+  <div class="flex flex-col gap-6 mb-4">
+    <% [
+      {size: :sm, label: "Small"},
+      {size: :md, label: "Medium"},
+      {size: :lg, label: "Large"}
+    ].each do |row| %>
+      <div>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-2"><%= row[:label] %></p>
+        <div class="flex flex-wrap items-center gap-6">
+          <div class="flex flex-col gap-1">
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Icon rest</p>
+            <%= render FlatPack::TrashButton::Component.new(size: row[:size], timeout: 0) %>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Icon armed</p>
+            <%= render FlatPack::TrashButton::Component.new(size: row[:size], armed: true, timeout: 0) %>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Label rest</p>
+            <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: row[:size], timeout: 0) %>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p class="text-xs text-[var(--surface-muted-content-color)]">Label armed</p>
+            <%= render FlatPack::TrashButton::Component.new(text: "Trash", size: row[:size], armed: true, timeout: 0) %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </section>
 
