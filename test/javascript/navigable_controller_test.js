@@ -27,6 +27,7 @@ class FakeNode {
     this.listeners = {}
     this.focused = false
     this.src = attributes.src || ''
+    this.style = {}
   }
 
   getAttribute(name) {
@@ -259,11 +260,24 @@ test('back pops history, re-visits the previous url, and hides the back button a
   assert.equal(frame.src, '/gallery/1')
   assert.equal(backButton.hidden, false)
 
+  controller.pendingAction = null
   controller.back()
   assert.equal(controller.stack.length, 0)
   assert.equal(controller.currentUrl, '/gallery')
   assert.equal(frame.src, '/gallery')
   assert.equal(backButton.hidden, true)
+})
+
+test('a second back during an in-flight back does not skip a screen', () => {
+  const {controller} = buildController()
+  controller.applyHistory('/gallery/1', 'push')
+  controller.applyHistory('/gallery/1/photographer', 'push')
+
+  controller.back()
+  controller.back()
+
+  assert.equal(controller.stack.length, 1)
+  assert.equal(controller.currentUrl, '/gallery/1')
 })
 
 test('close and onClosed clear history and reset the frame to src', () => {

@@ -528,7 +528,7 @@
     <%= render FlatPack::Button::Component.new(
       text: "Open gallery",
       style: :primary,
-      data: {"modal-id": "gallery-editor"}
+      data: {action: "click->flat-pack--modal#open", "modal-id": "gallery-editor"}
     ) %>
   </div>
 

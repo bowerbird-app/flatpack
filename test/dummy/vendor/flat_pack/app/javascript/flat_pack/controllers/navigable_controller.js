@@ -147,12 +147,13 @@ export default class extends Controller {
 
   back() {
     if (this.stack.length === 0) return
+    if (this.pendingAction === NAV_BACK) return
     if (!this.dispatch("before-visit", {url: this.peekUrl(), action: NAV_BACK})) return
 
+    this.pendingAction = NAV_BACK
     const entry = this.stack.pop()
     this.restoreSelector = entry.focus
     this.currentUrl = entry.url
-    this.pendingAction = NAV_BACK
     this.updateBackButton()
     this.visit(entry.url)
   }
@@ -334,19 +335,35 @@ export default class extends Controller {
 
   showLoading() {
     this.hideError()
+    this.setBusy(true)
     if (this.hasLoadingTarget) this.toggleHidden(this.loadingTarget, false)
-    if (this.hasFrameTarget) this.frameTarget.setAttribute("aria-busy", "true")
+    if (this.hasFrameTarget) {
+      this.frameTarget.setAttribute("aria-busy", "true")
+      this.frameTarget.style.visibility = "hidden"
+    }
   }
 
   hideLoading() {
     if (this.hasLoadingTarget) this.toggleHidden(this.loadingTarget, true)
-    if (this.hasFrameTarget) this.frameTarget.removeAttribute("aria-busy")
+    if (this.hasFrameTarget) {
+      this.frameTarget.removeAttribute("aria-busy")
+      if (!this.hasErrorTarget || this.errorTarget.hidden) {
+        this.frameTarget.style.visibility = ""
+        this.setBusy(false)
+      }
+    } else {
+      this.setBusy(false)
+    }
   }
 
   showError() {
-    this.hideLoading()
+    if (this.hasLoadingTarget) this.toggleHidden(this.loadingTarget, true)
+    this.setBusy(true)
     if (this.hasErrorTarget) this.toggleHidden(this.errorTarget, false)
-    if (this.hasFrameTarget) this.frameTarget.setAttribute("aria-busy", "false")
+    if (this.hasFrameTarget) {
+      this.frameTarget.setAttribute("aria-busy", "false")
+      this.frameTarget.style.visibility = "hidden"
+    }
     this.pendingAction = null
     if (this.hasErrorTarget) {
       const retry = this.errorTarget.querySelector("button, [data-fp-nav='retry']")
@@ -356,6 +373,15 @@ export default class extends Controller {
 
   hideError() {
     if (this.hasErrorTarget) this.toggleHidden(this.errorTarget, true)
+    if (this.hasFrameTarget && (!this.hasLoadingTarget || this.loadingTarget.hidden)) {
+      this.frameTarget.style.visibility = ""
+      this.setBusy(false)
+    }
+  }
+
+  setBusy(busy) {
+    if (busy) this.element.setAttribute("data-fp-navigable-busy", "true")
+    else this.element.removeAttribute("data-fp-navigable-busy")
   }
 
   closeOverlay() {

@@ -293,7 +293,6 @@ module FlatPack
           disabled: true,
           aria: {label: fp_t("modal.back"), hidden: true},
           data: {
-            action: "flat-pack--navigable#back",
             "flat-pack--navigable-target": "backButton",
             fp_nav: "back"
           }) do
@@ -441,7 +440,7 @@ module FlatPack
               render FlatPack::Button::Component.new(
                 text: fp_t("modal.retry"),
                 style: :primary,
-                data: {fp_nav: "retry", action: "flat-pack--navigable#retry"}
+                data: {fp_nav: "retry"}
               )
             end
           end
