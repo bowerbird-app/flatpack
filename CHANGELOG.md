@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.213] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `scroll: :body | :page` (default `:body`, today’s capped card with an internal body scroller) and `sticky_footer:` (default `false`). `scroll: :page` sizes the dialog to its content and scrolls the overlay. Short page-scroll dialogs still sit like today. `sticky_footer: true` requires `:page` and pins the action row to the bottom of the viewport.
+
+### Changed
+- Bumped the gem version to `0.1.213`.
+- Modal enter/exit motion writes the Tailwind v4 `scale` property, matching Command palette.
+
+### Fixed
+- Opening a modal no longer leaves the dialog at `scale-95`. Tailwind 4’s `scale-95` uses the CSS `scale` property; the controller was writing `transform: scale(1)`.
+- Dialog height cap and overlay min-height use `dvh` with a `vh` fallback, so iOS Safari toolbars do not hide the footer.
+- `.fp-overlay-pad` is unlayered, same as `.fp-top-nav`, so host Tailwind preflight cannot zero overlay insets when Flatpack CSS is linked first. Drawer, Command palette, and carousel lightbox share that class.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. Pass `scroll: :page` only when the overlay should scroll. Pass `sticky_footer: true` only with `:page`.
+- Rebuild host Tailwind so `sm:my-auto` is generated if you use page scroll. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.213`.
+
 ## [0.1.212] - 2026-10-09
 
 ### Added

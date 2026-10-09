@@ -64,23 +64,6 @@
     transform: none;
   }
 
-  /* Overlay inset padding: existing 1rem / 1.5rem pad, never less than the notch. */
-  .fp-overlay-pad {
-    padding-top: max(1rem, env(safe-area-inset-top, 0px));
-    padding-right: max(1rem, env(safe-area-inset-right, 0px));
-    padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
-    padding-left: max(1rem, env(safe-area-inset-left, 0px));
-  }
-
-  @media (min-width: 640px) {
-    .fp-overlay-pad {
-      padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
-      padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
-      padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
-      padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
-    }
-  }
-
   .fp-toast-region {
     top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + calc(var(--spacing) * 4));
     right: calc(env(safe-area-inset-right, 0px) + calc(var(--spacing) * 4));
@@ -537,6 +520,83 @@
   .fp-top-nav[data-scrolled="true"] {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+}
+
+/* Overlay inset padding: 1rem / 1.5rem, never less than the notch.
+ * Unlayered for the same preflight reason as .fp-top-nav. Modal, drawer,
+ * command palette, and carousel lightbox all use this class.
+ */
+.fp-overlay-pad {
+  padding-top: max(1rem, env(safe-area-inset-top, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+}
+
+@media (min-width: 640px) {
+  .fp-overlay-pad {
+    padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+  }
+}
+
+/* Visual viewport height with a vh fallback for browsers without dvh.
+ * Body-scroll dialogs cap to the overlay; page-scroll dialogs only min-size
+ * the wrapper so tall content can grow and the overlay scrolls.
+ */
+.fp-modal-overlay-min {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.fp-modal-dialog-cap {
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+}
+
+.fp-modal-page-sticky {
+  min-height: calc(100vh - 2rem);
+  min-height: calc(100dvh - 2rem);
+}
+
+.fp-modal-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--modal-surface-color);
+}
+
+.fp-modal-sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  margin-top: auto;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  margin-bottom: -1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  background-color: var(--modal-surface-color);
+  box-shadow: 0 -1px 0 var(--modal-border-color);
+}
+
+@media (min-width: 640px) {
+  .fp-modal-page-sticky {
+    min-height: calc(100vh - 3rem);
+    min-height: calc(100dvh - 3rem);
+  }
+
+  .fp-modal-sticky-footer {
+    margin-left: -1.5rem;
+    margin-right: -1.5rem;
+    margin-bottom: -1.5rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1.5rem;
   }
 }
 

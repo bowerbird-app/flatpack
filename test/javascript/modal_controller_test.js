@@ -18,7 +18,11 @@ function loadModalController(documentStub) {
   const context = {
     module: { exports: {} },
     exports: {},
-    document: documentStub
+    document: documentStub,
+    window: { innerWidth: 1024 },
+    requestAnimationFrame: (fn) => fn(),
+    setTimeout: (fn) => 1,
+    clearTimeout: () => {}
   }
 
   vm.runInNewContext(transformedSource, context, { filename: filePath })
@@ -36,20 +40,55 @@ function button(id) {
   }
 }
 
+function classListStub(initial = []) {
+  const names = new Set(initial)
+  return {
+    names,
+    contains(name) { return names.has(name) },
+    add(...added) { added.forEach((name) => names.add(name)) },
+    remove(...removed) { removed.forEach((name) => names.delete(name)) }
+  }
+}
+
 function buildController({ buttons, hidden = false } = {}) {
-  const documentStub = { activeElement: null }
+  const documentStub = {
+    activeElement: null,
+    body: {
+      style: {
+        overflow: "",
+        paddingRight: "",
+        overscrollBehavior: "",
+        removeProperty(name) { this[name.replace(/-([a-z])/g, (_, c) => c.toUpperCase())] = "" }
+      },
+      dataset: {},
+      addEventListener() {},
+      removeEventListener() {}
+    },
+    documentElement: { clientWidth: 1024 },
+    addEventListener() {},
+    removeEventListener() {}
+  }
   const ModalController = loadModalController(documentStub)
   const focusable = buttons || [button('first'), button('middle'), button('last')]
   const dialog = {
+    style: {},
     contains(node) { return focusable.includes(node) },
     focus() { this.focused = true },
     querySelectorAll() { return focusable }
   }
+  const classList = classListStub(hidden ? ['hidden'] : [])
 
   const controller = Object.assign(new ModalController(), {
     hasDialogTarget: true,
     dialogTarget: dialog,
-    element: { classList: { contains: (name) => hidden && name === 'hidden' } }
+    element: {
+      classList,
+      style: {},
+      scrollTop: 40,
+      attributes: { 'aria-hidden': hidden ? 'true' : 'false' },
+      setAttribute(name, value) { this.attributes[name] = value },
+      offsetHeight: 1
+    }
   })
 
   return { controller, focusable, dialog, documentStub }
@@ -96,4 +135,25 @@ test('tab between first and last does not wrap', () => {
   assert.equal(event.prevented, false)
   assert.equal(focusable[0].focused, undefined)
   assert.equal(focusable[2].focused, undefined)
+})
+
+test('open writes the Tailwind v4 scale property and resets overlay scroll', () => {
+  const { controller, dialog } = buildController({ hidden: true })
+
+  controller.open()
+
+  assert.equal(controller.element.scrollTop, 0)
+  assert.equal(dialog.style.opacity, '1')
+  assert.equal(dialog.style.scale, '1')
+  assert.equal(dialog.style.transform, undefined)
+})
+
+test('close writes the Tailwind v4 scale property', () => {
+  const { controller, dialog } = buildController({ hidden: false })
+
+  controller.close()
+
+  assert.equal(dialog.style.opacity, '0')
+  assert.equal(dialog.style.scale, '0.95')
+  assert.equal(dialog.style.transform, undefined)
 })

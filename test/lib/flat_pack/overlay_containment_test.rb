@@ -54,6 +54,23 @@ module FlatPack
       assert_includes css[rule_at, 500], "padding-right: max(1rem, env(safe-area-inset-right, 0px));"
     end
 
+    test "overlay pad and modal viewport caps are unlayered and use dvh" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      layer_end = layered_components_end_index(css)
+      pad_at = css.index(/^\.fp-overlay-pad \{/)
+
+      refute_nil pad_at
+      assert_operator pad_at, :>, layer_end
+      assert_includes css, ".fp-modal-overlay-min"
+      assert_includes css, ".fp-modal-dialog-cap"
+      assert_includes css, ".fp-modal-page-sticky"
+      assert_includes css, ".fp-modal-sticky-footer"
+      assert_includes css, "min-height: 100vh;"
+      assert_includes css, "min-height: 100dvh;"
+      assert_includes css, "max-height: calc(100vh - 2rem);"
+      assert_includes css, "max-height: calc(100dvh - 2rem);"
+    end
+
     def layered_components_end_index(css)
       start = css.index("@layer components")
       raise "missing @layer components" unless start
@@ -74,6 +91,7 @@ module FlatPack
     test "drawer and command palette animate Tailwind v4 translate and scale" do
       drawer = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/drawer_controller.js").read
       palette = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/command_palette_controller.js").read
+      modal = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/modal_controller.js").read
 
       assert_includes drawer, "style.translate"
       assert_includes drawer, "closedTranslate"
@@ -84,6 +102,9 @@ module FlatPack
       refute_includes drawer, "style.transform"
       assert_includes palette, "style.scale"
       refute_includes palette, "style.transform"
+      assert_includes modal, "style.scale"
+      assert_includes modal, "this.element.scrollTop = 0"
+      refute_includes modal, "style.transform"
     end
 
     test "modal body lock also sets overscroll-behavior none" do
