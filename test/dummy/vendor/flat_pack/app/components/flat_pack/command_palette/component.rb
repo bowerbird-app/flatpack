@@ -6,16 +6,16 @@ module FlatPack
       def initialize(
         id:,
         items:,
-        placeholder: "Search commands",
-        empty_text: "No matching commands",
+        placeholder: FlatPack::Copy::OMITTED,
+        empty_text: FlatPack::Copy::OMITTED,
         shortcut: true,
         **system_arguments
       )
         super(**system_arguments)
         @palette_id = id
         @items = Array(items)
-        @placeholder = placeholder
-        @empty_text = empty_text
+        @placeholder = fp_text(placeholder, "command_palette.placeholder")
+        @empty_text = fp_text(empty_text, "command_palette.empty")
         @shortcut = shortcut
         validate_id!
         validate_items!
@@ -33,7 +33,7 @@ module FlatPack
       private
 
       def grouped_items
-        @items.group_by { |item| item[:group].presence || "Commands" }
+        @items.group_by { |item| item[:group].presence || fp_t("command_palette.group") }
       end
 
       def root_attributes
@@ -74,7 +74,7 @@ module FlatPack
       def dialog_attributes
         {
           role: "dialog",
-          aria: {modal: "true", label: "Command palette"},
+          aria: {modal: "true", label: fp_t("command_palette.label")},
           class: dialog_classes,
           data: {"flat-pack--command-palette-target": "dialog"}
         }

@@ -9,7 +9,7 @@ module FlatPack
         back_icon: "chevron-left",
         back_tooltip: nil,
         # Deprecated: Use back_tooltip instead.
-        back_label: "Go back",
+        back_label: FlatPack::Copy::OMITTED,
         back_style: :secondary,
         back_size: :md,
         secondary_anchor_href: nil,
@@ -19,7 +19,7 @@ module FlatPack
         anchor_icon: "x-mark",
         anchor_tooltip: nil,
         # Deprecated: Use anchor_tooltip instead.
-        anchor_label: "Close",
+        anchor_label: FlatPack::Copy::OMITTED,
         anchor_style: :secondary,
         anchor_size: :md,
         **system_arguments
@@ -27,18 +27,18 @@ module FlatPack
         super(**system_arguments)
 
         @back_icon = back_icon
-        @back_label = back_tooltip.presence || back_label
+        @back_label = back_tooltip.presence || fp_text(back_label, "page_nav.back")
         @back_style = back_style
         @back_size = back_size
 
         @secondary_anchor_href = secondary_anchor_href
         @secondary_anchor_icon = secondary_anchor_icon
         @secondary_anchor_tooltip = secondary_anchor_tooltip
-        @secondary_anchor_label = secondary_anchor_tooltip.presence || "Previous page"
+        @secondary_anchor_label = secondary_anchor_tooltip.presence || fp_t("page_nav.previous")
 
         @anchor_href = anchor_href
         @anchor_icon = anchor_icon
-        @anchor_label = anchor_tooltip.presence || anchor_label
+        @anchor_label = anchor_tooltip.presence || fp_text(anchor_label, "page_nav.close")
         @anchor_style = anchor_style
         @anchor_size = anchor_size
       end
@@ -74,7 +74,7 @@ module FlatPack
       def nav_attributes
         merge_attributes(
           class: "flat-pack-page-nav",
-          aria: {label: "Page navigation"},
+          aria: {label: fp_t("page_nav.label")},
           data: {controller: "flat-pack--page-nav"}
         )
       end

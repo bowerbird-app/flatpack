@@ -2,7 +2,7 @@
 
 FlatPack uses inset rings for selected, active, drag, and focus-visible states. Keep focus-ring color tokens sufficiently distinct from their component backgrounds so the indicator remains accessible inside overflow-clipped containers.
 
-FlatPack ships with a default rounded / charcoal palette in `:root` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
+FlatPack ships with a default rounded / charcoal palette on `:root, [data-theme]` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
 
 Use this guide when you want a complete starting point instead of hand-picking a few overrides.
 
@@ -11,10 +11,10 @@ Use this guide when you want a complete starting point instead of hand-picking a
 FlatPack's theming surface has three layers:
 
 - `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
-- `:root {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.).
+- `:root, [data-theme] {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.). Repeating the wiring on `[data-theme]` re-resolves those aliases when `data-theme` is on `<body>` or another descendant, not only on `<html>`.
 - `[data-theme="rounded"]` is an empty alias of that default.
-- `[data-theme="..."]` selectors override **only** tokens that differ from `:root` (semantic / intentional exceptions). Component aliases inherit.
-- `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `.fp-button[data-fp-style]`. See [Button](components/button.md).
+- `[data-theme="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
+- `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
 For most apps, generate a brand kit instead of copying every variable:
 
@@ -33,9 +33,48 @@ That means a custom host-app theme is usually just brand/semantic overrides:
 }
 ```
 
-For an exact primary hex, set `--color-primary` / `--color-primary-hover` instead of the brand primitives.
+For an exact primary hex, set `--color-primary`. Hover derives from that colour (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), with a `--brand-*` fallback in browsers that do not support relative colour syntax. Override `--color-primary-hover` only when hover should diverge. Focus rings (`--color-ring`) and active sidebar / top-nav fills follow `--color-primary`. Text and icons on those fills follow `--color-primary-text` (default `#fff` — keep it unless the fill is light). The bottom nav bar is inverted chrome (`--bottom-nav-background-color`); leave it unless you want a different bar colour.
 
-Any non-`light` theme value applied to `<html data-theme="...">` will activate the matching selector.
+Any non-`light` theme value applied to `<html data-theme="...">` (or `<body data-theme="...">`) will activate the matching selector.
+
+## Minimal brand themes
+
+A named host theme should set semantic tokens, not component aliases. Component tokens are wired on `:root, [data-theme]` and re-resolve when `data-theme` is on `<body>`.
+
+**Light** — pick one path:
+
+- Recolor primary: `--brand-hue` / `--brand-chroma` / `--brand-lightness`
+- Exact hex: `--color-primary` (and `--color-primary-text` if the fill is light)
+- Surfaces, if they should differ from the kit greys: `--surface-page-background-color`, `--surface-background-color`, `--surface-muted-background-color`, `--surface-border-color`, `--surface-content-color`, `--surface-muted-content-color`
+
+**Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`.
+
+```css
+[data-theme="featured-in"] {
+  --color-primary: #c41e6a;
+  --color-primary-text: #fff;
+  --surface-page-background-color: oklch(0.98 0.01 350);
+  --surface-background-color: oklch(0.99 0.005 350);
+  --surface-muted-background-color: oklch(0.94 0.02 350);
+  --surface-border-color: oklch(0.86 0.03 350);
+  --surface-content-color: oklch(0.22 0.04 350);
+  --surface-muted-content-color: oklch(0.45 0.03 350);
+}
+
+[data-theme="featured-in-dark"] {
+  color-scheme: dark;
+  --color-primary: oklch(0.72 0.18 350);
+  --color-primary-text: oklch(0.18 0.04 350);
+  --surface-page-background-color: oklch(0.16 0.02 350);
+  --surface-background-color: oklch(0.18 0.02 350);
+  --surface-muted-background-color: oklch(0.24 0.03 350);
+  --surface-border-color: oklch(0.32 0.03 350);
+  --surface-content-color: oklch(0.94 0.01 350);
+  --surface-muted-content-color: oklch(0.72 0.02 350);
+}
+```
+
+Do not copy `--button-*`, `--color-ghost-*`, or `--list-item-*` onto a brand theme unless that control should diverge from the surface tokens.
 
 ## Fastest Path
 
@@ -43,7 +82,7 @@ Any non-`light` theme value applied to `<html data-theme="...">` will activate t
 2. If you need a named theme with extra semantic/surface tweaks, create or open a host stylesheet that loads **after** the FlatPack tags.
 3. Start from brand/semantic overrides. Copy the complete starter block below only when you need a full fork.
 4. Rename `[data-theme="your-theme-name"]` to your own theme name.
-5. Apply the theme by setting `data-theme="your-theme-name"` on `<html>`.
+5. Apply the theme by setting `data-theme="your-theme-name"` on `<html>` (preferred) or `<body>`. Derived tokens re-resolve in either place.
 
 Example:
 
@@ -63,7 +102,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
 ```css
 [data-theme="your-theme-name"] {
   --color-primary: oklch(0.52 0.26 250);
-  --color-primary-hover: oklch(0.42 0.24 250);
+  --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
   --color-primary-text: oklch(1.0 0 0);
 
   --color-default: var(--surface-background-color);
@@ -71,13 +110,13 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
 
-  --color-secondary: oklch(0.95 0.01 250);
-  --color-secondary-hover: oklch(0.90 0.02 250);
-  --color-secondary-text: oklch(0.25 0.02 250);
+  --color-secondary: color-mix(in oklab, var(--surface-muted-background-color) 18%, var(--surface-background-color));
+  --color-secondary-hover: color-mix(in oklab, var(--surface-muted-background-color) 70%, var(--surface-background-color));
+  --color-secondary-text: var(--surface-content-color);
 
   --color-ghost: transparent;
-  --color-ghost-hover: oklch(0.96 0.01 250);
-  --color-ghost-text: oklch(0.35 0.02 250);
+  --color-ghost-hover: color-mix(in oklab, var(--surface-muted-background-color) 35%, var(--surface-background-color));
+  --color-ghost-text: var(--surface-content-color);
 
   --color-success-background-color: oklch(62.7% .194 149.214);
   --color-success-hover-background-color: oklch(57% .194 149.214);
@@ -107,6 +146,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
 
   --surface-border-color: oklch(0.89 0.01 250);
   --surface-border-hover-color: oklch(0.82 0.02 250);
+  --overlay-backdrop-color: rgb(0 0 0 / 0.5);
+  --overlay-scrim-color: rgb(31 41 55 / 0.68);
   --checkbox-size: 1.25rem;
   --checkbox-radius: 0.125rem;
   --checkbox-label-gap: 0.75rem;
@@ -202,9 +243,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
   --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--color-primary);
-  --tabs-pill-active-border-color: var(--color-primary);
-  --tabs-pill-active-text-color: var(--color-primary-text);
+  --tabs-pill-active-background-color: var(--button-primary-background-color);
+  --tabs-pill-active-border-color: var(--button-primary-border-color);
+  --tabs-pill-active-text-color: var(--button-primary-text-color);
   --tabs-pill-active-shadow: var(--shadow-md);
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
   --tabs-pill-inactive-hover-background-color: var(--surface-muted-background-color);
@@ -247,7 +288,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
-  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
+  --carousel-chevron-background-color: var(--overlay-scrim-color);
   --carousel-control-background-color: rgb(0 0 0 / 0.6);
   --carousel-control-hover-background-color: rgb(0 0 0 / 0.8);
   --carousel-control-text-color: oklch(1.0 0 0);
@@ -264,7 +305,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --carousel-caption-below-text-color: var(--surface-muted-content-color);
   --carousel-media-background-color: oklch(0 0 0);
   --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
-  --modal-backdrop-color: rgb(0 0 0 / 0.5);
+  --modal-backdrop-color: var(--overlay-backdrop-color);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
   --modal-title-color: var(--surface-content-color);
@@ -327,10 +368,20 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --list-marker-color: var(--surface-muted-content-color);
   --list-marker-min-width: 1.5rem;
   --list-marker-gap: 0.5rem;
+  --collection-editor-background-color: var(--surface-background-color);
+  --collection-editor-border-color: var(--surface-border-color);
+  --collection-editor-radius: var(--radius-md);
+  --collection-editor-row-background-color: transparent;
+  --collection-editor-row-hover-background-color: var(--list-item-hover-background-color);
+  --collection-editor-row-padding: 0.75rem;
+  --collection-editor-title-color: var(--surface-content-color);
+  --collection-editor-description-color: var(--surface-muted-content-color);
+  --collection-editor-handle-color: var(--surface-muted-content-color);
+  --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
-  --sidebar-item-active-background-color: oklch(0.52 0.26 250);
-  --sidebar-item-active-text-color: oklch(1.0 0 0);
-  --sidebar-item-active-icon-color: oklch(1.0 0 0);
+  --sidebar-item-active-background-color: var(--color-primary);
+  --sidebar-item-active-text-color: var(--color-primary-text);
+  --sidebar-item-active-icon-color: var(--color-primary-text);
   --sidebar-group-item-indent: 0.75rem;
   --sidebar-footer-text-color: oklch(0.45 0.01 250);
   --sidebar-header-background-color: var(--sidebar-background-color);
@@ -554,9 +605,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-item-icon-color: oklch(0.45 0.01 250);
   --top-nav-item-hover-background-color: oklch(0.96 0.01 250);
   --top-nav-item-hover-text-color: oklch(0.20 0.01 250);
-  --top-nav-item-active-background-color: oklch(0.52 0.26 250);
-  --top-nav-item-active-text-color: oklch(1.0 0 0);
-  --top-nav-item-active-icon-color: oklch(1.0 0 0);
+  --top-nav-item-active-background-color: var(--color-primary);
+  --top-nav-item-active-text-color: var(--color-primary-text);
+  --top-nav-item-active-icon-color: var(--color-primary-text);
   --top-nav-height: 72px;
   --top-nav-backdrop-blur: 16px;
 
@@ -580,7 +631,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --search-result-hover-background-color: var(--surface-muted-background-color);
   --search-result-divider-color: var(--surface-border-color);
 
-  --color-ring: oklch(0.52 0.26 250);
+  --color-ring: var(--color-primary);
   --icon-stroke-width: 1.5;
 
   --stack-gap-sm: 0.5rem;
@@ -601,7 +652,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --table-cell-muted-text-color: var(--surface-muted-content-color);
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
-  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
+  --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
   --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: 0.5rem;
@@ -680,16 +731,16 @@ One limitation remains: the controller's built-in label helper only knows the sh
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.
 
 - `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
-- `:root {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from `:root`. `[data-theme="rounded"]` is an empty alias of the default. Component aliases inherit.
+- `:root, [data-theme] {}` contains the default rounded / charcoal palette and component aliases.
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default. `[data-theme="rounded"]` is an empty alias of the default. Component aliases re-resolve on `[data-theme]`.
 
-When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied.
+When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring`, `--sidebar-item-active-background-color`, and `--top-nav-item-active-background-color` follow `--color-primary`; you only set them when they should diverge.
 
 ## Practical Editing Order
 
 If you do not want to retune hundreds of variables at once, start with these groups first:
 
-1. Core surface and text tokens: `--surface-*`, `--color-primary*`, `--color-secondary*`, `--color-default*`, `--color-ring`, `--icon-stroke-width`
+1. Core surface and text tokens: `--surface-*`, `--color-primary*` (hover, ring, and active nav follow), `--color-secondary*` / `--color-ghost-*` (follow surface unless you override them), `--color-default*`, `--overlay-backdrop-color`, `--overlay-scrim-color`, `--icon-stroke-width`
 2. Global feel tokens: `--radius-*`, `--shadow-*`, `--stack-gap-*`
 3. High-visibility component tokens: `--button-*`, `--card-*`, `--modal-*`, `--sidebar-*`, `--top-nav-*`
 4. Lower-frequency component tokens only when those components appear in your app

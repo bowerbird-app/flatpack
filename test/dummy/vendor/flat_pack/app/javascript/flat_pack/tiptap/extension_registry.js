@@ -37,6 +37,8 @@
  *   TableOfContents, Selection, FileHandler
  */
 
+import { flatPackCopy } from "flat_pack/copy"
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 /**
@@ -82,7 +84,7 @@ async function buildMinimalExtensions(config) {
     }),
 
     Placeholder.configure({
-      placeholder: config.placeholder || "Start writing…",
+      placeholder: config.placeholder || flatPackCopy("rich_text.placeholder"),
     }),
 
     Link.configure({
@@ -292,7 +294,7 @@ async function buildFullExtensions(config) {
       additions.push(
         collaborationCursorMod.CollaborationCursor.configure({
           provider: collabConfig.provider,
-          user:     collabConfig.user || { name: "Anonymous", color: "#6366f1" },
+          user:     collabConfig.user || { name: flatPackCopy("rich_text.anonymous"), color: "#6366f1" },
         })
       )
     }

@@ -1,0 +1,375 @@
+en:
+  flatpack:
+    common:
+      close: Close
+      dismiss: Dismiss
+      remove: Remove
+      cancel: Cancel
+      apply: Apply
+      loading: Loading
+      search: Search
+      previous: Prev
+      next: Next
+      back: Back
+      edit: Edit
+      save: Save
+      delete: Delete
+      reset: Reset
+    alert:
+      dismiss: Dismiss
+    avatar:
+      alt: Avatar
+    badge:
+      remove: Remove
+    bottom_nav:
+      label: Bottom navigation
+    breadcrumb:
+      label: Breadcrumb
+      back: Back
+      home: Home
+    button:
+      loading: Loading
+    carousel:
+      label: Carousel
+      slide: Slide %{current} of %{total}
+      previous: Previous slide
+      next: Next slide
+      expand_image: Expand image
+      lightbox: Image lightbox
+      close_lightbox: Close lightbox
+      go_to_slide: Go to slide %{number}
+      show_slide: Show slide %{number}
+      thumbnail: Thumbnail %{number}
+      video_thumbnail: Video thumbnail %{number}
+      slide_fallback: Slide %{number}
+    chart:
+      region: Region
+      value: Value
+      all: All
+      date_range: Date range
+      status: Status
+    chart_buttons:
+      apply: Apply
+    chip:
+      remove: Remove
+    collection_editor:
+      new_record: New %{label}
+      edit_record: Edit %{label}
+      choose_image: Choose image
+      already_joined: This image is already on this page
+      create_failed: Could not create the record
+      load_failed: Could not load the record
+      save_failed: Could not save the record
+    code_block:
+      snippets: Code snippets
+      snippet: Snippet
+      examples: Code Examples
+      example: Code Example
+    color_swatch:
+      fallback: Color
+    combobox:
+      placeholder: Search
+      empty: No matches
+    command_palette:
+      placeholder: Search commands
+      empty: No matching commands
+      group: Commands
+      label: Command palette
+    comments:
+      placeholder: Write a comment...
+      submit: Comment
+      cancel: Cancel
+      you: You
+      title: Comments
+      empty_title: No comments yet
+      empty_description: Be the first to share your thoughts.
+      locked: Locked
+      show_replies: Show replies
+      system: System
+      edited: " (edited)"
+      deleted: This comment has been deleted.
+    content_editor:
+      edit: Edit
+      save: Save
+      cancel: Cancel
+      bold: Bold
+      italic: Italic
+      underline: Underline
+      strikethrough: Strikethrough
+      clear_formatting: Clear formatting
+      heading_1: Heading 1
+      heading_2: Heading 2
+      heading_3: Heading 3
+      bullet_list: Bullet list
+      ordered_list: Ordered list
+      blockquote: Blockquote
+      insert_link: Insert / edit link
+      insert_image: Insert image
+      image_upload_failed: Image upload failed.
+      edit_url: "Edit URL (leave blank to remove):"
+      enter_url: "Enter URL:"
+      save_failed: Save failed. Please try again.
+    date:
+      select: Select date
+      select_range: Select date range
+      range: Date range
+      quick_select: Quick select
+      previous: Prev
+      next: Next
+      cancel: Cancel
+      apply: Apply
+      back_to_range: Back to date range
+      pick_in_calendar: Pick in calendar
+      today: Today
+      yesterday: Yesterday
+      last_3_days: Last 3 days
+      this_week: This week
+      last_week: Last week
+      last_4_weeks: Last 4 weeks
+      this_month: This month
+      last_month: Last month
+      this_year: This year
+      last_year: Last year
+      weekday_mo: Mo
+      weekday_tu: Tu
+      weekday_we: We
+      weekday_th: Th
+      weekday_fr: Fr
+      weekday_sa: Sa
+      weekday_su: Su
+    date_picker:
+      summary: Select a date from calendar or use a quick range preset.
+    drawer:
+      close: Close
+    file_input:
+      upload: Upload a file
+      or_drag: " or drag and drop"
+      max_size: "Max size: %{size}"
+      size_exceeded: File "%{name}" exceeds maximum size of %{size}
+      size_bytes: "%{count}B"
+      size_kilobytes: "%{count}KB"
+      size_megabytes: "%{count}MB"
+    font_swatch:
+      fallback: Font
+    form:
+      please_select: Please select an option.
+      invalid_selection: Invalid selection.
+      invalid_value: Invalid value.
+    modal:
+      close: Close
+    modal_filter:
+      trigger: Filter
+      title: Filters
+      apply: Apply
+      reset: Reset
+    notification:
+      bell: Notifications
+      empty: No recent notifications
+      fallback: Notification
+      see_all: See all notifications
+      overflow: 9+
+    page_nav:
+      back: Go back
+      close: Close
+      previous: Previous page
+      label: Page navigation
+    pagination:
+      loading_more: Loading more…
+      label: Pagination
+      previous: Previous page
+      next: Next page
+      page: Page %{number}
+      error_loading: Error loading. Try again.
+      loading: Loading…
+    password:
+      show: Show password
+      hide: Hide password
+    picker:
+      title: Select Assets
+      confirm: Use Selected
+      close: Close
+      search_placeholder: Search assets...
+      empty: No assets found
+      search_label: Search available assets
+      untitled: Untitled
+    progress:
+      label: Progress
+      percent: "%{count}%"
+    search:
+      placeholder: Search...
+      no_results: No results found
+      clear: Clear search
+      searching: Searching...
+      result_fallback: Result
+    search_input:
+      clear: Clear search
+    section_title:
+      copy_link: Copy link
+      copy_link_to: Copy link to %{title}
+    select:
+      placeholder: Select an option
+      search: Search...
+      remove: Remove %{label}
+      type_to_search: Type at least %{count} characters to search
+      searching: Searching...
+      empty: No options found
+    sidebar:
+      expand: Expand sidebar
+      collapse: Collapse sidebar
+      open: Open sidebar
+      title: FlatPack
+    skeleton:
+      loading: Loading…
+    skip_link:
+      text: Skip to content
+    spinner:
+      loading: Loading
+    stepper:
+      progress: Progress
+    tabs:
+      label: Tabs
+    table:
+      empty: No data available
+      sort: Sort
+    text:
+      copy_input: Copy input value
+      copy_textarea: Copy textarea value
+      characters: "%{count} characters"
+      characters_with_limit: "%{count}/%{limit} characters"
+      formatting_toolbar: Formatting toolbar
+    timestamp:
+      fallback: "-"
+      in: In %{distance}
+      ago: "%{distance} ago"
+      just_now: Just now
+      a_min_ago: a min ago
+      minutes_ago: "%{count} minutes ago"
+      hours_ago: "%{count} hours ago"
+      yesterday: Yesterday
+      days_ago: "%{count} days ago"
+      weeks_ago: "%{count} weeks ago"
+      months_ago: "%{count} months ago"
+      short_a_min_ago: a min ago
+      short_min_ago: "%{count} min ago"
+      short_hr_ago: "%{count}hr ago"
+      short_yesterday: 1d ago
+      short_d_ago: "%{count}d ago"
+      short_wk_ago: "%{count}wk ago"
+      short_mo_ago: "%{count}mo ago"
+    toast:
+      dismiss: Dismiss
+    top_nav:
+      more: More navigation items
+    rich_text:
+      placeholder: Start writing…
+      anonymous: Anonymous
+      insert_content: Insert content
+      bold: Bold
+      italic: Italic
+      underline: Underline
+      strikethrough: Strikethrough
+      inline_code: Inline code
+      highlight: Highlight
+      heading_1: Heading 1
+      heading_2: Heading 2
+      heading_3: Heading 3
+      bullet_list: Bullet list
+      numbered_list: Numbered list
+      task_list: Task list
+      blockquote: Blockquote
+      align_left: Align left
+      align_center: Align center
+      align_right: Align right
+      insert_link: Insert/edit link
+      link: Link
+      insert_image: Insert image
+      insert_table: Insert table
+      undo: Undo
+      redo: Redo
+      link_placeholder: https://
+      apply: Apply
+      remove: Remove
+      image_placeholder: Image URL (https://...)
+      insert: Insert
+      upload_from_computer: Upload from computer
+      uploading: Uploading…
+      upload_failed: Upload failed
+      upload_failed_connection: Upload failed — check your connection
+      enter_link_url: "Enter link URL:"
+      text_formatting: Text formatting
+      or_upload: "— or upload a file —"
+      upload_image_file: Upload image file
+    chat:
+      placeholder: Type a message...
+      send: Send message
+      back: Back
+      back_to_conversations: Back to conversations
+      loading_older: Loading older messages...
+      jump_to_latest: Jump to latest
+      jump_to_latest_message: Jump to latest message
+      sending: Sending...
+      failed: Failed
+      edit: Edit
+      delete: Delete
+      typing: Someone is typing
+      outgoing_images: Outgoing chat images
+      incoming_images: Incoming chat images
+      image: Image
+      you: You
+      attachment: Attachment
+    billing:
+      status_alert:
+        past_due:
+          title: Past due
+          description: Update your payment method to keep this workspace on its plan.
+        trial_ending:
+          title: Trial ending soon
+          description: Add a payment method before the trial ends to avoid interruption.
+        payment_failed:
+          title: Payment failed
+          description: Your last payment did not go through. Try another card or contact your bank.
+        canceled:
+          title: Plan canceled
+          description: This workspace is no longer on a paid plan.
+      plan_picker:
+        popular: Popular
+        current: Current
+        current_plan: Current plan
+        get_started: Get started
+      plan_summary:
+        active: Active
+        trial: Trial
+        past_due: Past due
+        canceled: Canceled
+        incomplete: Incomplete
+      invoice_list:
+        title: Invoices
+        empty_title: No invoices yet
+        empty_description: They’ll show up here after your first payment.
+        paid: Paid
+        open: Open
+        failed: Failed
+        void: Void
+        date: Date
+        amount: Amount
+        status: Status
+        actions: Actions
+        download: Download
+      payment_method:
+        title: Payment method
+        empty_title: No card on file
+        empty_description: Add a payment method to keep billing up to date.
+        expires: Expires %{date}
+      usage_meter:
+        unlimited: "%{used} · Unlimited"
+        of: "%{used} of %{limit}"
+    clipboard:
+      nothing: Nothing to copy
+      copied: Copied to clipboard
+      unable: Unable to copy
+    theme:
+      system: System
+      light: Light
+      dark: Dark
+      ocean: Ocean
+      rounded: Rounded

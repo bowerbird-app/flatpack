@@ -15,19 +15,34 @@ Use Tabs when content can be split into a small number of peer sections in the s
 | `default_tab` | Integer | `0` | no | Zero-based index of initially active tab/panel. |
 | `variant` | Symbol | `:underline` | no | Visual style: `:underline`, `:pills`, `:stacked`. |
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Button::Pill; invalid values raise). |
+| `style` | Symbol | `:primary` | no | Colour of the active pill or stacked control. Same names as [Button](button.md) `style`. Unknown names raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for root wrapper. |
 
 ## Slots
 None (content is defined through component builder methods).
 
 ## Variants
-- `:underline` horizontal underline tabs.
-- `:pills` pill-style horizontal tabs.
-- `:stacked` vertical tab list with side-by-side layout on medium+ breakpoints.
+- `:underline` horizontal underline tabs. `style:` is accepted. Underline paint does not change.
+- `:pills` pill-style horizontal tabs. `style:` paints the active control. The default `:primary` uses the pill colour.
+- `:stacked` vertical tab list with side-by-side layout on medium+ breakpoints. `style:` paints the active control the same way as pills.
 
 ## Example
 ```erb
 <%= render FlatPack::Tabs::Component.new(default_tab: 0, variant: :underline) do |tabs| %>
+  <% tabs.tab(label: "Overview", id: "overview") do %>
+    <p>Overview content</p>
+  <% end %>
+
+  <% tabs.tab(label: "Activity", id: "activity") do %>
+    <p>Activity content</p>
+  <% end %>
+<% end %>
+```
+
+Pill and stacked tabs take the same `style:` names as Button. `:primary` is the default.
+
+```erb
+<%= render FlatPack::Tabs::Component.new(variant: :pills, style: :default) do |tabs| %>
   <% tabs.tab(label: "Overview", id: "overview") do %>
     <p>Overview content</p>
   <% end %>

@@ -190,6 +190,7 @@ Rails.application.routes.draw do
   get "demo/grid", to: "pages#grid"
   get "demo/grid/two_columns", to: "pages#grid_two_columns"
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
+  get "demo/masonry", to: "pages#masonry"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/charts/types", to: "pages#charts_types"

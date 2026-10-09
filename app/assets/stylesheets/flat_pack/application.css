@@ -1950,3 +1950,110 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+/* Masonry: CSS columns by default. Rows order upgrades to grid + spans. */
+.fp-masonry {
+  --fp-masonry-gap: 1rem;
+  --fp-masonry-row: 8px;
+}
+
+.fp-masonry--columns {
+  column-gap: var(--fp-masonry-gap);
+}
+
+.fp-masonry--columns > * {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 var(--fp-masonry-gap);
+  vertical-align: top;
+  min-width: 0;
+}
+
+.fp-masonry__image {
+  outline: 1px solid color-mix(in oklch, var(--surface-content-color) 10%, transparent);
+  outline-offset: -1px;
+}
+
+.fp-masonry__link {
+  display: block;
+  border-radius: var(--radius-md);
+}
+
+.fp-masonry__link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fp-masonry__link {
+    transition: opacity var(--duration-fast) var(--easing-standard);
+  }
+
+  .fp-masonry__link:hover {
+    opacity: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-masonry__link {
+    transition: none;
+  }
+}
+
+@supports not (grid-template-rows: masonry) {
+  .fp-masonry--rows:not([data-fp-masonry-ready]) {
+    column-gap: var(--fp-masonry-gap);
+  }
+
+  .fp-masonry--rows:not([data-fp-masonry-ready]) > * {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 var(--fp-masonry-gap);
+    vertical-align: top;
+    min-width: 0;
+  }
+}
+
+@supports (grid-template-rows: masonry) {
+  .fp-masonry--rows {
+    display: grid;
+    gap: var(--fp-masonry-gap);
+    grid-template-rows: masonry;
+    column-count: unset;
+    column-width: auto;
+  }
+
+  .fp-masonry--rows > * {
+    display: block;
+    width: auto;
+    margin-bottom: 0;
+    break-inside: auto;
+    -webkit-column-break-inside: auto;
+    page-break-inside: auto;
+    min-width: 0;
+  }
+}
+
+.fp-masonry--rows[data-fp-masonry-ready] {
+  display: grid;
+  gap: var(--fp-masonry-gap);
+  grid-auto-rows: var(--fp-masonry-row);
+  column-count: unset;
+  column-width: auto;
+}
+
+.fp-masonry--rows[data-fp-masonry-ready] > * {
+  display: block;
+  width: auto;
+  margin-bottom: 0;
+  break-inside: auto;
+  -webkit-column-break-inside: auto;
+  page-break-inside: auto;
+  min-width: 0;
+}
+

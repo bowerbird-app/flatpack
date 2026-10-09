@@ -32,6 +32,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "max-w-sm" "max-w-xl" "max-w-2xl" "max-w-4xl" "max-w-6xl"
+      # "sm:my-auto"
       SIZES = {
         sm: "max-w-sm",
         md: "max-w-xl",
@@ -41,11 +42,14 @@ module FlatPack
       }.freeze
 
       BODY_HEIGHT_MODES = %i[auto fixed min].freeze
+      SCROLL_MODES = %i[body page].freeze
 
       def initialize(
         id:,
         title: nil,
         size: :md,
+        scroll: :body,
+        sticky_footer: false,
         body_height_mode: :auto,
         body_height: nil,
         close_on_backdrop: true,
@@ -56,6 +60,8 @@ module FlatPack
         @modal_id = id
         @title = title
         @size = size.to_sym
+        @scroll = scroll.to_sym
+        @sticky_footer = sticky_footer
         @body_height_mode = body_height_mode.to_sym
         @body_height = body_height
         @close_on_backdrop = close_on_backdrop
@@ -63,20 +69,27 @@ module FlatPack
 
         validate_id!
         validate_size!
+        validate_scroll!
+        validate_sticky_footer!
         validate_body_height_mode!
         validate_body_height!
       end
 
       def call
         content_tag(:div, **backdrop_attributes) do
-          safe_join([
-            render_backdrop,
-            render_dialog
-          ])
+          render_dialog
         end
       end
 
       private
+
+      def page_scroll?
+        @scroll == :page
+      end
+
+      def sticky_footer?
+        page_scroll? && @sticky_footer && footer?
+      end
 
       def backdrop_attributes
         merge_attributes(
@@ -86,6 +99,7 @@ module FlatPack
             controller: "flat-pack--modal",
             "flat-pack--modal-close-on-backdrop-value": @close_on_backdrop,
             "flat-pack--modal-close-on-escape-value": @close_on_escape,
+            fp_modal_scroll: @scroll,
             action: action_attributes
           },
           aria: {
@@ -115,28 +129,34 @@ module FlatPack
         )
       end
 
-      def render_backdrop
-        # Empty div that acts as clickable backdrop
+      def render_click_backdrop
+        # Sits inside the growing wrapper so margin clicks still close after the overlay scrolls.
         content_tag(:div,
           nil,
-          class: "absolute inset-0",
+          class: "absolute inset-0 pointer-events-auto",
           data: {action: "click->flat-pack--modal#clickBackdrop"})
       end
 
       def render_dialog
         content_tag(:div, class: dialog_wrapper_classes) do
-          content_tag(:div, **dialog_attributes) do
-            safe_join([
-              render_header_section || render_close_button_row,
-              render_body_content,
-              render_footer_content
-            ].compact)
-          end
+          safe_join([
+            render_click_backdrop,
+            content_tag(:div, **dialog_attributes) do
+              safe_join([
+                render_header_section || render_close_button_row,
+                render_body_content,
+                render_footer_content
+              ].compact)
+            end
+          ])
         end
       end
 
       def dialog_wrapper_classes
-        "relative flex w-full min-h-screen items-start sm:items-center justify-center fp-overlay-pad"
+        classes(
+          "relative flex w-full fp-modal-overlay-min justify-center fp-overlay-pad pointer-events-none",
+          page_scroll? ? "items-start" : "items-start sm:items-center"
+        )
       end
 
       def dialog_attributes
@@ -158,13 +178,16 @@ module FlatPack
 
       def dialog_classes
         classes(
+          "pointer-events-auto",
           "relative",
           "flex",
           "flex-col",
-          "min-h-0",
-          "max-h-[calc(100vh-2rem)]",
+          page_scroll? ? nil : "min-h-0",
+          page_scroll? ? nil : "fp-modal-dialog-cap",
           "w-full",
-          "overflow-hidden",
+          page_scroll? ? nil : "overflow-hidden",
+          sticky_footer? ? "fp-modal-page-sticky" : nil,
+          page_scroll? ? "sm:my-auto" : nil,
           size_classes,
           "p-4",
           "sm:p-6",
@@ -173,8 +196,7 @@ module FlatPack
           "shadow-lg",
           "border",
           "border-[var(--modal-border-color)]",
-          "transform",
-          "transition-[opacity,transform]",
+          "transition-[opacity,scale]",
           "duration-[var(--duration-slow)]",
           "ease-[var(--easing-enter)]",
           "scale-95",
@@ -191,7 +213,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: close_button_classes,
-          aria: {label: "Close"},
+          aria: {label: fp_t("modal.close")},
           data: {action: "flat-pack--modal#close"}) do
           close_icon
         end
@@ -268,7 +290,10 @@ module FlatPack
       end
 
       def header_wrapper_classes
-        "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3"
+        classes(
+          "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3",
+          sticky_footer? ? "fp-modal-sticky-header" : nil
+        )
       end
 
       def close_button_row_classes
@@ -290,7 +315,7 @@ module FlatPack
           "flat-pack-modal__body",
           "min-h-0",
           body_layout_class,
-          "overflow-y-auto",
+          body_overflow_class,
           "pt-4",
           "text-sm",
           "text-[var(--modal-body-color)]"
@@ -299,6 +324,13 @@ module FlatPack
 
       def body_layout_class
         (@body_height_mode == :auto) ? "flex-1" : "shrink-0"
+      end
+
+      def body_overflow_class
+        return "overflow-y-auto" unless page_scroll?
+        return "overflow-y-auto" if @body_height_mode == :fixed
+
+        nil
       end
 
       def body_style
@@ -313,7 +345,10 @@ module FlatPack
       end
 
       def footer_classes
-        "flat-pack-modal__footer shrink-0 pt-4 flex justify-end gap-3"
+        classes(
+          "flat-pack-modal__footer shrink-0 pt-4 flex justify-end gap-3",
+          sticky_footer? ? "fp-modal-sticky-footer" : nil
+        )
       end
 
       def header_id
@@ -328,6 +363,23 @@ module FlatPack
       def validate_size!
         return if SIZES.key?(@size)
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def validate_scroll!
+        return if SCROLL_MODES.include?(@scroll)
+
+        raise ArgumentError, "Invalid scroll: #{@scroll}. Must be one of: #{SCROLL_MODES.join(", ")}"
+      end
+
+      def validate_sticky_footer!
+        unless [true, false].include?(@sticky_footer)
+          raise ArgumentError, "sticky_footer must be true or false"
+        end
+
+        return unless @sticky_footer
+        return if page_scroll?
+
+        raise ArgumentError, "sticky_footer requires scroll: :page"
       end
 
       def validate_body_height_mode!

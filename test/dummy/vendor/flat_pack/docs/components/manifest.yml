@@ -231,6 +231,12 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: collection_editor
+    title: Collection Editor
+    doc: docs/components/collection-editor.md
+    primary_class: FlatPack::CollectionEditor::Component
+    status: documented
+
   - key: combobox
     title: Combobox
     doc: docs/components/combobox.md
@@ -391,6 +397,15 @@ components:
     title: List
     doc: docs/components/list.md
     primary_class: FlatPack::List::Component
+    status: documented
+
+  - key: masonry
+    title: Masonry
+    doc: docs/components/masonry.md
+    primary_class: FlatPack::Masonry::Component
+    related_classes:
+      - FlatPack::Masonry::Item
+      - FlatPack::Masonry::Image
     status: documented
 
   - key: modal

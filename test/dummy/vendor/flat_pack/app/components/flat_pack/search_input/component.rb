@@ -18,8 +18,10 @@ module FlatPack
         label: nil,
         error: nil,
         help_text: nil,
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -69,7 +71,7 @@ module FlatPack
             action: "flat-pack--search-input#clear",
             flat_pack__search_input_target: "clearButton"
           },
-          aria: {label: "Clear search"}) do
+          aria: {label: fp_t("search_input.clear")}) do
           render_x_icon
         end
       end

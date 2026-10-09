@@ -99,6 +99,20 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show Masonry binds ORDERS to order and GAPS to gap" do
+      payload = FlatPack::ComponentCatalog.show("Masonry::Component")
+      order = parameter_named(payload, "order")
+      gap = parameter_named(payload, "gap")
+
+      assert_equal %w[columns rows], order.fetch(:enum)
+      assert_equal "columns", order.fetch(:default)
+      assert_equal %w[sm md lg], gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      examples = payload.fetch(:examples)
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::Masonry::Component"
+    end
+
     test "show Hero binds ALIGNS to align with a center default" do
       payload = FlatPack::ComponentCatalog.show("Hero::Component")
       align = parameter_named(payload, "align")

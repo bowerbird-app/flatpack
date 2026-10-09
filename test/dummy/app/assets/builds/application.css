@@ -743,9 +743,6 @@
   .max-h-\[420px\] {
     max-height: 420px;
   }
-  .max-h-\[calc\(100vh-2rem\)\] {
-    max-height: calc(100vh - 2rem);
-  }
   .min-h-0 {
     min-height: calc(var(--spacing) * 0);
   }
@@ -766,6 +763,9 @@
   }
   .min-h-\[5\.5rem\] {
     min-height: 5.5rem;
+  }
+  .min-h-\[7rem\] {
+    min-height: 7rem;
   }
   .min-h-\[16rem\] {
     min-height: 16rem;
@@ -1151,6 +1151,24 @@
   .appearance-none {
     appearance: none;
   }
+  .columns-1 {
+    columns: 1;
+  }
+  .columns-2 {
+    columns: 2;
+  }
+  .columns-3 {
+    columns: 3;
+  }
+  .columns-4 {
+    columns: 4;
+  }
+  .columns-5 {
+    columns: 5;
+  }
+  .columns-6 {
+    columns: 6;
+  }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
@@ -1165,6 +1183,9 @@
   }
   .grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .grid-cols-6 {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
   .grid-cols-7 {
     grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -3276,6 +3297,9 @@
   .opacity-100 {
     opacity: 100%;
   }
+  .opacity-\[var\(--button-disabled-opacity\)\] {
+    opacity: var(--button-disabled-opacity);
+  }
   .shadow {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -3609,6 +3633,11 @@
       }
     }
   }
+  .group-has-\[\:checked\]\:text-\[var\(--color-primary\)\] {
+    &:is(:where(.group):has(*:is(:checked)) *) {
+      color: var(--color-primary);
+    }
+  }
   .peer-checked\:translate-x-4 {
     &:is(:where(.peer):checked ~ *) {
       --tw-translate-x: calc(var(--spacing) * 4);
@@ -3790,6 +3819,13 @@
     &:hover {
       @media (hover: hover) {
         z-index: 999 !important;
+      }
+    }
+  }
+  .hover\:border-\[var\(--surface-border-hover-color\)\] {
+    &:hover {
+      @media (hover: hover) {
+        border-color: var(--surface-border-hover-color);
       }
     }
   }
@@ -4310,6 +4346,12 @@
       --tw-ring-inset: inset;
     }
   }
+  .active\:translate-y-px {
+    &:active {
+      --tw-translate-y: 1px;
+      translate: var(--tw-translate-x) var(--tw-translate-y);
+    }
+  }
   .active\:cursor-grabbing {
     &:active {
       cursor: grabbing;
@@ -4335,6 +4377,40 @@
       opacity: var(--button-disabled-opacity);
     }
   }
+  .has-\[\:checked\]\:border-\[var\(--button-primary-border-color\)\] {
+    &:has(*:is(:checked)) {
+      border-color: var(--button-primary-border-color);
+    }
+  }
+  .has-\[\:checked\]\:border-\[var\(--color-primary\)\] {
+    &:has(*:is(:checked)) {
+      border-color: var(--color-primary);
+    }
+  }
+  .has-\[\:checked\]\:bg-\[color-mix\(in_oklab\,var\(--color-primary\)_12\%\,var\(--surface-background-color\)\)\] {
+    &:has(*:is(:checked)) {
+      background-color: var(--color-primary);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab,var(--color-primary) 12%,var(--surface-background-color));
+      }
+    }
+  }
+  .has-\[\:checked\]\:bg-\[var\(--button-primary-background-color\)\] {
+    &:has(*:is(:checked)) {
+      background-color: var(--button-primary-background-color);
+    }
+  }
+  .has-\[\:checked\]\:text-\[var\(--button-primary-text-color\)\] {
+    &:has(*:is(:checked)) {
+      color: var(--button-primary-text-color);
+    }
+  }
+  .has-\[\:checked\]\:shadow-\[var\(--button-shadow\)\] {
+    &:has(*:is(:checked)) {
+      --tw-shadow: var(--button-shadow);
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
   .has-\[\:checked\]\:ring-2 {
     &:has(*:is(:checked)) {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
@@ -4350,6 +4426,83 @@
   .has-\[\:checked\]\:ring-offset-white {
     &:has(*:is(:checked)) {
       --tw-ring-offset-color: var(--color-white);
+    }
+  }
+  .has-\[\:checked\]\:hover\:bg-\[color-mix\(in_oklab\,var\(--color-primary\)_12\%\,var\(--surface-background-color\)\)\] {
+    &:has(*:is(:checked)) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-primary);
+          @supports (color: color-mix(in lab, red, red)) {
+            background-color: color-mix(in oklab,var(--color-primary) 12%,var(--surface-background-color));
+          }
+        }
+      }
+    }
+  }
+  .has-\[\:checked\]\:hover\:bg-\[var\(--button-primary-hover-background-color\)\] {
+    &:has(*:is(:checked)) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--button-primary-hover-background-color);
+        }
+      }
+    }
+  }
+  .has-\[\:checked\]\:hover\:shadow-\[var\(--button-shadow-hover\)\] {
+    &:has(*:is(:checked)) {
+      &:hover {
+        @media (hover: hover) {
+          --tw-shadow: var(--button-shadow-hover);
+          box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+        }
+      }
+    }
+  }
+  .has-\[\:checked\]\:active\:shadow-\[var\(--button-shadow-active\)\] {
+    &:has(*:is(:checked)) {
+      &:active {
+        --tw-shadow: var(--button-shadow-active);
+        box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+      }
+    }
+  }
+  .has-\[\:focus-visible\]\:ring-2 {
+    &:has(*:is(:focus-visible)) {
+      --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
+  .has-\[\:focus-visible\]\:ring-\[var\(--button-focus-ring-color\)\] {
+    &:has(*:is(:focus-visible)) {
+      --tw-ring-color: var(--button-focus-ring-color);
+    }
+  }
+  .has-\[\:focus-visible\]\:ring-offset-2 {
+    &:has(*:is(:focus-visible)) {
+      --tw-ring-offset-width: 2px;
+      --tw-ring-offset-shadow: var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    }
+  }
+  .has-\[\:focus-visible\]\:ring-offset-\[var\(--button-focus-ring-offset-color\)\] {
+    &:has(*:is(:focus-visible)) {
+      --tw-ring-offset-color: var(--button-focus-ring-offset-color);
+    }
+  }
+  .has-\[\:focus-visible\]\:ring-offset-\[var\(--surface-background-color\)\] {
+    &:has(*:is(:focus-visible)) {
+      --tw-ring-offset-color: var(--surface-background-color);
+    }
+  }
+  .has-\[\:focus-visible\]\:outline-none {
+    &:has(*:is(:focus-visible)) {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+  }
+  .has-\[\:focus-visible\]\:ring-inset {
+    &:has(*:is(:focus-visible)) {
+      --tw-ring-inset: inset;
     }
   }
   .aria-selected\:bg-\[var\(--list-item-active-background-color\)\] {
@@ -4387,9 +4540,19 @@
       scale: var(--tw-scale-x) var(--tw-scale-y);
     }
   }
+  .motion-reduce\:transform-none {
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
+  }
   .motion-reduce\:animate-none {
     @media (prefers-reduced-motion: reduce) {
       animation: none;
+    }
+  }
+  .motion-reduce\:transition-none {
+    @media (prefers-reduced-motion: reduce) {
+      transition-property: none;
     }
   }
   .motion-reduce\:before\:animate-none {
@@ -4408,6 +4571,11 @@
   .sm\:right-4 {
     @media (width >= 40rem) {
       right: calc(var(--spacing) * 4);
+    }
+  }
+  .sm\:my-auto {
+    @media (width >= 40rem) {
+      margin-block: auto;
     }
   }
   .sm\:block {
@@ -4440,6 +4608,41 @@
       max-width: 500px;
     }
   }
+  .sm\:columns-1 {
+    @media (width >= 40rem) {
+      columns: 1;
+    }
+  }
+  .sm\:columns-2 {
+    @media (width >= 40rem) {
+      columns: 2;
+    }
+  }
+  .sm\:columns-3 {
+    @media (width >= 40rem) {
+      columns: 3;
+    }
+  }
+  .sm\:columns-4 {
+    @media (width >= 40rem) {
+      columns: 4;
+    }
+  }
+  .sm\:columns-5 {
+    @media (width >= 40rem) {
+      columns: 5;
+    }
+  }
+  .sm\:columns-6 {
+    @media (width >= 40rem) {
+      columns: 6;
+    }
+  }
+  .sm\:grid-cols-1 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
   .sm\:grid-cols-2 {
     @media (width >= 40rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4448,6 +4651,26 @@
   .sm\:grid-cols-3 {
     @media (width >= 40rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .sm\:grid-cols-4 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .sm\:grid-cols-5 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  .sm\:grid-cols-6 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+  .sm\:grid-cols-\[repeat\(auto-fit\,minmax\(14rem\,1fr\)\)\] {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(auto-fit,minmax(14rem,1fr));
     }
   }
   .sm\:flex-row {
@@ -4633,6 +4856,41 @@
       translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
+  .md\:columns-1 {
+    @media (width >= 48rem) {
+      columns: 1;
+    }
+  }
+  .md\:columns-2 {
+    @media (width >= 48rem) {
+      columns: 2;
+    }
+  }
+  .md\:columns-3 {
+    @media (width >= 48rem) {
+      columns: 3;
+    }
+  }
+  .md\:columns-4 {
+    @media (width >= 48rem) {
+      columns: 4;
+    }
+  }
+  .md\:columns-5 {
+    @media (width >= 48rem) {
+      columns: 5;
+    }
+  }
+  .md\:columns-6 {
+    @media (width >= 48rem) {
+      columns: 6;
+    }
+  }
+  .md\:grid-cols-1 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
   .md\:grid-cols-2 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4646,6 +4904,16 @@
   .md\:grid-cols-4 {
     @media (width >= 48rem) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .md\:grid-cols-5 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  .md\:grid-cols-6 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
     }
   }
   .md\:grid-cols-\[16rem_minmax\(0\,1fr\)\] {
@@ -4822,6 +5090,41 @@
       flex-basis: calc(1 / 5 * 100%);
     }
   }
+  .lg\:columns-1 {
+    @media (width >= 64rem) {
+      columns: 1;
+    }
+  }
+  .lg\:columns-2 {
+    @media (width >= 64rem) {
+      columns: 2;
+    }
+  }
+  .lg\:columns-3 {
+    @media (width >= 64rem) {
+      columns: 3;
+    }
+  }
+  .lg\:columns-4 {
+    @media (width >= 64rem) {
+      columns: 4;
+    }
+  }
+  .lg\:columns-5 {
+    @media (width >= 64rem) {
+      columns: 5;
+    }
+  }
+  .lg\:columns-6 {
+    @media (width >= 64rem) {
+      columns: 6;
+    }
+  }
+  .lg\:grid-cols-1 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
   .lg\:grid-cols-2 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4835,6 +5138,11 @@
   .lg\:grid-cols-4 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .lg\:grid-cols-5 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
   .lg\:grid-cols-6 {
@@ -4884,14 +5192,64 @@
       margin-inline: calc(var(--spacing) * -16);
     }
   }
+  .xl\:columns-1 {
+    @media (width >= 80rem) {
+      columns: 1;
+    }
+  }
+  .xl\:columns-2 {
+    @media (width >= 80rem) {
+      columns: 2;
+    }
+  }
+  .xl\:columns-3 {
+    @media (width >= 80rem) {
+      columns: 3;
+    }
+  }
+  .xl\:columns-4 {
+    @media (width >= 80rem) {
+      columns: 4;
+    }
+  }
+  .xl\:columns-5 {
+    @media (width >= 80rem) {
+      columns: 5;
+    }
+  }
+  .xl\:columns-6 {
+    @media (width >= 80rem) {
+      columns: 6;
+    }
+  }
+  .xl\:grid-cols-1 {
+    @media (width >= 80rem) {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+  }
   .xl\:grid-cols-2 {
     @media (width >= 80rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
+  .xl\:grid-cols-3 {
+    @media (width >= 80rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
   .xl\:grid-cols-4 {
     @media (width >= 80rem) {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .xl\:grid-cols-5 {
+    @media (width >= 80rem) {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+  .xl\:grid-cols-6 {
+    @media (width >= 80rem) {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
     }
   }
   .xl\:gap-x-8 {

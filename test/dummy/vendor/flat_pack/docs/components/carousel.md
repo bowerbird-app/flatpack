@@ -131,7 +131,7 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 | `url` | image | String URL | `nil` | Optional click-through URL. In `:logo_slider` mode, wraps the logo image in a link that opens in a new tab. |
 | `thumb_src` | image, html | String URL | `nil` | Thumbnail for `show_thumbs`. Image slides fall back to `src`. HTML slides without a usable URL show the slide number. |
 | `thumb` | image, html | String URL | `nil` | Alias for `thumb_src`. |
-| `alt` | image | String | `"Slide n"` | Falls back to slide index label. |
+| `alt` | image | String | I18n `flatpack.carousel.slide_fallback` | Falls back to the kit copy for slide `%{number}`. |
 | `caption` | image, video, html | String | `""` | Used by caption rendering modes. |
 | `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Only image slides can actually open lightbox. |
 | `poster` | video | String URL | `nil` | Poster image behind video element. |

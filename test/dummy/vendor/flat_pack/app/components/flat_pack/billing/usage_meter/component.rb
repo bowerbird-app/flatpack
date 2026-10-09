@@ -58,10 +58,10 @@ module FlatPack
         def helper_text
           used_text = [@used, @unit].compact.join(" ")
           if @limit.nil?
-            "#{used_text} · Unlimited"
+            fp_t("billing.usage_meter.unlimited", used: used_text)
           else
             limit_text = [@limit, @unit].compact.join(" ")
-            "#{@used} of #{limit_text}"
+            fp_t("billing.usage_meter.of", used: @used, limit: limit_text)
           end
         end
 

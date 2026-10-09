@@ -17,11 +17,11 @@ module FlatPack
         end
 
         def initialize(
-          label: "Someone is typing",
+          label: FlatPack::Copy::OMITTED,
           **system_arguments
         )
           super(**system_arguments)
-          @label = label
+          @label = fp_text(label, "chat.typing")
         end
 
         def call

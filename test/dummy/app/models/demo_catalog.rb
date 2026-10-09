@@ -170,6 +170,7 @@ class DemoCatalog
             {title: "Movable Cards", search_title: "Grid: Movable Cards", path: "/demo/grid/movable_cards", description: "Draggable card grid with persisted ordering", icon: :chevron_down}
           ]
         },
+        {type: :item, title: "Masonry", path: "/demo/masonry", description: "Mixed-ratio photos stacked without empty holes", icon: :image},
         {type: :item, title: "Code Blocks", path: "/demo/code_blocks", description: "Reusable snippets for demo pages", icon: :type},
         {type: :item, title: "Avatars", path: "/demo/avatars", description: "Avatar examples with images, initials, and status", icon: :user},
         {type: :item, title: "Avatar Groups", path: "/demo/avatar_groups", description: "Stacked avatar groups with overflow and overlap", icon: :users},

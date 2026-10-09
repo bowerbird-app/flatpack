@@ -49,7 +49,7 @@ FlatPack::Button.register_style(:partner, press: :raised)
 CSS loaded after `flat_pack/application`:
 
 ```css
-.fp-button[data-fp-style="partner"] {
+[data-fp-style="partner"] {
   --fp-button-background: #635bff;
   --fp-button-hover-background: #0a2540;
   --fp-button-text: #ffffff;
@@ -61,7 +61,9 @@ CSS loaded after `flat_pack/application`:
 <%= render FlatPack::Button::Component.new(text: "Manage billing", style: :partner) %>
 ```
 
-The button sets `data-fp-style` to the style name. Built-in styles map that attribute onto `--button-primary-*` and the other scheme tokens, so theme and hero overlay remaps still apply. A registered style sets `--fp-button-*` directly and does not change the page theme.
+The button sets `data-fp-style` to the style name. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Built-in styles map that attribute onto `--button-primary-*` and the other scheme tokens, so theme and hero overlay remaps still apply. A registered style sets `--fp-button-*` directly and does not change the page theme.
+
+A pill group uses the same `[data-fp-style]` rule. It adds `fp-pill-button-slots` when `style` is not `:primary`. That class copies the button slots onto the active pill. `:primary` leaves the pill tokens alone, so a host override of `--tabs-pill-active-*` still applies. A selector that only matches `.fp-button[data-fp-style="partner"]` still paints buttons. Those pill groups inherit the default button slots.
 
 Do not register over a built-in name. Names are a lowercase letter, then letters, numbers, or underscores. Vendor colours (Stripe, Paddle, and the rest) belong in the host or billing gem CSS, not in FlatPack.
 
@@ -75,12 +77,25 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 | --- | --- | --- | --- | --- |
 | `items` | Array<Hash> | none | yes | One or more pill definitions. Each item requires `text` and `href`, and may include `id`, `active`, `target`, `class`, `data`, and `aria`. |
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Tabs via Button size tokens). |
+| `style` | Symbol | `:primary` | no | Active pill colour. Same names as Button `style` above. `:primary` keeps the pill colour. Any other name uses that button colour on the active pill. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria for the outer group wrapper. |
 
 ```erb
 <%= render FlatPack::Button::Pill::Component.new(
   items: [
     {text: "All products", href: products_path, active: true, id: "products-pill"},
+    {text: "On sale", href: sale_products_path}
+  ]
+) %>
+```
+
+`:primary` is the default. Pass `style:` to use another Button style on the active pill.
+
+```erb
+<%= render FlatPack::Button::Pill::Component.new(
+  style: :default,
+  items: [
+    {text: "All products", href: products_path, active: true},
     {text: "On sale", href: sale_products_path}
   ]
 ) %>
@@ -114,7 +129,7 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
 - Focus ring styles are applied by default for keyboard navigation.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
-- Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Colour paint is kit CSS on `.fp-button[data-fp-style]`, not per-style Tailwind background classes.
+- Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Colour does not come from per-style Tailwind background classes.
 
 ## Unsaved changes
 A save button can switch between `:default` and `:primary` while the form is edited. The form controller owns that state. The button stays a normal button and only its `data-fp-style` changes. See [Unsaved changes](../behaviours/unsaved-changes.md).
