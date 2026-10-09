@@ -601,6 +601,9 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def section_title
+  end
+
   def page_nav
   end
 

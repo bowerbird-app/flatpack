@@ -272,7 +272,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Hero** - Full-width landing-page hero with seven layout variants
 - **PageHeader** - Page-level header with title, subtitle, and action slots
 - **PageTitle** - Lightweight semantic heading block with optional subtitle
-- **SectionTitle** - In-page section heading with optional description
+- **SectionTitle** - In-page section heading with optional description, size, and spacing
 
 ### Navigation
 - **Breadcrumb** - Navigation trail showing current location in site hierarchy

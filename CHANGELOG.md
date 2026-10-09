@@ -27,6 +27,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pass `column_widths` with one grid track per header when a content column should differ from the default. Omit it and the columns stay as they are. A bad track, or a list that does not match `headers`, raises `ArgumentError`.
 - Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.211`.
 
+## [0.1.210] - 2026-10-08
+
+### Added
+- `FlatPack::SectionTitle::Component` accepts `size:` (`:lg`, `:md`, `:sm`), `spacing:` (`:lg`, `:md`, `:sm`, `:none`), and `level:` (`:h1`–`:h6`). Defaults match today's look: `size: :lg` (`text-2xl` heading, `text-base` subtitle), `spacing: :lg` (`my-8`), `level: :h2`. Smaller sizes scale the subtitle and the copy-link icon.
+
+### Changed
+- Bumped the gem version to `0.1.210`.
+
+### Fixed
+- A blank `subtitle` (`""` or whitespace) no longer renders an empty `<p class="mt-1 …">`. Only a present subtitle gets a paragraph, so an empty optional field or blank translation does not add a gap.
+
+### Upgrade notes
+- Existing SectionTitle calls are unchanged. Pass `size:`, `spacing:`, and `level:` only when you want a smaller heading, tighter or no wrapper margin, or a different heading tag.
+- Caller `class: "mb-2"` still cannot override the default `my-8`. Use `spacing: :none` when the caller should own the margin.
+- Rebuild host Tailwind so `my-6`, `my-4`, and the smaller type sizes are generated. Redeploy so `meta.gem_version` shows `0.1.210`.
+
 ## [0.1.209] - 2026-10-08
 
 ### Changed
