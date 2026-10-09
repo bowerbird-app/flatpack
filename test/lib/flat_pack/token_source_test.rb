@@ -286,6 +286,29 @@ module FlatPack
       refute_includes application, "--tabs-pill-default-background-color"
     end
 
+    test "range thumb fill follows --color-primary with a surface ring" do
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
+      assert_match(/--range-fill-color:\s*var\(--color-primary\)/, root_block)
+      assert_match(/--range-thumb-color:\s*var\(--color-primary\)/, root_block)
+      assert_match(/--range-thumb-border-color:\s*var\(--surface-background-color\)/, root_block)
+      refute_match(/--range-thumb-color:\s*var\(--surface-background-color\)/, root_block)
+
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      assert_includes application, "background: var(--range-thumb-color);"
+      assert_includes application, "border: 2px solid var(--range-thumb-border-color);"
+      assert_includes application, "::-webkit-slider-thumb"
+      assert_includes application, "::-moz-range-thumb"
+      assert_includes application, ".fp-range-input:disabled"
+      assert_includes application, ".fp-range-input:focus-visible"
+
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      refute_includes dark_block, "--range-thumb-color"
+      refute_includes ocean_block, "--range-thumb-color"
+      refute_includes dark_block, "--range-thumb-border-color"
+      refute_includes ocean_block, "--range-thumb-border-color"
+    end
+
     test "focus ring and active nav fills follow --color-primary" do
       {
         "--color-ring" => "var(--color-primary)",

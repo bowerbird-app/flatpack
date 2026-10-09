@@ -337,7 +337,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --progress-danger-fill-color: var(--color-danger-background-color);
   --range-track-color: var(--surface-muted-background-color);
   --range-fill-color: var(--color-primary);
-  --range-thumb-color: var(--surface-background-color);
+  --range-thumb-color: var(--color-primary);
   --range-thumb-border-color: var(--surface-background-color);
   --range-thumb-shadow: var(--shadow-md);
   --range-thumb-size: 1.25rem;

@@ -128,7 +128,7 @@ GIT
 PATH
   remote: vendor/flat_pack
   specs:
-    flat_pack (0.1.214)
+    flat_pack (0.1.215)
       pagy (~> 9.0)
       rails (>= 7.1, < 9)
       tailwind_merge (~> 0.13)
