@@ -31,6 +31,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts; FlatPack does not format currency |
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
 | Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
+| Sliding active marker | `indicator` | Tabs and Button::Pill. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
 
 ## Billing namespace notes
 
