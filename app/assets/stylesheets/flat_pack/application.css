@@ -131,16 +131,6 @@
     text-wrap: balance;
   }
 
-  .fp-display {
-    font-size: var(--display-size);
-    letter-spacing: var(--display-tracking);
-    line-height: var(--display-leading);
-  }
-
-  .fp-display + .fp-display-subtitle {
-    margin-top: 0.4em;
-  }
-
   .fp-text-pretty {
     text-wrap: pretty;
   }
@@ -964,6 +954,19 @@
     padding-right: 1.5rem;
     padding-bottom: 1.5rem;
   }
+}
+
+/* Cover type. Unlayered so Tailwind preflight cannot collapse h1.fp-display
+ * to inherit. PageTitle and Hero also set the same tokens inline.
+ */
+.fp-display {
+  font-size: var(--display-size);
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
+}
+
+.fp-display + .fp-display-subtitle {
+  margin-top: 0.4em;
 }
 
 /* Long-form reading type. Unlayered so Tailwind preflight cannot collapse

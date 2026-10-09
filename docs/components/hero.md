@@ -145,7 +145,7 @@ end %>
 ) %>
 ```
 
-Existing Hero calls stay on the product scale. `size: :display` is opt-in.
+Existing Hero calls stay on the product scale. `size: :display` is opt-in. Display headlines set `--display-size`, `--display-tracking`, and `--display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. The centered column widens to `max-w-5xl` for wrapping cover titles.
 
 ### Image tiles
 

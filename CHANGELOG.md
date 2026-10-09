@@ -17,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Type scale tokens `--text-6xl` (3.75rem / 60px) and `--text-7xl` (4.5rem / 72px), with `--text-6xl--line-height` / `--text-7xl--line-height` of `1`, mapped in `@theme inline` so `text-6xl` / `text-7xl` utilities work after a Tailwind rebuild.
-- Theme-tunable display tokens `--display-size` (fluid clamp from `--text-5xl` / 48px to `--text-7xl` / 72px), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.1`). Kit CSS ships `.fp-display`.
-- `FlatPack::PageTitle::Component` and `FlatPack::Hero::Component` accept opt-in `size: :display` for cover titles. Default output is unchanged.
+- Theme-tunable display tokens `--display-size` (fluid clamp from `--text-5xl` / 48px to `--text-7xl` / 72px), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.1`). Kit CSS ships unlayered `.fp-display` so Tailwind preflight cannot collapse heading size.
+- `FlatPack::PageTitle::Component` and `FlatPack::Hero::Component` accept opt-in `size: :display` for cover titles. Default output is unchanged. Display headlines set the display tokens inline.
 
 ### Changed
 - Bumped the gem version to `0.1.223`.

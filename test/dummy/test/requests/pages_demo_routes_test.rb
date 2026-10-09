@@ -739,6 +739,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "fp-display"
+    assert_includes response.body, "font-size: var(--display-size)"
     assert_includes response.body, "A press kit for the Northlight collection"
     refute_includes response.body, "lg:text-6xl"
   end

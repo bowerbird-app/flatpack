@@ -63,6 +63,7 @@ module FlatPack
       assert_includes css, "letter-spacing: var(--display-tracking)"
       assert_includes css, "line-height: var(--display-leading)"
       assert_includes css, ".fp-display-subtitle"
+      assert_includes css, "/* Cover type. Unlayered so Tailwind preflight cannot collapse"
       assert_includes css, ".fp-text-pretty"
       assert_includes css, "text-wrap: pretty"
       assert_includes css, ".fp-content"

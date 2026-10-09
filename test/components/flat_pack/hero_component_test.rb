@@ -149,7 +149,11 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "fp-display"
         assert_includes html, "fp-text-balance"
+        assert_includes html, "font-size: var(--display-size)"
+        assert_includes html, "letter-spacing: var(--display-tracking)"
+        assert_includes html, "line-height: var(--display-leading)"
         assert_includes html, "mt-8"
+        assert_includes html, "max-w-5xl"
         refute_includes html, "--hero-headline-size"
         refute_includes html, "lg:text-6xl"
         refute_includes html, "text-[length:var(--text-4xl)]"
@@ -163,6 +167,9 @@ module FlatPack
 
         html = page.native.to_html
         refute_includes html, "fp-display"
+        refute_includes html, "--display-size"
+        refute_includes html, "max-w-5xl"
+        assert_includes html, "max-w-4xl"
         assert_includes html, "--hero-headline-size"
         assert_includes html, "--text-4xl"
       end
@@ -177,6 +184,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "fp-display"
+        assert_includes html, "font-size: var(--display-size)"
         refute_includes html, "sm:text-[length:var(--hero-headline-size)]"
       end
 

@@ -244,11 +244,18 @@ module FlatPack
           class: "text-sm font-medium text-[var(--surface-muted-content-color)]")
       end
 
+      def display_headline_style
+        return nil unless display?
+
+        "font-size: var(--display-size); letter-spacing: var(--display-tracking); line-height: var(--display-leading);"
+      end
+
       def render_headline
         return nil unless @headline.present?
 
         content_tag(:h1, @headline,
-          class: "mt-2 #{headline_size_class} font-semibold text-[var(--surface-content-color)] fp-text-balance")
+          class: "mt-2 #{headline_size_class} font-semibold text-[var(--surface-content-color)] fp-text-balance",
+          style: display_headline_style)
       end
 
       def render_description
@@ -279,7 +286,7 @@ module FlatPack
 
       def render_centered
         content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 #{align_row[:text]}", style: combined_style)) do
-          content_tag(:div, class: "max-w-4xl #{overlay_inner_margin_class}") do
+          content_tag(:div, class: "#{display? ? "max-w-5xl" : "max-w-4xl"} #{overlay_inner_margin_class}") do
             safe_join([
               render_badge_content,
               render_tagline,
@@ -302,7 +309,7 @@ module FlatPack
               safe_join([
                 render_badge_content,
                 render_overlay_tagline,
-                content_tag_if(@headline, :h1, @headline, class: overlay_headline_class),
+                content_tag_if(@headline, :h1, @headline, class: overlay_headline_class, style: display_headline_style),
                 content_tag_if(@description, :p, @description, class: overlay_description_class),
                 render_actions_block(extra_classes: align_row[:actions])
               ].compact)
