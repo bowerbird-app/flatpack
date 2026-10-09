@@ -9,8 +9,6 @@
   subtitle: "A round button in the corner. One tap to add, or fan out more actions."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :fab %>
-
 <div class="relative h-[28rem] rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-page-background-color)] overflow-hidden mb-8" id="live-fab-stage">
   <%= render FlatPack::Fab::Component.new(id: "live-fab", position: fab_position, contained: true) do |fab| %>
     <% fab.with_action(icon: :pencil, label: "Note", href: "#note") %>
@@ -19,6 +17,8 @@
     <% fab.with_action(icon: :bell, label: "Reminder", href: "#reminder") %>
   <% end %>
 </div>
+
+<%= render "pages/component_method_variables_table", component: :fab %>
 
 <%= render FlatPack::Modal::Component.new(id: "fab-invite", title: "Invite someone", size: :sm) do |modal| %>
   <% modal.body do %>
@@ -130,14 +130,15 @@
       <% nav.item(text: "Alerts", href: "#", icon: :bell) %>
       <% nav.item(text: "You", href: "#", icon: :user) %>
     <% end %>
-    <%= render FlatPack::Fab::Component.new(contained: true, position: :bottom_right) do |fab| %>
+    <%= render FlatPack::Fab::Component.new(contained: true, position: :bottom_right, offset: "0.75rem") do |fab| %>
       <% fab.with_action(icon: :pencil, label: "Note", href: "#note") %>
       <% fab.with_action(icon: :camera, label: "Photo", href: "#photo") %>
       <% fab.with_action(icon: :user_plus, label: "Invite", data: {modal_id: "fab-invite"}) %>
     <% end %>
   </div>
   <p class="mt-3 text-sm text-[var(--surface-muted-content-color)]">
-    Full-screen with the tab bar: <%= render FlatPack::Link::Component.new(text: "Open the phone layout", href: "/mobile/fab") %>.
+    Full-screen with the tab bar:
+    <%= render FlatPack::Link::Component.new(href: "/mobile/fab") { "Open the phone layout" } %>.
   </p>
 </section>
 

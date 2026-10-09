@@ -15,6 +15,7 @@ class PagesFabDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "fp-fab--contained"
     assert_includes response.body, "fp-bottom-nav"
     assert_includes response.body, 'href="/mobile/fab"'
+    assert_includes response.body, "Open the phone layout"
     assert_includes response.body, "with_action"
     assert_includes response.body, "layout"
   end
