@@ -84,7 +84,8 @@ class PagesController < ApplicationController
     {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
     {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/, /\A--list-marker-/]},
     {action: /\Anotification\z/, title: "Notification", patterns: [/\A--popover-/, /\A--list-item-/]},
-    {action: /\Atree\z/, title: "Tree", patterns: []}
+    {action: /\Atree\z/, title: "Tree", patterns: []},
+    {action: /\Afab\z/, title: "FAB", patterns: [/\A--fab-/]}
   ].freeze
 
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
@@ -98,6 +99,7 @@ class PagesController < ApplicationController
     tables_basic tables_sortable local_time
     forms_unsaved_changes
     buttons_trash buttons_trash_destroy
+    fab
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -652,6 +654,11 @@ class PagesController < ApplicationController
   end
 
   def masonry
+  end
+
+  def fab
+    allowed = %w[bottom_right bottom_left top_right top_left]
+    @fab_position = allowed.include?(params[:position].to_s) ? params[:position].to_sym : :bottom_right
   end
 
   def pagination

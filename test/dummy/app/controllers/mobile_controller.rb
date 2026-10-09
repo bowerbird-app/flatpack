@@ -8,4 +8,7 @@ class MobileController < ApplicationController
 
   def bottom_nav
   end
+
+  def fab
+  end
 end

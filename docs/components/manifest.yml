@@ -303,6 +303,14 @@ components:
     primary_class: FlatPack::EmptyState::Component
     status: documented
 
+  - key: fab
+    title: FAB
+    doc: docs/components/fab.md
+    primary_class: FlatPack::Fab::Component
+    related_classes:
+      - FlatPack::Fab::Action
+    status: documented
+
   - key: email_button
     title: Email Button
     doc: docs/components/email-button.md

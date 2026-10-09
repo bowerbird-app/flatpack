@@ -1,0 +1,165 @@
+<%
+  fab_position = @fab_position
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "FAB",
+  subtitle: "A round button in the corner. One tap to add, or fan out more actions."
+) %>
+
+<div class="relative h-[28rem] rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-page-background-color)] overflow-hidden mb-8" id="live-fab-stage">
+  <%= render FlatPack::Fab::Component.new(id: "live-fab", position: fab_position, contained: true) do |fab| %>
+    <% fab.with_action(icon: :pencil, label: "Note", href: "#note") %>
+    <% fab.with_action(icon: :camera, label: "Photo", href: "#photo") %>
+    <% fab.with_action(icon: :user_plus, label: "Invite", data: {modal_id: "fab-invite"}) %>
+    <% fab.with_action(icon: :bell, label: "Reminder", href: "#reminder") %>
+  <% end %>
+</div>
+
+<%= render "pages/component_method_variables_table", component: :fab %>
+
+<%= render FlatPack::Modal::Component.new(id: "fab-invite", title: "Invite someone", size: :sm) do |modal| %>
+  <% modal.body do %>
+    <p class="text-[var(--surface-content-color)]">Send a link. They join when they open it.</p>
+  <% end %>
+  <% modal.footer do %>
+    <%= render FlatPack::Button::Component.new(text: "Close", style: :secondary, data: {action: "click->flat-pack--modal#close"}) %>
+  <% end %>
+<% end %>
+
+<section class="mb-12" id="speed-dial">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Speed-dial",
+    anchor_link: true,
+    subtitle: "The plus in the corner opens more actions. Try Invite."
+  ) %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4 max-w-2xl">
+    Tap the plus. Smaller buttons rise in a stack. The plus turns into a close. Escape, the dimmed page, or picking an action all close it.
+  </p>
+  <div class="flex flex-wrap gap-2 mb-4">
+    <% [
+      [:bottom_right, "Bottom right"],
+      [:bottom_left, "Bottom left"],
+      [:top_right, "Top right"],
+      [:top_left, "Top left"]
+    ].each do |value, text| %>
+      <%= render FlatPack::Button::Component.new(
+        text: text,
+        href: "/demo/fab?position=#{value}",
+        style: (fab_position == value) ? :primary : :secondary
+      ) %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Speed-dial (ERB)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Fab::Component.new(position: :bottom_right) do |fab| #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :pencil, label: "Note", href: "/notes/new") #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :camera, label: "Photo", href: "/photos/new") #{erb_tag_close}
+        #{erb_output_open} fab.with_action(icon: :user_plus, label: "Invite", data: { modal_id: "invite" }) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="single-action">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "One action",
+    anchor_link: true,
+    subtitle: "No extra actions. The button is the action."
+  ) %>
+  <div class="relative h-56 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-muted-background-color)] overflow-hidden" id="single-action-stage">
+    <%= render FlatPack::Fab::Component.new(
+      href: "#compose",
+      label: "New note",
+      icon: :pencil,
+      contained: true,
+      position: :bottom_right
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "One action (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Fab::Component.new(href: "/notes/new", label: "New note", icon: :pencil) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="corners">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Corners",
+    anchor_link: true,
+    subtitle: "Same button, four corners."
+  ) %>
+  <div class="relative h-80 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-page-background-color)] overflow-hidden" id="corners-stage">
+    <% %i[bottom_right bottom_left top_right top_left].each do |corner| %>
+      <%= render FlatPack::Fab::Component.new(
+        label: corner.to_s.tr("_", " "),
+        contained: true,
+        position: corner,
+        size: :md
+      ) %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="with-bottom-nav">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "With the tab bar",
+    anchor_link: true,
+    subtitle: "On a phone the button sits above the bar. Open this page on a small screen, or use the phone frame."
+  ) %>
+  <div class="relative mx-auto w-[390px] max-w-full h-[640px] rounded-[var(--radius-xl)] border border-[var(--surface-border-color)] bg-[var(--surface-page-background-color)] overflow-hidden" id="bottom-nav-stage">
+    <div class="h-full overflow-y-auto p-4 pb-28">
+      <p class="text-sm font-semibold text-[var(--surface-content-color)]">Today</p>
+      <p class="mt-2 text-sm text-[var(--surface-muted-content-color)]">Notes stay in the list. The add button floats above the tabs.</p>
+      <% 8.times do |i| %>
+        <%= render FlatPack::Card::Component.new(class: "mt-3") do %>
+          <p class="text-sm text-[var(--surface-content-color)]">Note <%= i + 1 %></p>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::BottomNav::Component.new(class: "!absolute") do |nav| %>
+      <% nav.item(text: "Home", href: "#", icon: :home, active: true) %>
+      <% nav.item(text: "Search", href: "#", icon: :magnifying_glass) %>
+      <% nav.item(text: "Alerts", href: "#", icon: :bell) %>
+      <% nav.item(text: "You", href: "#", icon: :user) %>
+    <% end %>
+    <%= render FlatPack::Fab::Component.new(contained: true, position: :bottom_right, offset: "0.75rem") do |fab| %>
+      <% fab.with_action(icon: :pencil, label: "Note", href: "#note") %>
+      <% fab.with_action(icon: :camera, label: "Photo", href: "#photo") %>
+      <% fab.with_action(icon: :user_plus, label: "Invite", data: {modal_id: "fab-invite"}) %>
+    <% end %>
+  </div>
+  <p class="mt-3 text-sm text-[var(--surface-muted-content-color)]">
+    Full-screen with the tab bar:
+    <%= render FlatPack::Link::Component.new(href: "/mobile/fab") do %>Open the phone layout<% end %>.
+  </p>
+</section>
+
+<section class="mb-24" id="sizes">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sizes",
+    anchor_link: true,
+    subtitle: "Medium is 56px. Large is a bit bigger."
+  ) %>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden">
+      <%= render FlatPack::Fab::Component.new(contained: true, size: :md, label: "Medium") %>
+    </div>
+    <div class="relative h-40 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden">
+      <%= render FlatPack::Fab::Component.new(contained: true, size: :lg, label: "Large") %>
+    </div>
+  </div>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Buttons", href: "/demo/buttons"},
+  {text: "Modals", href: "/demo/modals"},
+  {text: "Bottom navigation", href: "/mobile/bottom_nav"}
+] %>

@@ -60,6 +60,7 @@ class DemoCatalog
           ]
         },
         {type: :item, title: "Modals", path: "/demo/modals", description: "Dialog overlays with focus trap", icon: :box},
+        {type: :item, title: "FAB", path: "/demo/fab", description: "Corner button, or a stack of actions", icon: :plus},
         {type: :item, title: "Drawers", path: "/demo/drawer", description: "Edge panels for filters and details", icon: :menu},
         {type: :item, title: "Command palette", path: "/demo/command_palette", description: "Searchable command overlay, also Cmd+K", icon: :search},
         {type: :item, title: "Popovers", path: "/demo/popovers", description: "Click-triggered floating content", icon: :question},

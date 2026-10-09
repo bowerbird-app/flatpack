@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.221] - 2026-10-09
+
+### Added
+- `FlatPack::Fab::Component` is a floating action button. Rest is a large round primary control (`:md` 56px, `:lg` 64px) pinned to a corner (`position: :bottom_right` default, also `:bottom_left`, `:top_right`, `:top_left`). No actions: a link (`href:`) or a button (`data:` for Turbo/Stimulus). `with_action(icon:, label:, href:, **attrs)` opens a stacked speed-dial (`layout: :stack`). Actions are smaller round buttons with a label pill, staggered ~30ms, and the plus rotates 45°. Close via the main button, Escape, backdrop/outside click, or choosing an action. `backdrop:` defaults to true. `hide_on_scroll:` hides on scroll down. Safe-area insets and auto offset above Bottom Nav (`--fp-fab-nav-offset`). z-index 45, below Modal/Drawer/Toasts. An `:arc` layout is reserved for a later release.
+
+### Changed
+- Bumped the gem version to `0.1.221`.
+
+### Upgrade notes
+- New component. Existing Button, Modal, and Bottom Nav calls are unchanged.
+- Rebuild host Tailwind so `rounded-full` and the FAB utilities generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.221`.
+- `layout: :arc` raises until that layout ships. Use `:stack`.
+- When a Bottom Nav is on the same screen, the FAB measures `.fp-bottom-nav` and sits above it. Hosts can also set `--fp-fab-nav-offset` or pass `offset:`.
+
 ## [0.1.220] - 2026-10-09
 
 ### Added

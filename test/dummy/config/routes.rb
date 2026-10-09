@@ -197,6 +197,7 @@ Rails.application.routes.draw do
   get "demo/grid/two_columns", to: "pages#grid_two_columns"
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/masonry", to: "pages#masonry"
+  get "demo/fab", to: "pages#fab"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/charts/types", to: "pages#charts_types"
@@ -286,6 +287,7 @@ Rails.application.routes.draw do
   # Mobile demos
   get "mobile", to: "mobile#index"
   get "mobile/bottom_nav", to: "mobile#bottom_nav"
+  get "mobile/fab", to: "mobile#fab"
 
   resources :articles, path: "demo/articles", except: [:destroy]
   post "demo/articles/upload_image", to: "article_images#create", as: :article_upload_image

@@ -650,6 +650,24 @@
         { variable: "icon", accepts: "Symbol/String or nil", example: "icon: :search" }
       ]
     },
+    fab: {
+      label: "FAB",
+      method_call: "render FlatPack::Fab::Component.new(position: :bottom_right) do |fab| fab.with_action(icon: :pencil, label: \"Note\", href: \"/notes/new\") end",
+      variables: [
+        { variable: "icon", accepts: "Symbol/String", example: "icon: :plus" },
+        { variable: "label", accepts: "String or nil", example: "label: \"New note\"" },
+        { variable: "href", accepts: "String or nil", example: "href: \"/notes/new\"" },
+        { variable: "position", accepts: ":bottom_right, :bottom_left, :top_right, :top_left", example: "position: :bottom_right" },
+        { variable: "size", accepts: ":md, :lg", example: "size: :md" },
+        { variable: "layout", accepts: ":stack", example: "layout: :stack" },
+        { variable: "backdrop", accepts: "true, false", example: "backdrop: true" },
+        { variable: "hide_on_scroll", accepts: "true, false", example: "hide_on_scroll: false" },
+        { variable: "contained", accepts: "true, false", example: "contained: true" },
+        { variable: "offset", accepts: "CSS length or nil", example: "offset: \"1rem\"" },
+        { variable: "with_action", accepts: "slot", example: "fab.with_action(icon: :pencil, label: \"Note\", href: \"/notes/new\", data: { modal_id: \"invite\" })" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"compose-fab\", data: { turbo_method: \"post\" }" }
+      ]
+    },
     form_input: {
       label: "Form Inputs",
       method_call: "form_with(...) { render FlatPack::TextInput::Component.new(...); render FlatPack::Button::Component.new(...) }",

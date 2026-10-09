@@ -59,6 +59,7 @@ module FlatPack
         flatpack_date_picker_controller.js
         list_orderable_controller.js
         trash_button_controller.js
+        fab_controller.js
       ]
 
       controllers.each do |name|
