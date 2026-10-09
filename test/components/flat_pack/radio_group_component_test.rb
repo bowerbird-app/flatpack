@@ -252,6 +252,7 @@ module FlatPack
         assert_includes error.message, "default"
         assert_includes error.message, "inline"
         assert_includes error.message, "cards"
+        assert_includes error.message, "swatches"
       end
 
       def test_inline_variant_renders_pills_with_icons
@@ -408,6 +409,227 @@ module FlatPack
         ))
 
         assert_selector "input.custom-radio.sr-only"
+      end
+
+      def test_swatches_variant_renders_colour_circles_with_real_radios
+        options = [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Snow", value: "#ffffff", color: "#ffffff"},
+          {label: "Ink", value: "ink", color: "#0a0a0a"}
+        ]
+        render_inline(Component.new(
+          name: "cover_color",
+          options: options,
+          variant: :swatches,
+          value: "#1d4ed8",
+          label: "Cover colour"
+        ))
+
+        assert_selector "legend", text: "Cover colour"
+        assert_selector "input[type='radio'][name='cover_color']", count: 3
+        assert_selector "input.sr-only.peer[value='#1d4ed8'][checked]"
+        assert_selector "input[value='ink']"
+        refute_selector "input.flat-pack-radio"
+        refute_selector "input[type='color']"
+        refute_selector "[data-controller='flat-pack--color-swatch']"
+        assert_selector "fieldset.flex.flex-wrap"
+        assert_selector "label.flat-pack-radio-swatch[for='cover_color__1d4ed8']"
+        assert_selector "span.sr-only", text: "Ocean"
+        assert_selector "[data-controller='flat-pack--tooltip']", count: 3
+        assert_selector "[role='tooltip']", text: "Ocean"
+        html = page.native.to_html
+        assert_includes html, "background-color: #1d4ed8"
+        assert_includes html, "background-color: #ffffff"
+        assert_includes html, "background-color: #0a0a0a"
+        assert_includes html, "group-has-[:checked]:ring-[var(--color-swatch-selected-ring-color)]"
+        assert_includes html, "group-has-[:checked]:ring-offset-[var(--color-swatch-ring-offset-color)]"
+        assert_includes html, "h-10 w-10"
+        refute_includes html, "fp-button"
+        refute_includes html, "min-h-[7rem]"
+      end
+
+      def test_swatches_variant_defaults_color_from_hex_value
+        render_inline(Component.new(
+          name: "accent",
+          options: ["#38bdf8", "#0a0a0a"],
+          variant: :swatches
+        ))
+
+        html = page.native.to_html
+        assert_selector "input[value='#38bdf8']"
+        assert_includes html, "background-color: #38bdf8"
+        assert_includes html, "background-color: #0a0a0a"
+      end
+
+      def test_swatches_variant_expands_short_hex
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Red", value: "red", color: "#f00"}],
+          variant: :swatches
+        ))
+
+        assert_includes page.native.to_html, "background-color: #ff0000"
+      end
+
+      def test_swatches_variant_uses_dark_check_on_light_fill
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Snow", value: "#ffffff"}],
+          variant: :swatches,
+          value: "#ffffff"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "text-[var(--color-swatch-check-on-light)]"
+        assert_selector "svg[aria-hidden='true']"
+      end
+
+      def test_swatches_variant_uses_light_check_on_dark_fill
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Ink", value: "#0a0a0a"}],
+          variant: :swatches,
+          value: "#0a0a0a"
+        ))
+
+        assert_includes page.native.to_html, "text-[var(--color-swatch-check-on-dark)]"
+      end
+
+      def test_swatches_variant_can_hide_tooltips
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Ocean", value: "#1d4ed8"}],
+          variant: :swatches,
+          show_tooltip: false
+        ))
+
+        refute_selector "[data-controller='flat-pack--tooltip']"
+        assert_selector "span.sr-only", text: "Ocean"
+        refute_includes page.native.to_html, "show_tooltip"
+      end
+
+      def test_swatches_variant_respects_tooltip_placement
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Ocean", value: "#1d4ed8"}],
+          variant: :swatches,
+          tooltip_placement: :bottom
+        ))
+
+        assert_selector "[data-flat-pack--tooltip-placement-value='bottom']"
+      end
+
+      def test_swatches_variant_sizes_match_color_swatch
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Ocean", value: "#1d4ed8"}],
+          variant: :swatches,
+          size: :sm
+        ))
+        assert_includes page.native.to_html, "h-8 w-8"
+        assert_includes page.native.to_html, "width: 2rem; height: 2rem"
+
+        render_inline(Component.new(
+          name: "accent_lg",
+          options: [{label: "Ocean", value: "#1d4ed8"}],
+          variant: :swatches,
+          size: :lg
+        ))
+        assert_includes page.native.to_html, "h-12 w-12"
+        assert_includes page.native.to_html, "width: 3rem; height: 3rem"
+      end
+
+      def test_swatches_variant_keeps_disabled_error_required_and_help
+        options = [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Coral", value: "#f97316", disabled: true}
+        ]
+        render_inline(Component.new(
+          name: "cover",
+          options: options,
+          variant: :swatches,
+          value: "#1d4ed8",
+          required: true,
+          error: "Pick a cover colour.",
+          help_text: "Used on the share card."
+        ))
+
+        assert_selector "input[value='#1d4ed8'][checked][required]"
+        assert_selector "input[value='#f97316'][disabled]"
+        refute_selector "input[value='#1d4ed8'][disabled]"
+        assert_selector "p", text: "Pick a cover colour."
+        assert_selector "input[aria-invalid='true']"
+        assert_selector "input[aria-describedby*='cover_help_text']", count: 2
+        html = page.native.to_html
+        assert_includes html, "border-[var(--color-error)]"
+        assert_includes html, "mt-4 text-sm text-[var(--color-error)]"
+        assert_includes html, "mt-4 text-xs text-[var(--surface-muted-content-color)]"
+        assert_includes html, "opacity-50"
+      end
+
+      def test_swatches_variant_respects_group_disabled
+        render_inline(Component.new(
+          name: "accent",
+          options: [{label: "Ocean", value: "#1d4ed8"}, {label: "Ink", value: "#0a0a0a"}],
+          variant: :swatches,
+          disabled: true
+        ))
+
+        assert_selector "input[disabled]", count: 2
+      end
+
+      def test_swatches_variant_requires_a_colour
+        error = assert_raises(ArgumentError) do
+          Component.new(
+            name: "accent",
+            options: [{label: "Ocean", value: "ocean"}],
+            variant: :swatches
+          )
+        end
+
+        assert_includes error.message, "needs a color"
+      end
+
+      def test_swatches_variant_rejects_unsafe_color
+        assert_raises(ArgumentError) do
+          Component.new(
+            name: "accent",
+            options: [{label: "Bad", value: "bad", color: "not-a-color"}],
+            variant: :swatches
+          )
+        end
+      end
+
+      def test_raises_error_for_invalid_tooltip_placement
+        error = assert_raises(ArgumentError) do
+          Component.new(
+            name: "accent",
+            options: [{label: "Ocean", value: "#1d4ed8"}],
+            variant: :swatches,
+            tooltip_placement: :diagonal
+          )
+        end
+
+        assert_includes error.message, "Invalid tooltip_placement"
+      end
+
+      def test_default_inline_and_cards_do_not_render_swatch_chrome
+        render_inline(Component.new(name: "color", options: ["Red"], show_tooltip: true))
+        html = page.native.to_html
+        refute_includes html, "flat-pack-radio-swatch"
+        refute_includes html, "--color-swatch-selected-ring-color"
+        refute_selector "[data-controller='flat-pack--tooltip']"
+        refute_includes html, "show_tooltip"
+
+        render_inline(Component.new(name: "cadence", options: ["Daily"], variant: :inline))
+        html = page.native.to_html
+        refute_includes html, "flat-pack-radio-swatch"
+        refute_includes html, "--color-swatch-selected-ring-color"
+
+        render_inline(Component.new(name: "plan", options: ["Starter"], variant: :cards))
+        html = page.native.to_html
+        refute_includes html, "flat-pack-radio-swatch"
+        refute_includes html, "--color-swatch-selected-ring-color"
       end
     end
   end

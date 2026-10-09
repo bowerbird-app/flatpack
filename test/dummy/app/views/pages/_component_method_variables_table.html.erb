@@ -828,8 +828,8 @@
       method_call: "render FlatPack::RadioGroup::Component.new(name: \"plan\", options: [\"One\", \"Two\"], variant: :inline)",
       variables: [
         { variable: "name", accepts: "String (required)", example: "name: \"plan\"" },
-        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [{ label: \"Email\", value: \"email\", icon: \"envelope\", description: \"A note in the inbox.\" }]" },
-        { variable: "variant", accepts: ":default, :inline, :cards", example: "variant: :cards" },
+        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [{ label: \"Ocean\", value: \"#1d4ed8\", color: \"#1d4ed8\" }]" },
+        { variable: "variant", accepts: ":default, :inline, :cards, :swatches", example: "variant: :swatches" },
         { variable: "value", accepts: "String or nil", example: "value: \"email\"" },
         { variable: "label", accepts: "String or nil", example: "label: \"How should we send this?\"" },
         { variable: "help_text", accepts: "String or nil", example: "help_text: \"You can change this later.\"" },
@@ -838,7 +838,10 @@
         { variable: "required", accepts: "true, false", example: "required: true" },
         { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" },
         { variable: "icon", accepts: "String or Symbol on a hash option", example: "icon: \"envelope\"" },
-        { variable: "description", accepts: "String on a hash option (cards variant)", example: "description: \"A note in the inbox.\"" }
+        { variable: "description", accepts: "String on a hash option (cards variant)", example: "description: \"A note in the inbox.\"" },
+        { variable: "color", accepts: "CSS colour on a hash option (swatches variant)", example: "color: \"#1d4ed8\"" },
+        { variable: "show_tooltip", accepts: "true, false (swatches variant)", example: "show_tooltip: true" },
+        { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left (swatches variant)", example: "tooltip_placement: :top" }
       ]
     },
     text_input: {

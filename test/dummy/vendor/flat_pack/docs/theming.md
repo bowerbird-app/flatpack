@@ -399,6 +399,12 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 - Size: `--checkbox-size` (Checkbox and RadioGroup; `size:` sets sm `1rem` / md `1.25rem` / lg `1.5rem`)
 - Radius: `--checkbox-radius` (checkbox); radios stay `rounded-full`
 - Label spacing: `--checkbox-label-gap` (checkbox)
+- RadioGroup `variant: :swatches` reuses Color Swatch tokens: `--color-swatch-radius`, `--color-swatch-border-color`, `--color-swatch-selected-ring-color` (aliases `--color-ring`), `--color-swatch-ring-offset-color` (aliases `--surface-background-color`), `--color-swatch-shadow`, plus `--color-swatch-check-on-dark` / `--color-swatch-check-on-light` for the selected check. Circle size follows ColorSwatch `:sm` / `:md` / `:lg`, not `--checkbox-size`.
+
+### Color Swatch
+- Circle: `--color-swatch-radius` (pill), `--color-swatch-border-color`, `--color-swatch-shadow`
+- Selected / focus ring: `--color-swatch-selected-ring-color`, `--color-swatch-ring-offset-color` (gap uses the page background so the ring reads on white and near-black fills)
+- Selected check ink on RadioGroup swatches: `--color-swatch-check-on-dark` (light mark on a dark fill), `--color-swatch-check-on-light` (dark mark on a light fill)
 
 ### SVG Status Dot Utility
 - Utility class: `fp-red-dot` (apply on an `svg` element)

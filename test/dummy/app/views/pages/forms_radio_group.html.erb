@@ -222,11 +222,113 @@
   ) %>
 </section>
 
+<section class="mb-12" id="colour-swatches">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Colour swatches",
+    anchor_link: true,
+    subtitle: "A fixed palette. Tap a dot to pick it. Hover for the name."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-lg)]") do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "cover_color",
+        variant: :swatches,
+        label: "Cover colour",
+        help_text: "Used on the share card.",
+        value: "#1d4ed8",
+        options: [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Sky", value: "#38bdf8"},
+          {label: "Leaf", value: "#16a34a"},
+          {label: "Sun", value: "#facc15"},
+          {label: "Coral", value: "#f97316"},
+          {label: "Plum", value: "#7c3aed"},
+          {label: "Snow", value: "#ffffff"},
+          {label: "Ink", value: "#0a0a0a"}
+        ]
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "cover_color_sizes_sm",
+        variant: :swatches,
+        label: "Small",
+        size: :sm,
+        value: "#16a34a",
+        options: [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Leaf", value: "#16a34a"},
+          {label: "Snow", value: "#ffffff"},
+          {label: "Ink", value: "#0a0a0a"}
+        ]
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "cover_color_sizes_lg",
+        variant: :swatches,
+        label: "Large",
+        size: :lg,
+        value: "#0a0a0a",
+        options: [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Leaf", value: "#16a34a"},
+          {label: "Snow", value: "#ffffff"},
+          {label: "Ink", value: "#0a0a0a"}
+        ]
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "cover_color_disabled",
+        variant: :swatches,
+        label: "One colour off",
+        help_text: "Coral is not on this plan.",
+        value: "#1d4ed8",
+        options: [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Coral", value: "#f97316", disabled: true},
+          {label: "Snow", value: "#ffffff"},
+          {label: "Ink", value: "#0a0a0a"}
+        ]
+      ) %>
+
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "cover_color_error",
+        variant: :swatches,
+        label: "Cover colour",
+        error: "Pick a cover colour to continue.",
+        options: [
+          {label: "Ocean", value: "#1d4ed8"},
+          {label: "Snow", value: "#ffffff"},
+          {label: "Ink", value: "#0a0a0a"}
+        ]
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RadioGroup::Component.new(
+        name: &quot;cover_color&quot;,
+        variant: :swatches,
+        label: &quot;Cover colour&quot;,
+        value: &quot;#1d4ed8&quot;,
+        options: [
+          { label: &quot;Ocean&quot;, value: &quot;#1d4ed8&quot; },
+          { label: &quot;Snow&quot;, value: &quot;#ffffff&quot; },
+          { label: &quot;Ink&quot;, value: &quot;#0a0a0a&quot; }
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Colour swatches"
+  ) %>
+</section>
+
 <section class="mb-12" id="in-a-form">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Inside a form",
     anchor_link: true,
-    subtitle: "Both layouts submit as ordinary radios. Try them in a card, then save."
+    subtitle: "Pills, cards, and colour dots submit as ordinary radios. Try them in a card, then save."
   ) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
@@ -255,6 +357,24 @@
             {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
             {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
             {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."}
+          ]
+        ) %>
+
+        <%= render FlatPack::RadioGroup::Component.new(
+          name: "form_cover_color",
+          variant: :swatches,
+          label: "Cover colour",
+          required: true,
+          value: "#1d4ed8",
+          options: [
+            {label: "Ocean", value: "#1d4ed8"},
+            {label: "Sky", value: "#38bdf8"},
+            {label: "Leaf", value: "#16a34a"},
+            {label: "Sun", value: "#facc15"},
+            {label: "Coral", value: "#f97316"},
+            {label: "Plum", value: "#7c3aed"},
+            {label: "Snow", value: "#ffffff"},
+            {label: "Ink", value: "#0a0a0a"}
           ]
         ) %>
 

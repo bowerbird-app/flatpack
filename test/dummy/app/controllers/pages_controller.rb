@@ -72,6 +72,7 @@ class PagesController < ApplicationController
     {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
     {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
     {action: /\Atables(_.*)?\z/, title: "Table", patterns: [/\A--table-/]},
+    {action: /\Aforms_radio_group\z/, title: "Form Controls & Radio Group", patterns: [/\A--form-control-/, /\A--color-swatch-/]},
     {action: /\Aforms(_.*)?\z/, title: "Form Controls", patterns: [/\A--form-control-/]},
     {action: /\Arange_input\z/, title: "Range Input", patterns: [/\A--range-/]},
     {action: /\Aforms_switch\z/, title: "Form Controls & Switch", patterns: [/\A--form-control-/, /\A--switch-/]},
