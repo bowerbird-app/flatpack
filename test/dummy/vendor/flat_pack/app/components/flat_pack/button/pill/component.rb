@@ -12,25 +12,52 @@ module FlatPack
         ITEM_ACTIVE_CLASSES = FlatPack::Button::PillStyle::ACTIVE_CLASSES
         ITEM_INACTIVE_CLASSES = FlatPack::Button::PillStyle::INACTIVE_CLASSES
 
-        def initialize(items:, size: :md, style: FlatPack::Button::PillStyle::DEFAULT, **system_arguments)
+        def initialize(items:, size: :md, style: FlatPack::Button::PillStyle::DEFAULT, indicator: nil, **system_arguments)
           super(**system_arguments)
           @pill_style = FlatPack::Button::PillStyle.resolve(style)
           @size = FlatPack::Shared::PadTextSizes.normalize!(size)
+          @indicator = FlatPack::Shared::SlideIndicator.normalize(indicator)
           @items = normalize_items(items)
         end
 
         def call
           content_tag(:div, **group_attributes) do
-            safe_join(@items.map { |item| render_item(item) })
+            nodes = []
+            nodes << render_slide_indicator if sliding_indicator?
+            nodes.concat(@items.map { |item| render_item(item) })
+            safe_join(nodes)
           end
         end
 
         private
 
         def group_attributes
-          merge_attributes(
-            class: "#{GROUP_CLASSES} #{@pill_style.group_class}",
-            data: {fp_style: @pill_style.name.to_s}
+          unless sliding_indicator?
+            return merge_attributes(
+              class: "#{GROUP_CLASSES} #{@pill_style.group_class}",
+              data: {fp_style: @pill_style.name.to_s}
+            )
+          end
+
+          slide_data = merge_data_attributes(
+            {fp_style: @pill_style.name.to_s},
+            FlatPack::Shared::SlideIndicator.list_data(kind: FlatPack::Shared::SlideIndicator::KIND_PILL)
+          )
+
+          {
+            class: classes("#{GROUP_CLASSES} #{@pill_style.group_class} #{FlatPack::Shared::SlideIndicator::LIST_CLASS}"),
+            data: merge_data_attributes(data_attributes, slide_data),
+            aria: aria_attributes
+          }.merge(html_attributes).compact
+        end
+
+        def render_slide_indicator
+          content_tag(
+            :span,
+            "",
+            class: FlatPack::Shared::SlideIndicator.indicator_classes(kind: FlatPack::Shared::SlideIndicator::KIND_PILL),
+            aria: {hidden: true},
+            data: {"flat-pack--slide-indicator-target": "indicator"}
           )
         end
 
@@ -51,13 +78,15 @@ module FlatPack
               existing_class,
               ITEM_BASE_CLASSES,
               FlatPack::Shared::PadTextSizes.classes_for(@size),
-              item[:active] ? ITEM_ACTIVE_CLASSES : ITEM_INACTIVE_CLASSES
+              (FlatPack::Shared::SlideIndicator::ITEM_CLASS if sliding_indicator?),
+              item[:active] ? item_active_classes : item_inactive_classes
             )
           )
 
           attrs[:aria] = existing_aria.merge(current: "page") if item[:active]
           attrs[:aria] = existing_aria if existing_aria.present? && !item[:active]
-          attrs[:data] = existing_data if existing_data.present?
+          item_data = sliding_indicator? ? merge_data_attributes(existing_data, slide_item_data) : existing_data
+          attrs[:data] = item_data if item_data.present?
           attrs[:target] = item[:target] if item[:target].present?
           attrs[:rel] = "noopener noreferrer" if item[:target] == "_blank"
           attrs
@@ -90,6 +119,29 @@ module FlatPack
               symbolized_item.except(:text, :href, :active, :target)
             )
           }
+        end
+
+        def item_active_classes
+          return FlatPack::Button::PillStyle::ACTIVE_TEXT_CLASSES if sliding_indicator?
+
+          ITEM_ACTIVE_CLASSES
+        end
+
+        def item_inactive_classes
+          return FlatPack::Button::PillStyle::INACTIVE_TEXT_CLASSES if sliding_indicator?
+
+          ITEM_INACTIVE_CLASSES
+        end
+
+        def slide_item_data
+          FlatPack::Shared::SlideIndicator.item_data.merge(
+            "flat-pack-slide-indicator-active-classes": FlatPack::Button::PillStyle::ACTIVE_TEXT_CLASSES,
+            "flat-pack-slide-indicator-inactive-classes": FlatPack::Button::PillStyle::INACTIVE_TEXT_CLASSES
+          )
+        end
+
+        def sliding_indicator?
+          @indicator == :slide
         end
 
         def merge_css_classes(*class_values)

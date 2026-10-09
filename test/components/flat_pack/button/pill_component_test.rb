@@ -156,6 +156,57 @@ module FlatPack
           refute_includes classes, "fp-button-flat"
           assert_includes classes, "fp-pill-style"
         end
+
+        def test_omitted_indicator_does_not_render_slide_markup
+          render_inline(Component.new(items: [
+            {text: "Overview", href: "/demo/buttons", active: true},
+            {text: "Tables", href: "/demo/tables"}
+          ]))
+
+          html = page.native.to_html
+          refute_includes html, "fp-slide-indicator"
+          refute_includes html, "flat-pack--slide-indicator"
+          assert_includes html, "bg-[var(--tabs-pill-active-background-color)]"
+          assert_includes html, "shadow-[var(--tabs-pill-active-shadow)]"
+        end
+
+        def test_slide_indicator_renders_pill_and_text_only_items
+          render_inline(Component.new(
+            indicator: :slide,
+            items: [
+              {text: "Overview", href: "/demo/buttons", active: true, id: "overview-pill"},
+              {text: "Tables", href: "/demo/tables"}
+            ]
+          ))
+
+          group = page.find("div.fp-slide-indicator-list")
+          assert_includes group["data-controller"].to_s.split, "flat-pack--slide-indicator"
+          assert_equal "pill", group["data-flat-pack--slide-indicator-kind-value"]
+          assert_selector "span.fp-slide-indicator.fp-slide-indicator--pill[aria-hidden='true']", visible: :all
+          assert_selector "a#overview-pill[aria-current='page'][data-flat-pack--slide-indicator-target='item']"
+          assert_includes page.find("a#overview-pill")[:class], "text-[var(--tabs-pill-active-text-color)]"
+          refute_includes page.find("a#overview-pill")[:class], "bg-[var(--tabs-pill-active-background-color)]"
+          refute_includes page.find("a#overview-pill")[:class], "shadow-[var(--tabs-pill-active-shadow)]"
+        end
+
+        def test_slide_indicator_keeps_host_controller
+          render_inline(Component.new(
+            indicator: :slide,
+            data: {controller: "pill-buttons-demo"},
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          controllers = page.find("div.fp-slide-indicator-list")["data-controller"].split
+          assert_includes controllers, "pill-buttons-demo"
+          assert_includes controllers, "flat-pack--slide-indicator"
+        end
+
+        def test_invalid_indicator_raises_argument_error
+          error = assert_raises(ArgumentError) do
+            Component.new(indicator: :bounce, items: [{text: "Overview", href: "/demo/buttons"}])
+          end
+          assert_includes error.message, "Invalid indicator"
+        end
       end
     end
   end

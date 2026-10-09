@@ -16,6 +16,7 @@ Use Tabs when content can be split into a small number of peer sections in the s
 | `variant` | Symbol | `:underline` | no | Visual style: `:underline`, `:pills`, `:stacked`. |
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Button::Pill; invalid values raise). |
 | `style` | Symbol | `:primary` | no | Colour of the active pill or stacked control. Same names as [Button](button.md) `style`. Unknown names raise `ArgumentError`. |
+| `indicator` | Symbol | `nil` | no | Omit for today’s instant active swap. `:slide` renders one indicator that follows the selected tab. Unknown names raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for root wrapper. |
 
 ## Slots
@@ -25,6 +26,7 @@ None (content is defined through component builder methods).
 - `:underline` horizontal underline tabs. `style:` is accepted. Underline paint does not change.
 - `:pills` pill-style horizontal tabs. `style:` paints the active control. The default `:primary` uses the pill colour.
 - `:stacked` vertical tab list with side-by-side layout on medium+ breakpoints. `style:` paints the active control the same way as pills.
+- `indicator: :slide` is opt-in on every variant. Default markup stays the same. One marker follows the selected tab. Tabs keep only the text colour change. Motion is `--duration-base` / `--easing-standard`. `prefers-reduced-motion` snaps.
 
 ## Example
 ```erb
@@ -53,6 +55,14 @@ Pill and stacked tabs take the same `style:` names as Button. `:primary` is the 
 <% end %>
 ```
 
+```erb
+<%= render FlatPack::Tabs::Component.new(variant: :pills, indicator: :slide) do |tabs| %>
+  <% tabs.tab(label: "Overview", id: "overview") do %>
+    <p>Overview content</p>
+  <% end %>
+<% end %>
+```
+
 ## Accessibility
 - Renders ARIA tab semantics: `tablist`, `tab`, and `tabpanel`.
 - Sets tab orientation metadata (`horizontal` or `vertical`) for controller behavior.
@@ -60,3 +70,4 @@ Pill and stacked tabs take the same `style:` names as Button. `:primary` is the 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controller: `flat-pack--tabs`.
+- Sliding indicator: `flat-pack--slide-indicator` when `indicator: :slide`.
