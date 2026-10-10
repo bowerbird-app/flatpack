@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.226] - 2026-10-10
 
 ### Added
-- `FlatPack::HeroTitle::Component` renders a standalone cover headline. Args: `text:` (or a content block), `size:` (`:md`, `:lg`, `:xl`, `:xxl`; default `:xl`), `level:` (`:h1`–`:h6`, default `:h1`), optional `align:` (`:left`, `:center`), and `system_arguments`.
+- `FlatPack::HeroTitle::Component` renders a standalone cover headline. Args: `text:` (or a content block), `size:` (`:md`, `:lg`, `:xl`, `:xxl`; default `:xl`), `level:` (`:h1`–`:h6`, default `:h1`), optional `align:` (`:left`, `:center`), and `system_arguments`. Ink is `--surface-content-color`; a caller `text-*` class still wins (Hero overlay ink).
 - Size tokens `--hero-title-md-size`, `--hero-title-lg-size`, `--hero-title-xl-size`, `--hero-title-xxl-size` with matching `-min` / `-max`. Each size is a fluid clamp. `:xl` aliases `--display-size` (`clamp` from `--text-5xl` / 48px to `5.5rem` / 88px, preferred `1rem + 5vw`) so today's display output is unchanged. Weight, tracking, and leading reuse `--display-weight` (600), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.05`). Unlayered `.fp-hero-title` / `.fp-hero-title--*` sit beside `.fp-display`.
 - Hero accepts opt-in `title_size:` (`:md`, `:lg`, `:xl`, `:xxl`) to pick a Hero Title step.
 - Dummy demo at `/demo/hero_title` (sizes, wrapping, inside Hero, dark).
