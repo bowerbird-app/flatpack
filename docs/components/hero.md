@@ -23,7 +23,7 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | `variant` | Symbol | `:centered` | no | Layout variant. One of: `:centered`, `:centered_image`, `:screenshot`, `:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`. Invalid values raise `ArgumentError`. |
 | `align` | Symbol | `:center` | no | Overlay copy and CTA alignment. One of: `:center`, `:left`. Overlay variants (`:centered`, `:centered_image`, `:screenshot`) apply it. Column variants (`:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`) validate it and keep their markup. Invalid values raise `ArgumentError`. |
 | `on` | Symbol | `:dark` | no | Overlay contrast on `:centered_image`. `:dark` is light type on a dark wash (default). `:light` is dark type on a light wash. Other variants validate it and keep their markup. Invalid values raise `ArgumentError`. Hosts can still set `--hero-overlay-*` on the section for one photo. |
-| `size` | Symbol | `:default` | no | Headline scale. `:default` is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). `:display` uses `--display-size`, tight tracking, and tight leading. Invalid values raise `ArgumentError`. |
+| `size` | Symbol | `:default` | no | Headline scale. `:default` is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). `:display` uses `--display-size`, `--display-weight` (600), `--display-tracking`, and `--display-leading` (`1.05`). Invalid values raise `ArgumentError`. |
 | `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
 | `headline` | String | `nil` | no | Primary `<h1>` text. Default size is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Pass `size: :display` for cover type. |
 | `description` | String | `nil` | no | Supporting paragraph below the headline. Page-surface variants use `--hero-description-size` (default `--text-xl`). Overlay body on `:centered_image` stays `--text-2xl`. |
@@ -145,7 +145,7 @@ end %>
 ) %>
 ```
 
-Existing Hero calls stay on the product scale. `size: :display` is opt-in. Display headlines set `--display-size`, `--display-tracking`, and `--display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. The centered column widens to `max-w-5xl` for wrapping cover titles.
+Existing Hero calls stay on the product scale. `size: :display` is opt-in. Display headlines set `--display-size`, `--display-weight`, `--display-tracking`, and `--display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. Default headlines stay `font-semibold` without those tokens. The centered column widens to `max-w-5xl` for wrapping cover titles.
 
 ### Image tiles
 

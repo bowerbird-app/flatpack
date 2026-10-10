@@ -37,7 +37,7 @@ Forbid implementing DNA `visual_effects` (WebGL, particles, shaders, Canvas, scr
 
 Advise timing, easing, and choreography only. Implement with Flatpack CSS and token transitions. Do not default to Framer, GSAP, or Lottie.
 
-Today the kit has `--font-sans` / `--font-mono`, `--text-xs` through `--text-7xl`, `--display-size` / `--display-tracking` / `--display-leading` for opt-in cover type, `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms), `--easing-standard` / `--easing-enter` / `--easing-exit`, list/layout `--easing-spring` / `--easing-spring-snappy`, and `--transition-*` aliases. Prefer those tokens in new code. Do not sprinkle keyframes in a host app. Spring tokens are list/layout only — overlays stay bounce-free. Product chrome stays on `--text-5xl` and below unless a component opts into `size: :display`.
+Today the kit has `--font-sans` / `--font-mono`, `--text-xs` through `--text-8xl`, `--display-size` / `--display-size-min` / `--display-size-max` / `--display-tracking` / `--display-leading` / `--display-weight` for opt-in cover type, `--duration-fast` (150ms), `--duration-base` (200ms), `--duration-slow` (300ms), `--easing-standard` / `--easing-enter` / `--easing-exit`, list/layout `--easing-spring` / `--easing-spring-snappy`, and `--transition-*` aliases. Prefer those tokens in new code. Do not sprinkle keyframes in a host app. Spring tokens are list/layout only — overlays stay bounce-free. Product chrome stays on `--text-5xl` and below unless a component opts into `size: :display`.
 
 ## Taste bar
 

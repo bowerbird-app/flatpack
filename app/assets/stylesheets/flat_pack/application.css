@@ -961,6 +961,7 @@
  */
 .fp-display {
   font-size: var(--display-size);
+  font-weight: var(--display-weight);
   letter-spacing: var(--display-tracking);
   line-height: var(--display-leading);
 }

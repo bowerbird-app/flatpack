@@ -114,9 +114,11 @@ module FlatPack
 
         html = page.native.to_html
         assert_selector "h1[style*='font-size: var(--page-title-h1-size)']", text: "Dashboard"
+        assert_includes html, "font-bold"
         assert_includes html, "leading-tight"
         refute_includes html, "fp-display"
         refute_includes html, "--display-size"
+        refute_includes html, "--display-weight"
       end
 
       def test_display_size_uses_display_tokens
@@ -125,9 +127,11 @@ module FlatPack
         html = page.native.to_html
         assert_selector "h1.fp-display", text: "Northlight"
         assert_includes html, "font-size: var(--display-size)"
+        assert_includes html, "font-weight: var(--display-weight)"
         assert_includes html, "letter-spacing: var(--display-tracking)"
         assert_includes html, "line-height: var(--display-leading)"
         assert_includes html, "fp-text-balance"
+        refute_includes html, "font-bold"
         refute_includes html, "leading-tight"
         refute_includes html, "--page-title-h1-size"
       end

@@ -97,8 +97,8 @@ module FlatPack
       end
 
       def title_classes
-        classes = ["font-bold", "fp-text-balance"]
-        classes << (display? ? "fp-display" : "leading-tight")
+        classes = ["fp-text-balance"]
+        classes << (display? ? "fp-display" : "font-bold leading-tight")
         classes << "text-[var(--surface-content-color)]" unless @title_color
         classes.join(" ")
       end
@@ -106,6 +106,7 @@ module FlatPack
       def title_style
         style_rules = ["font-size: #{heading_size_token}"]
         if display?
+          style_rules << "font-weight: var(--display-weight)"
           style_rules << "letter-spacing: var(--display-tracking)"
           style_rules << "line-height: var(--display-leading)"
         end

@@ -1,9 +1,9 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Type scale",
-  subtitle: "Kit rungs from xs through 7xl, plus the fluid display cover size."
+  subtitle: "Kit rungs from xs through 8xl, plus the fluid display cover size."
 ) %>
 
-<%# Tailwind scan: text-xs text-sm text-base text-lg text-xl text-2xl text-3xl text-4xl text-5xl text-6xl text-7xl %>
+<%# Tailwind scan: text-xs text-sm text-base text-lg text-xl text-2xl text-3xl text-4xl text-5xl text-6xl text-7xl text-8xl %>
 <%
   type_scale_steps = [
     ["text-xs", "xs", "0.75rem / 12px"],
@@ -16,7 +16,8 @@
     ["text-4xl", "4xl", "2.25rem / 36px"],
     ["text-5xl", "5xl", "3rem / 48px"],
     ["text-6xl", "6xl", "3.75rem / 60px"],
-    ["text-7xl", "7xl", "4.5rem / 72px"]
+    ["text-7xl", "7xl", "4.5rem / 72px"],
+    ["text-8xl", "8xl", "6rem / 96px"]
   ]
 %>
 
@@ -24,7 +25,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Scale",
     anchor_link: true,
-    subtitle: "Tailwind utilities mapped from --text-*. 6xl and 7xl are the new rungs."
+    subtitle: "Tailwind utilities mapped from --text-*. 6xl through 8xl are the display rungs."
   ) %>
 
   <div class="space-y-8">
@@ -41,11 +42,11 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Display",
     anchor_link: true,
-    subtitle: "Fluid cover size. About 48px on a phone, 72px on a wide screen. A theme can pick a different cover size."
+    subtitle: "Fluid cover size. About 48px on a phone, 88px on a wide screen. A theme can raise or lower --display-size-max."
   ) %>
 
-  <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]">display · clamp(5xl, 2rem + 3.5vw, 7xl) · fp-display</p>
-  <p class="fp-display font-semibold fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
+  <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]">display · clamp(min, 1rem + 5vw, max 5.5rem) · fp-display</p>
+  <p class="fp-display fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
 </section>
 
 <section class="mb-12" id="display-dark" data-theme="dark">
@@ -54,6 +55,6 @@
       title: "Display on dark",
       subtitle: "Same cover size on the dark theme."
     ) %>
-    <p class="fp-display font-semibold fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
+    <p class="fp-display fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
   </div>
 </section>

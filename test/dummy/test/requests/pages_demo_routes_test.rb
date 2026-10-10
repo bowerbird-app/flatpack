@@ -723,15 +723,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "lg:text-6xl"
   end
 
-  test "type scale demo shows 6xl 7xl and display" do
+  test "type scale demo shows 6xl 7xl 8xl and display" do
     get "/demo/type_scale"
 
     assert_response :success
     assert_includes response.body, "text-6xl"
     assert_includes response.body, "text-7xl"
+    assert_includes response.body, "text-8xl"
     assert_includes response.body, "fp-display"
     assert_includes response.body, "3.75rem / 60px"
     assert_includes response.body, "4.5rem / 72px"
+    assert_includes response.body, "6rem / 96px"
   end
 
   test "hero display demo uses display size" do

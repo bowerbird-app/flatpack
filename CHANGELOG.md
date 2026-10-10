@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.224] - 2026-10-10
+
+### Changed
+- Display cover size now tops out at `--display-size-max` (`5.5rem` / 88px) on wide desktops, with `--display-size-min` (`--text-5xl` / 48px) on small viewports. Preferred size is `1rem + 5vw` (~80px at 1280). `--display-leading` is `1.05`. `--display-tracking` stays `-0.03em`.
+- `--display-weight` is `600` (semibold). Content `h1` and Hero headlines already use 600; PageTitle `size: :display` now matches. Default PageTitle stays `font-bold`.
+- Type scale token `--text-8xl` (6rem / 96px) with `--text-8xl--line-height` of `1`, mapped in `@theme inline` so `text-8xl` works after a Tailwind rebuild. Themes can set `--display-size-max: var(--text-8xl)` for a 96px ceiling.
+- Bumped the gem version to `0.1.224`.
+
+### Upgrade notes
+- Existing default PageTitle and Hero calls are unchanged. Only `size: :display` and `--display-*` defaults change.
+- Cover titles are larger on desktop (~88px from 1440) and still ~48px on a phone. Reload kit CSS. Rebuild host Tailwind for `text-8xl`.
+- Themes that overrode `--display-size` keep that override. To keep the fluid clamp and change the ceiling, set `--display-size-max` (or `--display-size-min`) instead.
+- Redeploy so `meta.gem_version` shows `0.1.224`.
+
 ## [0.1.223] - 2026-10-09
 
 ### Added
