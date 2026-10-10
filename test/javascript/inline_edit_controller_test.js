@@ -266,6 +266,18 @@ test("wrapped block finds the first heading", () => {
   assert.equal(heading.attrs.role, "textbox")
 })
 
+test("wrapped block prefers a heading over a leading paragraph", () => {
+  const paragraph = {textContent: "Tagline", innerText: "Tagline", classList: classListStub(), attrs: {}, setAttribute() {}, getAttribute() { return null }}
+  const {controller, heading, element} = buildController({wrapped: true})
+  element.querySelector = (selector) => {
+    if (selector.includes("data-inline-edit-target")) return null
+    if (selector.includes("h1")) return heading
+    if (selector === "p") return paragraph
+    return null
+  }
+  assert.equal(controller.findSurface(), heading)
+})
+
 test("plain mode saves with meta enter", () => {
   const {controller, surface} = buildController({mode: "plain", value: "Line one"})
   let saved = false
