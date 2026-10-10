@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.225] - 2026-10-10
+
+### Added
+- `FlatPack::RangeInput::Component` accepts an opt-in size-slider presentation. `variant: :size` / `:text_size` put a small and large `A` (theme font) at the track ends. `variant: :zoom` defaults to `magnifying-glass-minus` / `magnifying-glass-plus`. `start_icon:` / `end_icon:` take any kit icon name. End glyphs and icons are decorative (`aria-hidden`); the input keeps its accessible label.
+- Optional live preview: `preview_target:` (CSS selector or element id) and `with_preview` write `--fp-range-value` (current number) and `--fp-range-scale` (0–1) on the target as you drag. Stimulus does this work only when a preview is present. Default RangeInput markup and behaviour are unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.225`.
+
+### Upgrade notes
+- Existing RangeInput calls are unchanged. Pass `variant: :size`, `variant: :zoom`, or `start_icon:` / `end_icon:` for the size-slider layout.
+- For live preview, pass `preview_target:` and/or `with_preview`, then size the sample with `font-size: calc(var(--fp-range-value) * 1px)` or `calc(… * var(--fp-range-scale))`. Set the same custom properties on the target for first paint if it sits outside the component.
+- Thumb fill still aliases `--color-primary`. Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.225`.
+
 ## [0.1.224] - 2026-10-10
 
 ### Changed

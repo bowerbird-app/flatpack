@@ -14,6 +14,7 @@ function loadRangeInputController() {
   const context = {
     module: { exports: {} },
     exports: {},
+    document: undefined,
     CustomEvent: class CustomEvent {
       constructor(type, options = {}) {
         this.type = type
@@ -25,10 +26,17 @@ function loadRangeInputController() {
 
   vm.runInNewContext(transformedSource, context, { filename: filePath })
 
-  return context.module.exports
+  return { RangeInputController: context.module.exports, context }
 }
 
-function buildController({ min = '0', max = '100', value = '50' } = {}) {
+function buildController({
+  min = '0',
+  max = '100',
+  value = '50',
+  previewTargets = [],
+  previewSelector = '',
+  documentRef = undefined
+} = {}) {
   const properties = {}
   const input = {
     value,
@@ -41,11 +49,18 @@ function buildController({ min = '0', max = '100', value = '50' } = {}) {
     setAttribute(name, next) { this.attributes[name] = next }
   }
   const events = []
-  const RangeInputController = loadRangeInputController()
+  const { RangeInputController, context } = loadRangeInputController()
+  if (documentRef !== undefined) {
+    context.document = documentRef
+  }
   const controller = Object.assign(new RangeInputController(), {
     inputTarget: input,
     hasValueDisplayTarget: true,
     valueDisplayTarget: { textContent: '' },
+    hasPreviewTarget: previewTargets.length > 0,
+    previewTargets,
+    hasPreviewSelectorValue: Boolean(previewSelector),
+    previewSelectorValue: previewSelector,
     element: {
       dispatchEvent(event) { events.push(event) }
     }
@@ -86,4 +101,59 @@ test('update keeps the value display and change event', () => {
   assert.equal(controller.valueDisplayTarget.textContent, '80')
   assert.equal(events[0].type, 'range-input:change')
   assert.equal(events[0].detail.value, 80)
+})
+
+test('update skips preview work when no preview target or selector is set', () => {
+  const { controller } = buildController({ value: '40' })
+
+  controller.update()
+
+  assert.equal(controller.hasPreviewTarget, false)
+  assert.equal(controller.hasPreviewSelectorValue, false)
+})
+
+test('update writes --fp-range-value and --fp-range-scale on a preview slot', () => {
+  const previewProperties = {}
+  const preview = {
+    style: {
+      setProperty(name, next) { previewProperties[name] = next }
+    }
+  }
+  const { controller } = buildController({
+    min: '14',
+    max: '32',
+    value: '18',
+    previewTargets: [preview]
+  })
+
+  controller.update()
+
+  assert.equal(previewProperties['--fp-range-value'], '18')
+  assert.equal(Number.parseFloat(previewProperties['--fp-range-scale']).toFixed(4), '0.2222')
+})
+
+test('update writes preview properties on a selector target', () => {
+  const previewProperties = {}
+  const preview = {
+    style: {
+      setProperty(name, next) { previewProperties[name] = next }
+    }
+  }
+  const { controller } = buildController({
+    min: '1',
+    max: '3',
+    value: '2',
+    previewSelector: '#zoom-preview',
+    documentRef: {
+      querySelectorAll(selector) {
+        assert.equal(selector, '#zoom-preview')
+        return [preview]
+      }
+    }
+  })
+
+  controller.update()
+
+  assert.equal(previewProperties['--fp-range-value'], '2')
+  assert.equal(previewProperties['--fp-range-scale'], '0.5')
 })

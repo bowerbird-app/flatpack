@@ -300,6 +300,10 @@ module FlatPack
       assert_includes application, "::-moz-range-thumb"
       assert_includes application, ".fp-range-input:disabled"
       assert_includes application, ".fp-range-input:focus-visible"
+      assert_includes application, ".fp-range-input-ends"
+      assert_includes application, ".fp-range-input-glyph--start"
+      assert_includes application, ".fp-range-input-glyph--end"
+      assert_includes application, "font-family: var(--font-sans)"
 
       dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
       ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]

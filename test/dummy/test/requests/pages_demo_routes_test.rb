@@ -786,6 +786,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">min</td>"
     assert_includes response.body, ">max</td>"
     assert_includes response.body, ">step</td>"
+    assert_includes response.body, ">variant</td>"
+    assert_includes response.body, ">start_icon</td>"
+    assert_includes response.body, ">end_icon</td>"
+    assert_includes response.body, ">preview_target</td>"
     assert_includes response.body, "**system_arguments"
   end
 

@@ -20,6 +20,8 @@ module FlatPack
       --fp-trash-button-size
       --fp-fab-offset
       --fp-fab-nav-offset
+      --fp-range-scale
+      --fp-range-value
       --range-progress
       --spacing
     ].freeze

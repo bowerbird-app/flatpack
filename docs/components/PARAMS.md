@@ -36,6 +36,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
 | Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
 | Sliding active marker | `indicator` | Tabs and Button::Pill. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
+| RangeInput end glyphs | `start_icon` / `end_icon` | Kit icon names at the track ends. `variant: :size` / `:text_size` use theme-font `A` glyphs instead; `:zoom` defaults to magnifying-glass minus/plus. |
+| RangeInput live preview | `preview_target` | CSS selector or element id. Stimulus writes `--fp-range-value` and `--fp-range-scale` on the target while dragging. |
 
 ## Billing namespace notes
 
