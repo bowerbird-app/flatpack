@@ -148,6 +148,264 @@ module FlatPack
 
         assert_selector ".custom-class"
       end
+
+      def test_default_markup_omits_size_slider_chrome
+        render_inline(Component.new(name: "volume", value: 50))
+
+        html = page.native.to_html
+
+        assert_selector "div.relative > input.fp-range-input[type='range']"
+        refute_selector ".fp-range-input-ends"
+        refute_selector ".fp-range-input-glyph"
+        refute_selector ".fp-range-input-end-icon"
+        refute_selector ".fp-range-input-preview"
+        refute_selector ".fp-range-input-ticks"
+        refute_selector ".fp-range-input-track"
+        refute_includes html, "preview-selector"
+        refute_includes html, "--fp-range-value"
+        refute_includes html, "--fp-range-scale"
+      end
+
+      def test_size_variant_renders_theme_font_glyphs
+        render_inline(Component.new(
+          name: "text_size",
+          variant: :size,
+          label: "Text size",
+          min: 14,
+          max: 32,
+          step: 3,
+          value: 23
+        ))
+
+        html = page.native.to_html
+
+        assert_selector ".fp-range-input-ends"
+        assert_selector ".fp-range-input-glyph--start[aria-hidden='true']", text: "A"
+        assert_selector ".fp-range-input-glyph--end[aria-hidden='true']", text: "A"
+        assert_selector "input.fp-range-input[aria-label='Text size'][step='3']"
+        assert_selector ".fp-range-input-ticks[aria-hidden='true']"
+        assert_selector ".fp-range-input-tick", count: 7
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Aa"
+        assert_selector ".fp-range-input-preview"
+        assert_includes html, "--fp-range-value: 23"
+        refute_selector "div.relative > input.fp-range-input"
+      end
+
+      def test_text_size_variant_aliases_size
+        render_inline(Component.new(name: "text_size", variant: :text_size))
+
+        assert_selector ".fp-range-input-glyph--start", text: "A"
+        assert_selector ".fp-range-input-glyph--end", text: "A"
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Aa"
+      end
+
+      def test_sample_customizes_the_built_in_preview
+        render_inline(Component.new(
+          name: "text_size",
+          variant: :size,
+          sample: "Embiggen",
+          min: 14,
+          max: 32,
+          value: 23
+        ))
+
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Embiggen"
+        refute_selector ".fp-range-input-sample", text: "Aa"
+      end
+
+      def test_blank_sample_omits_the_built_in_preview
+        render_inline(Component.new(name: "text_size", variant: :size, sample: ""))
+
+        refute_selector ".fp-range-input-preview"
+        refute_selector ".fp-range-input-sample"
+      end
+
+      def test_preview_slot_overrides_sample
+        render_inline(Component.new(name: "text_size", variant: :size, sample: "Embiggen")) do |range|
+          range.with_preview { "Custom slot" }
+        end
+
+        assert_selector ".fp-range-input-preview", text: "Custom slot"
+        refute_selector ".fp-range-input-sample"
+        refute_text "Embiggen"
+        refute_text "Aa"
+      end
+
+      def test_default_variant_ignores_sample
+        render_inline(Component.new(name: "volume", sample: "Embiggen", value: 50))
+
+        refute_selector ".fp-range-input-preview"
+        refute_selector ".fp-range-input-sample"
+        refute_text "Embiggen"
+      end
+
+      def test_zoom_variant_does_not_render_a_built_in_sample
+        render_inline(Component.new(name: "zoom", variant: :zoom, sample: "Embiggen"))
+
+        refute_selector ".fp-range-input-sample"
+        refute_selector ".fp-range-input-preview"
+      end
+
+      def test_zoom_variant_renders_default_magnifying_icons
+        render_inline(Component.new(
+          name: "zoom",
+          variant: :zoom,
+          label: "Icon size",
+          min: 1,
+          max: 3,
+          step: 0.5,
+          value: 2
+        ))
+
+        assert_selector ".fp-range-input-ends"
+        assert_selector ".fp-range-input-end-icon--start[data-flat-pack--icon-name-value='magnifying-glass-minus'][aria-hidden='true']"
+        assert_selector ".fp-range-input-end-icon--end[data-flat-pack--icon-name-value='magnifying-glass-plus'][aria-hidden='true']"
+        assert_selector "input.fp-range-input[aria-label='Icon size'][step='0.5']"
+        assert_selector ".fp-range-input-tick", count: 5
+      end
+
+      def test_custom_end_icons_without_variant
+        render_inline(Component.new(
+          name: "custom",
+          start_icon: :minus,
+          end_icon: :plus
+        ))
+
+        assert_selector ".fp-range-input-end-icon--start[data-flat-pack--icon-name-value='minus']"
+        assert_selector ".fp-range-input-end-icon--end[data-flat-pack--icon-name-value='plus']"
+        refute_selector ".fp-range-input-glyph"
+      end
+
+      def test_start_icon_overrides_size_glyph
+        render_inline(Component.new(
+          name: "mixed",
+          variant: :size,
+          start_icon: :minus
+        ))
+
+        assert_selector ".fp-range-input-end-icon--start[data-flat-pack--icon-name-value='minus']"
+        assert_selector ".fp-range-input-glyph--end", text: "A"
+      end
+
+      def test_preview_slot_sets_runtime_custom_properties
+        render_inline(Component.new(name: "reading", min: 14, max: 32, value: 18)) do |range|
+          range.with_preview { "A" }
+        end
+
+        html = page.native.to_html
+
+        assert_selector "[data-flat-pack--range-input-target='preview']", text: "A"
+        assert_selector ".fp-range-input-preview"
+        assert_includes html, "--fp-range-value: 18"
+        assert_includes html, "--fp-range-scale: 0.2222"
+        assert_includes html, "--fp-range-max: 32"
+      end
+
+      def test_preview_renders_below_the_slider
+        render_inline(Component.new(name: "reading", variant: :size, min: 14, max: 32, step: 3, value: 23)) do |range|
+          range.with_preview { "A" }
+        end
+
+        html = page.native.to_html
+        input_at = html.index("fp-range-input-track")
+        preview_at = html.index("fp-range-input-preview")
+
+        assert input_at
+        assert preview_at
+        assert_operator preview_at, :>, input_at
+      end
+
+      def test_built_in_sample_renders_below_the_slider
+        render_inline(Component.new(name: "reading", variant: :size, min: 14, max: 32, step: 3, value: 23))
+
+        html = page.native.to_html
+        input_at = html.index("fp-range-input-track")
+        preview_at = html.index("fp-range-input-preview")
+
+        assert input_at
+        assert preview_at
+        assert_operator preview_at, :>, input_at
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Aa"
+      end
+
+      def test_ticks_opt_in_on_default_variant
+        render_inline(Component.new(name: "volume", ticks: true, min: 0, max: 100, step: 25, value: 50))
+
+        assert_selector ".fp-range-input-tick", count: 5
+        refute_selector ".fp-range-input-ends"
+      end
+
+      def test_ticks_opt_out_on_size_variant
+        render_inline(Component.new(
+          name: "text_size",
+          variant: :size,
+          ticks: false,
+          min: 14,
+          max: 32,
+          step: 3
+        ))
+
+        refute_selector ".fp-range-input-ticks"
+        assert_selector ".fp-range-input-glyph--start"
+      end
+
+      def test_omits_ticks_when_the_step_count_is_too_dense
+        render_inline(Component.new(name: "text_size", variant: :size, min: 0, max: 100, step: 1))
+
+        refute_selector ".fp-range-input-ticks"
+        assert_selector "input.fp-range-input[step='1']"
+      end
+
+      def test_preview_target_id_becomes_a_selector_value
+        render_inline(Component.new(name: "reading", preview_target: "reading-preview"))
+
+        assert_selector "[data-flat-pack--range-input-preview-selector-value='#reading-preview']"
+      end
+
+      def test_preview_target_keeps_an_explicit_selector
+        render_inline(Component.new(name: "reading", preview_target: ".reading-preview"))
+
+        assert_selector "[data-flat-pack--range-input-preview-selector-value='.reading-preview']"
+      end
+
+      def test_disabled_size_slider_still_dims_the_input
+        render_inline(Component.new(name: "text_size", variant: :size, disabled: true, value: 20))
+
+        assert_selector "input.fp-range-input[disabled]"
+        assert_selector ".fp-range-input-glyph--start"
+      end
+
+      def test_raises_on_invalid_variant
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "volume", variant: :huge)
+        end
+
+        assert_match(/Invalid variant/, error.message)
+      end
+
+      def test_raises_on_non_string_preview_target
+        assert_raises(ArgumentError) do
+          Component.new(name: "volume", preview_target: 12)
+        end
+      end
+
+      def test_raises_on_non_string_sample
+        assert_raises(ArgumentError) do
+          Component.new(name: "volume", sample: :aa)
+        end
+      end
+
+      def test_raises_on_invalid_ticks
+        assert_raises(ArgumentError) do
+          Component.new(name: "volume", ticks: "yes")
+        end
+      end
+
+      def test_raises_on_non_positive_step
+        assert_raises(ArgumentError) do
+          Component.new(name: "volume", step: 0)
+        end
+      end
     end
   end
 end

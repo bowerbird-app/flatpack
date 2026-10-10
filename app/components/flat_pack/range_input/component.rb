@@ -3,6 +3,16 @@
 module FlatPack
   module RangeInput
     class Component < FlatPack::BaseComponent
+      VARIANTS = %i[default size text_size zoom].freeze
+      SIZE_VARIANTS = %i[size text_size].freeze
+      SIZE_GLYPH = "A"
+      DEFAULT_SAMPLE = "Aa"
+      ZOOM_START_ICON = "magnifying-glass-minus"
+      ZOOM_END_ICON = "magnifying-glass-plus"
+      MAX_TICKS = 24
+
+      renders_one :preview
+
       def initialize(
         name:,
         id: nil,
@@ -14,6 +24,12 @@ module FlatPack
         help_text: nil,
         show_value: true,
         disabled: false,
+        variant: :default,
+        start_icon: nil,
+        end_icon: nil,
+        preview_target: nil,
+        ticks: nil,
+        sample: DEFAULT_SAMPLE,
         **system_arguments
       )
         super(**system_arguments)
@@ -27,9 +43,20 @@ module FlatPack
         @help_text = normalize_help_text!(help_text)
         @show_value = show_value
         @disabled = disabled
+        @variant = (variant || :default).to_sym
+        @start_icon = start_icon.presence
+        @end_icon = end_icon.presence
+        @preview_target = preview_target
+        @ticks = ticks
+        @sample = sample
 
         validate_name!
         validate_range!
+        validate_step!
+        validate_variant!
+        validate_preview_target!
+        validate_ticks!
+        validate_sample!
       end
 
       def call
@@ -37,6 +64,7 @@ module FlatPack
           safe_join([
             render_label,
             render_input_wrapper,
+            render_preview,
             render_help_text
           ].compact)
         end
@@ -64,17 +92,99 @@ module FlatPack
           data: {"flat-pack--range-input-target": "valueDisplay"})
       end
 
+      def render_preview
+        return content_tag(:div, preview, **preview_attributes) if preview?
+        return unless built_in_sample?
+
+        content_tag(:div, **preview_attributes) do
+          content_tag(:span, @sample, class: "fp-range-input-sample", aria: {hidden: true})
+        end
+      end
+
       def render_input_wrapper
-        content_tag(:div, class: "relative") do
-          tag.input(**input_attributes)
+        return render_default_input_wrapper unless decorative_ends?
+
+        content_tag(:div, class: "fp-range-input-ends") do
+          safe_join([
+            render_start_end,
+            render_track,
+            render_end_end
+          ].compact)
+        end
+      end
+
+      def render_default_input_wrapper
+        if draw_ticks?
+          render_track
+        else
+          content_tag(:div, class: "relative") do
+            tag.input(**input_attributes)
+          end
+        end
+      end
+
+      def render_track
+        content_tag(:div, class: "fp-range-input-track") do
+          safe_join([
+            tag.input(**input_attributes),
+            render_ticks
+          ].compact)
+        end
+      end
+
+      def render_ticks
+        return unless draw_ticks?
+
+        content_tag(:div, class: "fp-range-input-ticks", aria: {hidden: true}) do
+          safe_join(Array.new(tick_count) { content_tag(:span, "", class: "fp-range-input-tick") })
+        end
+      end
+
+      def render_start_end
+        render_range_end(start_end_kind, start_end_icon, :start)
+      end
+
+      def render_end_end
+        render_range_end(end_end_kind, end_end_icon, :end)
+      end
+
+      def render_range_end(kind, icon_name, position)
+        case kind
+        when :glyph
+          content_tag(
+            :span,
+            SIZE_GLYPH,
+            class: "fp-range-input-glyph fp-range-input-glyph--#{position}",
+            aria: {hidden: true}
+          )
+        when :icon
+          render FlatPack::Shared::IconComponent.new(
+            name: icon_name,
+            size: ((position == :start) ? :sm : :md),
+            class: "fp-range-input-end-icon fp-range-input-end-icon--#{position}"
+          )
         end
       end
 
       def container_attributes
         merge_attributes(
-          data: {controller: "flat-pack--range-input"},
+          data: container_data,
           class: "w-full"
         )
+      end
+
+      def container_data
+        data = {controller: "flat-pack--range-input"}
+        data["flat-pack--range-input-preview-selector-value"] = preview_selector if preview_selector.present?
+        data
+      end
+
+      def preview_attributes
+        {
+          class: "fp-range-input-preview",
+          style: preview_custom_properties,
+          data: {"flat-pack--range-input-target": "preview"}
+        }
       end
 
       def label_attributes
@@ -116,11 +226,97 @@ module FlatPack
         "fp-range-input"
       end
 
+      def preview_custom_properties
+        "--fp-range-value: #{preview_value}; --fp-range-scale: #{range_scale.round(4)}; --fp-range-max: #{preview_number(@max)}"
+      end
+
+      def preview_value
+        preview_number(@value)
+      end
+
+      def preview_number(raw)
+        number = Float(raw)
+        (number == number.to_i) ? number.to_i : number
+      rescue ArgumentError, TypeError
+        raw
+      end
+
       def range_progress_percent
+        range_scale * 100.0
+      end
+
+      def range_scale
         span = @max.to_f - @min.to_f
         return 0.0 if span <= 0
 
-        (((@value.to_f - @min.to_f) / span) * 100).clamp(0.0, 100.0)
+        ((@value.to_f - @min.to_f) / span).clamp(0.0, 1.0)
+      end
+
+      def preview_selector
+        token = @preview_target.to_s.strip
+        return if token.blank?
+        return token if token.match?(/\A[#.\[:]/)
+
+        "##{token}"
+      end
+
+      def decorative_ends?
+        size_variant? || zoom_variant? || @start_icon.present? || @end_icon.present?
+      end
+
+      def draw_ticks?
+        ticks_enabled? && tick_count.between?(2, MAX_TICKS)
+      end
+
+      def ticks_enabled?
+        case @ticks
+        when true then true
+        when false then false
+        else
+          size_variant? || zoom_variant?
+        end
+      end
+
+      def tick_count
+        span = @max.to_f - @min.to_f
+        step = @step.to_f
+        return 0 if step <= 0
+
+        ((span / step).round + 1)
+      end
+
+      def built_in_sample?
+        size_variant? && @sample.present?
+      end
+
+      def size_variant?
+        SIZE_VARIANTS.include?(@variant)
+      end
+
+      def zoom_variant?
+        @variant == :zoom
+      end
+
+      def start_end_kind
+        return :icon if @start_icon.present? || zoom_variant?
+        return :glyph if size_variant?
+
+        nil
+      end
+
+      def end_end_kind
+        return :icon if @end_icon.present? || zoom_variant?
+        return :glyph if size_variant?
+
+        nil
+      end
+
+      def start_end_icon
+        @start_icon.presence || (zoom_variant? ? ZOOM_START_ICON : nil)
+      end
+
+      def end_end_icon
+        @end_icon.presence || (zoom_variant? ? ZOOM_END_ICON : nil)
       end
 
       def validate_name!
@@ -131,6 +327,36 @@ module FlatPack
       def validate_range!
         return if @min < @max
         raise ArgumentError, "min must be less than max"
+      end
+
+      def validate_step!
+        return if @step.to_f.positive?
+
+        raise ArgumentError, "step must be greater than 0"
+      end
+
+      def validate_ticks!
+        return if @ticks.nil? || @ticks == true || @ticks == false
+
+        raise ArgumentError, "ticks must be true or false"
+      end
+
+      def validate_variant!
+        return if VARIANTS.include?(@variant)
+
+        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def validate_preview_target!
+        return if @preview_target.nil? || @preview_target.is_a?(String)
+
+        raise ArgumentError, "preview_target must be a String"
+      end
+
+      def validate_sample!
+        return if @sample.nil? || @sample.is_a?(String)
+
+        raise ArgumentError, "sample must be a String"
       end
 
       def error_id
