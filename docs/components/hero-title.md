@@ -56,6 +56,7 @@ None. Pass copy as `text:` or as the component block.
 ## Accessibility
 - Default tag is `<h1>`. Pass `level:` so the heading rank matches the page outline. One `<h1>` per page.
 - Copy is the accessible name. Do not hide the text or replace it with a decorative image.
+- Default ink is `--surface-content-color` so the heading stays readable on light and dark surfaces. Override with a `text-*` class when the headline sits on a photo overlay.
 
 ## Dependencies
 - `FlatPack::BaseComponent`
