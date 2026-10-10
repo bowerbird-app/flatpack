@@ -27,7 +27,7 @@ Use Inline Edit on a show page when people change a title, a short note, or a ri
 | `**system_arguments` | Hash | `{}` | no | Extra HTML attributes. In tag mode, `class:` lands on the editable tag. In wrap mode, extras land on the wrapper. |
 
 ## Slots
-- Default block: the wrapped markup stays as-is. The controller edits `data-inline-edit-target`, then the first heading, then the first `p`.
+- Default block: the wrapped markup stays as-is. The controller edits `data-inline-edit-target`, then the first heading, then the first `p`. A heading wins over an earlier tagline `p` (Hero wrap).
 
 ## Variants
 - **Text** (`mode: :text`): single line. Enter saves. Paste is plain. Newlines are stripped.
