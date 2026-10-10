@@ -113,7 +113,6 @@
   --inline-edit-placeholder-color: var(--inline-edit-placeholder-color);
   --inline-edit-placeholder-hover-color: var(--inline-edit-placeholder-hover-color);
   --inline-edit-hover-bg: var(--inline-edit-hover-bg);
-  --inline-edit-focus-bg: var(--inline-edit-focus-bg);
   --quote-border-color: var(--quote-border-color);
   --quote-border-width: var(--quote-border-width);
   --quote-padding-left: var(--quote-padding-left);
@@ -814,7 +813,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --inline-edit-placeholder-color: var(--surface-muted-content-color);
   --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 42%, var(--surface-muted-content-color));
   --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 7%, transparent);
-  --inline-edit-focus-bg: color-mix(in oklab, var(--surface-content-color) 11%, transparent);
   --quote-border-color: var(--surface-border-color);
   --quote-border-width: 4px;
   --quote-padding-left: 1rem;
@@ -1476,7 +1474,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --inline-edit-placeholder-color: var(--surface-muted-content-color);
   --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 48%, var(--surface-muted-content-color));
   --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 9%, transparent);
-  --inline-edit-focus-bg: color-mix(in oklab, var(--surface-content-color) 14%, transparent);
 }
 
 /* Ocean theme — overrides only */

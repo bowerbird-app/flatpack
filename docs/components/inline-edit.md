@@ -33,7 +33,7 @@ Use Inline Edit on a show page when people change a title, a short note, or a ri
 - **Text** (`mode: :text`): single line. Enter saves. Paste is plain. Newlines are stripped.
 - **Plain** (`mode: :plain`): multi-line. Cmd/Ctrl+Enter saves.
 - **Rich** (`mode: :rich`): selection shows the Content Editor bubble. No Edit / Save / Cancel bar.
-- **Cue** (`cue:`): highlight (default) is a Notion-style wash on hover — soft `--inline-edit-hover-bg`, `--radius-sm`, extra inset via box-shadow spread so layout does not move. Focus and edit use a slightly stronger `--inline-edit-focus-bg` and a thin `--inline-edit-focus-color` ring. `:tint` is the same paint. `:underline` is the old rest line. `:none` stays quiet until focus. Pointer is `cursor: text`. Wrapped lines clone the wash (`box-decoration-break: clone`).
+- **Cue** (`cue:`): highlight (default) is a Notion-style wash on hover — soft `--inline-edit-hover-bg`, `--radius-sm`, extra inset via box-shadow spread so layout does not move. Keyboard Tab (before edit) uses the same wash on `:focus-visible`. While editing there is no wash and no ring: only the text and caret, even if the pointer stays over the words. `:tint` is the same paint. `:underline` is the old rest line. `:none` stays quiet until keyboard focus. Pointer is `cursor: text`. Wrapped lines clone the wash (`box-decoration-break: clone`).
 
 ## Example
 
@@ -87,14 +87,14 @@ Use Inline Edit on a show page when people change a title, a short note, or a ri
 
 ## Accessibility
 - Rest is focusable (`tabindex="0"`, `role="textbox"`, `aria-label`). `aria-multiline` is set when `mode` is not `:text`.
-- Click or Enter starts editing. Escape restores the last saved value.
+- Keyboard Tab before edit shows the hover wash via `:focus-visible`. Click or Enter starts editing; the wash drops so only the caret remains. Escape restores the last saved value.
 - Saving announces through an `aria-live` region. Failure restores the value, paints a red wash (or a red underline when `cue: :underline`), and reads the error.
 - `prefers-reduced-motion: reduce` drops highlight and status motion.
 
 ## Dependencies
 - Stimulus controller `flat-pack--inline-edit`.
 - Stylesheet `flat_pack/inline_edit.css` (also bundled from `flat_pack/application.css`).
-- Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover and focus washes are `color-mix` tints (~7–11% light, ~9–14% dark). Placeholder copy darkens a little on hover and focus.
+- Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover (and keyboard `:focus-visible` before edit) uses `--inline-edit-hover-bg` (~7% light, ~9% dark). Caret uses `--inline-edit-focus-color`. Placeholder copy darkens a little on hover and keyboard focus.
 - The surface uses `white-space: pre-wrap` at rest and while editing. That matches the UA `contenteditable` wrap, so a wrapped headline does not grow when the caret appears.
 - `:rich` reuses the Content Editor balloon (`FlatPack::Shared::ExecCommandBalloon` and `exec_command_bubble.js`).
 - `update_url:` requests send `name=value` with the CSRF token and `Accept: text/vnd.turbo-stream.html`. Turbo Stream bodies are applied with `Turbo.renderStreamMessage`.

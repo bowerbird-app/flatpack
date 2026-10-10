@@ -65,6 +65,18 @@ test("rest hover editing boxes match on every demo", async ({ page }) => {
   }
 })
 
+function paintOf(locator) {
+  return locator.evaluate((el) => {
+    const style = getComputedStyle(el)
+    return { backgroundColor: style.backgroundColor, boxShadow: style.boxShadow }
+  })
+}
+
+function isTransparent(color) {
+  return /^(rgba?\(0,\s*0,\s*0,\s*0\)|transparent|oklab\([^)]*\/\s*0\))$/i.test(color.replace(/\s+/g, " "))
+    || /\/\s*0\)/.test(color)
+}
+
 test("default cue is highlight and cursor is text", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto("http://127.0.0.1:3000/demo/inline_edit", { waitUntil: "networkidle" })
@@ -81,4 +93,28 @@ test("default cue is highlight and cursor is text", async ({ page }) => {
     return { transition: style.transition }
   })
   expect(reduced.transition).not.toEqual("all 0s ease 0s")
+})
+
+test("hover washes, editing is caret only, tab shows wash", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto("http://127.0.0.1:3000/demo/inline_edit", { waitUntil: "networkidle" })
+
+  const surface = page.locator("#title [role='textbox']").first()
+  const rest = await paintOf(surface)
+  expect(isTransparent(rest.backgroundColor)).toBeTruthy()
+
+  await surface.hover()
+  const hover = await paintOf(surface)
+  expect(isTransparent(hover.backgroundColor)).toBeFalsy()
+
+  await surface.click()
+  await surface.hover()
+  const editing = await paintOf(surface)
+  expect(isTransparent(editing.backgroundColor)).toBeTruthy()
+  await page.keyboard.press("Escape")
+
+  await page.mouse.click(8, 8)
+  await surface.evaluate((el) => el.focus({ focusVisible: true }))
+  const keyed = await paintOf(surface)
+  expect(isTransparent(keyed.backgroundColor)).toBeFalsy()
 })
