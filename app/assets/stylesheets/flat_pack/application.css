@@ -2,6 +2,7 @@
 @import "flat_pack/variables.css";
 @import "flat_pack/rich_text.css";
 @import "flat_pack/content_editor.css";
+@import "flat_pack/inline_edit.css";
 
 /* Base layer for component styles */
 @layer components {

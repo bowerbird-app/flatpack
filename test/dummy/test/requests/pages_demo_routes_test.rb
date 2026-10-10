@@ -100,6 +100,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/grid/movable_cards
     /demo/masonry
     /demo/fab
+    /demo/inline_edit
     /demo/pagination
     /demo/admin
     /demo/charts

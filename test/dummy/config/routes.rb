@@ -236,6 +236,10 @@ Rails.application.routes.draw do
   get "demo/carousel", to: "pages#carousel"
 
   namespace :demo do
+    get "inline_edit", to: "inline_edits#show", as: :inline_edit
+    patch "inline_edit", to: "inline_edits#update"
+    patch "inline_edit/fail", to: "inline_edits#fail", as: :inline_edit_fail
+
     get "collection_editor", to: "collection_editors#show", as: :collection_editor
     get "collection_editor/people", to: "collection_editors#search_people", as: :collection_editor_people
     post "collection_editor/people", to: "collection_editors#create_person"

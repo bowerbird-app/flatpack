@@ -93,6 +93,14 @@ fr:
       system: Système
       edited: ' (modifié)'
       deleted: Ce commentaire a été supprimé.
+    inline_edit:
+      label: Modifier le texte
+      placeholder: Sans titre
+      saving: Enregistrement
+      saved: Enregistré
+      required: Ce champ ne peut pas être vide
+      too_long: Trop long
+      save_failed: Enregistrement impossible. Réessayez.
     content_editor:
       edit: Modifier
       save: Enregistrer

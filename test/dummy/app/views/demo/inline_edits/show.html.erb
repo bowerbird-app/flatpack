@@ -1,0 +1,207 @@
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Inline edit",
+  subtitle: "Click the words. They stay the same size. A field never replaces them."
+) %>
+
+<p class="text-[var(--surface-muted-content-color)] mb-8 max-w-2xl" id="inline-edit-server-note">
+  Change a title and press Enter. The page can save without leaving this screen.
+</p>
+
+<section class="mb-12" id="title">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A heading",
+    anchor_link: true,
+    subtitle: "Click, type, Enter to save. Escape puts the old words back."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    tag: :h1,
+    value: @kit.title,
+    name: "kit[title]",
+    update_url: demo_inline_edit_path,
+    label: "Kit title",
+    placeholder: "Untitled kit",
+    class: "text-[length:var(--text-4xl)] font-semibold text-[var(--surface-content-color)] fp-text-balance"
+  ) %>
+</section>
+
+<section class="mb-12" id="page-title">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inside a page title",
+    anchor_link: true,
+    subtitle: "The heading keeps its look. Only the text is editable."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    name: "kit[page_title]",
+    update_url: demo_inline_edit_path,
+    label: "Page title"
+  ) do %>
+    <%= render FlatPack::PageTitle::Component.new(title: @kit.page_title, subtitle: "Wrapped, not rebuilt") %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="hero">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inside a hero",
+    anchor_link: true,
+    subtitle: "Same idea: the hero headline is the editor."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    name: "kit[hero]",
+    update_url: demo_inline_edit_path,
+    label: "Hero title"
+  ) do %>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered,
+      headline: @kit.hero_title,
+      description: "The line above is the thing you edit."
+    ) %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="plain">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A paragraph",
+    anchor_link: true,
+    subtitle: "Enter starts a new line. Cmd or Ctrl + Enter saves."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    tag: :p,
+    mode: :plain,
+    value: @kit.note,
+    name: "kit[note]",
+    update_url: demo_inline_edit_path,
+    label: "Field note",
+    class: "max-w-xl text-[var(--surface-content-color)] leading-relaxed"
+  ) %>
+</section>
+
+<section class="mb-12" id="rich">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Rich text",
+    anchor_link: true,
+    subtitle: "Select words. A small toolbar floats above the selection."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    tag: :div,
+    mode: :rich,
+    value: @kit.intro_html,
+    name: "kit[intro]",
+    update_url: demo_inline_edit_path,
+    label: "Intro",
+    class: "max-w-xl text-[var(--surface-content-color)] leading-relaxed"
+  ) %>
+</section>
+
+<section class="mb-12" id="form-only">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inside a form",
+    anchor_link: true,
+    subtitle: "No live save. The hidden field goes out with the form."
+  ) %>
+  <%= form_with url: demo_inline_edit_path, method: :patch, local: true, html: {id: "inline-edit-form"} do %>
+    <div class="mb-4">
+      <%= render FlatPack::InlineEdit::Component.new(
+        tag: :h2,
+        value: "Notebook name",
+        name: "kit[form_title]",
+        label: "Notebook name",
+        class: "text-[length:var(--text-2xl)] font-semibold text-[var(--surface-content-color)]"
+      ) %>
+    </div>
+    <%= render FlatPack::Button::Component.new(text: "Save notebook", type: :submit) %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="error">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "When save fails",
+    anchor_link: true,
+    subtitle: "The old words come back. A red line and a spoken error."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    tag: :h2,
+    value: "This save will fail",
+    name: "kit[title]",
+    update_url: demo_inline_edit_fail_path,
+    label: "Failing title",
+    class: "text-[length:var(--text-2xl)] font-semibold text-[var(--surface-content-color)]"
+  ) %>
+</section>
+
+<section class="mb-12" id="dark">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Dark",
+    anchor_link: true,
+    subtitle: "Same editor. Dark tokens."
+  ) %>
+  <div data-theme="dark" class="rounded-[var(--radius-lg)] p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+    <%= render FlatPack::InlineEdit::Component.new(
+      tag: :h2,
+      value: "Night watch",
+      name: "kit[title]",
+      update_url: demo_inline_edit_path,
+      label: "Night title",
+      class: "text-[length:var(--text-3xl)] font-semibold text-[var(--surface-content-color)]"
+    ) %>
+    <p class="mt-3 text-[var(--surface-muted-content-color)] max-w-xl">
+      Hover for the cue. Click to type.
+    </p>
+  </div>
+</section>
+
+<section class="mb-12" id="cues">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Cues",
+    anchor_link: true,
+    subtitle: "Underline is the default. Tint washes the words. None is quiet until focus."
+  ) %>
+  <div class="space-y-4">
+    <%= render FlatPack::InlineEdit::Component.new(
+      tag: :p,
+      value: "Underline cue",
+      name: "kit[title]",
+      update_url: demo_inline_edit_path,
+      cue: :underline,
+      label: "Underline cue",
+      class: "text-[var(--surface-content-color)]"
+    ) %>
+    <%= render FlatPack::InlineEdit::Component.new(
+      tag: :p,
+      value: "Tint cue",
+      name: "kit[title]",
+      update_url: demo_inline_edit_path,
+      cue: :tint,
+      label: "Tint cue",
+      class: "text-[var(--surface-content-color)]"
+    ) %>
+    <%= render FlatPack::InlineEdit::Component.new(
+      tag: :p,
+      value: "No rest cue",
+      name: "kit[title]",
+      update_url: demo_inline_edit_path,
+      cue: :none,
+      label: "No cue",
+      class: "text-[var(--surface-content-color)]"
+    ) %>
+  </div>
+</section>
+
+<%= render FlatPack::CodeBlock::Component.new(
+  title: "Heading (ERB)",
+  language: "erb",
+  code: <<~CODE
+    #{erb_output_open} render FlatPack::InlineEdit::Component.new(
+      tag: :h1,
+      value: @kit.title,
+      name: "kit[title]",
+      update_url: kit_path(@kit),
+      label: "Kit title",
+      placeholder: "Untitled kit"
+    ) #{erb_tag_close}
+  CODE
+) %>

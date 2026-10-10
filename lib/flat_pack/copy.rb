@@ -83,6 +83,11 @@ module FlatPack
       timestamp.short_d_ago
       timestamp.short_wk_ago
       timestamp.short_mo_ago
+      inline_edit.saving
+      inline_edit.saved
+      inline_edit.required
+      inline_edit.too_long
+      inline_edit.save_failed
       content_editor.image_upload_failed
       content_editor.edit_url
       content_editor.enter_url
