@@ -95,6 +95,7 @@ Use Inline Edit on a show page when people change a title, a short note, or a ri
 - Stimulus controller `flat-pack--inline-edit`.
 - Stylesheet `flat_pack/inline_edit.css` (also bundled from `flat_pack/application.css`).
 - Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover and focus washes are `color-mix` tints (~7–11% light, ~9–14% dark). Placeholder copy darkens a little on hover and focus.
+- Editing keeps the host `white-space` (an unlayered rule beats the UA `pre-wrap` on `contenteditable`). `:plain` uses `pre-wrap` at rest and while editing so newlines show without a box change.
 - `:rich` reuses the Content Editor balloon (`FlatPack::Shared::ExecCommandBalloon` and `exec_command_bubble.js`).
 - `update_url:` requests send `name=value` with the CSRF token and `Accept: text/vnd.turbo-stream.html`. Turbo Stream bodies are applied with `Turbo.renderStreamMessage`.
 - Events: `flat-pack:inline-edit:save` (cancelable), `flat-pack:inline-edit:saved`, `flat-pack:inline-edit:error`.

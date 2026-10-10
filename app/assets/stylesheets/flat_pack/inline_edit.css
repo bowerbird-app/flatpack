@@ -167,3 +167,13 @@
     }
   }
 }
+
+/* UA contenteditable sets white-space: pre-wrap (unlayered). Keep host wrapping. */
+.fp-inline-edit:not(.fp-inline-edit--plain) .fp-inline-edit__surface[contenteditable="true"],
+.fp-inline-edit:not(.fp-inline-edit--plain) .fp-inline-edit__surface[contenteditable="plaintext-only"] {
+  white-space: inherit;
+}
+
+.fp-inline-edit--plain .fp-inline-edit__surface {
+  white-space: pre-wrap;
+}
