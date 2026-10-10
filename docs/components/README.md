@@ -60,6 +60,7 @@ email_footer_links | FlatPack::EmailFooterLinks::Component | docs/components/ema
 email_template_example | FlatPack::EmailTemplateExample::Component | docs/components/email-template-example.md
 grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
+hero_title | FlatPack::HeroTitle::Component | docs/components/hero-title.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
 kbd | FlatPack::Kbd::Component | docs/components/kbd.md
 date_input | FlatPack::DateInput::Component | docs/components/inputs.md

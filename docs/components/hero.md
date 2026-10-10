@@ -12,6 +12,8 @@ Render a full-width landing-page hero section in one of seven layout variants wi
 
 Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Component` or `FlatPack::Card::Component` instead.
 
+For a cover headline without the hero chrome, use `FlatPack::HeroTitle::Component`. Hero `size: :display` and `title_size:` render Hero Title for the headline. Product-scale heroes (`size: :default` without `title_size:`) stay on `--text-4xl` / `--hero-headline-size`.
+
 ## Class
 
 `FlatPack::Hero::Component`
@@ -23,9 +25,10 @@ Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Compon
 | `variant` | Symbol | `:centered` | no | Layout variant. One of: `:centered`, `:centered_image`, `:screenshot`, `:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`. Invalid values raise `ArgumentError`. |
 | `align` | Symbol | `:center` | no | Overlay copy and CTA alignment. One of: `:center`, `:left`. Overlay variants (`:centered`, `:centered_image`, `:screenshot`) apply it. Column variants (`:split_image`, `:angled_image`, `:image_tiles`, `:offset_image`) validate it and keep their markup. Invalid values raise `ArgumentError`. |
 | `on` | Symbol | `:dark` | no | Overlay contrast on `:centered_image`. `:dark` is light type on a dark wash (default). `:light` is dark type on a light wash. Other variants validate it and keep their markup. Invalid values raise `ArgumentError`. Hosts can still set `--hero-overlay-*` on the section for one photo. |
-| `size` | Symbol | `:default` | no | Headline scale. `:default` is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). `:display` uses `--display-size`, `--display-weight` (600), `--display-tracking`, and `--display-leading` (`1.05`). Invalid values raise `ArgumentError`. |
+| `size` | Symbol | `:default` | no | Headline scale. `:default` is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). `:display` renders `FlatPack::HeroTitle::Component` at `:xl` (today's `--display-size`). Invalid values raise `ArgumentError`. |
+| `title_size` | Symbol | `nil` | no | Opt-in Hero Title step for the headline. One of `:md`, `:lg`, `:xl`, `:xxl`. When set, Hero renders Hero Title at that size even if `size:` is `:default`. When both `size: :display` and `title_size:` are set, `title_size:` wins. Invalid values raise `ArgumentError`. |
 | `tagline` | String | `nil` | no | Small sentence-case label rendered above the headline. |
-| `headline` | String | `nil` | no | Primary `<h1>` text. Default size is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Pass `size: :display` for cover type. |
+| `headline` | String | `nil` | no | Primary `<h1>` text. Default size is `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Pass `size: :display` or `title_size:` for cover type. |
 | `description` | String | `nil` | no | Supporting paragraph below the headline. Page-surface variants use `--hero-description-size` (default `--text-xl`). Overlay body on `:centered_image` stays `--text-2xl`. |
 | `image_url` | String | `nil` | no | Main image URL. Used by `screenshot`, `split_image`, `angled_image`, `offset_image`. Sanitized via `FlatPack::AttributeSanitizer.sanitize_url`. |
 | `image_alt` | String | `""` | no | Alt text for the main image. Pass `""` for decorative images. |
@@ -145,7 +148,7 @@ end %>
 ) %>
 ```
 
-Existing Hero calls stay on the product scale. `size: :display` is opt-in. Display headlines set `--display-size`, `--display-weight`, `--display-tracking`, and `--display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. Default headlines stay `font-semibold` without those tokens. The centered column widens to `max-w-5xl` for wrapping cover titles.
+Existing Hero calls stay on the product scale. `size: :display` is opt-in and renders `FlatPack::HeroTitle::Component` at `:xl`, which is `--display-size`. Pass `title_size:` to pick another Hero Title step. Display headlines set `--display-size`, `--display-weight`, `--display-tracking`, and `--display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. Default headlines stay `font-semibold` without those tokens. The centered column widens to `max-w-5xl` for wrapping cover titles.
 
 ### Image tiles
 
@@ -174,5 +177,6 @@ Existing Hero calls stay on the product scale. `size: :display` is opt-in. Displ
 ## Dependencies
 
 - `FlatPack::BaseComponent`
+- `FlatPack::HeroTitle::Component` — cover headlines (`size: :display` or `title_size:`).
 - `FlatPack::AttributeSanitizer` — URL sanitization for `image_url`, `background_image_url`, and each tile URL.
 - No Stimulus controllers required.
