@@ -48,7 +48,7 @@ module FlatPack
           class: "flat-pack-richtext-bubble-menu",
           data: {
             "#{controller}-target" => target,
-            action: "mousedown->#{controller}#keepSelection"
+            :action => "mousedown->#{controller}#keepSelection"
           }
         ) do
           safe_join([
@@ -105,7 +105,7 @@ module FlatPack
             hidden: true,
             data: {
               "#{controller}-target" => "imageInput",
-              action: "change->#{controller}#imageInputChanged"
+              :action => "change->#{controller}#imageInputChanged"
             }
           )
         ]

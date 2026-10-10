@@ -81,7 +81,7 @@ module FlatPack
       def wrapper_classes
         [
           "fp-inline-edit",
-          block_tag? || wrapped? ? "fp-inline-edit--block" : "fp-inline-edit--inline",
+          (block_tag? || wrapped?) ? "fp-inline-edit--block" : "fp-inline-edit--inline",
           wrapped? ? "fp-inline-edit--wrapped" : "fp-inline-edit--tag",
           "fp-inline-edit--#{@mode}",
           "fp-inline-edit--cue-#{@cue}"
@@ -117,7 +117,7 @@ module FlatPack
       end
 
       def surface_attributes
-        attrs = {
+        {
           class: surface_classes,
           tabindex: 0,
           role: "textbox",
@@ -128,7 +128,6 @@ module FlatPack
           },
           aria: surface_aria
         }
-        attrs
       end
 
       def surface_classes
