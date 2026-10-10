@@ -73,8 +73,9 @@ function paintOf(locator) {
 }
 
 function isTransparent(color) {
-  return /^(rgba?\(0,\s*0,\s*0,\s*0\)|transparent|oklab\([^)]*\/\s*0\))$/i.test(color.replace(/\s+/g, " "))
-    || /\/\s*0\)/.test(color)
+  const normalized = color.replace(/\s+/g, " ").trim()
+  if (/^(transparent|rgba?\(0, 0, 0, 0\))$/i.test(normalized)) return true
+  return /\/\s*0(?:\.0+)?\s*\)$/.test(normalized)
 }
 
 test("default cue is highlight and cursor is text", async ({ page }) => {
@@ -104,17 +105,20 @@ test("hover washes, editing is caret only, tab shows wash", async ({ page }) => 
   expect(isTransparent(rest.backgroundColor)).toBeTruthy()
 
   await surface.hover()
+  await page.waitForTimeout(200)
   const hover = await paintOf(surface)
   expect(isTransparent(hover.backgroundColor)).toBeFalsy()
 
   await surface.click()
   await surface.hover()
+  await page.waitForTimeout(200)
   const editing = await paintOf(surface)
   expect(isTransparent(editing.backgroundColor)).toBeTruthy()
   await page.keyboard.press("Escape")
 
   await page.mouse.click(8, 8)
   await surface.evaluate((el) => el.focus({ focusVisible: true }))
+  await page.waitForTimeout(200)
   const keyed = await paintOf(surface)
   expect(isTransparent(keyed.backgroundColor)).toBeFalsy()
 })
