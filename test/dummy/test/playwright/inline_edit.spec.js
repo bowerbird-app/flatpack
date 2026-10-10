@@ -38,6 +38,7 @@ test("title click type enter save and escape cancel", async ({ page }) => {
   await title.click()
   assertNoShift(rest, await boxOf(title), "title editing")
 
+  await page.keyboard.press("End")
   await page.keyboard.type(" plus")
   await page.keyboard.press("Enter")
   await expect(page.locator("#inline-edit-saved-copy")).toContainText("Summer field kit plus")
