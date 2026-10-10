@@ -88,12 +88,22 @@ module FlatPack
       end
 
       def render_title
-        content_tag(
-          @variant,
-          @title,
-          class: title_classes,
-          style: title_style
-        )
+        if display?
+          render FlatPack::HeroTitle::Component.new(
+            text: @title,
+            size: FlatPack::HeroTitle::Component::DEFAULT_SIZE,
+            level: @variant,
+            class: (@title_color ? nil : "text-[var(--surface-content-color)]"),
+            style: (@title_color ? "color: #{@title_color}" : nil)
+          )
+        else
+          content_tag(
+            @variant,
+            @title,
+            class: title_classes,
+            style: title_style
+          )
+        end
       end
 
       def title_classes

@@ -89,6 +89,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/toasts
     /demo/page_header
     /demo/page_title/display
+    /demo/hero_title
     /demo/type_scale
     /pages/hero/display
     /demo/section_title
@@ -735,6 +736,22 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "3.75rem / 60px"
     assert_includes response.body, "4.5rem / 72px"
     assert_includes response.body, "6rem / 96px"
+  end
+
+  test "hero title demo renders every size and wrapping copy" do
+    get "/demo/hero_title"
+
+    assert_response :success
+    assert_includes response.body, "fp-hero-title--md"
+    assert_includes response.body, "fp-hero-title--lg"
+    assert_includes response.body, "fp-hero-title--xl"
+    assert_includes response.body, "fp-hero-title--xxl"
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "font-size: var(--display-size)"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    assert_includes response.body, "Northlight collection"
+    assert_includes response.body, "title_size"
+    refute_includes response.body, "lg:text-6xl"
   end
 
   test "hero display demo uses display size" do

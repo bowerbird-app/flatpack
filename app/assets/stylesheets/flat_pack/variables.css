@@ -643,6 +643,18 @@
   --display-tracking: var(--display-tracking);
   --display-leading: var(--display-leading);
   --display-weight: var(--display-weight);
+  --hero-title-md-size: var(--hero-title-md-size);
+  --hero-title-md-size-min: var(--hero-title-md-size-min);
+  --hero-title-md-size-max: var(--hero-title-md-size-max);
+  --hero-title-lg-size: var(--hero-title-lg-size);
+  --hero-title-lg-size-min: var(--hero-title-lg-size-min);
+  --hero-title-lg-size-max: var(--hero-title-lg-size-max);
+  --hero-title-xl-size: var(--hero-title-xl-size);
+  --hero-title-xl-size-min: var(--hero-title-xl-size-min);
+  --hero-title-xl-size-max: var(--hero-title-xl-size-max);
+  --hero-title-xxl-size: var(--hero-title-xxl-size);
+  --hero-title-xxl-size-min: var(--hero-title-xxl-size-min);
+  --hero-title-xxl-size-max: var(--hero-title-xxl-size-max);
   --page-title-h1-size: var(--page-title-h1-size);
   --page-title-h2-size: var(--page-title-h2-size);
   --page-title-h3-size: var(--page-title-h3-size);
@@ -1329,6 +1341,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --display-tracking: -0.03em;
   --display-leading: 1.05;
   --display-weight: 600;
+  /* Cover titles. xl aliases --display-size (48px → 88px) so today's display output is unchanged. */
+  --hero-title-md-size-min: var(--text-4xl);
+  --hero-title-md-size-max: var(--text-6xl);
+  --hero-title-md-size: clamp(var(--hero-title-md-size-min), 1rem + 3.5vw, var(--hero-title-md-size-max));
+  --hero-title-lg-size-min: var(--text-5xl);
+  --hero-title-lg-size-max: var(--text-7xl);
+  --hero-title-lg-size: clamp(var(--hero-title-lg-size-min), 1rem + 4.5vw, var(--hero-title-lg-size-max));
+  --hero-title-xl-size-min: var(--display-size-min);
+  --hero-title-xl-size-max: var(--display-size-max);
+  --hero-title-xl-size: var(--display-size);
+  --hero-title-xxl-size-min: var(--text-5xl);
+  --hero-title-xxl-size-max: var(--text-8xl);
+  --hero-title-xxl-size: clamp(var(--hero-title-xxl-size-min), 1rem + 5.5vw, var(--hero-title-xxl-size-max));
   --page-title-h1-size: var(--text-4xl);
   --page-title-h2-size: var(--text-3xl);
   --page-title-h3-size: var(--text-2xl);

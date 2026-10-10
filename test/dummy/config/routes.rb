@@ -190,6 +190,7 @@ Rails.application.routes.draw do
   get "demo/toasts", to: "pages#toasts"
   get "demo/page_header", to: "pages#page_header"
   get "demo/page_title/display", to: "pages#page_title_display"
+  get "demo/hero_title", to: "pages#hero_title"
   get "demo/type_scale", to: "pages#type_scale"
   get "demo/section_title", to: "pages#section_title"
   get "demo/page_nav", to: "pages#page_nav"

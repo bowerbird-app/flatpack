@@ -272,6 +272,18 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --display-tracking: -0.03em;
   --display-leading: 1.05;
   --display-weight: 600;
+  --hero-title-md-size-min: var(--text-4xl);
+  --hero-title-md-size-max: var(--text-6xl);
+  --hero-title-md-size: clamp(var(--hero-title-md-size-min), 1rem + 3.5vw, var(--hero-title-md-size-max));
+  --hero-title-lg-size-min: var(--text-5xl);
+  --hero-title-lg-size-max: var(--text-7xl);
+  --hero-title-lg-size: clamp(var(--hero-title-lg-size-min), 1rem + 4.5vw, var(--hero-title-lg-size-max));
+  --hero-title-xl-size-min: var(--display-size-min);
+  --hero-title-xl-size-max: var(--display-size-max);
+  --hero-title-xl-size: var(--display-size);
+  --hero-title-xxl-size-min: var(--text-5xl);
+  --hero-title-xxl-size-max: var(--text-8xl);
+  --hero-title-xxl-size: clamp(var(--hero-title-xxl-size-min), 1rem + 5.5vw, var(--hero-title-xxl-size-max));
   --code-block-background-color: var(--surface-muted-background-color);
   --code-block-border-color: var(--surface-border-color);
   --code-block-title-color: var(--surface-muted-content-color);
@@ -723,6 +735,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --content-h6-size: var(--text-lg);
   --hero-headline-size: var(--text-5xl);
   --hero-description-size: var(--text-xl);
+  --hero-title-md-size: clamp(var(--hero-title-md-size-min), 1rem + 3.5vw, var(--hero-title-md-size-max));
+  --hero-title-lg-size: clamp(var(--hero-title-lg-size-min), 1rem + 4.5vw, var(--hero-title-lg-size-max));
+  --hero-title-xl-size: var(--display-size);
+  --hero-title-xxl-size: clamp(var(--hero-title-xxl-size-min), 1rem + 5.5vw, var(--hero-title-xxl-size-max));
 
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);

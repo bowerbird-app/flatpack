@@ -723,6 +723,17 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"studio-wall\"" }
       ]
     },
+    hero_title: {
+      label: "Hero Title",
+      method_call: "render FlatPack::HeroTitle::Component.new(text: \"A press kit for the Northlight collection\")",
+      variables: [
+        { variable: "text", accepts: "String, or block content", example: "text: \"A press kit for the Northlight collection\"" },
+        { variable: "size", accepts: ":md, :lg, :xl, :xxl", example: "size: :xl" },
+        { variable: "level", accepts: ":h1, :h2, :h3, :h4, :h5, :h6", example: "level: :h1" },
+        { variable: "align", accepts: ":left, :center, or omit", example: "align: :center" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-2\", id: \"cover\"" }
+      ]
+    },
     hero: {
       label: "Hero",
       method_call: "render FlatPack::Hero::Component.new(variant: :centered, headline: \"Title\") do |hero| ... end",
@@ -730,6 +741,7 @@
         { variable: "variant", accepts: ":centered, :centered_image, :screenshot, :split_image, :angled_image, :image_tiles, :offset_image", example: "variant: :split_image" },
         { variable: "align", accepts: ":left, :center", example: "align: :left" },
         { variable: "size", accepts: ":default, :display", example: "size: :display" },
+        { variable: "title_size", accepts: ":md, :lg, :xl, :xxl, or nil", example: "title_size: :md" },
         { variable: "tagline", accepts: "String or nil", example: "tagline: \"Introducing FlatPack\"" },
         { variable: "headline", accepts: "String or nil", example: "headline: \"Build beautiful interfaces faster.\"" },
         { variable: "description", accepts: "String or nil", example: "description: \"A UI kit for Rails apps that follows your theme.\"" },

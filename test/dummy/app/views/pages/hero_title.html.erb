@@ -1,0 +1,160 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Hero Title",
+  subtitle: "Cover headlines. Four fluid sizes. xl is today's display size."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :hero_title %>
+
+<%
+  hero_title_theme_token_rows = [
+    { variable: "--hero-title-md-size", default_value: "clamp(var(--hero-title-md-size-min), 1rem + 3.5vw, var(--hero-title-md-size-max))" },
+    { variable: "--hero-title-md-size-min", default_value: "var(--text-4xl)" },
+    { variable: "--hero-title-md-size-max", default_value: "var(--text-6xl)" },
+    { variable: "--hero-title-lg-size", default_value: "clamp(var(--hero-title-lg-size-min), 1rem + 4.5vw, var(--hero-title-lg-size-max))" },
+    { variable: "--hero-title-lg-size-min", default_value: "var(--text-5xl)" },
+    { variable: "--hero-title-lg-size-max", default_value: "var(--text-7xl)" },
+    { variable: "--hero-title-xl-size", default_value: "var(--display-size)" },
+    { variable: "--hero-title-xl-size-min", default_value: "var(--display-size-min)" },
+    { variable: "--hero-title-xl-size-max", default_value: "var(--display-size-max)" },
+    { variable: "--hero-title-xxl-size", default_value: "clamp(var(--hero-title-xxl-size-min), 1rem + 5.5vw, var(--hero-title-xxl-size-max))" },
+    { variable: "--hero-title-xxl-size-min", default_value: "var(--text-5xl)" },
+    { variable: "--hero-title-xxl-size-max", default_value: "var(--text-8xl)" },
+    { variable: "--display-size", default_value: "clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max))" },
+    { variable: "--display-weight", default_value: "600" },
+    { variable: "--display-tracking", default_value: "-0.03em" },
+    { variable: "--display-leading", default_value: "1.05" }
+  ]
+  hero_title_sizes = [
+    { size: :md, label: "md", note: "36px to 60px" },
+    { size: :lg, label: "lg", note: "48px to 72px" },
+    { size: :xl, label: "xl · default", note: "48px to 88px · today's display size" },
+    { size: :xxl, label: "xxl", note: "48px to 96px" }
+  ]
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-16" id="sizes">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sizes",
+    anchor_link: true,
+    subtitle: "xl matches --display-size. Resize the window; the type flexes."
+  ) %>
+
+  <div class="space-y-12">
+    <% hero_title_sizes.each do |row| %>
+      <div id="size-<%= row[:size] %>">
+        <p class="mb-2 text-sm text-[var(--surface-muted-content-color)]">
+          <%= row[:label] %> · <%= row[:note] %>
+          · <span data-hero-title-measure> </span>
+        </p>
+        <%= render FlatPack::HeroTitle::Component.new(
+          text: "Northlight collection",
+          size: row[:size]
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-16" id="wrap">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Long title",
+    anchor_link: true,
+    subtitle: "Balanced wrapping on a long line. Same copy at every size."
+  ) %>
+
+  <div class="space-y-12">
+    <% hero_title_sizes.each do |row| %>
+      <div id="wrap-<%= row[:size] %>">
+        <p class="mb-2 text-sm text-[var(--surface-muted-content-color)]"><%= row[:label] %></p>
+        <%= render FlatPack::HeroTitle::Component.new(
+          text: "A press kit for the Northlight collection",
+          size: row[:size]
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-16" id="in-hero">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inside Hero",
+    anchor_link: true,
+    subtitle: "Hero size: :display uses Hero Title at xl. title_size: picks another step."
+  ) %>
+
+  <div class="rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden">
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered,
+      size: :display,
+      tagline: "Press kit",
+      headline: "A press kit for the Northlight collection",
+      description: "Stills, credits, and download packs."
+    ) do |hero|
+      hero.slot do
+        concat render(FlatPack::Button::Component.new(text: "Download stills", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Credits", style: :secondary, href: "#"))
+      end
+    end %>
+  </div>
+
+  <div class="mt-8 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] overflow-hidden">
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered,
+      title_size: :md,
+      tagline: "Lookbook",
+      headline: "Northlight collection",
+      description: "A smaller cover step on the same hero."
+    ) %>
+  </div>
+</section>
+
+<section class="mb-16" id="dark" data-theme="dark">
+  <div class="rounded-[var(--radius-lg)] bg-[var(--surface-page-background-color)] p-6 sm:p-10">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Dark",
+      subtitle: "Same sizes on the dark theme."
+    ) %>
+    <div class="space-y-10">
+      <% hero_title_sizes.each do |row| %>
+        <div>
+          <p class="mb-2 text-sm text-[var(--surface-muted-content-color)]"><%= row[:label] %></p>
+          <%= render FlatPack::HeroTitle::Component.new(
+            text: "A press kit for the Northlight collection",
+            size: row[:size]
+          ) %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-16">
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::HeroTitle::Component.new(
+        text: "A press kit for the Northlight collection",
+        size: :xl
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<%= render "pages/theme_token_reference", title: "Hero Title", rows: hero_title_theme_token_rows %>
+
+<script>
+  (function () {
+    function paintMeasures() {
+      document.querySelectorAll("[data-hero-title-measure]").forEach(function (label) {
+        var heading = label.closest("div").querySelector(".fp-hero-title");
+        if (!heading) return;
+        label.textContent = getComputedStyle(heading).fontSize;
+      });
+    }
+    paintMeasures();
+    window.addEventListener("resize", paintMeasures);
+  })();
+</script>

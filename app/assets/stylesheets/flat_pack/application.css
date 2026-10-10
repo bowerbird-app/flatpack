@@ -957,9 +957,31 @@
   }
 }
 
-/* Cover type. Unlayered so Tailwind preflight cannot collapse h1.fp-display
- * to inherit. PageTitle and Hero also set the same tokens inline.
+/* Cover type. Unlayered so Tailwind preflight cannot collapse headings
+ * to inherit. HeroTitle, PageTitle, and Hero also set the same tokens inline.
  */
+.fp-hero-title {
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
+}
+
+.fp-hero-title--md {
+  font-size: var(--hero-title-md-size);
+}
+
+.fp-hero-title--lg {
+  font-size: var(--hero-title-lg-size);
+}
+
+.fp-hero-title--xl {
+  font-size: var(--hero-title-xl-size);
+}
+
+.fp-hero-title--xxl {
+  font-size: var(--hero-title-xxl-size);
+}
+
 .fp-display {
   font-size: var(--display-size);
   font-weight: var(--display-weight);

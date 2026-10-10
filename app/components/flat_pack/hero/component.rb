@@ -19,8 +19,9 @@ module FlatPack
       # "ps-[max(2rem,env(safe-area-inset-left))]" "sm:ps-10" "lg:ps-16" "pe-6" "pb-16" "px-6" "leading-tight"
       # "text-[length:var(--text-4xl)]" "sm:text-[length:var(--hero-headline-size)]"
       # "text-[length:var(--hero-description-size)]" "text-[length:var(--text-2xl)]"
-      # "fp-hero-overlay-on-light" "fp-display" "mt-8"
+      # "fp-hero-overlay-on-light" "fp-display" "fp-hero-title" "mt-8"
       SIZES = %i[default display].freeze
+      TITLE_SIZES = FlatPack::HeroTitle::Component::SIZES
       ALIGNS = {
         left: {
           text: "text-left",
@@ -73,6 +74,7 @@ module FlatPack
         align: :center,
         on: :dark,
         size: :default,
+        title_size: nil,
         tagline: nil,
         headline: nil,
         description: nil,
@@ -88,6 +90,7 @@ module FlatPack
         @align = align.to_sym
         @on = on.to_sym
         @size = size.to_sym
+        @title_size = title_size&.to_sym
         @tagline = tagline
         @headline = headline
         @description = description
@@ -101,6 +104,7 @@ module FlatPack
         validate_align!
         validate_on!
         validate_size!
+        validate_title_size!
       end
 
       def call
@@ -133,24 +137,30 @@ module FlatPack
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.join(", ")}"
       end
 
+      def validate_title_size!
+        return if @title_size.nil? || TITLE_SIZES.include?(@title_size)
+
+        raise ArgumentError, "Invalid title_size: #{@title_size}. Must be one of: #{TITLE_SIZES.join(", ")}"
+      end
+
       def display?
         @size == :display
       end
 
+      def cover_title?
+        display? || @title_size.present?
+      end
+
+      def hero_title_size
+        @title_size || FlatPack::HeroTitle::Component::DEFAULT_SIZE
+      end
+
       def headline_size_class
-        if display?
-          "fp-display"
-        else
-          "text-[length:var(--text-4xl)] sm:text-[length:var(--hero-headline-size)] tracking-tight"
-        end
+        "text-[length:var(--text-4xl)] sm:text-[length:var(--hero-headline-size)] tracking-tight"
       end
 
       def overlay_headline_size_class
-        if display?
-          "fp-display"
-        else
-          "text-[length:var(--text-4xl)] sm:text-[length:var(--hero-headline-size)] tracking-tight leading-tight"
-        end
+        "text-[length:var(--text-4xl)] sm:text-[length:var(--hero-headline-size)] tracking-tight leading-tight"
       end
 
       def align_row
@@ -196,7 +206,7 @@ module FlatPack
       end
 
       def overlay_description_class
-        gap = display? ? "mt-8" : "mt-6"
+        gap = cover_title? ? "mt-8" : "mt-6"
         "#{gap} text-[length:var(--text-2xl)] text-[var(--hero-overlay-muted-text-color)] fp-text-pretty"
       end
 
@@ -244,24 +254,44 @@ module FlatPack
           class: "text-sm font-medium text-[var(--surface-muted-content-color)]")
       end
 
-      def display_headline_style
-        return nil unless display?
-
-        "font-size: var(--display-size); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: var(--display-leading);"
-      end
-
       def render_headline
         return nil unless @headline.present?
 
-        content_tag(:h1, @headline,
-          class: "mt-2 #{headline_size_class} font-semibold text-[var(--surface-content-color)] fp-text-balance",
-          style: display_headline_style)
+        if cover_title?
+          render_hero_title(
+            class: "mt-2 font-semibold text-[var(--surface-content-color)]"
+          )
+        else
+          content_tag(:h1, @headline,
+            class: "mt-2 #{headline_size_class} font-semibold text-[var(--surface-content-color)] fp-text-balance")
+        end
+      end
+
+      def render_hero_title(**extra)
+        render FlatPack::HeroTitle::Component.new(
+          text: @headline,
+          size: hero_title_size,
+          **extra
+        )
+      end
+
+      def overlay_headline
+        return nil unless @headline.present?
+
+        if cover_title?
+          wrap = (@align == :left) ? "fp-text-pretty" : nil
+          render_hero_title(
+            class: ["mt-2 font-semibold text-[var(--hero-overlay-text-color)]", wrap].compact.join(" ")
+          )
+        else
+          content_tag(:h1, @headline, class: overlay_headline_class)
+        end
       end
 
       def render_description
         return nil unless @description.present?
 
-        gap = display? ? "mt-8" : "mt-6"
+        gap = cover_title? ? "mt-8" : "mt-6"
         content_tag(:p, @description,
           class: "#{gap} text-[length:var(--hero-description-size)] text-[var(--surface-muted-content-color)] fp-text-pretty")
       end
@@ -286,7 +316,7 @@ module FlatPack
 
       def render_centered
         content_tag(:section, **merge_attributes(class: "w-full px-6 py-24 #{align_row[:text]}", style: combined_style)) do
-          content_tag(:div, class: "#{display? ? "max-w-5xl" : "max-w-4xl"} #{overlay_inner_margin_class}") do
+          content_tag(:div, class: "#{cover_title? ? "max-w-5xl" : "max-w-4xl"} #{overlay_inner_margin_class}") do
             safe_join([
               render_badge_content,
               render_tagline,
@@ -309,7 +339,7 @@ module FlatPack
               safe_join([
                 render_badge_content,
                 render_overlay_tagline,
-                content_tag_if(@headline, :h1, @headline, class: overlay_headline_class, style: display_headline_style),
+                overlay_headline,
                 content_tag_if(@description, :p, @description, class: overlay_description_class),
                 render_actions_block(extra_classes: align_row[:actions])
               ].compact)

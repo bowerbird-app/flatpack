@@ -46,6 +46,7 @@ class PagesController < ApplicationController
     {action: /\Afont_swatches\z/, title: "Font Swatches", patterns: [/\A--font-swatch-/]},
     {action: /\Aoverflow_row\z/, title: "Overflow Row", patterns: [/\A--overflow-row-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
+    {action: /\Ahero_title/, title: "Hero Title", patterns: [/\A--hero-title-/, /\A--display-/]},
     {action: /\Ahero(_.*)?\z/, title: "Hero", patterns: [/\A--hero-/]},
     {action: /\Atype_scale\z/, title: "Type", patterns: [/\A--(font-|text-|leading-|display-)/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
@@ -621,6 +622,9 @@ class PagesController < ApplicationController
 
   def page_title_display
     render layout: "fullpage"
+  end
+
+  def hero_title
   end
 
   def type_scale

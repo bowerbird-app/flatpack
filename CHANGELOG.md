@@ -34,6 +34,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redeploy so `meta.gem_version` shows `0.1.227`.
 - For `:rich`, sanitize stored HTML with `FlatPack::RichTextSanitizer`. `update_url:` uses `AttributeSanitizer`.
 
+## [0.1.226] - 2026-10-10
+
+### Added
+- `FlatPack::HeroTitle::Component` renders a standalone cover headline. Args: `text:` (or a content block), `size:` (`:md`, `:lg`, `:xl`, `:xxl`; default `:xl`), `level:` (`:h1`–`:h6`, default `:h1`), optional `align:` (`:left`, `:center`), and `system_arguments`. Ink is `--surface-content-color`; a caller `text-*` class still wins (Hero overlay ink).
+- Size tokens `--hero-title-md-size`, `--hero-title-lg-size`, `--hero-title-xl-size`, `--hero-title-xxl-size` with matching `-min` / `-max`. Each size is a fluid clamp. `:xl` aliases `--display-size` (`clamp` from `--text-5xl` / 48px to `5.5rem` / 88px, preferred `1rem + 5vw`) so today's display output is unchanged. Weight, tracking, and leading reuse `--display-weight` (600), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.05`). Unlayered `.fp-hero-title` / `.fp-hero-title--*` sit beside `.fp-display`.
+- Hero accepts opt-in `title_size:` (`:md`, `:lg`, `:xl`, `:xxl`) to pick a Hero Title step.
+- Dummy demo at `/demo/hero_title` (sizes, wrapping, inside Hero, dark).
+- Bumped the gem version to `0.1.226`.
+
+### Changed
+- Hero `size: :display` renders the headline through Hero Title at `:xl`. Default Hero headlines stay on `--text-4xl` / `--hero-headline-size`.
+- PageTitle `size: :display` renders the heading through Hero Title at `:xl`. Default PageTitle stays `font-bold` with `--page-title-h*-size`.
+
+### Upgrade notes
+- Existing Hero and PageTitle calls are unchanged. `size: :default` and `size: :display` look the same as `0.1.224`.
+- New component. Use `FlatPack::HeroTitle::Component` for a cover line without Hero or PageTitle chrome. Hero `size: :display` already does this. Pass `title_size:` on Hero to pick another step.
+- Reload kit CSS for `--hero-title-*` and `.fp-hero-title`. Themes override `--hero-title-<size>-size-min` / `-max` (or the clamp) on a named `data-theme` block. `:xl` follows `--display-size`; override `--display-size-max` to raise or lower that step.
+- Redeploy so `meta.gem_version` shows `0.1.226`.
+
 ## [0.1.225] - 2026-10-10
 
 ### Added

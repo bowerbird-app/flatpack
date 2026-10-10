@@ -215,6 +215,7 @@ class DemoCatalog
           icon: :align_left,
           children: [
             {title: "Page Title", path: "/demo/page_header", description: "Page title with optional subtitle", icon: :type},
+            {title: "Hero Title", path: "/demo/hero_title", description: "Cover headlines in four fluid sizes", icon: :type},
             {title: "Type scale", path: "/demo/type_scale", description: "Kit type rungs from xs through 8xl, plus display", icon: :type},
             {title: "Section Title", path: "/demo/section_title", description: "In-page headings with size and spacing", icon: :type},
             {title: "Content", path: "/demo/text/content", description: "Article type for CMS HTML", icon: :align_left},
