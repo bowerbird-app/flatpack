@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `FlatPack::RangeInput::Component` accepts an opt-in size-slider presentation. `variant: :size` / `:text_size` put a small and large `A` (theme font) at the track ends. `variant: :zoom` defaults to `magnifying-glass-minus` / `magnifying-glass-plus`. `start_icon:` / `end_icon:` take any kit icon name. End glyphs and icons are decorative (`aria-hidden`); the input keeps its accessible label.
 - Size, text-size, and zoom sliders snap to `step:` and show one tick under the track per step. Pass `ticks: true` on a default RangeInput for the same notches, or `ticks: false` to hide them. Arrow keys move one step (native range). Ticks render when the step count is 2–24.
-- Optional live preview: `preview_target:` (CSS selector or element id) and `with_preview` write `--fp-range-value` (current number), `--fp-range-scale` (0–1), and `--fp-range-max` on the target as you drag. The sample renders **below** the track with no fill or border. Size demos use a single `A` (`.fp-range-input-sample`). Stimulus does this work only when a preview is present. Default RangeInput markup and behaviour are unchanged.
+- Optional live preview: `preview_target:` (CSS selector or element id) and `with_preview` write `--fp-range-value` (current number), `--fp-range-scale` (0–1), and `--fp-range-max` on the target as you drag. The sample renders **below** the track with no fill or border. Size and text-size sliders show decorative `sample:` letters there (`"Aa"` by default). `with_preview` replaces the built-in letters. Stimulus does this work only when a preview is present. Default RangeInput markup and behaviour are unchanged.
 
 ### Changed
 - Bumped the gem version to `0.1.225`.
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - Existing RangeInput calls are unchanged. Pass `variant: :size`, `variant: :zoom`, or `start_icon:` / `end_icon:` for the size-slider layout.
-- For live preview, pass `with_preview` (renders below the track) and/or `preview_target:`. Size a single letter with `.fp-range-input-sample`, or `font-size: calc(var(--fp-range-value) * 1px)`. Set the same custom properties on an external target for first paint.
+- For live preview, pass `with_preview` (renders below the track) and/or `preview_target:`. Size and text-size sliders already show `sample:` (`"Aa"` by default) below the track; pass `sample: "Embiggen"` to change it or `sample: ""` to hide it. Size custom slot markup with `.fp-range-input-sample`, or `font-size: calc(var(--fp-range-value) * 1px)`. Set the same custom properties on an external target for first paint.
 - Thumb fill still aliases `--color-primary`. Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.225`.
 
 ## [0.1.224] - 2026-10-10

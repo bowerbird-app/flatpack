@@ -177,12 +177,17 @@ module FlatPack
           value: 23
         ))
 
+        html = page.native.to_html
+
         assert_selector ".fp-range-input-ends"
         assert_selector ".fp-range-input-glyph--start[aria-hidden='true']", text: "A"
         assert_selector ".fp-range-input-glyph--end[aria-hidden='true']", text: "A"
         assert_selector "input.fp-range-input[aria-label='Text size'][step='3']"
         assert_selector ".fp-range-input-ticks[aria-hidden='true']"
         assert_selector ".fp-range-input-tick", count: 7
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Aa"
+        assert_selector ".fp-range-input-preview"
+        assert_includes html, "--fp-range-value: 23"
         refute_selector "div.relative > input.fp-range-input"
       end
 
@@ -191,6 +196,54 @@ module FlatPack
 
         assert_selector ".fp-range-input-glyph--start", text: "A"
         assert_selector ".fp-range-input-glyph--end", text: "A"
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Aa"
+      end
+
+      def test_sample_customizes_the_built_in_preview
+        render_inline(Component.new(
+          name: "text_size",
+          variant: :size,
+          sample: "Embiggen",
+          min: 14,
+          max: 32,
+          value: 23
+        ))
+
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Embiggen"
+        refute_selector ".fp-range-input-sample", text: "Aa"
+      end
+
+      def test_blank_sample_omits_the_built_in_preview
+        render_inline(Component.new(name: "text_size", variant: :size, sample: ""))
+
+        refute_selector ".fp-range-input-preview"
+        refute_selector ".fp-range-input-sample"
+      end
+
+      def test_preview_slot_overrides_sample
+        render_inline(Component.new(name: "text_size", variant: :size, sample: "Embiggen")) do |range|
+          range.with_preview { "Custom slot" }
+        end
+
+        assert_selector ".fp-range-input-preview", text: "Custom slot"
+        refute_selector ".fp-range-input-sample"
+        refute_text "Embiggen"
+        refute_text "Aa"
+      end
+
+      def test_default_variant_ignores_sample
+        render_inline(Component.new(name: "volume", sample: "Embiggen", value: 50))
+
+        refute_selector ".fp-range-input-preview"
+        refute_selector ".fp-range-input-sample"
+        refute_text "Embiggen"
+      end
+
+      def test_zoom_variant_does_not_render_a_built_in_sample
+        render_inline(Component.new(name: "zoom", variant: :zoom, sample: "Embiggen"))
+
+        refute_selector ".fp-range-input-sample"
+        refute_selector ".fp-range-input-preview"
       end
 
       def test_zoom_variant_renders_default_magnifying_icons
@@ -262,6 +315,19 @@ module FlatPack
         assert_operator preview_at, :>, input_at
       end
 
+      def test_built_in_sample_renders_below_the_slider
+        render_inline(Component.new(name: "reading", variant: :size, min: 14, max: 32, step: 3, value: 23))
+
+        html = page.native.to_html
+        input_at = html.index("fp-range-input-track")
+        preview_at = html.index("fp-range-input-preview")
+
+        assert input_at
+        assert preview_at
+        assert_operator preview_at, :>, input_at
+        assert_selector ".fp-range-input-sample[aria-hidden='true']", text: "Aa"
+      end
+
       def test_ticks_opt_in_on_default_variant
         render_inline(Component.new(name: "volume", ticks: true, min: 0, max: 100, step: 25, value: 50))
 
@@ -320,6 +386,12 @@ module FlatPack
       def test_raises_on_non_string_preview_target
         assert_raises(ArgumentError) do
           Component.new(name: "volume", preview_target: 12)
+        end
+      end
+
+      def test_raises_on_non_string_sample
+        assert_raises(ArgumentError) do
+          Component.new(name: "volume", sample: :aa)
         end
       end
 

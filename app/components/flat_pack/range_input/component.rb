@@ -6,6 +6,7 @@ module FlatPack
       VARIANTS = %i[default size text_size zoom].freeze
       SIZE_VARIANTS = %i[size text_size].freeze
       SIZE_GLYPH = "A"
+      DEFAULT_SAMPLE = "Aa"
       ZOOM_START_ICON = "magnifying-glass-minus"
       ZOOM_END_ICON = "magnifying-glass-plus"
       MAX_TICKS = 24
@@ -28,6 +29,7 @@ module FlatPack
         end_icon: nil,
         preview_target: nil,
         ticks: nil,
+        sample: DEFAULT_SAMPLE,
         **system_arguments
       )
         super(**system_arguments)
@@ -46,6 +48,7 @@ module FlatPack
         @end_icon = end_icon.presence
         @preview_target = preview_target
         @ticks = ticks
+        @sample = sample
 
         validate_name!
         validate_range!
@@ -53,6 +56,7 @@ module FlatPack
         validate_variant!
         validate_preview_target!
         validate_ticks!
+        validate_sample!
       end
 
       def call
@@ -89,9 +93,12 @@ module FlatPack
       end
 
       def render_preview
-        return unless preview?
+        return content_tag(:div, preview, **preview_attributes) if preview?
+        return unless built_in_sample?
 
-        content_tag(:div, preview, **preview_attributes)
+        content_tag(:div, **preview_attributes) do
+          content_tag(:span, @sample, class: "fp-range-input-sample", aria: {hidden: true})
+        end
       end
 
       def render_input_wrapper
@@ -278,6 +285,10 @@ module FlatPack
         ((span / step).round + 1)
       end
 
+      def built_in_sample?
+        size_variant? && @sample.present?
+      end
+
       def size_variant?
         SIZE_VARIANTS.include?(@variant)
       end
@@ -340,6 +351,12 @@ module FlatPack
         return if @preview_target.nil? || @preview_target.is_a?(String)
 
         raise ArgumentError, "preview_target must be a String"
+      end
+
+      def validate_sample!
+        return if @sample.nil? || @sample.is_a?(String)
+
+        raise ArgumentError, "sample must be a String"
       end
 
       def error_id

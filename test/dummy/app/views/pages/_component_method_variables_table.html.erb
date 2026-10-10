@@ -697,7 +697,8 @@
         { variable: "end_icon", accepts: "Symbol, String, or nil", example: "end_icon: :plus" },
         { variable: "ticks", accepts: "true, false, or omit", example: "ticks: true" },
         { variable: "preview_target", accepts: "String or nil", example: "preview_target: \"reading-preview\"" },
-        { variable: "with_preview", accepts: "slot block", example: "range.with_preview { tag.span \"A\", class: \"fp-range-input-sample\" }" },
+        { variable: "sample", accepts: "String", example: "sample: \"Aa\"" },
+        { variable: "with_preview", accepts: "slot block", example: "range.with_preview { tag.span \"Aa\", class: \"fp-range-input-sample\" }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"range-input\" }" }
       ]
     },

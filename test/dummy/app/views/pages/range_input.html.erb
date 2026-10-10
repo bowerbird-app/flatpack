@@ -232,12 +232,8 @@
     step: 3,
     value: 23,
     show_value: false,
-    help_text: "Snaps to seven sizes. Arrow keys move one step."
-  ) do |range| %>
-    <% range.with_preview do %>
-      <span class="fp-range-input-sample" aria-hidden="true">A</span>
-    <% end %>
-  <% end %>
+    help_text: "Snaps to seven sizes. Arrow keys move one step. The Aa below follows the slider."
+  ) %>
 
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE'),
@@ -250,14 +246,46 @@
         step: 3,
         value: 23,
         show_value: false
-      ) do |range| %&gt;
-        &lt;% range.with_preview do %&gt;
-          &lt;span class=&quot;fp-range-input-sample&quot; aria-hidden=&quot;true&quot;&gt;A&lt;/span&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
+      ) %&gt;
     CODE
     language: "erb",
     title: "Text size"
+  ) %>
+</section>
+
+<section class="mb-12" id="size-slider-sample">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom sample", anchor_link: true) %>
+
+  <%= render FlatPack::RangeInput::Component.new(
+    name: "reading_size_sample",
+    id: "reading_size_sample",
+    label: "Text size",
+    variant: :size,
+    sample: "Embiggen",
+    min: 14,
+    max: 32,
+    step: 3,
+    value: 23,
+    show_value: false,
+    help_text: "Pass sample: to swap the letters under the slider."
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RangeInput::Component.new(
+        name: &quot;reading_size_sample&quot;,
+        label: &quot;Text size&quot;,
+        variant: :size,
+        sample: &quot;Embiggen&quot;,
+        min: 14,
+        max: 32,
+        step: 3,
+        value: 23,
+        show_value: false
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Custom sample"
   ) %>
 </section>
 
@@ -274,11 +302,7 @@
     step: 3,
     value: 32,
     show_value: false
-  ) do |range| %>
-    <% range.with_preview do %>
-      <span class="fp-range-input-sample" aria-hidden="true">A</span>
-    <% end %>
-  <% end %>
+  ) %>
 </section>
 
 <section class="mb-12" id="size-slider-zoom">

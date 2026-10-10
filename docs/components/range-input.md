@@ -26,15 +26,16 @@ Use `RangeInput` for numeric adjustments such as volume, opacity, thresholds, or
 | `start_icon` | Symbol/String | `nil` | no | Kit icon name for the left (start) end. Any `FlatPack::Shared::IconComponent` name. Overrides the start `A` on `:size` / `:text_size`, and the default minus glass on `:zoom`. On `:default`, passing this (or `end_icon:`) opts into the end-icon layout. |
 | `end_icon` | Symbol/String | `nil` | no | Kit icon name for the right (end) end. Same rules as `start_icon:`. |
 | `preview_target` | String | `nil` | no | CSS selector or element id. While dragging, Stimulus writes `--fp-range-value` (current number) and `--fp-range-scale` (0–1 from `min`/`max`) on matching elements. A bare id becomes `#id`. Omit when you do not need live preview. Must be a `String`. |
+| `sample` | String | `"Aa"` | no | Letters shown below a `:size` / `:text_size` slider. Decorative (`aria-hidden`). Pass `""` to hide the built-in preview. Ignored on `:default` and `:zoom`. `with_preview` replaces this entirely. Must be a `String`. |
 | `ticks` | Boolean | `nil` | no | Visible notches under the track, one per `step`. Omit to show ticks on `:size` / `:text_size` / `:zoom` and hide them on `:default`. Pass `true` or `false` to override. Ticks render only when the step count is between 2 and 24. |
 | `**system_arguments` | Hash | `{}` | no | Standard HTML attributes merged into the container. |
 
 ## Slots
-- `with_preview` — optional sample **below** the track. The wrapper is `.fp-range-input-preview` (no fill or border) and a Stimulus `preview` target. Server-rendered `--fp-range-value`, `--fp-range-scale`, and `--fp-range-max` stay in sync as you drag. For a size slider, put a single `A` in `.fp-range-input-sample`. Use this or `preview_target:`, or both.
+- `with_preview` — optional sample **below** the track. Replaces the built-in `sample:` letters. The wrapper is `.fp-range-input-preview` (no fill or border) and a Stimulus `preview` target. Server-rendered `--fp-range-value`, `--fp-range-scale`, and `--fp-range-max` stay in sync as you drag. Use this or `preview_target:`, or both.
 
 ## Variants
 - Default slider: omit `variant:` (or `variant: :default`). Markup and behaviour match previous releases.
-- Size slider: `variant: :size` or `variant: :text_size`. Ticks on by default.
+- Size slider: `variant: :size` or `variant: :text_size`. Ticks on by default. Built-in `sample:` letters (`"Aa"` by default) sit below the track.
 - Zoom slider: `variant: :zoom`. Ticks on by default.
 - Custom ends: `start_icon:` / `end_icon:`
 - Ticks: omit for the variant default, or pass `ticks: true` / `ticks: false`
@@ -54,7 +55,7 @@ Use `RangeInput` for numeric adjustments such as volume, opacity, thresholds, or
 ) %>
 ```
 
-Text size with a live letter below the track:
+Text size with the built-in `Aa` below the track:
 
 ```erb
 <%= render FlatPack::RangeInput::Component.new(
@@ -66,11 +67,23 @@ Text size with a live letter below the track:
   step: 3,
   value: 23,
   show_value: false
-) do |range| %>
-  <% range.with_preview do %>
-    <span class="fp-range-input-sample" aria-hidden="true">A</span>
-  <% end %>
-<% end %>
+) %>
+```
+
+Custom sample letters:
+
+```erb
+<%= render FlatPack::RangeInput::Component.new(
+  name: "text_size",
+  label: "Text size",
+  variant: :size,
+  sample: "Embiggen",
+  min: 14,
+  max: 32,
+  step: 3,
+  value: 23,
+  show_value: false
+) %>
 ```
 
 Zoom with a slot:
@@ -108,11 +121,11 @@ Zoom with a slot:
 - Tokens: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`, `--range-thumb-size`, `--range-track-height`.
 - Thumb fill (`--range-thumb-color`) aliases `--color-primary`. The ring (`--range-thumb-border-color`) aliases `--surface-background-color`, with `--range-thumb-shadow` for depth. Hosts that set those names keep their overrides.
 - Fill percent is the runtime custom property `--range-progress` on the input (server-rendered from `value` / `min` / `max`, then kept in sync by Stimulus). Not a theme token.
-- Preview runtime properties (only when a slot or `preview_target:` is used): `--fp-range-value` (current number, unitless), `--fp-range-scale` (0–1), and `--fp-range-max` (`max`, for reserving sample height). Not theme tokens. `.fp-range-input-sample` sizes a single `A` with `font-size: calc(var(--fp-range-value) * 1px)`. The sample sits below the track with no fill or border.
+- Preview runtime properties (when a built-in `sample:`, a `with_preview` slot, or `preview_target:` is used): `--fp-range-value` (current number, unitless), `--fp-range-scale` (0–1), and `--fp-range-max` (`max`, for reserving sample height). Not theme tokens. `.fp-range-input-sample` sizes the letters with `font-size: calc(var(--fp-range-value) * 1px)`. The sample sits below the track with no fill or border.
 - Size glyphs use `--font-sans` and `--surface-muted-content-color`. They follow light and dark themes.
 - The control stays a native range. Dual-handle filters are a separate pattern, not this component. Ticks are one notch per `step` under the track.
 
 ## Dependencies
 - Core install: `rails generate flat_pack:install`
-- Stimulus: `flat-pack--range-input` for live value display, `--range-progress` fill, and `range-input:change` custom events. Preview custom properties are written only when a preview slot or `preview_target:` is present; default sliders do not pay that cost.
+- Stimulus: `flat-pack--range-input` for live value display, `--range-progress` fill, and `range-input:change` custom events. Preview custom properties are written only when a built-in sample, preview slot, or `preview_target:` is present; default sliders do not pay that cost.
 - Size and zoom ends compose `FlatPack::Shared::IconComponent` when icons are used.
