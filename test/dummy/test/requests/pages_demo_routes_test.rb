@@ -88,6 +88,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/page_title/display
+    /demo/type_scale
+    /pages/hero/display
     /demo/section_title
     /demo/page_nav
     /demo/text/content
@@ -709,6 +712,38 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "help_text"
   end
 
+  test "page title display demo renders cover titles" do
+    get "/demo/page_title/display"
+
+    assert_response :success
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "Northlight"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    assert_includes response.body, "Stills, credits, and download packs"
+    refute_includes response.body, "lg:text-6xl"
+  end
+
+  test "type scale demo shows 6xl 7xl and display" do
+    get "/demo/type_scale"
+
+    assert_response :success
+    assert_includes response.body, "text-6xl"
+    assert_includes response.body, "text-7xl"
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "3.75rem / 60px"
+    assert_includes response.body, "4.5rem / 72px"
+  end
+
+  test "hero display demo uses display size" do
+    get "/pages/hero/display"
+
+    assert_response :success
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "font-size: var(--display-size)"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    refute_includes response.body, "lg:text-6xl"
+  end
+
   test "page header demo includes all page title heading variants" do
     get "/demo/page_header"
 
@@ -721,6 +756,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Heading Variant H6</h6>"
     assert_includes response.body, "--page-title-h1-size"
     assert_includes response.body, "--page-title-h6-size"
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    assert_includes response.body, "--display-size"
   end
 
   test "text content demo renders long-form marketing copy" do

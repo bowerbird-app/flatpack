@@ -4,6 +4,7 @@ module FlatPack
   module PageTitle
     class Component < FlatPack::BaseComponent
       VARIANTS = %i[h1 h2 h3 h4 h5 h6].freeze
+      SIZES = %i[default display].freeze
 
       renders_one :actions
 
@@ -15,6 +16,7 @@ module FlatPack
         title:,
         subtitle: nil,
         variant: :h1,
+        size: :default,
         large_subtitle: false,
         title_color: nil,
         subtitle_color: nil,
@@ -24,12 +26,14 @@ module FlatPack
         @title = title
         @subtitle = subtitle
         @variant = variant.to_sym
+        @size = size.to_sym
         @large_subtitle = large_subtitle
         @title_color = title_color
         @subtitle_color = subtitle_color
 
         validate_title!
         validate_variant!
+        validate_size!
       end
 
       def call
@@ -60,7 +64,11 @@ module FlatPack
       end
 
       def container_classes
-        classes("mb-6")
+        display? ? classes("mb-10") : classes("mb-6")
+      end
+
+      def display?
+        @size == :display
       end
 
       def render_header_content
@@ -89,19 +97,24 @@ module FlatPack
       end
 
       def title_classes
-        classes = ["font-bold", "leading-tight", "fp-text-balance"]
+        classes = ["font-bold", "fp-text-balance"]
+        classes << (display? ? "fp-display" : "leading-tight")
         classes << "text-[var(--surface-content-color)]" unless @title_color
         classes.join(" ")
       end
 
       def title_style
         style_rules = ["font-size: #{heading_size_token}"]
+        if display?
+          style_rules << "letter-spacing: var(--display-tracking)"
+          style_rules << "line-height: var(--display-leading)"
+        end
         style_rules << "color: #{@title_color}" if @title_color
         style_rules.join("; ") + ";"
       end
 
       def heading_size_token
-        "var(--page-title-#{@variant}-size)"
+        display? ? "var(--display-size)" : "var(--page-title-#{@variant}-size)"
       end
 
       def render_subtitle
@@ -112,7 +125,9 @@ module FlatPack
 
       def subtitle_classes
         classes = []
-        classes << "mt-2 text-lg fp-text-pretty" unless @large_subtitle
+        unless @large_subtitle
+          classes << (display? ? "fp-display-subtitle text-lg fp-text-pretty" : "mt-2 text-lg fp-text-pretty")
+        end
         classes << "text-[var(--surface-muted-content-color)]" unless @subtitle_color
         classes.join(" ").presence
       end
@@ -146,6 +161,12 @@ module FlatPack
         return if VARIANTS.include?(@variant)
 
         raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def validate_size!
+        return if SIZES.include?(@size)
+
+        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.join(", ")}"
       end
     end
   end

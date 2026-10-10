@@ -108,6 +108,49 @@ module FlatPack
 
         assert_includes error.message, "Invalid variant"
       end
+
+      def test_default_size_keeps_page_title_heading_token
+        render_inline(Component.new(title: "Dashboard"))
+
+        html = page.native.to_html
+        assert_selector "h1[style*='font-size: var(--page-title-h1-size)']", text: "Dashboard"
+        assert_includes html, "leading-tight"
+        refute_includes html, "fp-display"
+        refute_includes html, "--display-size"
+      end
+
+      def test_display_size_uses_display_tokens
+        render_inline(Component.new(title: "Northlight", size: :display))
+
+        html = page.native.to_html
+        assert_selector "h1.fp-display", text: "Northlight"
+        assert_includes html, "font-size: var(--display-size)"
+        assert_includes html, "letter-spacing: var(--display-tracking)"
+        assert_includes html, "line-height: var(--display-leading)"
+        assert_includes html, "fp-text-balance"
+        refute_includes html, "leading-tight"
+        refute_includes html, "--page-title-h1-size"
+      end
+
+      def test_display_subtitle_spacing_scales
+        render_inline(Component.new(
+          title: "Northlight",
+          subtitle: "Stills, credits, and download packs",
+          size: :display
+        ))
+
+        assert_selector "p.fp-display-subtitle", text: "Stills, credits, and download packs"
+        assert_selector "p.text-lg"
+        refute_selector "p.mt-2"
+      end
+
+      def test_raises_error_for_invalid_size
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(title: "Dashboard", size: :huge))
+        end
+
+        assert_includes error.message, "Invalid size"
+      end
     end
   end
 end

@@ -257,9 +257,16 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
   --leading-tight: 1.25;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
+  --display-size: clamp(var(--text-5xl), 2rem + 3.5vw, var(--text-7xl));
+  --display-tracking: -0.03em;
+  --display-leading: 1.1;
   --code-block-background-color: var(--surface-muted-background-color);
   --code-block-border-color: var(--surface-border-color);
   --code-block-title-color: var(--surface-muted-content-color);

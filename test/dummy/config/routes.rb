@@ -80,6 +80,7 @@ Rails.application.routes.draw do
   get "pages/hero/angled_image", to: "pages#hero_angled_image"
   get "pages/hero/image_tiles", to: "pages#hero_image_tiles"
   get "pages/hero/offset_image", to: "pages#hero_offset_image"
+  get "pages/hero/display", to: "pages#hero_display"
   get "demo", to: "pages#demo"
   get "themes", to: "themes#index"
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,
@@ -188,6 +189,8 @@ Rails.application.routes.draw do
   get "demo/tabs/stacked_pills", to: "pages#tabs_stacked_pills"
   get "demo/toasts", to: "pages#toasts"
   get "demo/page_header", to: "pages#page_header"
+  get "demo/page_title/display", to: "pages#page_title_display"
+  get "demo/type_scale", to: "pages#type_scale"
   get "demo/section_title", to: "pages#section_title"
   get "demo/page_nav", to: "pages#page_nav"
   get "demo/text/content", to: "pages#text_content"

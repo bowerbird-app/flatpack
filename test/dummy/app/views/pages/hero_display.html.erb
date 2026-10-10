@@ -1,0 +1,16 @@
+<div class="fixed top-4 left-4 z-50">
+  <%= render FlatPack::Button::Component.new(text: "Back to Hero", style: :secondary, href: pages_hero_path) %>
+</div>
+
+<%= render FlatPack::Hero::Component.new(
+  variant: :centered,
+  size: :display,
+  tagline: "Press kit",
+  headline: "A press kit for the Northlight collection",
+  description: "Stills, credits, and download packs."
+) do |hero|
+  hero.slot do
+    concat render(FlatPack::Button::Component.new(text: "Download stills", style: :primary, href: "#"))
+    concat render(FlatPack::Button::Component.new(text: "Credits", style: :secondary, href: "#"))
+  end
+end %>

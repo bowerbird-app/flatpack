@@ -956,6 +956,19 @@
   }
 }
 
+/* Cover type. Unlayered so Tailwind preflight cannot collapse h1.fp-display
+ * to inherit. PageTitle and Hero also set the same tokens inline.
+ */
+.fp-display {
+  font-size: var(--display-size);
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
+}
+
+.fp-display + .fp-display-subtitle {
+  margin-top: 0.4em;
+}
+
 /* Long-form reading type. Unlayered so Tailwind preflight cannot collapse
  * headings to inherit. Bare CMS HTML (h1, p, ul) picks up the same scale as
  * the main Content demo: kicker, display title, lead, then body at 18px / 1.75
