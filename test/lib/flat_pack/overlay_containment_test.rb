@@ -50,6 +50,8 @@ module FlatPack
       assert_includes css, ".fp-range-input-ends"
       assert_includes css, ".fp-range-input-glyph"
       assert_includes css, ".fp-range-input-preview"
+      assert_includes css, ".fp-range-input-ticks"
+      assert_includes css, ".fp-range-input-sample"
       assert_includes css, "::-webkit-slider-thumb"
       assert_includes css, "::-moz-range-thumb"
       assert_includes css, "::-moz-range-progress"

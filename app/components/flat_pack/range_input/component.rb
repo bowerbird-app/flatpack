@@ -8,6 +8,7 @@ module FlatPack
       SIZE_GLYPH = "A"
       ZOOM_START_ICON = "magnifying-glass-minus"
       ZOOM_END_ICON = "magnifying-glass-plus"
+      MAX_TICKS = 24
 
       renders_one :preview
 
@@ -26,6 +27,7 @@ module FlatPack
         start_icon: nil,
         end_icon: nil,
         preview_target: nil,
+        ticks: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -43,19 +45,22 @@ module FlatPack
         @start_icon = start_icon.presence
         @end_icon = end_icon.presence
         @preview_target = preview_target
+        @ticks = ticks
 
         validate_name!
         validate_range!
+        validate_step!
         validate_variant!
         validate_preview_target!
+        validate_ticks!
       end
 
       def call
         content_tag(:div, **container_attributes) do
           safe_join([
             render_label,
-            render_preview,
             render_input_wrapper,
+            render_preview,
             render_help_text
           ].compact)
         end
@@ -95,15 +100,36 @@ module FlatPack
         content_tag(:div, class: "fp-range-input-ends") do
           safe_join([
             render_start_end,
-            tag.input(**input_attributes),
+            render_track,
             render_end_end
           ].compact)
         end
       end
 
       def render_default_input_wrapper
-        content_tag(:div, class: "relative") do
-          tag.input(**input_attributes)
+        if draw_ticks?
+          render_track
+        else
+          content_tag(:div, class: "relative") do
+            tag.input(**input_attributes)
+          end
+        end
+      end
+
+      def render_track
+        content_tag(:div, class: "fp-range-input-track") do
+          safe_join([
+            tag.input(**input_attributes),
+            render_ticks
+          ].compact)
+        end
+      end
+
+      def render_ticks
+        return unless draw_ticks?
+
+        content_tag(:div, class: "fp-range-input-ticks", aria: {hidden: true}) do
+          safe_join(Array.new(tick_count) { content_tag(:span, "", class: "fp-range-input-tick") })
         end
       end
 
@@ -194,14 +220,18 @@ module FlatPack
       end
 
       def preview_custom_properties
-        "--fp-range-value: #{preview_value}; --fp-range-scale: #{range_scale.round(4)}"
+        "--fp-range-value: #{preview_value}; --fp-range-scale: #{range_scale.round(4)}; --fp-range-max: #{preview_number(@max)}"
       end
 
       def preview_value
-        number = Float(@value)
+        preview_number(@value)
+      end
+
+      def preview_number(raw)
+        number = Float(raw)
         (number == number.to_i) ? number.to_i : number
       rescue ArgumentError, TypeError
-        @value
+        raw
       end
 
       def range_progress_percent
@@ -225,6 +255,27 @@ module FlatPack
 
       def decorative_ends?
         size_variant? || zoom_variant? || @start_icon.present? || @end_icon.present?
+      end
+
+      def draw_ticks?
+        ticks_enabled? && tick_count.between?(2, MAX_TICKS)
+      end
+
+      def ticks_enabled?
+        case @ticks
+        when true then true
+        when false then false
+        else
+          size_variant? || zoom_variant?
+        end
+      end
+
+      def tick_count
+        span = @max.to_f - @min.to_f
+        step = @step.to_f
+        return 0 if step <= 0
+
+        ((span / step).round + 1)
       end
 
       def size_variant?
@@ -265,6 +316,18 @@ module FlatPack
       def validate_range!
         return if @min < @max
         raise ArgumentError, "min must be less than max"
+      end
+
+      def validate_step!
+        return if @step.to_f.positive?
+
+        raise ArgumentError, "step must be greater than 0"
+      end
+
+      def validate_ticks!
+        return if @ticks.nil? || @ticks == true || @ticks == false
+
+        raise ArgumentError, "ticks must be true or false"
       end
 
       def validate_variant!

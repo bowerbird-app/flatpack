@@ -695,8 +695,9 @@
         { variable: "variant", accepts: ":default, :size, :text_size, :zoom", example: "variant: :size" },
         { variable: "start_icon", accepts: "Symbol, String, or nil", example: "start_icon: :minus" },
         { variable: "end_icon", accepts: "Symbol, String, or nil", example: "end_icon: :plus" },
+        { variable: "ticks", accepts: "true, false, or omit", example: "ticks: true" },
         { variable: "preview_target", accepts: "String or nil", example: "preview_target: \"reading-preview\"" },
-        { variable: "with_preview", accepts: "slot block", example: "range.with_preview { tag.p \"Sample\" }" },
+        { variable: "with_preview", accepts: "slot block", example: "range.with_preview { tag.span \"A\", class: \"fp-range-input-sample\" }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"range-input\" }" }
       ]
     },

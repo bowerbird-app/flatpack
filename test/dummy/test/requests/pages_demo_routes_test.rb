@@ -789,8 +789,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">variant</td>"
     assert_includes response.body, ">start_icon</td>"
     assert_includes response.body, ">end_icon</td>"
+    assert_includes response.body, ">ticks</td>"
     assert_includes response.body, ">preview_target</td>"
     assert_includes response.body, "**system_arguments"
+    assert_includes response.body, "fp-range-input-ticks"
+    assert_includes response.body, "fp-range-input-sample"
+    assert_includes response.body, "fp-range-input-tick"
   end
 
   test "notification demo renders the notification component examples" do

@@ -303,6 +303,8 @@ module FlatPack
       assert_includes application, ".fp-range-input-ends"
       assert_includes application, ".fp-range-input-glyph--start"
       assert_includes application, ".fp-range-input-glyph--end"
+      assert_includes application, ".fp-range-input-ticks"
+      assert_includes application, ".fp-range-input-sample"
       assert_includes application, "font-family: var(--font-sans)"
 
       dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
