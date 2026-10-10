@@ -247,7 +247,7 @@ module FlatPack
       def display_headline_style
         return nil unless display?
 
-        "font-size: var(--display-size); letter-spacing: var(--display-tracking); line-height: var(--display-leading);"
+        "font-size: var(--display-size); font-weight: var(--display-weight); letter-spacing: var(--display-tracking); line-height: var(--display-leading);"
       end
 
       def render_headline

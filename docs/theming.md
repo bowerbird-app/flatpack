@@ -249,24 +249,29 @@ Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `
 --text-5xl: 3rem
 --text-6xl: 3.75rem
 --text-7xl: 4.5rem
+--text-8xl: 6rem
 
 --text-6xl--line-height: 1
 --text-7xl--line-height: 1
+--text-8xl--line-height: 1
 
 --leading-tight: 1.25
 --leading-snug: 1.375
 --leading-normal: 1.5
 
---display-size: clamp(var(--text-5xl), 2rem + 3.5vw, var(--text-7xl))
+--display-size-min: var(--text-5xl)
+--display-size-max: 5.5rem
+--display-size: clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max))
 --display-tracking: -0.03em
---display-leading: 1.1
+--display-leading: 1.05
+--display-weight: 600
 ```
 
 `--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` and the kit `--radius-*` values on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit face and the kit radii (rich-text chrome follows `--radius-md`).
 
-`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). `--text-6xl` (3.75rem / 60px) and `--text-7xl` (4.5rem / 72px) are the display rungs; `@theme inline` maps them so `text-6xl` / `text-7xl` work after a Tailwind rebuild. Pairing `--text-6xl--line-height` and `--text-7xl--line-height` are `1`. Product PageTitle and Hero stay on `5xl` and below unless you pass `size: :display`.
+`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). `--text-6xl` (3.75rem / 60px), `--text-7xl` (4.5rem / 72px), and `--text-8xl` (6rem / 96px) are the display rungs; `@theme inline` maps them so `text-6xl` / `text-7xl` / `text-8xl` work after a Tailwind rebuild. Pairing `--text-*-line-height` tokens are `1`. Product PageTitle and Hero stay on `5xl` and below unless you pass `size: :display`.
 
-`--display-size` is a theme-tunable fluid cover size: about `--text-5xl` (48px) on small viewports and `--text-7xl` (72px) on desktop. Override the whole token on a named theme (`--display-size: 4rem`, or another `clamp()`). `--display-tracking` is `-0.03em`. `--display-leading` is `1.1`, tighter than `--leading-tight`. Kit CSS ships unlayered `.fp-display` so Tailwind preflight cannot collapse heading size. PageTitle and Hero also set the same tokens inline.
+`--display-size` is a theme-tunable fluid cover size: `--display-size-min` (`--text-5xl` / 48px) on a phone, about 80px at 1280, and `--display-size-max` (`5.5rem` / 88px) from 1440. Preferred size is `1rem + 5vw`. Override `--display-size-max` (or `--display-size-min`) on a named theme without rewriting the clamp, or replace `--display-size` entirely. `--display-tracking` is `-0.03em`. `--display-leading` is `1.05`. `--display-weight` is `600`, matching content `h1` and Hero headlines. Kit CSS ships unlayered `.fp-display` so Tailwind preflight cannot collapse heading size. PageTitle and Hero also set the same tokens inline.
 
 Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-text-balance`, and `.fp-text-pretty`. Use tabular nums on live numbers (pagination, meters, timestamps, chart axes). Use balance on titles. Use pretty on short supporting copy. Labels are sentence case — do not force `uppercase tracking-widest` on taglines, table headers, or section titles. Avatar initials may stay `uppercase`.
 

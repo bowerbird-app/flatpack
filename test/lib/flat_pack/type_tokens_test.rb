@@ -24,9 +24,14 @@ module FlatPack
       assert_match(/--text-6xl--line-height:\s*1/, root_block)
       assert_match(/--text-7xl:\s*4\.5rem/, root_block)
       assert_match(/--text-7xl--line-height:\s*1/, root_block)
-      assert_match(/--display-size:\s*clamp\(var\(--text-5xl\), 2rem \+ 3\.5vw, var\(--text-7xl\)\)/, root_block)
+      assert_match(/--text-8xl:\s*6rem/, root_block)
+      assert_match(/--text-8xl--line-height:\s*1/, root_block)
+      assert_match(/--display-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--display-size-max:\s*5\.5rem/, root_block)
+      assert_match(/--display-size:\s*clamp\(var\(--display-size-min\), 1rem \+ 5vw, var\(--display-size-max\)\)/, root_block)
       assert_match(/--display-tracking:\s*-0\.03em/, root_block)
-      assert_match(/--display-leading:\s*1\.1/, root_block)
+      assert_match(/--display-leading:\s*1\.05/, root_block)
+      assert_match(/--display-weight:\s*600/, root_block)
       assert_match(/--page-title-h1-size:\s*var\(--text-4xl\)/, root_block)
       assert_match(/--page-title-h6-size:\s*var\(--text-base\)/, root_block)
       assert_match(/--content-p-size:\s*var\(--text-lg\)/, root_block)
@@ -60,6 +65,7 @@ module FlatPack
       assert_includes css, "text-wrap: balance"
       assert_includes css, ".fp-display"
       assert_includes css, "font-size: var(--display-size)"
+      assert_includes css, "font-weight: var(--display-weight)"
       assert_includes css, "letter-spacing: var(--display-tracking)"
       assert_includes css, "line-height: var(--display-leading)"
       assert_includes css, ".fp-display-subtitle"

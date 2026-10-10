@@ -625,12 +625,17 @@
   --text-6xl--line-height: var(--text-6xl--line-height);
   --text-7xl: var(--text-7xl);
   --text-7xl--line-height: var(--text-7xl--line-height);
+  --text-8xl: var(--text-8xl);
+  --text-8xl--line-height: var(--text-8xl--line-height);
   --leading-tight: var(--leading-tight);
   --leading-snug: var(--leading-snug);
   --leading-normal: var(--leading-normal);
   --display-size: var(--display-size);
+  --display-size-min: var(--display-size-min);
+  --display-size-max: var(--display-size-max);
   --display-tracking: var(--display-tracking);
   --display-leading: var(--display-leading);
+  --display-weight: var(--display-weight);
   --page-title-h1-size: var(--page-title-h1-size);
   --page-title-h2-size: var(--page-title-h2-size);
   --page-title-h3-size: var(--page-title-h3-size);
@@ -1298,13 +1303,18 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --text-6xl--line-height: 1;
   --text-7xl: 4.5rem;
   --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
   --leading-tight: 1.25;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
-  /* ~48px on small viewports, ~72px on desktop. Themes override the whole clamp. */
-  --display-size: clamp(var(--text-5xl), 2rem + 3.5vw, var(--text-7xl));
+  /* ~48px on a phone, ~80px at 1280, ~88px from 1440. Override min/max without rewriting the clamp. */
+  --display-size-min: var(--text-5xl);
+  --display-size-max: 5.5rem;
+  --display-size: clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max));
   --display-tracking: -0.03em;
-  --display-leading: 1.1;
+  --display-leading: 1.05;
+  --display-weight: 600;
   --page-title-h1-size: var(--text-4xl);
   --page-title-h2-size: var(--text-3xl);
   --page-title-h3-size: var(--text-2xl);

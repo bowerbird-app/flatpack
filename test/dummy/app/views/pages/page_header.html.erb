@@ -14,9 +14,12 @@
     { variable: "--page-title-h4-size", default_value: "1.25rem" },
     { variable: "--page-title-h5-size", default_value: "1.125rem" },
     { variable: "--page-title-h6-size", default_value: "1rem" },
-    { variable: "--display-size", default_value: "clamp(var(--text-5xl), 2rem + 3.5vw, var(--text-7xl))" },
+    { variable: "--display-size", default_value: "clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max))" },
+    { variable: "--display-size-min", default_value: "var(--text-5xl)" },
+    { variable: "--display-size-max", default_value: "5.5rem" },
     { variable: "--display-tracking", default_value: "-0.03em" },
-    { variable: "--display-leading", default_value: "1.1" }
+    { variable: "--display-leading", default_value: "1.05" },
+    { variable: "--display-weight", default_value: "600" }
   ]
 %>
 
