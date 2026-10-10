@@ -347,6 +347,12 @@ components:
     primary_class: FlatPack::Hero::Component
     status: documented
 
+  - key: hero_title
+    title: Hero Title
+    doc: docs/components/hero-title.md
+    primary_class: FlatPack::HeroTitle::Component
+    status: documented
+
   - key: inputs
     title: Input Components
     doc: docs/components/inputs.md

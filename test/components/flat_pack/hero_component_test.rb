@@ -138,6 +138,15 @@ module FlatPack
         end
       end
 
+      def test_raises_argument_error_for_unknown_title_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title_size: :huge)
+        end
+
+        assert_includes error.message, "Invalid title_size"
+        assert_includes error.message, "xl"
+      end
+
       def test_display_size_uses_display_class_and_keeps_balance
         render_inline(Component.new(
           variant: :centered,
@@ -158,6 +167,37 @@ module FlatPack
         refute_includes html, "--hero-headline-size"
         refute_includes html, "lg:text-6xl"
         refute_includes html, "text-[length:var(--text-4xl)]"
+        assert_includes html, "fp-hero-title"
+        assert_includes html, "fp-hero-title--xl"
+      end
+
+      def test_title_size_uses_hero_title_without_display_size_flag
+        render_inline(Component.new(
+          variant: :centered,
+          title_size: :md,
+          headline: "Northlight press kit"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "fp-hero-title--md"
+        assert_includes html, "font-size: var(--hero-title-md-size)"
+        assert_includes html, "max-w-5xl"
+        refute_includes html, "fp-display"
+        refute_includes html, "--hero-headline-size"
+      end
+
+      def test_title_size_wins_over_display_size
+        render_inline(Component.new(
+          variant: :centered,
+          size: :display,
+          title_size: :xxl,
+          headline: "Northlight press kit"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "fp-hero-title--xxl"
+        assert_includes html, "font-size: var(--hero-title-xxl-size)"
+        refute_includes html, "fp-hero-title--xl"
       end
 
       def test_default_size_omits_display_class

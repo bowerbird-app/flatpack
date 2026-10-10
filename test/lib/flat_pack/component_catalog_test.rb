@@ -162,6 +162,24 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show HeroTitle binds SIZES to size with an xl default" do
+      payload = FlatPack::ComponentCatalog.show("HeroTitle::Component")
+      size = parameter_named(payload, "size")
+      level = parameter_named(payload, "level")
+
+      assert_equal %w[md lg xl xxl], size.fetch(:enum)
+      assert_equal "xl", size.fetch(:default)
+      assert_equal %w[h1 h2 h3 h4 h5 h6], level.fetch(:enum)
+      assert_equal "h1", level.fetch(:default)
+    end
+
+    test "show Hero binds TITLE_SIZES to title_size" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      title_size = parameter_named(payload, "title_size")
+
+      assert_equal %w[md lg xl xxl], title_size.fetch(:enum)
+    end
+
     test "show Hero binds ONS to on with a dark default" do
       payload = FlatPack::ComponentCatalog.show("Hero::Component")
       on = parameter_named(payload, "on")

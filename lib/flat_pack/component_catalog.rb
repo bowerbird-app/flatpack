@@ -40,6 +40,8 @@ module FlatPack
       {constant: :STYLES, kwargs: %i[style]},
       {constant: :VARIANTS, kwargs: %i[variant style]},
       {constant: :SIZES, kwargs: %i[size]},
+      {constant: :TITLE_SIZES, kwargs: %i[title_size]},
+      {constant: :LEVELS, kwargs: %i[level]},
       {constant: :TYPES, kwargs: %i[type]},
       {constant: :ALIGNMENTS, kwargs: %i[alignment]},
       {constant: :DIRECTIONS, kwargs: %i[direction]},

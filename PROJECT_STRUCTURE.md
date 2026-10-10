@@ -65,6 +65,7 @@ flat_pack/
 │   │   ├── file_input/
 │   │   ├── grid/
 │   │   ├── hero/
+│   │   ├── hero_title/
 │   │   ├── kbd/
 │   │   ├── link/
 │   │   ├── list/

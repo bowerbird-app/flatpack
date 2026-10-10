@@ -45,6 +45,16 @@ module FlatPack
       assert_match(/--content-h6-size:\s*var\(--text-lg\)/, root_block)
       assert_match(/--hero-headline-size:\s*var\(--text-5xl\)/, root_block)
       assert_match(/--hero-description-size:\s*var\(--text-xl\)/, root_block)
+      assert_match(/--hero-title-md-size-min:\s*var\(--text-4xl\)/, root_block)
+      assert_match(/--hero-title-md-size-max:\s*var\(--text-6xl\)/, root_block)
+      assert_match(/--hero-title-md-size:\s*clamp\(var\(--hero-title-md-size-min\), 1rem \+ 3\.5vw, var\(--hero-title-md-size-max\)\)/, root_block)
+      assert_match(/--hero-title-lg-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--hero-title-lg-size-max:\s*var\(--text-7xl\)/, root_block)
+      assert_match(/--hero-title-lg-size:\s*clamp\(var\(--hero-title-lg-size-min\), 1rem \+ 4\.5vw, var\(--hero-title-lg-size-max\)\)/, root_block)
+      assert_match(/--hero-title-xl-size:\s*var\(--display-size\)/, root_block)
+      assert_match(/--hero-title-xxl-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--hero-title-xxl-size-max:\s*var\(--text-8xl\)/, root_block)
+      assert_match(/--hero-title-xxl-size:\s*clamp\(var\(--hero-title-xxl-size-min\), 1rem \+ 5\.5vw, var\(--hero-title-xxl-size-max\)\)/, root_block)
     end
 
     test "root applies the kit face and antialiased smoothing" do
@@ -63,6 +73,11 @@ module FlatPack
       assert_includes css, "font-variant-numeric: tabular-nums"
       assert_includes css, ".fp-text-balance"
       assert_includes css, "text-wrap: balance"
+      assert_includes css, ".fp-hero-title"
+      assert_includes css, ".fp-hero-title--md"
+      assert_includes css, ".fp-hero-title--xl"
+      assert_includes css, ".fp-hero-title--xxl"
+      assert_includes css, "font-size: var(--hero-title-xl-size)"
       assert_includes css, ".fp-display"
       assert_includes css, "font-size: var(--display-size)"
       assert_includes css, "font-weight: var(--display-weight)"

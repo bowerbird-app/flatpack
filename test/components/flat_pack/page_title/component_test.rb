@@ -131,6 +131,8 @@ module FlatPack
         assert_includes html, "letter-spacing: var(--display-tracking)"
         assert_includes html, "line-height: var(--display-leading)"
         assert_includes html, "fp-text-balance"
+        assert_includes html, "fp-hero-title"
+        assert_includes html, "fp-hero-title--xl"
         refute_includes html, "font-bold"
         refute_includes html, "leading-tight"
         refute_includes html, "--page-title-h1-size"
