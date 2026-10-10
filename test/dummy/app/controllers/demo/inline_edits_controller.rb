@@ -33,7 +33,7 @@ module Demo
       OpenStruct.new(
         title: "Summer field kit",
         page_title: "Coast path notes",
-        hero_title: "Pack light",
+        hero_title: "A long weekend pack you can still carry up the ridge",
         note: "Leave at dawn. Tide tables in the side pocket. Extra socks.",
         intro_html: "<p>Write as you walk. <strong>Bold the find.</strong> Keep the list short.</p>"
       )

@@ -10,7 +10,10 @@ class InlineEditsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="flat-pack--inline-edit"'
     assert_includes response.body, "Summer field kit"
     assert_includes response.body, "Coast path notes"
-    assert_includes response.body, "Pack light"
+    assert_includes response.body, "A long weekend pack you can still carry up the ridge"
+    assert_includes response.body, "Untitled kit"
+    assert_includes response.body, "fp-inline-edit--cue-highlight"
+    assert_includes response.body, "fp-inline-edit--cue-underline"
     assert_includes response.body, "Leave at dawn"
     assert_includes response.body, "Write as you walk"
     assert_includes response.body, "Notebook name"

@@ -7,7 +7,7 @@ module FlatPack
 
       MODES = %i[text plain rich].freeze
       TAGS = %i[span h1 h2 h3 h4 h5 h6 p div].freeze
-      CUES = %i[underline tint none].freeze
+      CUES = %i[highlight tint underline none].freeze
       METHODS = %i[patch put post].freeze
       BLOCK_TAGS = %i[h1 h2 h3 h4 h5 h6 p div].freeze
 
@@ -23,7 +23,7 @@ module FlatPack
         maxlength: nil,
         required: false,
         save_on_blur: true,
-        cue: :underline,
+        cue: :highlight,
         **system_arguments
       )
         super(**system_arguments)

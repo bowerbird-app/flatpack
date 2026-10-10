@@ -1,5 +1,6 @@
 /* FlatPack Inline Edit
  * The surface keeps the host type. Editing never swaps in a form field.
+ * Default cue is a Notion-style highlight: paint only, no box-model change.
  */
 
 @layer components {
@@ -20,21 +21,19 @@
     cursor: text;
     outline: none;
     caret-color: var(--inline-edit-focus-color);
-    text-decoration-line: underline;
-    text-decoration-style: solid;
-    text-decoration-thickness: 1px;
-    text-decoration-color: transparent;
-    text-underline-offset: 0.14em;
-    transition: text-decoration-color var(--duration-fast) var(--easing-standard),
-      background-color var(--duration-fast) var(--easing-standard);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    box-shadow: 0 0 0 0.25em transparent;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard),
+      text-decoration-color var(--duration-fast) var(--easing-standard);
   }
 
   .fp-inline-edit__surface[contenteditable="true"],
   .fp-inline-edit__surface[contenteditable="plaintext-only"] {
     outline: none;
-    box-shadow: none;
     border: none;
-    background: transparent;
     padding: 0;
     margin: inherit;
     font: inherit;
@@ -44,31 +43,66 @@
     letter-spacing: inherit;
     color: inherit;
     white-space: inherit;
+    caret-color: var(--inline-edit-focus-color);
   }
 
-  .fp-inline-edit--cue-underline:hover .fp-inline-edit__surface,
-  .fp-inline-edit--cue-underline.is-focused .fp-inline-edit__surface {
-    text-decoration-color: var(--inline-edit-cue-color);
-  }
-
-  .fp-inline-edit--cue-tint .fp-inline-edit__surface {
-    background-color: transparent;
+  .fp-inline-edit--cue-highlight:not(.fp-inline-edit--rich) .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint:not(.fp-inline-edit--rich) .fp-inline-edit__surface,
+  .fp-inline-edit--cue-none:not(.fp-inline-edit--rich) .fp-inline-edit__surface {
+    display: inline;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
   }
 
-  .fp-inline-edit--cue-tint:hover .fp-inline-edit__surface,
-  .fp-inline-edit--cue-tint.is-focused .fp-inline-edit__surface {
-    background-color: color-mix(in oklab, var(--inline-edit-cue-color) 18%, transparent);
+  .fp-inline-edit--cue-highlight.fp-inline-edit--rich .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint.fp-inline-edit--rich .fp-inline-edit__surface,
+  .fp-inline-edit--cue-none.fp-inline-edit--rich .fp-inline-edit__surface {
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
-  .fp-inline-edit.is-editing .fp-inline-edit__surface,
-  .fp-inline-edit.is-focused .fp-inline-edit__surface {
+  .fp-inline-edit--cue-highlight:hover .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint:hover .fp-inline-edit__surface {
+    background-color: var(--inline-edit-hover-bg);
+    box-shadow: 0 0 0 0.25em var(--inline-edit-hover-bg);
+  }
+
+  .fp-inline-edit--cue-highlight.is-focused .fp-inline-edit__surface,
+  .fp-inline-edit--cue-highlight.is-editing .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint.is-focused .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint.is-editing .fp-inline-edit__surface,
+  .fp-inline-edit--cue-none.is-focused .fp-inline-edit__surface,
+  .fp-inline-edit--cue-none.is-editing .fp-inline-edit__surface {
+    background-color: var(--inline-edit-focus-bg);
+    box-shadow:
+      0 0 0 0.25em var(--inline-edit-focus-bg),
+      0 0 0 calc(0.25em + 1px) color-mix(in oklab, var(--inline-edit-focus-color) 40%, transparent);
+  }
+
+  .fp-inline-edit--cue-underline .fp-inline-edit__surface {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.14em;
+  }
+
+  .fp-inline-edit--cue-underline:hover .fp-inline-edit__surface {
+    text-decoration-color: var(--inline-edit-cue-color);
+  }
+
+  .fp-inline-edit--cue-underline.is-focused .fp-inline-edit__surface,
+  .fp-inline-edit--cue-underline.is-editing .fp-inline-edit__surface {
     text-decoration-color: var(--inline-edit-focus-color);
   }
 
-  .fp-inline-edit.is-error .fp-inline-edit__surface {
+  .fp-inline-edit.is-error.fp-inline-edit--cue-underline .fp-inline-edit__surface {
     text-decoration-color: var(--inline-edit-error-color);
+  }
+
+  .fp-inline-edit.is-error:not(.fp-inline-edit--cue-underline) .fp-inline-edit__surface {
+    background-color: color-mix(in oklab, var(--inline-edit-error-color) 12%, transparent);
+    box-shadow: 0 0 0 0.25em color-mix(in oklab, var(--inline-edit-error-color) 12%, transparent);
   }
 
   .fp-inline-edit__surface.is-empty::before {
@@ -77,6 +111,13 @@
     pointer-events: none;
     font: inherit;
     font-weight: inherit;
+    transition: color var(--duration-fast) var(--easing-standard);
+  }
+
+  .fp-inline-edit:hover .fp-inline-edit__surface.is-empty::before,
+  .fp-inline-edit.is-focused .fp-inline-edit__surface.is-empty::before,
+  .fp-inline-edit.is-editing .fp-inline-edit__surface.is-empty::before {
+    color: var(--inline-edit-placeholder-hover-color);
   }
 
   .fp-inline-edit__status {
@@ -120,6 +161,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     .fp-inline-edit__surface,
+    .fp-inline-edit__surface.is-empty::before,
     .fp-inline-edit__status {
       transition: none;
     }

@@ -98,10 +98,25 @@ module FlatPack
         assert_selector ".fp-inline-edit__surface[aria-required='true']"
       end
 
+      def test_default_cue_is_highlight
+        render_inline(Component.new(name: "kit[title]", value: "Trail"))
+
+        assert_selector ".fp-inline-edit--cue-highlight"
+        refute_selector ".fp-inline-edit--cue-underline"
+      end
+
       def test_cue_variants
         render_inline(Component.new(name: "kit[title]", value: "Trail", cue: :tint))
-
         assert_selector ".fp-inline-edit--cue-tint"
+
+        render_inline(Component.new(name: "kit[title]", value: "Trail", cue: :underline))
+        assert_selector ".fp-inline-edit--cue-underline"
+
+        render_inline(Component.new(name: "kit[title]", value: "Trail", cue: :none))
+        assert_selector ".fp-inline-edit--cue-none"
+
+        render_inline(Component.new(name: "kit[title]", value: "Trail", cue: :highlight))
+        assert_selector ".fp-inline-edit--cue-highlight"
       end
 
       def test_save_on_blur_default

@@ -58,7 +58,7 @@
     <%= render FlatPack::Hero::Component.new(
       variant: :centered,
       headline: @kit.hero_title,
-      description: "The line above is the thing you edit."
+      description: "The wrapped headline above is the thing you edit."
     ) %>
   <% end %>
 </section>
@@ -154,13 +154,39 @@
   </div>
 </section>
 
+<section class="mb-12" id="placeholder">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Empty field",
+    anchor_link: true,
+    subtitle: "Placeholder copy darkens a little on hover."
+  ) %>
+  <%= render FlatPack::InlineEdit::Component.new(
+    tag: :h2,
+    value: "",
+    name: "kit[empty]",
+    update_url: demo_inline_edit_path,
+    label: "Empty title",
+    placeholder: "Untitled kit",
+    class: "text-[length:var(--text-2xl)] font-semibold text-[var(--surface-content-color)]"
+  ) %>
+</section>
+
 <section class="mb-12" id="cues">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Cues",
     anchor_link: true,
-    subtitle: "Underline is the default. Tint washes the words. None is quiet until focus."
+    subtitle: "Highlight is the default. Tint is the same wash. Underline is the old rest line. None is quiet until focus."
   ) %>
   <div class="space-y-4">
+    <%= render FlatPack::InlineEdit::Component.new(
+      tag: :p,
+      value: "Highlight cue",
+      name: "kit[title]",
+      update_url: demo_inline_edit_path,
+      cue: :highlight,
+      label: "Highlight cue",
+      class: "text-[var(--surface-content-color)]"
+    ) %>
     <%= render FlatPack::InlineEdit::Component.new(
       tag: :p,
       value: "Underline cue",
