@@ -420,6 +420,7 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 - Thumb fill aliases `--color-primary` so it tracks brand and `data-theme`. The ring aliases `--surface-background-color` so the handle reads on both the primary fill and the grey track. Disabled uses the native input’s reduced opacity, so the thumb stays muted rather than full primary.
 - Size: `--range-track-height`, `--range-thumb-size` (hit target is `--hit-target-min`)
 - Runtime fill: `--range-progress` on the input (percentage). Not a theme token.
+- Opt-in size slider: `.fp-range-input-ends` with `.fp-range-input-glyph` (theme `--font-sans`) or `.fp-range-input-end-icon`. Ticks are `.fp-range-input-ticks` / `.fp-range-input-tick` using `--surface-muted-content-color`. Preview runtime properties `--fp-range-value`, `--fp-range-scale`, and `--fp-range-max` are not theme tokens. Built-in `sample:` letters (default `Aa`) sit below the track with no fill.
 
 ### Checkbox / Radio
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-primary-text`, `--color-ring`
