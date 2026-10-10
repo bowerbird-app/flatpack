@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Bumped the gem version to `0.1.225`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.225` so frozen CI installs resolve the path gem.
 
 ### Upgrade notes
 - Existing RangeInput calls are unchanged. Pass `variant: :size`, `variant: :zoom`, or `start_icon:` / `end_icon:` for the size-slider layout.
