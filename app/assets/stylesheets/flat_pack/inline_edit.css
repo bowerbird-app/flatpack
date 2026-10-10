@@ -76,7 +76,7 @@
     background-color: var(--inline-edit-focus-bg);
     box-shadow:
       0 0 0 0.25em var(--inline-edit-focus-bg),
-      0 0 0 calc(0.25em + 1px) color-mix(in oklab, var(--inline-edit-focus-color) 40%, transparent);
+      0 0 0 calc(0.25em + 1px) color-mix(in oklab, var(--inline-edit-focus-color) 22%, transparent);
   }
 
   .fp-inline-edit--cue-underline .fp-inline-edit__surface {
