@@ -18,6 +18,18 @@ module FlatPack
         assert_includes html, "font-weight: var(--display-weight)"
         assert_includes html, "letter-spacing: var(--display-tracking)"
         assert_includes html, "line-height: var(--display-leading)"
+        assert_includes html, "text-[var(--surface-content-color)]"
+      end
+
+      def test_caller_text_color_wins_over_surface_ink
+        render_inline(Component.new(
+          text: "Northlight",
+          class: "text-[var(--hero-overlay-text-color)]"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "text-[var(--hero-overlay-text-color)]"
+        refute_includes html, "text-[var(--surface-content-color)]"
       end
 
       def test_renders_block_content_when_text_omitted

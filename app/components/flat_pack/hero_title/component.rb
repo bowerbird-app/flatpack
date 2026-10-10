@@ -7,6 +7,7 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "fp-hero-title" "fp-hero-title--md" "fp-hero-title--lg" "fp-hero-title--xl" "fp-hero-title--xxl"
       # "fp-display" "fp-text-balance" "text-left" "text-center"
+      # "text-[var(--surface-content-color)]"
       SIZES = %i[md lg xl xxl].freeze
       LEVELS = %i[h1 h2 h3 h4 h5 h6].freeze
       ALIGNS = {
@@ -27,6 +28,12 @@ module FlatPack
         @size = size.to_sym
         @level = level.to_sym
         @align = align&.to_sym
+        # Prepend so a caller text-* class (Hero overlay ink, a host colour)
+        # still wins through Tailwind Merge.
+        @system_arguments[:class] = [
+          "text-[var(--surface-content-color)]",
+          @system_arguments[:class]
+        ].compact_blank.join(" ")
 
         validate_size!
         validate_level!

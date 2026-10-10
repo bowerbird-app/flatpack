@@ -60,5 +60,6 @@ None. Pass copy as `text:` or as the component block.
 ## Dependencies
 - `FlatPack::BaseComponent`
 - Kit tokens `--hero-title-*-size` / `-min` / `-max`, plus `--display-weight`, `--display-tracking`, and `--display-leading`.
+- Ink is `text-[var(--surface-content-color)]` so light and dark islands follow the surface. Pass another `text-*` class to override (Hero overlay ink does this).
 - Unlayered `.fp-hero-title` and `.fp-display` so Tailwind preflight cannot collapse heading size.
 - No Stimulus controllers required.
