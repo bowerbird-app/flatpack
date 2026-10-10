@@ -93,6 +93,14 @@ en:
       system: System
       edited: " (edited)"
       deleted: This comment has been deleted.
+    inline_edit:
+      label: Edit text
+      placeholder: Untitled
+      saving: Saving
+      saved: Saved
+      required: This can’t be empty
+      too_long: Too long
+      save_failed: Couldn’t save. Try again.
     content_editor:
       edit: Edit
       save: Save

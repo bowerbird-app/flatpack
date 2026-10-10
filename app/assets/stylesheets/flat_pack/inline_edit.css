@@ -1,0 +1,162 @@
+/* FlatPack Inline Edit
+ * The surface keeps the host type. Editing never swaps in a form field.
+ * Default cue is a Notion-style highlight: paint only, no box-model change.
+ */
+
+@layer components {
+  .fp-inline-edit {
+    position: relative;
+    max-width: 100%;
+  }
+
+  .fp-inline-edit--block {
+    display: block;
+  }
+
+  .fp-inline-edit--inline {
+    display: inline;
+  }
+
+  .fp-inline-edit__surface {
+    cursor: text;
+    outline: none;
+    caret-color: var(--inline-edit-focus-color);
+    border-radius: var(--radius-sm);
+    background-color: transparent;
+    box-shadow: 0 0 0 0.25em transparent;
+    white-space: pre-wrap;
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard),
+      text-decoration-color var(--duration-fast) var(--easing-standard);
+  }
+
+  .fp-inline-edit__surface[contenteditable="true"],
+  .fp-inline-edit__surface[contenteditable="plaintext-only"] {
+    outline: none;
+    border: none;
+    padding: 0;
+    margin: inherit;
+    font: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    caret-color: var(--inline-edit-focus-color);
+  }
+
+  .fp-inline-edit--cue-highlight:not(.fp-inline-edit--rich) .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint:not(.fp-inline-edit--rich) .fp-inline-edit__surface,
+  .fp-inline-edit--cue-none:not(.fp-inline-edit--rich) .fp-inline-edit__surface {
+    display: inline;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .fp-inline-edit--cue-highlight.fp-inline-edit--rich .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint.fp-inline-edit--rich .fp-inline-edit__surface,
+  .fp-inline-edit--cue-none.fp-inline-edit--rich .fp-inline-edit__surface {
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .fp-inline-edit--cue-highlight:not(.is-editing):hover .fp-inline-edit__surface,
+  .fp-inline-edit--cue-tint:not(.is-editing):hover .fp-inline-edit__surface,
+  .fp-inline-edit--cue-highlight:not(.is-editing) .fp-inline-edit__surface:focus-visible,
+  .fp-inline-edit--cue-tint:not(.is-editing) .fp-inline-edit__surface:focus-visible,
+  .fp-inline-edit--cue-none:not(.is-editing) .fp-inline-edit__surface:focus-visible {
+    background-color: var(--inline-edit-hover-bg);
+    box-shadow: 0 0 0 0.25em var(--inline-edit-hover-bg);
+  }
+
+  .fp-inline-edit--cue-underline .fp-inline-edit__surface {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 1px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.14em;
+  }
+
+  .fp-inline-edit--cue-underline:not(.is-editing):hover .fp-inline-edit__surface,
+  .fp-inline-edit--cue-underline:not(.is-editing) .fp-inline-edit__surface:focus-visible {
+    text-decoration-color: var(--inline-edit-cue-color);
+  }
+
+  .fp-inline-edit.is-error.fp-inline-edit--cue-underline .fp-inline-edit__surface {
+    text-decoration-color: var(--inline-edit-error-color);
+  }
+
+  .fp-inline-edit.is-error:not(.fp-inline-edit--cue-underline) .fp-inline-edit__surface {
+    background-color: color-mix(in oklab, var(--inline-edit-error-color) 12%, transparent);
+    box-shadow: 0 0 0 0.25em color-mix(in oklab, var(--inline-edit-error-color) 12%, transparent);
+  }
+
+  .fp-inline-edit__surface.is-empty::before {
+    content: attr(data-placeholder);
+    color: var(--inline-edit-placeholder-color);
+    pointer-events: none;
+    font: inherit;
+    font-weight: inherit;
+    transition: color var(--duration-fast) var(--easing-standard);
+  }
+
+  .fp-inline-edit:not(.is-editing):hover .fp-inline-edit__surface.is-empty::before,
+  .fp-inline-edit:not(.is-editing) .fp-inline-edit__surface.is-empty:focus-visible::before {
+    color: var(--inline-edit-placeholder-hover-color);
+  }
+
+  .fp-inline-edit__status {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    color: var(--inline-edit-focus-color);
+    transition: opacity var(--duration-fast) var(--easing-standard);
+  }
+
+  .fp-inline-edit.is-saving .fp-inline-edit__status,
+  .fp-inline-edit.is-saved .fp-inline-edit__status {
+    opacity: 1;
+  }
+
+  .fp-inline-edit.is-error .fp-inline-edit__status {
+    color: var(--inline-edit-error-color);
+  }
+
+  .fp-inline-edit__tick {
+    display: inline-flex;
+    color: var(--color-success-background-color);
+  }
+
+  .fp-inline-edit__live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-inline-edit__surface,
+    .fp-inline-edit__surface.is-empty::before,
+    .fp-inline-edit__status {
+      transition: none;
+    }
+  }
+}
+
+/* UA contenteditable forces pre-wrap. Pin the same wrap at rest so boxes match. */
+.fp-inline-edit__surface,
+.fp-inline-edit__surface[contenteditable="true"],
+.fp-inline-edit__surface[contenteditable="plaintext-only"] {
+  white-space: pre-wrap;
+}

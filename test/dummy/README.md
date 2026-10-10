@@ -86,6 +86,7 @@ The dummy app loads gem CSS first, then the compiled host Tailwind bundle last (
 <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/content_editor", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/inline_edit", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 ```
 

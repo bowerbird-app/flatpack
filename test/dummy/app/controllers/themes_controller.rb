@@ -19,6 +19,7 @@ class ThemesController < ApplicationController
     "Breadcrumbs" => [/\A--breadcrumb-/],
     "Bottom Nav" => [/\A--bottom-nav-/],
     "FAB" => [/\A--fab-/],
+    "Inline Edit" => [/\A--inline-edit-/],
     "Code Blocks" => [/\A--code-block-/],
     "Comments" => [/\A--comments-/],
     "Content" => [/\A--content-/],
@@ -267,6 +268,8 @@ class ThemesController < ApplicationController
       "Bottom nav"
     when /\A--fab-/
       "FAB"
+    when /\A--inline-edit-/
+      "Inline Edit"
     when /\A--modal-/
       "Modal"
     when /\A--drawer-/

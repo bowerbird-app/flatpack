@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.227] - 2026-10-10
+
+### Added
+- `FlatPack::InlineEdit::Component` turns a heading or paragraph into an in-place editor. The same element becomes `contenteditable`. Type, size, weight, and wrapping stay put. No bordered field.
+- `mode:` `:text` (default, Enter saves), `:plain` (Enter is a newline, Cmd/Ctrl+Enter saves), `:rich` (ContentEditor bubble toolbar, no Edit/Save/Cancel bar).
+- `tag:` `:span`, `:h1`–`:h6`, `:p`, `:div`. A content block edits the first `data-inline-edit-target`, heading, or `p` inside.
+- `name:` / `value:` keep a hidden input for a normal form when `update_url:` is omitted. `update_url:` + `method:` (default `:patch`) save with CSRF and `Accept: turbo-stream`.
+- `label:`, `placeholder:`, `maxlength:`, `required:`, `save_on_blur:` (default true), `cue:` `:highlight` (default Notion-style wash) / `:tint` (same paint) / `:underline` / `:none`.
+- Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover wash is a ~7% (dark ~9%) `color-mix` tint with box-shadow spread, not padding. Keyboard Tab before edit uses the same wash (`:focus-visible`). Editing drops the wash and ring — caret only. Placeholder copy darkens on hover and keyboard focus.
+- ContentEditor’s balloon toolbar now lives in `FlatPack::Shared::ExecCommandBalloon` and `exec_command_bubble.js`. ContentEditor still renders the Edit/Save/Cancel bar and the same bubble.
+
+### Changed
+- Bumped the gem version to `0.1.227`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.227`.
+
+### Upgrade notes
+- New opt-in component. Existing ContentEditor, PageTitle, and Hero calls are unchanged.
+- Reload kit CSS and JavaScript. Rebuild host Tailwind if you scan Flatpack sources.
+- Redeploy so `meta.gem_version` shows `0.1.227`.
+- For `:rich`, sanitize stored HTML with `FlatPack::RichTextSanitizer`. `update_url:` uses `AttributeSanitizer`.
+
 ## [0.1.226] - 2026-10-10
 
 ### Added

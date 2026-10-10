@@ -377,6 +377,12 @@ components:
       - FlatPack::Switch::Component
     status: documented
 
+  - key: inline_edit
+    title: Inline Edit
+    doc: docs/components/inline-edit.md
+    primary_class: FlatPack::InlineEdit::Component
+    status: documented
+
   - key: kbd
     title: Keyboard
     doc: docs/components/kbd.md

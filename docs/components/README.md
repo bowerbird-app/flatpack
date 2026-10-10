@@ -62,6 +62,7 @@ grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
 hero_title | FlatPack::HeroTitle::Component | docs/components/hero-title.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
+inline_edit | FlatPack::InlineEdit::Component | docs/components/inline-edit.md
 kbd | FlatPack::Kbd::Component | docs/components/kbd.md
 date_input | FlatPack::DateInput::Component | docs/components/inputs.md
 date_range_input | FlatPack::DateRangeInput::Component | docs/components/date-range-input.md

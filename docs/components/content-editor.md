@@ -74,3 +74,4 @@ Use Content Editor when you need lightweight inline editing of an HTML body fiel
 - Requires Stimulus controller `flat-pack--content-editor`.
 - Requires stylesheet `flat_pack/content_editor.css` (also bundled from `flat_pack/application.css`). Editor chrome uses kit `--radius-md` / `--radius-sm`. If host Tailwind loads last, re-set those radii on unlayered `:root` — see [Theming](../theming.md).
 - Image upload variant requires a server-side endpoint that accepts a `file` multipart field and returns `{ "url": "..." }` JSON.
+- The balloon toolbar is shared with [Inline Edit](inline-edit.md) (`FlatPack::Shared::ExecCommandBalloon`). Content Editor still owns the Edit / Save / Cancel bar.

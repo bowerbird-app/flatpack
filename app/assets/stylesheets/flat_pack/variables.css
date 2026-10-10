@@ -107,6 +107,12 @@
   --fab-action-gap: var(--fab-action-gap);
   --fab-action-gap-sm: var(--fab-action-gap-sm);
   --fab-z-index: var(--fab-z-index);
+  --inline-edit-cue-color: var(--inline-edit-cue-color);
+  --inline-edit-focus-color: var(--inline-edit-focus-color);
+  --inline-edit-error-color: var(--inline-edit-error-color);
+  --inline-edit-placeholder-color: var(--inline-edit-placeholder-color);
+  --inline-edit-placeholder-hover-color: var(--inline-edit-placeholder-hover-color);
+  --inline-edit-hover-bg: var(--inline-edit-hover-bg);
   --quote-border-color: var(--quote-border-color);
   --quote-border-width: var(--quote-border-width);
   --quote-padding-left: var(--quote-padding-left);
@@ -801,6 +807,12 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --fab-action-gap: 0.75rem;
   --fab-action-gap-sm: 0.5rem;
   --fab-z-index: 45;
+  --inline-edit-cue-color: color-mix(in oklab, var(--surface-content-color) 28%, transparent);
+  --inline-edit-focus-color: var(--color-primary);
+  --inline-edit-error-color: var(--color-error);
+  --inline-edit-placeholder-color: var(--surface-muted-content-color);
+  --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 42%, var(--surface-muted-content-color));
+  --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 7%, transparent);
   --quote-border-color: var(--surface-border-color);
   --quote-border-width: 4px;
   --quote-padding-left: 1rem;
@@ -1456,6 +1468,12 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-backdrop-blur: 3px;
   --sidebar-background-color: oklch(0.17 0.01 250);
   --top-nav-background-color: oklch(0.18 0.01 250);
+  --inline-edit-cue-color: color-mix(in oklab, var(--surface-content-color) 38%, transparent);
+  --inline-edit-focus-color: var(--color-primary);
+  --inline-edit-error-color: var(--color-error);
+  --inline-edit-placeholder-color: var(--surface-muted-content-color);
+  --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 48%, var(--surface-muted-content-color));
+  --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 9%, transparent);
 }
 
 /* Ocean theme — overrides only */

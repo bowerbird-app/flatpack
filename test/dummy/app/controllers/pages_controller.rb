@@ -87,7 +87,8 @@ class PagesController < ApplicationController
     {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/, /\A--list-marker-/]},
     {action: /\Anotification\z/, title: "Notification", patterns: [/\A--popover-/, /\A--list-item-/]},
     {action: /\Atree\z/, title: "Tree", patterns: []},
-    {action: /\Afab\z/, title: "FAB", patterns: [/\A--fab-/]}
+    {action: /\Afab\z/, title: "FAB", patterns: [/\A--fab-/]},
+    {action: /\Ainline_edit\z/, title: "Inline Edit", patterns: [/\A--inline-edit-/]}
   ].freeze
 
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
@@ -2507,6 +2508,7 @@ class PagesController < ApplicationController
       flat_pack/application.css
       flat_pack/rich_text.css
       flat_pack/content_editor.css
+      flat_pack/inline_edit.css
     ].map do |logical_path|
       asset = Rails.application.assets.load_path.find(logical_path)
       "#{logical_path}:#{asset&.digested_path || "missing"}"
