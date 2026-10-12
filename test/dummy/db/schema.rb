@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_09_101301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -110,7 +110,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.index ["chat_item_id"], name: "index_chat_item_attachments_on_chat_item_id"
     t.check_constraint "\"position\" >= 0", name: "chat_item_attachments_position_non_negative"
     t.check_constraint "byte_size IS NULL OR byte_size >= 0", name: "chat_item_attachments_byte_size_non_negative"
-    t.check_constraint "kind::text = ANY (ARRAY['image'::character varying, 'file'::character varying]::text[])", name: "chat_item_attachments_kind_allowed"
+    t.check_constraint "kind::text = ANY (ARRAY['image'::character varying::text, 'file'::character varying::text])", name: "chat_item_attachments_kind_allowed"
   end
 
   create_table "chat_items", force: :cascade do |t|
@@ -143,6 +143,57 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.index ["created_at"], name: "index_demo_comments_on_created_at"
     t.index ["parent_comment_id", "created_at", "id"], name: "index_demo_comments_on_parent_and_created"
     t.index ["parent_comment_id"], name: "index_demo_comments_on_parent_comment_id"
+  end
+
+  create_table "demo_images", force: :cascade do |t|
+    t.string "alt_text", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "swatch", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_demo_images_on_name", unique: true
+  end
+
+  create_table "demo_people", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_demo_people_on_email", unique: true
+  end
+
+  create_table "demo_project_images", force: :cascade do |t|
+    t.string "caption"
+    t.datetime "created_at", null: false
+    t.string "credit"
+    t.bigint "image_id", null: false
+    t.integer "position", null: false
+    t.bigint "project_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["image_id"], name: "index_demo_project_images_on_image_id"
+    t.index ["project_id", "image_id"], name: "index_demo_project_images_on_project_id_and_image_id", unique: true
+    t.index ["project_id", "position"], name: "index_demo_project_images_on_project_id_and_position"
+    t.index ["project_id"], name: "index_demo_project_images_on_project_id"
+  end
+
+  create_table "demo_project_people", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "person_id", null: false
+    t.integer "position", null: false
+    t.bigint "project_id", null: false
+    t.string "role", null: false
+    t.datetime "updated_at", null: false
+    t.index ["person_id"], name: "index_demo_project_people_on_person_id"
+    t.index ["project_id", "person_id"], name: "index_demo_project_people_on_project_id_and_person_id", unique: true
+    t.index ["project_id", "position"], name: "index_demo_project_people_on_project_id_and_position"
+    t.index ["project_id"], name: "index_demo_project_people_on_project_id"
+  end
+
+  create_table "demo_projects", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_demo_projects_on_name", unique: true
   end
 
   create_table "demo_table_rows", force: :cascade do |t|
@@ -186,12 +237,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "recording_studio_access_invitations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.uuid "accepted_by_actor_id"
+    t.string "accepted_by_actor_type"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "last_sent_at", null: false
+    t.uuid "manager_actor_id", null: false
+    t.string "manager_actor_type", null: false
+    t.uuid "recording_id", null: false
+    t.datetime "revoked_at"
+    t.string "role", null: false
+    t.string "token_digest", limit: 64, null: false
+    t.datetime "updated_at", null: false
+    t.index ["recording_id", "email"], name: "idx_rs_access_invitations_one_active", unique: true, where: "((accepted_at IS NULL) AND (revoked_at IS NULL))"
+    t.index ["recording_id"], name: "index_recording_studio_access_invitations_on_recording_id"
+    t.index ["token_digest"], name: "idx_rs_access_invitations_token_digest", unique: true
+    t.check_constraint "accepted_at IS NULL OR revoked_at IS NULL", name: "access_invitations_not_accepted_and_revoked"
+  end
+
   create_table "recording_studio_accesses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "actor_id", null: false
     t.string "actor_type", null: false
     t.datetime "created_at", null: false
     t.uuid "depends_on_recording_id"
-    t.integer "role", default: 0, null: false
+    t.string "role", default: "view", null: false
     t.index ["actor_type", "actor_id", "role"], name: "index_recording_studio_accesses_on_actor_and_role"
     t.index ["actor_type", "actor_id"], name: "index_recording_studio_accesses_on_actor"
     t.index ["depends_on_recording_id"], name: "index_recording_studio_accesses_on_depends_on_recording_id"
@@ -325,14 +397,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
   end
 
   create_table "recording_studio_attachable_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "alt_text"
     t.string "attachment_kind", null: false
     t.bigint "byte_size", null: false
+    t.text "caption"
     t.string "content_type", null: false
+    t.text "credit"
     t.text "description"
     t.string "name", null: false
     t.string "original_filename", null: false
+    t.uuid "root_recording_id"
     t.index ["attachment_kind", "content_type"], name: "idx_rs_attachable_kind_type"
     t.index ["attachment_kind"], name: "idx_on_attachment_kind_d683071625"
+    t.index ["root_recording_id"], name: "index_rs_attachable_attachments_on_root_recording_id"
+  end
+
+  create_table "recording_studio_attachable_libraries", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", default: "default", null: false
+    t.index ["key"], name: "index_recording_studio_attachable_libraries_on_key"
+  end
+
+  create_table "recording_studio_attachable_placements", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "attachment_recording_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["attachment_recording_id"], name: "idx_on_attachment_recording_id_76c6286907"
   end
 
   create_table "recording_studio_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -488,6 +577,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.index ["user_id"], name: "index_recording_studio_user_identities_on_user_id"
   end
 
+  create_table "recording_studio_user_otp_challenges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "attempts_count", default: 0, null: false
+    t.string "code_digest", null: false
+    t.datetime "consumed_at"
+    t.datetime "created_at", null: false
+    t.text "delivery_code_ciphertext"
+    t.datetime "delivery_requested_at"
+    t.datetime "expires_at", null: false
+    t.string "purpose", null: false
+    t.datetime "revoked_at"
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.datetime "verified_at"
+    t.index ["expires_at"], name: "index_recording_studio_user_otp_challenges_on_expires_at"
+    t.index ["user_id", "purpose"], name: "idx_on_user_id_purpose_2b7c2a59c4"
+    t.index ["user_id"], name: "index_recording_studio_user_otp_challenges_on_user_id"
+  end
+
   create_table "recording_studio_user_people", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
   end
@@ -496,22 +603,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
     t.jsonb "additional_profile_attributes", default: {}, null: false
     t.datetime "created_at", null: false
     t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.string "time_zone", default: "UTC", null: false
+    t.string "last_name"
+    t.string "time_zone", default: "UTC"
     t.uuid "user_id", null: false
     t.index ["user_id"], name: "index_recording_studio_user_profiles_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "confirmation_sent_at"
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.string "registered_with", default: "password", null: false
     t.datetime "remember_created_at"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
+    t.string "unconfirmed_email"
     t.datetime "updated_at", null: false
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.check_constraint "registered_with::text = ANY (ARRAY['password'::character varying::text, 'otp'::character varying::text])", name: "users_registered_with_check"
   end
 
   create_table "workspaces", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -525,6 +639,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
   add_foreign_key "chat_item_attachments", "chat_items"
   add_foreign_key "chat_items", "chat_groups"
   add_foreign_key "demo_comments", "demo_comments", column: "parent_comment_id"
+  add_foreign_key "demo_project_images", "demo_images", column: "image_id"
+  add_foreign_key "demo_project_images", "demo_projects", column: "project_id"
+  add_foreign_key "demo_project_people", "demo_people", column: "person_id"
+  add_foreign_key "demo_project_people", "demo_projects", column: "project_id"
+  add_foreign_key "recording_studio_access_invitations", "recording_studio_recordings", column: "recording_id"
   add_foreign_key "recording_studio_api_api_access_tokens", "recording_studio_api_api_credentials", column: "api_credential_id"
   add_foreign_key "recording_studio_api_api_credentials", "recording_studio_api_api_clients", column: "api_client_id"
   add_foreign_key "recording_studio_events", "recording_studio_recordings", column: "recording_id"
@@ -535,5 +654,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_03_000006) do
   add_foreign_key "recording_studio_recordings", "recording_studio_recordings", column: "parent_recording_id"
   add_foreign_key "recording_studio_recordings", "recording_studio_recordings", column: "root_recording_id"
   add_foreign_key "recording_studio_user_identities", "users"
+  add_foreign_key "recording_studio_user_otp_challenges", "users"
   add_foreign_key "recording_studio_user_profiles", "users"
 end

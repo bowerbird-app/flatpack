@@ -15,13 +15,13 @@ module FlatPack
         def initialize(
           depth: 1,
           collapsed: false,
-          collapsed_label: "Show replies",
+          collapsed_label: FlatPack::Copy::OMITTED,
           **system_arguments
         )
           super(**system_arguments)
           @depth = depth
           @collapsed = collapsed
-          @collapsed_label = collapsed_label
+          @collapsed_label = fp_text(collapsed_label, "comments.show_replies")
         end
 
         def call

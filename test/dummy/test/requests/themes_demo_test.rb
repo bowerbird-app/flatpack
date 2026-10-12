@@ -50,4 +50,12 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "no-op alias of :root"
     assert_includes response.body, "--color-primary"
   end
+
+  test "brand theme demo sets data-theme on body" do
+    get "/demo/brand_theme/dark"
+
+    assert_response :success
+    assert_includes response.body, 'data-theme="featured-in-dark"'
+    assert_includes response.body, "Sign out"
+  end
 end

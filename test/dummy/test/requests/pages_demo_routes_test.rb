@@ -5,12 +5,15 @@ require "test_helper"
 class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
   DEMO_PATHS = %w[
     /demo
+    /demo/brand_theme
+    /demo/brand_theme/dark
     /demo/buttons
     /demo/links
     /demo/buttons/pills
     /demo/buttons/segmented
     /demo/buttons/groups
     /demo/buttons/dropdowns
+    /demo/buttons/trash
     /demo/billing
     /demo/billing/plan_summary
     /demo/billing/plan_picker
@@ -37,9 +40,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/radio_group
     /demo/forms/select
     /demo/forms/combobox
+    /demo/collection_editor
     /demo/forms/nested_multiselect
     /demo/forms/switch
     /demo/forms/combined
+    /demo/forms/unsaved_changes
     /demo/badges
     /demo/chips
     /demo/chip_groups
@@ -70,6 +75,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/email/footer_links
     /demo/email/template_example
     /demo/modals
+    /demo/modals/gallery_editor
     /demo/drawer
     /demo/command_palette
     /demo/kbd
@@ -83,12 +89,20 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/tabs/stacked_pills
     /demo/toasts
     /demo/page_header
+    /demo/page_title/display
+    /demo/hero_title
+    /demo/type_scale
+    /pages/hero/display
+    /demo/section_title
     /demo/page_nav
     /demo/text/content
     /demo/text/quote
     /demo/empty_state
     /demo/grid
     /demo/grid/movable_cards
+    /demo/masonry
+    /demo/fab
+    /demo/inline_edit
     /demo/pagination
     /demo/admin
     /demo/charts
@@ -131,7 +145,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/notification
     /mobile
     /mobile/bottom_nav
+    /mobile/fab
   ].freeze
+
+  test "unsaved changes demo wires the form controller and a default save button" do
+    get "/demo/forms/unsaved_changes"
+
+    assert_response :success
+    assert_includes response.body, 'data-controller="flat-pack--unsaved-changes"'
+    assert_includes response.body, 'data-flat-pack--unsaved-changes-target="submit"'
+    assert_includes response.body, 'data-fp-style="default"'
+    assert_includes response.body, "Save changes"
+    assert_includes response.body, "Edit any field to see the Save button become primary."
+  end
 
   test "demo pages respond successfully" do
     DEMO_PATHS.each do |path|
@@ -267,6 +293,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_buttons_groups_path
     assert_includes response.body, demo_buttons_segmented_path
     assert_includes response.body, demo_buttons_dropdowns_path
+    assert_includes response.body, demo_buttons_trash_path
   end
 
   test "application layout sets viewport-fit cover" do
@@ -277,6 +304,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Skip to content"
     assert_includes response.body, 'id="main"'
     assert_includes response.body, "demo-command-palette"
+  end
+
+  test "trash button demo renders rest armed and row examples" do
+    get "/demo/buttons/trash"
+
+    assert_response :success
+    assert_includes response.body, "Trash Button"
+    assert_includes response.body, "fp-trash-button"
+    assert_includes response.body, "data-fp-armed=\"true\""
+    assert_includes response.body, "Harbour take"
+    assert_includes response.body, "flat-pack--trash-button"
   end
 
   test "buttons related demos render after theme tokens" do
@@ -347,6 +385,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-controller="segmented-buttons-demo"'
     assert_includes response.body, 'data-action="segmented-buttons-demo#activate"'
     assert_includes response.body, 'aria-pressed="true"'
+    assert_includes response.body, "The selected button uses the primary colour."
+    assert_includes response.body, "The selected button matches a default button."
+    assert_includes response.body, 'data-fp-style="primary"'
+    assert_includes response.body, 'data-fp-style="default"'
+    assert_includes response.body, 'data-fp-style="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="primary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="default"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-style-value="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-press-class-value="fp-button-raised"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-press-class-value="fp-button-flat"'
+    refute_includes response.body, "active-classes-value"
 
     get "/demo/buttons/groups"
 
@@ -354,6 +403,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Button Groups (Wrapped Together)"
     assert_includes response.body, "Left"
     assert_includes response.body, "Middle"
+    assert_includes response.body, 'data-fp-style="primary"'
+    assert_includes response.body, 'data-fp-style="secondary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-style-value="primary"'
+    assert_includes response.body, 'data-segmented-buttons-demo-active-press-class-value="fp-button-raised"'
+    assert_includes response.body, 'data-segmented-buttons-demo-inactive-press-class-value="fp-button-flat"'
+    refute_includes response.body, "active-classes-value"
   end
 
   test "page nav demo renders icon-only navigation" do
@@ -671,6 +726,56 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "help_text"
   end
 
+  test "page title display demo renders cover titles" do
+    get "/demo/page_title/display"
+
+    assert_response :success
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "Northlight"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    assert_includes response.body, "Stills, credits, and download packs"
+    refute_includes response.body, "lg:text-6xl"
+  end
+
+  test "type scale demo shows 6xl 7xl 8xl and display" do
+    get "/demo/type_scale"
+
+    assert_response :success
+    assert_includes response.body, "text-6xl"
+    assert_includes response.body, "text-7xl"
+    assert_includes response.body, "text-8xl"
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "3.75rem / 60px"
+    assert_includes response.body, "4.5rem / 72px"
+    assert_includes response.body, "6rem / 96px"
+  end
+
+  test "hero title demo renders every size and wrapping copy" do
+    get "/demo/hero_title"
+
+    assert_response :success
+    assert_includes response.body, "fp-hero-title--md"
+    assert_includes response.body, "fp-hero-title--lg"
+    assert_includes response.body, "fp-hero-title--xl"
+    assert_includes response.body, "fp-hero-title--xxl"
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "font-size: var(--display-size)"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    assert_includes response.body, "Northlight collection"
+    assert_includes response.body, "title_size"
+    refute_includes response.body, "lg:text-6xl"
+  end
+
+  test "hero display demo uses display size" do
+    get "/pages/hero/display"
+
+    assert_response :success
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "font-size: var(--display-size)"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    refute_includes response.body, "lg:text-6xl"
+  end
+
   test "page header demo includes all page title heading variants" do
     get "/demo/page_header"
 
@@ -683,6 +788,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Heading Variant H6</h6>"
     assert_includes response.body, "--page-title-h1-size"
     assert_includes response.body, "--page-title-h6-size"
+    assert_includes response.body, "fp-display"
+    assert_includes response.body, "A press kit for the Northlight collection"
+    assert_includes response.body, "--display-size"
   end
 
   test "text content demo renders long-form marketing copy" do
@@ -708,7 +816,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">min</td>"
     assert_includes response.body, ">max</td>"
     assert_includes response.body, ">step</td>"
+    assert_includes response.body, ">variant</td>"
+    assert_includes response.body, ">start_icon</td>"
+    assert_includes response.body, ">end_icon</td>"
+    assert_includes response.body, ">ticks</td>"
+    assert_includes response.body, ">preview_target</td>"
+    assert_includes response.body, ">sample</td>"
     assert_includes response.body, "**system_arguments"
+    assert_includes response.body, "fp-range-input-ticks"
+    assert_includes response.body, "fp-range-input-sample"
+    assert_includes response.body, "fp-range-input-tick"
+    assert_includes response.body, "Aa"
+    assert_includes response.body, "Embiggen"
   end
 
   test "notification demo renders the notification component examples" do

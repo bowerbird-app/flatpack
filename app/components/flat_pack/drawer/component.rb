@@ -194,7 +194,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: "shrink-0 cursor-pointer text-[var(--drawer-close-icon-color)] hover:text-[var(--drawer-close-icon-hover-color)] transition-colors rounded-[var(--radius-sm)] p-1 fp-hit-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          aria: {label: "Close"},
+          aria: {label: fp_t("drawer.close")},
           data: {action: "flat-pack--drawer#close"}) do
           render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md)
         end

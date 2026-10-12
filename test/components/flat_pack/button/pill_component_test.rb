@@ -95,6 +95,118 @@ module FlatPack
 
           assert_includes error.message, "Invalid size"
         end
+
+        def test_omitted_style_and_primary_stamp_the_group
+          [nil, :primary].each do |style|
+            arguments = {
+              data: {fp_style: "ghost"},
+              items: [{text: "Overview", href: "/demo/buttons", active: true}]
+            }
+            arguments[:style] = style unless style.nil?
+
+            render_inline(Component.new(**arguments))
+
+            group = page.find("div.fp-pill-style")
+            assert_equal "primary", group["data-fp-style"]
+            assert_includes group[:class].split, "fp-pill-style"
+            refute_includes group[:class].split, "fp-pill-button-slots"
+            assert_includes page.native.to_html, "bg-[var(--tabs-pill-active-background-color)]"
+          end
+        end
+
+        def test_default_style_sets_data_fp_style
+          render_inline(Component.new(
+            style: :default,
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          group = page.find("div.fp-pill-style")
+          assert_equal "default", group["data-fp-style"]
+          assert_includes group[:class].split, "fp-pill-button-slots"
+        end
+
+        def test_danger_style_uses_button_slots
+          render_inline(Component.new(
+            style: :danger,
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          group = page.find("div.fp-pill-style")
+          assert_equal "danger", group["data-fp-style"]
+          assert_includes group[:class].split, "fp-pill-button-slots"
+        end
+
+        def test_unknown_style_raises_the_registry_message
+          error = assert_raises(ArgumentError) do
+            Component.new(style: :nope, items: [{text: "Overview", href: "/demo/buttons"}])
+          end
+
+          assert_equal FlatPack::Button::StyleRegistry.invalid_style_message(:nope), error.message
+        end
+
+        def test_group_does_not_use_the_button_class
+          render_inline(Component.new(items: [
+            {text: "Overview", href: "/demo/buttons", active: true},
+            {text: "Tables", href: "/demo/tables"}
+          ]))
+
+          classes = page.native.to_html.scan(/class="([^"]*)"/).flatten.flat_map(&:split)
+          refute_includes classes, "fp-button"
+          refute_includes classes, "fp-button-raised"
+          refute_includes classes, "fp-button-flat"
+          assert_includes classes, "fp-pill-style"
+        end
+
+        def test_omitted_indicator_does_not_render_slide_markup
+          render_inline(Component.new(items: [
+            {text: "Overview", href: "/demo/buttons", active: true},
+            {text: "Tables", href: "/demo/tables"}
+          ]))
+
+          html = page.native.to_html
+          refute_includes html, "fp-slide-indicator"
+          refute_includes html, "flat-pack--slide-indicator"
+          assert_includes html, "bg-[var(--tabs-pill-active-background-color)]"
+          assert_includes html, "shadow-[var(--tabs-pill-active-shadow)]"
+        end
+
+        def test_slide_indicator_renders_pill_and_text_only_items
+          render_inline(Component.new(
+            indicator: :slide,
+            items: [
+              {text: "Overview", href: "/demo/buttons", active: true, id: "overview-pill"},
+              {text: "Tables", href: "/demo/tables"}
+            ]
+          ))
+
+          group = page.find("div.fp-slide-indicator-list")
+          assert_includes group["data-controller"].to_s.split, "flat-pack--slide-indicator"
+          assert_equal "pill", group["data-flat-pack--slide-indicator-kind-value"]
+          assert_selector "span.fp-slide-indicator.fp-slide-indicator--pill[aria-hidden='true']", visible: :all
+          assert_selector "a#overview-pill[aria-current='page'][data-flat-pack--slide-indicator-target='item']"
+          assert_includes page.find("a#overview-pill")[:class], "text-[var(--tabs-pill-active-text-color)]"
+          refute_includes page.find("a#overview-pill")[:class], "bg-[var(--tabs-pill-active-background-color)]"
+          refute_includes page.find("a#overview-pill")[:class], "shadow-[var(--tabs-pill-active-shadow)]"
+        end
+
+        def test_slide_indicator_keeps_host_controller
+          render_inline(Component.new(
+            indicator: :slide,
+            data: {controller: "pill-buttons-demo"},
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          controllers = page.find("div.fp-slide-indicator-list")["data-controller"].split
+          assert_includes controllers, "pill-buttons-demo"
+          assert_includes controllers, "flat-pack--slide-indicator"
+        end
+
+        def test_invalid_indicator_raises_argument_error
+          error = assert_raises(ArgumentError) do
+            Component.new(indicator: :bounce, items: [{text: "Overview", href: "/demo/buttons"}])
+          end
+          assert_includes error.message, "Invalid indicator"
+        end
       end
     end
   end

@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = [
@@ -568,7 +569,7 @@ export default class extends Controller {
     }
 
     const label = this.displayValue(this.draft, this.draftPresetKey)
-    this.summaryElement.textContent = label || "Select a date from calendar or use a quick range preset."
+    this.summaryElement.textContent = label || flatPackCopy("date_picker.summary")
   }
 
   initialVisibleMonth() {

@@ -53,6 +53,7 @@ None.
 ## Styling
 - Kit class: `.fp-range-input` (unlayered so `appearance: none` beats the browser chrome).
 - Tokens: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`, `--range-thumb-size`, `--range-track-height`.
+- Thumb fill (`--range-thumb-color`) aliases `--color-primary`. The ring (`--range-thumb-border-color`) aliases `--surface-background-color`, with `--range-thumb-shadow` for depth. Hosts that set those names keep their overrides.
 - Fill percent is the runtime custom property `--range-progress` on the input (server-rendered from `value` / `min` / `max`, then kept in sync by Stimulus). Not a theme token.
 - The control stays a native range. Dual-handle filters are a separate pattern, not this component.
 

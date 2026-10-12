@@ -88,7 +88,7 @@ module FlatPack
         auto_submit: true,
         form_data: {},
         checkbox_data: {},
-        submit_label: "Apply",
+        submit_label: FlatPack::Copy::OMITTED,
         **system_arguments
       )
         control(

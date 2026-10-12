@@ -58,6 +58,23 @@ class PagesControllerPrivateTest < ActiveSupport::TestCase
     refute_equal old_key, new_key
   end
 
+  test "page_cache_key changes when locale changes" do
+    controller = PagesController.new
+    request = OpenStruct.new(path: "/")
+    controller.define_singleton_method(:request) { request }
+    controller.define_singleton_method(:page_template_cache_version) { "templates" }
+    controller.define_singleton_method(:component_cache_version) { "components" }
+    controller.define_singleton_method(:layout_stylesheet_cache_version) { "styles" }
+    controller.define_singleton_method(:importmap_cache_version) { "importmap" }
+
+    en_key = I18n.with_locale(:en) { controller.send(:page_cache_key) }
+    fr_key = I18n.with_locale(:fr) { controller.send(:page_cache_key) }
+
+    refute_equal en_key, fr_key
+    assert_includes en_key, "/:en:"
+    assert_includes fr_key, "/:fr:"
+  end
+
   test "page_cache_key changes when component version changes" do
     controller = PagesController.new
     request = OpenStruct.new(path: "/demo/tree")

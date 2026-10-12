@@ -118,6 +118,12 @@ components:
     primary_class: FlatPack::ButtonGroup::Component
     status: documented
 
+  - key: trash_button
+    title: Trash Button
+    doc: docs/components/trash-button.md
+    primary_class: FlatPack::TrashButton::Component
+    status: documented
+
   - key: card
     title: Card
     doc: docs/components/card.md
@@ -231,6 +237,12 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: collection_editor
+    title: Collection Editor
+    doc: docs/components/collection-editor.md
+    primary_class: FlatPack::CollectionEditor::Component
+    status: documented
+
   - key: combobox
     title: Combobox
     doc: docs/components/combobox.md
@@ -291,6 +303,14 @@ components:
     primary_class: FlatPack::EmptyState::Component
     status: documented
 
+  - key: fab
+    title: FAB
+    doc: docs/components/fab.md
+    primary_class: FlatPack::Fab::Component
+    related_classes:
+      - FlatPack::Fab::Action
+    status: documented
+
   - key: email_button
     title: Email Button
     doc: docs/components/email-button.md
@@ -333,6 +353,12 @@ components:
     primary_class: FlatPack::Hero::Component
     status: documented
 
+  - key: hero_title
+    title: Hero Title
+    doc: docs/components/hero-title.md
+    primary_class: FlatPack::HeroTitle::Component
+    status: documented
+
   - key: inputs
     title: Input Components
     doc: docs/components/inputs.md
@@ -355,6 +381,12 @@ components:
       - FlatPack::Select::Component
       - FlatPack::Combobox::Component
       - FlatPack::Switch::Component
+    status: documented
+
+  - key: inline_edit
+    title: Inline Edit
+    doc: docs/components/inline-edit.md
+    primary_class: FlatPack::InlineEdit::Component
     status: documented
 
   - key: kbd
@@ -399,10 +431,21 @@ components:
     primary_class: FlatPack::List::Component
     status: documented
 
+  - key: masonry
+    title: Masonry
+    doc: docs/components/masonry.md
+    primary_class: FlatPack::Masonry::Component
+    related_classes:
+      - FlatPack::Masonry::Item
+      - FlatPack::Masonry::Image
+    status: documented
+
   - key: modal
     title: Modal
     doc: docs/components/modal.md
     primary_class: FlatPack::Modal::Component
+    related_classes:
+      - FlatPack::Modal::Screen
     status: documented
 
   - key: modal_filter

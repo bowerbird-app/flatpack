@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="rounded" class="h-full overflow-hidden overscroll-none">
+<html <%= tag.attributes(flat_pack_html_attributes(class: "h-full overflow-hidden overscroll-none", data: {theme: "rounded"})) %>>
   <head>
     <title><%= content_for(:title) || "FlatPack Studio" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">

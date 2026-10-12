@@ -34,7 +34,7 @@ module FlatPack
       def list_attributes
         merge_attributes(
           class: list_classes,
-          aria: {label: "Progress"}
+          aria: {label: fp_t("stepper.progress")}
         )
       end
 

@@ -13,6 +13,7 @@ module FlatPack
         orderable_method: :patch,
         param_uuid_name: "id",
         param_target_position_name: "position",
+        handle_selector: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -25,6 +26,7 @@ module FlatPack
         @orderable_method = orderable_method
         @param_uuid_name = param_uuid_name
         @param_target_position_name = param_target_position_name
+        @handle_selector = handle_selector.presence
       end
 
       def call
@@ -65,6 +67,7 @@ module FlatPack
         data[:flat_pack__list_orderable_orderable_method_value] = @orderable_method.to_s.upcase if @orderable_method.present?
         data[:flat_pack__list_orderable_param_uuid_name_value] = @param_uuid_name if @param_uuid_name.present?
         data[:flat_pack__list_orderable_param_target_position_name_value] = @param_target_position_name if @param_target_position_name.present?
+        data[:flat_pack__list_orderable_handle_selector_value] = @handle_selector if @handle_selector.present?
 
         data
       end

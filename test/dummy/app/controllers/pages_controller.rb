@@ -46,7 +46,9 @@ class PagesController < ApplicationController
     {action: /\Afont_swatches\z/, title: "Font Swatches", patterns: [/\A--font-swatch-/]},
     {action: /\Aoverflow_row\z/, title: "Overflow Row", patterns: [/\A--overflow-row-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
+    {action: /\Ahero_title/, title: "Hero Title", patterns: [/\A--hero-title-/, /\A--display-/]},
     {action: /\Ahero(_.*)?\z/, title: "Hero", patterns: [/\A--hero-/]},
+    {action: /\Atype_scale\z/, title: "Type", patterns: [/\A--(font-|text-|leading-|display-)/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
     {action: /\Anavbar\z/, title: "Top Nav", patterns: [/\A--top-nav-/]},
     {action: /\Asidebar(_.*)?\z/, title: "Sidebar", patterns: [/\A--sidebar-/]},
@@ -72,6 +74,7 @@ class PagesController < ApplicationController
     {action: /\Acomments\z/, title: "Comments", patterns: [/\A--comments-/]},
     {action: /\Achat(_.*)?\z/, title: "Chat", patterns: [/\A--chat-/]},
     {action: /\Atables(_.*)?\z/, title: "Table", patterns: [/\A--table-/]},
+    {action: /\Aforms_radio_group\z/, title: "Form Controls & Radio Group", patterns: [/\A--form-control-/, /\A--color-swatch-/]},
     {action: /\Aforms(_.*)?\z/, title: "Form Controls", patterns: [/\A--form-control-/]},
     {action: /\Arange_input\z/, title: "Range Input", patterns: [/\A--range-/]},
     {action: /\Aforms_switch\z/, title: "Form Controls & Switch", patterns: [/\A--form-control-/, /\A--switch-/]},
@@ -83,7 +86,9 @@ class PagesController < ApplicationController
     {action: /\Atimeline\z/, title: "Timeline", patterns: [/\A--timeline-/]},
     {action: /\Alist\z/, title: "List", patterns: [/\A--list-item-/, /\A--list-marker-/]},
     {action: /\Anotification\z/, title: "Notification", patterns: [/\A--popover-/, /\A--list-item-/]},
-    {action: /\Atree\z/, title: "Tree", patterns: []}
+    {action: /\Atree\z/, title: "Tree", patterns: []},
+    {action: /\Afab\z/, title: "FAB", patterns: [/\A--fab-/]},
+    {action: /\Ainline_edit\z/, title: "Inline Edit", patterns: [/\A--inline-edit-/]}
   ].freeze
 
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
@@ -95,6 +100,9 @@ class PagesController < ApplicationController
     modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable local_time
+    forms_unsaved_changes
+    buttons_trash buttons_trash_destroy
+    fab
   ].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
@@ -103,6 +111,10 @@ class PagesController < ApplicationController
 
   def demo
     @component_index = cached_component_index
+  end
+
+  def brand_theme
+    @body_theme = (params[:tone] == "dark") ? "featured-in-dark" : "featured-in"
   end
 
   def buttons
@@ -121,6 +133,18 @@ class PagesController < ApplicationController
   end
 
   def buttons_dropdowns
+  end
+
+  def buttons_trash
+    @tracks = [
+      OpenStruct.new(id: 1, name: "Harbour take", added_on: "9 Oct"),
+      OpenStruct.new(id: 2, name: "Piano sketch", added_on: "8 Oct"),
+      OpenStruct.new(id: 3, name: "Voice memo", added_on: "7 Oct")
+    ]
+  end
+
+  def buttons_trash_destroy
+    redirect_to demo_buttons_trash_path, status: :see_other, notice: "It's gone."
   end
 
   def billing
@@ -423,6 +447,14 @@ class PagesController < ApplicationController
   def forms_combined
   end
 
+  def forms_unsaved_changes
+  end
+
+  def forms_unsaved_changes_save
+    flash[:notice] = "Changes saved."
+    redirect_to demo_forms_unsaved_changes_path
+  end
+
   def forms_create
     # Handle POST form submission
     flash[:notice] = "Form submitted successfully with POST method"
@@ -591,6 +623,19 @@ class PagesController < ApplicationController
   def page_header
   end
 
+  def page_title_display
+    render layout: "fullpage"
+  end
+
+  def hero_title
+  end
+
+  def type_scale
+  end
+
+  def section_title
+  end
+
   def page_nav
   end
 
@@ -622,6 +667,14 @@ class PagesController < ApplicationController
 
     @movable_cards = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: movable_cards_list_key).ordered : []
     @movable_cards_version = demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
+  end
+
+  def masonry
+  end
+
+  def fab
+    allowed = %w[bottom_right bottom_left top_right top_left]
+    @fab_position = allowed.include?(params[:position].to_s) ? params[:position].to_sym : :bottom_right
   end
 
   def pagination
@@ -793,13 +846,15 @@ class PagesController < ApplicationController
     @carousel_single_slide = carousel_demo_single_slide
     @carousel_chart_slides = carousel_demo_chart_slides
     @carousel_logo_slider_slides = carousel_demo_logo_slider_slides
+    @carousel_card_slides = carousel_demo_card_slides
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
       "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
       "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
-      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet."
+      "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet.",
+      "HTML cards can pass thumb_src or thumb. Without a usable picture, the thumb shows the slide number."
     ]
   end
 
@@ -907,6 +962,10 @@ class PagesController < ApplicationController
   end
 
   def hero_offset_image
+    render layout: "fullpage"
+  end
+
+  def hero_display
     render layout: "fullpage"
   end
 
@@ -2175,6 +2234,51 @@ class PagesController < ApplicationController
     )
   end
 
+  def carousel_demo_card_slides
+    [
+      carousel_card_slide(
+        title: "Quiet desk",
+        body: "A calm spot for the next pass.",
+        thumb_src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "Workshop",
+        body: "Notes from the planning table.",
+        thumb: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "Night shift",
+        body: "The late window, still lit.",
+        thumb_src: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=320&h=320&fit=crop"
+      ),
+      carousel_card_slide(
+        title: "No picture",
+        body: "This thumb shows its number."
+      )
+    ]
+  end
+
+  def carousel_card_slide(title:, body:, thumb_src: nil, thumb: nil)
+    {
+      type: :html,
+      caption: title,
+      thumb_src: thumb_src,
+      thumb: thumb,
+      html: ApplicationController.render(
+        inline: <<~ERB,
+          <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+            <% card.body do %>
+              <h3 class="text-base font-semibold text-(--surface-content-color)"><%= title %></h3>
+              <p class="mt-2 text-sm text-(--surface-muted-content-color)"><%= body %></p>
+            <% end %>
+          <% end %>
+        ERB
+        locals: {title: title, body: body},
+        layout: false
+      )
+    }.compact
+  end
+
   def carousel_demo_logo_slider_slides
     [
       {type: :image, src: "https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg", alt: "GitHub", url: "https://github.com"},
@@ -2318,7 +2422,7 @@ class PagesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root \{(?<body>.*?)^\}/m, :body]
+    block = css[/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m, :body]
     return [] if block.blank?
 
     block.lines.filter_map do |line|
@@ -2350,7 +2454,7 @@ class PagesController < ApplicationController
   end
 
   def page_cache_key
-    "dummy/full-page/#{request.path}:#{page_cache_version}"
+    "dummy/full-page/#{request.path}:#{I18n.locale}:#{page_cache_version}"
   end
 
   def page_cache_version
@@ -2407,6 +2511,7 @@ class PagesController < ApplicationController
       flat_pack/application.css
       flat_pack/rich_text.css
       flat_pack/content_editor.css
+      flat_pack/inline_edit.css
     ].map do |logical_path|
       asset = Rails.application.assets.load_path.find(logical_path)
       "#{logical_path}:#{asset&.digested_path || "missing"}"

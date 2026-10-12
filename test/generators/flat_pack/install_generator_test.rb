@@ -52,11 +52,12 @@ module FlatPack
           assert_equal 2, content.scan("pin_all_from FlatPack::Engine.root.join").length
           assert_includes content, "controllers/flat_pack"
           assert_includes content, "flat_pack/local_time"
+          assert_includes content, "flat_pack/copy"
           assert_includes content, "preload: false"
         end
       end
 
-      test "configure_importmap backfills local time pin when controllers are configured" do
+      test "configure_importmap backfills local time and copy pins when controllers are configured" do
         with_temp_rails_root do |tmp_root|
           config_dir = tmp_root.join("config")
           FileUtils.mkdir_p(config_dir)
@@ -71,6 +72,7 @@ module FlatPack
 
           content = importmap.read
           assert_equal 1, content.scan('pin "flat_pack/local_time"').length
+          assert_equal 1, content.scan('pin "flat_pack/copy"').length
         end
       end
 

@@ -11,12 +11,12 @@ Token value changes in the central theme source are automatically reflected on a
 Tokens are extracted from:
 
 ```
-app/assets/stylesheets/flat_pack/variables.css  →  :root { … }
+app/assets/stylesheets/flat_pack/variables.css  →  :root, [data-theme] { … }
 ```
 
-All `--token-name: value;` declarations inside the `:root` block are read and built into rows with `variable` and `default_value` fields. `@theme inline` only lists the same names as `var(--token)` so Tailwind can emit utilities; dummy tables do not use that block for displayed values.
+All `--token-name: value;` declarations inside the `:root, [data-theme]` block are read and built into rows with `variable` and `default_value` fields. `@theme inline` only lists the same names as `var(--token)` so Tailwind can emit utilities; dummy tables do not use that block for displayed values.
 
-Named theme overrides live in slim `[data-theme]` blocks (only tokens that differ from `:root`). `[data-theme="rounded"]` is empty. Component aliases that are pure `var(--semantic)` references are defined once on `:root` and are not re-copied per theme.
+Named theme overrides live in slim `[data-theme="…"]` blocks (only tokens that differ from the default). `[data-theme="rounded"]` is empty. Component aliases that are pure `var(--semantic)` references are defined once on `:root, [data-theme]` and are not re-copied per named theme. That shared selector is what lets a host put `data-theme` on `<body>` and still have `--button-primary-*` / `--color-ring` follow `--color-primary`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome is `--overlay-scrim-color`. Hover follows `--color-primary` via relative colour syntax.
 
 ### Controller Mapping
 
@@ -73,5 +73,5 @@ Open `test/dummy/app/controllers/pages_controller.rb` and add to `DEMO_THEME_TOK
 If the token section does not appear on a demo page:
 
 1. Confirm the page action name matches an entry in `DEMO_THEME_TOKEN_MAPPINGS`.
-2. Confirm matching tokens exist inside `:root { … }` in `variables.css`.
+2. Confirm matching tokens exist inside `:root, [data-theme] { … }` in `variables.css`.
 3. Confirm the page is rendered through the standard dummy app layout.

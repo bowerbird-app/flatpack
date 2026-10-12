@@ -248,7 +248,7 @@ module FlatPack
       end
 
       def accessible_name
-        tooltip_text.presence || "Font"
+        tooltip_text.presence || fp_t("font_swatch.fallback")
       end
 
       def selected_option_label

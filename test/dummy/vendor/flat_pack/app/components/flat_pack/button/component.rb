@@ -81,7 +81,7 @@ module FlatPack
 
         if @loading
           content << render(FlatPack::Spinner::Component.new(size: @size, label: nil))
-          content << content_tag(:span, "Loading") unless @icon_only
+          content << content_tag(:span, fp_t("button.loading")) unless @icon_only
         else
           content << render_icon if @icon
           content << content_tag(:span, @text) if @text && !@icon_only

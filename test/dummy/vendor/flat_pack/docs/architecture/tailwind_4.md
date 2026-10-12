@@ -74,7 +74,7 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
-  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
+  --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h); /* @supports; brand-knob fallback otherwise */
   --button-primary-background-color: var(--color-primary);
 }
 
@@ -96,7 +96,7 @@ SCHEMES = {
 
 The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as values.
 
-Button colour is kit CSS instead. `.fp-button[data-fp-style]` assigns local `--fp-button-*` paint tokens. Built-in styles map those from `--button-primary-*` and the other scheme tokens. Hosts register extra names with `FlatPack::Button.register_style` and paint the same tokens in host CSS. Do not add per-style Tailwind `bg-[var(--button-…)]` classes for a new colourway — Tailwind will not scan dynamically registered names.
+Button colour is kit CSS. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. `[data-fp-style]` assigns local `--fp-button-*` paint tokens. Built-in styles map those from `--button-primary-*` and the other scheme tokens. Hosts register extra names with `FlatPack::Button.register_style` and paint the same tokens in host CSS. Do not add per-style Tailwind `bg-[var(--button-…)]` classes for a new colourway — Tailwind will not scan dynamically registered names.
 
 ### Safelist Comments for Ruby Constants
 

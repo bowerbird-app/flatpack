@@ -19,8 +19,9 @@
   <% end %>
 
   <% nav.right do %>
-    <% if user_signed_in? %>
-      <div class="flex items-center gap-3">
+    <div class="flex items-center gap-3">
+      <%= render "layouts/flat_pack/language_selector" %>
+      <% if user_signed_in? %>
         <% if defined?(RecordingStudioRootSwitchable) %>
           <%= recording_studio_root_switch_dropdown(style: :ghost, size: :md) %>
         <% end %>
@@ -29,7 +30,7 @@
           name: current_user.try(:name).presence || current_user.email,
           size: :sm
         ) %>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
   <% end %>
 <% end %>

@@ -256,9 +256,9 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 **Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
 
 The imported `variables.css` contains:
-- `:root {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use)
+- `:root, [data-theme] {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use). `[data-theme]` repeats the wiring so a named theme on `<body>` re-resolves aliases
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
-- `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
+- `[data-theme="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
 - `[data-theme="ocean"] {}` — ocean variant (overrides only)
 - `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute). Leave it empty. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
@@ -280,7 +280,7 @@ To **explicitly force light mode** regardless of any ThemeController state or st
 
 ```erb
 <%# app/views/layouts/application.html.erb %>
-<html data-theme="light" lang="<%= I18n.locale %>">
+<html data-theme="light" lang="<%= I18n.locale %>" <%= tag.attributes(data: flat_pack_copy_data) %>>
 ```
 
 > **Note:** When `data-theme` is absent or set to `"light"`, the `:root {}` light palette from `variables.css` is active. The FlatPack `ThemeController` stores user preference in `localStorage` under the key `flatpack-theme` and sets `data-theme` on `document.documentElement` accordingly. If you add `data-theme="light"` to the static HTML, JavaScript will override it once the controller connects — remove the static attribute if you want the ThemeController to manage theme state.
@@ -292,8 +292,7 @@ To **customize the theme**, override CSS variables in your own stylesheet:
 
 /* Override FlatPack defaults (loaded via stylesheet_link_tag in the layout) */
 :root {
-  --color-primary: oklch(0.55 0.22 160);        /* teal primary */
-  --color-primary-hover: oklch(0.45 0.22 160);
+  --color-primary: oklch(0.55 0.22 160);        /* teal primary; hover follows */
   --surface-background-color: oklch(1.0 0 0);   /* white background */
   --surface-content-color: oklch(0.20 0.01 250); /* dark text */
 }
@@ -325,6 +324,9 @@ pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"),
 
 # Local/relative time enhancer for <time class="local-time">
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+
+# Kit copy for Stimulus (pairs with data-fp-copy on <html>)
+pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
 
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
@@ -370,6 +372,7 @@ If you need to manually configure JavaScript:
                 to: "flat_pack/tiptap",
                 preload: false
    pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+   pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 
@@ -438,6 +441,7 @@ import ChatSenderController       from "${controllersDir}/chat_sender_controller
 import ChipController             from "${controllersDir}/chip_controller.js";
 import CodeBlockTabsController    from "${controllersDir}/code_block_tabs_controller.js";
 import CollapseController         from "${controllersDir}/collapse_controller.js";
+import CollectionEditorController from "${controllersDir}/collection_editor_controller.js";
 import ContentEditorController    from "${controllersDir}/content_editor_controller.js";
 import DateInputController        from "${controllersDir}/date_input_controller.js";
 import FileInputController        from "${controllersDir}/file_input_controller.js";
@@ -459,6 +463,7 @@ import SelectController           from "${controllersDir}/select_controller.js";
 import SidebarController          from "${controllersDir}/sidebar_controller.js";
 import SidebarGroupController     from "${controllersDir}/sidebar_group_controller.js";
 import SidebarLayoutController    from "${controllersDir}/sidebar_layout_controller.js";
+import SlideIndicatorController   from "${controllersDir}/slide_indicator_controller.js";
 import TableController            from "${controllersDir}/table_controller.js";
 import TableSortableController    from "${controllersDir}/table_sortable_controller.js";
 import TabsController             from "${controllersDir}/tabs_controller.js";
@@ -468,6 +473,7 @@ import TiptapController           from "${controllersDir}/tiptap_controller.js";
 import ToastController            from "${controllersDir}/toast_controller.js";
 import ToastsRegionController     from "${controllersDir}/toasts_region_controller.js";
 import TooltipController          from "${controllersDir}/tooltip_controller.js";
+import UnsavedChangesController   from "${controllersDir}/unsaved_changes_controller.js";
 
 const application = Application.start();
 application.register("flat-pack--accordion",           AccordionController);
@@ -484,6 +490,7 @@ application.register("flat-pack--chat-sender",         ChatSenderController);
 application.register("flat-pack--chip",                ChipController);
 application.register("flat-pack--code-block-tabs",     CodeBlockTabsController);
 application.register("flat-pack--collapse",            CollapseController);
+application.register("flat-pack--collection-editor",   CollectionEditorController);
 application.register("flat-pack--content-editor",      ContentEditorController);
 application.register("flat-pack--date-input",          DateInputController);
 application.register("flat-pack--file-input",          FileInputController);
@@ -505,6 +512,7 @@ application.register("flat-pack--select",              SelectController);
 application.register("flat-pack--sidebar",             SidebarController);
 application.register("flat-pack--sidebar-group",       SidebarGroupController);
 application.register("flat-pack--sidebar-layout",      SidebarLayoutController);
+application.register("flat-pack--slide-indicator",     SlideIndicatorController);
 application.register("flat-pack--table",               TableController);
 application.register("flat-pack--table-sortable",      TableSortableController);
 application.register("flat-pack--tabs",                TabsController);
@@ -514,6 +522,7 @@ application.register("flat-pack--tiptap",              TiptapController);
 application.register("flat-pack--toast",               ToastController);
 application.register("flat-pack--toasts-region",       ToastsRegionController);
 application.register("flat-pack--tooltip",             TooltipController);
+application.register("flat-pack--unsaved-changes",     UnsavedChangesController);
 `.trim()
 
 const tmpDir = path.join(__dirname, "../tmp")

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600" role="img" aria-label="harbour">
+  <rect width="100%" height="100%" fill="#1b3a4b"/>
+  <rect y="348" width="100%" height="252" fill="#0f6b6b"/>
+  <rect y="312" width="100%" height="72" fill="#e8b86d" opacity="0.55"/>
+  <circle cx="312" cy="132" r="32" fill="#e8b86d" opacity="0.85"/>
+</svg>

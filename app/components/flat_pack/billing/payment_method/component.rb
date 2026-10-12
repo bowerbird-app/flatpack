@@ -13,18 +13,18 @@ module FlatPack
           last4: nil,
           expires_text: nil,
           expires_on: nil,
-          title: "Payment method",
-          empty_title: "No card on file",
-          empty_description: "Add a payment method to keep billing up to date.",
+          title: FlatPack::Copy::OMITTED,
+          empty_title: FlatPack::Copy::OMITTED,
+          empty_description: FlatPack::Copy::OMITTED,
           **system_arguments
         )
           super(**system_arguments)
           @brand = brand
           @last4 = last4
           @expires_text = expires_text.presence || expires_on
-          @title = title
-          @empty_title = empty_title
-          @empty_description = empty_description
+          @title = fp_text(title, "billing.payment_method.title")
+          @empty_title = fp_text(empty_title, "billing.payment_method.empty_title")
+          @empty_description = fp_text(empty_description, "billing.payment_method.empty_description")
         end
 
         def actions(*args, **kwargs, &block)
@@ -57,7 +57,7 @@ module FlatPack
           safe_join([
             content_tag(:h3, @title, class: "text-lg font-semibold text-[var(--surface-content-color)] mb-3"),
             content_tag(:p, "#{@brand} •••• #{@last4}", class: "text-base text-[var(--surface-content-color)] mb-1"),
-            (@expires_text.present? ? content_tag(:p, "Expires #{@expires_text}", class: "text-sm text-[var(--surface-muted-content-color)] mb-4") : nil),
+            (@expires_text.present? ? content_tag(:p, fp_t("billing.payment_method.expires", date: @expires_text), class: "text-sm text-[var(--surface-muted-content-color)] mb-4") : nil),
             render_actions_row
           ].compact)
         end

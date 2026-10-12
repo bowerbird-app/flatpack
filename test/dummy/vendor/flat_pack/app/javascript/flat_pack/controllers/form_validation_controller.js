@@ -1,5 +1,6 @@
 // FlatPack Form Validation Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 const MESSAGE_KEYS = {
   valueMissing: "required",
@@ -69,14 +70,14 @@ export default class extends Controller {
   validationMessage() {
     if (this.typeValue === "custom-select-hidden") {
       if (this.element.required && this.element.value.trim().length === 0) {
-        return this.messageOverride("required") || "Please select an option."
+        return this.messageOverride("required") || flatPackCopy("form.please_select")
       }
 
-      return "Invalid selection."
+      return flatPackCopy("form.invalid_selection")
     }
 
     const validity = this.element.validity
-    if (!validity) return "Invalid value."
+    if (!validity) return flatPackCopy("form.invalid_value")
 
     for (const [flag, messageKey] of Object.entries(MESSAGE_KEYS)) {
       if (validity[flag]) {
@@ -88,7 +89,7 @@ export default class extends Controller {
       return this.messageOverride("customError") || this.element.validationMessage
     }
 
-    return this.element.validationMessage || "Invalid value."
+    return this.element.validationMessage || flatPackCopy("form.invalid_value")
   }
 
   messageOverride(key) {

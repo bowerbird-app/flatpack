@@ -228,7 +228,7 @@ module FlatPack
       def render_empty_state
         tag.tr do
           tag.td colspan: column_count, class: "#{body_cell_classes} text-center text-[var(--table-empty-state-text-color)]" do
-            "No data available"
+            fp_t("table.empty")
           end
         end
       end

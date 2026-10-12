@@ -17,10 +17,14 @@ module FlatPack
 
       assert_includes names, "Button::Component"
       assert_includes names, "Fieldset::Component"
+      assert_includes names, "TrashButton::Component"
       assert_includes names, "Content::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
+      assert_includes names, "Modal::Screen"
+      assert_includes names, "Fab::Component"
+      assert_includes names, "Fab::Action"
     end
 
     test "list excludes internals, shared helpers, and non-components" do
@@ -100,12 +104,81 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show TrashButton binds EXPANDS to expand and METHODS to method" do
+      payload = FlatPack::ComponentCatalog.show("TrashButton::Component")
+      expand = parameter_named(payload, "expand")
+      method = parameter_named(payload, "method")
+      size = parameter_named(payload, "size")
+
+      assert_equal %w[right left], expand.fetch(:enum)
+      assert_equal "right", expand.fetch(:default)
+      assert_equal %w[delete post put patch get], method.fetch(:enum)
+      assert_equal "delete", method.fetch(:default)
+      assert_equal %w[sm md lg], size.fetch(:enum)
+      assert_equal "md", size.fetch(:default)
+      examples = payload.fetch(:examples)
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::TrashButton::Component"
+    end
+
+    test "show Fab binds SIZES POSITIONS LAYOUTS and Action STYLES" do
+      payload = FlatPack::ComponentCatalog.show("Fab::Component")
+      size = parameter_named(payload, "size")
+      position = parameter_named(payload, "position")
+      layout = parameter_named(payload, "layout")
+
+      assert_equal %w[sm md lg], size.fetch(:enum)
+      assert_equal "md", size.fetch(:default)
+      assert_equal %w[bottom_right bottom_left top_right top_left], position.fetch(:enum)
+      assert_equal "bottom_right", position.fetch(:default)
+      assert_equal %w[stack], layout.fetch(:enum)
+      assert_equal "stack", layout.fetch(:default)
+
+      action = FlatPack::ComponentCatalog.show("Fab::Action")
+      style = parameter_named(action, "style")
+
+      assert_equal %w[default danger], style.fetch(:enum)
+      assert_equal "default", style.fetch(:default)
+    end
+
+    test "show Masonry binds ORDERS to order and GAPS to gap" do
+      payload = FlatPack::ComponentCatalog.show("Masonry::Component")
+      order = parameter_named(payload, "order")
+      gap = parameter_named(payload, "gap")
+
+      assert_equal %w[columns rows], order.fetch(:enum)
+      assert_equal "columns", order.fetch(:default)
+      assert_equal %w[sm md lg], gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      examples = payload.fetch(:examples)
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::Masonry::Component"
+    end
+
     test "show Hero binds ALIGNS to align with a center default" do
       payload = FlatPack::ComponentCatalog.show("Hero::Component")
       align = parameter_named(payload, "align")
 
       assert_equal FlatPack::Hero::Component::ALIGNS.keys.map(&:to_s), align.fetch(:enum)
       assert_equal "center", align.fetch(:default)
+    end
+
+    test "show HeroTitle binds SIZES to size with an xl default" do
+      payload = FlatPack::ComponentCatalog.show("HeroTitle::Component")
+      size = parameter_named(payload, "size")
+      level = parameter_named(payload, "level")
+
+      assert_equal %w[md lg xl xxl], size.fetch(:enum)
+      assert_equal "xl", size.fetch(:default)
+      assert_equal %w[h1 h2 h3 h4 h5 h6], level.fetch(:enum)
+      assert_equal "h1", level.fetch(:default)
+    end
+
+    test "show Hero binds TITLE_SIZES to title_size" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      title_size = parameter_named(payload, "title_size")
+
+      assert_equal %w[md lg xl xxl], title_size.fetch(:enum)
     end
 
     test "show Hero binds ONS to on with a dark default" do
@@ -143,7 +216,9 @@ module FlatPack
       variant = parameter_named(payload, "variant")
 
       assert_equal FlatPack::Tabs::Component::VARIANTS.keys.map(&:to_s), variant.fetch(:enum)
-      refute payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) == "style" }
+
+      style = parameter_named(payload, "style")
+      assert_equal %w[default primary secondary ghost success warning danger], style.fetch(:enum)
     end
 
     test "show Avatar binds SHAPES to shape" do

@@ -74,7 +74,7 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
       this.attributes[name] = value
     },
     querySelector(selector) {
-      if (selector === "button[aria-label='Remove']") return button
+      if (selector === "[data-fp-chip-remove]") return button
 
       return null
     },

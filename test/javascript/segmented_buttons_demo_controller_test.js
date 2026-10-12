@@ -21,11 +21,12 @@ function loadController() {
   return context.module.exports
 }
 
-function buildButton(classNames = [], pressed = 'false') {
+function buildButton(classNames = [], pressed = 'false', fpStyle = '') {
   const classes = new Set(classNames)
   const attributes = { 'aria-pressed': pressed }
 
   return {
+    dataset: { fpStyle },
     classList: {
       add(...tokens) {
         tokens.forEach((token) => classes.add(token))
@@ -46,27 +47,35 @@ function buildButton(classNames = [], pressed = 'false') {
   }
 }
 
-test('segmented buttons click swaps active and inactive button classes', () => {
+test('segmented buttons click sets data-fp-style and swaps the press class', () => {
   const SegmentedButtonsDemoController = loadController()
   const controller = new SegmentedButtonsDemoController()
-  const dayButton = buildButton(['bg-primary', 'text-primary'], 'true')
-  const weekButton = buildButton(['bg-secondary', 'text-secondary'], 'false')
+  const dayButton = buildButton(['fp-button-flat'], 'true', 'ghost')
+  const weekButton = buildButton(['fp-button-raised'], 'false', 'primary')
 
   controller.buttonTargets = [dayButton, weekButton]
-  controller.activeClassesValue = 'bg-primary text-primary'
-  controller.inactiveClassesValue = 'bg-secondary text-secondary'
+  controller.activeStyleValue = 'primary'
+  controller.inactiveStyleValue = 'secondary'
+  controller.activePressClassValue = 'fp-button-raised'
+  controller.inactivePressClassValue = 'fp-button-flat'
   controller.connect()
+
+  assert.equal(dayButton.dataset.fpStyle, 'primary')
+  assert.equal(dayButton.classList.contains('fp-button-raised'), true)
+  assert.equal(dayButton.classList.contains('fp-button-flat'), false)
+  assert.equal(weekButton.dataset.fpStyle, 'secondary')
+  assert.equal(weekButton.classList.contains('fp-button-flat'), true)
+  assert.equal(weekButton.classList.contains('fp-button-raised'), false)
 
   controller.activate({ currentTarget: weekButton })
 
-  assert.equal(weekButton.classList.contains('bg-primary'), true)
-  assert.equal(weekButton.classList.contains('text-primary'), true)
-  assert.equal(weekButton.classList.contains('bg-secondary'), false)
+  assert.equal(weekButton.dataset.fpStyle, 'primary')
+  assert.equal(weekButton.classList.contains('fp-button-raised'), true)
+  assert.equal(weekButton.classList.contains('fp-button-flat'), false)
   assert.equal(weekButton.getAttribute('aria-pressed'), 'true')
 
-  assert.equal(dayButton.classList.contains('bg-primary'), false)
-  assert.equal(dayButton.classList.contains('text-primary'), false)
-  assert.equal(dayButton.classList.contains('bg-secondary'), true)
-  assert.equal(dayButton.classList.contains('text-secondary'), true)
+  assert.equal(dayButton.dataset.fpStyle, 'secondary')
+  assert.equal(dayButton.classList.contains('fp-button-flat'), true)
+  assert.equal(dayButton.classList.contains('fp-button-raised'), false)
   assert.equal(dayButton.getAttribute('aria-pressed'), 'false')
 })

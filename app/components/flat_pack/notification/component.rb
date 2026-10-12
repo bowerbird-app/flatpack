@@ -8,8 +8,8 @@ module FlatPack
         unread_count: 0,
         trigger_id: nil,
         placement: :bottom,
-        bell_label: "Notifications",
-        empty_text: "No recent notifications",
+        bell_label: FlatPack::Copy::OMITTED,
+        empty_text: FlatPack::Copy::OMITTED,
         timestamp_tooltip_placement: :left,
         **system_arguments
       )
@@ -21,8 +21,8 @@ module FlatPack
         @trigger_id = trigger_id.presence || generated_trigger_id
         @popover_id = "#{@trigger_id}-popover"
         @placement = placement.to_sym
-        @bell_label = bell_label.to_s
-        @empty_text = empty_text.to_s
+        @bell_label = fp_text(bell_label, "notification.bell").to_s
+        @empty_text = fp_text(empty_text, "notification.empty").to_s
         @timestamp_tooltip_placement = timestamp_tooltip_placement.to_sym
 
         validate_placement!
@@ -277,7 +277,7 @@ module FlatPack
       end
 
       def rollup_counter_text(count)
-        return "9+" if count > 9
+        return fp_t("notification.overflow") if count > 9
 
         count.to_s
       end
@@ -287,7 +287,7 @@ module FlatPack
           safe_join([
             content_tag(
               :div,
-              notification_value(notification, :title).presence || "Notification",
+              notification_value(notification, :title).presence || fp_t("notification.fallback"),
               class: "truncate text-sm font-medium text-[var(--surface-content-color)]"
             ),
             render_notification_body(notification_value(notification, :body))
@@ -323,7 +323,7 @@ module FlatPack
           class: "sticky bottom-0 border-t border-[var(--surface-border-color)] bg-[var(--popover-background-color)]"
         ) do
           link_to(
-            "See all notifications",
+            fp_t("notification.see_all"),
             @see_all_href,
             class: "block rounded-b-[var(--popover-radius)] px-3 py-3 text-center text-sm font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--surface-muted-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[var(--color-primary)]"
           )
@@ -349,7 +349,7 @@ module FlatPack
       def badge_text
         return nil unless unread?
 
-        (unread_count > 9) ? "9+" : unread_count.to_s
+        (unread_count > 9) ? fp_t("notification.overflow") : unread_count.to_s
       end
 
       def accessible_label

@@ -7,14 +7,14 @@ FlatPack uses CSS variables for theming, allowing you to customize the appearanc
 ```text
 Brand primitives (--brand-hue, --brand-chroma, --brand-lightness)
     ↓
-    Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --icon-*)
+    Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --display-*, --duration-*, --easing-*, --icon-*)
     ↓
 Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semantic)
     ↓
 Components / Stimulus
 ```
 
-The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an empty alias of the default. Component tokens inherit automatically. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto that selector. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
+The kit default (no `data-theme`) is the rounded / charcoal palette. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` is an empty alias of the default. Component tokens are declared on `:root, [data-theme]` as `var(--semantic)`, so they re-resolve when a host puts `data-theme` on `<body>` or another descendant — not only on `<html>`. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto that selector. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
 
 On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign it on `[data-theme="rounded"]`.
 
@@ -38,14 +38,21 @@ Or override primitives directly:
 }
 ```
 
-`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover subtracts `0.10` from lightness only, so charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`.
+`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover follows `--color-primary` and subtracts `0.10` from lightness (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), so an exact hex still darkens on hover. Browsers without relative colour syntax keep the brand-knob fallback. Charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`. `--color-primary-text` stays `#fff` unless you override it.
 
-For an exact brand hex, set the semantic tokens instead:
+These follow `--color-primary` (and `--color-primary-text` for text or icons on that fill). You do not set them on a named theme unless you want them to diverge:
+
+- `--color-ring` — focus rings
+- `--sidebar-item-active-background-color` / `--top-nav-item-active-background-color` — selected nav fills
+- `--button-primary-*`, `--badge-primary-*`, `--tabs-pill-active-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, and other primary-filled controls
+
+The bottom nav bar (`--bottom-nav-background-color`) is a dark surface, not a brand fill. Dark and ocean set their own bar colours. Active bottom-nav *items* use `--bottom-nav-item-active-color` (contrast on that bar), not `--color-primary`.
+
+For an exact brand hex, set `--color-primary`. Hover derives from it; set `--color-primary-hover` only when it should not be `l - 0.10`:
 
 ```css
 :root {
   --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
 }
 ```
 
@@ -147,6 +154,9 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 --surface-border-color
 --surface-border-hover-color
 
+--overlay-backdrop-color
+--overlay-scrim-color
+
 --color-ring
 ```
 
@@ -210,7 +220,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the four kit radii on
 
 `--button-shadow` is the rest elevation. `--button-shadow-hover` aliases `--shadow-button`. `--button-shadow-active` aliases `--shadow-button-active`. Ghost and secondary stay unshadowed at rest.
 
-Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces.
+Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`.
 
 ### Hit targets
 ```css
@@ -237,15 +247,31 @@ Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `
 --text-3xl: 1.875rem
 --text-4xl: 2.25rem
 --text-5xl: 3rem
+--text-6xl: 3.75rem
+--text-7xl: 4.5rem
+--text-8xl: 6rem
+
+--text-6xl--line-height: 1
+--text-7xl--line-height: 1
+--text-8xl--line-height: 1
 
 --leading-tight: 1.25
 --leading-snug: 1.375
 --leading-normal: 1.5
+
+--display-size-min: var(--text-5xl)
+--display-size-max: 5.5rem
+--display-size: clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max))
+--display-tracking: -0.03em
+--display-leading: 1.05
+--display-weight: 600
 ```
 
 `--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` and the kit `--radius-*` values on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit face and the kit radii (rich-text chrome follows `--radius-md`).
 
-`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). Do not add `--text-6xl` or `--text-7xl`; a theme that wants a larger hero sets `--hero-headline-size` to a rem.
+`--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). `--text-6xl` (3.75rem / 60px), `--text-7xl` (4.5rem / 72px), and `--text-8xl` (6rem / 96px) are the display rungs; `@theme inline` maps them so `text-6xl` / `text-7xl` / `text-8xl` work after a Tailwind rebuild. Pairing `--text-*-line-height` tokens are `1`. Product PageTitle and Hero stay on `5xl` and below unless you pass `size: :display`.
+
+`--display-size` is a theme-tunable fluid cover size: `--display-size-min` (`--text-5xl` / 48px) on a phone, about 80px at 1280, and `--display-size-max` (`5.5rem` / 88px) from 1440. Preferred size is `1rem + 5vw`. Override `--display-size-max` (or `--display-size-min`) on a named theme without rewriting the clamp, or replace `--display-size` entirely. `--display-tracking` is `-0.03em`. `--display-leading` is `1.05`. `--display-weight` is `600`, matching content `h1` and Hero headlines. Kit CSS ships unlayered `.fp-display` and `.fp-hero-title` so Tailwind preflight cannot collapse heading size. `FlatPack::HeroTitle::Component` is the cover headline. `:xl` (default) aliases `--display-size`. `:md` clamps `--text-4xl` to `--text-6xl` (`1rem + 3.5vw`). `:lg` clamps `--text-5xl` to `--text-7xl` (`1rem + 4.5vw`). `:xxl` clamps `--text-5xl` to `--text-8xl` (`1rem + 5.5vw`). Override `--hero-title-<size>-size-min` / `-max` without rewriting the clamp. PageTitle `size: :display` and Hero `size: :display` render Hero Title at `:xl` and set the same tokens inline.
 
 Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-text-balance`, and `.fp-text-pretty`. Use tabular nums on live numbers (pagination, meters, timestamps, chart axes). Use balance on titles. Use pretty on short supporting copy. Labels are sentence case — do not force `uppercase tracking-widest` on taglines, table headers, or section titles. Avatar initials may stay `uppercase`.
 
@@ -272,7 +298,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1)  /* list/layout drop settle only */
 ```
 
-`--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar) uses `--easing-standard`. Overlay enter/exit stay bounce-free. `--easing-spring` and `--easing-spring-snappy` are the exception for list (and future layout) reorder settle — do not use them on modals, drawers, toasts, popovers, or tooltips.
+`--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar, and the opt-in Tabs/Pill `indicator: :slide` marker) uses `--easing-standard`. Overlay enter/exit stay bounce-free. `--easing-spring` and `--easing-spring-snappy` are the exception for list (and future layout) reorder settle — do not use them on modals, drawers, toasts, popovers, or tooltips.
 
 Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field. List orderable sibling shifts use `--easing-spring`; drop settle uses `--easing-spring-snappy`. Under reduced motion, list reorder snaps with no spring.
 
@@ -306,6 +332,18 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --hero-overlay-copy-padding-top
 --hero-headline-size
 --hero-description-size
+--hero-title-md-size
+--hero-title-md-size-min
+--hero-title-md-size-max
+--hero-title-lg-size
+--hero-title-lg-size-min
+--hero-title-lg-size-max
+--hero-title-xl-size
+--hero-title-xl-size-min
+--hero-title-xl-size-max
+--hero-title-xxl-size
+--hero-title-xxl-size-min
+--hero-title-xxl-size-max
 
 --drawer-backdrop-color
 --drawer-surface-color
@@ -354,15 +392,17 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing component tokens.
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). `--color-ring` and the active sidebar / top-nav fills do the same. You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing those component tokens.
 
 Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`. Range input paints the native slider through `.fp-range-input` and `--range-*` tokens, not `accent-color`.
 
 Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
 
+Collection Editor aliases the same surface and list tokens. `--collection-editor-title-color` follows `--surface-content-color`. `--collection-editor-description-color` follows `--surface-muted-content-color`. Row hover follows `--list-item-hover-background-color`. The drop indicator follows `--color-primary`. Cell lines follow `--collection-editor-border-color`. Override the `--collection-editor-*` names on a parent when only that collection should change. Named themes inherit these aliases and do not need their own copies.
+
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
-- Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in `data-fp-style` values map these from `--button-primary-*` and the other scheme tokens. A host-registered style sets the paint tokens on `.fp-button[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
+- Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in `data-fp-style` values map these from `--button-primary-*` and the other scheme tokens. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. A host-registered style sets the paint tokens on `[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
 - Radius: `--radius-md`
 - Shadow: `--button-shadow`, `--button-shadow-hover`, `--button-shadow-active`
 - Duration: `--duration-fast` for colour, border, and shadow
@@ -377,8 +417,10 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 ### Range Input
 - Kit class: `.fp-range-input`
 - Track / fill / thumb: `--range-track-color`, `--range-fill-color`, `--range-thumb-color`, `--range-thumb-border-color`, `--range-thumb-shadow`
+- Thumb fill aliases `--color-primary` so it tracks brand and `data-theme`. The ring aliases `--surface-background-color` so the handle reads on both the primary fill and the grey track. Disabled uses the native input’s reduced opacity, so the thumb stays muted rather than full primary.
 - Size: `--range-track-height`, `--range-thumb-size` (hit target is `--hit-target-min`)
 - Runtime fill: `--range-progress` on the input (percentage). Not a theme token.
+- Opt-in size slider: `.fp-range-input-ends` with `.fp-range-input-glyph` (theme `--font-sans`) or `.fp-range-input-end-icon`. Ticks are `.fp-range-input-ticks` / `.fp-range-input-tick` using `--surface-muted-content-color`. Preview runtime properties `--fp-range-value`, `--fp-range-scale`, and `--fp-range-max` are not theme tokens. Built-in `sample:` letters (default `Aa`) sit below the track with no fill.
 
 ### Checkbox / Radio
 - Colors: `--surface-background-color`, `--surface-border-color`, `--color-primary`, `--color-primary-text`, `--color-ring`
@@ -386,6 +428,12 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Size: `--checkbox-size` (Checkbox and RadioGroup; `size:` sets sm `1rem` / md `1.25rem` / lg `1.5rem`)
 - Radius: `--checkbox-radius` (checkbox); radios stay `rounded-full`
 - Label spacing: `--checkbox-label-gap` (checkbox)
+- RadioGroup `variant: :swatches` reuses Color Swatch tokens: `--color-swatch-radius`, `--color-swatch-border-color`, `--color-swatch-selected-ring-color` (aliases `--color-ring`), `--color-swatch-ring-offset-color` (aliases `--surface-background-color`), `--color-swatch-shadow`, plus `--color-swatch-check-on-dark` / `--color-swatch-check-on-light` for the selected check. Circle size follows ColorSwatch `:sm` / `:md` / `:lg`, not `--checkbox-size`.
+
+### Color Swatch
+- Circle: `--color-swatch-radius` (pill), `--color-swatch-border-color`, `--color-swatch-shadow`
+- Selected / focus ring: `--color-swatch-selected-ring-color`, `--color-swatch-ring-offset-color` (gap uses the page background so the ring reads on white and near-black fills)
+- Selected check ink on RadioGroup swatches: `--color-swatch-check-on-dark` (light mark on a dark fill), `--color-swatch-check-on-light` (dark mark on a light fill)
 
 ### SVG Status Dot Utility
 - Utility class: `fp-red-dot` (apply on an `svg` element)
@@ -401,9 +449,19 @@ Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallb
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
 - Card stat trends: `--color-success-background-color`, `--color-danger-background-color`
 
+### FAB
+- Main control: `--fab-size` (56px `:md`), `--fab-size-sm` (40px), `--fab-size-lg` (64px)
+- Speed-dial glyphs: `--fab-action-size`, `--fab-action-size-sm`, `--fab-action-size-lg`
+- Stack gap: `--fab-action-gap` (sm uses `--fab-action-gap-sm`)
+- `style: :danger` on a speed-dial action uses `--button-danger-background-color`, `--button-danger-hover-background-color`, and `--button-danger-text-color` — the same tokens TrashButton uses. Default actions keep `--fab-action-*`.
+
 ## Dark mode and named themes
 
-See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from `:root`. `rounded` is an alias of the default. Component aliases stay on `:root` and inherit.
+See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from the default palette. `rounded` is an alias of the default. Component aliases are declared on `:root, [data-theme]` and re-resolve against that element's semantic tokens.
+
+`var()` inside a custom property is computed on the element that declares it. If the kit only declared `--button-primary-background-color: var(--color-primary)` on `:root`, a host that sets `--color-primary` on `<body data-theme="…">` would keep the already-resolved `:root` value. Declaring the same wiring on `[data-theme]` is the generic fix. Prefer `data-theme` on `<html>` when you can; either placement works.
+
+Dark and ocean set `--color-primary` directly. Their focus rings and active nav fills follow that primary. They do not restate `--color-ring`.
 
 ## Auditing tokens
 

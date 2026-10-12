@@ -67,7 +67,7 @@ module FlatPack
       def skeleton_attributes
         attrs = {
           class: skeleton_classes,
-          aria: {busy: true, label: "Loading…"},
+          aria: {busy: true, label: fp_t("skeleton.loading")},
           role: "status"
         }
 

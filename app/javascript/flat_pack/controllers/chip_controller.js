@@ -150,7 +150,7 @@ export default class extends Controller {
   }
 
   setRemoveButtonState(disabled) {
-    const button = this.element.querySelector("button[aria-label='Remove']")
+    const button = this.element.querySelector("[data-fp-chip-remove]")
     if (!button) return
 
     button.disabled = disabled

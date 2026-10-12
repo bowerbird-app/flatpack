@@ -18,8 +18,10 @@ module FlatPack
         label: nil,
         error: nil,
         help_text: nil,
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -69,7 +71,7 @@ module FlatPack
             action: "flat-pack--password-input#toggle",
             flat_pack__password_input_target: "toggle"
           },
-          aria: {label: "Show password", pressed: false}) do
+          aria: {label: fp_t("password.show"), pressed: false}) do
           content_tag(:span, class: "fp-password-toggle-icons") do
             safe_join([
               render_eye_icon,

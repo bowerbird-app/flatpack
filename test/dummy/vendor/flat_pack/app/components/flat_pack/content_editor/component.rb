@@ -96,7 +96,7 @@ module FlatPack
       def render_edit_button
         content_tag(
           :button,
-          "Edit",
+          fp_t("content_editor.edit"),
           type: "button",
           class: "flat-pack-btn flat-pack-btn--primary",
           data: {
@@ -109,7 +109,7 @@ module FlatPack
       def render_save_button
         content_tag(
           :button,
-          "Save",
+          fp_t("content_editor.save"),
           type: "button",
           hidden: true,
           class: "flat-pack-btn flat-pack-btn--primary",
@@ -123,7 +123,7 @@ module FlatPack
       def render_cancel_button
         content_tag(
           :button,
-          "Cancel",
+          fp_t("content_editor.cancel"),
           type: "button",
           hidden: true,
           class: "flat-pack-btn flat-pack-btn--secondary",
@@ -146,21 +146,21 @@ module FlatPack
           }
         ) do
           safe_join([
-            toolbar_btn("bold", "Bold", ICON_BOLD),
-            toolbar_btn("italic", "Italic", ICON_ITALIC),
-            toolbar_btn("underline", "Underline", ICON_UNDERLINE),
-            toolbar_btn("strikeThrough", "Strikethrough", ICON_STRIKE),
-            toolbar_btn("removeFormat", "Clear formatting", ICON_CLEAR),
+            toolbar_btn("bold", fp_t("content_editor.bold"), ICON_BOLD),
+            toolbar_btn("italic", fp_t("content_editor.italic"), ICON_ITALIC),
+            toolbar_btn("underline", fp_t("content_editor.underline"), ICON_UNDERLINE),
+            toolbar_btn("strikeThrough", fp_t("content_editor.strikethrough"), ICON_STRIKE),
+            toolbar_btn("removeFormat", fp_t("content_editor.clear_formatting"), ICON_CLEAR),
             content_tag(:span, "", class: "flat-pack-richtext-bubble-sep"),
-            toolbar_btn("h1", "Heading 1", "H1", style: "font-size:11px;font-weight:700;width:28px;"),
-            toolbar_btn("h2", "Heading 2", "H2", style: "font-size:11px;font-weight:700;width:28px;"),
-            toolbar_btn("h3", "Heading 3", "H3", style: "font-size:11px;font-weight:700;width:28px;"),
+            toolbar_btn("h1", fp_t("content_editor.heading_1"), "H1", style: "font-size:11px;font-weight:700;width:28px;"),
+            toolbar_btn("h2", fp_t("content_editor.heading_2"), "H2", style: "font-size:11px;font-weight:700;width:28px;"),
+            toolbar_btn("h3", fp_t("content_editor.heading_3"), "H3", style: "font-size:11px;font-weight:700;width:28px;"),
             content_tag(:span, "", class: "flat-pack-richtext-bubble-sep"),
-            toolbar_btn("insertUnorderedList", "Bullet list", ICON_UL),
-            toolbar_btn("insertOrderedList", "Ordered list", ICON_OL),
-            toolbar_btn("blockquote", "Blockquote", ICON_BLOCKQUOTE),
+            toolbar_btn("insertUnorderedList", fp_t("content_editor.bullet_list"), ICON_UL),
+            toolbar_btn("insertOrderedList", fp_t("content_editor.ordered_list"), ICON_OL),
+            toolbar_btn("blockquote", fp_t("content_editor.blockquote"), ICON_BLOCKQUOTE),
             content_tag(:span, "", class: "flat-pack-richtext-bubble-sep"),
-            toolbar_btn("link", "Insert / edit link", ICON_LINK),
+            toolbar_btn("link", fp_t("content_editor.insert_link"), ICON_LINK),
             *render_image_upload_controls
           ])
         end
@@ -189,7 +189,7 @@ module FlatPack
             :button,
             ICON_IMAGE,
             type: "button",
-            title: "Insert image",
+            title: fp_t("content_editor.insert_image"),
             class: "flat-pack-richtext-bubble-btn",
             data: {action: "flat-pack--content-editor#triggerImageUpload"}
           ),

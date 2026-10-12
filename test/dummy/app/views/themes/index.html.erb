@@ -28,7 +28,11 @@
         <code class="font-mono text-xs">rails g flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52</code>).
         Lightness applies to <code class="font-mono text-xs">--color-primary</code> only. For an exact hex, set
         <code class="font-mono text-xs">--color-primary</code> directly. Named themes should override
-        brand/semantic tokens — component aliases inherit from <code class="font-mono text-xs">:root</code>.
+        brand/semantic tokens — focus rings and active nav fills follow
+        <code class="font-mono text-xs">--color-primary</code>. Component aliases are declared on
+        <code class="font-mono text-xs">:root, [data-theme]</code> so they re-resolve when
+        <code class="font-mono text-xs">data-theme</code> is on <code class="font-mono text-xs">body</code>
+        or another descendant.
       </p>
     </div>
   </div>
@@ -71,6 +75,60 @@
     </div>
   </div>
 
+
+  <div id="collection-editor" class="space-y-6">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Collection Editor",
+      subtitle: "Title, description, handle, row, and drop indicator follow the collection editor tokens.",
+      anchor_link: true
+    ) %>
+    <p class="text-sm text-[var(--surface-muted-content-color)]">
+      The sample below overrides <code>--collection-editor-title-color</code> and
+      <code>--collection-editor-border-color</code> with the danger color. The full collaborators form, picker, and reorder demo is on
+      <a class="underline" href="/demo/collection_editor#theme">Collection Editor</a>.
+    </p>
+    <style>
+      .collection-editor-token-override {
+        --collection-editor-title-color: var(--color-danger-background-color);
+        --collection-editor-border-color: var(--color-danger-background-color);
+        --collection-editor-handle-color: var(--color-danger-background-color);
+        --collection-editor-drop-indicator-color: var(--color-danger-background-color);
+      }
+    </style>
+    <div class="collection-editor-token-override">
+      <%= form_with url: "/demo/collection_editor", method: :get, data: {turbo: false} do |form| %>
+        <%= render FlatPack::CollectionEditor::Component.new(
+          title: "Collaborators",
+          headers: ["Person", "Role"],
+          orderable: true,
+          empty_text: "No collaborators yet"
+        ) do |editor| %>
+          <% form.fields_for :project_people, @collection_editor_preview, child_index: "preview" do |row_form| %>
+            <% editor.with_row(form: row_form) do |row| %>
+              <% row.with_entity(
+                form: row_form,
+                association_name: :person_id,
+                title: "Alice Chen",
+                description: "alice@example.com",
+                label: "Person",
+                search_placeholder: "Search people"
+              ) %>
+              <% row.with_field do %>
+                <%= render FlatPack::Select::Component.new(
+                  name: row_form.field_name(:role),
+                  id: row_form.field_id(:role),
+                  label: "Role",
+                  options: ["Designer", "Photographer", "Producer"],
+                  value: "Designer",
+                  chrome: :cell
+                ) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 
   <div class="space-y-6">
     <%= render FlatPack::SectionTitle::Component.new(

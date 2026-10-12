@@ -198,7 +198,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: dismiss_button_classes,
-          aria: {label: "Dismiss"},
+          aria: {label: fp_t("toast.dismiss")},
           data: {action: "flat-pack--toast#dismiss"}) do
           render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :sm)
         end

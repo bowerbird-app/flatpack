@@ -126,7 +126,7 @@ module FlatPack
           safe_join([
             render(
               FlatPack::Button::Component.new(
-                text: "Edit",
+                text: fp_t("chat.edit"),
                 size: :sm,
                 style: :secondary,
                 data: {action: "click->flat-pack--chat-message-actions#handleEdit"}
@@ -134,7 +134,7 @@ module FlatPack
             ),
             render(
               FlatPack::Button::Component.new(
-                text: "Delete",
+                text: fp_t("chat.delete"),
                 size: :sm,
                 style: :danger,
                 data: {action: "click->flat-pack--chat-message-actions#handleDelete"}

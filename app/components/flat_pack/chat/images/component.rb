@@ -95,7 +95,7 @@ module FlatPack
         end
 
         def default_aria_label
-          (@direction == :outgoing) ? "Outgoing chat images" : "Incoming chat images"
+          (@direction == :outgoing) ? fp_t("chat.outgoing_images") : fp_t("chat.incoming_images")
         end
 
         def message_component_class

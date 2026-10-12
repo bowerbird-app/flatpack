@@ -60,14 +60,14 @@ module FlatPack
         return unless @label_visible
         return unless @show_label || @label
 
-        label_text = @label || "#{percentage.to_i}%"
+        label_text = @label || fp_t("progress.percent", count: percentage.to_i)
         content_tag(:div, label_text, class: "text-sm font-medium text-[var(--surface-content-color)] mb-1 fp-tabular-nums")
       end
 
       def render_progress_bar
         content_tag(:div, **bar_container_attributes) do
           content_tag(:div, **bar_fill_attributes) do
-            content_tag(:span, "#{percentage.to_i}%", class: "sr-only")
+            content_tag(:span, fp_t("progress.percent", count: percentage.to_i), class: "sr-only")
           end
         end
       end
@@ -83,7 +83,7 @@ module FlatPack
             valuenow: @value,
             valuemin: 0,
             valuemax: @max,
-            label: @label || "Progress"
+            label: @label || fp_t("progress.label")
           },
           class: bar_container_classes
         }

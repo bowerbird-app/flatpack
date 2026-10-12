@@ -8,6 +8,14 @@ module FlatPack
       @system_arguments = sanitize_args(system_arguments)
     end
 
+    def fp_t(key, **options)
+      FlatPack::Copy.t(key, **options)
+    end
+
+    def fp_text(given, key, **options)
+      FlatPack::Copy.text(given, key, **options)
+    end
+
     private
 
     def set_slot(slot_name, slot_definition = nil, *args, **kwargs, &block)

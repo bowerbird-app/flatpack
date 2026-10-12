@@ -3,13 +3,13 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["button"]
   static values = {
-    activeClasses: String,
-    inactiveClasses: String
+    activeStyle: String,
+    inactiveStyle: { type: String, default: "secondary" },
+    activePressClass: String,
+    inactivePressClass: String
   }
 
   connect() {
-    this.activeClasses = this.parseClasses(this.activeClassesValue)
-    this.inactiveClasses = this.parseClasses(this.inactiveClassesValue)
     this.syncPressedState()
   }
 
@@ -21,8 +21,9 @@ export default class extends Controller {
     this.buttonTargets.forEach((button) => {
       const isActive = button === activeButton
 
-      button.classList.remove(...(isActive ? this.inactiveClasses : this.activeClasses))
-      button.classList.add(...(isActive ? this.activeClasses : this.inactiveClasses))
+      button.dataset.fpStyle = isActive ? this.activeStyleValue : this.inactiveStyleValue
+      button.classList.remove("fp-button-raised", "fp-button-flat")
+      button.classList.add(isActive ? this.activePressClassValue : this.inactivePressClassValue)
       button.setAttribute("aria-pressed", isActive ? "true" : "false")
     })
   }
@@ -30,9 +31,5 @@ export default class extends Controller {
   syncPressedState() {
     const activeButton = this.buttonTargets.find((button) => button.getAttribute("aria-pressed") === "true") || this.buttonTargets[0]
     if (activeButton) this.setActiveButton(activeButton)
-  }
-
-  parseClasses(classValue) {
-    return classValue.split(/\s+/).filter(Boolean)
   }
 }

@@ -18,6 +18,7 @@ module FlatPack
 
         assert_selector "button", text: "Filter"
         assert_selector "div#modal-table-filters-modal"
+        assert_no_selector "[data-flat-pack--modal-origin-value]"
         assert_selector "form#modal-table-filters-mobile-form[data-turbo-frame='modal-filter-table-frame']"
         assert_selector "#modal-only-filter"
         assert_no_selector "div.hidden.md\\:block"

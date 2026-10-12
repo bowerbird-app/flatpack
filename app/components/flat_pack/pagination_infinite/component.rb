@@ -19,7 +19,7 @@ module FlatPack
         url:,
         page: 1,
         has_more: true,
-        loading_text: "Loading more…",
+        loading_text: FlatPack::Copy::OMITTED,
         loading_variant: :table,
         insert_mode: :append,
         observe_root_selector: nil,
@@ -34,7 +34,7 @@ module FlatPack
         @url = url
         @page = page.to_i
         @has_more = has_more
-        @loading_text = loading_text
+        @loading_text = fp_text(loading_text, "pagination.loading_more")
         @loading_variant = loading_variant.to_sym
         @insert_mode = insert_mode.to_sym
         @observe_root_selector = observe_root_selector.to_s.presence

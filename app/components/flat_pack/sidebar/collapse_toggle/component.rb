@@ -89,7 +89,7 @@ module FlatPack
         end
 
         def label_text
-          @collapsed ? "Expand sidebar" : "Collapse sidebar"
+          @collapsed ? fp_t("sidebar.expand") : fp_t("sidebar.collapse")
         end
 
         def aria_attributes_for_button

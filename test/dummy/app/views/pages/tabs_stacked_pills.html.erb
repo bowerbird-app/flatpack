@@ -68,6 +68,51 @@
   ) %>
 </section>
 
+<section class="mb-12" id="sliding-stacked">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sliding stack", anchor_link: true, subtitle: "The fill slides up and down.") %>
+  <%= render FlatPack::Tabs::Component.new(variant: :stacked, indicator: :slide) do |tabs| %>
+    <% tabs.tab(id: "slide-stack-account", label: "Account") %>
+    <% tabs.tab(id: "slide-stack-billing", label: "Billing") %>
+    <% tabs.tab(id: "slide-stack-members", label: "Team") %>
+    <% tabs.tab(id: "slide-stack-security", label: "Security") %>
+
+    <% tabs.panel(id: "slide-stack-account") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Account</h3>
+        <p class="text-(--surface-content-color)">Up and down arrows still move focus. The fill follows.</p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "slide-stack-billing") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Billing</h3>
+        <p class="text-(--surface-content-color)">Same stacked layout. The marker is one pill that travels.</p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "slide-stack-members") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Team</h3>
+        <p class="text-(--surface-content-color)">Pass <code>indicator: :slide</code> with <code>variant: :stacked</code>.</p>
+      <% end %>
+    <% end %>
+    <% tabs.panel(id: "slide-stack-security") do %>
+      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+        <h3 class="text-lg font-semibold mb-2">Security</h3>
+        <p class="text-(--surface-content-color)">Reduced motion snaps the fill with no travel.</p>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Tabs::Component.new(variant: :stacked, indicator: :slide) do |tabs| %&gt;
+        &lt;% tabs.tab(id: "account", label: "Account") %&gt;
+        &lt;% tabs.tab(id: "billing", label: "Billing") %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
   <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>

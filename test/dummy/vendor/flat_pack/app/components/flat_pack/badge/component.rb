@@ -69,7 +69,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-[var(--badge-remove-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-offset-2 focus:ring-ring",
-          "aria-label": "Remove",
+          "aria-label": fp_t("badge.remove"),
           data: {action: "click->flat-pack--badge#remove"}) do
           # X icon (close)
           content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", class: "h-3 w-3", viewBox: "0 0 20 20", fill: "currentColor") do

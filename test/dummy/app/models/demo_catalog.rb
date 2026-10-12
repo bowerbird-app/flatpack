@@ -22,7 +22,8 @@ class DemoCatalog
             {title: "Light theme", path: "/themes/demos/light", description: "Light color scheme demo", icon: :monitor},
             {title: "Dark theme", path: "/themes/demos/dark", description: "Dark color scheme demo", icon: :monitor},
             {title: "Ocean theme", path: "/themes/demos/ocean", description: "Ocean color scheme demo", icon: :monitor},
-            {title: "Rounded theme", path: "/themes/demos/rounded", description: "Rounded theme demo", icon: :monitor}
+            {title: "Rounded theme", path: "/themes/demos/rounded", description: "Rounded theme demo", icon: :monitor},
+            {title: "Brand on body", path: "/demo/brand_theme/dark", description: "Semantic-only brand dark theme on body", icon: :monitor}
           ]
         }
       ]
@@ -40,7 +41,8 @@ class DemoCatalog
             {title: "Pill Buttons", path: "/demo/buttons/pills", description: "Pill-style button and filter links", icon: :square},
             {title: "Segmented", path: "/demo/buttons/segmented", description: "Segmented button selected-state patterns", icon: :square},
             {title: "Button Groups", path: "/demo/buttons/groups", description: "Grouped buttons wrapped together", icon: :square},
-            {title: "Dropdowns", path: "/demo/buttons/dropdowns", description: "Button dropdown menus and positions", icon: :chevron_down}
+            {title: "Dropdowns", path: "/demo/buttons/dropdowns", description: "Button dropdown menus and positions", icon: :chevron_down},
+            {title: "Trash Button", path: "/demo/buttons/trash", description: "Two-step delete with a confirm swap", icon: :square}
           ]
         },
         {
@@ -58,6 +60,8 @@ class DemoCatalog
           ]
         },
         {type: :item, title: "Modals", path: "/demo/modals", description: "Dialog overlays with focus trap", icon: :box},
+        {type: :item, title: "FAB", path: "/demo/fab", description: "Corner button, or a stack of actions", icon: :plus},
+        {type: :item, title: "Inline edit", path: "/demo/inline_edit", description: "Click a title. Type. It stays a title.", icon: :pencil},
         {type: :item, title: "Drawers", path: "/demo/drawer", description: "Edge panels for filters and details", icon: :menu},
         {type: :item, title: "Command palette", path: "/demo/command_palette", description: "Searchable command overlay, also Cmd+K", icon: :search},
         {type: :item, title: "Popovers", path: "/demo/popovers", description: "Click-triggered floating content", icon: :question},
@@ -101,14 +105,16 @@ class DemoCatalog
             {title: "File Input", path: "/demo/forms/file_input", description: "File upload input examples", icon: :box},
             {title: "Checkbox", path: "/demo/forms/checkbox", description: "Checkbox input examples", icon: :square},
             {title: "Fieldset", path: "/demo/forms/fieldset", description: "Name a group of related fields", icon: :square},
-            {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radio group examples", icon: :square},
+            {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radios, pills, cards, or colour dots", icon: :square},
             {title: "Select", path: "/demo/forms/select", description: "Dropdown select input examples", icon: :chevron_down},
             {title: "Combobox", path: "/demo/forms/combobox", description: "Searchable single-choice field with a typed filter", icon: :search},
+            {title: "Collection Editor", path: "/demo/collection_editor", description: "Ordered related records with a person picker, a library image join, and join fields", icon: :users},
             {title: "Nested Multiselect", path: "/demo/forms/nested_multiselect", description: "Parent and child checkbox multiselect examples", icon: :square},
             {title: "Picker", path: "/demo/picker", description: "Reusable file and image picker for any workflow", icon: :image},
             {title: "Switch", path: "/demo/forms/switch", description: "Toggle switch input examples", icon: :settings},
             {title: "Range Input", path: "/demo/range_input", description: "Slider input with live value", icon: :settings},
-            {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3}
+            {title: "Combined Form", path: "/demo/forms/combined", description: "Full form with multiple input types", icon: :edit_3},
+            {title: "Unsaved changes", path: "/demo/forms/unsaved_changes", description: "Save button turns primary when a form has unsaved changes", icon: :edit_3}
           ]
         }
       ]
@@ -168,6 +174,7 @@ class DemoCatalog
             {title: "Movable Cards", search_title: "Grid: Movable Cards", path: "/demo/grid/movable_cards", description: "Draggable card grid with persisted ordering", icon: :chevron_down}
           ]
         },
+        {type: :item, title: "Masonry", path: "/demo/masonry", description: "Mixed-ratio photos stacked without empty holes", icon: :image},
         {type: :item, title: "Code Blocks", path: "/demo/code_blocks", description: "Reusable snippets for demo pages", icon: :type},
         {type: :item, title: "Avatars", path: "/demo/avatars", description: "Avatar examples with images, initials, and status", icon: :user},
         {type: :item, title: "Avatar Groups", path: "/demo/avatar_groups", description: "Stacked avatar groups with overflow and overlap", icon: :users},
@@ -209,6 +216,9 @@ class DemoCatalog
           icon: :align_left,
           children: [
             {title: "Page Title", path: "/demo/page_header", description: "Page title with optional subtitle", icon: :type},
+            {title: "Hero Title", path: "/demo/hero_title", description: "Cover headlines in four fluid sizes", icon: :type},
+            {title: "Type scale", path: "/demo/type_scale", description: "Kit type rungs from xs through 8xl, plus display", icon: :type},
+            {title: "Section Title", path: "/demo/section_title", description: "In-page headings with size and spacing", icon: :type},
             {title: "Content", path: "/demo/text/content", description: "Article type for CMS HTML", icon: :align_left},
             {title: "Quote", path: "/demo/text/quote", description: "Blockquote and citation text examples", icon: :message_circle}
           ]

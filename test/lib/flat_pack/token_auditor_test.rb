@@ -12,6 +12,15 @@ module FlatPack
 
     test "runtime fill percent is not a theme token" do
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--range-progress"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--collection-editor-columns"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-gap"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-row"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-trash-button-size"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-offset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-nav-offset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-value"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-scale"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-max"
     end
 
     test "brand primitives and transition aliases are defined" do

@@ -34,6 +34,7 @@ class ApplicationController < ActionController::Base
       "/pages/hero",
       "/mobile",
       "/flat_pack",
+      "/recording_studio_internationalization",
       "/assets",
       "/rails/active_storage",
       "/cable"

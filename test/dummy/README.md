@@ -8,7 +8,7 @@ This dummy app serves as:
 - A testing environment for the FlatPack gem during development
 - A demo/showcase of FlatPack components
 - Reference implementation showing how to integrate FlatPack into a Rails app
-- A host wiring demo for Recording Studio Users, Admin, API, OAuth Connect, and MCP (see `docs/recording_studio_dummy.md`)
+- A host wiring demo for Recording Studio Users, Admin, API, OAuth Connect, MCP, and locale switching (see `docs/recording_studio_dummy.md` and `docs/i18n.md`)
 
 ## Setup
 
@@ -86,6 +86,7 @@ The dummy app loads gem CSS first, then the compiled host Tailwind bundle last (
 <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/content_editor", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "flat_pack/inline_edit", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 ```
 
@@ -125,6 +126,8 @@ The FlatPack engine is mounted in `config/routes.rb`:
 ```ruby
 mount FlatPack::Engine => "/flat_pack"
 ```
+
+The dummy also mounts `RecordingStudioInternationalization` so the catalog can switch English/French. The language selector sits in the top nav, immediately left of the theme control. Full-page catalog cache keys include the locale. Kit French lives only in `config/locales/flatpack.fr.yml` — the FlatPack gem ships English only.
 
 ## Demo Pages
 

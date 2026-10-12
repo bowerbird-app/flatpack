@@ -106,6 +106,12 @@
     overflow: hidden;
   }
 
+  .flat-pack-richtext-editor.flat-pack-richtext-editor--cell {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+
   /* When there is no toolbar, round all corners */
   .flat-pack-richtext-wrapper:not(:has(.flat-pack-richtext-toolbar)) .flat-pack-richtext-editor {
     border-radius: calc(var(--radius-md, 1rem) - 1px);

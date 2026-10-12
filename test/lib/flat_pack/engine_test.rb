@@ -50,6 +50,30 @@ module FlatPack
       refute app.config.respond_to?(:view_component)
     end
 
+    test "copy helper is mixed into views and skipped on API-like controllers" do
+      assert_includes ActionView::Base.included_modules, FlatPack::CopyHelper
+
+      api_like = Class.new
+      base_like = Class.new do
+        def self.helper(mod)
+          (@helpers ||= []) << mod
+        end
+
+        def self.helpers
+          @helpers || []
+        end
+      end
+
+      [api_like, base_like].each do |klass|
+        klass.class_eval do
+          helper FlatPack::CopyHelper if respond_to?(:helper)
+        end
+      end
+
+      refute_respond_to api_like, :helper
+      assert_includes base_like.helpers, FlatPack::CopyHelper
+    end
+
     test "view component slot compatibility helpers are available" do
       component = FlatPack::Comments::Thread::Component.new
 

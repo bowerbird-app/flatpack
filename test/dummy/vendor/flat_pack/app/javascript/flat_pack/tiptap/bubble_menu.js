@@ -13,6 +13,23 @@
  * CSS variables from the gem's design system.
  */
 
+import { flatPackCopy } from "flat_pack/copy"
+
+const BUBBLE_COPY_KEYS = {
+  bold: "rich_text.bold",
+  italic: "rich_text.italic",
+  underline: "rich_text.underline",
+  strike: "rich_text.strikethrough",
+  code: "rich_text.inline_code",
+  highlight: "rich_text.highlight",
+  link: "rich_text.link"
+}
+
+function bubbleCopyLabel(def) {
+  const key = BUBBLE_COPY_KEYS[def.name]
+  return key ? flatPackCopy(key) : def.label
+}
+
 // ── SVG Icons (same subset as toolbar, kept local to avoid cross-module state) ──
 
 const ICONS = {
@@ -44,7 +61,7 @@ function bubbleButton({ label, icon, onClick }) {
 
 function bubbleToolButton(def, editor, menuEl) {
   const btn = bubbleButton({
-    label: def.label,
+    label: bubbleCopyLabel(def),
     icon: def.icon,
     onClick: () => {
       def.action(editor)
@@ -138,7 +155,7 @@ function buildDefaultBubbleTools(opts) {
       icon: ICONS.link,
       action: (e) => {
         const prev = e.getAttributes("link").href || ""
-        const url = window.prompt("Enter link URL:", prev)
+        const url = window.prompt(flatPackCopy("rich_text.enter_link_url"), prev)
         if (url === null) return
         if (url === "") {
           e.chain().focus().extendMarkRange("link").unsetLink().run()
@@ -183,7 +200,7 @@ export function buildBubbleMenu(menuEl, editor, opts, extraTools = []) {
   if (menuEl.childElementCount > 0) return
 
   menuEl.setAttribute("role", "toolbar")
-  menuEl.setAttribute("aria-label", "Text formatting")
+  menuEl.setAttribute("aria-label", flatPackCopy("rich_text.text_formatting"))
   const toolDefinitions = mergeBubbleToolDefinitions(buildDefaultBubbleTools(opts), extraTools)
   menuEl._flatPackBubbleToolDefinitions = toolDefinitions
 

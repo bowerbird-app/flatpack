@@ -28,6 +28,7 @@ breadcrumb | FlatPack::Breadcrumb::Component | docs/components/breadcrumb.md
 button | FlatPack::Button::Component | docs/components/button.md
 button_dropdown | FlatPack::Button::Dropdown::Component | docs/components/button-dropdown.md
 button_group | FlatPack::ButtonGroup::Component | docs/components/button-group.md
+trash_button | FlatPack::TrashButton::Component | docs/components/trash-button.md
 card | FlatPack::Card::Component | docs/components/card.md
 carousel | FlatPack::Carousel::Component | docs/components/carousel.md
 chart | FlatPack::Chart::Component | docs/components/charts.md
@@ -41,6 +42,7 @@ divider | FlatPack::Divider::Component | docs/components/divider.md
 drawer | FlatPack::Drawer::Component | docs/components/drawer.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
+collection_editor | FlatPack::CollectionEditor::Component | docs/components/collection-editor.md
 combobox | FlatPack::Combobox::Component | docs/components/combobox.md
 command_palette | FlatPack::CommandPalette::Component | docs/components/command-palette.md
 content | FlatPack::Content::Component | docs/components/content.md
@@ -51,6 +53,7 @@ comments_item | FlatPack::Comments::Item::Component | docs/components/comments-i
 comments_replies | FlatPack::Comments::Replies::Component | docs/components/comments-replies.md
 comments_thread | FlatPack::Comments::Thread::Component | docs/components/comments-thread.md
 empty_state | FlatPack::EmptyState::Component | docs/components/empty-state.md
+fab | FlatPack::Fab::Component | docs/components/fab.md
 email_button | FlatPack::EmailButton::Component | docs/components/email-button.md
 email_card | FlatPack::EmailCard::Component | docs/components/email-card.md
 email_footer_links | FlatPack::EmailFooterLinks::Component | docs/components/email-footer-links.md
@@ -58,7 +61,9 @@ email_template_example | FlatPack::EmailTemplateExample::Component | docs/compon
 fieldset | FlatPack::Fieldset::Component | docs/components/fieldset.md
 grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
+hero_title | FlatPack::HeroTitle::Component | docs/components/hero-title.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
+inline_edit | FlatPack::InlineEdit::Component | docs/components/inline-edit.md
 kbd | FlatPack::Kbd::Component | docs/components/kbd.md
 date_input | FlatPack::DateInput::Component | docs/components/inputs.md
 date_range_input | FlatPack::DateRangeInput::Component | docs/components/date-range-input.md
@@ -66,6 +71,7 @@ date_time_input | FlatPack::DateTimeInput::Component | docs/components/inputs.md
 time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
 list | FlatPack::List::Component | docs/components/list.md
+masonry | FlatPack::Masonry::Component | docs/components/masonry.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
 notification | FlatPack::Notification::Component | docs/components/notification.md

@@ -21,19 +21,19 @@ module FlatPack
 
         def initialize(
           count: 0,
-          title: "Comments",
+          title: FlatPack::Copy::OMITTED,
           variant: :default,
-          empty_title: "No comments yet",
-          empty_description: "Be the first to share your thoughts.",
+          empty_title: FlatPack::Copy::OMITTED,
+          empty_description: FlatPack::Copy::OMITTED,
           locked: false,
           **system_arguments
         )
           super(**system_arguments)
           @count = count
-          @title = title
+          @title = fp_text(title, "comments.title")
           @variant = variant.to_sym
-          @empty_title = empty_title
-          @empty_description = empty_description
+          @empty_title = fp_text(empty_title, "comments.empty_title")
+          @empty_description = fp_text(empty_description, "comments.empty_description")
           @locked = locked
 
           validate_variant!
@@ -124,7 +124,7 @@ module FlatPack
                   d: "M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z",
                   "clip-rule": "evenodd")
               end,
-              content_tag(:span, "Locked")
+              content_tag(:span, fp_t("comments.locked"))
             ])
           end
         end

@@ -7,17 +7,22 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Concept | Param | Use for |
 | --- | --- | --- |
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
+| Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
+| Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
 | Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy |
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Overlay position | `placement` | Tooltips, popovers, dropdowns, and notification menus |
+| Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
+| Masonry column count | `columns` | Masonry only. Integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Do not use Grid's `cols` here. |
+| Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
@@ -27,6 +32,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts; FlatPack does not format currency |
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
 | Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
+| Sliding active marker | `indicator` | Tabs and Button::Pill. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
 
 ## Billing namespace notes
 
@@ -45,6 +51,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`.
 - Do not use `position` for overlay placement. Use `placement`.
+- Do not use `placement` for where a Modal grows from. Use `origin`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`.

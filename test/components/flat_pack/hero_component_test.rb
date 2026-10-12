@@ -132,6 +132,107 @@ module FlatPack
         end
       end
 
+      def test_raises_argument_error_for_unknown_size
+        assert_raises(ArgumentError) do
+          Component.new(size: :huge)
+        end
+      end
+
+      def test_raises_argument_error_for_unknown_title_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title_size: :huge)
+        end
+
+        assert_includes error.message, "Invalid title_size"
+        assert_includes error.message, "xl"
+      end
+
+      def test_display_size_uses_display_class_and_keeps_balance
+        render_inline(Component.new(
+          variant: :centered,
+          size: :display,
+          headline: "Northlight press kit",
+          description: "Stills, credits, and download packs."
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "fp-display"
+        assert_includes html, "fp-text-balance"
+        assert_includes html, "font-size: var(--display-size)"
+        assert_includes html, "font-weight: var(--display-weight)"
+        assert_includes html, "letter-spacing: var(--display-tracking)"
+        assert_includes html, "line-height: var(--display-leading)"
+        assert_includes html, "mt-8"
+        assert_includes html, "max-w-5xl"
+        refute_includes html, "--hero-headline-size"
+        refute_includes html, "lg:text-6xl"
+        refute_includes html, "text-[length:var(--text-4xl)]"
+        assert_includes html, "fp-hero-title"
+        assert_includes html, "fp-hero-title--xl"
+      end
+
+      def test_title_size_uses_hero_title_without_display_size_flag
+        render_inline(Component.new(
+          variant: :centered,
+          title_size: :md,
+          headline: "Northlight press kit"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "fp-hero-title--md"
+        assert_includes html, "font-size: var(--hero-title-md-size)"
+        assert_includes html, "max-w-5xl"
+        refute_includes html, "fp-display"
+        refute_includes html, "--hero-headline-size"
+      end
+
+      def test_title_size_wins_over_display_size
+        render_inline(Component.new(
+          variant: :centered,
+          size: :display,
+          title_size: :xxl,
+          headline: "Northlight press kit"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "fp-hero-title--xxl"
+        assert_includes html, "font-size: var(--hero-title-xxl-size)"
+        refute_includes html, "fp-hero-title--xl"
+      end
+
+      def test_default_size_omits_display_class
+        render_inline(Component.new(
+          variant: :centered,
+          headline: "Build beautiful interfaces faster."
+        ))
+
+        html = page.native.to_html
+        refute_includes html, "fp-display"
+        refute_includes html, "--display-size"
+        refute_includes html, "--display-weight"
+        refute_includes html, "max-w-5xl"
+        assert_includes html, "max-w-4xl"
+        assert_includes html, "--hero-headline-size"
+        assert_includes html, "--text-4xl"
+      end
+
+      def test_overlay_display_size_uses_display_class
+        render_inline(Component.new(
+          variant: :centered_image,
+          size: :display,
+          headline: "Northlight press kit",
+          background_image_url: "https://placehold.co/1600x800"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "fp-display"
+        assert_includes html, "fp-hero-title"
+        assert_includes html, "font-size: var(--display-size)"
+        assert_includes html, "font-weight: var(--display-weight)"
+        assert_includes html, "text-[var(--hero-overlay-text-color)]"
+        refute_includes html, "sm:text-[length:var(--hero-headline-size)]"
+      end
+
       # 11. javascript: URL in image_url results in a safe value (no JS in output)
       def test_sanitizes_javascript_url_in_image_url
         render_inline(Component.new(

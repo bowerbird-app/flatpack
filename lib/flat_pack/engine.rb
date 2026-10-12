@@ -39,6 +39,22 @@ module FlatPack
     # Configure autoload paths for components
     config.autoload_paths << root.join("app/components")
 
+    initializer "flat_pack.copy_helper" do
+      ActiveSupport.on_load(:action_controller) do
+        # ActionController::API has no `helper`. Views still get CopyHelper
+        # from the action_view load hook.
+        if respond_to?(:helper)
+          helper FlatPack::CopyHelper
+          helper FlatPack::ModalHelper
+        end
+      end
+
+      ActiveSupport.on_load(:action_view) do
+        include FlatPack::CopyHelper
+        include FlatPack::ModalHelper
+      end
+    end
+
     # Configure Propshaft to serve our assets
     initializer "flat_pack.assets" do |app|
       if app.config.respond_to?(:assets)

@@ -41,7 +41,7 @@ module FlatPack
       }.freeze
 
       def initialize(
-        placeholder: "Search...",
+        placeholder: FlatPack::Copy::OMITTED,
         name: "q",
         value: nil,
         search_url: nil,
@@ -50,11 +50,11 @@ module FlatPack
         size: :md,
         min_characters: 2,
         debounce: 250,
-        no_results_text: "No results found",
+        no_results_text: FlatPack::Copy::OMITTED,
         **system_arguments
       )
         super(**system_arguments)
-        @placeholder = placeholder
+        @placeholder = fp_text(placeholder, "search.placeholder")
         @name = name
         @value = value
         @search_url = search_url.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_url) : nil
@@ -63,7 +63,7 @@ module FlatPack
         @size = size.to_sym
         @min_characters = min_characters
         @debounce = debounce
-        @no_results_text = no_results_text
+        @no_results_text = fp_text(no_results_text, "search.no_results")
 
         validate_search_url!(search_url) if search_url.present?
         validate_max_width!
@@ -104,7 +104,7 @@ module FlatPack
             action: "flat-pack--search-input#clear",
             flat_pack__search_input_target: "clearButton"
           },
-          aria: {label: "Clear search"}) do
+          aria: {label: fp_t("search.clear")}) do
           render FlatPack::Shared::IconComponent.new(
             name: "x-mark",
             size: icon_size
@@ -245,7 +245,7 @@ module FlatPack
           safe_join([
             content_tag(:ul, "", class: "max-h-72 overflow-y-auto", data: {flat_pack__search_target: "results"}, role: "listbox"),
             content_tag(:div, @no_results_text, class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "noResults"}),
-            content_tag(:div, "Searching...", class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "loading"})
+            content_tag(:div, fp_t("search.searching"), class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "loading"})
           ])
         end
       end

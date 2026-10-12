@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
   static targets = ["searchInput", "results", "emptyState", "outputField", "formFields"]
@@ -269,7 +270,7 @@ export default class extends Controller {
   #listItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
     const kind = this.#normalizedKind(item.kind)
-    const title = this.#escapeHtml(String(item.title || item.label || item.name || "Untitled"))
+    const title = this.#escapeHtml(String(item.title || item.label || item.name || flatPackCopy("picker.untitled")))
     const thumbnailUrl = String(item.thumbnail_url || "")
     const description = this.#escapeHtml(String(item.description || ""))
     const rightText = this.#escapeHtml(String(item.right_text || ""))
@@ -311,7 +312,7 @@ export default class extends Controller {
     `
   }
 
-  #listLeadingSlotMarkup(item, { isSelected = false, title = "Untitled" } = {}) {
+  #listLeadingSlotMarkup(item, { isSelected = false, title = flatPackCopy("picker.untitled") } = {}) {
     const thumbnailUrl = this.#escapeHtml(String(item.thumbnail_url || ""))
 
     if (thumbnailUrl) {
@@ -375,7 +376,7 @@ export default class extends Controller {
   #gridItemMarkup(item) {
     const itemId = this.#escapeHtml(String(item.id))
     const kind = this.#normalizedKind(item.kind)
-    const label = this.#escapeHtml(String(item.title || item.label || item.name || "Untitled"))
+    const label = this.#escapeHtml(String(item.title || item.label || item.name || flatPackCopy("picker.untitled")))
     const name = this.#escapeHtml(String(item.name || ""))
     const contentType = this.#escapeHtml(String(item.contentType || ""))
     const byteSize = Number.isFinite(item.byteSize) ? item.byteSize : ""
@@ -434,7 +435,7 @@ export default class extends Controller {
 
   #gridFallbackPreviewMarkup(kind, item) {
     if (kind === "file") {
-      const label = this.#escapeHtml(String(item.label || item.name || "Untitled"))
+      const label = this.#escapeHtml(String(item.label || item.name || flatPackCopy("picker.untitled")))
       const meta = this.#escapeHtml(this.#metaText(item))
 
       return `

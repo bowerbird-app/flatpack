@@ -118,6 +118,12 @@ components:
     primary_class: FlatPack::ButtonGroup::Component
     status: documented
 
+  - key: trash_button
+    title: Trash Button
+    doc: docs/components/trash-button.md
+    primary_class: FlatPack::TrashButton::Component
+    status: documented
+
   - key: card
     title: Card
     doc: docs/components/card.md
@@ -229,6 +235,12 @@ components:
     title: Collapse
     doc: docs/components/collapse.md
     primary_class: FlatPack::Collapse::Component
+    status: documented
+
+  - key: collection_editor
+    title: Collection Editor
+    doc: docs/components/collection-editor.md
+    primary_class: FlatPack::CollectionEditor::Component
     status: documented
 
   - key: combobox
@@ -399,10 +411,21 @@ components:
     primary_class: FlatPack::List::Component
     status: documented
 
+  - key: masonry
+    title: Masonry
+    doc: docs/components/masonry.md
+    primary_class: FlatPack::Masonry::Component
+    related_classes:
+      - FlatPack::Masonry::Item
+      - FlatPack::Masonry::Image
+    status: documented
+
   - key: modal
     title: Modal
     doc: docs/components/modal.md
     primary_class: FlatPack::Modal::Component
+    related_classes:
+      - FlatPack::Modal::Screen
     status: documented
 
   - key: modal_filter
