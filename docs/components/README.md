@@ -58,6 +58,7 @@ email_button | FlatPack::EmailButton::Component | docs/components/email-button.m
 email_card | FlatPack::EmailCard::Component | docs/components/email-card.md
 email_footer_links | FlatPack::EmailFooterLinks::Component | docs/components/email-footer-links.md
 email_template_example | FlatPack::EmailTemplateExample::Component | docs/components/email-template-example.md
+fieldset | FlatPack::Fieldset::Component | docs/components/fieldset.md
 grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
 hero_title | FlatPack::HeroTitle::Component | docs/components/hero-title.md

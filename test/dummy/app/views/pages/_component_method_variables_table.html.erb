@@ -668,6 +668,17 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"compose-fab\", data: { turbo_method: \"post\" }" }
       ]
     },
+    fieldset: {
+      label: "Fieldset",
+      method_call: "render FlatPack::Fieldset::Component.new(title: \"Shipping address\", description: \"Where should we send this order?\") { ... }",
+      variables: [
+        { variable: "title", accepts: "String (required)", example: "title: \"Shipping address\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Where should we send this order?\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Add a street.\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "default slot", accepts: "Block", example: "the fields passed in the block" }
+      ]
+    },
     form_input: {
       label: "Form Inputs",
       method_call: "form_with(...) { render FlatPack::TextInput::Component.new(...); render FlatPack::Button::Component.new(...) }",

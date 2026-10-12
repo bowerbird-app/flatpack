@@ -63,6 +63,7 @@ flat_pack/
 │   │   ├── email_template_example/
 │   │   ├── empty_state/
 │   │   ├── file_input/
+│   │   ├── fieldset/
 │   │   ├── grid/
 │   │   ├── hero/
 │   │   ├── hero_title/

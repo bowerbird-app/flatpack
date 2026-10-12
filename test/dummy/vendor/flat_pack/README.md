@@ -358,6 +358,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **FileInput** - File upload input
 - **Checkbox** - Single checkbox or checkbox groups
 - **RadioGroup** - Radio button groups, including optional inline pills and selectable cards
+- **Fieldset** - Legend and fieldset for a named cluster of controls
 - **Select** - Dropdown select menus with optional searchable single and multiselect modes
 - **Switch** - Toggle switch for boolean states
 
