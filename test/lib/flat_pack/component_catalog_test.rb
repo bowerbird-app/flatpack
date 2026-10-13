@@ -141,6 +141,24 @@ module FlatPack
       assert_equal "default", style.fetch(:default)
     end
 
+    test "show Overlay item binds PLACEMENTS to placement and INSETS to inset" do
+      payload = FlatPack::ComponentCatalog.show("Overlay::Component")
+      slots = payload.fetch(:slots).map { |slot| slot[:name] }
+
+      assert_includes slots, "media"
+      assert_includes slots, "items"
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::Overlay::Component"
+
+      item = FlatPack::ComponentCatalog.show("Overlay::Item")
+      placement = parameter_named(item, "placement")
+      inset = parameter_named(item, "inset")
+
+      assert_equal %w[top_left top_center top_right middle_left center middle_right bottom_left bottom_center bottom_right], placement.fetch(:enum)
+      assert_equal "top_left", placement.fetch(:default)
+      assert_equal %w[sm md lg], inset.fetch(:enum)
+      assert_equal "md", inset.fetch(:default)
+    end
+
     test "show Masonry binds ORDERS to order and GAPS to gap" do
       payload = FlatPack::ComponentCatalog.show("Masonry::Component")
       order = parameter_named(payload, "order")

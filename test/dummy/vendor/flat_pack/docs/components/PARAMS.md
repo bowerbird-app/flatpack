@@ -16,7 +16,9 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy |
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
-| Overlay position | `placement` | Tooltips, popovers, dropdowns, and notification menus |
+| Floating layer anchor | `placement` | Tooltips, popovers, dropdowns, and notification menus. Typical values are `:top`, `:bottom`, `:left`, `:right`. Menu components that already list corner values keep those. |
+| Content on media | `placement` | `FlatPack::Overlay::Item` only (`with_item`). Nine-cell grid: `:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`. Default `:top_left`. Not FAB `position`, and not the floating-layer anchor above. |
+| Gap from the media edge | `inset` | `FlatPack::Overlay::Item` only. `:sm`, `:md`, `:lg` on the Tailwind spacing scale (`--spacing` × 2, × 4, and × 6). Default `:md`. `:center` ignores it. Edge-centers use it on the edge axis only. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
@@ -60,7 +62,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`.
-- Do not use `position` for overlay placement. Use `placement`.
+- Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay's nine-cell grid is `placement` on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.

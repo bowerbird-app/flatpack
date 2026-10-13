@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.231] - 2026-10-13
+
+### Added
+- `FlatPack::Overlay::Component` places content on media. `with_media` is the element underneath. `with_item` can be used more than once for a badge, icon, button, or anything else.
+- Each item takes `placement:` on a nine-cell grid (`:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`, default `:top_left`) and `inset:` `:sm` / `:md` / `:lg` (default `:md`) on the Tailwind spacing scale. Demo: `/demo/overlay`.
+
+### Changed
+- Bumped the gem version to `0.1.231`.
+
+### Upgrade notes
+- Additive. Hero, Carousel, FAB, Avatar, and Card media stay as they are.
+- Overlay does not theme, recolour, or shadow its items. Pass those components in the item slot so they keep their own look.
+- `placement` on an overlay item is the nine-cell grid. Tooltip, popover, and dropdown `placement` values are unchanged. FAB corners stay `position`.
+- Rebuild host Tailwind so the positioning utilities (`inline-flex`, `contents`, `top-2` / `top-4` / `top-6`, and the matching `right`, `bottom`, `left`, and translate classes) are generated.
+- Redeploy so `meta.gem_version` shows `0.1.231`.
+
 ## [0.1.230] - 2026-10-13
 
 ### Added
