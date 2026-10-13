@@ -3,12 +3,11 @@ import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
-  static targets = ["textarea", "count", "copyButton"]
+  static targets = ["textarea", "count"]
   static values = {
     autogrow: { type: Boolean, default: true },
     submitOnEnter: { type: Boolean, default: false },
     characterCountEnabled: Boolean,
-    quickCopyEnabled: Boolean,
     minCharacters: Number,
     maxCharacters: Number
   }
@@ -84,68 +83,6 @@ export default class extends Controller {
 
     this.countTarget.classList.toggle("text-[var(--color-warning-border)]", belowMin || aboveMax)
     this.countTarget.classList.toggle("text-[var(--surface-muted-content-color)]", !(belowMin || aboveMax))
-  }
-
-  async copyFromTextarea() {
-    if (!this.quickCopyEnabledValue || !this.hasTextareaTarget || this.textareaTarget.disabled) return
-
-    await this.copyTextareaValue()
-  }
-
-  async copyFromButton(event) {
-    event.preventDefault()
-    if (!this.quickCopyEnabledValue || !this.hasTextareaTarget || this.textareaTarget.disabled) return
-
-    await this.copyTextareaValue()
-  }
-
-  async copyTextareaValue() {
-    const value = this.textareaTarget.value || ""
-
-    if (!value.length) {
-      this.dispatchToast("warning", flatPackCopy("clipboard.nothing"))
-      return
-    }
-
-    const copied = await this.writeText(value)
-    if (copied) {
-      this.dispatchToast("success", flatPackCopy("clipboard.copied"))
-      return
-    }
-
-    this.dispatchToast("danger", flatPackCopy("clipboard.unable"))
-  }
-
-  async writeText(text) {
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(text)
-        return true
-      } catch {
-      }
-    }
-
-    const input = document.createElement("input")
-    input.value = text
-    input.style.position = "fixed"
-    input.style.opacity = "0"
-
-    document.body.appendChild(input)
-    input.select()
-    const copied = document.execCommand("copy")
-    input.remove()
-
-    return copied
-  }
-
-  dispatchToast(style, text) {
-    document.dispatchEvent(new CustomEvent("toast:add", {
-      detail: {
-        style,
-        text,
-        timeout: 3000
-      }
-    }))
   }
 
   #isVisible(element) {

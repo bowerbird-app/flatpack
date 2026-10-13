@@ -1,0 +1,52 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Copy Button",
+  subtitle: "Copies a string, or the text of another element."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :copy_button %>
+
+<section class="mb-12" id="copy-string">
+  <%= render FlatPack::SectionTitle::Component.new(title: "String", anchor_link: true, subtitle: "text: is the clipboard string. label: is what the button says.") %>
+  <div class="flex flex-wrap items-center gap-3 mb-4">
+    <%= render FlatPack::CopyButton::Component.new(text: "sk_live_1234567890", timeout: 0, id: "copy-default") %>
+    <%= render FlatPack::CopyButton::Component.new(text: "sk_live_1234567890", label: "Copy key", style: :primary) %>
+    <%= render FlatPack::Tooltip::Component.new(text: "Copy") do %>
+      <%= render FlatPack::CopyButton::Component.new(text: "sk_live_1234567890", icon_only: true, label: "Copy key") %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::CopyButton::Component.new(text: "sk_live_1234567890") %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="copy-sizes">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Same scale as Button.") %>
+  <div class="flex flex-wrap items-center gap-3 mb-4">
+    <% {sm: "Small", md: "Medium", lg: "Large"}.each do |size, name| %>
+      <%= render FlatPack::CopyButton::Component.new(text: name, label: name, size: size) %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="copy-target">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Another element", anchor_link: true, subtitle: "target: is an id or a selector.") %>
+  <p id="copy-snippet" class="mb-4 text-sm">Harbour take, 9 Oct</p>
+  <div class="flex flex-wrap items-center gap-3 mb-4">
+    <%= render FlatPack::CopyButton::Component.new(target: "copy-snippet", label: "Copy snippet") %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;p id="copy-snippet"&gt;Harbour take, 9 Oct&lt;/p&gt;
+      &lt;%= render FlatPack::CopyButton::Component.new(target: "copy-snippet", label: "Copy snippet") %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="copy-missing">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Missing target", anchor_link: true, subtitle: "A missing element shows the error state.") %>
+  <div class="mb-4">
+    <%= render FlatPack::CopyButton::Component.new(target: "missing-copy-target", label: "Copy missing", timeout: 0, id: "copy-error") %>
+  </div>
+</section>

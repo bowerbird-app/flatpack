@@ -101,6 +101,9 @@ module FlatPack
       clipboard.nothing
       clipboard.copied
       clipboard.unable
+      clipboard.copy
+      clipboard.copied_label
+      clipboard.error_label
     ].freeze
 
     module_function

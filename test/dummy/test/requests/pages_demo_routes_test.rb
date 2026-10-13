@@ -14,6 +14,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/buttons/groups
     /demo/buttons/dropdowns
     /demo/buttons/trash
+    /demo/buttons/copy
     /demo/billing
     /demo/billing/plan_summary
     /demo/billing/plan_picker
@@ -295,6 +296,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_buttons_segmented_path
     assert_includes response.body, demo_buttons_dropdowns_path
     assert_includes response.body, demo_buttons_trash_path
+    assert_includes response.body, demo_buttons_copy_path
   end
 
   test "application layout sets viewport-fit cover" do
@@ -305,6 +307,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Skip to content"
     assert_includes response.body, 'id="main"'
     assert_includes response.body, "demo-command-palette"
+  end
+
+  test "copy button demo renders string target and error examples" do
+    get "/demo/buttons/copy"
+
+    assert_response :success
+    assert_includes response.body, "Copy Button"
+    assert_includes response.body, "fp-copy-button"
+    assert_includes response.body, 'id="copy-default"'
+    assert_includes response.body, 'id="copy-error"'
+    assert_includes response.body, "flat-pack--clipboard"
+    assert_includes response.body, "copy-snippet"
   end
 
   test "trash button demo renders rest armed and row examples" do

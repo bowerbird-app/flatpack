@@ -2,6 +2,7 @@ const ENGLISH = {
   "password.show": "Show password",
   "password.hide": "Hide password",
   "chip.remove": "Remove",
+  "collection_editor.already_joined": "This image is already on this page",
   "collection_editor.create_failed": "Could not create the record",
   "collection_editor.load_failed": "Could not load the record",
   "collection_editor.save_failed": "Could not save the record",
@@ -89,7 +90,10 @@ const ENGLISH = {
   "chat.failed": "Failed",
   "clipboard.nothing": "Nothing to copy",
   "clipboard.copied": "Copied to clipboard",
-  "clipboard.unable": "Unable to copy"
+  "clipboard.unable": "Unable to copy",
+  "clipboard.copy": "Copy",
+  "clipboard.copied_label": "Copied",
+  "clipboard.error_label": "Couldn’t copy"
 }
 
 function payload() {

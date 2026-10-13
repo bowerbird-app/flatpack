@@ -35,7 +35,7 @@ Component-specific props:
 | --- | --- | --- | --- | --- |
 | `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
-| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` and plain `TextArea` from both field click and a trailing copy icon button, with toast feedback; the control is rendered `readonly` when enabled. Not applied when `TextArea` uses `rich_text: true`. |
+| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` and plain `TextArea` from both a field click and a trailing icon button. The control is `readonly`. Feedback is a toast, then the same Copied or error icon state as Copy Button. Not applied when `TextArea` uses `rich_text: true`. |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextInput` and `TextArea` count color. |

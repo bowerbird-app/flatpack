@@ -328,6 +328,9 @@ pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 # Kit copy for Stimulus (pairs with data-fp-copy on <html>)
 pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
 
+# Shared clipboard writer used by CopyButton, quick copy, and section-title anchors
+pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
+
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
@@ -373,6 +376,7 @@ If you need to manually configure JavaScript:
                 preload: false
    pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
    pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
+   pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 

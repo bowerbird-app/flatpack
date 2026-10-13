@@ -58,6 +58,13 @@ module FlatPack
       assert_empty extra, "dummy fr.yml has keys the gem en file does not: #{extra.sort.join(", ")}"
     end
 
+    test "copy.js English fallback includes every JS key" do
+      source = File.read(FlatPack::Engine.root.join("app/javascript/flat_pack/copy.js"))
+      missing = FlatPack::Copy::JS_KEYS.reject { |key| source.include?(%("#{key}")) }
+
+      assert_empty missing, "copy.js ENGLISH is missing: #{missing.sort.join(", ")}"
+    end
+
     test "JS_KEYS all exist in the gem English locale" do
       en_keys = leaf_keys(yaml_tree(GEM_EN, "en"))
       missing = FlatPack::Copy::JS_KEYS - en_keys

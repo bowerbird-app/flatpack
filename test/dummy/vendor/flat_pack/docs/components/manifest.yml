@@ -118,6 +118,12 @@ components:
     primary_class: FlatPack::ButtonGroup::Component
     status: documented
 
+  - key: copy_button
+    title: Copy Button
+    doc: docs/components/copy-button.md
+    primary_class: FlatPack::CopyButton::Component
+    status: documented
+
   - key: trash_button
     title: Trash Button
     doc: docs/components/trash-button.md

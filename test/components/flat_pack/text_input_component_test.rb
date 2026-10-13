@@ -168,10 +168,13 @@ module FlatPack
         render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true))
 
         assert_selector "div[data-controller='flat-pack--text-input']"
-        assert_selector "div[data-flat-pack--text-input-quick-copy-enabled-value='true']"
+        refute_selector "[data-flat-pack--text-input-quick-copy-enabled-value]"
+        assert_selector "div.fp-quick-copy[data-controller='flat-pack--clipboard'][data-flat-pack--clipboard-feedback-value='toast'][data-action='click->flat-pack--clipboard#copy']"
         assert_selector "input[data-flat-pack--text-input-target='input']"
-        assert_selector "input[data-action='click->flat-pack--text-input#copyFromInput']"
-        assert_selector "button[aria-label='Copy input value'][data-action='click->flat-pack--text-input#copyFromButton']"
+        refute_selector "input[data-action*='copyFromInput']"
+        assert_selector "button[aria-label='Copy input value'][data-flat-pack--clipboard-target='button']"
+        refute_selector "button[data-action]"
+        assert_includes page.native.to_html, "top-1/2"
         assert_selector "svg[data-flat-pack--icon-name-value='clipboard-document']"
       end
 
@@ -179,8 +182,8 @@ module FlatPack
         render_inline(Component.new(name: "headline", character_count: true, quick_copy: true))
 
         assert_selector "div[data-flat-pack--text-input-character-count-enabled-value='true']"
-        assert_selector "div[data-flat-pack--text-input-quick-copy-enabled-value='true']"
-        assert_selector "input[data-action='input->flat-pack--text-input#updateCharacterCount click->flat-pack--text-input#copyFromInput']"
+        assert_selector "div.fp-quick-copy[data-controller='flat-pack--clipboard']"
+        assert_selector "input[data-action='input->flat-pack--text-input#updateCharacterCount']"
       end
 
       def test_quick_copy_button_is_disabled_with_disabled_input

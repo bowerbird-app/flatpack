@@ -53,6 +53,7 @@ module FlatPack
           assert_includes content, "controllers/flat_pack"
           assert_includes content, "flat_pack/local_time"
           assert_includes content, "flat_pack/copy"
+          assert_includes content, "flat_pack/clipboard"
           assert_includes content, "preload: false"
         end
       end
@@ -73,6 +74,7 @@ module FlatPack
           content = importmap.read
           assert_equal 1, content.scan('pin "flat_pack/local_time"').length
           assert_equal 1, content.scan('pin "flat_pack/copy"').length
+          assert_equal 1, content.scan('pin "flat_pack/clipboard"').length
         end
       end
 

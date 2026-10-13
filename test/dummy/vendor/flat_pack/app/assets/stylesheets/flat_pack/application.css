@@ -1886,6 +1886,56 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   padding-right: 0.5rem;
 }
 
+.fp-copy-button__icons {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.fp-copy-button__icons [data-icon] {
+  display: inline-flex;
+  transition: opacity var(--duration-fast) var(--easing-standard);
+}
+
+.fp-copy-button__icons [data-icon="copied"],
+.fp-copy-button__icons [data-icon="error"] {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fp-copy-button[data-fp-clipboard-state="copied"] .fp-copy-button__icons [data-icon="idle"],
+.fp-copy-button[data-fp-clipboard-state="error"] .fp-copy-button__icons [data-icon="idle"] {
+  opacity: 0;
+}
+
+.fp-copy-button[data-fp-clipboard-state="copied"] .fp-copy-button__icons [data-icon="copied"] {
+  opacity: 1;
+}
+
+.fp-copy-button[data-fp-clipboard-state="error"] .fp-copy-button__icons [data-icon="error"] {
+  opacity: 1;
+}
+
+.fp-copy-button[data-fp-clipboard-state="copied"] {
+  --fp-button-background: var(--button-success-background-color);
+  --fp-button-hover-background: var(--button-success-hover-background-color);
+  --fp-button-text: var(--button-success-text-color);
+  --fp-button-border: var(--button-success-border-color);
+}
+
+.fp-copy-button[data-fp-clipboard-state="error"] {
+  --fp-button-background: var(--button-danger-background-color);
+  --fp-button-hover-background: var(--button-danger-hover-background-color);
+  --fp-button-text: var(--button-danger-text-color);
+  --fp-button-border: var(--button-danger-border-color);
+}
+
 .flat-pack-collection-editor {
   display: flex;
   flex-direction: column;

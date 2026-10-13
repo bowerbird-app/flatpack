@@ -390,6 +390,9 @@ en:
       nothing: Nothing to copy
       copied: Copied to clipboard
       unable: Unable to copy
+      copy: Copy
+      copied_label: Copied
+      error_label: Couldn’t copy
     theme:
       system: System
       light: Light

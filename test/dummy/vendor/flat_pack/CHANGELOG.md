@@ -13,6 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.233] - 2026-10-13
+
+### Added
+- `FlatPack::CopyButton::Component` copies `text:` or the value of `target:`. It uses Button sizes and styles. Idle, Copied, and error states share one control. Demo: `/demo/buttons/copy`.
+- `flat-pack--clipboard` writes with `navigator.clipboard.writeText`, then a hidden textarea and `document.execCommand("copy")`. It announces through a live region, and dispatches `flat-pack:clipboard:copied` and `flat-pack:clipboard:error`.
+- Locale keys `flatpack.clipboard.copy`, `flatpack.clipboard.copied_label`, and `flatpack.clipboard.error_label`.
+
+### Fixed
+- `flat_pack/copy.js` includes the English fallback for `collection_editor.already_joined`.
+
+### Changed
+- Bumped the gem version to `0.1.233`.
+- Text Input and Text Area `quick_copy: true` copy through `flat-pack--clipboard`. The trailing icon, readonly field, and toast stay. After a click the icon shows the shared Copied or error state.
+- Section Title `anchor_link: true` copies through the same controller. Hover, the link icon, the tooltip, and the hash update stay. The anchor announces the copy instead of staying silent.
+
+### Upgrade notes
+- Additive for Button, Text Input, Text Area, and Section Title callers. `quick_copy:` and `anchor_link:` keep the same arguments.
+- Copy Button `text:` is the clipboard string. The visible label is `label`.
+- Add `flatpack.clipboard.copy` (“Copy”), `flatpack.clipboard.copied_label` (“Copied”), and `flatpack.clipboard.error_label` (“Couldn’t copy”) to host locale files that translate `flatpack.*`.
+- Pin `flat_pack/clipboard`, or rerun `rails generate flat_pack:install`. The engine importmap pins it too.
+- Reload kit CSS and JavaScript. No new Tailwind utilities.
+- With `prefers-reduced-motion: reduce`, Copied and error stay for at most 600ms and the icon swap does not fade. `timeout: 0` still holds the state.
+- `writeClipboardText` and `readClipboardSource` in `flat_pack/clipboard.js` are the extension point for a later share button. This release does not call the Web Share API.
+- Redeploy so `meta.gem_version` shows `0.1.233`.
+
 ## [0.1.232] - 2026-10-13
 
 ### Added

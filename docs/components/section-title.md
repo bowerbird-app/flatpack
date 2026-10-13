@@ -80,5 +80,6 @@ Inside a card:
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus controller: `flat-pack--section-title-anchor`.
+- Stimulus controller: `flat-pack--section-title-anchor` shows and hides the icon.
+- The anchor uses `flat-pack--clipboard` (`feedback: quiet`) to copy the absolute URL, announce it, and update the hash. A non-hash `href` is left to the browser.
 - Uses `FlatPack::Tooltip::Component` for anchor hint.
