@@ -26,7 +26,8 @@ function loadController({ reduced = false, fetchImpl, turbo, copy } = {}) {
     .replace(
       'import { flatPackCopy } from "flat_pack/copy"',
       `const COPY = ${JSON.stringify(copy || {
-        "inline_edit.saving": "Saving",
+        "inline_edit.editing": "Editing",
+        "inline_edit.saving": "Saving…",
         "inline_edit.saved": "Saved",
         "inline_edit.required": "This can’t be empty",
         "inline_edit.too_long": "Too long",
@@ -93,8 +94,8 @@ function classListStub(initial = []) {
   const names = new Set(initial)
   return {
     contains(name) { return names.has(name) },
-    add(name) { names.add(name) },
-    remove(name) { names.delete(name) },
+    add(...added) { added.forEach((name) => names.add(name)) },
+    remove(...removed) { removed.forEach((name) => names.delete(name)) },
     toggle(name, force) {
       const should = force === undefined ? !names.has(name) : Boolean(force)
       if (should) names.add(name)
@@ -129,6 +130,7 @@ function buildController(options = {}) {
   }
   const field = {value: options.value || "Trail kit"}
   const live = {id: "live", textContent: ""}
+  const state = {textContent: ""}
   const spinner = {hidden: true}
   const tick = {hidden: true}
   const status = {style: {}}
@@ -155,6 +157,8 @@ function buildController(options = {}) {
   controller.fieldTarget = field
   controller.hasLiveTarget = true
   controller.liveTarget = live
+  controller.hasStateTarget = true
+  controller.stateTarget = state
   controller.hasSpinnerTarget = true
   controller.spinnerTarget = spinner
   controller.hasTickTarget = true
@@ -172,8 +176,64 @@ function buildController(options = {}) {
   controller.labelValue = "Kit title"
   controller.placeholderValue = "Untitled kit"
   controller.connect()
-  return {controller, surface, field, live, element, heading, spinner, tick}
+  return {controller, surface, field, live, state, element, heading, spinner, tick}
 }
+
+test("editing label appears above the field and clears on escape", () => {
+  const {controller, surface, state, element} = buildController()
+  controller.activate()
+  assert.equal(state.textContent, "Editing")
+  assert.equal(element.classList.contains("is-state-visible"), true)
+  assert.equal(element.classList.contains("is-state-error"), false)
+  controller.cancel()
+  assert.equal(state.textContent, "")
+  assert.equal(element.classList.contains("is-state-visible"), false)
+  assert.equal(surface.attrs.contenteditable, undefined)
+})
+
+test("saving label replaces editing, then clears after a successful save", async () => {
+  let release
+  const gate = new Promise((resolve) => { release = resolve })
+  const {controller, surface, state, element} = buildController({
+    updateUrl: "/kits/1",
+    fetchImpl: () => gate.then(() => ({ok: true, headers: {get() { return "" }}}))
+  })
+  controller.activate()
+  assert.equal(state.textContent, "Editing")
+  const pending = controller.commit()
+  assert.equal(state.textContent, "Saving…")
+  assert.equal(element.classList.contains("is-state-error"), false)
+  release()
+  await pending
+  assert.equal(state.textContent, "")
+  assert.equal(element.classList.contains("is-state-visible"), false)
+})
+
+test("failed save shows the message on the label without duplicating it for assistive tech", async () => {
+  const {controller, surface, state, live, element} = buildController({
+    updateUrl: "/kits/1",
+    fetchImpl: async () => ({ok: false, headers: {get() { return "" }}})
+  })
+  controller.activate()
+  surface.innerText = "Broken"
+  surface.textContent = "Broken"
+  await controller.commit()
+  assert.equal(state.textContent, "Couldn’t save. Try again.")
+  assert.equal(live.textContent, "Couldn’t save. Try again.")
+  assert.equal(element.classList.contains("is-state-visible"), true)
+  assert.equal(element.classList.contains("is-state-error"), true)
+})
+
+test("validation message is the visible label", async () => {
+  const {controller, surface, state, live, element} = buildController({required: true})
+  controller.activate()
+  surface.innerText = "   "
+  surface.textContent = "   "
+  await controller.commit()
+  assert.equal(state.textContent, "This can’t be empty")
+  assert.equal(live.textContent, "This can’t be empty")
+  assert.equal(element.classList.contains("is-state-error"), true)
+})
 
 test("enter activates a resting title then saves on the next enter", async () => {
   const {controller, surface, field} = buildController({updateUrl: "/kits/1"})

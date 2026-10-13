@@ -12,7 +12,7 @@ import {
 const SAVED_HOLD_MS = 900
 
 export default class extends Controller {
-  static targets = ["surface", "field", "status", "spinner", "tick", "live", "bubble"]
+  static targets = ["surface", "field", "status", "spinner", "tick", "live", "state", "bubble"]
   static values = {
     name: String,
     mode: { type: String, default: "text" },
@@ -145,6 +145,7 @@ export default class extends Controller {
     this.#editing = true
     this.element.classList.add("is-editing")
     this.element.classList.remove("is-error")
+    this.showState(flatPackCopy("inline_edit.editing"))
     surface.setAttribute("contenteditable", this.contentEditableValue())
     surface.setAttribute("aria-invalid", "false")
     this.clearLive()
@@ -199,6 +200,7 @@ export default class extends Controller {
 
     this.#saving = true
     this.showSpinner()
+    this.showState(flatPackCopy("inline_edit.saving"))
     this.announce(flatPackCopy("inline_edit.saving"))
 
     try {
@@ -275,6 +277,7 @@ export default class extends Controller {
     this.teardownEditing({ restore: false })
     this.element.classList.add("is-error")
     this.hideStatus()
+    this.showState(message, { error: true })
     this.announce(message)
     this.surface?.setAttribute("aria-invalid", "true")
     this.syncField()
@@ -285,6 +288,7 @@ export default class extends Controller {
     const surface = this.surface
     this.#editing = false
     this.element.classList.remove("is-editing")
+    this.clearState()
     if (surface) {
       surface.removeAttribute("contenteditable")
       surface.removeEventListener("paste", this.boundPaste)
@@ -410,6 +414,19 @@ export default class extends Controller {
     const wrap = this.element.getBoundingClientRect()
     this.statusTarget.style.left = `${rect.right - wrap.left + 8}px`
     this.statusTarget.style.top = `${rect.top - wrap.top + Math.max(0, (rect.height - 16) / 2)}px`
+  }
+
+  showState(text, { error = false } = {}) {
+    if (!this.hasStateTarget) return
+    this.stateTarget.textContent = text
+    this.element.classList.add("is-state-visible")
+    this.element.classList.toggle("is-state-error", error)
+  }
+
+  clearState() {
+    if (!this.hasStateTarget) return
+    this.stateTarget.textContent = ""
+    this.element.classList.remove("is-state-visible", "is-state-error")
   }
 
   announce(message) {

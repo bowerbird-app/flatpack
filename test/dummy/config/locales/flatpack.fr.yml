@@ -96,7 +96,8 @@ fr:
     inline_edit:
       label: Modifier le texte
       placeholder: Sans titre
-      saving: Enregistrement
+      editing: Modification
+      saving: Enregistrement…
       saved: Enregistré
       required: Ce champ ne peut pas être vide
       too_long: Trop long

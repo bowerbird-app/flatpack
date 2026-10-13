@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.229] - 2026-10-13
+
+### Added
+- Inline edit shows a small muted label just above the field while you edit (“Editing”), while the save is in flight (“Saving…”), and when save or validation fails (the same message the live region speaks, in the error color). The label is absolutely positioned, so the field does not shift. It is `aria-hidden`.
+
+### Changed
+- Bumped the gem version to `0.1.229`.
+- `flatpack.inline_edit.saving` is now “Saving…”.
+
+### Upgrade notes
+- Additive. Add `flatpack.inline_edit.editing` to host locale files. English default is “Editing”.
+- If a host translated `flatpack.inline_edit.saving`, update that string if it should match the visible “Saving…” label. The English default changed from “Saving” to “Saving…”.
+- Rebuild host CSS so `flat_pack/inline_edit.css` includes the state label. No Tailwind utilities were added.
+- Redeploy so `meta.gem_version` shows `0.1.229`.
+
 ## [0.1.228] - 2026-10-12
 
 ### Added

@@ -56,6 +56,7 @@ module FlatPack
       def call
         content_tag(wrapper_tag, **wrapper_attributes) do
           safe_join([
+            render_state,
             render_surface,
             render_hidden_field,
             render_status,
@@ -167,6 +168,16 @@ module FlatPack
         return @value.to_s if rich?
 
         @value.to_s
+      end
+
+      def render_state
+        content_tag(
+          :span,
+          "",
+          class: "fp-inline-edit__state",
+          aria: {hidden: true},
+          data: {flat_pack__inline_edit_target: "state"}
+        )
       end
 
       def render_status

@@ -11,6 +11,22 @@ module FlatPack
         assert_selector "[data-controller='flat-pack--inline-edit']"
       end
 
+      def test_state_label_is_present_and_hidden_from_assistive_tech
+        render_inline(Component.new(tag: :h1, name: "kit[title]", value: "Trail kit"))
+
+        assert_selector ".fp-inline-edit__state[aria-hidden='true'][data-flat-pack--inline-edit-target='state']", visible: :all, text: ""
+      end
+
+      def test_state_label_is_absolutely_positioned_and_skips_motion_when_reduced
+        css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/inline_edit.css"))
+        state_rule = css[/  \.fp-inline-edit__state \{.*?\n  \}/m]
+
+        assert_includes state_rule, "position: absolute"
+        assert_includes state_rule, "transform: translateY"
+        refute_includes state_rule, "margin-top"
+        assert_match(/prefers-reduced-motion: reduce.*?\.fp-inline-edit__state \{\s*transition: none;/m, css)
+      end
+
       def test_renders_heading_tag_with_value
         render_inline(Component.new(tag: :h1, name: "kit[title]", value: "Trail kit", label: "Kit title"))
 
