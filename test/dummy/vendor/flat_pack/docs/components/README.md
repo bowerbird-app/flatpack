@@ -104,6 +104,7 @@ tabs | FlatPack::Tabs::Component | docs/components/tabs.md
 timeline | FlatPack::Timeline::Component | docs/components/timeline.md
 timestamp | FlatPack::Timestamp::Component | docs/components/timestamp.md
 tree | FlatPack::Tree::Component | docs/components/tree.md
+video_preview | FlatPack::VideoPreview::Component | docs/components/video-preview.md
 toast | FlatPack::Toast::Component | docs/components/toast.md
 toasts | FlatPack::Toasts::Region::Component | docs/components/toasts.md
 tooltip | FlatPack::Tooltip::Component | docs/components/tooltip.md
