@@ -626,6 +626,15 @@ components:
     primary_class: FlatPack::Tree::Component
     status: documented
 
+  - key: video_preview
+    title: Video preview
+    doc: docs/components/video-preview.md
+    primary_class: FlatPack::VideoPreview::Component
+    related_classes:
+      - FlatPack::Overlay::Component
+      - FlatPack::Overlay::Item
+    status: documented
+
   - key: tabs
     title: Tabs
     doc: docs/components/tabs.md

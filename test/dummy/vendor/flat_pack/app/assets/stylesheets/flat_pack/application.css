@@ -2796,3 +2796,19 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+.fp-video-preview__player {
+  position: absolute;
+  inset: 0;
+  display: grid;
+}
+
+.fp-video-preview__player > * {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  grid-area: 1 / 1;
+}
+

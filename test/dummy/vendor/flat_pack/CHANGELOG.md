@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.233] - 2026-10-13
+
+### Added
+- `FlatPack::VideoPreview::Component` shows a thumbnail and a centred play button in a fixed aspect-ratio frame (default `16/9`, same ratio strings as Card media, rounded like Card media). The host supplies the player in `with_player`. That markup stays in a `<template>` until someone clicks, or presses Enter or Space. Flatpack does not know about providers, build embed URLs, or accept a raw embed string. `with_item` passes `placement` and `inset` through to Overlay. Demo: `/demo/video_preview`.
+
+### Changed
+- Bumped the gem version to `0.1.233`.
+
+### Upgrade notes
+- Additive. Card, Carousel, and Overlay stay as they are.
+- `label:` is required. It is the play button's accessible name. Translate it in the host. There is no `flatpack.video_preview` string and no colour or theme prop.
+- The host writes the iframe or video tag, including any autoplay flag, and decides which players are allowed.
+- Activation runs once, dispatches `flat-pack:video-preview:play`, and moves focus into the player.
+- With `prefers-reduced-motion: reduce`, the swap is instant and the play button does not shift on press.
+- Rebuild host Tailwind so the frame utilities are generated: `aspect-[16/9]`, `aspect-[4/3]`, `aspect-square`, `rounded-[var(--radius-lg)]`, and the play-button classes in `FlatPack::VideoPreview::Component`.
+- Reload Flatpack CSS so `.fp-video-preview__player` fills the inserted player, and reload Flatpack JavaScript so `flat-pack--video-preview` is available.
+- Redeploy so `meta.gem_version` shows `0.1.233`.
+
 ## [0.1.232] - 2026-10-13
 
 ### Added

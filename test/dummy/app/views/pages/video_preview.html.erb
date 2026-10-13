@@ -1,0 +1,95 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Video preview",
+  subtitle: "A poster and a play button. The player stays unloaded until you press play."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :video_preview %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="launch-trailer">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Launch trailer",
+    anchor_link: true,
+    subtitle: "You write the iframe. Flatpack does not talk to the provider."
+  ) %>
+
+  <div class="max-w-3xl" id="video-preview-trailer">
+    <%= render FlatPack::VideoPreview::Component.new(label: "Play: Launch trailer") do |preview| %>
+      <% preview.with_media do %>
+        <%= image_tag "/images/hero-packaging.jpg", alt: "", class: "block h-full w-full object-cover" %>
+      <% end %>
+      <% preview.with_item(placement: :bottom_left, inset: :sm) do %>
+        <%= render FlatPack::Badge::Component.new(text: "2:14", size: :sm) %>
+      <% end %>
+      <% preview.with_player do %>
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?autoplay=1&mute=1&rel=0"
+          title="Launch trailer"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::VideoPreview::Component.new(label: "Play: Launch trailer") do |preview| #{erb_tag_close}
+        #{erb_output_open} preview.with_media do #{erb_tag_close}
+          #{erb_output_open} image_tag poster_path, alt: "" #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} preview.with_item(placement: :bottom_left, inset: :sm) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Badge::Component.new(text: "2:14", size: :sm) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} preview.with_player do #{erb_tag_close}
+          &lt;iframe src="&lt;%= trailer_embed_url %&gt;" title="Launch trailer" allow="autoplay" allowfullscreen&gt;&lt;/iframe&gt;
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="own-file">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A file of your own",
+    anchor_link: true,
+    subtitle: "A video tag works the same way. Nothing loads until play."
+  ) %>
+
+  <div class="max-w-3xl" id="video-preview-file">
+    <%= render FlatPack::VideoPreview::Component.new(label: "Play: Packing the stool", aspect_ratio: "16/9") do |preview| %>
+      <% preview.with_media do %>
+        <%= image_tag "/images/hero-stool.jpg", alt: "", class: "block h-full w-full object-cover" %>
+      <% end %>
+      <% preview.with_item(placement: :bottom_left, inset: :sm) do %>
+        <%= render FlatPack::Badge::Component.new(text: "0:02", size: :sm) %>
+      <% end %>
+      <% preview.with_player do %>
+        <video controls playsinline autoplay muted src="/videos/packing-sample.mp4"></video>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::VideoPreview::Component.new(label: "Play: Packing the stool") do |preview| #{erb_tag_close}
+        #{erb_output_open} preview.with_media do #{erb_tag_close}
+          #{erb_output_open} image_tag poster_path, alt: "" #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} preview.with_player do #{erb_tag_close}
+          &lt;video controls playsinline src="&lt;%= video_path %&gt;"&gt;&lt;/video&gt;
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
