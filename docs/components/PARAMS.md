@@ -15,6 +15,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy |
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
+| Beside a heading | `trailing` | Section Title slot (`with_trailing`). After the heading element, before the copy-link icon. Outside both, so the accessible name stays `title`. Generic content. Not a count param. |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Floating layer anchor | `placement` | Tooltips, popovers, dropdowns, and notification menus. Typical values are `:top`, `:bottom`, `:left`, `:right`. Menu components that already list corner values keep those. |
 | Content on media | `placement` | `FlatPack::Overlay::Item` only (`with_item`). Nine-cell grid: `:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`. Default `:top_left`. Not FAB `position`, and not the floating-layer anchor above. |
@@ -67,3 +68,4 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`.
+- Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.

@@ -246,6 +246,65 @@
   ) %>
 </section>
 
+<section class="mb-12" id="section-title-trailing">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Trailing", anchor_link: true, subtitle: "Park a badge beside the title. The heading name stays Images.") %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Without a copy link</p>
+      <div class="rounded-lg border border-dashed border-[var(--surface-border-color)] px-4">
+        <%= render FlatPack::SectionTitle::Component.new(title: "Images", spacing: :none) do |section| %>
+          <% section.with_trailing do %>
+            <%= render FlatPack::Badge::Component.new(text: "24", size: :sm) %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    <div>
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">With a copy link</p>
+      <div class="rounded-lg border border-dashed border-[var(--surface-border-color)] px-4" id="section-title-trailing-anchor">
+        <%= render FlatPack::SectionTitle::Component.new(
+          title: "Images",
+          spacing: :none,
+          anchor_link: true,
+          anchor_id: "images"
+        ) do |section| %>
+          <% section.with_trailing do %>
+            <%= render FlatPack::Badge::Component.new(text: "24", size: :sm) %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <p class="mt-6 text-sm text-[var(--surface-muted-content-color)] mb-2">Long title, narrow column</p>
+  <div class="w-72 max-w-full rounded-lg border border-dashed border-[var(--surface-border-color)] px-4" id="section-title-trailing-narrow">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Photographs from the winter field trip",
+      spacing: :none,
+      anchor_link: true,
+      anchor_id: "field-trip"
+    ) do |section| %>
+      <% section.with_trailing do %>
+        <%= render FlatPack::Badge::Component.new(text: "24", size: :sm) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::SectionTitle::Component.new(title: "Images", anchor_link: true) do |section| %&gt;
+        &lt;% section.with_trailing do %&gt;
+          &lt;%= render FlatPack::Badge::Component.new(text: "24", size: :sm) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Copy link", anchor_link: true, subtitle: "Hover the heading to copy a deep link. The icon scales with size.") %>
 

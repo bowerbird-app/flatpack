@@ -245,6 +245,87 @@ module FlatPack
 
         assert_includes error.message, "Invalid level"
       end
+
+      def test_renders_trailing_slot_outside_the_heading
+        render_images_with_count
+
+        assert_selector "h2", exact_text: "Images"
+        assert_selector "h2.min-w-0.break-words", exact_text: "Images"
+        assert_selector "span.shrink-0 span", text: "24"
+        refute_selector "h2", text: "24"
+        assert_nil page.find("h2").native.at_css("span")
+      end
+
+      def test_trailing_slot_sits_between_heading_and_anchor
+        render_images_with_count(anchor_link: true)
+
+        row = page.find("div.flex.flex-wrap.items-center")
+        children = row.native.element_children
+        assert_equal %w[h2 span div], children.map(&:name)
+
+        heading = children[0]
+        trailing = children[1]
+        anchor_wrap = children[2]
+        anchor = anchor_wrap.at_css("a")
+
+        assert_equal "Images", heading.text.strip
+        assert_includes heading["class"], "min-w-0"
+        assert_includes heading["class"], "break-words"
+        refute_includes heading.text, "24"
+
+        assert_includes trailing["class"], "shrink-0"
+        assert_includes trailing.text, "24"
+        assert_nil trailing.at_css("a")
+
+        assert_equal "#images", anchor["href"]
+        assert_equal "Copy link to Images", anchor["aria-label"]
+        refute_includes anchor["aria-label"], "24"
+        assert_includes anchor["class"], "shrink-0"
+        assert_includes anchor_wrap["class"], "shrink-0"
+        assert_nil anchor.at_xpath(".//*[contains(text(), '24')]")
+        assert_equal(-1, heading <=> trailing)
+        assert_equal(-1, trailing <=> anchor)
+      end
+
+      def test_copy_link_label_stays_the_title_when_trailing_is_present
+        render_images_with_count(anchor_link: true, anchor_id: "gallery")
+
+        assert_selector "a[href='#gallery'][aria-label='Copy link to Images']"
+        refute_selector "a[aria-label*='24']"
+        assert_selector "div[role='tooltip']", exact_text: "Copy link"
+      end
+
+      def test_does_not_render_trailing_when_the_slot_is_omitted
+        render_inline(Component.new(title: "Images", anchor_link: true))
+
+        row = page.find("div.flex.flex-wrap.items-center")
+        assert_equal %w[h2 div], row.native.element_children.map(&:name)
+        assert_equal "Images", page.find("h2").text
+      end
+
+      def test_subtitle_stays_below_the_title_row_when_trailing_is_present
+        render_inline(Component.new(title: "Images", subtitle: "Latest uploads")) do |component|
+          component.with_trailing { count_badge }
+        end
+
+        assert_selector "p", text: "Latest uploads"
+        refute_includes page.find("div.flex").text, "Latest uploads"
+        assert_selector "h2", exact_text: "Images"
+      end
+
+      private
+
+      def render_images_with_count(**options)
+        render_inline(Component.new(title: "Images", **options)) do |component|
+          component.with_trailing { count_badge }
+        end
+      end
+
+      def count_badge
+        vc_test_controller.view_context.render(
+          FlatPack::Badge::Component.new(text: "24", size: :sm)
+        )
+      end
     end
   end
 end

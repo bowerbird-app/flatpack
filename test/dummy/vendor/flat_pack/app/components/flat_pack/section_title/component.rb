@@ -39,6 +39,17 @@ module FlatPack
 
       LEVELS = %i[h1 h2 h3 h4 h5 h6].freeze
 
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "flex" "flex-wrap" "items-center" "gap-2" "min-w-0" "break-words" "shrink-0" "flex-1" "max-w-max"
+      # flex-1 + max-w-max lets a long heading shrink and wrap while a short heading
+      # stays as wide as its text, so trailing content sits beside the title.
+      TITLE_ROW = "flex flex-wrap items-center gap-2"
+      HEADING_LAYOUT = "min-w-0 flex-1 max-w-max break-words"
+      TRAILING_LAYOUT = "shrink-0"
+
+      renders_one :trailing
+
       def initialize(
         title:,
         subtitle: nil,
@@ -98,22 +109,33 @@ module FlatPack
       end
 
       def render_title_row
-        content_tag(:div, class: "flex items-center gap-2") do
+        content_tag(:div, class: TITLE_ROW) do
           safe_join([
             render_title,
+            render_trailing,
             render_anchor_link
           ].compact)
         end
       end
 
       def render_title
-        content_tag(@level, @title, class: size_config.fetch(:heading))
+        content_tag(@level, @title, class: "#{size_config.fetch(:heading)} #{HEADING_LAYOUT}")
+      end
+
+      def render_trailing
+        return nil unless trailing?
+
+        content_tag(:span, trailing, class: TRAILING_LAYOUT)
       end
 
       def render_anchor_link
         return nil unless @anchor_link
 
-        render FlatPack::Tooltip::Component.new(text: fp_t("section_title.copy_link"), placement: :top) do
+        render FlatPack::Tooltip::Component.new(
+          text: fp_t("section_title.copy_link"),
+          placement: :top,
+          class: TRAILING_LAYOUT
+        ) do
           content_tag(:a,
             href: "##{anchor_id}",
             class: "shrink-0 transition-opacity text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]",
