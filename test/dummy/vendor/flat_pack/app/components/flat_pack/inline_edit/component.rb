@@ -59,7 +59,6 @@ module FlatPack
             render_state,
             render_surface,
             render_hidden_field,
-            render_status,
             render_live_region,
             (rich? ? render_bubble : nil)
           ].compact)
@@ -173,32 +172,24 @@ module FlatPack
       def render_state
         content_tag(
           :span,
-          "",
+          safe_join([
+            content_tag(:span, "", class: "fp-inline-edit__state-text"),
+            content_tag(
+              :span,
+              render(FlatPack::Spinner::Component.new(size: :sm, label: nil)),
+              class: "fp-inline-edit__state-spinner"
+            ),
+            content_tag(:span, saved_mark, class: "fp-inline-edit__state-mark")
+          ]),
           class: "fp-inline-edit__state",
           aria: {hidden: true},
           data: {flat_pack__inline_edit_target: "state"}
         )
       end
 
-      def render_status
-        content_tag(
-          :span,
-          class: "fp-inline-edit__status",
-          data: {flat_pack__inline_edit_target: "status"},
-          aria: {hidden: true}
-        ) do
-          safe_join([
-            content_tag(:span, class: "fp-inline-edit__spinner", hidden: true, data: {flat_pack__inline_edit_target: "spinner"}) do
-              render(FlatPack::Spinner::Component.new(size: :sm, label: nil))
-            end,
-            content_tag(:span, tick_icon, class: "fp-inline-edit__tick", hidden: true, data: {flat_pack__inline_edit_target: "tick"})
-          ])
-        end
-      end
-
-      def tick_icon
+      def saved_mark
         <<~SVG.html_safe
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14" aria-hidden="true"><path d="M5 12.5l5 5L19 7"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12.5l5 5L19 7"/></svg>
         SVG
       end
 
