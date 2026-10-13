@@ -23,7 +23,11 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
 | Masonry column count | `columns` | Masonry only. Integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Do not use Grid's `cols` here. |
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
-| Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens |
+| FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
+| FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
+| FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
+| Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). |
+| Hero cover step | `title_size` | Hero only. Opt-in `FlatPack::HeroTitle::Component` size (`:md`, `:lg`, `:xl`, `:xxl`) for the headline. Omit to keep today's default or `size: :display` mapping. |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
 | Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
@@ -33,6 +37,12 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
 | Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
 | Sliding active marker | `indicator` | Tabs and Button::Pill. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
+| Inline edit flavour | `mode` | InlineEdit only. `:text` (single line), `:plain` (multi-line), `:rich` (bubble toolbar). |
+| Inline edit rest cue | `cue` | InlineEdit only. `:highlight` (default Notion-style wash), `:tint` (same paint), `:underline`, `:none`. Not Badge/Button `style`. |
+| RangeInput end glyphs | `start_icon` / `end_icon` | Kit icon names at the track ends. `variant: :size` / `:text_size` use theme-font `A` glyphs instead; `:zoom` defaults to magnifying-glass minus/plus. |
+| RangeInput live preview | `preview_target` | CSS selector or element id. Stimulus writes `--fp-range-value` and `--fp-range-scale` on the target while dragging. |
+| RangeInput sample letters | `sample` | Text under a `:size` / `:text_size` slider. Default `"Aa"`. Pass `""` to hide. `with_preview` replaces it. |
+| RangeInput step notches | `ticks` | Visible notches under the track, one per `step`. Size and zoom variants show ticks unless you pass `ticks: false`. |
 
 ## Billing namespace notes
 
