@@ -460,6 +460,14 @@ components:
     primary_class: FlatPack::Notification::Component
     status: documented
 
+  - key: overlay
+    title: Overlay
+    doc: docs/components/overlay.md
+    primary_class: FlatPack::Overlay::Component
+    related_classes:
+      - FlatPack::Overlay::Item
+    status: documented
+
   - key: page_header
     title: Page Header
     doc: docs/components/page-header.md

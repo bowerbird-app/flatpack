@@ -1210,6 +1210,17 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-xl\", data: { testid: \"search\" }" }
       ]
     },
+    overlay: {
+      label: "Overlay",
+      method_call: "render FlatPack::Overlay::Component.new do |overlay| overlay.with_media { image_tag photo_path, alt: \"Stool in a box\" }; overlay.with_item(placement: :top_left, inset: :md) { render FlatPack::Badge::Component.new(text: \"New\") } end",
+      variables: [
+        { variable: "with_media", accepts: "slot block", example: "overlay.with_media { image_tag photo_path, alt: \"Stool in a box\", class: \"block h-auto w-full\" }" },
+        { variable: "with_item", accepts: "slot block, repeatable", example: "overlay.with_item(placement: :bottom_right, inset: :lg) { render FlatPack::Button::Component.new(text: \"Share\", style: :primary) }" },
+        { variable: "placement", accepts: ":top_left, :top_center, :top_right, :middle_left, :center, :middle_right, :bottom_left, :bottom_center, :bottom_right", example: "placement: :top_left" },
+        { variable: "inset", accepts: ":sm, :md, :lg", example: "inset: :md" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", id: \"stool-photo\"" }
+      ]
+    },
     notification: {
       label: "Notification",
       method_call: "render FlatPack::Notification::Component.new(unread_count: 12, see_all_href: demo_notification_path, notifications: demo_notifications)",

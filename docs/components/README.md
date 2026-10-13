@@ -75,6 +75,7 @@ masonry | FlatPack::Masonry::Component | docs/components/masonry.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
 notification | FlatPack::Notification::Component | docs/components/notification.md
+overlay | FlatPack::Overlay::Component | docs/components/overlay.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
 page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md
 page_title | FlatPack::PageTitle::Component | docs/components/page-title.md

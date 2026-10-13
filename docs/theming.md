@@ -156,6 +156,9 @@ For a named host-app variant such as `[data-theme="sunrise"]`, see the theme gen
 
 --overlay-backdrop-color
 --overlay-scrim-color
+--overlay-inset-sm: 0.5rem
+--overlay-inset-md: 1rem
+--overlay-inset-lg: 1.5rem
 
 --color-ring
 ```
@@ -220,7 +223,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the four kit radii on
 
 `--button-shadow` is the rest elevation. `--button-shadow-hover` aliases `--shadow-button`. `--button-shadow-active` aliases `--shadow-button-active`. Ghost and secondary stay unshadowed at rest.
 
-Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`.
+Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`. Overlay item gaps are `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg`. Set those on `:root` or a named theme when the gap should differ from `0.5rem` / `1rem` / `1.5rem`.
 
 ### Hit targets
 ```css

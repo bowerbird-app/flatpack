@@ -58,6 +58,7 @@ module FlatPack
       {constant: :ONS, kwargs: %i[on]},
       {constant: :SEPARATORS, kwargs: %i[separator]},
       {constant: :PADDINGS, kwargs: %i[padding]},
+      {constant: :INSETS, kwargs: %i[inset]},
       {constant: :HOVERS, kwargs: %i[hover]},
       {constant: :TREND_DIRECTIONS, kwargs: %i[trend_direction]},
       {constant: :OVERLAPS, kwargs: %i[overlap]},
