@@ -112,6 +112,9 @@
     left: 0;
     top: 0;
     transform: translateY(calc(-100% - 0.125rem));
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
     width: max-content;
     max-width: 100%;
     margin: 0;
@@ -131,37 +134,37 @@
     opacity: 1;
   }
 
+  .fp-inline-edit.is-state-saved .fp-inline-edit__state {
+    color: var(--color-success-background-color);
+  }
+
   .fp-inline-edit.is-state-error .fp-inline-edit__state {
     width: 100%;
     white-space: normal;
     color: var(--inline-edit-error-color);
   }
 
-  .fp-inline-edit__status {
-    position: absolute;
-    display: inline-flex;
+  .fp-inline-edit.is-state-error .fp-inline-edit__state-text {
+    min-width: 0;
+  }
+
+  .fp-inline-edit__state-spinner,
+  .fp-inline-edit__state-mark {
+    display: none;
+    flex: none;
     align-items: center;
-    justify-content: center;
-    width: 1rem;
-    height: 1rem;
-    opacity: 0;
-    pointer-events: none;
-    color: var(--inline-edit-focus-color);
-    transition: opacity var(--duration-fast) var(--easing-standard);
+    line-height: 0;
   }
 
-  .fp-inline-edit.is-saving .fp-inline-edit__status,
-  .fp-inline-edit.is-saved .fp-inline-edit__status {
-    opacity: 1;
-  }
-
-  .fp-inline-edit.is-error .fp-inline-edit__status {
-    color: var(--inline-edit-error-color);
-  }
-
-  .fp-inline-edit__tick {
+  .fp-inline-edit.is-state-saving .fp-inline-edit__state-spinner,
+  .fp-inline-edit.is-state-saved .fp-inline-edit__state-mark {
     display: inline-flex;
-    color: var(--color-success-background-color);
+  }
+
+  .fp-inline-edit__state-spinner .fp-spinner,
+  .fp-inline-edit__state-mark svg {
+    width: 0.75rem;
+    height: 0.75rem;
   }
 
   .fp-inline-edit__live {
@@ -179,7 +182,6 @@
   @media (prefers-reduced-motion: reduce) {
     .fp-inline-edit__surface,
     .fp-inline-edit__surface.is-empty::before,
-    .fp-inline-edit__status,
     .fp-inline-edit__state {
       transition: none;
     }
