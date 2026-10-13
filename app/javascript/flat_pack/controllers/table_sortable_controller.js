@@ -18,6 +18,7 @@ export default class extends Controller {
     this.needsSave = false
     this.conflictRetryPending = false
     this.lastStableOrder = this.currentOrder()
+    this.ensureDragHandlers()
     this.setupDraggableRows()
   }
 
@@ -25,24 +26,53 @@ export default class extends Controller {
     this.removeDragListeners()
   }
 
+  ensureDragHandlers() {
+    if (this.dragHandlers) return
+
+    this.dragHandlers = {
+      dragstart: this.handleDragStart.bind(this),
+      dragend: this.handleDragEnd.bind(this),
+      dragover: this.handleDragOver.bind(this),
+      drop: this.handleDrop.bind(this),
+      dragenter: this.handleDragEnter.bind(this),
+      dragleave: this.handleDragLeave.bind(this)
+    }
+  }
+
   setupDraggableRows() {
-    this.rowTargets.forEach((row) => {
-      row.setAttribute("draggable", "true")
-      
-      // Add drag event listeners
-      row.addEventListener("dragstart", this.handleDragStart.bind(this))
-      row.addEventListener("dragend", this.handleDragEnd.bind(this))
-      row.addEventListener("dragover", this.handleDragOver.bind(this))
-      row.addEventListener("drop", this.handleDrop.bind(this))
-      row.addEventListener("dragenter", this.handleDragEnter.bind(this))
-      row.addEventListener("dragleave", this.handleDragLeave.bind(this))
+    this.ensureDragHandlers()
+    this.rowTargets.forEach((row) => this.addDragListeners(row))
+  }
+
+  rowTargetConnected(row) {
+    this.ensureDragHandlers()
+    this.addDragListeners(row)
+  }
+
+  rowTargetDisconnected(row) {
+    this.removeDragListenersFrom(row)
+  }
+
+  addDragListeners(row) {
+    row.setAttribute("draggable", "true")
+    Object.entries(this.dragHandlers).forEach(([eventName, handler]) => {
+      row.removeEventListener(eventName, handler)
+      row.addEventListener(eventName, handler)
     })
   }
 
+  removeDragListenersFrom(row) {
+    if (this.dragHandlers) {
+      Object.entries(this.dragHandlers).forEach(([eventName, handler]) => {
+        row.removeEventListener(eventName, handler)
+      })
+    }
+
+    row.removeAttribute("draggable")
+  }
+
   removeDragListeners() {
-    this.rowTargets.forEach((row) => {
-      row.removeAttribute("draggable")
-    })
+    this.rowTargets.forEach((row) => this.removeDragListenersFrom(row))
   }
 
   handleDragStart(event) {
