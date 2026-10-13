@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.229] - 2026-10-13
+
+### Fixed
+- Table and grid sortable controllers attach drag listeners when a row or item appears after `connect()`. `rowTargetConnected` and `itemTargetConnected` store one handler set and add it. `rowTargetDisconnected` and `itemTargetDisconnected` remove that set. Reconnecting the controller does not add a second set.
+
+### Changed
+- Bumped the gem version to `0.1.229`.
+- Synchronized `Gemfile.lock` and the Rails 7 dummy lockfile with `0.1.229`.
+
+### Upgrade notes
+- Reload Flatpack JavaScript. Ruby callers stay the same.
+- A sortable row or grid item added after the controller connects is draggable.
+
 ## [0.1.228] - 2026-10-12
 
 ### Added

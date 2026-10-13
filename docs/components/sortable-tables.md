@@ -133,3 +133,4 @@ records.order(validated_column => validated_direction)
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Optional Turbo Frames for partial updates.
 - Drag reorder requires Stimulus controller `flat-pack--table-sortable` (enabled by `draggable_rows: true`).
+- A row with `data-flat-pack--table-sortable-target="row"` is draggable when it appears, including after the controller connects.
