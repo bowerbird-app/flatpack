@@ -315,11 +315,17 @@
   .top-4 {
     top: calc(var(--spacing) * 4);
   }
-  .top-6 {
-    top: calc(var(--spacing) * 6);
-  }
   .top-8 {
     top: calc(var(--spacing) * 8);
+  }
+  .top-\[var\(--overlay-inset-lg\)\] {
+    top: var(--overlay-inset-lg);
+  }
+  .top-\[var\(--overlay-inset-md\)\] {
+    top: var(--overlay-inset-md);
+  }
+  .top-\[var\(--overlay-inset-sm\)\] {
+    top: var(--overlay-inset-sm);
   }
   .top-full {
     top: 100%;
@@ -339,14 +345,17 @@
   .right-4 {
     right: calc(var(--spacing) * 4);
   }
-  .right-6 {
-    right: calc(var(--spacing) * 6);
+  .right-\[var\(--overlay-inset-lg\)\] {
+    right: var(--overlay-inset-lg);
+  }
+  .right-\[var\(--overlay-inset-md\)\] {
+    right: var(--overlay-inset-md);
+  }
+  .right-\[var\(--overlay-inset-sm\)\] {
+    right: var(--overlay-inset-sm);
   }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
-  }
-  .bottom-2 {
-    bottom: calc(var(--spacing) * 2);
   }
   .bottom-3 {
     bottom: calc(var(--spacing) * 3);
@@ -354,11 +363,17 @@
   .bottom-4 {
     bottom: calc(var(--spacing) * 4);
   }
-  .bottom-6 {
-    bottom: calc(var(--spacing) * 6);
-  }
   .bottom-12 {
     bottom: calc(var(--spacing) * 12);
+  }
+  .bottom-\[var\(--overlay-inset-lg\)\] {
+    bottom: var(--overlay-inset-lg);
+  }
+  .bottom-\[var\(--overlay-inset-md\)\] {
+    bottom: var(--overlay-inset-md);
+  }
+  .bottom-\[var\(--overlay-inset-sm\)\] {
+    bottom: var(--overlay-inset-sm);
   }
   .bottom-full {
     bottom: 100%;
@@ -381,11 +396,17 @@
   .left-4 {
     left: calc(var(--spacing) * 4);
   }
-  .left-6 {
-    left: calc(var(--spacing) * 6);
-  }
   .left-8 {
     left: calc(var(--spacing) * 8);
+  }
+  .left-\[var\(--overlay-inset-lg\)\] {
+    left: var(--overlay-inset-lg);
+  }
+  .left-\[var\(--overlay-inset-md\)\] {
+    left: var(--overlay-inset-md);
+  }
+  .left-\[var\(--overlay-inset-sm\)\] {
+    left: var(--overlay-inset-sm);
   }
   .z-0 {
     z-index: 0;

@@ -14,8 +14,8 @@ module FlatPack
         assert_selector "div.fp-overlay.relative.inline-flex"
         assert_selector "div.fp-overlay > div.contents img[alt='Stool in a box']"
         assert_selector "[data-fp-placement='top_left'][data-fp-inset='md']", text: "New"
-        assert_includes page.native.to_html, "top-4"
-        assert_includes page.native.to_html, "left-4"
+        assert_includes page.native.to_html, "top-[var(--overlay-inset-md)]"
+        assert_includes page.native.to_html, "left-[var(--overlay-inset-md)]"
       end
 
       def test_nine_placements_use_the_grid
@@ -31,26 +31,42 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "top-4 left-4"
-        assert_includes html, "top-4 left-1/2 -translate-x-1/2"
-        assert_includes html, "top-4 right-4"
-        assert_includes html, "top-1/2 left-4 -translate-y-1/2"
+        assert_includes html, "top-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]"
+        assert_includes html, "top-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2"
+        assert_includes html, "top-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]"
+        assert_includes html, "top-1/2 left-[var(--overlay-inset-md)] -translate-y-1/2"
         assert_includes html, "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        assert_includes html, "top-1/2 right-4 -translate-y-1/2"
-        assert_includes html, "bottom-4 left-4"
-        assert_includes html, "bottom-4 left-1/2 -translate-x-1/2"
-        assert_includes html, "bottom-4 right-4"
+        assert_includes html, "top-1/2 right-[var(--overlay-inset-md)] -translate-y-1/2"
+        assert_includes html, "bottom-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]"
+        assert_includes html, "bottom-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2"
+        assert_includes html, "bottom-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]"
       end
 
-      def test_inset_steps_use_the_spacing_scale
+      def test_inset_steps_use_the_inset_tokens
         render_inline(Component.new) do |overlay|
           overlay.with_media { image_markup }
           overlay.with_item(placement: :top_left, inset: :sm) { "Small" }
           overlay.with_item(placement: :bottom_right, inset: :lg) { "Large" }
         end
 
-        assert_selector "[data-fp-placement='top_left'][data-fp-inset='sm'].top-2.left-2", text: "Small"
-        assert_selector "[data-fp-placement='bottom_right'][data-fp-inset='lg'].bottom-6.right-6", text: "Large"
+        html = page.native.to_html
+        assert_includes html, "top-[var(--overlay-inset-sm)] left-[var(--overlay-inset-sm)]"
+        assert_includes html, "bottom-[var(--overlay-inset-lg)] right-[var(--overlay-inset-lg)]"
+        assert_selector "[data-fp-placement='top_left'][data-fp-inset='sm']", text: "Small"
+        assert_selector "[data-fp-placement='bottom_right'][data-fp-inset='lg']", text: "Large"
+      end
+
+      def test_edge_centers_use_inset_on_the_edge_axis_only
+        render_inline(Component.new) do |overlay|
+          overlay.with_item(placement: :top_center, inset: :md) { "Top" }
+          overlay.with_item(placement: :middle_left, inset: :lg) { "Side" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "top-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2"
+        refute_includes html, "left-[var(--overlay-inset-md)]"
+        assert_includes html, "top-1/2 left-[var(--overlay-inset-lg)] -translate-y-1/2"
+        refute_includes html, "top-[var(--overlay-inset-lg)]"
       end
 
       def test_center_ignores_inset
@@ -66,8 +82,8 @@ module FlatPack
 
         assert_includes sm, "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
         assert_includes lg, "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        refute_includes sm, "top-2"
-        refute_includes lg, "top-6"
+        refute_includes sm, "--overlay-inset-"
+        refute_includes lg, "--overlay-inset-"
       end
 
       def test_items_keep_their_own_markup

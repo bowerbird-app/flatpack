@@ -18,7 +18,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Floating layer anchor | `placement` | Tooltips, popovers, dropdowns, and notification menus. Typical values are `:top`, `:bottom`, `:left`, `:right`. Menu components that already list corner values keep those. |
 | Content on media | `placement` | `FlatPack::Overlay::Item` only (`with_item`). Nine-cell grid: `:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`. Default `:top_left`. Not FAB `position`, and not the floating-layer anchor above. |
-| Gap from the media edge | `inset` | `FlatPack::Overlay::Item` only. `:sm`, `:md`, `:lg` on the Tailwind spacing scale (`--spacing` × 2, × 4, and × 6). Default `:md`. `:center` ignores it. Edge-centers use it on the edge axis only. |
+| Gap from the media edge | `inset` | `FlatPack::Overlay::Item` only. `:sm`, `:md`, `:lg` read `--overlay-inset-sm` (`0.5rem`), `--overlay-inset-md` (`1rem`), and `--overlay-inset-lg` (`1.5rem`). Default `:md`. `:center` ignores it. Edge-centers use it on the edge axis only. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |

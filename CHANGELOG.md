@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `FlatPack::Overlay::Component` places content on media. `with_media` is the element underneath. `with_item` can be used more than once for a badge, icon, button, or anything else.
-- Each item takes `placement:` on a nine-cell grid (`:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`, default `:top_left`) and `inset:` `:sm` / `:md` / `:lg` (default `:md`) on the Tailwind spacing scale. Demo: `/demo/overlay`.
+- Each item takes `placement:` on a nine-cell grid (`:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`, default `:top_left`) and `inset:` `:sm` / `:md` / `:lg` (default `:md`). The gaps are `--overlay-inset-sm` (`0.5rem`), `--overlay-inset-md` (`1rem`), and `--overlay-inset-lg` (`1.5rem`). Demo: `/demo/overlay`.
 
 ### Changed
 - Bumped the gem version to `0.1.231`.
@@ -26,7 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additive. Hero, Carousel, FAB, Avatar, and Card media stay as they are.
 - Overlay does not theme, recolour, or shadow its items. Pass those components in the item slot so they keep their own look.
 - `placement` on an overlay item is the nine-cell grid. Tooltip, popover, and dropdown `placement` values are unchanged. FAB corners stay `position`.
-- Rebuild host Tailwind so the positioning utilities (`inline-flex`, `contents`, `top-2` / `top-4` / `top-6`, and the matching `right`, `bottom`, `left`, and translate classes) are generated.
+- Rebuild host Tailwind so the positioning utilities are generated: `inline-flex`, `contents`, `top-[var(--overlay-inset-sm)]` (and the `md` / `lg` and `right` / `bottom` / `left` matches), plus `top-1/2`, `left-1/2`, and the translate classes.
+- To change the gap, set `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg` on `:root` or a named `[data-theme]` block. `:center` ignores them. Edge-centers use the token on the edge axis only.
 - Redeploy so `meta.gem_version` shows `0.1.231`.
 
 ## [0.1.230] - 2026-10-13

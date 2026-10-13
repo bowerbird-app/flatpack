@@ -6,9 +6,9 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "absolute" "z-10" "h-max" "w-max"
-      # "top-2" "right-2" "bottom-2" "left-2"
-      # "top-4" "right-4" "bottom-4" "left-4"
-      # "top-6" "right-6" "bottom-6" "left-6"
+      # "top-[var(--overlay-inset-sm)]" "right-[var(--overlay-inset-sm)]" "bottom-[var(--overlay-inset-sm)]" "left-[var(--overlay-inset-sm)]"
+      # "top-[var(--overlay-inset-md)]" "right-[var(--overlay-inset-md)]" "bottom-[var(--overlay-inset-md)]" "left-[var(--overlay-inset-md)]"
+      # "top-[var(--overlay-inset-lg)]" "right-[var(--overlay-inset-lg)]" "bottom-[var(--overlay-inset-lg)]" "left-[var(--overlay-inset-lg)]"
       # "top-1/2" "left-1/2" "-translate-x-1/2" "-translate-y-1/2"
 
       PLACEMENTS = %i[
@@ -23,42 +23,42 @@ module FlatPack
         bottom_right
       ].freeze
 
-      # Inset steps follow the Tailwind spacing scale (--spacing is 0.25rem):
-      # sm = * 2 (0.5rem), md = * 4 (1rem), lg = * 6 (1.5rem).
-      # :center does not use the inset. Edge centers use it on the edge axis only.
+      # Gap sizes are --overlay-inset-sm (0.5rem), --overlay-inset-md (1rem),
+      # and --overlay-inset-lg (1.5rem). :center does not use the inset.
+      # Edge centers use it on the edge axis only.
       INSETS = {
         sm: {
-          top_left: "absolute z-10 h-max w-max top-2 left-2",
-          top_center: "absolute z-10 h-max w-max top-2 left-1/2 -translate-x-1/2",
-          top_right: "absolute z-10 h-max w-max top-2 right-2",
-          middle_left: "absolute z-10 h-max w-max top-1/2 left-2 -translate-y-1/2",
+          top_left: "absolute z-10 h-max w-max top-[var(--overlay-inset-sm)] left-[var(--overlay-inset-sm)]",
+          top_center: "absolute z-10 h-max w-max top-[var(--overlay-inset-sm)] left-1/2 -translate-x-1/2",
+          top_right: "absolute z-10 h-max w-max top-[var(--overlay-inset-sm)] right-[var(--overlay-inset-sm)]",
+          middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--overlay-inset-sm)] -translate-y-1/2",
           center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          middle_right: "absolute z-10 h-max w-max top-1/2 right-2 -translate-y-1/2",
-          bottom_left: "absolute z-10 h-max w-max bottom-2 left-2",
-          bottom_center: "absolute z-10 h-max w-max bottom-2 left-1/2 -translate-x-1/2",
-          bottom_right: "absolute z-10 h-max w-max bottom-2 right-2"
+          middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--overlay-inset-sm)] -translate-y-1/2",
+          bottom_left: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-sm)] left-[var(--overlay-inset-sm)]",
+          bottom_center: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-sm)] left-1/2 -translate-x-1/2",
+          bottom_right: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-sm)] right-[var(--overlay-inset-sm)]"
         },
         md: {
-          top_left: "absolute z-10 h-max w-max top-4 left-4",
-          top_center: "absolute z-10 h-max w-max top-4 left-1/2 -translate-x-1/2",
-          top_right: "absolute z-10 h-max w-max top-4 right-4",
-          middle_left: "absolute z-10 h-max w-max top-1/2 left-4 -translate-y-1/2",
+          top_left: "absolute z-10 h-max w-max top-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]",
+          top_center: "absolute z-10 h-max w-max top-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2",
+          top_right: "absolute z-10 h-max w-max top-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]",
+          middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--overlay-inset-md)] -translate-y-1/2",
           center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          middle_right: "absolute z-10 h-max w-max top-1/2 right-4 -translate-y-1/2",
-          bottom_left: "absolute z-10 h-max w-max bottom-4 left-4",
-          bottom_center: "absolute z-10 h-max w-max bottom-4 left-1/2 -translate-x-1/2",
-          bottom_right: "absolute z-10 h-max w-max bottom-4 right-4"
+          middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--overlay-inset-md)] -translate-y-1/2",
+          bottom_left: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]",
+          bottom_center: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2",
+          bottom_right: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]"
         },
         lg: {
-          top_left: "absolute z-10 h-max w-max top-6 left-6",
-          top_center: "absolute z-10 h-max w-max top-6 left-1/2 -translate-x-1/2",
-          top_right: "absolute z-10 h-max w-max top-6 right-6",
-          middle_left: "absolute z-10 h-max w-max top-1/2 left-6 -translate-y-1/2",
+          top_left: "absolute z-10 h-max w-max top-[var(--overlay-inset-lg)] left-[var(--overlay-inset-lg)]",
+          top_center: "absolute z-10 h-max w-max top-[var(--overlay-inset-lg)] left-1/2 -translate-x-1/2",
+          top_right: "absolute z-10 h-max w-max top-[var(--overlay-inset-lg)] right-[var(--overlay-inset-lg)]",
+          middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--overlay-inset-lg)] -translate-y-1/2",
           center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          middle_right: "absolute z-10 h-max w-max top-1/2 right-6 -translate-y-1/2",
-          bottom_left: "absolute z-10 h-max w-max bottom-6 left-6",
-          bottom_center: "absolute z-10 h-max w-max bottom-6 left-1/2 -translate-x-1/2",
-          bottom_right: "absolute z-10 h-max w-max bottom-6 right-6"
+          middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--overlay-inset-lg)] -translate-y-1/2",
+          bottom_left: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-lg)] left-[var(--overlay-inset-lg)]",
+          bottom_center: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-lg)] left-1/2 -translate-x-1/2",
+          bottom_right: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-lg)] right-[var(--overlay-inset-lg)]"
         }
       }.freeze
 

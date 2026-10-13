@@ -164,7 +164,10 @@ module FlatPack
         "--modal-backdrop-color" => "var(--overlay-backdrop-color)",
         "--carousel-chevron-background-color" => "var(--overlay-scrim-color)",
         "--overlay-backdrop-color" => "rgb(0 0 0 / 0.5)",
-        "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)"
+        "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)",
+        "--overlay-inset-sm" => "0.5rem",
+        "--overlay-inset-md" => "1rem",
+        "--overlay-inset-lg" => "1.5rem"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
