@@ -1,5 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
+import {
+  applyFormat,
+  hideToolbar,
+  keepSelection as preventToolbarFocusLoss,
+  placeToolbarOnImage,
+  updateToolbarFromSelection
+} from "controllers/flat_pack/exec_command_bubble"
 
 export default class extends Controller {
   static targets = ["editBtn", "saveBtn", "cancelBtn", "displayContent", "balloonToolbar", "imageInput"]
@@ -33,7 +40,7 @@ export default class extends Controller {
   }
 
   keepSelection(event) {
-    event.preventDefault()
+    preventToolbarFocusLoss(event)
   }
 
   triggerImageUpload() {
@@ -80,47 +87,10 @@ export default class extends Controller {
   }
 
   format(event) {
-    const cmd = event.currentTarget.dataset.command
-    if (["h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "p"].includes(cmd)) {
-      const current = document.queryCommandValue("formatBlock").toLowerCase()
-      document.execCommand("formatBlock", false, current === cmd ? "p" : cmd)
-    } else if (cmd === "link") {
-      // Image selected — wrap/unwrap via DOM
-      if (this.#selectedImage) {
-        const img = this.#selectedImage
-        const existingAnchor = img.closest("a")
-        if (existingAnchor) {
-          const url = prompt(flatPackCopy("content_editor.edit_url"), existingAnchor.href)
-          if (url === "") {
-            existingAnchor.replaceWith(img)
-          } else if (url !== null) {
-            existingAnchor.href = url
-          }
-        } else {
-          const url = prompt(flatPackCopy("content_editor.enter_url"), "https://")
-          if (url) {
-            const a = document.createElement("a")
-            a.href = url
-            img.replaceWith(a)
-            a.appendChild(img)
-          }
-        }
-        return
-      }
-      // Text selection — use execCommand
-      const anchor = document.getSelection()?.anchorNode?.parentElement?.closest("a")
-      if (anchor) {
-        const url = prompt(flatPackCopy("content_editor.edit_url"), anchor.href)
-        if (url === "") document.execCommand("unlink", false, null)
-        else if (url !== null) document.execCommand("createLink", false, url)
-      } else {
-        const url = prompt(flatPackCopy("content_editor.enter_url"), "https://")
-        if (url) document.execCommand("createLink", false, url)
-      }
-    } else {
-      document.execCommand(cmd, false, null)
-    }
-    this.displayContentTarget.focus()
+    applyFormat(event.currentTarget.dataset.command, {
+      editorEl: this.displayContentTarget,
+      selectedImage: this.#selectedImage
+    })
   }
 
   async save() {
@@ -169,8 +139,7 @@ export default class extends Controller {
       document.removeEventListener("selectionchange", this.#selectionHandler)
       this.#selectionHandler = null
     }
-    this.balloonToolbarTarget.hidden = true
-    this.balloonToolbarTarget.style.display = "none"
+    hideToolbar(this.balloonToolbarTarget)
     this.editBtnTarget.hidden   = false
     this.saveBtnTarget.hidden   = true
     this.cancelBtnTarget.hidden = true
@@ -183,55 +152,13 @@ export default class extends Controller {
     }
     event.preventDefault()
     this.#selectedImage = event.target
-    const toolbar = this.balloonToolbarTarget
-    const rect = event.target.getBoundingClientRect()
-    toolbar.hidden = false
-    toolbar.style.display = "flex"
-    const tw = toolbar.getBoundingClientRect().width
-    const th = toolbar.getBoundingClientRect().height
-    toolbar.style.left = `${Math.max(4, rect.left + rect.width / 2 - tw / 2)}px`
-    toolbar.style.top  = `${Math.max(4, rect.top - th - 8)}px`
+    placeToolbarOnImage(this.balloonToolbarTarget, event.target)
   }
 
   #handleSelection() {
-    const sel = document.getSelection()
-    const toolbar = this.balloonToolbarTarget
-
-    if (!sel || sel.isCollapsed || !this.displayContentTarget.contains(sel.anchorNode)) {
-      // Don't hide toolbar if an image is selected via click
-      if (!this.#selectedImage) {
-        toolbar.hidden = true
-        toolbar.style.display = "none"
-      }
-      return
-    }
-    this.#selectedImage = null
-
-    const range = sel.getRangeAt(0)
-    const rect  = range.getBoundingClientRect()
-
-    toolbar.hidden = false
-    toolbar.style.display = "flex"
-
-    // Reflect active formatting states
-    const blockVal = document.queryCommandValue("formatBlock").toLowerCase()
-    toolbar.querySelectorAll("[data-command]").forEach(btn => {
-      const cmd = btn.dataset.command
-      let active = false
-      if (["bold", "italic", "underline", "strikeThrough"].includes(cmd)) {
-        try { active = document.queryCommandState(cmd) } catch (_) {}
-      } else if (["h1", "h2", "h3", "blockquote"].includes(cmd)) {
-        active = blockVal === cmd
-      }
-      btn.classList.toggle("is-active", active)
+    const result = updateToolbarFromSelection(this.balloonToolbarTarget, this.displayContentTarget, {
+      selectedImage: this.#selectedImage
     })
-
-    const tw   = toolbar.getBoundingClientRect().width
-    const th   = toolbar.getBoundingClientRect().height
-    const left = Math.max(4, rect.left + rect.width / 2 - tw / 2)
-    const top  = Math.max(4, rect.top - th - 8)
-
-    toolbar.style.left = `${left}px`
-    toolbar.style.top  = `${top}px`
+    this.#selectedImage = result.selectedImage
   }
 }

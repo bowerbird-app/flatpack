@@ -18,6 +18,11 @@ module FlatPack
       --fp-masonry-gap
       --fp-masonry-row
       --fp-trash-button-size
+      --fp-fab-offset
+      --fp-fab-nav-offset
+      --fp-range-max
+      --fp-range-scale
+      --fp-range-value
       --range-progress
       --spacing
     ].freeze

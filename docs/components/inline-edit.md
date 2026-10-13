@@ -88,8 +88,9 @@ Use Inline Edit on a show page when people change a title, a short note, or a ri
 ## Accessibility
 - Rest is focusable (`tabindex="0"`, `role="textbox"`, `aria-label`). `aria-multiline` is set when `mode` is not `:text`.
 - Keyboard Tab before edit shows the hover wash via `:focus-visible`. Click or Enter starts editing; the wash drops so only the caret remains. Escape restores the last saved value.
-- Saving announces through an `aria-live` region. Failure restores the value, paints a red wash (or a red underline when `cue: :underline`), and reads the error.
-- `prefers-reduced-motion: reduce` drops highlight and status motion.
+- While editing, a small muted label sits just above the field: “Editing”. While the save is in flight it reads “Saving…” with a small spinner beside the word. After a successful save it reads “Saved” with a check in `--color-success-background-color`, stays about 1.5s, then fades. On failure the same label shows the error or validation message in `--inline-edit-error-color`, with no spinner or check. The label is `position: absolute`, so the field does not move when it appears or goes away. It is `aria-hidden` because the live region already speaks those words.
+- Saving announces through an `aria-live` region. Failure restores the value, paints a red wash (or a red underline when `cue: :underline`), shows the message in the label, and reads the error.
+- `prefers-reduced-motion: reduce` drops the highlight and label fade. The saved label skips the 1.5s hold and stays only briefly, then disappears. The words still appear.
 
 ## Dependencies
 - Stimulus controller `flat-pack--inline-edit`.

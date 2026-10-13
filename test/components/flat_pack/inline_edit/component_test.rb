@@ -11,6 +11,30 @@ module FlatPack
         assert_selector "[data-controller='flat-pack--inline-edit']"
       end
 
+      def test_state_label_is_present_and_hidden_from_assistive_tech
+        render_inline(Component.new(tag: :h1, name: "kit[title]", value: "Trail kit"))
+
+        assert_selector ".fp-inline-edit__state[aria-hidden='true'][data-flat-pack--inline-edit-target='state']", visible: :all
+        assert_selector ".fp-inline-edit__state .fp-inline-edit__state-text", visible: :all, text: ""
+        assert_selector ".fp-inline-edit__state .fp-inline-edit__state-spinner .fp-spinner", visible: :all
+        assert_selector ".fp-inline-edit__state .fp-inline-edit__state-mark svg", visible: :all
+      end
+
+      def test_state_label_is_absolutely_positioned_and_skips_motion_when_reduced
+        css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/inline_edit.css"))
+        state_rule = css[/  \.fp-inline-edit__state \{.*?\n  \}/m]
+
+        assert_includes state_rule, "position: absolute"
+        assert_includes state_rule, "transform: translateY"
+        refute_includes state_rule, "margin-top"
+        assert_match(/prefers-reduced-motion: reduce.*?\.fp-inline-edit__state \{\s*transition: none;/m, css)
+        assert_includes css, ".fp-inline-edit.is-state-saving .fp-inline-edit__state-spinner"
+        assert_includes css, ".fp-inline-edit.is-state-saved .fp-inline-edit__state"
+        assert_includes css, "color: var(--color-success-background-color)"
+        refute_includes css, ".fp-inline-edit__status"
+        refute_includes css, ".fp-inline-edit__tick"
+      end
+
       def test_renders_heading_tag_with_value
         render_inline(Component.new(tag: :h1, name: "kit[title]", value: "Trail kit", label: "Kit title"))
 
@@ -125,12 +149,14 @@ module FlatPack
         assert_selector "[data-flat-pack--inline-edit-save-on-blur-value='true']"
       end
 
-      def test_live_region_and_status
+      def test_live_region_and_no_beside_field_status
         render_inline(Component.new(name: "kit[title]", value: "Trail"))
 
         assert_selector "[data-flat-pack--inline-edit-target='live'][aria-live='polite']", visible: :all
-        assert_selector "[data-flat-pack--inline-edit-target='spinner']", visible: :all
-        assert_selector "[data-flat-pack--inline-edit-target='tick']", visible: :all
+        refute_selector "[data-flat-pack--inline-edit-target='spinner']", visible: :all
+        refute_selector "[data-flat-pack--inline-edit-target='tick']", visible: :all
+        refute_selector "[data-flat-pack--inline-edit-target='status']", visible: :all
+        refute_selector ".fp-inline-edit__status", visible: :all
       end
 
       def test_wraps_block_and_keeps_inner_heading

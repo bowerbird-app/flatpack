@@ -83,6 +83,7 @@ module FlatPack
       timestamp.short_d_ago
       timestamp.short_wk_ago
       timestamp.short_mo_ago
+      inline_edit.editing
       inline_edit.saving
       inline_edit.saved
       inline_edit.required

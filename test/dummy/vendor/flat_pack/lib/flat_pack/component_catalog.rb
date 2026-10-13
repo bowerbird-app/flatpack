@@ -22,7 +22,8 @@ module FlatPack
     EXTRA_RELATIVE_PATHS = [
       "chat/message.rb",
       "masonry/image.rb",
-      "modal/screen.rb"
+      "modal/screen.rb",
+      "fab/action.rb"
     ].freeze
 
     PUBLICITY_RULES = [
@@ -39,6 +40,8 @@ module FlatPack
       {constant: :STYLES, kwargs: %i[style]},
       {constant: :VARIANTS, kwargs: %i[variant style]},
       {constant: :SIZES, kwargs: %i[size]},
+      {constant: :TITLE_SIZES, kwargs: %i[title_size]},
+      {constant: :LEVELS, kwargs: %i[level]},
       {constant: :TYPES, kwargs: %i[type]},
       {constant: :ALIGNMENTS, kwargs: %i[alignment]},
       {constant: :DIRECTIONS, kwargs: %i[direction]},
@@ -63,7 +66,9 @@ module FlatPack
       {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]},
       {constant: :ORIGINS, kwargs: %i[origin]},
       {constant: :EXPANDS, kwargs: %i[expand]},
-      {constant: :METHODS, kwargs: %i[method]}
+      {constant: :METHODS, kwargs: %i[method]},
+      {constant: :POSITIONS, kwargs: %i[position]},
+      {constant: :LAYOUTS, kwargs: %i[layout]}
     ].freeze
 
     DOC_KEYS = {

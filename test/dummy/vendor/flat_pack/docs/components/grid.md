@@ -40,7 +40,7 @@ Default block content; each child element participates as a grid item.
 <% end %>
 ```
 
-Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`.
+Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`. An item added after the controller connects is draggable too.
 
 ## Accessibility
 Grid is structural layout only. Accessibility is determined by the semantics of content rendered inside each grid item.

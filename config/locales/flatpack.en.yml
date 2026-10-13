@@ -96,7 +96,8 @@ en:
     inline_edit:
       label: Edit text
       placeholder: Untitled
-      saving: Saving
+      editing: Editing
+      saving: Saving…
       saved: Saved
       required: This can’t be empty
       too_long: Too long

@@ -13,6 +13,166 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.230] - 2026-10-13
+
+### Added
+- Inline edit shows a small muted label just above the field while you edit (“Editing”), while the save is in flight (“Saving…” plus a small spinner), and after a successful save (“Saved” plus a green check, for about 1.5 seconds, then it fades). When save or validation fails, the same label shows the message the live region speaks, in the error color. The label is absolutely positioned, so the field does not shift. It is `aria-hidden`. Copy uses the existing `flatpack.inline_edit.saved` string (“Saved”).
+
+### Changed
+- Bumped the gem version to `0.1.230`.
+- `flatpack.inline_edit.saving` is now “Saving…”.
+- The spinner and check that sat beside the field are gone. Save feedback lives only in the floating label.
+
+### Upgrade notes
+- Additive. Add `flatpack.inline_edit.editing` to host locale files. English default is “Editing”. `flatpack.inline_edit.saved` is unchanged (“Saved”).
+- If a host translated `flatpack.inline_edit.saving`, update that string if it should match the visible “Saving…” label. The English default changed from “Saving” to “Saving…”.
+- Drop any host CSS aimed at `.fp-inline-edit__status`, `.fp-inline-edit__spinner`, or `.fp-inline-edit__tick`. Those elements are no longer rendered.
+- Rebuild host CSS so `flat_pack/inline_edit.css` includes the state label. No Tailwind utilities were added.
+- Redeploy so `meta.gem_version` shows `0.1.230`.
+- With `prefers-reduced-motion: reduce`, the saved label skips the 1.5s hold and stays only briefly, with no fade.
+
+## [0.1.229] - 2026-10-13
+
+### Fixed
+- Table and grid sortable controllers attach drag listeners when a row or item appears after `connect()`. `rowTargetConnected` and `itemTargetConnected` store one handler set and add it. `rowTargetDisconnected` and `itemTargetDisconnected` remove that set. Reconnecting the controller does not add a second set.
+
+### Changed
+- Bumped the gem version to `0.1.229`.
+- Synchronized `Gemfile.lock` and the Rails 7 dummy lockfile with `0.1.229`.
+
+### Upgrade notes
+- Reload Flatpack JavaScript. Ruby callers stay the same.
+- A sortable row or grid item added after the controller connects is draggable.
+
+## [0.1.228] - 2026-10-12
+
+### Added
+- `FlatPack::Fieldset::Component` names a cluster of form controls. `title:` is the legend. Optional `description:`, `error:`, and `disabled:` cover the hint, the group message, and a native disabled group. The block is the fields. Demo: `/demo/forms/fieldset`.
+
+### Changed
+- Bumped the gem version to `0.1.228`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.228`.
+
+### Upgrade notes
+- Additive. Keep calling the same input components. Wrap a cluster in `FlatPack::Fieldset::Component` when that cluster needs a name.
+- Rebuild host Tailwind so the fieldset utilities (`float-left`, `clear-both`, `min-w-0`, `border-0`) are generated if the host scans component files.
+- Redeploy so `meta.gem_version` shows `0.1.228`.
+
+## [0.1.227] - 2026-10-10
+
+### Added
+- `FlatPack::InlineEdit::Component` turns a heading or paragraph into an in-place editor. The same element becomes `contenteditable`. Type, size, weight, and wrapping stay put. No bordered field.
+- `mode:` `:text` (default, Enter saves), `:plain` (Enter is a newline, Cmd/Ctrl+Enter saves), `:rich` (ContentEditor bubble toolbar, no Edit/Save/Cancel bar).
+- `tag:` `:span`, `:h1`–`:h6`, `:p`, `:div`. A content block edits the first `data-inline-edit-target`, heading, or `p` inside.
+- `name:` / `value:` keep a hidden input for a normal form when `update_url:` is omitted. `update_url:` + `method:` (default `:patch`) save with CSRF and `Accept: turbo-stream`.
+- `label:`, `placeholder:`, `maxlength:`, `required:`, `save_on_blur:` (default true), `cue:` `:highlight` (default Notion-style wash) / `:tint` (same paint) / `:underline` / `:none`.
+- Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover wash is a ~7% (dark ~9%) `color-mix` tint with box-shadow spread, not padding. Keyboard Tab before edit uses the same wash (`:focus-visible`). Editing drops the wash and ring — caret only. Placeholder copy darkens on hover and keyboard focus.
+- ContentEditor’s balloon toolbar now lives in `FlatPack::Shared::ExecCommandBalloon` and `exec_command_bubble.js`. ContentEditor still renders the Edit/Save/Cancel bar and the same bubble.
+
+### Changed
+- Bumped the gem version to `0.1.227`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.227`.
+
+### Upgrade notes
+- New opt-in component. Existing ContentEditor, PageTitle, and Hero calls are unchanged.
+- Reload kit CSS and JavaScript. Rebuild host Tailwind if you scan Flatpack sources.
+- Redeploy so `meta.gem_version` shows `0.1.227`.
+- For `:rich`, sanitize stored HTML with `FlatPack::RichTextSanitizer`. `update_url:` uses `AttributeSanitizer`.
+
+## [0.1.226] - 2026-10-10
+
+### Added
+- `FlatPack::HeroTitle::Component` renders a standalone cover headline. Args: `text:` (or a content block), `size:` (`:md`, `:lg`, `:xl`, `:xxl`; default `:xl`), `level:` (`:h1`–`:h6`, default `:h1`), optional `align:` (`:left`, `:center`), and `system_arguments`. Ink is `--surface-content-color`; a caller `text-*` class still wins (Hero overlay ink).
+- Size tokens `--hero-title-md-size`, `--hero-title-lg-size`, `--hero-title-xl-size`, `--hero-title-xxl-size` with matching `-min` / `-max`. Each size is a fluid clamp. `:xl` aliases `--display-size` (`clamp` from `--text-5xl` / 48px to `5.5rem` / 88px, preferred `1rem + 5vw`) so today's display output is unchanged. Weight, tracking, and leading reuse `--display-weight` (600), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.05`). Unlayered `.fp-hero-title` / `.fp-hero-title--*` sit beside `.fp-display`.
+- Hero accepts opt-in `title_size:` (`:md`, `:lg`, `:xl`, `:xxl`) to pick a Hero Title step.
+- Dummy demo at `/demo/hero_title` (sizes, wrapping, inside Hero, dark).
+- Bumped the gem version to `0.1.226`.
+
+### Changed
+- Hero `size: :display` renders the headline through Hero Title at `:xl`. Default Hero headlines stay on `--text-4xl` / `--hero-headline-size`.
+- PageTitle `size: :display` renders the heading through Hero Title at `:xl`. Default PageTitle stays `font-bold` with `--page-title-h*-size`.
+
+### Upgrade notes
+- Existing Hero and PageTitle calls are unchanged. `size: :default` and `size: :display` look the same as `0.1.224`.
+- New component. Use `FlatPack::HeroTitle::Component` for a cover line without Hero or PageTitle chrome. Hero `size: :display` already does this. Pass `title_size:` on Hero to pick another step.
+- Reload kit CSS for `--hero-title-*` and `.fp-hero-title`. Themes override `--hero-title-<size>-size-min` / `-max` (or the clamp) on a named `data-theme` block. `:xl` follows `--display-size`; override `--display-size-max` to raise or lower that step.
+- Redeploy so `meta.gem_version` shows `0.1.226`.
+
+## [0.1.225] - 2026-10-10
+
+### Added
+- `FlatPack::RangeInput::Component` accepts an opt-in size-slider presentation. `variant: :size` / `:text_size` put a small and large `A` (theme font) at the track ends. `variant: :zoom` defaults to `magnifying-glass-minus` / `magnifying-glass-plus`. `start_icon:` / `end_icon:` take any kit icon name. End glyphs and icons are decorative (`aria-hidden`); the input keeps its accessible label.
+- Size, text-size, and zoom sliders snap to `step:` and show one tick under the track per step. Pass `ticks: true` on a default RangeInput for the same notches, or `ticks: false` to hide them. Arrow keys move one step (native range). Ticks render when the step count is 2–24.
+- Optional live preview: `preview_target:` (CSS selector or element id) and `with_preview` write `--fp-range-value` (current number), `--fp-range-scale` (0–1), and `--fp-range-max` on the target as you drag. The sample renders **below** the track with no fill or border. Size and text-size sliders show decorative `sample:` letters there (`"Aa"` by default). `with_preview` replaces the built-in letters. Stimulus does this work only when a preview is present. Default RangeInput markup and behaviour are unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.225`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.225` so frozen CI installs resolve the path gem.
+
+### Upgrade notes
+- Existing RangeInput calls are unchanged. Pass `variant: :size`, `variant: :zoom`, or `start_icon:` / `end_icon:` for the size-slider layout.
+- For live preview, pass `with_preview` (renders below the track) and/or `preview_target:`. Size and text-size sliders already show `sample:` (`"Aa"` by default) below the track; pass `sample: "Embiggen"` to change it or `sample: ""` to hide it. Size custom slot markup with `.fp-range-input-sample`, or `font-size: calc(var(--fp-range-value) * 1px)`. Set the same custom properties on an external target for first paint.
+- Thumb fill still aliases `--color-primary`. Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.225`.
+
+## [0.1.224] - 2026-10-10
+
+### Changed
+- Display cover size now tops out at `--display-size-max` (`5.5rem` / 88px) on wide desktops, with `--display-size-min` (`--text-5xl` / 48px) on small viewports. Preferred size is `1rem + 5vw` (~80px at 1280). `--display-leading` is `1.05`. `--display-tracking` stays `-0.03em`.
+- `--display-weight` is `600` (semibold). Content `h1` and Hero headlines already use 600; PageTitle `size: :display` now matches. Default PageTitle stays `font-bold`.
+- Type scale token `--text-8xl` (6rem / 96px) with `--text-8xl--line-height` of `1`, mapped in `@theme inline` so `text-8xl` works after a Tailwind rebuild. Themes can set `--display-size-max: var(--text-8xl)` for a 96px ceiling.
+- Bumped the gem version to `0.1.224`.
+
+### Upgrade notes
+- Existing default PageTitle and Hero calls are unchanged. Only `size: :display` and `--display-*` defaults change.
+- Cover titles are larger on desktop (~88px from 1440) and still ~48px on a phone. Reload kit CSS. Rebuild host Tailwind for `text-8xl`.
+- Themes that overrode `--display-size` keep that override. To keep the fluid clamp and change the ceiling, set `--display-size-max` (or `--display-size-min`) instead.
+- Redeploy so `meta.gem_version` shows `0.1.224`.
+
+## [0.1.223] - 2026-10-09
+
+### Added
+- Type scale tokens `--text-6xl` (3.75rem / 60px) and `--text-7xl` (4.5rem / 72px), with `--text-6xl--line-height` / `--text-7xl--line-height` of `1`, mapped in `@theme inline` so `text-6xl` / `text-7xl` utilities work after a Tailwind rebuild.
+- Theme-tunable display tokens `--display-size` (fluid clamp from `--text-5xl` / 48px to `--text-7xl` / 72px), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.1`). Kit CSS ships unlayered `.fp-display` so Tailwind preflight cannot collapse heading size.
+- `FlatPack::PageTitle::Component` and `FlatPack::Hero::Component` accept opt-in `size: :display` for cover titles. Default output is unchanged. Display headlines set the display tokens inline.
+
+### Changed
+- Bumped the gem version to `0.1.223`.
+
+### Upgrade notes
+- Existing PageTitle and Hero calls are unchanged. Pass `size: :display` for cover type.
+- Rebuild host Tailwind so `text-6xl` / `text-7xl` generate. Reload kit CSS for `--display-*` and `.fp-display`.
+- Themes override `--display-size` (and tracking / leading) on a named `data-theme` block. Product chrome stays on `--text-5xl` and below unless a component opts in.
+- Redeploy so `meta.gem_version` shows `0.1.223`.
+
+## [0.1.222] - 2026-10-09
+
+### Added
+- FAB `size: :sm` is a 40px main control with matching speed-dial glyphs, label pills, and icons. `:md` (56px) and `:lg` (64px) are unchanged.
+- Speed-dial `with_action(..., style: :danger)` paints the round glyph (rest, hover, and focus) with `--button-danger-*`, the same tokens TrashButton uses. Omit `style:` for today’s surface glyph.
+
+### Changed
+- Bumped the gem version to `0.1.222`.
+
+### Upgrade notes
+- Existing FAB calls are unchanged. Pass `size: :sm` for the smaller control. Pass `style: :danger` on a speed-dial action for Trash and other destructive items.
+- `contained: true` already shipped in `0.1.221`. It pins the FAB inside the nearest positioned ancestor (`position: absolute`), opens the stack inside that box, and does not lift for a page Bottom Nav. Top corners open downward. Rebuild host CSS if you `@import` kit sources.
+- Redeploy so `meta.gem_version` shows `0.1.222`.
+
+## [0.1.221] - 2026-10-09
+
+### Added
+- `FlatPack::Fab::Component` is a floating action button. Rest is a large round primary control (`:md` 56px, `:lg` 64px) pinned to a corner (`position: :bottom_right` default, also `:bottom_left`, `:top_right`, `:top_left`). No actions: a link (`href:`) or a button (`data:` for Turbo/Stimulus). `with_action(icon:, label:, href:, **attrs)` opens a stacked speed-dial (`layout: :stack`). Actions are smaller round buttons with a label pill, staggered ~30ms, and the plus rotates 45°. Close via the main button, Escape, backdrop/outside click, or choosing an action. `backdrop:` defaults to true. `hide_on_scroll:` hides on scroll down. Safe-area insets and auto offset above Bottom Nav (`--fp-fab-nav-offset`). z-index 45, below Modal/Drawer/Toasts. An `:arc` layout is reserved for a later release.
+
+### Changed
+- Bumped the gem version to `0.1.221`.
+
+### Upgrade notes
+- New component. Existing Button, Modal, and Bottom Nav calls are unchanged.
+- Rebuild host Tailwind so `rounded-full` and the FAB utilities generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.221`.
+- `layout: :arc` raises until that layout ships. Use `:stack`.
+- When a Bottom Nav is on the same screen, the FAB measures `.fp-bottom-nav` and sits above it. Hosts can also set `--fp-fab-nav-offset` or pass `offset:`.
+
 ## [0.1.220] - 2026-10-09
 
 ### Added

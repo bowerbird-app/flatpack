@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 import {
   applyFormat,
   hideToolbar,
@@ -9,10 +9,12 @@ import {
   updateToolbarFromSelection
 } from "controllers/flat_pack/exec_command_bubble"
 
-const SAVED_HOLD_MS = 900
+const SAVED_HOLD_MS = 1500
+const SAVED_BRIEF_MS = 150
+const SAVED_FADE_MS = 150
 
 export default class extends Controller {
-  static targets = ["surface", "field", "status", "spinner", "tick", "live", "bubble"]
+  static targets = ["surface", "field", "live", "state", "bubble"]
   static values = {
     name: String,
     mode: { type: String, default: "text" },
@@ -143,8 +145,10 @@ export default class extends Controller {
 
     this.#savedSnapshot = this.readValue()
     this.#editing = true
+    this.clearSavedHold()
     this.element.classList.add("is-editing")
     this.element.classList.remove("is-error")
+    this.showState(flatPackCopy("inline_edit.editing"))
     surface.setAttribute("contenteditable", this.contentEditableValue())
     surface.setAttribute("aria-invalid", "false")
     this.clearLive()
@@ -198,7 +202,7 @@ export default class extends Controller {
     }
 
     this.#saving = true
-    this.showSpinner()
+    this.showState(flatPackCopy("inline_edit.saving"), { tone: "saving" })
     this.announce(flatPackCopy("inline_edit.saving"))
 
     try {
@@ -259,22 +263,20 @@ export default class extends Controller {
   succeed() {
     this.#saving = false
     this.teardownEditing({ restore: false })
-    this.showTick()
+    this.showState(flatPackCopy("inline_edit.saved"), { tone: "saved" })
     this.announce(flatPackCopy("inline_edit.saved"))
     this.clearSavedHold()
-    const hold = prefersReducedMotion() ? 0 : motionDuration("slow") || SAVED_HOLD_MS
-    this.#savedHoldTimer = globalThis.setTimeout(() => {
-      this.hideStatus()
-      this.element.classList.remove("is-saved")
-    }, hold || SAVED_HOLD_MS)
+    const hold = prefersReducedMotion() ? SAVED_BRIEF_MS : SAVED_HOLD_MS
+    this.#savedHoldTimer = globalThis.setTimeout(() => this.dismissSavedLabel(), hold)
   }
 
   fail(message, { revert }) {
     this.#saving = false
+    this.clearSavedHold()
     if (revert) this.writeValue(this.#savedSnapshot)
     this.teardownEditing({ restore: false })
     this.element.classList.add("is-error")
-    this.hideStatus()
+    this.showState(message, { error: true })
     this.announce(message)
     this.surface?.setAttribute("aria-invalid", "true")
     this.syncField()
@@ -285,6 +287,7 @@ export default class extends Controller {
     const surface = this.surface
     this.#editing = false
     this.element.classList.remove("is-editing")
+    this.clearState()
     if (surface) {
       surface.removeAttribute("contenteditable")
       surface.removeEventListener("paste", this.boundPaste)
@@ -381,35 +384,38 @@ export default class extends Controller {
     return probe.contentEditable === "plaintext-only" ? "plaintext-only" : "true"
   }
 
-  showSpinner() {
-    this.positionStatus()
-    this.element.classList.add("is-saving")
-    this.element.classList.remove("is-saved")
-    if (this.hasSpinnerTarget) this.spinnerTarget.hidden = false
-    if (this.hasTickTarget) this.tickTarget.hidden = true
+  dismissSavedLabel() {
+    this.#savedHoldTimer = null
+    if (!this.element.classList.contains("is-state-saved")) return
+    this.element.classList.remove("is-state-visible")
+    const fade = prefersReducedMotion() ? 0 : SAVED_FADE_MS
+    this.#savedHoldTimer = globalThis.setTimeout(() => {
+      this.#savedHoldTimer = null
+      if (this.element.classList.contains("is-state-visible")) return
+      this.clearState()
+    }, fade)
   }
 
-  showTick() {
-    this.positionStatus()
-    this.element.classList.remove("is-saving")
-    this.element.classList.add("is-saved")
-    if (this.hasSpinnerTarget) this.spinnerTarget.hidden = true
-    if (this.hasTickTarget) this.tickTarget.hidden = false
+  stateTextElement() {
+    if (!this.hasStateTarget) return null
+    return this.stateTarget.querySelector(".fp-inline-edit__state-text") || this.stateTarget
   }
 
-  hideStatus() {
-    this.element.classList.remove("is-saving")
-    if (this.hasSpinnerTarget) this.spinnerTarget.hidden = true
-    if (this.hasTickTarget) this.tickTarget.hidden = true
+  showState(text, { error = false, tone = null } = {}) {
+    const textElement = this.stateTextElement()
+    if (!textElement) return
+    textElement.textContent = text
+    this.element.classList.add("is-state-visible")
+    this.element.classList.toggle("is-state-error", error)
+    this.element.classList.toggle("is-state-saving", tone === "saving")
+    this.element.classList.toggle("is-state-saved", tone === "saved")
   }
 
-  positionStatus() {
-    if (!this.hasStatusTarget || !this.surface) return
-    const rects = this.surface.getClientRects()
-    const rect = rects[rects.length - 1] || this.surface.getBoundingClientRect()
-    const wrap = this.element.getBoundingClientRect()
-    this.statusTarget.style.left = `${rect.right - wrap.left + 8}px`
-    this.statusTarget.style.top = `${rect.top - wrap.top + Math.max(0, (rect.height - 16) / 2)}px`
+  clearState() {
+    const textElement = this.stateTextElement()
+    if (!textElement) return
+    textElement.textContent = ""
+    this.element.classList.remove("is-state-visible", "is-state-error", "is-state-saving", "is-state-saved")
   }
 
   announce(message) {

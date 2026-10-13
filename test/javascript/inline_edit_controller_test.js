@@ -26,7 +26,8 @@ function loadController({ reduced = false, fetchImpl, turbo, copy } = {}) {
     .replace(
       'import { flatPackCopy } from "flat_pack/copy"',
       `const COPY = ${JSON.stringify(copy || {
-        "inline_edit.saving": "Saving",
+        "inline_edit.editing": "Editing",
+        "inline_edit.saving": "Saving…",
         "inline_edit.saved": "Saved",
         "inline_edit.required": "This can’t be empty",
         "inline_edit.too_long": "Too long",
@@ -34,8 +35,8 @@ function loadController({ reduced = false, fetchImpl, turbo, copy } = {}) {
       })}\nconst flatPackCopy = (key) => COPY[key] || key`
     )
     .replace(
-      'import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"',
-      `function prefersReducedMotion() { return ${reduced} }\nfunction motionDuration() { return ${reduced ? 0 : 300} }`
+      'import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"',
+      `function prefersReducedMotion() { return ${reduced} }`
     )
     .replace(
       'import {\n  applyFormat,\n  hideToolbar,\n  keepSelection as preventToolbarFocusLoss,\n  placeCaretFromPoint,\n  updateToolbarFromSelection\n} from "controllers/flat_pack/exec_command_bubble"',
@@ -76,8 +77,15 @@ function loadController({ reduced = false, fetchImpl, turbo, copy } = {}) {
       removeEventListener() {}
     },
     globalThis: {
-      setTimeout(fn) { fn(); return 1 },
-      clearTimeout() {},
+      __timers: [],
+      setTimeout(fn, delay) {
+        const entry = {fn, delay, cleared: false, ran: false}
+        this.__timers.push(entry)
+        return entry
+      },
+      clearTimeout(entry) {
+        if (entry) entry.cleared = true
+      },
       Turbo: turbo || null,
       matchMedia() { return {matches: reduced} }
     }
@@ -86,15 +94,23 @@ function loadController({ reduced = false, fetchImpl, turbo, copy } = {}) {
   context.globalThis.Turbo = context.globalThis.Turbo
 
   vm.runInNewContext(source, context, {filename: controllerPath})
-  return context.module.exports
+  return {Controller: context.module.exports, timers: context.globalThis.__timers}
+}
+
+function flushTimers(timers) {
+  const pending = timers.filter((entry) => !entry.cleared && !entry.ran)
+  pending.forEach((entry) => {
+    entry.ran = true
+    entry.fn()
+  })
 }
 
 function classListStub(initial = []) {
   const names = new Set(initial)
   return {
     contains(name) { return names.has(name) },
-    add(name) { names.add(name) },
-    remove(name) { names.delete(name) },
+    add(...added) { added.forEach((name) => names.add(name)) },
+    remove(...removed) { removed.forEach((name) => names.delete(name)) },
     toggle(name, force) {
       const should = force === undefined ? !names.has(name) : Boolean(force)
       if (should) names.add(name)
@@ -129,9 +145,12 @@ function buildController(options = {}) {
   }
   const field = {value: options.value || "Trail kit"}
   const live = {id: "live", textContent: ""}
-  const spinner = {hidden: true}
-  const tick = {hidden: true}
-  const status = {style: {}}
+  const stateText = {textContent: ""}
+  const state = {
+    querySelector(selector) {
+      return selector === ".fp-inline-edit__state-text" ? stateText : null
+    }
+  }
   const heading = {textContent: "Coast path", innerText: "Coast path", innerHTML: "Coast path", classList: classListStub(), attrs: {}, setAttribute(name, value) { this.attrs[name] = String(value) }, getAttribute() { return null }, contains() { return false }, addEventListener() {}, removeEventListener() {}, focus() {}, getClientRects() { return [] }, getBoundingClientRect() { return {right: 0, top: 0, height: 0, left: 0, width: 0} }}
 
   const element = {
@@ -146,8 +165,8 @@ function buildController(options = {}) {
     getBoundingClientRect() { return {left: 0, top: 0} }
   }
 
-  const InlineEditController = loadController(options)
-  const controller = new InlineEditController()
+  const loaded = loadController(options)
+  const controller = new loaded.Controller()
   controller.element = element
   controller.hasSurfaceTarget = !options.wrapped
   controller.surfaceTarget = surface
@@ -155,12 +174,8 @@ function buildController(options = {}) {
   controller.fieldTarget = field
   controller.hasLiveTarget = true
   controller.liveTarget = live
-  controller.hasSpinnerTarget = true
-  controller.spinnerTarget = spinner
-  controller.hasTickTarget = true
-  controller.tickTarget = tick
-  controller.hasStatusTarget = true
-  controller.statusTarget = status
+  controller.hasStateTarget = true
+  controller.stateTarget = state
   controller.hasBubbleTarget = false
   controller.nameValue = "kit[title]"
   controller.modeValue = options.mode || "text"
@@ -172,8 +187,94 @@ function buildController(options = {}) {
   controller.labelValue = "Kit title"
   controller.placeholderValue = "Untitled kit"
   controller.connect()
-  return {controller, surface, field, live, element, heading, spinner, tick}
+  return {controller, surface, field, live, state: stateText, element, heading, timers: loaded.timers}
 }
+
+test("editing label appears above the field and clears on escape", () => {
+  const {controller, surface, state, element} = buildController()
+  controller.activate()
+  assert.equal(state.textContent, "Editing")
+  assert.equal(element.classList.contains("is-state-visible"), true)
+  assert.equal(element.classList.contains("is-state-error"), false)
+  controller.cancel()
+  assert.equal(state.textContent, "")
+  assert.equal(element.classList.contains("is-state-visible"), false)
+  assert.equal(surface.attrs.contenteditable, undefined)
+})
+
+test("saving label shows a spinner tone, then Saved with a check, then fades", async () => {
+  let release
+  const gate = new Promise((resolve) => { release = resolve })
+  const {controller, live, state, element, timers} = buildController({
+    updateUrl: "/kits/1",
+    fetchImpl: () => gate.then(() => ({ok: true, headers: {get() { return "" }}}))
+  })
+  controller.activate()
+  assert.equal(state.textContent, "Editing")
+  assert.equal(element.classList.contains("is-state-saving"), false)
+  const pending = controller.commit()
+  assert.equal(state.textContent, "Saving…")
+  assert.equal(element.classList.contains("is-state-saving"), true)
+  assert.equal(element.classList.contains("is-state-saved"), false)
+  assert.equal(element.classList.contains("is-state-error"), false)
+  release()
+  await pending
+  assert.equal(state.textContent, "Saved")
+  assert.equal(live.textContent, "Saved")
+  assert.equal(element.classList.contains("is-state-visible"), true)
+  assert.equal(element.classList.contains("is-state-saved"), true)
+  assert.equal(element.classList.contains("is-state-saving"), false)
+  assert.equal(timers[0].delay, 1500)
+  flushTimers(timers)
+  assert.equal(element.classList.contains("is-state-visible"), false)
+  assert.equal(state.textContent, "Saved")
+  assert.equal(timers[1].delay, 150)
+  flushTimers(timers)
+  assert.equal(state.textContent, "")
+  assert.equal(element.classList.contains("is-state-saved"), false)
+})
+
+test("reduced motion keeps Saved visible briefly and skips the hold", async () => {
+  const {controller, state, element, timers} = buildController({
+    reduced: true,
+    updateUrl: "/kits/1",
+    fetchImpl: async () => ({ok: true, headers: {get() { return "" }}})
+  })
+  controller.activate()
+  await controller.commit()
+  assert.equal(state.textContent, "Saved")
+  assert.equal(element.classList.contains("is-state-saved"), true)
+  assert.equal(timers[0].delay, 150)
+  flushTimers(timers)
+  assert.equal(element.classList.contains("is-state-visible"), false)
+  assert.equal(timers[1].delay, 0)
+})
+
+test("failed save shows the message on the label without duplicating it for assistive tech", async () => {
+  const {controller, surface, state, live, element} = buildController({
+    updateUrl: "/kits/1",
+    fetchImpl: async () => ({ok: false, headers: {get() { return "" }}})
+  })
+  controller.activate()
+  surface.innerText = "Broken"
+  surface.textContent = "Broken"
+  await controller.commit()
+  assert.equal(state.textContent, "Couldn’t save. Try again.")
+  assert.equal(live.textContent, "Couldn’t save. Try again.")
+  assert.equal(element.classList.contains("is-state-visible"), true)
+  assert.equal(element.classList.contains("is-state-error"), true)
+})
+
+test("validation message is the visible label", async () => {
+  const {controller, surface, state, live, element} = buildController({required: true})
+  controller.activate()
+  surface.innerText = "   "
+  surface.textContent = "   "
+  await controller.commit()
+  assert.equal(state.textContent, "This can’t be empty")
+  assert.equal(live.textContent, "This can’t be empty")
+  assert.equal(element.classList.contains("is-state-error"), true)
+})
 
 test("enter activates a resting title then saves on the next enter", async () => {
   const {controller, surface, field} = buildController({updateUrl: "/kits/1"})

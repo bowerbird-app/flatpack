@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.230] - 2026-10-13
+
+### Added
+- Inline edit shows a small muted label just above the field while you edit (“Editing”), while the save is in flight (“Saving…” plus a small spinner), and after a successful save (“Saved” plus a green check, for about 1.5 seconds, then it fades). When save or validation fails, the same label shows the message the live region speaks, in the error color. The label is absolutely positioned, so the field does not shift. It is `aria-hidden`. Copy uses the existing `flatpack.inline_edit.saved` string (“Saved”).
+
+### Changed
+- Bumped the gem version to `0.1.230`.
+- `flatpack.inline_edit.saving` is now “Saving…”.
+- The spinner and check that sat beside the field are gone. Save feedback lives only in the floating label.
+
+### Upgrade notes
+- Additive. Add `flatpack.inline_edit.editing` to host locale files. English default is “Editing”. `flatpack.inline_edit.saved` is unchanged (“Saved”).
+- If a host translated `flatpack.inline_edit.saving`, update that string if it should match the visible “Saving…” label. The English default changed from “Saving” to “Saving…”.
+- Drop any host CSS aimed at `.fp-inline-edit__status`, `.fp-inline-edit__spinner`, or `.fp-inline-edit__tick`. Those elements are no longer rendered.
+- Rebuild host CSS so `flat_pack/inline_edit.css` includes the state label. No Tailwind utilities were added.
+- Redeploy so `meta.gem_version` shows `0.1.230`.
+- With `prefers-reduced-motion: reduce`, the saved label skips the 1.5s hold and stays only briefly, with no fade.
+
 ## [0.1.229] - 2026-10-13
 
 ### Fixed
