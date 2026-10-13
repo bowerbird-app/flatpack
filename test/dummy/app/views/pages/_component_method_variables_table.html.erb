@@ -1159,6 +1159,7 @@
         { variable: "size", accepts: ":lg, :md, :sm", example: "size: :md" },
         { variable: "spacing", accepts: ":lg, :md, :sm, :none", example: "spacing: :none" },
         { variable: "level", accepts: ":h1, :h2, :h3, :h4, :h5, :h6", example: "level: :h3" },
+        { variable: "with_trailing", accepts: "slot block", example: "section.with_trailing { render FlatPack::Badge::Component.new(text: \"24\") }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-3\", id: \"members\"" }
       ]
     },

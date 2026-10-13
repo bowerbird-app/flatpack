@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.232] - 2026-10-13
+
+### Added
+- `FlatPack::SectionTitle::Component` accepts `with_trailing`. The slot renders in the title row after the heading and before the copy-link icon. It sits outside the heading and outside the anchor, so the heading name and the copy-link label stay the title. Pass a badge, a count, or anything else. Demo: `/demo/section_title`.
+
+### Changed
+- Bumped the gem version to `0.1.232`.
+- The title row can wrap. The heading can shrink and break long words. Trailing content and the copy-link icon keep their size.
+
+### Upgrade notes
+- Additive. Calls that only pass `title:` render the same heading, subtitle, and copy link.
+- `title:` stays a string. Inline edit titles are unchanged.
+- There is no count or badge param. Use `with_trailing`.
+- Rebuild host Tailwind so these utilities are generated: `flex-wrap`, `flex-1`, `max-w-max`, `min-w-0`, `break-words`, and `shrink-0`.
+- Redeploy so `meta.gem_version` shows `0.1.232`.
+
 ## [0.1.231] - 2026-10-13
 
 ### Added

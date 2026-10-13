@@ -22,7 +22,11 @@ Use Section Title for document-style pages where subsections need deep-linkable 
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots
-None.
+| name | type | description |
+|---|---|---|
+| `trailing` (`with_trailing`) | slot | Content after the heading and before the copy-link icon. Outside the heading tag and outside the anchor, so the heading's accessible name and the copy-link label stay the title. Generic: a badge, a count, or anything else. Not a count param. |
+
+The title row stays vertically centred. On a narrow width the row can wrap, and the heading can shrink and break long words. Trailing content and the copy-link icon keep their size.
 
 ## Variants
 - Size: `:lg` (default), `:md`, `:sm`.
@@ -39,6 +43,19 @@ Caller `class:` still loses to component utilities (BaseComponent merge order). 
   subtitle: "Understand request windows and quotas.",
   anchor_link: true
 ) %>
+```
+
+With something beside the title:
+
+```erb
+<%= render FlatPack::SectionTitle::Component.new(
+  title: "Images",
+  anchor_link: true
+) do |section| %>
+  <% section.with_trailing do %>
+    <%= render FlatPack::Badge::Component.new(text: "24", size: :sm) %>
+  <% end %>
+<% end %>
 ```
 
 Inside a card:
@@ -58,7 +75,8 @@ Inside a card:
 
 ## Accessibility
 - Heading defaults to semantic `h2`. Pass `level:` when the document outline needs a different tag.
-- Anchor control includes `aria-label` with section context.
+- Anchor control includes `aria-label` with section context. The label is the title only.
+- `with_trailing` is outside the heading and outside the anchor, so a badge does not become part of the heading name or the copy-link label.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
