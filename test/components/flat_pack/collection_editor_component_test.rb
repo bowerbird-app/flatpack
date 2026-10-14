@@ -226,6 +226,8 @@ module FlatPack
         assert_includes css, "inset: -1px;"
         assert_includes css, ".flat-pack-collection-editor-chip [data-collection-editor-chip-remove]"
         assert_includes css, ".flat-pack-collection-editor-fields :is(input, select, textarea, .flat-pack-select-trigger)"
+        assert_includes css, ".flat-pack-collection-editor-card:has([data-flat-pack--select-target=\"dropdown\"]:not(.hidden))"
+        assert_includes css, ".flat-pack-collection-editor-row:has([data-flat-pack--select-target=\"dropdown\"]:not(.hidden))"
         assert_includes css, "padding-block: 0"
         assert_includes css, ".flat-pack-modal__body .flat-pack-collection-editor-create-fields"
         refute_includes css, "justify-content: center"

@@ -960,7 +960,7 @@
       method_call: "render FlatPack::Select::Component.new(name: \"country\", label: \"Country\", options: [[\"United States\", \"US\"], [\"Canada\", \"CA\"]], searchable: true, multiple: true)",
       variables: [
         { variable: "name", accepts: "String (required)", example: "name: \"user[country]\"" },
-        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>", example: "options: [[\"United States\", \"US\"], { label: \"Australia\", value: \"australia\", children: [{ label: \"VIC\", value: \"vic\" }] }]" },
+        { variable: "options", accepts: "Array<String>, Array<[label, value]>, Array<Hash>. Hash options may include icon: (Heroicon name) and children:", example: "options: [{ label: \"High\", value: \"high\", icon: \"arrow-up\" }]" },
         { variable: "value", accepts: "String, Array<String>, nil", example: "value: [\"US\", \"CA\"]" },
         { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Select an option\"" },
         { variable: "label", accepts: "String or nil", example: "label: \"Country\"" },
@@ -1321,7 +1321,8 @@
       method_call: "render FlatPack::Table::Component.new(data: @users) do |table| ... end",
       variables: [
         { variable: "data", accepts: "Array/Enumerable", example: "data: @users" },
-        { variable: "column", accepts: "title:, html:, sortable:, sort_key:", example: "table.column(title: \"Email\", sortable: true, sort_key: :email)" },
+        { variable: "headers", accepts: "true, false", example: "headers: false" },
+        { variable: "column", accepts: "title:, html:, sortable:, sort_key:. title stays required when headers is false", example: "table.column(title: \"Email\", sortable: true, sort_key: :email)" },
         { variable: "direction", accepts: ":asc, :desc", example: "direction: :desc" }
       ]
     },

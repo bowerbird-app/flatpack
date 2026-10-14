@@ -118,8 +118,10 @@
                   name: row_form.field_name(:role),
                   id: row_form.field_id(:role),
                   label: "Role",
-                  options: ["Designer", "Photographer", "Producer"],
+                  options: DemoProjectPerson.role_options,
                   value: "Designer",
+                  placeholder: "Role",
+                  searchable: true,
                   chrome: :cell
                 ) %>
               <% end %>

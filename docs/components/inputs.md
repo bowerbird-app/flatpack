@@ -53,7 +53,7 @@ Component-specific props:
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
-| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
+| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). Select hashes may include `icon:` (Heroicon name). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. Child hashes may include `icon:` too. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
 | `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
@@ -73,6 +73,7 @@ None.
 - RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, primary when selected (`--button-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
+- Select option `icon:` is a Heroicon name. The custom menu (including local search, remote search results, nested parent and child rows, and multiselect chips) draws it with `FlatPack::Shared::IconComponent` at size `:sm` (`w-4 h-4`), the same size as the select chevron, so it matches the `text-sm` control. The icon is decorative (`aria-hidden`). The text label stays. The closed control shows the icon for the selected value. Remote JSON may include `"icon"`. A native `<select>` cannot draw icons; the value and label still submit. An icon that is not a Heroicon name (`letter`, `letter-number` pieces) raises `ArgumentError`.
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
 - In searchable multiselect dropdown rows, selected state is indicated by checkbox state with neutral row styling (no primary selected row background)
@@ -144,6 +145,20 @@ Additional focused examples:
   help_text: "Choose the country used for billing and tax rules.",
   searchable: true,
   placeholder: "Search..."
+) %>
+```
+
+```erb
+<%= render FlatPack::Select::Component.new(
+  name: "task[priority]",
+  label: "Priority",
+  value: "high",
+  searchable: true,
+  options: [
+    { label: "Low", value: "low", icon: "arrow-down" },
+    { label: "Medium", value: "medium", icon: "minus" },
+    { label: "High", value: "high", icon: "arrow-up" }
+  ]
 ) %>
 ```
 
@@ -238,14 +253,16 @@ Nested Select options require `multiple: true`. Selecting a parent selects the p
 Remote endpoint response format for `Select` supports either:
 
 ```json
-[{ "label": "Alice Johnson", "value": "alice-johnson" }]
+[{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }]
 ```
 
 or:
 
 ```json
-{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson" }] }
+{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }] }
 ```
+
+`icon` is optional. When present it is a Heroicon name. The menu and the closed control use it. A native select ignores it.
 
 ```erb
 <%= render FlatPack::FileInput::Component.new(
