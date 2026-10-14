@@ -55,7 +55,7 @@ None.
 - Orderable behavior via `orderable: true` and `orderable_url:`.
 - Key column `:fit` or a fixed CSS length, and an optional `stack_below` breakpoint.
 
-`layout: :key_value` renders a `<dl>`. Each item renders a `<div>` that contains one `<dt>` and one `<dd>`. The list is a grid. Each row uses subgrid, so icons share a column and keys share a column no matter how long a key is. `:fit` sets that key column to `max-content` (the widest key). `key_width: "10rem"` fixes it. Values wrap in their column. `trailing:` sits in a column at the end of the row. `spacing` and `divider` still apply. The divider is the same 1px `--surface-border-color` rule, with `border-radius: 0`.
+`layout: :key_value` renders a `<dl>`. Each item renders a `<div>` that contains one `<dt>` and one `<dd>`. The list is a grid. Each row uses subgrid, so icons share a column and keys share a column no matter how long a key is. `:fit` sets that key column to `max-content` (the widest key). `key_width: "10rem"` fixes it. Values wrap in their column. `trailing:` sits in a column at the end of the row. `spacing` and `divider` still apply. The divider is the same 1px `--surface-border-color` rule, with `border-radius: 0`. `--fp-list-key-width` is a runtime layout property on the list (from `key_width:`). It is not a theme token.
 
 Render each item inside the list block. The item reads the layout from that render. A row built before the list cannot see `:key_value`.
 
