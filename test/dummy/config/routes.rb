@@ -204,6 +204,7 @@ Rails.application.routes.draw do
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/masonry", to: "pages#masonry"
   get "demo/overlay", to: "pages#overlay"
+  get "demo/video_preview", to: "pages#video_preview"
   get "demo/fab", to: "pages#fab"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"

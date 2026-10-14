@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.233] - 2026-10-13
+## [0.1.234] - 2026-10-14
 
 ### Added
 - `FlatPack::CopyButton::Component` copies `text:` or the value of `target:`. It uses Button sizes and styles. The Copied state keeps that style and only changes the label and icon. Error uses danger tokens. Demo: `/demo/buttons/copy`.
@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `flat_pack/copy.js` includes the English fallback for `collection_editor.already_joined`.
 
 ### Changed
-- Bumped the gem version to `0.1.233`.
+- Bumped the gem version to `0.1.234`.
 - Text Input and Text Area `quick_copy: true` copy through `flat-pack--clipboard`. The trailing icon, readonly field, and toast stay. After a click the icon swaps to a check or an error icon. The check keeps the field’s icon colour.
 - Section Title `anchor_link: true` copies through the same controller. Hover, the link icon, the tooltip, and the hash update stay. The anchor announces the copy instead of staying silent. The check keeps the link colour.
 
@@ -36,6 +36,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reload kit CSS and JavaScript. No new Tailwind utilities.
 - With `prefers-reduced-motion: reduce`, Copied and error stay for at most 600ms and the icon swap does not fade. `timeout: 0` still holds the state.
 - `writeClipboardText` and `readClipboardSource` in `flat_pack/clipboard.js` are the extension point for a later share button. This release does not call the Web Share API.
+- Redeploy so `meta.gem_version` shows `0.1.234`.
+
+## [0.1.233] - 2026-10-13
+
+### Added
+- `FlatPack::VideoPreview::Component` shows a thumbnail and a centred play button in a fixed aspect-ratio frame (default `16/9`, same ratio strings as Card media, rounded like Card media). The host supplies the player in `with_player`. That markup stays in a `<template>` until someone clicks, or presses Enter or Space. Flatpack does not know about providers, build embed URLs, or accept a raw embed string. `with_item` passes `placement` and `inset` through to Overlay. Demo: `/demo/video_preview`.
+
+### Changed
+- Bumped the gem version to `0.1.233`.
+
+### Upgrade notes
+- Additive. Card, Carousel, and Overlay stay as they are.
+- `label:` is required. It is the play button's accessible name. Translate it in the host. There is no `flatpack.video_preview` string and no colour or theme prop.
+- The host writes the iframe or video tag, including any autoplay flag, and decides which players are allowed.
+- Activation runs once, dispatches `flat-pack:video-preview:play`, and moves focus into the player.
+- With `prefers-reduced-motion: reduce`, the swap is instant and the play button does not shift on press.
+- Rebuild host Tailwind so the frame utilities are generated: `aspect-[16/9]`, `aspect-[4/3]`, `aspect-square`, `rounded-[var(--radius-lg)]`, and the play-button classes in `FlatPack::VideoPreview::Component`.
+- Reload Flatpack CSS so `.fp-video-preview__player` fills the inserted player, and reload Flatpack JavaScript so `flat-pack--video-preview` is available.
 - Redeploy so `meta.gem_version` shows `0.1.233`.
 
 ## [0.1.232] - 2026-10-13

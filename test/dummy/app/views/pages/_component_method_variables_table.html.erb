@@ -1237,6 +1237,20 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", id: \"stool-photo\"" }
       ]
     },
+    video_preview: {
+      label: "Video preview",
+      method_call: "render FlatPack::VideoPreview::Component.new(label: \"Play: Launch trailer\") do |preview| preview.with_media { image_tag poster_path, alt: \"\" }; preview.with_item(placement: :bottom_left, inset: :sm) { render FlatPack::Badge::Component.new(text: \"2:14\", size: :sm) }; preview.with_player { tag.iframe(src: trailer_embed_url, title: \"Launch trailer\") } end",
+      variables: [
+        { variable: "label", accepts: "String (required)", example: "label: \"Play: Launch trailer\"" },
+        { variable: "aspect_ratio", accepts: "\"16/9\", \"4/3\", \"1/1\", or a custom ratio", example: "aspect_ratio: \"16/9\"" },
+        { variable: "with_media", accepts: "slot block (required)", example: "preview.with_media { image_tag poster_path, alt: \"\" }" },
+        { variable: "with_player", accepts: "slot block (required)", example: "preview.with_player { tag.iframe(src: trailer_embed_url, title: \"Launch trailer\", allow: \"autoplay\") }" },
+        { variable: "with_item", accepts: "slot block, repeatable", example: "preview.with_item(placement: :bottom_left, inset: :sm) { render FlatPack::Badge::Component.new(text: \"2:14\", size: :sm) }" },
+        { variable: "placement", accepts: ":top_left, :top_center, :top_right, :middle_left, :center, :middle_right, :bottom_left, :bottom_center, :bottom_right", example: "placement: :bottom_left" },
+        { variable: "inset", accepts: ":sm, :md, :lg", example: "inset: :sm" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-3xl\", id: \"launch-trailer\"" }
+      ]
+    },
     notification: {
       label: "Notification",
       method_call: "render FlatPack::Notification::Component.new(unread_count: 12, see_all_href: demo_notification_path, notifications: demo_notifications)",
