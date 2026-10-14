@@ -13,6 +13,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.238] - 2026-10-14
+
+### Added
+- `FlatPack::Table::Column` accepts `width:` (`:fit`, `:fill`, or a CSS length such as `"12rem"`), `min_width:`, `max_width:`, `align:` (`:start`, `:center`, `:end`), `wrap:` (`:wrap`, `:nowrap`, `:truncate`), and `hide_below:` (`:sm`, `:md`, `:lg`, `:xl`).
+- Widths render on `<colgroup>` / `<col>`. A CSS length uses `table-layout: fixed` unless a sibling column is `:fit` (fixed layout clips shrink-to-content columns). The length is still a `max-width` cap on the header and cells. Table `min_width:` still sets the horizontal scroll floor.
+- `wrap: :truncate` clips the header and cells and puts the full text in `title`.
+- `hide_below:` hides that header and its cells below the breakpoint. The column stays in the markup, so colspan still counts it.
+- `FlatPack::Table::Component` accepts `style:` (`:default`, `:plain`) and `dividers:` (`true` / `false`). `:plain` drops the outer border, radius, and row hover.
+- Demos: `/demo/tables/basic#table-column-widths`, `#table-align-wrap`, `#table-hide-below`, `#table-plain-rows`, `#table-no-dividers`. The plain demo is an icon column (`width: :fit`), a fixed key, and a fill value, with `headers: false` and `style: :plain`.
+
+### Changed
+- Bumped the gem version to `0.1.238`.
+- Header and cell alignment uses logical `text-start` / `text-center` / `text-end`. Default align is `:start`.
+- The draggable demo sizes the grip with `width: :fit`. Sortable id and views columns use the same column options.
+
+### Upgrade notes
+- Additive. Existing tables keep the bordered frame, row lines, and row hover.
+- `style` must be `:default` or `:plain`. `dividers` must be `true` or `false`.
+- Column `width:` is `:fit`, `:fill`, or a length such as `"12rem"`. Column `min_width:` and `max_width:` are lengths. They are not the table scroll floor and they are not a class or a raw style string.
+- A length `width:` sets `table-layout: fixed` when no column is `:fit`. Beside `:fit`, the table stays on automatic layout and the length cells get `max-width` of that length. Pass `min_width: :none` on the table when the scroll floor should stay off.
+- `align:` is `:start`, `:center`, or `:end`. In left-to-right text, `:start` matches the old `text-left`.
+- `wrap: :truncate` ellipsizes inside a length `width:`. On a `:fill` column the cell is capped with `max-width: 0` so the ellipsis uses the leftover space instead of widening the table.
+- `hide_below:` does not remove the column from `column_count` or colspan.
+- There is no compatibility shim. These options are new.
+- Rebuild host Tailwind so `text-start`, `text-center`, `text-end`, `whitespace-nowrap`, `truncate`, `min-w-0`, `max-w-full`, `shrink-0`, `table-fixed`, `max-sm:hidden`, `max-md:hidden`, `max-lg:hidden`, `max-xl:hidden`, and the `max-*: [visibility:collapse]` column classes are generated.
+- Redeploy so `meta.gem_version` shows `0.1.238`.
+- Main was `0.1.237` after #276. Recheck main at merge time and bump again if it has moved. Do not tag this PR.
+
 ## [0.1.237] - 2026-10-14
 
 ### Added

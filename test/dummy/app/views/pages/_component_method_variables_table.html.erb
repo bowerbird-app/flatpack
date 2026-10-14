@@ -1323,7 +1323,9 @@
       variables: [
         { variable: "data", accepts: "Array/Enumerable", example: "data: @users" },
         { variable: "headers", accepts: "true, false", example: "headers: false" },
-        { variable: "column", accepts: "title:, html:, sortable:, sort_key:. title stays required when headers is false", example: "table.column(title: \"Email\", sortable: true, sort_key: :email)" },
+        { variable: "style", accepts: ":default, :plain", example: "style: :plain" },
+        { variable: "dividers", accepts: "true, false", example: "dividers: false" },
+        { variable: "column", accepts: "title:, width: (:fit, :fill, or a CSS length), min_width:, max_width:, align: (:start, :center, :end), wrap: (:wrap, :nowrap, :truncate), hide_below: (:sm, :md, :lg, :xl), html:, sortable:, sort_key:. title stays required when headers is false", example: "table.column(title: \"Email\", width: :fill, wrap: :truncate)" },
         { variable: "direction", accepts: ":asc, :desc", example: "direction: :desc" }
       ]
     },

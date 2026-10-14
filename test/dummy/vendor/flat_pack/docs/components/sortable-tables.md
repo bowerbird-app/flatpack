@@ -43,6 +43,8 @@ Drag-and-drop persistence behavior:
 ## Slots
 Use `table.column(...)` definitions. Sort behavior is controlled per-column with `sortable` and `sort_key`.
 
+Column `width`, `min_width`, `max_width`, `align`, `wrap`, and `hide_below` work on sortable headers and on draggable rows. Use `width: :fit` on a drag handle so the grip stays as wide as its content. A CSS length `width:` uses `table-layout: fixed` unless that table also has a `:fit` column. `hide_below:` hides the header and the cells together, and the reorder payload still uses the row id.
+
 ## Variants
 
 | variant | description |
