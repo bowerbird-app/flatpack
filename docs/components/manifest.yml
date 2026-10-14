@@ -437,13 +437,23 @@ components:
     primary_class: FlatPack::List::Component
     status: documented
 
+  - key: media
+    title: Media
+    doc: docs/components/media.md
+    primary_class: FlatPack::Media::Component
+    related_classes:
+      - FlatPack::Overlay::Component
+      - FlatPack::Overlay::Item
+    status: documented
+
   - key: masonry
     title: Masonry
     doc: docs/components/masonry.md
     primary_class: FlatPack::Masonry::Component
     related_classes:
       - FlatPack::Masonry::Item
-      - FlatPack::Masonry::Image
+      - FlatPack::Grid::Component
+      - FlatPack::Media::Component
     status: documented
 
   - key: modal

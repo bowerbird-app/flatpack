@@ -6,7 +6,7 @@ Show a still frame and a play button. The player stays unloaded until someone pr
 ## When to use
 Use Video preview for a trailer, lesson, or clip that should not fetch until the visitor asks. The host writes the player (an iframe, a video tag, or anything else). Flatpack does not know about providers, does not build embed URLs, and does not accept a raw embed string. The host decides which players are allowed.
 
-Do not use it for a photo with a badge (that is Overlay) or a sliding gallery (that is Carousel).
+Do not use it for a photo with a badge (that is `FlatPack::Media::Component`) or a sliding gallery (that is Carousel). Overlay only places the items.
 
 ## Class
 - Primary: `FlatPack::VideoPreview::Component`

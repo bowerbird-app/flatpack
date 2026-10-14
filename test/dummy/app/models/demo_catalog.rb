@@ -175,7 +175,7 @@ class DemoCatalog
             {title: "Movable Cards", search_title: "Grid: Movable Cards", path: "/demo/grid/movable_cards", description: "Draggable card grid with persisted ordering", icon: :chevron_down}
           ]
         },
-        {type: :item, title: "Masonry", path: "/demo/masonry", description: "Mixed-ratio photos stacked without empty holes", icon: :image},
+        {type: :item, title: "Masonry", path: "/demo/masonry", description: "A photo wall. Each tile is a link, a badge, and a filename", icon: :image},
         {type: :item, title: "Overlay", path: "/demo/overlay", description: "Place a badge, icon, or button on a photo", icon: :image},
         {type: :item, title: "Video preview", path: "/demo/video_preview", description: "Play a clip when you ask. The player stays unloaded until then", icon: :play},
         {type: :item, title: "Code Blocks", path: "/demo/code_blocks", description: "Reusable snippets for demo pages", icon: :type},

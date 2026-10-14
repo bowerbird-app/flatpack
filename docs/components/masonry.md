@@ -6,9 +6,11 @@ Stack mixed-ratio items so each one keeps its natural shape and sits tight under
 ## When to use
 Use Masonry for photo walls, media libraries, and mixed portrait/landscape tiles. Use `Grid` when items should share a row height. Do not change `Grid` to get this layout.
 
+Masonry is layout only. A photo is `FlatPack::Media::Component` inside `with_item`. A link, a filename, or a card is host markup in that same cell.
+
 ## Class
 - Primary: `FlatPack::Masonry::Component`
-- Related classes: `FlatPack::Masonry::Item`, `FlatPack::Masonry::Image`, `FlatPack::Grid::Component`
+- Related classes: `FlatPack::Masonry::Item`, `FlatPack::Grid::Component`, `FlatPack::Media::Component`
 
 ## Props
 
@@ -21,7 +23,6 @@ Use Masonry for photo walls, media libraries, and mixed portrait/landscape tiles
 
 ## Slots
 - `with_item` — arbitrary content. The slot wrapper is the masonry cell.
-- `with_image` — convenience image cell. Required: `src`, `alt`, `width`, `height`. Optional: `href`, `caption`.
 Default block content is also accepted: each direct child is a cell.
 
 ## Variants
@@ -35,8 +36,16 @@ Default block content is also accepted: each direct child is a cell.
 
 ```erb
 <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
-  <% masonry.with_image(src: "/photos/harbour.jpg", alt: "Harbour at dusk", width: 400, height: 600) %>
-  <% masonry.with_image(src: "/photos/cliff.jpg", alt: "Sea cliff", width: 600, height: 400, href: "/photos/cliff", caption: "Sea cliff") %>
+  <% masonry.with_item do %>
+    <%= link_to "/photos/harbour.jpg" do %>
+      <%= render FlatPack::Media::Component.new(src: "/photos/harbour.jpg", alt: "Harbour at dusk", width: 1120, height: 1400) do |media| %>
+        <% media.with_item(placement: :bottom_left, inset: :sm) do %>
+          <%= render FlatPack::Badge::Component.new(text: "JPG · 1120×1400 · 4:5", size: :xs) %>
+        <% end %>
+      <% end %>
+      <span>harbour.jpg</span>
+    <% end %>
+  <% end %>
   <% masonry.with_item do %>
     <%= render FlatPack::Card::Component.new(style: :outlined) { "Notes from the jetty" } %>
   <% end %>
@@ -47,14 +56,14 @@ Rows order, left to right:
 
 ```erb
 <%= render FlatPack::Masonry::Component.new(order: :rows, columns: 3) do |masonry| %>
-  <% masonry.with_image(src: "/photos/studio.jpg", alt: "Studio window", width: 500, height: 500) %>
+  <% masonry.with_item do %>
+    <%= render FlatPack::Media::Component.new(src: "/photos/studio.jpg", alt: "Studio window", width: 500, height: 500) %>
+  <% end %>
 <% end %>
 ```
 
-`width` and `height` set `aspect-ratio` on the image so the cell reserves space before the file loads. Images also ship `loading="lazy"` and `decoding="async"`.
-
 ## Accessibility
-DOM order is reading order. In `order: :columns`, the visual stack goes down each column, so what you see may not match left-to-right reading. Prefer `order: :rows` when source order should match the visual row. Image `alt` is required (use `""` only when the image is decorative). Linked images get their name from `alt`.
+DOM order is reading order. In `order: :columns`, the visual stack goes down each column, so what you see may not match left-to-right reading. Prefer `order: :rows` when source order should match the visual row. Image `alt` belongs on `FlatPack::Media::Component`. The filename under a photo is host text. If that text and the image sit in one link, both are part of the link name.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

@@ -2684,37 +2684,6 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   min-width: 0;
 }
 
-.fp-masonry__image {
-  outline: 1px solid color-mix(in oklch, var(--surface-content-color) 10%, transparent);
-  outline-offset: -1px;
-}
-
-.fp-masonry__link {
-  display: block;
-  border-radius: var(--radius-md);
-}
-
-.fp-masonry__link:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .fp-masonry__link {
-    transition: opacity var(--duration-fast) var(--easing-standard);
-  }
-
-  .fp-masonry__link:hover {
-    opacity: 0.92;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fp-masonry__link {
-    transition: none;
-  }
-}
-
 @supports not (grid-template-rows: masonry) {
   .fp-masonry--rows:not([data-fp-masonry-ready]) {
     column-gap: var(--fp-masonry-gap);

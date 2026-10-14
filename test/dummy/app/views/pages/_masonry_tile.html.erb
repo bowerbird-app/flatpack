@@ -1,0 +1,14 @@
+<%# locals: (photo:) %>
+<%= link_to photo[:src], class: "block rounded-[var(--media-radius)] text-inherit no-underline outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]" do %>
+  <%= render FlatPack::Media::Component.new(
+    src: photo[:src],
+    alt: photo[:alt],
+    width: photo[:width],
+    height: photo[:height]
+  ) do |media| %>
+    <% media.with_item(placement: :bottom_left, inset: :sm) do %>
+      <%= render FlatPack::Badge::Component.new(text: photo[:badge], size: :xs) %>
+    <% end %>
+  <% end %>
+  <span class="mt-2 block text-sm text-[var(--surface-muted-content-color)]"><%= photo[:filename] %></span>
+<% end %>
