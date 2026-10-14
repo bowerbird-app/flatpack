@@ -1347,6 +1347,9 @@
   .grid-cols-\[max-content_var\(--fp-list-key-width\)_var\(--stack-gap-md\)_minmax\(0\,1fr\)_max-content\] {
     grid-template-columns: max-content var(--fp-list-key-width) var(--stack-gap-md) minmax(0,1fr) max-content;
   }
+  .grid-cols-\[repeat\(auto-fill\,minmax\(var\(--fp-collection-min-item-width\)\,1fr\)\)\] {
+    grid-template-columns: repeat(auto-fill,minmax(var(--fp-collection-min-item-width),1fr));
+  }
   .grid-cols-subgrid {
     grid-template-columns: subgrid;
   }
@@ -5993,6 +5996,26 @@
   .\[\&\:has\(\[aria-expanded\=true\]\)_\[role\=tooltip\]\]\:\!opacity-0 {
     &:has([aria-expanded=true]) [role=tooltip] {
       opacity: 0% !important;
+    }
+  }
+  .\[\&\>\*\]\:w-full {
+    &>* {
+      width: 100%;
+    }
+  }
+  .\[\&\>\*\]\:min-w-0 {
+    &>* {
+      min-width: calc(var(--spacing) * 0);
+    }
+  }
+  .\[\&\>\*\]\:flex-1 {
+    &>* {
+      flex: 1;
+    }
+  }
+  .\[\&\>\*\]\:self-stretch {
+    &>* {
+      align-self: stretch;
     }
   }
   .\[\&\>\*\]\:rounded-none {

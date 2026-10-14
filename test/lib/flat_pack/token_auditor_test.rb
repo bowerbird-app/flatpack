@@ -18,6 +18,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-trash-button-size"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-offset"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-nav-offset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collection-min-item-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-list-key-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-value"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-scale"

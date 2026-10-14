@@ -18,6 +18,7 @@ module FlatPack
       --fp-masonry-gap
       --fp-masonry-row
       --fp-trash-button-size
+      --fp-collection-min-item-width
       --fp-fab-offset
       --fp-fab-nav-offset
       --fp-list-key-width

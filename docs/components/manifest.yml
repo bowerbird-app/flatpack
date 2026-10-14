@@ -243,6 +243,16 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: collection
+    title: Collection
+    doc: docs/components/collection.md
+    primary_class: FlatPack::Collection::Component
+    related_classes:
+      - FlatPack::Button::Component
+      - FlatPack::Badge::Component
+      - FlatPack::Chip::Component
+    status: documented
+
   - key: collection_editor
     title: Collection Editor
     doc: docs/components/collection-editor.md

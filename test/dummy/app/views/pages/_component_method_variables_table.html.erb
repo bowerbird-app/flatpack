@@ -173,7 +173,12 @@
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Save\"" },
         { variable: "style", accepts: ":primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :secondary" },
-        { variable: "loading", accepts: "true, false", example: "loading: true" }
+        { variable: "loading", accepts: "true, false", example: "loading: true" },
+        { variable: "align", accepts: ":center, :start", example: "align: :start" },
+        { variable: "lines", accepts: "1, 2", example: "lines: 2" },
+        { variable: "current", accepts: "true, false", example: "current: true" },
+        { variable: "title", accepts: "String or nil", example: "title: \"Logos and lockups for print and screen\"" },
+        { variable: "trailing", accepts: "slot block", example: "button.with_trailing { render FlatPack::Badge::Component.new(text: \"12\", size: :sm) }" }
       ]
     },
     copy_button: {
@@ -727,6 +732,18 @@
         { variable: "sample", accepts: "String", example: "sample: \"Aa\"" },
         { variable: "with_preview", accepts: "slot block", example: "range.with_preview { tag.span \"Aa\", class: \"fp-range-input-sample\" }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"w-full\", data: { testid: \"range-input\" }" }
+      ]
+    },
+    collection: {
+      label: "Collection",
+      method_call: "render FlatPack::Collection::Component.new(as: :nav, label: \"Press kit\", layout: :grid) do |collection| ... end",
+      variables: [
+        { variable: "as", accepts: ":list, :nav", example: "as: :nav" },
+        { variable: "label", accepts: "String (required for :nav)", example: "label: \"Press kit\"" },
+        { variable: "layout", accepts: ":stack, :grid, :wrap", example: "layout: :grid" },
+        { variable: "gap", accepts: ":sm, :md, :lg", example: "gap: :md" },
+        { variable: "min_item_width", accepts: "CSS length (grid only)", example: "min_item_width: \"14rem\"" },
+        { variable: "with_item", accepts: "slot block, repeatable", example: "collection.with_item { render FlatPack::Button::Component.new(text: \"Logos\", align: :start, lines: 2) }" }
       ]
     },
     grid: {

@@ -23,17 +23,25 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `icon_only` | Boolean | `false` | no | Uses compact icon-only padding, a 44px hit target (`.fp-hit-target`), and hides visible text. Requires `text:` or `aria: { label: "…" }`. |
 | `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
 | `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
+| `align` | Symbol | `:center` | no | `:center` keeps the label in the middle. `:start` left-aligns it and lets the label fill the remaining space (`flex-1 min-w-0`). |
+| `lines` | Integer | `1` | no | `1` or `2`. Clamps the label with an ellipsis. `2` top-aligns the row so a wrapped label and the trailing slot share the first line. |
+| `current` | Boolean | `false` | no | Marks the control with the current look (`.fp-button-current`). On a link, also sets `aria-current="page"`. |
+| `title` | String, nil | `nil` | no | Full label for the tooltip when `lines` clamps the visible text. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria. |
 
 ## Slots
-No slots.
+| name | description |
+| --- | --- |
+| `trailing` | Fixed-width content at the end of the button (`shrink-0`). A `FlatPack::Badge::Component` with `size: :sm`, or an icon. Set with `with_trailing`. Not supported on icon-only buttons. |
 
 ## Variants
 - Built-in styles: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`
 - Host-registered styles: any name added with `FlatPack::Button.register_style`
 - Sizes: `:sm`, `:md`, `:lg`
 - Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
-- States: loading, icon + text, icon-only
+- States: loading, icon + text, icon-only, current (`current: true`)
+- Label alignment: `:center` (default), `:start`
+- Label lines: `1` (default), `2`
 
 ## Host-registered styles
 The seven built-in styles are kit-owned. Do not override `--color-primary` (or other theme tokens) to recolour one button. A host or third-party gem registers a named colourway, then paints it with local `--fp-button-*` tokens.
@@ -134,13 +142,33 @@ Pass `indicator: :slide` for a sliding fill. Items keep text colour. A normal le
 ) %>
 ```
 
+A menu row leaves the label at the start, clamps it to two lines, and parks a count at the end. `current: true` on a link sets `aria-current="page"`. See [Collection](collection.md) for the press-kit grid.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Logos and lockups for print, screen, and social",
+  title: "Logos and lockups for print, screen, and social",
+  href: "/press/logos",
+  icon: "swatch",
+  align: :start,
+  lines: 2,
+  current: true
+) do |button| %>
+  <% button.with_trailing do %>
+    <%= render FlatPack::Badge::Component.new(text: "12", size: :sm) %>
+  <% end %>
+<% end %>
+```
+
 ## Touch
 Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulation` (`touch-action: manipulation`) so taps are not delayed by double-tap zoom. Icon-only controls also get that from `.fp-hit-target`. Kit CSS does not set a host-wide `button {}` rule.
 
 ## Accessibility
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
+- Leading icons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
-- Focus ring styles are applied by default for keyboard navigation.
+- `current: true` on a link sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
+- Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
 - Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Colour does not come from per-style Tailwind background classes.
 

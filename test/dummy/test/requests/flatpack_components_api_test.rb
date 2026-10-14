@@ -44,7 +44,7 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "authenticated show Button includes parameters, empty slots, and examples" do
+  test "authenticated show Button includes parameters, the trailing slot, and examples" do
     get "/recording_studio_api/api/v1/flatpack/components/Button--Component", headers: authorization_headers
 
     assert_response :success
@@ -60,7 +60,7 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert text.key?("default")
     assert_nil text.fetch("default")
     refute system_arguments.key?("default")
-    assert_equal [], payload.fetch("slots")
+    assert_equal [{"name" => "trailing", "collection" => false}], payload.fetch("slots")
     examples = payload.fetch("examples")
     assert_operator examples.size, :>=, 1
     examples.each do |example|

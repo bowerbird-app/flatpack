@@ -229,6 +229,7 @@ class DemoCatalog
         },
         {type: :item, title: "Empty State", path: "/demo/empty_state", description: "Empty screens that invite the next action", icon: :folder},
         {type: :item, title: "Overflow Row", path: "/demo/overflow_row", description: "One-row layout that scrolls sideways when items do not fit", icon: :chevron_right},
+        {type: :item, title: "Collection", path: "/demo/collection", description: "Grid, wrap, or stack of buttons, badges, and chips", icon: :dashboard},
         {type: :item, title: "Stepper", path: "/demo/stepper", description: "Horizontal and vertical progress through named steps", icon: :chevron_right},
         {type: :item, title: "Divider", path: "/demo/divider", description: "Horizontal rule with optional centered label for stacked auth actions", icon: :minus}
       ]

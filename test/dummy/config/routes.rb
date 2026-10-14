@@ -200,6 +200,7 @@ Rails.application.routes.draw do
   get "demo/text/content", to: "pages#text_content"
   get "demo/text/quote", to: "pages#text_quote"
   get "demo/empty_state", to: "pages#empty_state"
+  get "demo/collection", to: "pages#collection"
   get "demo/grid", to: "pages#grid"
   get "demo/grid/two_columns", to: "pages#grid_two_columns"
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"

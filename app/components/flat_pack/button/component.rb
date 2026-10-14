@@ -17,6 +17,33 @@ module FlatPack
         lg: "p-[var(--button-icon-only-padding-lg)]"
       }.freeze
 
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "inline-flex" "gap-2" "items-center" "items-start" "justify-center" "justify-start"
+      # "min-w-0" "max-w-full" "flex-1" "text-center" "text-start" "truncate" "line-clamp-2"
+      # "shrink-0" "self-start"
+      ALIGNS = {
+        center: "justify-center",
+        start: "justify-start"
+      }.freeze
+
+      LABEL_ALIGNS = {
+        center: "min-w-0 max-w-full text-center",
+        start: "min-w-0 flex-1 text-start"
+      }.freeze
+
+      LINES = {
+        1 => "truncate",
+        2 => "line-clamp-2"
+      }.freeze
+
+      TRAILING_CLASSES = {
+        1 => "shrink-0",
+        2 => "shrink-0 self-start"
+      }.freeze
+
+      renders_one :trailing
+
       def initialize(
         text: nil,
         style: :default,
@@ -28,6 +55,10 @@ module FlatPack
         icon_only: false,
         loading: false,
         type: "button",
+        align: :center,
+        lines: 1,
+        current: false,
+        title: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -40,6 +71,10 @@ module FlatPack
         @icon_only = icon_only
         @loading = loading
         @type = type
+        @align = align.to_sym
+        @lines = lines
+        @current = current
+        @title = title
 
         # Sanitize URL for security and validate
         if href
@@ -52,9 +87,15 @@ module FlatPack
         validate_style!
         validate_size!
         validate_content!
+        validate_align!
+        validate_lines!
+        validate_current!
+        validate_title!
       end
 
       def call
+        validate_trailing!
+
         if @href
           render_link
         else
@@ -81,13 +122,22 @@ module FlatPack
 
         if @loading
           content << render(FlatPack::Spinner::Component.new(size: @size, label: nil))
-          content << content_tag(:span, fp_t("button.loading")) unless @icon_only
+          content << content_tag(:span, fp_t("button.loading"), class: label_classes) unless @icon_only
         else
           content << render_icon if @icon
-          content << content_tag(:span, @text) if @text && !@icon_only
+          content << content_tag(:span, @text, class: label_classes) if @text && !@icon_only
+          content << render_trailing if show_trailing?
         end
 
         safe_join(content)
+      end
+
+      def show_trailing?
+        !@loading && !@icon_only && trailing?
+      end
+
+      def render_trailing
+        content_tag(:span, trailing, class: TRAILING_CLASSES.fetch(@lines))
       end
 
       def render_icon
@@ -113,10 +163,7 @@ module FlatPack
           data: style_data
         }
         attrs[:disabled] = true if @loading
-        aria = {}
-        aria[:label] = derived_icon_only_label if derived_icon_only_label.present?
-        aria[:busy] = "true" if @loading
-        attrs[:aria] = aria if aria.any?
+        apply_shared_control_attributes!(attrs)
         merge_attributes(**attrs)
       end
 
@@ -128,16 +175,27 @@ module FlatPack
           data: style_data
         }
         attrs[:rel] = "noopener noreferrer" if @target == "_blank"
+        apply_shared_control_attributes!(attrs)
+        if @current
+          attrs[:aria] ||= {}
+          attrs[:aria][:current] = "page"
+        end
+        merge_attributes(**attrs).compact
+      end
+
+      def apply_shared_control_attributes!(attrs)
+        attrs[:title] = @title if @title.present?
         aria = {}
         aria[:label] = derived_icon_only_label if derived_icon_only_label.present?
         aria[:busy] = "true" if @loading
         attrs[:aria] = aria if aria.any?
-        merge_attributes(**attrs).compact
       end
 
       def button_classes
         classes(
-          "inline-flex items-center justify-center gap-2",
+          "inline-flex gap-2",
+          cross_align_class,
+          ALIGNS.fetch(@align),
           default_radius_class,
           "font-medium",
           "cursor-pointer",
@@ -149,8 +207,17 @@ module FlatPack
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
           "fp-touch-manipulation",
           conditional_size_classes,
-          icon_only_classes
+          icon_only_classes,
+          ("fp-button-current" if @current)
         )
+      end
+
+      def cross_align_class
+        (@lines == 2) ? "items-start" : "items-center"
+      end
+
+      def label_classes
+        "#{LABEL_ALIGNS.fetch(@align)} #{LINES.fetch(@lines)}"
       end
 
       def default_radius_class
@@ -222,6 +289,34 @@ module FlatPack
         return if explicit_aria_label.present?
 
         @text.presence
+      end
+
+      def validate_align!
+        return if ALIGNS.key?(@align)
+
+        raise ArgumentError, "Invalid align: #{@align.inspect}. Must be one of: #{ALIGNS.keys.join(", ")}."
+      end
+
+      def validate_lines!
+        return if LINES.key?(@lines)
+
+        raise ArgumentError, "Invalid lines: #{@lines.inspect}. Must be 1 or 2."
+      end
+
+      def validate_current!
+        return if @current == true || @current == false
+
+        raise ArgumentError, "Invalid current: #{@current.inspect}. Must be true or false."
+      end
+
+      def validate_title!
+        validate_text_option!(@title, name: :title)
+      end
+
+      def validate_trailing!
+        return unless @icon_only && trailing?
+
+        raise ArgumentError, "Trailing slot is not supported on icon-only buttons."
       end
 
       def validate_href!(original_url)
