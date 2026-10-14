@@ -446,9 +446,14 @@ test("toast feedback uses toasts and leaves the live region alone", async () => 
   assert.equal(context.document.events[0].detail.style, "success")
   assert.equal(context.document.events[0].detail.text, "Copied to clipboard")
   assert.equal(live.textContent, "")
-  assert.equal(button.style.color, "var(--color-success-background-color)")
+  assert.equal(button.style.color, "")
   assert.equal(icon.getAttribute("data-flat-pack--icon-name-value"), "check")
   assert.equal(context.writeCalls[0], "sk_live")
+
+  input.value = ""
+  await controller.copy(clickEvent(input))
+  assert.equal(button.style.color, "var(--color-error)")
+  assert.equal(icon.getAttribute("data-flat-pack--icon-name-value"), "exclamation-circle")
 })
 
 test("quiet anchor copy updates the hash and a non-hash link is ignored", async () => {
@@ -474,6 +479,7 @@ test("quiet anchor copy updates the hash and a non-hash link is ignored", async 
     JSON.stringify([{}, "", "https://example.com/docs#overview"])
   )
   assert.equal(live.textContent, "Copied to clipboard")
+  assert.equal(button.style.color, "")
   assert.equal(icon.getAttribute("data-flat-pack--icon-name-value"), "check")
   assert.equal(context.document.events.length, 0)
 

@@ -31,7 +31,7 @@ None.
 - Labelled or icon-only
 - Sizes `:sm`, `:md`, `:lg`
 - Button styles
-- Idle, Copied (success tokens and a check), and error (danger tokens). An empty source uses the same error chrome with the “Nothing to copy” label.
+- Idle, Copied (same button style, check icon, “Copied” label), and error (danger tokens). An empty source uses the same error chrome with the “Nothing to copy” label.
 
 ## Example
 ```erb
@@ -61,7 +61,7 @@ element.addEventListener("flat-pack:clipboard:error", (event) => {
 The visible label is `aria-hidden`. The button’s accessible name stays the idle label, so a screen reader hears the live region once instead of a renamed button plus the region. The polite live region announces “Copied to clipboard”, “Nothing to copy”, or “Unable to copy”. `prefers-reduced-motion` keeps the state for at most 600ms, and `--duration-*` collapses to `0ms`, so the icon swap does not fade. A disabled button does nothing.
 
 ## Dependencies
-- Button class strings and `FlatPack::Button::StyleRegistry`. Copied and error fills override `[data-fp-style]` on `.fp-copy-button` with `--button-success-*` and `--button-danger-*`.
+- Button class strings and `FlatPack::Button::StyleRegistry`. Copied keeps the style passed in. Error fills override `[data-fp-style]` on `.fp-copy-button` with `--button-danger-*`.
 - Stimulus controller `flat-pack--clipboard` (`app/javascript/flat_pack/controllers/clipboard_controller.js`).
 - `flat_pack/clipboard.js` writes with `navigator.clipboard.writeText`, then a hidden textarea and `document.execCommand("copy")` when the async API is missing, the page is insecure, or `writeText` rejects.
 - Locale keys under `flatpack.clipboard.*`.

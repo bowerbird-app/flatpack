@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.233] - 2026-10-13
 
 ### Added
-- `FlatPack::CopyButton::Component` copies `text:` or the value of `target:`. It uses Button sizes and styles. Idle, Copied, and error states share one control. Demo: `/demo/buttons/copy`.
+- `FlatPack::CopyButton::Component` copies `text:` or the value of `target:`. It uses Button sizes and styles. The Copied state keeps that style and only changes the label and icon. Error uses danger tokens. Demo: `/demo/buttons/copy`.
 - `flat-pack--clipboard` writes with `navigator.clipboard.writeText`, then a hidden textarea and `document.execCommand("copy")`. It announces through a live region, and dispatches `flat-pack:clipboard:copied` and `flat-pack:clipboard:error`.
 - Locale keys `flatpack.clipboard.copy`, `flatpack.clipboard.copied_label`, and `flatpack.clipboard.error_label`.
 
@@ -25,8 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Bumped the gem version to `0.1.233`.
-- Text Input and Text Area `quick_copy: true` copy through `flat-pack--clipboard`. The trailing icon, readonly field, and toast stay. After a click the icon shows the shared Copied or error state.
-- Section Title `anchor_link: true` copies through the same controller. Hover, the link icon, the tooltip, and the hash update stay. The anchor announces the copy instead of staying silent.
+- Text Input and Text Area `quick_copy: true` copy through `flat-pack--clipboard`. The trailing icon, readonly field, and toast stay. After a click the icon swaps to a check or an error icon. The check keeps the field’s icon colour.
+- Section Title `anchor_link: true` copies through the same controller. Hover, the link icon, the tooltip, and the hash update stay. The anchor announces the copy instead of staying silent. The check keeps the link colour.
 
 ### Upgrade notes
 - Additive for Button, Text Input, Text Area, and Section Title callers. `quick_copy:` and `anchor_link:` keep the same arguments.

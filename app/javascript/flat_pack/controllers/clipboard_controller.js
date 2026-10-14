@@ -9,12 +9,12 @@ import {
 } from "flat_pack/clipboard"
 
 const REDUCED_MOTION_HOLD_MS = 600
-const SUCCESS_COLOR = "var(--color-success-background-color)"
 const ERROR_COLOR = "var(--color-error)"
 
 // Owns every copy in the kit. A later share button can import
 // writeClipboardText and readClipboardSource from flat_pack/clipboard
-// and reuse data-fp-clipboard-state for the same copied and error chrome.
+// and reuse data-fp-clipboard-state. Copied keeps the control's colours
+// and swaps the icon and label. Error uses the danger chrome.
 export default class extends Controller {
   static targets = ["button", "label", "live"]
   static values = {
@@ -140,7 +140,7 @@ export default class extends Controller {
     }
 
     button.setAttribute("data-fp-clipboard-state", visual)
-    button.style.color = visual === "copied" ? SUCCESS_COLOR : ERROR_COLOR
+    button.style.color = visual === "error" ? ERROR_COLOR : ""
     this.swapIcon(visual === "copied" ? "check" : "exclamation-circle")
   }
 
