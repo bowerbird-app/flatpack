@@ -209,6 +209,7 @@ class DemoCatalog
           children: [
             {title: "Overview", search_title: "Cards", path: "/demo/cards", description: "Composed card layouts", icon: :box},
             {title: "Styles", search_title: "Cards: Styles", path: "/demo/cards/styles", description: "Card styles, padding, slots, and clickable cards", icon: :box},
+            {title: "Tones", search_title: "Cards: Tones", path: "/demo/cards/tones", description: "Card colour fills: surface, shaded, brand, soft brand, and gradient", icon: :box},
             {title: "Media", search_title: "Cards: Media", path: "/demo/cards/media", description: "Media gallery cards and aspect ratios", icon: :image},
             {title: "Composed", search_title: "Cards: Composed", path: "/demo/cards/composed", description: "Product, stat, profile, pricing, and list cards", icon: :box}
           ]

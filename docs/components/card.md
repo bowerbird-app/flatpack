@@ -4,7 +4,7 @@
 Render a flexible content container with optional structured header, body, footer, and media sections.
 
 ## When to use
-Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Do not use tracked-out ALL-CAPS eyebrows or decorative gradient washes unless a host theme asks for them.
+Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Colour fill is `tone:`. `style:` is the border, shadow, and hover. Do not pass raw colours.
 
 ## Class
 - Primary: `FlatPack::Card::Component`
@@ -13,12 +13,12 @@ Use Card to group related content in a consistent surface with optional hover an
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `style` | Symbol | `:default` | no | Visual style: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`, `:list`; invalid values raise `ArgumentError`. |
+| `style` | Symbol | `:default` | no | Structure only: `:default`, `:elevated`, `:outlined`, `:interactive`, `:list`. Border, shadow, and hover. Invalid values raise `ArgumentError`. `:flat` is removed. |
+| `tone` | Symbol | `:default` | no | Colour fill: `:default` (surface), `:shaded` (soft grey), `:brand` (solid brand colour and contrasting text), `:brand_subtle` (light brand tint and normal text), `:gradient` (brand gradient and contrasting text). One tone per card. Invalid values raise `ArgumentError`. |
 | `hover` | Symbol | `nil` | no | Explicit hover mode: `:none`, `:subtle`, `:strong`; when `nil`, style default applies (`:interactive` => `:strong`, `:list` => `:subtle`, others => `:none`). Invalid values raise `ArgumentError`. |
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
-| `theme` | Hash | `nil` | no | Optional card-local token overrides. Supported keys: `:background`, `:background_muted`, `:text`, `:muted_text`, `:primary`, `:primary_hover`, `:primary_text`, `:default_button`, `:default_button_hover`, `:default_button_text`, `:default_button_border`, `:secondary_button`, `:secondary_button_hover`, `:secondary_button_text`, and `:secondary_button_border`. Only supplied keys override the card subtree; omitted keys continue using the existing theme tokens. Invalid keys or unsafe CSS color values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
 Behavior note:
@@ -45,33 +45,26 @@ Slot props:
 | `media.padding` | Symbol | `:md` | no | Media inset spacing: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 
 ## Variants
-- Style variants: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`, `:list`.
+- Style variants: `:default`, `:elevated`, `:outlined`, `:interactive`, `:list`.
+- Tone variants: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`.
 - Hover variants: `:none`, `:subtle`, `:strong` (or style-derived when omitted).
 
-## Theme overrides
-- `theme` writes CSS custom-property overrides on the card root, so nested content and token-driven components inherit the new palette only inside that card.
-- Pass any subset of `:background`, `:background_muted`, `:text`, `:muted_text`, `:primary`, `:primary_hover`, `:primary_text`, `:default_button`, `:default_button_hover`, `:default_button_text`, `:default_button_border`, `:secondary_button`, `:secondary_button_hover`, `:secondary_button_text`, and `:secondary_button_border`.
-- Omitted keys are not inferred from other values; they keep the original card or global token as a fallback.
-- Theme values must be safe CSS colors such as hex, `oklch(...)`, `rgb(...)`, `hsl(...)`, or `var(--token)`.
+## Tones
+Each tone is four theme tokens. `background` is a `background` value so a gradient can live there. Host themes set the colours. The card does not take a raw colour.
 
-| variable | accepts | example |
-|---|---|---|
-| `theme` | Full card-local override hash | `theme: { background: "#163300", text: "#9FE870", muted_text: "#9FE870", primary: "#9FE870", primary_hover: "#9FE870", primary_text: "#163300" }` |
-| `background` | Card background color | `background: "#163300"` |
-| `background_muted` | Flat-card muted surface color | `background_muted: "transparent"` |
-| `text` | Primary text color inside the card | `text: "#9FE870"` |
-| `muted_text` | Muted/supporting text color inside the card | `muted_text: "#9FE870"` |
-| `primary` | Shared primary accent and primary button background/border | `primary: "#9FE870"` |
-| `primary_hover` | Shared primary hover accent and primary button hover background | `primary_hover: "#84cc16"` |
-| `primary_text` | Shared primary contrast text and primary button text | `primary_text: "#163300"` |
-| `default_button` | Default button background color | `default_button: "#f8fafc"` |
-| `default_button_hover` | Default button hover background color | `default_button_hover: "#e2e8f0"` |
-| `default_button_text` | Default button text color | `default_button_text: "#0f172a"` |
-| `default_button_border` | Default button border color | `default_button_border: "#cbd5e1"` |
-| `secondary_button` | Secondary button background color | `secondary_button: "#111827"` |
-| `secondary_button_hover` | Secondary button hover background color | `secondary_button_hover: "#1f2937"` |
-| `secondary_button_text` | Secondary button text color | `secondary_button_text: "#f9fafb"` |
-| `secondary_button_border` | Secondary button border color | `secondary_button_border: "#4b5563"` |
+The card writes those tokens back onto `--surface-content-color`, `--surface-muted-content-color`, `--surface-border-color`, and `--card-border-color` for its subtree. Nested text and icons that read those tokens stay with the tone. On `:brand` and `:gradient`, button and badge aliases are rebound to that text and border so a primary button does not disappear into the fill.
+
+| tone | background | text | muted text | border |
+|---|---|---|---|---|
+| `:default` | `--card-tone-default-background` | `--card-tone-default-text-color` | `--card-tone-default-muted-text-color` | `--card-tone-default-border-color` |
+| `:shaded` | `--card-tone-shaded-background` | `--card-tone-shaded-text-color` | `--card-tone-shaded-muted-text-color` | `--card-tone-shaded-border-color` |
+| `:brand` | `--card-tone-brand-background` | `--card-tone-brand-text-color` | `--card-tone-brand-muted-text-color` | `--card-tone-brand-border-color` |
+| `:brand_subtle` | `--card-tone-brand-subtle-background` | `--card-tone-brand-subtle-text-color` | `--card-tone-brand-subtle-muted-text-color` | `--card-tone-brand-subtle-border-color` |
+| `:gradient` | `--card-tone-gradient-background` | `--card-tone-gradient-text-color` | `--card-tone-gradient-muted-text-color` | `--card-tone-gradient-border-color` |
+
+Light mode defines every token on `:root, [data-theme]`. Default follows `--card-background-color`. Shaded follows `--card-background-muted-color`. Brand follows `--color-primary` and `--color-primary-text`. Soft brand mixes the primary into the surface. The gradient runs from `--color-primary` toward a darker mix so contrasting text stays readable. Dark mode overrides only `--card-tone-gradient-background`, lifting the gradient toward white so dark primary text still reads. The other tones follow the dark semantic tokens.
+
+`FlatPack::Card::Stat::Component` takes the same `tone:` and paints that fill on itself.
 
 ## Example
 ```erb
@@ -87,21 +80,23 @@ Slot props:
 ```
 
 ```erb
-<%= render FlatPack::Card::Component.new(
-  style: :flat,
-  theme: {
-    background_muted: "transparent"
-  }
-) do |card| %>
-  <% card.media(aspect_ratio: "4/3", padding: :none) do %>
-    <%= image_tag image_url, class: "h-full w-full rounded-lg object-cover", alt: "Preview" %>
-  <% end %>
-
-  <% card.body(padding: :none, class: "px-3 py-2") do %>
-    <p class="truncate text-sm font-medium text-[var(--surface-content-color)]">IMG_4985.HEIC</p>
-    <p class="text-sm font-medium text-[var(--color-primary)]">3.9 MB</p>
+<%= render FlatPack::Card::Component.new(style: :elevated, tone: :brand) do |card| %>
+  <% card.body do %>
+    <h3 class="text-lg font-semibold">Paid plan</h3>
+    <p class="text-sm text-[var(--surface-muted-content-color)]">Renews on the first.</p>
+    <%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %>
   <% end %>
 <% end %>
+```
+
+```erb
+<%= render FlatPack::Card::Stat::Component.new(
+  value: "$12,400",
+  label: "Monthly revenue",
+  trend: "+4%",
+  trend_direction: :up,
+  tone: :shaded
+) %>
 ```
 
 ## Accessibility

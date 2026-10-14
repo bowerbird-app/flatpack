@@ -150,6 +150,7 @@ Rails.application.routes.draw do
   get "demo/cards/styles", to: "pages#cards_styles"
   get "demo/cards/media", to: "pages#cards_media"
   get "demo/cards/composed", to: "pages#cards_composed"
+  get "demo/cards/tones", to: "pages#cards_tones"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"
   get "demo/navbar", to: "pages#navbar"
   get "demo/search", to: "pages#search"

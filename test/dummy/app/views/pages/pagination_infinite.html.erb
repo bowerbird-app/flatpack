@@ -129,7 +129,7 @@
     subtitle: "Use when you want users to explicitly trigger loading"
   ) %>
   
-  <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+  <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
     <p class="mb-4">To disable automatic loading on scroll, simply don't set up the Intersection Observer, or add a data attribute to control behavior.</p>
     <p class="text-sm text-[var(--surface-muted-content-color)]">This is useful for feeds where you want users to consciously choose to load more content rather than having it happen automatically.</p>
   <% end %>

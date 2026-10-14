@@ -17,7 +17,7 @@
         <% tabs.tab(id: "members", label: "Team Members") %>
 
         <% tabs.panel(id: "account") do %>
-          <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+          <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
             <h3 class="text-lg font-semibold mb-2">Account Preferences</h3>
             <p class="text-[var(--surface-content-color)]">
               Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.
@@ -25,13 +25,13 @@
           <% end %>
         <% end %>
         <% tabs.panel(id: "billing") do %>
-          <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+          <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
             <h3 class="text-lg font-semibold mb-2">Billing Settings</h3>
             <p class="text-[var(--surface-content-color)]">The selected tab uses the primary colour.</p>
           <% end %>
         <% end %>
         <% tabs.panel(id: "members") do %>
-          <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+          <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
             <h3 class="text-lg font-semibold mb-2">Team Members</h3>
             <p class="text-[var(--surface-content-color)]">Switch styles with <code>variant: :pills</code> and keep existing tab/panel declarations.</p>
           <% end %>
@@ -48,7 +48,7 @@
         <% tabs.tab(id: "default-members", label: "Team Members") %>
 
         <% tabs.panel(id: "default-account") do %>
-          <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+          <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
             <h3 class="text-lg font-semibold mb-2">Account Preferences</h3>
             <p class="text-[var(--surface-content-color)]">
               This group uses the default button colour for the selected tab.
@@ -56,13 +56,13 @@
           <% end %>
         <% end %>
         <% tabs.panel(id: "default-billing") do %>
-          <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+          <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
             <h3 class="text-lg font-semibold mb-2">Billing Settings</h3>
             <p class="text-[var(--surface-content-color)]">The selected tab matches a default button.</p>
           <% end %>
         <% end %>
         <% tabs.panel(id: "default-members") do %>
-          <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+          <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
             <h3 class="text-lg font-semibold mb-2">Team Members</h3>
             <p class="text-[var(--surface-content-color)]">Same tabs, different selected colour.</p>
           <% end %>
@@ -106,19 +106,19 @@
     <% tabs.tab(id: "slide-members", label: "Team") %>
 
     <% tabs.panel(id: "slide-account") do %>
-      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+      <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
         <h3 class="text-lg font-semibold mb-2">Account</h3>
         <p class="text-[var(--surface-content-color)]">The filled pill slides. Text colour is the only change on the tab itself.</p>
       <% end %>
     <% end %>
     <% tabs.panel(id: "slide-billing") do %>
-      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+      <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
         <h3 class="text-lg font-semibold mb-2">Billing</h3>
         <p class="text-[var(--surface-content-color)]">Same tokens as the instant pills above. This one just moves.</p>
       <% end %>
     <% end %>
     <% tabs.panel(id: "slide-members") do %>
-      <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+      <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
         <h3 class="text-lg font-semibold mb-2">Team</h3>
         <p class="text-[var(--surface-content-color)]">Pass <code>indicator: :slide</code> on the pills variant.</p>
       <% end %>
@@ -138,7 +138,7 @@
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Keyboard Navigation", anchor_link: true, subtitle: "Examples for Keyboard Navigation.") %>
-  <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg) do %>
+  <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg) do %>
     <h3 class="font-semibold mb-3">Keyboard Shortcuts:</h3>
     <%= render FlatPack::List::Component.new(spacing: :dense, class: "text-[var(--surface-content-color)]") do %>
       <%= render FlatPack::List::Item.new do %><kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">←</kbd> / <kbd class="px-2 py-1 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded text-sm">→</kbd> - Navigate between tabs<% end %>

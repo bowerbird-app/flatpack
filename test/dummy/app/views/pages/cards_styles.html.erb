@@ -10,7 +10,7 @@
 
   <!-- Card Styles -->
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Card Styles", anchor_link: true, subtitle: "Examples for Card Styles.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Card Styles", anchor_link: true, subtitle: "Border, shadow, and hover. Colour fill is on the tones page.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
         <% card.header do %>
@@ -36,15 +36,6 @@
         <% end %>
         <% card.body do %>
           <p class="text-sm">Card with strong border.</p>
-        <% end %>
-      <% end %>
-
-      <%= render FlatPack::Card::Component.new(style: :flat) do |card| %>
-        <% card.header do %>
-          <h3 class="text-lg font-semibold">Flat Card</h3>
-        <% end %>
-        <% card.body do %>
-          <p class="text-sm">Subtle background, no border.</p>
         <% end %>
       <% end %>
 
@@ -268,6 +259,7 @@
 <%= render "shared/related_demos",
   links: [
     {text: "Overview", href: demo_cards_path},
+    {text: "Tones", href: demo_cards_tones_path},
     {text: "Media", href: demo_cards_media_path},
     {text: "Composed", href: demo_cards_composed_path}
   ] %>

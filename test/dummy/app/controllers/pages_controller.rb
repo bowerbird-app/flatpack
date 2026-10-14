@@ -581,6 +581,9 @@ class PagesController < ApplicationController
   def cards_composed
   end
 
+  def cards_tones
+  end
+
   def breadcrumbs
   end
 

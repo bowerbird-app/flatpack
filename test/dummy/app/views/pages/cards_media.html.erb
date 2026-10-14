@@ -29,7 +29,7 @@
     <div class="mb-4 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
       <% gallery_cards.each do |image| %>
         <%= render FlatPack::Card::Component.new(
-          style: :flat,
+          tone: :shaded,
           hover: :subtle,
           "style" => "background-color: transparent",
           class: "group shadow-none ring-0 ring-[var(--color-primary)] transition duration-200 has-[:checked]:ring-2 has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
@@ -94,7 +94,7 @@
         &lt;div class=&quot;grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4&quot;&gt;
           &lt;% gallery_cards.each do |image| %&gt;
             &lt;%= render FlatPack::Card::Component.new(
-              style: :flat,
+              tone: :shaded,
               hover: :subtle,
               &quot;style&quot; =&gt; &quot;background-color: transparent&quot;,
               class: &quot;group shadow-none ring-0 ring-[var(--color-primary)] transition duration-200 has-[:checked]:ring-2 has-[:checked]:ring-offset-2 has-[:checked]:ring-offset-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-white&quot;
@@ -245,5 +245,6 @@
   links: [
     {text: "Overview", href: demo_cards_path},
     {text: "Styles", href: demo_cards_styles_path},
+    {text: "Tones", href: demo_cards_tones_path},
     {text: "Composed", href: demo_cards_composed_path}
   ] %>

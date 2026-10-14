@@ -10,16 +10,24 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Overview", anchor_link: true) %>
   <p class="text-[var(--surface-muted-content-color)] mb-6">
-    Cards combine media, header, body, and footer slots with style variants, padding options, and themed palettes.
-    Explore styles and slots, media patterns, and composed examples below.
+    Cards combine media, header, body, and footer slots. Style is the border and shadow. Tone is the fill.
+    Explore styles, tones, media, and composed examples below.
   </p>
 
-  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+  <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
     <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Styles &amp; Slots</h3>
-        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Style variants, padding, clickable cards, and slot dividers.</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Border, shadow, padding, clickable cards, and slot dividers.</p>
         <%= render FlatPack::Button::Component.new(text: "View styles", style: :secondary, size: :sm, href: demo_cards_styles_path) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(tone: :brand, hover: :subtle) do |card| %>
+      <% card.body do %>
+        <h3 class="text-lg font-semibold mb-2">Tones</h3>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Surface, shaded, brand, soft brand, and gradient fills.</p>
+        <%= render FlatPack::Button::Component.new(text: "View tones", style: :primary, size: :sm, href: demo_cards_tones_path) %>
       <% end %>
     <% end %>
 
@@ -34,7 +42,7 @@
     <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Composed Examples</h3>
-        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Product, stat, profile, pricing, themed, and list cards.</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Product, stat, profile, pricing, and list cards.</p>
         <%= render FlatPack::Button::Component.new(text: "View examples", style: :secondary, size: :sm, href: demo_cards_composed_path) %>
       <% end %>
     <% end %>
