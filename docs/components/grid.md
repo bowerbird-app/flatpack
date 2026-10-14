@@ -34,9 +34,9 @@ Default block content; each child element participates as a grid item.
 
 ```erb
 <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md, align: :stretch) do %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 1" } %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 2" } %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 3" } %>
+  <%= render FlatPack::Card::Component.new(border: :strong) { "Item 1" } %>
+  <%= render FlatPack::Card::Component.new(border: :strong) { "Item 2" } %>
+  <%= render FlatPack::Card::Component.new(border: :strong) { "Item 3" } %>
 <% end %>
 ```
 

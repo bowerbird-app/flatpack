@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.237] - 2026-10-14
+
+### Added
+- `FlatPack::Card::Component` `style:` is the colour fill: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. `shadow:` is `:none`, `:sm`, or `:md`. `border:` is `:none`, `:default` (1px), or `:strong` (2px). `hover:` stays `:none`, `:subtle`, or `:strong`, and defaults to `:none`. Hover paints outside the component layer so a style fill or shadow does not cover it. Demo: `/demo/cards/tones`.
+- `FlatPack::Card::Stat::Component` takes the same `style:`.
+
+### Changed
+- Removed card `style:` values `:flat`, `:elevated`, `:outlined`, `:interactive`, and `:list`.
+- Removed the card `theme:` hash.
+- Bumped the gem version to `0.1.237`.
+
+### Upgrade notes
+- Replace `style: :flat` with `style: :shaded` and `border: :none`.
+- Replace `style: :elevated` with `shadow: :md`. Dark themes already draw `--shadow-md` larger than the light token.
+- Replace `style: :outlined` with `border: :strong`.
+- Replace `style: :interactive` with `hover: :strong`. Hover no longer follows the old style.
+- `:list` only set the hover default to `:subtle`. The horizontal list demo already passed `padding: :sm`. Use `hover: :subtle` and `padding:`.
+- Replace `theme:` with `style:`. The card does not take raw colours, and it does not recolour nested buttons or badges.
+- Host themes set `--card-style-{default|shaded|brand|brand-subtle|gradient}-{background|text-color|muted-text-color|border-color}`. `background` is a CSS `background` so the gradient token can be a gradient. Dark mode overrides `--card-style-gradient-background`.
+- Rebuild host Tailwind so the style classes are generated, including `[background:var(--card-style-brand-background)]`, `shadow-[var(--shadow-sm)]`, and `shadow-[var(--shadow-md)]`.
+- Reload `flat_pack/variables` and `flat_pack/application`.
+- Redeploy so `meta.gem_version` shows `0.1.237`.
+
 ## [0.1.236] - 2026-10-14
 
 ### Added

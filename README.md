@@ -92,7 +92,7 @@ Styles: `:primary`, `:secondary`, `:ghost`
 ### Card Component
 
 ```erb
-<%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+<%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
   <% card.header do %>
     <h3>Card Title</h3>
   <% end %>
@@ -107,7 +107,7 @@ Styles: `:primary`, `:secondary`, `:ghost`
 <% end %>
 ```
 
-Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
+Styles: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Shadow: `:none`, `:sm`, `:md`. Border: `:none`, `:default`, `:strong`. Hover: `:none`, `:subtle`, `:strong`.
 
 ### Breadcrumb Component
 

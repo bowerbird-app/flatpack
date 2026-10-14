@@ -2129,9 +2129,6 @@
   .bg-\[var\(--card-background-color\)\] {
     background-color: var(--card-background-color);
   }
-  .bg-\[var\(--card-background-muted-color\)\] {
-    background-color: var(--card-background-muted-color);
-  }
   .bg-\[var\(--carousel-caption-overlay-background-color\)\] {
     background-color: var(--carousel-caption-overlay-background-color);
   }
@@ -2404,18 +2401,6 @@
   }
   .bg-white {
     background-color: var(--color-white);
-  }
-  .bg-white\/10 {
-    background-color: color-mix(in srgb, #fff 10%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
-    }
-  }
-  .bg-white\/15 {
-    background-color: color-mix(in srgb, #fff 15%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-white) 15%, transparent);
-    }
   }
   .bg-white\/90 {
     background-color: color-mix(in srgb, #fff 90%, transparent);
@@ -3505,6 +3490,14 @@
     --tw-shadow: var(--popover-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .shadow-\[var\(--shadow-md\)\] {
+    --tw-shadow: var(--shadow-md);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-\[var\(--shadow-sm\)\] {
+    --tw-shadow: var(--shadow-sm);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-\[var\(--switch-thumb-shadow\)\] {
     --tw-shadow: var(--switch-thumb-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -3787,6 +3780,21 @@
   .\[--button-padding-y-md\:var\(--chat-composer-control-padding-y\)\] {
     --button-padding-y-md: var(--chat-composer-control-padding-y);
   }
+  .\[--card-border-color\:var\(--card-style-brand-border-color\)\] {
+    --card-border-color: var(--card-style-brand-border-color);
+  }
+  .\[--card-border-color\:var\(--card-style-brand-subtle-border-color\)\] {
+    --card-border-color: var(--card-style-brand-subtle-border-color);
+  }
+  .\[--card-border-color\:var\(--card-style-default-border-color\)\] {
+    --card-border-color: var(--card-style-default-border-color);
+  }
+  .\[--card-border-color\:var\(--card-style-gradient-border-color\)\] {
+    --card-border-color: var(--card-style-gradient-border-color);
+  }
+  .\[--card-border-color\:var\(--card-style-shaded-border-color\)\] {
+    --card-border-color: var(--card-style-shaded-border-color);
+  }
   .\[--chat-message-meta-color\:var\(--chat-message-incoming-meta-color\)\] {
     --chat-message-meta-color: var(--chat-message-incoming-meta-color);
   }
@@ -3805,14 +3813,74 @@
   .\[--surface-border-color\:oklch\(30\%_0\.02_250\)\] {
     --surface-border-color: oklch(30% 0.02 250);
   }
+  .\[--surface-border-color\:var\(--card-style-brand-border-color\)\] {
+    --surface-border-color: var(--card-style-brand-border-color);
+  }
+  .\[--surface-border-color\:var\(--card-style-brand-subtle-border-color\)\] {
+    --surface-border-color: var(--card-style-brand-subtle-border-color);
+  }
+  .\[--surface-border-color\:var\(--card-style-default-border-color\)\] {
+    --surface-border-color: var(--card-style-default-border-color);
+  }
+  .\[--surface-border-color\:var\(--card-style-gradient-border-color\)\] {
+    --surface-border-color: var(--card-style-gradient-border-color);
+  }
+  .\[--surface-border-color\:var\(--card-style-shaded-border-color\)\] {
+    --surface-border-color: var(--card-style-shaded-border-color);
+  }
   .\[--surface-content-color\:oklch\(88\%_0_0\)\] {
     --surface-content-color: oklch(88% 0 0);
+  }
+  .\[--surface-content-color\:var\(--card-style-brand-subtle-text-color\)\] {
+    --surface-content-color: var(--card-style-brand-subtle-text-color);
+  }
+  .\[--surface-content-color\:var\(--card-style-brand-text-color\)\] {
+    --surface-content-color: var(--card-style-brand-text-color);
+  }
+  .\[--surface-content-color\:var\(--card-style-default-text-color\)\] {
+    --surface-content-color: var(--card-style-default-text-color);
+  }
+  .\[--surface-content-color\:var\(--card-style-gradient-text-color\)\] {
+    --surface-content-color: var(--card-style-gradient-text-color);
+  }
+  .\[--surface-content-color\:var\(--card-style-shaded-text-color\)\] {
+    --surface-content-color: var(--card-style-shaded-text-color);
   }
   .\[--surface-muted-content-color\:oklch\(62\%_0_0\)\] {
     --surface-muted-content-color: oklch(62% 0 0);
   }
+  .\[--surface-muted-content-color\:var\(--card-style-brand-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-style-brand-muted-text-color);
+  }
+  .\[--surface-muted-content-color\:var\(--card-style-brand-subtle-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-style-brand-subtle-muted-text-color);
+  }
+  .\[--surface-muted-content-color\:var\(--card-style-default-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-style-default-muted-text-color);
+  }
+  .\[--surface-muted-content-color\:var\(--card-style-gradient-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-style-gradient-muted-text-color);
+  }
+  .\[--surface-muted-content-color\:var\(--card-style-shaded-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-style-shaded-muted-text-color);
+  }
   .\[--surface-subtle-background-color\:oklch\(28\%_0\.02_250\)\] {
     --surface-subtle-background-color: oklch(28% 0.02 250);
+  }
+  .\[background\:var\(--card-style-brand-background\)\] {
+    background: var(--card-style-brand-background);
+  }
+  .\[background\:var\(--card-style-brand-subtle-background\)\] {
+    background: var(--card-style-brand-subtle-background);
+  }
+  .\[background\:var\(--card-style-default-background\)\] {
+    background: var(--card-style-default-background);
+  }
+  .\[background\:var\(--card-style-gradient-background\)\] {
+    background: var(--card-style-gradient-background);
+  }
+  .\[background\:var\(--card-style-shaded-background\)\] {
+    background: var(--card-style-shaded-background);
   }
   .\[scrollbar-width\:none\] {
     scrollbar-width: none;
@@ -5609,12 +5677,6 @@
   .dark\:bg-gray-950 {
     @media (prefers-color-scheme: dark) {
       background-color: var(--color-gray-950);
-    }
-  }
-  .dark\:shadow-lg {
-    @media (prefers-color-scheme: dark) {
-      --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
   }
   .dark\:ring-white\/10 {

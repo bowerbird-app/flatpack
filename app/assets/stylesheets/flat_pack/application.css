@@ -204,18 +204,9 @@
     cursor: pointer;
   }
 
-  .fp-card-hover-subtle:hover {
-    background-color: var(--card-hover-subtle-background-color);
-  }
-
   .fp-card-hover-strong {
     transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
     cursor: pointer;
-  }
-
-  .fp-card-hover-strong:hover {
-    box-shadow: var(--card-hover-strong-shadow);
-    border-color: var(--card-hover-strong-border-color);
   }
 
   .fp-scrollbar-hidden {
@@ -484,12 +475,24 @@
     height: 0;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .fp-card-hover-strong:hover {
-      box-shadow: var(--card-hover-strong-shadow-dark);
-    }
-  }
+}
 
+/* Unlayered so a style fill or shadow utility cannot cover the hover.
+ * Those utilities live in the host Tailwind layer, which beats @layer components.
+ */
+.fp-card-hover-subtle:hover {
+  background-color: var(--card-hover-subtle-background-color);
+}
+
+.fp-card-hover-strong:hover {
+  box-shadow: var(--card-hover-strong-shadow);
+  border-color: var(--card-hover-strong-border-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .fp-card-hover-strong:hover {
+    box-shadow: var(--card-hover-strong-shadow-dark);
+  }
 }
 
 /* Unlayered so host Tailwind preflight cannot zero the side inset.

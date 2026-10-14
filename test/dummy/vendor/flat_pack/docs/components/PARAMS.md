@@ -7,6 +7,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Concept | Param | Use for |
 | --- | --- | --- |
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
+| Card colour fill | `style` | Card and Card Stat. `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. Card `shadow`, `border`, and `hover` are separate. |
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
@@ -64,7 +65,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 
 ## Do not mix
 
-- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
+- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.

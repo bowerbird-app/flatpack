@@ -1,0 +1,140 @@
+<%# Controller: no instance variables required — style examples are inline. %>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Card styles",
+  subtitle: "Colour is style. Shadow, border, and hover are separate."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :card %>
+
+<%
+  styles = [
+    [:default, "Surface", "The page surface."],
+    [:shaded, "Shaded", "A soft grey."],
+    [:brand, "Brand", "Solid brand colour with contrasting type."],
+    [:brand_subtle, "Soft brand", "A light brand tint with normal type."],
+    [:gradient, "Gradient", "A brand gradient with contrasting type."]
+  ]
+%>
+
+<% styles.each do |style, label, description| %>
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: label, anchor_link: true, subtitle: description) %>
+    <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
+      <%= render FlatPack::Card::Component.new(style: style) do |card| %>
+        <% card.header do %>
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="text-lg font-semibold">Default border</h3>
+            <%= render FlatPack::Badge::Component.new(text: "Active", style: :default, size: :sm) %>
+          </div>
+        <% end %>
+        <% card.body do %>
+          <div class="flex items-start gap-3">
+            <%= render FlatPack::Shared::IconComponent.new(name: "star", size: :md, class: "mt-0.5 text-[var(--surface-muted-content-color)]") %>
+            <div>
+              <p class="text-sm">Paid plan</p>
+              <p class="mt-1 text-sm text-[var(--surface-muted-content-color)]">Renews on the first. Nested type follows the style.</p>
+            </div>
+          </div>
+        <% end %>
+        <% card.footer do %>
+          <%= render FlatPack::Button::Component.new(text: "Add money", style: (style == :brand || style == :gradient) ? :default : :primary, size: :sm) %>
+        <% end %>
+      <% end %>
+      <%= render FlatPack::Card::Component.new(style: style, shadow: :md, border: :strong) do |card| %>
+        <% card.header do %>
+          <h3 class="text-lg font-semibold">Shadow and strong border</h3>
+        <% end %>
+        <% card.body do %>
+          <p class="text-sm">Same colour. Medium shadow, 2px border.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </section>
+<% end %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Shadow", anchor_link: true, subtitle: "None, small, and medium. Dark themes draw the same tokens larger.") %>
+  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+    <% [[:none, "None"], [:sm, "Small"], [:md, "Medium"]].each do |shadow, label| %>
+      <%= render FlatPack::Card::Component.new(shadow: shadow) do |card| %>
+        <% card.header do %>
+          <h3 class="text-lg font-semibold"><%= label %></h3>
+        <% end %>
+        <% card.body do %>
+          <p class="text-sm">shadow: :<%= shadow %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Border", anchor_link: true, subtitle: "None, the 1px default, and a 2px strong border.") %>
+  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+    <% [[:none, "None"], [:default, "Default"], [:strong, "Strong"]].each do |border, label| %>
+      <%= render FlatPack::Card::Component.new(border: border, shadow: border == :none ? :sm : :none) do |card| %>
+        <% card.header do %>
+          <h3 class="text-lg font-semibold"><%= label %></h3>
+        <% end %>
+        <% card.body do %>
+          <p class="text-sm">border: :<%= border %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Hover", anchor_link: true, subtitle: "Default is none. Subtle washes the fill. Strong lifts the shadow.") %>
+  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+    <% [[:none, "None"], [:subtle, "Subtle"], [:strong, "Strong"]].each do |hover, label| %>
+      <%= render FlatPack::Card::Component.new(hover: hover, shadow: hover == :strong ? :sm : :none) do |card| %>
+        <% card.header do %>
+          <h3 class="text-lg font-semibold"><%= label %></h3>
+        <% end %>
+        <% card.body do %>
+          <p class="text-sm">Hover this card. hover: :<%= hover %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stat cards", anchor_link: true, subtitle: "The same style, painted on the stat itself.") %>
+  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "$12,400", label: "Monthly revenue", trend: "+4%", trend_direction: :up, style: :default) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "18", label: "Open invoices", trend: "-2", trend_direction: :down, style: :shaded) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "86", label: "New members", trend: "+12%", trend_direction: :up, style: :brand) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "9", label: "Trial seats", trend: "+1", trend_direction: :up, style: :brand_subtle) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "99.9%", label: "Uptime", trend: "+0.2%", trend_direction: :up, style: :gradient) %>
+  <% end %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Card::Component.new(style: :brand, shadow: :md, border: :strong) do |card| %&gt;
+        &lt;% card.body do %&gt;
+          <h3 class="text-lg font-semibold">Paid plan</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Renews on the first.</p>
+          &lt;%= render FlatPack::Button::Component.new(text: "Add money", style: :default, size: :sm) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+
+      &lt;%= render FlatPack::Card::Stat::Component.new(
+        value: "$12,400",
+        label: "Monthly revenue",
+        trend: "+4%",
+        trend_direction: :up,
+        style: :shaded
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<%= render "shared/related_demos",
+  links: [
+    {text: "Overview", href: demo_cards_path},
+    {text: "Slots", href: demo_cards_styles_path},
+    {text: "Media", href: demo_cards_media_path},
+    {text: "Composed", href: demo_cards_composed_path}
+  ] %>

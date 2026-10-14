@@ -58,6 +58,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/cards/styles
     /demo/cards/media
     /demo/cards/composed
+    /demo/cards/tones
     /demo/breadcrumbs
     /demo/navbar
     /demo/search

@@ -581,6 +581,9 @@ class PagesController < ApplicationController
   def cards_composed
   end
 
+  def cards_tones
+  end
+
   def breadcrumbs
   end
 
@@ -2232,7 +2235,7 @@ class PagesController < ApplicationController
   def render_carousel_chart_card(chart_component)
     ApplicationController.render(
       inline: <<~ERB,
-        <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+        <%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
           <% card.body do %>
             <%= render chart_component %>
           <% end %>
@@ -2275,7 +2278,7 @@ class PagesController < ApplicationController
       thumb: thumb,
       html: ApplicationController.render(
         inline: <<~ERB,
-          <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+          <%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
             <% card.body do %>
               <h3 class="text-base font-semibold text-(--surface-content-color)"><%= title %></h3>
               <p class="mt-2 text-sm text-(--surface-muted-content-color)"><%= body %></p>
