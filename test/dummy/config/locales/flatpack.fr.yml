@@ -394,6 +394,9 @@ fr:
       nothing: Rien à copier
       copied: Copié dans le presse-papiers
       unable: Impossible de copier
+      copy: Copier
+      copied_label: Copié
+      error_label: Pas copié
     theme:
       system: Système
       light: Clair

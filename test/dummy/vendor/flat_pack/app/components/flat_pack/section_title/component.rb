@@ -141,13 +141,26 @@ module FlatPack
             class: "shrink-0 transition-opacity text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)]",
             style: "opacity: 0",
             data: {
+              controller: "flat-pack--clipboard",
+              flat_pack__clipboard_source_value: "anchor",
+              flat_pack__clipboard_feedback_value: "quiet",
+              flat_pack__clipboard_icon_value: "link",
               flat_pack__section_title_anchor_target: "link",
-              action: "click->flat-pack--section-title-anchor#copy"
+              action: "click->flat-pack--clipboard#copy"
             },
             aria: {
               label: fp_t("section_title.copy_link_to", title: @title)
             }) do
-            render FlatPack::Shared::IconComponent.new(**icon_arguments)
+            safe_join([
+              render(FlatPack::Shared::IconComponent.new(**icon_arguments)),
+              content_tag(
+                :span,
+                "",
+                class: "sr-only",
+                aria: {live: "polite", atomic: "true"},
+                data: {flat_pack__clipboard_target: "live"}
+              )
+            ])
           end
         end
       end

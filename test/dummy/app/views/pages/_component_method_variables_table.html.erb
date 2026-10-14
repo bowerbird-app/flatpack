@@ -176,6 +176,21 @@
         { variable: "loading", accepts: "true, false", example: "loading: true" }
       ]
     },
+    copy_button: {
+      label: "Copy Button",
+      method_call: "render FlatPack::CopyButton::Component.new(text: \"sk_live_123\")",
+      variables: [
+        { variable: "text", accepts: "String or nil", example: "text: \"sk_live_123\"" },
+        { variable: "target", accepts: "String id or CSS selector", example: "target: \"invite-code\"" },
+        { variable: "label", accepts: "String", example: "label: \"Copy key\"" },
+        { variable: "icon", accepts: "String", example: "icon: \"clipboard-document\"" },
+        { variable: "icon_only", accepts: "true, false", example: "icon_only: true" },
+        { variable: "style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :primary" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :sm" },
+        { variable: "timeout", accepts: "Integer", example: "timeout: 2000" },
+        { variable: "type", accepts: "String", example: "type: \"button\"" }
+      ]
+    },
     trash_button: {
       label: "Trash Button",
       method_call: "render FlatPack::TrashButton::Component.new(url: take_path(@take))",

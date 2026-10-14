@@ -12,7 +12,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
 | Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
-| Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts |
+| Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts. Exception: `FlatPack::CopyButton::Component` `text` is the clipboard string. The visible label is `label`. |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy. Video preview's play button requires `label:` (for example `"Play: Launch trailer"`). The host translates it. |
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
 | Beside a heading | `trailing` | Section Title slot (`with_trailing`). After the heading element, before the copy-link icon. Outside both, so the accessible name stays `title`. Generic content. Not a count param. |
@@ -45,6 +45,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Inline edit rest cue | `cue` | InlineEdit only. `:highlight` (default Notion-style wash), `:tint` (same paint), `:underline`, `:none`. Not Badge/Button `style`. |
 | RangeInput end glyphs | `start_icon` / `end_icon` | Kit icon names at the track ends. `variant: :size` / `:text_size` use theme-font `A` glyphs instead; `:zoom` defaults to magnifying-glass minus/plus. |
 | RangeInput live preview | `preview_target` | CSS selector or element id. Stimulus writes `--fp-range-value` and `--fp-range-scale` on the target while dragging. |
+| Clipboard source element | `target` | `FlatPack::CopyButton::Component` only. An element id or CSS selector whose value or text is copied. Not RangeInput `preview_target`. |
 | RangeInput sample letters | `sample` | Text under a `:size` / `:text_size` slider. Default `"Aa"`. Pass `""` to hide. `with_preview` replaces it. |
 | RangeInput step notches | `ticks` | Visible notches under the track, one per `step`. Size and zoom variants show ticks unless you pass `ticks: false`. |
 
@@ -63,7 +64,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 
 - Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
-- Do not use `label` for the visible string of a compact control. Use `text`.
+- Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay's nine-cell grid is `placement` on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.

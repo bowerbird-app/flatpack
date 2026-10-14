@@ -135,6 +135,9 @@ class PagesController < ApplicationController
   def buttons_dropdowns
   end
 
+  def buttons_copy
+  end
+
   def buttons_trash
     @tracks = [
       OpenStruct.new(id: 1, name: "Harbour take", added_on: "9 Oct"),

@@ -11,6 +11,7 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 pin "controllers/flat_pack/nested_multiselect_controller", to: "flat_pack/controllers/nested_multiselect_controller.js", preload: false
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
+pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 
 # Third-party dependencies
 pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.esm.js"
