@@ -23,9 +23,16 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Gap from the media edge | `inset` | `FlatPack::Overlay::Item` `with_item`. Media and Video preview pass the same argument through. `:sm`, `:md`, `:lg` read `--overlay-inset-sm` (`0.5rem`), `--overlay-inset-md` (`1rem`), and `--overlay-inset-lg` (`1.5rem`). Default `:md`. `:center` ignores it. Edge-centers use it on the edge axis only. |
 | Image description | `alt` | Media, required String (`""` when the image is decorative). Avatar uses `alt` too. |
 | Image box | `width` / `height` | Media only. Positive integers. They set the `img` attributes and `aspect-ratio`. Not Card media or Video preview `aspect_ratio`. |
+| Table column track | `width` | `FlatPack::Table::Column` only. `:fit` (shrink to content), `:fill` (remaining space), or a CSS length such as `"12rem"`. A length uses `table-layout: fixed` unless a sibling is `:fit`. The length stays a `max-width` cap on the header and cells. |
+| Table column floor and cap | `min_width` / `max_width` | On a column, CSS lengths such as `"8rem"`. Table `min_width:` stays the scroll floor (`:none`, `:sm`, `:md`, `:lg`, or a `min-w-*` class). |
+| Table column wrapping | `wrap` | `FlatPack::Table::Column` only. `:wrap` (default), `:nowrap`, `:truncate`. Truncated cells expose the full text in `title`. |
+| Table column visibility | `hide_below` | `FlatPack::Table::Column` only. `:sm`, `:md`, `:lg`, `:xl`. Hides that header and its cells below the breakpoint. The column stays in `colspan`. |
+| Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param as Button, Badge, and Card. |
+| Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
 | Media frame ratio | `aspect_ratio` | Card media, Carousel, and Video preview. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview defaults to `"16/9"`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
+| Table column alignment | `align` | `FlatPack::Table::Column` only. `:start` (default), `:center`, `:end`. Logical, so RTL flips start and end. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
 | Masonry column count | `columns` | Masonry only. Integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Do not use Grid's `cols` here. |
@@ -72,5 +79,8 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `placement` for where a Modal grows from. Use `origin`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
-- Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`.
+- Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`. Table columns use `:start`, `:center`, and `:end`.
+- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor.
+- Do not use `divider` on Table. The param is `dividers`.
+- Do not add a per-column `class` or raw `style` string. Width, min width, max width, align, wrap, and `hide_below` are the column controls.
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.

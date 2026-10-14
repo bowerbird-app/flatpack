@@ -422,6 +422,255 @@ module FlatPack
         refute_includes html, "tracking-wider"
         assert_selector "th", text: "Name"
       end
+
+      def test_default_alignment_is_logical_start
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        assert_selector "th.text-start", text: "Name"
+        assert_selector "td.text-start", text: "Alice"
+        refute_includes page.native.to_html, "text-left"
+      end
+
+      def test_align_center_and_end_apply_to_header_and_cells
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", align: :center, html: ->(user) { user.name })
+          component.column(title: "Email", align: "end", html: ->(user) { user.email })
+        end
+
+        assert_selector "th.text-center", text: "Name"
+        assert_selector "td.text-center", text: "Alice"
+        assert_selector "th.text-end", text: "Email"
+        assert_selector "td.text-end", text: "alice@example.com"
+      end
+
+      def test_column_widths_render_on_col_and_a_length_stays_capped_beside_fit
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", width: :fit, html: ->(user) { user.name })
+          component.column(title: "Role", width: "12rem", min_width: "8rem", max_width: "20rem", html: ->(user) { user.email })
+          component.column(title: "Email", width: :fill, html: ->(user) { user.email })
+        end
+
+        assert_selector "table.min-w-\\[40rem\\]"
+        refute_selector "table.table-fixed"
+        assert_selector "colgroup col", count: 3
+        assert_selector "col[style='width: 1%']"
+        assert_selector "col[style='width: 12rem; min-width: 8rem; max-width: 20rem']"
+        assert_selector "th[style='min-width: 8rem; max-width: min(12rem, 20rem)']", text: "Role"
+        assert_selector "td[style='min-width: 8rem; max-width: min(12rem, 20rem)']", text: "alice@example.com"
+        assert_selector "col:not([style])", count: 1
+      end
+
+      def test_a_length_without_fit_uses_fixed_layout
+        render_inline(Component.new(data: @users, min_width: :none)) do |component|
+          component.column(title: "Role", width: "12rem", html: ->(user) { user.email })
+          component.column(title: "Email", width: :fill, html: ->(user) { user.email })
+        end
+
+        assert_selector "table.table-fixed"
+        assert_selector "col[style='width: 12rem']"
+        assert_selector "th[style='max-width: 12rem']", text: "Role"
+        assert_selector "td[style='max-width: 12rem']", text: "alice@example.com"
+      end
+
+      def test_fit_and_fill_alone_keep_automatic_table_layout
+        render_inline(Component.new(data: @users, min_width: :none)) do |component|
+          component.column(title: "Name", width: :fit, html: ->(user) { user.name })
+          component.column(title: "Email", width: :fill, html: ->(user) { user.email })
+        end
+
+        assert_selector "col[style='width: 1%']"
+        refute_selector "table.table-fixed"
+        refute_includes page.native.to_html, "min-w-["
+      end
+
+      def test_wrap_nowrap_and_truncate_with_full_text_title
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", wrap: :nowrap, html: ->(user) { user.name })
+          component.column(title: "Email", width: "12rem", wrap: :truncate, html: ->(user) { user.email })
+          component.column(
+            title: "Bio",
+            wrap: :truncate,
+            html: ->(user) { "<strong>#{user.name}</strong> lives here".html_safe }
+          )
+        end
+
+        assert_selector "td.whitespace-nowrap", text: "Alice"
+        assert_selector "td.truncate[style='max-width: 12rem'][title='alice@example.com']", text: "alice@example.com"
+        assert_selector "th.truncate[title='Email']", text: "Email"
+        assert_selector "td[title='Alice lives here'] strong", text: "Alice"
+        assert_selector "table.table-fixed"
+      end
+
+      def test_fill_truncate_uses_leftover_space_instead_of_growing_the_table
+        render_inline(Component.new(data: @users, min_width: :none)) do |component|
+          component.column(title: "Name", width: :fit, wrap: :nowrap, html: ->(user) { user.name })
+          component.column(title: "Email", width: :fill, wrap: :truncate, html: ->(user) { user.email })
+        end
+
+        assert_selector "td.truncate[style='max-width: 0'][title='alice@example.com']", text: "alice@example.com"
+        refute_selector "table.table-fixed"
+      end
+
+      def test_truncate_omits_title_when_the_cell_has_no_text
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", wrap: :truncate, html: ->(_user) { "  " })
+        end
+
+        assert_selector "td.truncate", count: 2
+        refute_selector "td[title]"
+      end
+
+      def test_hide_below_keeps_column_count_and_colspan
+        render_inline(Component.new(data: [])) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+          component.column(title: "Notes", hide_below: :md, html: ->(user) { user.email })
+          component.column(title: "Email", hide_below: "lg", html: ->(user) { user.email })
+        end
+
+        assert_selector "th.max-md\\:hidden", text: "Notes", visible: :all
+        assert_selector "th.max-lg\\:hidden", text: "Email", visible: :all
+        assert_selector "col.max-md\\:\\[visibility\\:collapse\\]", visible: :all
+        assert_selector "col.max-lg\\:\\[visibility\\:collapse\\]", visible: :all
+        assert_selector "td[colspan='3']", text: "No data available"
+      end
+
+      def test_hide_below_hides_header_and_cells_together
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+          component.column(title: "Notes", hide_below: :sm, html: ->(user) { user.email })
+        end
+
+        assert_selector "th.max-sm\\:hidden", text: "Notes", visible: :all
+        assert_selector "td.max-sm\\:hidden", text: "alice@example.com", visible: :all
+        assert_selector "td.max-sm\\:hidden", text: "bob@example.com", visible: :all
+      end
+
+      def test_column_options_work_with_sortable_headers
+        render_inline(Component.new(
+          data: @users,
+          sort: "email",
+          direction: "asc",
+          base_url: "/users"
+        )) do |component|
+          component.column(
+            title: "Email address",
+            sortable: true,
+            sort_key: :email,
+            align: :end,
+            wrap: :truncate,
+            hide_below: :lg,
+            width: "10rem",
+            html: ->(user) { user.email }
+          )
+        end
+
+        assert_selector "th.text-end.truncate.max-lg\\:hidden.cursor-pointer[title='Email address']"
+        assert_selector "th a[href*='sort=email'][href*='direction=desc']", text: /Email address/
+        assert_selector "th a .shrink-0", text: "↑"
+        assert_selector "td.text-end.truncate.max-lg\\:hidden[title='alice@example.com']"
+        refute_selector "td.cursor-pointer"
+        assert_selector "table.table-fixed"
+      end
+
+      def test_plain_style_drops_frame_and_row_hover
+        render_inline(Component.new(data: @users, style: :plain, headers: false, min_width: :none)) do |component|
+          component.column(title: "Name", width: :fit, html: ->(user) { user.name })
+          component.column(title: "Email", width: "8rem", html: ->(user) { user.email })
+          component.column(title: "Note", width: :fill, html: ->(user) { user.email })
+        end
+
+        assert_selector "div.overflow-x-auto"
+        assert_selector "thead.sr-only", visible: :all
+        refute_selector "table.table-fixed"
+        assert_selector "td[style='max-width: 8rem']", text: "alice@example.com"
+        refute_selector "div.border"
+        refute_selector "div.rounded-\\[var\\(--radius-lg\\)\\]"
+        refute_selector "tr[class]"
+        assert_selector "td", text: "Alice"
+      end
+
+      def test_dividers_can_be_removed
+        render_inline(Component.new(data: @users, dividers: false)) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        html = page.native.to_html
+        refute_includes html, "divide-y"
+        refute_includes html, "border-[var(--table-header-border-color)]"
+        assert_selector "thead.bg-\\[var\\(--table-header-background-color\\)\\]"
+      end
+
+      def test_default_style_keeps_frame_dividers_and_hover
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        assert_selector "div.overflow-x-auto.rounded-\\[var\\(--radius-lg\\)\\].border"
+        assert_selector "tbody.divide-y"
+        assert_selector "thead.border-b"
+        assert_selector "tr.hover\\:bg-\\[var\\(--table-row-hover-background-color\\)\\]"
+        refute_selector "table.table-fixed"
+        refute_selector "colgroup"
+      end
+
+      def test_draggable_handle_column_can_fit_its_content
+        render_inline(Component.new(data: @users, draggable_rows: true, reorder_url: "/demo/tables/reorder")) do |component|
+          component.column(title: "Reorder", width: :fit, wrap: :nowrap, align: :center, html: ->(_user) { "⋮⋮" })
+          component.column(title: "Name", width: :fill, html: ->(user) { user.name })
+        end
+
+        assert_selector "div[data-controller~='flat-pack--table-sortable']"
+        assert_selector "tr[data-flat-pack--table-sortable-target='row'][data-id='1']"
+        assert_selector "col[style='width: 1%']"
+        assert_selector "td.whitespace-nowrap.text-center", text: "⋮⋮"
+        refute_selector "table.table-fixed"
+      end
+
+      def test_column_rejects_class_and_raw_style_overrides
+        render_inline(Component.new(data: @users)) do |component|
+          class_error = assert_raises(ArgumentError) do
+            component.column(title: "Name", class: "text-red-500")
+          end
+          style_error = assert_raises(ArgumentError) do
+            component.column(title: "Name", style: "color: red")
+          end
+
+          assert_includes class_error.message, "unknown keyword"
+          assert_includes style_error.message, "unknown keyword"
+        end
+      end
+
+      def test_column_rejects_unknown_width_align_wrap_and_breakpoint
+        render_inline(Component.new(data: @users)) do |component|
+          assert_raises(ArgumentError) { component.column(title: "Name", width: "w-12") }
+          assert_raises(ArgumentError) { component.column(title: "Name", width: "12rem; color: red") }
+          assert_raises(ArgumentError) { component.column(title: "Name", min_width: :md) }
+          assert_raises(ArgumentError) { component.column(title: "Name", max_width: "8") }
+          assert_raises(ArgumentError) { component.column(title: "Name", align: :left) }
+          assert_raises(ArgumentError) { component.column(title: "Name", wrap: :clip) }
+          assert_raises(ArgumentError) { component.column(title: "Name", hide_below: :xxl) }
+        end
+      end
+
+      def test_table_style_and_dividers_reject_unknown_values
+        style_error = assert_raises(ArgumentError) { Component.new(data: @users, style: :ghost) }
+        dividers_error = assert_raises(ArgumentError) { Component.new(data: @users, dividers: :none) }
+
+        assert_includes style_error.message, "style must be one of"
+        assert_includes dividers_error.message, "dividers must be true or false"
+      end
+
+      def test_accepts_zero_and_fractional_lengths
+        render_inline(Component.new(data: @users, min_width: :none)) do |component|
+          component.column(title: "Name", width: "0.5rem", min_width: "0", html: ->(user) { user.name })
+        end
+
+        assert_selector "col[style='width: 0.5rem; min-width: 0']"
+        assert_selector "td[style='min-width: 0; max-width: 0.5rem']", text: "Alice"
+        assert_selector "table.table-fixed"
+      end
     end
   end
 end
