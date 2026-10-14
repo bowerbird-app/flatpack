@@ -159,6 +159,20 @@ module FlatPack
       assert_equal "md", inset.fetch(:default)
     end
 
+    test "show Media requires the image and lists overlay items" do
+      payload = FlatPack::ComponentCatalog.show("Media::Component")
+      src = parameter_named(payload, "src")
+      alt = parameter_named(payload, "alt")
+
+      assert src.fetch(:required)
+      assert alt.fetch(:required)
+      assert parameter_named(payload, "width").fetch(:required)
+      assert parameter_named(payload, "height").fetch(:required)
+      assert_includes payload.fetch(:slots), {name: "items", collection: true}
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::Media::Component"
+      refute FlatPack::ComponentCatalog.show("Masonry::Image")
+    end
+
     test "show Masonry binds ORDERS to order and GAPS to gap" do
       payload = FlatPack::ComponentCatalog.show("Masonry::Component")
       order = parameter_named(payload, "order")

@@ -74,31 +74,30 @@ module FlatPack
         assert_selector ".fp-masonry__item[data-flat-pack--masonry-target='item']", text: "Harbour wall"
       end
 
-      def test_image_item_reserves_aspect_ratio_and_lazy_loads
+      def test_item_holds_media_and_a_filename
+        view = vc_test_controller.view_context
+
         render_inline(Component.new) do |masonry|
-          masonry.with_image(src: "https://example.com/harbour.jpg", alt: "Harbour at dusk", width: 400, height: 600)
+          masonry.with_item do
+            view.safe_join([
+              view.render(FlatPack::Media::Component.new(src: "https://example.com/harbour.jpg", alt: "Harbour at dusk", width: 1120, height: 1400)) do |media|
+                media.with_item(placement: :bottom_left, inset: :sm) { "JPG · 1120×1400 · 4:5" }
+              end,
+              view.tag.span("harbour.jpg")
+            ])
+          end
         end
 
-        assert_selector "img.fp-masonry__image[src='https://example.com/harbour.jpg'][alt='Harbour at dusk']"
-        assert_selector "img[width='400'][height='600'][loading='lazy'][decoding='async']"
-        assert_includes page.native.to_html, "aspect-ratio: 400 / 600"
+        assert_selector ".fp-masonry__item img[alt='Harbour at dusk'][loading='lazy']"
+        assert_selector ".fp-masonry__item [data-fp-placement='bottom_left']", text: "JPG · 1120×1400 · 4:5"
+        assert_selector ".fp-masonry__item span", text: "harbour.jpg"
+        refute_selector ".fp-masonry__image"
+        refute_selector "figure.fp-masonry__figure"
       end
 
-      def test_image_item_optional_link_and_caption
-        render_inline(Component.new) do |masonry|
-          masonry.with_image(
-            src: "https://example.com/cliff.jpg",
-            alt: "Sea cliff",
-            width: 600,
-            height: 400,
-            href: "https://example.com/photos/cliff",
-            caption: "Sea cliff"
-          )
-        end
-
-        assert_selector "figure.fp-masonry__figure"
-        assert_selector "a.fp-masonry__link[href='https://example.com/photos/cliff'] img[alt='Sea cliff']"
-        assert_selector "figcaption", text: "Sea cliff"
+      def test_has_no_image_helper
+        refute FlatPack::Masonry.const_defined?(:Image, false)
+        refute_includes Component.instance_methods, :with_image
       end
 
       def test_accepts_custom_classes_and_data
@@ -125,40 +124,6 @@ module FlatPack
       def test_rejects_invalid_column_breakpoint
         error = assert_raises(ArgumentError) { Component.new(columns: {tablet: 3}) }
         assert_match(/Invalid columns breakpoints/, error.message)
-      end
-
-      def test_rejects_unsafe_image_src
-        error = assert_raises(ArgumentError) do
-          Image.new(src: "javascript:alert(1)", alt: "Bad", width: 100, height: 100)
-        end
-        assert_match(/Invalid src/, error.message)
-      end
-
-      def test_rejects_non_string_alt
-        error = assert_raises(ArgumentError) do
-          Image.new(src: "https://example.com/a.jpg", alt: nil, width: 100, height: 100)
-        end
-        assert_match(/alt must be a String/, error.message)
-      end
-
-      def test_rejects_non_positive_dimensions
-        error = assert_raises(ArgumentError) do
-          Image.new(src: "https://example.com/a.jpg", alt: "A", width: 0, height: 100)
-        end
-        assert_match(/width must be a positive integer/, error.message)
-      end
-
-      def test_rejects_unsafe_image_href
-        error = assert_raises(ArgumentError) do
-          Image.new(src: "https://example.com/a.jpg", alt: "A", width: 100, height: 100, href: "javascript:alert(1)")
-        end
-        assert_match(/Invalid href/, error.message)
-      end
-
-      def test_allows_empty_alt_for_decorative_images
-        render_inline(Image.new(src: "https://example.com/a.jpg", alt: "", width: 80, height: 80))
-
-        assert_selector "img[alt=''][src='https://example.com/a.jpg']"
       end
     end
   end

@@ -737,6 +737,20 @@
         { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
       ]
     },
+    media: {
+      label: "Media",
+      method_call: "render FlatPack::Media::Component.new(src: \"/photos/harbour.jpg\", alt: \"Harbour at dusk\", width: 1120, height: 1400) do |media| ... end",
+      variables: [
+        { variable: "src", accepts: "http(s) or relative URL (required)", example: "src: \"/photos/harbour.jpg\"" },
+        { variable: "alt", accepts: "String (required, \"\" if decorative)", example: "alt: \"Harbour at dusk\"" },
+        { variable: "width", accepts: "positive Integer (required)", example: "width: 1120" },
+        { variable: "height", accepts: "positive Integer (required)", example: "height: 1400" },
+        { variable: "with_item", accepts: "slot block, repeatable", example: "media.with_item(placement: :bottom_left, inset: :sm) { render FlatPack::Badge::Component.new(text: \"JPG · 1120×1400 · 4:5\", size: :xs) }" },
+        { variable: "placement", accepts: ":top_left, :top_center, :top_right, :middle_left, :center, :middle_right, :bottom_left, :bottom_center, :bottom_right", example: "placement: :bottom_left" },
+        { variable: "inset", accepts: ":sm, :md, :lg", example: "inset: :sm" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-md\", id: \"harbour\"" }
+      ]
+    },
     masonry: {
       label: "Masonry",
       method_call: "render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md, order: :columns) do |masonry| ... end",
@@ -744,8 +758,7 @@
         { variable: "columns", accepts: "Integer 1-6, or Hash of base/sm/md/lg/xl", example: "columns: {base: 2, md: 3, lg: 4}" },
         { variable: "gap", accepts: ":sm, :md, :lg", example: "gap: :md" },
         { variable: "order", accepts: ":columns, :rows", example: "order: :rows" },
-        { variable: "with_item", accepts: "slot block", example: "masonry.with_item { render FlatPack::Card::Component.new { \"Note\" } }" },
-        { variable: "with_image", accepts: "src, alt, width, height, optional href and caption", example: "masonry.with_image(src: \"/photos/harbour.jpg\", alt: \"Harbour\", width: 400, height: 600)" },
+        { variable: "with_item", accepts: "slot block", example: "masonry.with_item { render FlatPack::Media::Component.new(src: \"/photos/harbour.jpg\", alt: \"Harbour\", width: 1120, height: 1400) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"studio-wall\"" }
       ]
     },

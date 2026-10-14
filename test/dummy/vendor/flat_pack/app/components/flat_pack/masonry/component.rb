@@ -139,10 +139,6 @@ module FlatPack
         nil
       end
 
-      def with_image(**kwargs, &block)
-        with_item { render(FlatPack::Masonry::Image.new(**kwargs), &block) }
-      end
-
       def call
         captured = content
         content_tag(:div, **container_attributes) do

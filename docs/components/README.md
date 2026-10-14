@@ -72,6 +72,7 @@ date_time_input | FlatPack::DateTimeInput::Component | docs/components/inputs.md
 time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
 list | FlatPack::List::Component | docs/components/list.md
+media | FlatPack::Media::Component | docs/components/media.md
 masonry | FlatPack::Masonry::Component | docs/components/masonry.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md

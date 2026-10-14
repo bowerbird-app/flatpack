@@ -21,7 +21,6 @@ module FlatPack
 
     EXTRA_RELATIVE_PATHS = [
       "chat/message.rb",
-      "masonry/image.rb",
       "modal/screen.rb",
       "fab/action.rb"
     ].freeze

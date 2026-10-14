@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.235] - 2026-10-14
+
+### Added
+- `FlatPack::Media::Component` renders one image: `src`, required `alt`, `width`, `height`, `loading="lazy"`, `decoding="async"`, and `aspect-ratio` from those dimensions. Corners use `--media-radius` (default `--radius-md`). The hairline uses `--media-outline-color`. `with_item(placement:, inset:)` passes through to Overlay for a badge or button. Demo: `/demo/masonry`.
+
+### Changed
+- `FlatPack::Masonry::Component` is layout only. Cells are `with_item`. `FlatPack::Masonry::Image` and `with_image` are gone.
+- Bumped the gem version to `0.1.235`.
+
+### Upgrade notes
+- Replace `masonry.with_image(...)` with `masonry.with_item` and `FlatPack::Media::Component`.
+- Wrap a link in the host when the tile should navigate. Put the filename in that same cell, under the media. Do not put a button inside the link.
+- `--media-radius` and `--media-outline-color` are the image tokens. There is no colour, radius, or theme prop.
+- Rebuild host Tailwind so `rounded-[var(--media-radius)]`, `outline-[var(--media-outline-color)]`, and `group/media` are generated.
+- Redeploy so `meta.gem_version` shows `0.1.235`.
+
 ## [0.1.234] - 2026-10-14
 
 ### Added
