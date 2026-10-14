@@ -4,6 +4,7 @@ module FlatPack
   module List
     class Item < FlatPack::BaseComponent
       def initialize(
+        key: nil,
         icon: nil,
         leading: nil,
         trailing: nil,
@@ -14,18 +15,24 @@ module FlatPack
         **system_arguments
       )
         super(**system_arguments)
+        @key_value = Rendering.key_value?
+        @stack_below = Rendering.stack_below if @key_value
         @icon = icon
         @leading = leading
         @trailing = trailing
+        @key = normalize_key(key)
         @href = sanitize_url(href)
         @hover = hover
         @active = active
         @link_arguments = sanitize_args(link_arguments || {})
 
+        validate_layout_arguments!(href)
         validate_href!(href)
       end
 
       def call
+        return render_key_value if @key_value
+
         content_tag(:li, **item_attributes) do
           if linked?
             link_to @href, **link_attributes do
@@ -60,12 +67,111 @@ module FlatPack
         return unless @icon && @leading.nil?
 
         content_tag(:span, class: "flat-pack-list-item-icon flex-shrink-0 mr-2") do
-          if @icon.is_a?(String) && @icon.start_with?("<svg")
-            @icon.html_safe
-          else
-            render FlatPack::Shared::IconComponent.new(name: @icon, size: :md)
-          end
+          render_icon_graphic
         end
+      end
+
+      def render_icon_graphic
+        if @icon.is_a?(String) && @icon.start_with?("<svg")
+          @icon.html_safe
+        else
+          render FlatPack::Shared::IconComponent.new(name: @icon, size: :md)
+        end
+      end
+
+      def render_key_value
+        content_tag(:div, **key_value_row_attributes) do
+          safe_join([
+            content_tag(:dt, class: key_value_term_classes) { render_key_value_term },
+            content_tag(:dd, class: key_value_details_classes) { render_key_value_details }
+          ])
+        end
+      end
+
+      def render_key_value_term
+        safe_join([
+          render_key_value_icon,
+          content_tag(:span, @key, class: key_label_classes)
+        ])
+      end
+
+      def render_key_value_icon
+        if @icon
+          content_tag(:span, class: key_value_icon_classes, aria: {hidden: true}) do
+            render_icon_graphic
+          end
+        else
+          content_tag(:span, "", class: empty_icon_slot_classes, aria: {hidden: true})
+        end
+      end
+
+      def render_key_value_details
+        # SECURITY: Content is marked html_safe because it's expected to contain
+        # Rails-generated HTML from components captured via block. Never pass
+        # unsanitized user input directly to content.
+        parts = [content_tag(:div, content.to_s.html_safe, class: "flat-pack-list-value min-w-0 flex-1 break-words")]
+        parts << render_key_value_trailing if @trailing
+        safe_join(parts)
+      end
+
+      def render_key_value_trailing
+        content_tag(:span, @trailing, class: KeyValueLayout.trailing_classes_for(@stack_below))
+      end
+
+      def key_value_row_attributes
+        merge_attributes(class: key_value_row_classes)
+      end
+
+      def key_value_row_classes
+        classes(
+          "flat-pack-list-key-value-row",
+          KeyValueLayout.row_classes_for(@stack_below),
+          "rounded-[var(--radius-sm)]",
+          "py-4 px-4",
+          "text-[var(--surface-content-color)]",
+          ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
+          ("bg-[var(--list-item-active-background-color)]" if @active)
+        )
+      end
+
+      def key_value_term_classes
+        KeyValueLayout.term_classes_for(@stack_below)
+      end
+
+      def key_label_classes
+        "flat-pack-list-key min-w-0 break-words font-medium text-[var(--surface-muted-content-color)]"
+      end
+
+      def key_value_details_classes
+        KeyValueLayout.details_classes_for(@stack_below)
+      end
+
+      def key_value_icon_classes
+        "flat-pack-list-item-icon self-start mt-0.5 #{KeyValueLayout.icon_margin_class_for(@stack_below)}"
+      end
+
+      def empty_icon_slot_classes
+        ["flat-pack-list-key-value-icon-slot", KeyValueLayout.empty_icon_slot_class_for(@stack_below)].compact.join(" ")
+      end
+
+      def normalize_key(key)
+        return if key.nil?
+        return key.strip if key.is_a?(String) && !value_html_safe?(key)
+
+        raise ArgumentError, "key: must be a String."
+      end
+
+      def validate_layout_arguments!(href)
+        if @key_value
+          raise ArgumentError, "key: is required when the list layout is :key_value." if @key.blank?
+          raise ArgumentError, "href: is not supported when the list layout is :key_value." if href.present?
+          raise ArgumentError, "leading: is not supported when the list layout is :key_value." if @leading.present?
+          return
+        end
+
+        return if @key.blank?
+
+        raise ArgumentError, "key: is only supported when the list layout is :key_value."
       end
 
       def render_leading

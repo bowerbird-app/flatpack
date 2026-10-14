@@ -121,6 +121,26 @@ module FlatPack
       assert_includes examples.first.fetch(:erb), "FlatPack::TrashButton::Component"
     end
 
+    test "show List binds LAYOUTS and STACK_BELOWS" do
+      payload = FlatPack::ComponentCatalog.show("List::Component")
+      layout = parameter_named(payload, "layout")
+      key_width = parameter_named(payload, "key_width")
+      stack_below = parameter_named(payload, "stack_below")
+
+      assert_equal %w[items key_value], layout.fetch(:enum)
+      assert_equal "items", layout.fetch(:default)
+      assert_equal "fit", key_width.fetch(:default)
+      refute key_width.key?(:enum)
+      assert_equal %w[sm md lg], stack_below.fetch(:enum)
+      assert_nil stack_below.fetch(:default)
+
+      item = FlatPack::ComponentCatalog.show("List::Item")
+      key = parameter_named(item, "key")
+
+      assert_nil key.fetch(:default)
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::List::Component"
+    end
+
     test "show Fab binds SIZES POSITIONS LAYOUTS and Action STYLES" do
       payload = FlatPack::ComponentCatalog.show("Fab::Component")
       size = parameter_named(payload, "size")

@@ -68,7 +68,8 @@ module FlatPack
       {constant: :EXPANDS, kwargs: %i[expand]},
       {constant: :METHODS, kwargs: %i[method]},
       {constant: :POSITIONS, kwargs: %i[position]},
-      {constant: :LAYOUTS, kwargs: %i[layout]}
+      {constant: :LAYOUTS, kwargs: %i[layout]},
+      {constant: :STACK_BELOWS, kwargs: %i[stack_below]}
     ].freeze
 
     DOC_KEYS = {
