@@ -192,6 +192,135 @@ module FlatPack
         assert_selector "ol.flat-pack-list ul.flat-pack-list > li > span.flat-pack-list-item-marker", count: 1
       end
 
+      def test_key_value_layout_renders_a_description_list
+        row = key_value_row_builder
+        render_inline(Component.new(layout: :key_value, key_width: "10rem", divider: true, spacing: :comfortable)) {
+          row.call("Room", "Studio B")
+        }
+
+        assert_selector "dl.flat-pack-list.flat-pack-list--key-value.flat-pack-list-divided"
+        refute_selector "dl[role='list']"
+        refute_selector "ul"
+        refute_selector "ol"
+        assert_selector "dl > div.flat-pack-list-key-value-row > dt", text: "Room"
+        assert_selector "dl > div.flat-pack-list-key-value-row > dd", text: "Studio B"
+        html = page.native.to_html
+        assert_includes html, "--fp-list-key-width: 10rem"
+        assert_includes html, "gap-y-3"
+        assert_includes html, "grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]"
+        refute_includes html, "flat-pack-list-item-marker"
+      end
+
+      def test_key_value_fit_width_uses_the_widest_key
+        row = key_value_row_builder
+        render_inline(Component.new(layout: :key_value)) { row.call("Session notes", "Bring the ribbon mic") }
+
+        assert_includes page.native.to_html, "--fp-list-key-width: max-content"
+      end
+
+      def test_key_value_dense_spacing_uses_row_gap_only
+        row = key_value_row_builder
+        render_inline(Component.new(layout: :key_value, spacing: :dense)) { row.call("Room", "Studio B") }
+
+        html = page.native.to_html
+        assert_includes html, "gap-y-1"
+        refute_includes html, "gap-y-3"
+        refute_includes html, "gap-1"
+        refute_includes html, "gap-3"
+      end
+
+      def test_key_value_stack_below_uses_breakpoint_classes
+        row = key_value_row_builder
+        render_inline(Component.new(layout: :key_value, stack_below: :md)) { row.call("Room", "Studio B") }
+
+        html = page.native.to_html
+        assert_includes html, "grid-cols-1"
+        assert_includes html, "md:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]"
+        assert_includes html, "md:grid-cols-subgrid"
+      end
+
+      def test_key_value_merges_a_caller_style_after_the_key_width
+        row = key_value_row_builder
+        render_inline(Component.new(layout: :key_value, style: "outline: 1px solid var(--surface-border-color)")) {
+          row.call("Room", "Studio B")
+        }
+
+        style = page.find("dl")["style"]
+        assert_includes style, "--fp-list-key-width: max-content"
+        assert_includes style, "outline: 1px solid var(--surface-border-color)"
+      end
+
+      def test_key_value_sets_the_layout_while_rendering_rows
+        seen = nil
+        row = key_value_row_builder
+        render_inline(Component.new(layout: :key_value, stack_below: :lg)) do
+          seen = [Rendering.layout, Rendering.stack_below]
+          row.call("Room", "Studio B")
+        end
+
+        assert_equal [:key_value, :lg], seen
+        assert_equal :items, Rendering.layout
+      end
+
+      def test_key_value_rejects_ordered_orderable_and_selectable
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, ordered: true) }
+        assert_match(/ordered/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, orderable: true) }
+        assert_match(/orderable/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, selectable: true) }
+        assert_match(/selectable/, error.message)
+      end
+
+      def test_key_value_rejects_an_unknown_layout_width_or_breakpoint
+        error = assert_raises(ArgumentError) { Component.new(layout: :cards) }
+        assert_match(/Invalid layout/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, key_width: "10rem; color: red") }
+        assert_match(/Invalid key_width/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, key_width: "10") }
+        assert_match(/Invalid key_width/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, stack_below: :xl) }
+        assert_match(/Invalid stack_below/, error.message)
+      end
+
+      def test_items_layout_rejects_key_value_options
+        error = assert_raises(ArgumentError) { Component.new(key_width: "10rem") }
+        assert_match(/key_width/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(stack_below: :sm) }
+        assert_match(/stack_below/, error.message)
+      end
+
+      def test_items_layout_is_unchanged
+        render_inline(Component.new) { "content" }
+
+        html = page.native.to_html
+        assert_selector "ul.flat-pack-list[role='list']"
+        refute_includes html, "flat-pack-list--key-value"
+        refute_includes html, "--fp-list-key-width"
+        assert_includes html, "gap-3"
+      end
+
+      def test_key_value_divider_rule_stays_square_and_unlayered
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        layer_end = layered_components_end_index(css)
+        selector = ".flat-pack-list.flat-pack-list-divided.flat-pack-list--key-value > " \
+          ".flat-pack-list-key-value-row + .flat-pack-list-key-value-row::before"
+        rule = css[/^#{Regexp.escape(selector)} \{.*?\n\}/m]
+
+        refute_nil rule
+        assert_operator css.index(rule), :>, layer_end
+        assert_includes rule, "height: 1px;"
+        assert_includes rule, "background-color: var(--surface-border-color);"
+        assert_includes rule, "border-radius: 0;"
+        assert_includes css, ".flat-pack-list--key-value dd"
+        refute_includes rule, "justify-content: center"
+      end
+
       def test_ordered_list_keeps_icons_beside_markers
         first = Item.new(icon: :sun).with_content("Heat the pan").render_in(vc_test_controller.view_context)
         second = Item.new(icon: :star).with_content("Crack two eggs").render_in(vc_test_controller.view_context)
@@ -204,6 +333,13 @@ module FlatPack
       end
 
       private
+
+      def key_value_row_builder
+        context = vc_test_controller.view_context
+        lambda do |key, value|
+          Item.new(key: key).with_content(value).render_in(context)
+        end
+      end
 
       def rendered_items(*labels)
         labels.map { |label|

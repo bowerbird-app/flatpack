@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "List Components",
-  subtitle: "Semantic lists with consistent spacing and optional icons."
+  subtitle: "Lists, icons, and rows that pair a key with a value."
 ) %>
 
 <%= render "pages/component_method_variables_table", components: [:list, :list_item] %>
@@ -556,5 +556,116 @@
     CODE
     title: "Linked List Items",
     separated: false
+  ) %>
+</section>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="key-value">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Key and value",
+    anchor_link: true,
+    subtitle: "Icons and keys line up. Values wrap beside them."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(layout: :key_value, key_width: "10rem", divider: true) do %>
+        <%= render FlatPack::List::Item.new(key: "Title", icon: :musical_note) do %>
+          Morning session
+        <% end %>
+        <%= render FlatPack::List::Item.new(key: "Room", icon: :map_pin) do %>
+          Studio B
+        <% end %>
+        <%= render FlatPack::List::Item.new(key: "Recorded", icon: :calendar) do %>
+          14 Oct 2026
+        <% end %>
+        <%= render FlatPack::List::Item.new(key: "Notes", icon: :document_text) do %>
+          Bring the ribbon mic, two extra cables, and the spare headphones. Leave the amp in the hall.
+        <% end %>
+        <%= render FlatPack::List::Item.new(
+          key: "Guest code",
+          icon: :key,
+          trailing: render(FlatPack::CopyButton::Component.new(
+            text: "morning-b",
+            label: "Copy guest code",
+            icon_only: true,
+            size: :sm
+          ))
+        ) do %>
+          morning-b
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    title: "Key and value",
+    language: "erb",
+    separated: false,
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::List::Component.new(layout: :key_value, key_width: "10rem", divider: true) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::List::Item.new(key: "Room", icon: :map_pin) do #{erb_tag_close}
+          Studio B
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} render FlatPack::List::Item.new(key: "Guest code", icon: :key, trailing: copy_button) do #{erb_tag_close}
+          morning-b
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="key-value-stacked">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Narrow screen",
+    anchor_link: true,
+    subtitle: "Below md the key sits on top and the value sits under it."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(layout: :key_value, stack_below: :md, divider: true) do %>
+        <%= render FlatPack::List::Item.new(key: "Title", icon: :musical_note) do %>
+          Morning session
+        <% end %>
+        <%= render FlatPack::List::Item.new(key: "Room", icon: :map_pin) do %>
+          Studio B
+        <% end %>
+        <%= render FlatPack::List::Item.new(key: "Session notes", icon: :document_text) do %>
+          Bring the ribbon mic, two extra cables, and the spare headphones.
+        <% end %>
+        <%= render FlatPack::List::Item.new(
+          key: "Guest code",
+          icon: :key,
+          trailing: render(FlatPack::CopyButton::Component.new(
+            text: "morning-b",
+            label: "Copy guest code",
+            icon_only: true,
+            size: :sm
+          ))
+        ) do %>
+          morning-b
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    title: "Narrow screen",
+    language: "erb",
+    separated: false,
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::List::Component.new(layout: :key_value, stack_below: :md, divider: true) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::List::Item.new(key: "Session notes", icon: :document_text) do #{erb_tag_close}
+          Bring the ribbon mic.
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
   ) %>
 </section>

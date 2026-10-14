@@ -797,8 +797,11 @@
     },
     list: {
       label: "List",
-      method_call: "render FlatPack::List::Component.new(ordered: false, spacing: :comfortable, divider: false, selectable: false, orderable: false) do ... end",
+      method_call: "render FlatPack::List::Component.new(layout: :items, ordered: false, spacing: :comfortable, divider: false) do ... end",
       variables: [
+        { variable: "layout", accepts: ":items, :key_value", example: "layout: :key_value" },
+        { variable: "key_width", accepts: ":fit or a CSS length. :key_value only", example: "key_width: \"10rem\"" },
+        { variable: "stack_below", accepts: ":sm, :md, :lg, or nil. :key_value only", example: "stack_below: :md" },
         { variable: "ordered", accepts: "true, false", example: "ordered: true" },
         { variable: "spacing", accepts: ":comfortable, :dense", example: "spacing: :dense" },
         { variable: "divider", accepts: "true, false", example: "divider: true" },
@@ -813,8 +816,9 @@
     },
     list_item: {
       label: "List Item",
-      method_call: "render FlatPack::List::Item.new(icon: :check, href: demo_buttons_path, hover: true, active: false) { \"Task completed\" }",
+      method_call: "render FlatPack::List::Item.new(key: \"Room\", icon: :map_pin) { \"Studio B\" }",
       variables: [
+        { variable: "key", accepts: "String. Required when the list layout is :key_value", example: "key: \"Room\"" },
         { variable: "icon", accepts: "Symbol/String/SVG String or nil", example: "icon: :check" },
         { variable: "leading", accepts: "String/HTML or nil", example: "leading: content_tag(:strong, \"1\")" },
         { variable: "trailing", accepts: "String/HTML or nil", example: "trailing: render(FlatPack::Badge::Component.new(text: \"New\"))" },

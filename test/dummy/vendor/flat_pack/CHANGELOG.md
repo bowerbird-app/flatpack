@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.239] - 2026-10-14
+
+### Added
+- `FlatPack::List::Component` accepts `layout: :key_value`. The list renders a `<dl>`. Each `FlatPack::List::Item` takes `key:` and renders a `<div>` with a `<dt>` and a `<dd>`. Icons and keys share columns. Values wrap. Demo: `/demo/list#key-value`.
+- `key_width:` is `:fit` (the widest key) or a CSS length such as `"10rem"`.
+- `stack_below:` is `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value.
+- `icon:` still renders inside the key, `aria-hidden`, through `FlatPack::Shared::IconComponent`. `trailing:` still sits at the end of the row.
+
+### Changed
+- Bumped the gem version to `0.1.239`.
+
+### Upgrade notes
+- Additive. `layout` defaults to `:items`. Existing lists render the same `<ul>` or `<ol>`.
+- Pass `layout: :key_value` and give every item a `key:`. Render items inside the list block.
+- `ordered: true`, `orderable: true`, and `selectable: true` raise `ArgumentError` on a key/value list. `href:` and `leading:` raise on those items. `key:` outside `:key_value` raises.
+- `key_width` must be `:fit` or a CSS length. `stack_below` must be `:sm`, `:md`, `:lg`, or omitted.
+- Rebuild host Tailwind so the grid classes in `FlatPack::List::KeyValueLayout` are generated, including `grid-cols-subgrid` and the full track literals `grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`, `sm:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`, `md:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`, and `lg:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`. Reload kit CSS for the description-list margin reset and divider.
+- Redeploy so `meta.gem_version` shows `0.1.239`.
+
 ## [0.1.238] - 2026-10-14
 
 ### Added

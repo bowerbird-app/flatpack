@@ -1490,6 +1490,31 @@ ol.flat-pack-list {
   pointer-events: none;
 }
 
+/* Description-list rows. User-agent dl/dd margins would shove the value off the grid. */
+.flat-pack-list--key-value {
+  margin: 0;
+}
+
+.flat-pack-list--key-value dd {
+  margin: 0;
+}
+
+.flat-pack-list.flat-pack-list-divided.flat-pack-list--key-value > .flat-pack-list-key-value-row + .flat-pack-list-key-value-row {
+  position: relative;
+}
+
+.flat-pack-list.flat-pack-list-divided.flat-pack-list--key-value > .flat-pack-list-key-value-row + .flat-pack-list-key-value-row::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background-color: var(--surface-border-color);
+  border-radius: 0;
+  pointer-events: none;
+}
+
 ol.flat-pack-list > li {
   counter-increment: flat-pack-list-item;
 }

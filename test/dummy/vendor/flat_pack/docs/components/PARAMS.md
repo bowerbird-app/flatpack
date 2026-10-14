@@ -39,6 +39,10 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
 | FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
+| List shape | `layout` | List only. `:items` (default, `<ul>` or `<ol>`) or `:key_value` (`<dl>`). Not FAB `layout`. |
+| Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |
+| Key column size | `key_width` | List `:key_value` only. `:fit` (widest key) or a CSS length such as `"10rem"`. |
+| Stack key above value | `stack_below` | List `:key_value` only. `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). |
 | Hero cover step | `title_size` | Hero only. Opt-in `FlatPack::HeroTitle::Component` size (`:md`, `:lg`, `:xl`, `:xxl`) for the headline. Omit to keep today's default or `size: :display` mapping. |
@@ -84,3 +88,5 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `divider` on Table. The param is `dividers`.
 - Do not add a per-column `class` or raw `style` string. Width, min width, max width, align, wrap, and `hide_below` are the column controls.
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.
+- Do not pass FAB `layout: :stack` to List, or List `layout: :key_value` to FAB.
+- Do not use `label` for a key/value term. Use `key`. The item block is the value.

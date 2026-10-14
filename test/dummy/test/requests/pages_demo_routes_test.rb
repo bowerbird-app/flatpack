@@ -190,6 +190,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "list:error"
   end
 
+  test "list demo renders key and value rows" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "<dl"
+    assert_includes response.body, "flat-pack-list--key-value"
+    assert_includes response.body, "--fp-list-key-width: 10rem"
+    assert_includes response.body, "Guest code"
+    assert_includes response.body, "morning-b"
+    assert_includes response.body, "stack_below: :md"
+    assert_includes response.body, "Session notes"
+  end
+
   test "list demo renders ordered marker slots and icon steps" do
     get "/demo/list"
 

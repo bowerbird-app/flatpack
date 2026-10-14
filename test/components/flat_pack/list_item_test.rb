@@ -105,6 +105,72 @@ module FlatPack
         end
       end
 
+      def test_key_value_row_renders_term_value_icon_and_trailing
+        Rendering.with(layout: :key_value, stack_below: :sm) do
+          render_inline(Item.new(key: " Guest code ", icon: :key, trailing: "Copy")) { "morning-b" }
+        end
+
+        assert_selector "div.flat-pack-list-key-value-row > dt > span.flat-pack-list-key", text: "Guest code"
+        assert_selector "div.flat-pack-list-key-value-row > dd .flat-pack-list-value", text: "morning-b"
+        assert_selector "dt span.flat-pack-list-item-icon[aria-hidden='true'] svg[data-flat-pack--icon-name-value='key']"
+        assert_selector "dd span.flat-pack-list-key-value-trailing", text: "Copy"
+        html = page.native.to_html
+        assert_includes html, "sm:grid-cols-subgrid"
+        assert_includes html, "text-[var(--surface-muted-content-color)]"
+        assert_includes html, "break-words"
+        refute_selector "li"
+        refute_selector "a"
+      end
+
+      def test_key_value_without_an_icon_keeps_an_icon_slot
+        Rendering.with(layout: :key_value) do
+          render_inline(Item.new(key: "Room")) { "Studio B" }
+        end
+
+        assert_selector "dt span.flat-pack-list-key-value-icon-slot[aria-hidden='true']"
+        refute_selector "svg"
+      end
+
+      def test_key_value_hides_the_empty_icon_slot_until_the_breakpoint
+        Rendering.with(layout: :key_value, stack_below: :md) do
+          render_inline(Item.new(key: "Room")) { "Studio B" }
+        end
+
+        assert_includes page.native.to_html, "hidden md:block"
+      end
+
+      def test_key_value_requires_a_key_and_rejects_href_and_leading
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new }
+        end
+        assert_match(/key: is required/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "   ") }
+        end
+        assert_match(/key: is required/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: :room) }
+        end
+        assert_match(/must be a String/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", href: "/demo/list") }
+        end
+        assert_match(/href/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", leading: "1") }
+        end
+        assert_match(/leading/, error.message)
+      end
+
+      def test_key_is_only_supported_in_a_key_value_list
+        error = assert_raises(ArgumentError) { Item.new(key: "Room") }
+        assert_match(/only supported/, error.message)
+      end
+
       def test_marker_does_not_replace_icon_or_content
         render_inline(Item.new(icon: :check)) { "Content" }
 
