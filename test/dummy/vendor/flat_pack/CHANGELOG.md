@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - `flat_pack/copy.js` includes the English fallback for `collection_editor.already_joined`.
+- Copy button icons are centered with CSS grid. Kit `application.css` still does not use `justify-content: center`.
 
 ### Changed
 - Bumped the gem version to `0.1.234`.

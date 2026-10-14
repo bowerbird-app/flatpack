@@ -1888,9 +1888,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-copy-button__icons {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-grid;
+  place-items: center;
   flex: none;
 }
 
@@ -1903,8 +1902,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-copy-button__icons [data-icon="error"] {
   position: absolute;
   inset: 0;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   opacity: 0;
   pointer-events: none;
 }
