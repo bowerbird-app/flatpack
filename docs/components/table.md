@@ -24,6 +24,7 @@ Use Table for datasets that need consistent headers, rows, formatting, and optio
 | `tbody_data` | Hash | `nil` | No | Data attributes applied to `<tbody>`. |
 | `draggable_rows` | Boolean | `false` | No | Adds `flat-pack--table-sortable` controller and draggable row data hooks. |
 | `min_width` | Symbol/String/nil | `:md` | No | Minimum table width so narrow viewports scroll the wrapper instead of squashing columns. Accepts `:none`, `:sm` (30rem), `:md` (40rem), `:lg` (48rem), or a Tailwind `min-w-*` class String. |
+| `headers` | Boolean | `true` | No | When `false`, the header row stays in the DOM and is visually hidden with `sr-only`. Column `title:` stays required. Anything other than `true` or `false` raises `ArgumentError`. |
 | `reorder` | Hash | `nil` | No | Optional hash override for reorder settings (`url`, `resource`, `strategy`, `scope`, `version`, `row_id`). |
 | `reorder_url` | String | `nil` | No | PATCH endpoint used by sortable controller to persist order. |
 | `reorder_resource` | String | inferred | No | Resource key sent in reorder payload (defaults from sample row class/table name when possible). |
@@ -39,7 +40,7 @@ Use Table for datasets that need consistent headers, rows, formatting, and optio
 
 | name | type | required | description |
 |------|------|----------|-------------|
-| `title` | String | Yes | Header text for the column. |
+| `title` | String | Yes | Header text for the column. Still required when `headers: false`. |
 | `html` | Proc | No | Cell renderer proc called with each row. Optional when block is provided. |
 | `sortable` | Boolean | No | Enables sortable header behavior for this column. |
 | `sort_key` | Symbol/String | No | Key written into sort query string for sortable headers. |
@@ -54,6 +55,7 @@ When both block and `html` are provided, `html` is used. When neither is provide
 | Turbo frame wrapper | Provide `turbo_frame:` to wrap output in `<turbo-frame>`. |
 | Stimulus table | Set `stimulus: true` to attach `flat-pack--table`. |
 | Draggable reorder | Set `draggable_rows: true` and optionally `reorder_*` options. |
+| Visually hidden headers | Set `headers: false`. The `<thead>` keeps each column `title` for screen readers and is hidden with the Tailwind `sr-only` class. |
 | URL-driven filter/search controls | Compose sibling controls (for example `FlatPack::ChartButtons::Component` and `FlatPack::Search::Component`) around the table and submit GET params into a shared Turbo Frame. |
 | Inline mini charts | Render `FlatPack::Chart::Component` in a column `html` lambda for sparkline activity cells in dense rows. |
 
@@ -99,8 +101,15 @@ Use sibling controls as a separate surface around the table and keep all state i
 <% end %>
 ```
 
+```erb
+<%= render FlatPack::Table::Component.new(data: @users, headers: false) do |table| %>
+  <% table.column(title: "Name") { |user| user.name } %>
+  <% table.column(title: "Email") { |user| user.email } %>
+<% end %>
+```
+
 ## Accessibility
-Uses semantic table markup (`table`, `thead`, `tbody`, `th`, `td`). Sort indicators are visual arrows in sortable headers; provide meaningful header labels for screen-reader clarity.
+Uses semantic table markup (`table`, `thead`, `tbody`, `th`, `td`). Sort indicators are visual arrows in sortable headers; provide meaningful header labels for screen-reader clarity. `headers: false` keeps that `<thead>` in the accessibility tree and hides it with `sr-only`. Do not drop `title:` to hide a column name.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

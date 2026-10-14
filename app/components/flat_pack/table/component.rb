@@ -14,7 +14,7 @@ module FlatPack
       #
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "min-w-[30rem]" "min-w-[40rem]" "min-w-[48rem]"
+      # "min-w-[30rem]" "min-w-[40rem]" "min-w-[48rem]" "sr-only"
       MIN_WIDTHS = {
         none: nil,
         sm: "min-w-[30rem]",
@@ -33,6 +33,7 @@ module FlatPack
         tbody_data: nil,
         draggable_rows: false,
         min_width: :md,
+        headers: true,
         reorder: nil,
         reorder_url: nil,
         reorder_resource: nil,
@@ -45,6 +46,7 @@ module FlatPack
         super(**system_arguments)
         @data = data
         @min_width = normalize_min_width(min_width)
+        @show_headers = normalize_headers(headers)
         @stimulus = stimulus
         @turbo_frame = turbo_frame
         @sort = sort
@@ -132,10 +134,16 @@ module FlatPack
         MIN_WIDTHS[key]
       end
 
+      def normalize_headers(headers)
+        return headers if headers == true || headers == false
+
+        raise ArgumentError, "headers must be true or false"
+      end
+
       def render_header
         return unless columns.any?
 
-        tag.thead class: "bg-[var(--table-header-background-color)] border-b border-[var(--table-header-border-color)]" do
+        tag.thead(**header_attributes) do
           tag.tr do
             safe_join(columns.map { |column|
               column.render_header(
@@ -147,6 +155,14 @@ module FlatPack
               )
             })
           end
+        end
+      end
+
+      def header_attributes
+        if @show_headers
+          {class: "bg-[var(--table-header-background-color)] border-b border-[var(--table-header-border-color)]"}
+        else
+          {class: "sr-only"}
         end
       end
 

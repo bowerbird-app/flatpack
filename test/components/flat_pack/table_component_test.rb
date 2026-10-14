@@ -141,6 +141,48 @@ module FlatPack
         assert_selector "td[colspan='2']", text: "No data available"
       end
 
+      def test_shows_column_headers_by_default
+        render_inline(Component.new(data: @users)) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+        end
+
+        assert_selector "thead.bg-\\[var\\(--table-header-background-color\\)\\]"
+        assert_selector "th", text: "Name"
+        refute_selector "thead.sr-only"
+      end
+
+      def test_hides_headers_visually_and_keeps_them_for_screen_readers
+        render_inline(Component.new(data: @users, headers: false, base_url: "/users", sort: "email", direction: "asc")) do |component|
+          component.column(title: "Name", html: ->(user) { user.name })
+          component.column(title: "Email", sortable: true, sort_key: :email) { |user| user.email }
+        end
+
+        assert_selector "thead.sr-only", visible: :all
+        assert_selector "thead.sr-only th", text: "Name", visible: :all
+        assert_selector "thead.sr-only th", text: "Email", visible: :all
+        assert_selector "thead.sr-only a", text: "Email", visible: :all
+        assert_selector "td", text: "Alice"
+        refute_selector "thead.bg-\\[var\\(--table-header-background-color\\)\\]"
+      end
+
+      def test_column_title_stays_required_when_headers_are_hidden
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(data: @users, headers: false)) do |component|
+            component.column(html: ->(user) { user.name })
+          end
+        end
+
+        assert_includes error.message, "title"
+      end
+
+      def test_headers_rejects_non_boolean_values
+        error = assert_raises(ArgumentError) do
+          Component.new(data: @users, headers: :hidden)
+        end
+
+        assert_includes error.message, "headers must be true or false"
+      end
+
       def test_renders_sortable_column_headers
         render_inline(Component.new(
           data: @users,
