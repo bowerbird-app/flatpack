@@ -36,10 +36,11 @@
     name: row_form.field_name(:role),
     id: row_form.field_id(:role),
     label: "Role",
-    options: DemoProjectPerson::ROLES,
+    options: DemoProjectPerson.role_options,
     value: object.role,
     placeholder: "Role",
     error: role_error,
+    searchable: true,
     chrome: :cell
   ) %>
 <% end %>

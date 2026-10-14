@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.236] - 2026-10-14
+
+### Added
+- `FlatPack::Table::Component` accepts `headers: false` (default `true`). The header row stays in the DOM and is visually hidden with `sr-only`. Column `title:` stays required. Demo: `/demo/tables/basic#table-without-headers`.
+- `FlatPack::Select::Component` option hashes accept `icon:` (a Heroicon name). The custom menu, the closed control, multiselect chips, nested parent and child rows, and remote search results show it before the label. Icons are decorative. Demo: `/demo/forms/select#select-with-icons`.
+
+### Changed
+- Bumped the gem version to `0.1.236`.
+- A searchable select inside a collection editor cell can open its menu past the card edge.
+
+### Upgrade notes
+- Additive. Existing tables keep visible headers. Existing selects without `icon:` look the same.
+- `headers` must be `true` or `false`. `title:` is still required when headers are hidden.
+- `icon:` is a Heroicon name such as `"camera"`. The icon uses `FlatPack::Shared::IconComponent` size `:sm`, matching the `text-sm` select. A native `<select>` cannot draw icons.
+- Remote select JSON may include `"icon"` on each item. Local options use the same key, including `children`.
+- Rebuild host Tailwind so `sr-only` is generated if it is not already. Reload kit CSS so a collection editor card can show an open select menu, and reload kit JavaScript so select icons update after a search.
+- Redeploy so `meta.gem_version` shows `0.1.236`.
+
 ## [0.1.235] - 2026-10-14
 
 ### Added

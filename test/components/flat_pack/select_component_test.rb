@@ -413,6 +413,92 @@ module FlatPack
         assert_selector "select#color-select"
       end
 
+      def test_native_select_ignores_option_icons
+        render_inline(Component.new(
+          name: "priority",
+          options: [{label: "High", value: "high", icon: "arrow-up"}],
+          value: "high"
+        ))
+
+        assert_selector "select option", text: "High"
+        refute_selector "option svg"
+        refute_selector "[data-flat-pack--icon-name-value='arrow-up']"
+      end
+
+      def test_searchable_select_shows_icon_in_menu_and_closed_control
+        render_inline(Component.new(
+          name: "priority",
+          options: [
+            {label: "Low", value: "low", icon: "arrow-down"},
+            {label: "High", value: "high", icon: "arrow-up"}
+          ],
+          value: "high",
+          searchable: true
+        ))
+
+        assert_selector "[data-flat-pack--select-target='valueIcon'] svg[data-flat-pack--icon-name-value='arrow-up'][aria-hidden='true']"
+        assert_selector "[data-flat-pack--select-target='valueLabel']", text: "High"
+        assert_selector "[role='option'][data-value='low'][data-icon='arrow-down'] svg[data-flat-pack--icon-name-value='arrow-down'][aria-hidden='true']"
+        assert_selector "[role='option'][data-value='high'] span", text: "High"
+        assert_selector "[role='option'][data-value='high'].flex.items-center"
+      end
+
+      def test_searchable_multiselect_chips_include_option_icons
+        render_inline(Component.new(
+          name: "priorities",
+          options: [{label: "High", value: "high", icon: "arrow-up"}],
+          value: ["high"],
+          searchable: true,
+          multiple: true
+        ))
+
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='high'] svg[data-flat-pack--icon-name-value='arrow-up'][aria-hidden='true']"
+        assert_selector "[data-flat-pack--select-target='chip'][data-value='high']", text: "High"
+      end
+
+      def test_nested_options_keep_icons_on_parents_and_children
+        render_inline(Component.new(
+          name: "places",
+          options: [
+            {
+              label: "Australia",
+              value: "australia",
+              icon: "globe-alt",
+              children: [{label: "VIC", value: "vic", icon: "map-pin"}]
+            }
+          ],
+          multiple: true,
+          searchable: true
+        ))
+
+        assert_selector "[role='option'][data-option-type='parent'][data-icon='globe-alt'] svg[data-flat-pack--icon-name-value='globe-alt']"
+        assert_selector "[role='option'][data-option-type='child'][data-icon='map-pin'] svg[data-flat-pack--icon-name-value='map-pin']"
+        assert_selector "[role='option'][data-value='australia']", text: "Australia"
+      end
+
+      def test_cell_chrome_keeps_the_selected_icon
+        render_inline(Component.new(
+          name: "role",
+          label: "Role",
+          options: [{label: "Designer", value: "Designer", icon: "swatch"}],
+          value: "Designer",
+          searchable: true,
+          chrome: :cell
+        ))
+
+        assert_selector "button.flat-pack-select-trigger.border-0 svg[data-flat-pack--icon-name-value='swatch'][aria-hidden='true']"
+        assert_selector "[data-flat-pack--select-target='valueLabel']", text: "Designer"
+        assert_selector ".flat-pack-select-wrapper.flat-pack-input-wrapper"
+      end
+
+      def test_rejects_an_unsafe_option_icon
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "role", options: [{label: "Designer", value: "Designer", icon: "not an icon"}])
+        end
+
+        assert_includes error.message, "Invalid icon"
+      end
+
       def test_renders_with_all_parameters
         render_inline(Component.new(
           name: "size",

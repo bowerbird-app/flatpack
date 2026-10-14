@@ -423,13 +423,13 @@ class PagesController < ApplicationController
     query = params[:q].to_s.strip.downcase
 
     options = [
-      {label: "Alice Johnson", value: "alice-johnson"},
-      {label: "Bob Smith", value: "bob-smith"},
-      {label: "Carla Gomez", value: "carla-gomez"},
-      {label: "David Nguyen", value: "david-nguyen"},
-      {label: "Ethan Brown", value: "ethan-brown"},
-      {label: "Fatima Ali", value: "fatima-ali"},
-      {label: "Grace Lee", value: "grace-lee"}
+      {label: "Alice Johnson", value: "alice-johnson", icon: "user"},
+      {label: "Bob Smith", value: "bob-smith", icon: "user"},
+      {label: "Carla Gomez", value: "carla-gomez", icon: "user"},
+      {label: "David Nguyen", value: "david-nguyen", icon: "user"},
+      {label: "Ethan Brown", value: "ethan-brown", icon: "user"},
+      {label: "Fatima Ali", value: "fatima-ali", icon: "user"},
+      {label: "Grace Lee", value: "grace-lee", icon: "user"}
     ]
 
     results = if query.blank?

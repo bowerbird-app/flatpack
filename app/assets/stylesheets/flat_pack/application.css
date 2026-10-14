@@ -1945,7 +1945,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   padding: 0;
 }
 
-.flat-pack-collection-editor-card:has(.flat-pack-collection-editor-results.is-open) {
+.flat-pack-collection-editor-card:has(.flat-pack-collection-editor-results.is-open),
+.flat-pack-collection-editor-card:has([data-flat-pack--select-target="dropdown"]:not(.hidden)) {
   overflow: visible;
 }
 
@@ -2002,7 +2003,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   border-bottom: 0;
 }
 
-.flat-pack-collection-editor-row:has(.flat-pack-collection-editor-results.is-open) {
+.flat-pack-collection-editor-row:has(.flat-pack-collection-editor-results.is-open),
+.flat-pack-collection-editor-row:has([data-flat-pack--select-target="dropdown"]:not(.hidden)) {
   position: relative;
   z-index: 4;
 }

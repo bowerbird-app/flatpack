@@ -212,3 +212,95 @@
     title: "Select Examples"
   ) %>
 </section>
+
+<section id="select-with-icons" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Icons",
+    anchor_link: true,
+    subtitle: "A Heroicon sits before the label. The native select skips it."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)]", style: "overflow: visible") do %>
+      <%= render FlatPack::Select::Component.new(
+        name: "priority",
+        id: "priority-select",
+        options: [
+          {label: "Low", value: "low", icon: "arrow-down"},
+          {label: "Medium", value: "medium", icon: "minus"},
+          {label: "High", value: "high", icon: "arrow-up"}
+        ],
+        label: "Priority",
+        value: "high",
+        placeholder: "Choose a priority",
+        help_text: "The closed control keeps the icon for the selected value.",
+        searchable: true
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        name: "channels",
+        id: "channels-select",
+        options: [
+          {label: "Mail", value: "mail", icon: "envelope"},
+          {label: "Chat", value: "chat", icon: "chat-bubble-left"},
+          {label: "Phone", value: "phone", icon: "phone"}
+        ],
+        label: "Channels",
+        value: ["mail"],
+        placeholder: "Add a channel",
+        help_text: "Each chip keeps its icon.",
+        searchable: true,
+        multiple: true
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        name: "regions",
+        options: [
+          {
+            label: "Australia",
+            value: "australia",
+            icon: "globe-alt",
+            children: [
+              {label: "VIC", value: "vic", icon: "map-pin"},
+              {label: "NSW", value: "nsw", icon: "map-pin"}
+            ]
+          }
+        ],
+        label: "Regions",
+        placeholder: "Select regions",
+        help_text: "Parents and children can each carry an icon.",
+        searchable: true,
+        multiple: true
+      ) %>
+
+      <%= render FlatPack::Select::Component.new(
+        name: "native_priority",
+        options: [
+          {label: "Low", value: "low", icon: "arrow-down"},
+          {label: "High", value: "high", icon: "arrow-up"}
+        ],
+        label: "Native priority",
+        value: "high",
+        help_text: "A native select still submits the value. It cannot draw the icon."
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Select::Component.new(
+        name: &quot;priority&quot;,
+        options: [
+          { label: &quot;Low&quot;, value: &quot;low&quot;, icon: &quot;arrow-down&quot; },
+          { label: &quot;Medium&quot;, value: &quot;medium&quot;, icon: &quot;minus&quot; },
+          { label: &quot;High&quot;, value: &quot;high&quot;, icon: &quot;arrow-up&quot; }
+        ],
+        label: &quot;Priority&quot;,
+        value: &quot;high&quot;,
+        searchable: true
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Select option icons"
+  ) %>
+</section>

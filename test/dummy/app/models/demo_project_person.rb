@@ -2,6 +2,16 @@
 
 class DemoProjectPerson < ApplicationRecord
   ROLES = %w[Designer Photographer Producer Editor].freeze
+  ROLE_ICONS = {
+    "Designer" => "swatch",
+    "Photographer" => "camera",
+    "Producer" => "megaphone",
+    "Editor" => "pencil-square"
+  }.freeze
+
+  def self.role_options
+    ROLES.map { |role| {label: role, value: role, icon: ROLE_ICONS[role]} }
+  end
 
   belongs_to :project, class_name: "DemoProject", inverse_of: :project_people
   belongs_to :person, class_name: "DemoPerson", inverse_of: :project_people
