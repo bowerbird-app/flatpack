@@ -47,7 +47,7 @@ Default block content is also accepted: each direct child is a cell.
     <% end %>
   <% end %>
   <% masonry.with_item do %>
-    <%= render FlatPack::Card::Component.new(style: :outlined) { "Notes from the jetty" } %>
+    <%= render FlatPack::Card::Component.new(border: :strong) { "Notes from the jetty" } %>
   <% end %>
 <% end %>
 ```

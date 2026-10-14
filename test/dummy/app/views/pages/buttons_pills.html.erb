@@ -70,21 +70,21 @@
     </div>
 
     <div class="space-y-4 mb-4">
-      <%= render FlatPack::Card::Component.new(id: "pill-anchor-account", tone: :shaded, padding: :lg, class: "scroll-mt-24") do %>
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-account", style: :shaded, border: :none, padding: :lg, class: "scroll-mt-24") do %>
         <h4 class="text-lg font-semibold mb-2">Account Preferences</h4>
         <p class="text-(--surface-content-color)">
           Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.
         </p>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(id: "pill-anchor-billing", tone: :shaded, padding: :lg, class: "scroll-mt-24") do %>
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-billing", style: :shaded, border: :none, padding: :lg, class: "scroll-mt-24") do %>
         <h4 class="text-lg font-semibold mb-2">Billing Settings</h4>
         <p class="text-(--surface-content-color)">
           Same-page anchors work well for settings pages where the active pill should follow the section without forcing a full-page navigation.
         </p>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(id: "pill-anchor-members", tone: :shaded, padding: :lg, class: "scroll-mt-24") do %>
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-members", style: :shaded, border: :none, padding: :lg, class: "scroll-mt-24") do %>
         <h4 class="text-lg font-semibold mb-2">Team Members</h4>
         <p class="text-(--surface-content-color)">
           Reuse the same active and inactive pill classes so the visual treatment stays aligned with the tabs pills variant.
@@ -176,7 +176,7 @@
       ]
     ) %>
 
-    <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg, class: "mb-4") do %>
+    <%= render FlatPack::Card::Component.new(style: :shaded, border: :none, padding: :lg, class: "mb-4") do %>
       <h4 class="text-lg font-semibold mb-2"><%= slide_pill.capitalize %></h4>
       <p class="text-(--surface-content-color)">
         Active pill is <code>aria-current="page"</code> after the visit. Pass <code>indicator: :slide</code>.
@@ -211,7 +211,7 @@
       ]
     ) %>
 
-    <%= render FlatPack::Card::Component.new(tone: :shaded, padding: :lg, class: "mb-4") do %>
+    <%= render FlatPack::Card::Component.new(style: :shaded, border: :none, padding: :lg, class: "mb-4") do %>
       <h4 class="text-lg font-semibold mb-2">Account Preferences</h4>
       <p class="text-(--surface-content-color) mb-2">
         Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.

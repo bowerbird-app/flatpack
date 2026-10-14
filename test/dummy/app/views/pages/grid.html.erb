@@ -13,7 +13,7 @@
   </p>
   <%= render FlatPack::Grid::Component.new do %>
     <% 6.times do |i| %>
-      <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
         <% card.body do %>
           <h3 class="font-semibold mb-2">Item <%= i + 1 %></h3>
           <p class="text-sm text-[var(--surface-muted-content-color)]">
@@ -45,7 +45,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "2-Column Grid", anchor_link: true, subtitle: "Examples for 2-Column Grid.") %>
   <%= render FlatPack::Grid::Component.new(cols: 2) do %>
     <% 4.times do |i| %>
-      <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+      <%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
         <% card.body do %>
           <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-lg bg-primary flex items-center justify-center text-white font-bold">
@@ -116,7 +116,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Product Grid Example", anchor_link: true, subtitle: "Examples for Product Grid Example.") %>
   <%= render FlatPack::Grid::Component.new(cols: 3) do %>
     <% @products.first(6).each do |product| %>
-      <%= render FlatPack::Card::Component.new(style: :outlined, hover: :subtle) do |card| %>
+      <%= render FlatPack::Card::Component.new(border: :strong, hover: :subtle) do |card| %>
         <% card.media do %>
           <div class="h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
             <%= render FlatPack::Shared::IconComponent.new(name: :box, size: :lg, class: "text-blue-600") %>
@@ -142,7 +142,7 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::Grid::Component.new(cols: 3) do %&gt;
         &lt;% @products.first(6).each do |product| %&gt;
-          &lt;%= render FlatPack::Card::Component.new(style: :outlined, hover: :subtle) do |card| %&gt;
+          &lt;%= render FlatPack::Card::Component.new(border: :strong, hover: :subtle) do |card| %&gt;
             &lt;% card.media do %&gt;
               &lt;div class=&quot;h-48 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center&quot;&gt;
                 &lt;%= render FlatPack::Shared::IconComponent.new(name: :box, size: :lg, class: &quot;text-blue-600&quot;) %&gt;

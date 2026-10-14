@@ -22,86 +22,75 @@ module FlatPack
       def test_renders_with_style_default
         render_inline(Component.new(style: :default))
         html = page.native.to_html
-        assert_includes html, "[background:var(--card-tone-default-background)]"
+        assert_includes html, "[background:var(--card-style-default-background)]"
         assert_includes html, "border border-[var(--card-border-color)]"
-        assert_includes html, 'data-tone="default"'
+        assert_includes html, 'data-style="default"'
+        refute_includes html, "shadow-[var(--shadow-md)]"
+        refute_includes html, "fp-card-hover-"
         refute_includes html, "bg-[var(--card-background-color)]"
       end
 
-      def test_renders_with_style_elevated
-        render_inline(Component.new(style: :elevated))
-        assert_includes page.native.to_html, "shadow-md"
-        assert_includes page.native.to_html, "border border-[var(--card-border-color)]"
-      end
+      def test_renders_shaded_brand_and_gradient_styles
+        render_inline(Component.new(style: :shaded))
+        shaded = page.native.to_html
+        assert_includes shaded, "[background:var(--card-style-shaded-background)]"
+        assert_includes shaded, "[--surface-content-color:var(--card-style-shaded-text-color)]"
+        assert_includes shaded, "[--surface-muted-content-color:var(--card-style-shaded-muted-text-color)]"
+        assert_includes shaded, "[--card-border-color:var(--card-style-shaded-border-color)]"
+        assert_includes shaded, 'data-style="shaded"'
 
-      def test_renders_with_style_outlined
-        render_inline(Component.new(style: :outlined))
-        assert_includes page.native.to_html, "border-2"
-      end
+        render_inline(Component.new(style: :brand, shadow: :md))
+        brand = page.native.to_html
+        assert_includes brand, "[background:var(--card-style-brand-background)]"
+        assert_includes brand, "[--surface-content-color:var(--card-style-brand-text-color)]"
+        assert_includes brand, "[--surface-border-color:var(--card-style-brand-border-color)]"
+        assert_includes brand, "shadow-[var(--shadow-md)]"
+        assert_includes brand, 'data-style="brand"'
+        refute_includes brand, "bg-[var(--card-background-color)]"
 
-      def test_rejects_removed_flat_style
-        error = assert_raises(ArgumentError) do
-          render_inline(Component.new(style: :flat))
-        end
-        assert_includes error.message, "Invalid style"
-      end
-
-      def test_renders_shaded_tone
-        render_inline(Component.new(tone: :shaded))
-        html = page.native.to_html
-        assert_includes html, "[background:var(--card-tone-shaded-background)]"
-        assert_includes html, "[--surface-content-color:var(--card-tone-shaded-text-color)]"
-        assert_includes html, "[--surface-muted-content-color:var(--card-tone-shaded-muted-text-color)]"
-        assert_includes html, "[--card-border-color:var(--card-tone-shaded-border-color)]"
-        assert_includes html, 'data-tone="shaded"'
-        assert_includes html, "border border-[var(--card-border-color)]"
-      end
-
-      def test_renders_brand_and_gradient_tones
-        render_inline(Component.new(tone: :brand, style: :elevated))
-        html = page.native.to_html
-        assert_includes html, "[background:var(--card-tone-brand-background)]"
-        assert_includes html, "[--surface-content-color:var(--card-tone-brand-text-color)]"
-        assert_includes html, "[--surface-border-color:var(--card-tone-brand-border-color)]"
-        assert_includes html, 'data-tone="brand"'
-        assert_includes html, "shadow-md"
-        refute_includes html, "bg-[var(--card-background-color)]"
-
-        render_inline(Component.new(tone: :gradient))
+        render_inline(Component.new(style: :gradient))
         gradient = page.native.to_html
-        assert_includes gradient, "[background:var(--card-tone-gradient-background)]"
-        assert_includes gradient, 'data-tone="gradient"'
+        assert_includes gradient, "[background:var(--card-style-gradient-background)]"
+        assert_includes gradient, 'data-style="gradient"'
 
-        render_inline(Component.new(tone: :brand_subtle, style: :outlined))
+        render_inline(Component.new(style: :brand_subtle, border: :strong))
         subtle = page.native.to_html
-        assert_includes subtle, "[background:var(--card-tone-brand-subtle-background)]"
+        assert_includes subtle, "[background:var(--card-style-brand-subtle-background)]"
         assert_includes subtle, "border-2"
-        assert_includes subtle, 'data-tone="brand_subtle"'
+        assert_includes subtle, 'data-style="brand_subtle"'
       end
 
-      def test_renders_with_style_interactive
-        render_inline(Component.new(style: :interactive))
-        assert_includes page.native.to_html, "fp-card-hover-strong"
-      end
-
-      def test_renders_with_style_list
-        render_inline(Component.new(style: :list))
-        assert_includes page.native.to_html, "fp-card-hover-subtle"
+      def test_shadow_and_border_are_independent_of_style
+        render_inline(Component.new(shadow: :sm, border: :none))
+        html = page.native.to_html
+        assert_includes html, "shadow-[var(--shadow-sm)]"
+        refute_includes html, "border border-[var(--card-border-color)]"
+        refute_includes html, "border-2"
       end
 
       def test_renders_with_hover_subtle
-        render_inline(Component.new(style: :outlined, hover: :subtle))
+        render_inline(Component.new(border: :strong, hover: :subtle))
         assert_includes page.native.to_html, "fp-card-hover-subtle"
       end
 
       def test_renders_with_hover_strong
-        render_inline(Component.new(style: :outlined, hover: :strong))
+        render_inline(Component.new(border: :strong, hover: :strong))
         assert_includes page.native.to_html, "fp-card-hover-strong"
       end
 
-      def test_hover_none_overrides_style_default
-        render_inline(Component.new(style: :interactive, hover: :none))
+      def test_hover_defaults_to_none
+        render_inline(Component.new)
         refute_includes page.native.to_html, "fp-card-hover-strong"
+        refute_includes page.native.to_html, "fp-card-hover-subtle"
+      end
+
+      def test_rejects_removed_structural_styles
+        %i[flat elevated outlined interactive list].each do |style|
+          error = assert_raises(ArgumentError) do
+            render_inline(Component.new(style: style))
+          end
+          assert_includes error.message, "Invalid style"
+        end
       end
 
       def test_validates_style
@@ -154,19 +143,20 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "background-color: transparent"
-        assert_includes html, "[background:var(--card-tone-default-background)]"
+        assert_includes html, "[background:var(--card-style-default-background)]"
         refute_includes html, "--card-background-color:"
       end
 
-      def test_validates_tone
+      def test_rejects_unknown_tone_keyword
         error = assert_raises(ArgumentError) do
-          render_inline(Component.new(tone: :accent))
+          render_inline(Component.new(tone: :brand))
         end
-        assert_includes error.message, "Invalid tone"
+        assert_includes error.message, "unknown keyword"
+        assert_includes error.message, "tone"
       end
 
-      def test_brand_tone_rescopes_surface_tokens_for_nested_controls
-        render_inline(Component.new(tone: :brand)) do |card|
+      def test_brand_style_rescopes_surface_tokens
+        render_inline(Component.new(style: :brand)) do |card|
           card.footer do
             <<~HTML.html_safe
               <button class="bg-[var(--button-primary-background-color)] text-[var(--button-primary-text-color)]">
@@ -177,9 +167,9 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "[--surface-content-color:var(--card-tone-brand-text-color)]"
-        assert_includes html, "[--surface-muted-content-color:var(--card-tone-brand-muted-text-color)]"
-        assert_includes html, "[--surface-border-color:var(--card-tone-brand-border-color)]"
+        assert_includes html, "[--surface-content-color:var(--card-style-brand-text-color)]"
+        assert_includes html, "[--surface-muted-content-color:var(--card-style-brand-muted-text-color)]"
+        assert_includes html, "[--surface-border-color:var(--card-style-brand-border-color)]"
         assert_includes html, "bg-[var(--button-primary-background-color)]"
         refute_includes html, "#101820"
       end
@@ -500,33 +490,33 @@ module FlatPack
         assert_includes error.message, "Invalid trend_direction"
       end
 
-      def test_stat_component_applies_tone
+      def test_stat_component_applies_style
         render_inline(Stat::Component.new(
           value: "$12,400",
           label: "Monthly revenue",
           trend: "+4%",
           trend_direction: :up,
-          tone: :brand
+          style: :brand
         ))
 
         html = page.native.to_html
-        assert_includes html, "[background:var(--card-tone-brand-background)]"
-        assert_includes html, "[--surface-content-color:var(--card-tone-brand-text-color)]"
-        assert_includes html, 'data-tone="brand"'
+        assert_includes html, "[background:var(--card-style-brand-background)]"
+        assert_includes html, "[--surface-content-color:var(--card-style-brand-text-color)]"
+        assert_includes html, 'data-style="brand"'
         assert_includes html, "fp-card"
       end
 
-      def test_stat_component_rejects_unknown_tone
+      def test_stat_component_rejects_unknown_style
         error = assert_raises(ArgumentError) do
           render_inline(Stat::Component.new(
             value: "1",
             label: "Count",
             trend: "0",
             trend_direction: :up,
-            tone: :flat
+            style: :flat
           ))
         end
-        assert_includes error.message, "Invalid tone"
+        assert_includes error.message, "Invalid style"
       end
 
       # System Arguments Tests
@@ -551,14 +541,8 @@ module FlatPack
       end
 
       # Integration Tests
-      def test_interactive_card_has_correct_classes
-        render_inline(Component.new(style: :interactive))
-        html = page.native.to_html
-        assert_includes html, "fp-card-hover-strong"
-      end
-
-      def test_clickable_interactive_card_applies_to_link
-        render_inline(Component.new(style: :interactive, clickable: true, href: "/test"))
+      def test_strong_hover_applies_to_clickable_card
+        render_inline(Component.new(hover: :strong, clickable: true, href: "/test"))
         assert_selector "a[href='/test']"
         html = page.native.to_html
         assert_includes html, "fp-card-hover-strong"
@@ -623,7 +607,7 @@ module FlatPack
       end
 
       def test_multiple_style_variants_apply_correctly
-        [:default, :elevated, :outlined, :interactive, :list].each do |style|
+        [:default, :shaded, :brand, :brand_subtle, :gradient].each do |style|
           render_inline(Component.new(style: style))
           # Each style should render without errors
           assert_selector "div"

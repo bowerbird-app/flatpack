@@ -119,7 +119,7 @@
         <%= render "pages/masonry_tile", photo: masonry_photos.first %>
       <% end %>
       <% masonry.with_item do %>
-        <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+        <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
           <% card.body do %>
             <h3 class="font-semibold mb-2">Jetty notes</h3>
             <p class="text-sm text-[var(--surface-muted-content-color)]">

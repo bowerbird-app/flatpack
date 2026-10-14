@@ -11,7 +11,7 @@
   ) %>
 
   <%= render FlatPack::Grid::Component.new(cols: 2) do %>
-    <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+    <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Column One</h3>
         <p class="text-sm text-(--surface-muted-content-color)">
@@ -20,7 +20,7 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+    <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Column Two</h3>
         <p class="text-sm text-(--surface-muted-content-color)">

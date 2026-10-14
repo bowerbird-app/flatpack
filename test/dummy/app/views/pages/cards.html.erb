@@ -10,8 +10,8 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Overview", anchor_link: true) %>
   <p class="text-[var(--surface-muted-content-color)] mb-6">
-    Cards combine media, header, body, and footer slots. Style is the border and shadow. Tone is the fill.
-    Explore styles, tones, media, and composed examples below.
+    Cards combine media, header, body, and footer slots. Style is the colour. Shadow, border, and hover are separate.
+    Explore colour, slots, media, and composed examples below.
   </p>
 
   <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
@@ -23,11 +23,11 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(tone: :brand, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(style: :brand, hover: :subtle) do |card| %>
       <% card.body do %>
-        <h3 class="text-lg font-semibold mb-2">Tones</h3>
+        <h3 class="text-lg font-semibold mb-2">Colour</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Surface, shaded, brand, soft brand, and gradient fills.</p>
-        <%= render FlatPack::Button::Component.new(text: "View tones", style: :primary, size: :sm, href: demo_cards_tones_path) %>
+        <%= render FlatPack::Button::Component.new(text: "View colour", style: :default, size: :sm, href: demo_cards_tones_path) %>
       <% end %>
     <% end %>
 
@@ -56,7 +56,7 @@
     Recommended default for grid layouts: edge-to-edge top media, subtle hover interaction, and icon actions at the bottom.
   </p>
   <div class="max-w-sm mb-4">
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "shadow-md dark:shadow-lg") do |card| %>
+    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, shadow: :md) do |card| %>
       <% card.media(aspect_ratio: "16/9", padding: :none) do %>
         <%= image_tag "https://picsum.photos/800/450?random=21", class: "w-full h-full object-cover", alt: "Grid default card media" %>
       <% end %>
@@ -78,7 +78,7 @@
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "shadow-md dark:shadow-lg") do |card| %&gt;
+      &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, shadow: :md) do |card| %&gt;
         &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
           &lt;%= image_tag "https://picsum.photos/800/450?random=21", class: "w-full h-full object-cover", alt: "Grid default card media" %&gt;
         &lt;% end %&gt;

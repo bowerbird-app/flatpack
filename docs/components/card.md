@@ -4,7 +4,7 @@
 Render a flexible content container with optional structured header, body, footer, and media sections.
 
 ## When to use
-Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Colour fill is `tone:`. `style:` is the border, shadow, and hover. Do not pass raw colours.
+Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Colour fill is `style:`. Shadow, border, and hover are separate. Do not pass raw colours.
 
 ## Class
 - Primary: `FlatPack::Card::Component`
@@ -13,9 +13,10 @@ Use Card to group related content in a consistent surface with optional hover an
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `style` | Symbol | `:default` | no | Structure only: `:default`, `:elevated`, `:outlined`, `:interactive`, `:list`. Border, shadow, and hover. Invalid values raise `ArgumentError`. `:flat` is removed. |
-| `tone` | Symbol | `:default` | no | Colour fill: `:default` (surface), `:shaded` (soft grey), `:brand` (solid brand colour and contrasting text), `:brand_subtle` (light brand tint and normal text), `:gradient` (brand gradient and contrasting text). One tone per card. Invalid values raise `ArgumentError`. |
-| `hover` | Symbol | `nil` | no | Explicit hover mode: `:none`, `:subtle`, `:strong`; when `nil`, style default applies (`:interactive` => `:strong`, `:list` => `:subtle`, others => `:none`). Invalid values raise `ArgumentError`. |
+| `style` | Symbol | `:default` | no | Colour fill: `:default` (surface), `:shaded` (soft grey), `:brand` (solid brand colour and contrasting text), `:brand_subtle` (light brand tint and normal text), `:gradient` (brand gradient and contrasting text). Sets background, text, muted text, and border colour only. Invalid values raise `ArgumentError`. |
+| `shadow` | Symbol | `:none` | no | `:none`, `:sm`, `:md`. Uses `--shadow-sm` and `--shadow-md`, which dark themes already draw larger. Invalid values raise `ArgumentError`. |
+| `border` | Symbol | `:default` | no | `:none`, `:default` (1px), `:strong` (2px). The colour comes from the style. Invalid values raise `ArgumentError`. |
+| `hover` | Symbol | `:none` | no | `:none`, `:subtle`, `:strong`. Subtle washes the fill. Strong lifts the shadow and shifts the border colour. Invalid values raise `ArgumentError`. |
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
@@ -45,30 +46,31 @@ Slot props:
 | `media.padding` | Symbol | `:md` | no | Media inset spacing: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 
 ## Variants
-- Style variants: `:default`, `:elevated`, `:outlined`, `:interactive`, `:list`.
-- Tone variants: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`.
-- Hover variants: `:none`, `:subtle`, `:strong` (or style-derived when omitted).
+- Style variants: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`.
+- Shadow variants: `:none`, `:sm`, `:md`.
+- Border variants: `:none`, `:default`, `:strong`.
+- Hover variants: `:none`, `:subtle`, `:strong`.
 
-## Tones
-Each tone is four theme tokens. `background` is a `background` value so a gradient can live there. Host themes set the colours. The card does not take a raw colour.
+## Styles
+Each style is four theme tokens. `background` is a `background` value so a gradient can live there. Host themes set the colours. The card does not take a raw colour.
 
-The card writes those tokens back onto `--surface-content-color`, `--surface-muted-content-color`, `--surface-border-color`, and `--card-border-color` for its subtree. Nested text and icons that read those tokens stay with the tone. On `:brand` and `:gradient`, button and badge aliases are rebound to that text and border so a primary button does not disappear into the fill.
+The card writes those tokens back onto `--surface-content-color`, `--surface-muted-content-color`, `--surface-border-color`, and `--card-border-color` for its subtree. Nested text and icons that read those tokens stay with the style. Button and badge colours stay the host's choice.
 
-| tone | background | text | muted text | border |
+| style | background | text | muted text | border |
 |---|---|---|---|---|
-| `:default` | `--card-tone-default-background` | `--card-tone-default-text-color` | `--card-tone-default-muted-text-color` | `--card-tone-default-border-color` |
-| `:shaded` | `--card-tone-shaded-background` | `--card-tone-shaded-text-color` | `--card-tone-shaded-muted-text-color` | `--card-tone-shaded-border-color` |
-| `:brand` | `--card-tone-brand-background` | `--card-tone-brand-text-color` | `--card-tone-brand-muted-text-color` | `--card-tone-brand-border-color` |
-| `:brand_subtle` | `--card-tone-brand-subtle-background` | `--card-tone-brand-subtle-text-color` | `--card-tone-brand-subtle-muted-text-color` | `--card-tone-brand-subtle-border-color` |
-| `:gradient` | `--card-tone-gradient-background` | `--card-tone-gradient-text-color` | `--card-tone-gradient-muted-text-color` | `--card-tone-gradient-border-color` |
+| `:default` | `--card-style-default-background` | `--card-style-default-text-color` | `--card-style-default-muted-text-color` | `--card-style-default-border-color` |
+| `:shaded` | `--card-style-shaded-background` | `--card-style-shaded-text-color` | `--card-style-shaded-muted-text-color` | `--card-style-shaded-border-color` |
+| `:brand` | `--card-style-brand-background` | `--card-style-brand-text-color` | `--card-style-brand-muted-text-color` | `--card-style-brand-border-color` |
+| `:brand_subtle` | `--card-style-brand-subtle-background` | `--card-style-brand-subtle-text-color` | `--card-style-brand-subtle-muted-text-color` | `--card-style-brand-subtle-border-color` |
+| `:gradient` | `--card-style-gradient-background` | `--card-style-gradient-text-color` | `--card-style-gradient-muted-text-color` | `--card-style-gradient-border-color` |
 
-Light mode defines every token on `:root, [data-theme]`. Default follows `--card-background-color`. Shaded follows `--card-background-muted-color`. Brand follows `--color-primary` and `--color-primary-text`. Soft brand mixes the primary into the surface. The gradient runs from `--color-primary` toward a darker mix so contrasting text stays readable. Dark mode overrides only `--card-tone-gradient-background`, lifting the gradient toward white so dark primary text still reads. The other tones follow the dark semantic tokens.
+Light mode defines every token on `:root, [data-theme]`. Default follows `--card-background-color`. Shaded follows `--card-background-muted-color`. Brand follows `--color-primary` and `--color-primary-text`. Soft brand mixes the primary into the surface. The gradient runs from `--color-primary` toward a darker mix so contrasting text stays readable. Dark mode overrides only `--card-style-gradient-background`, lifting the gradient toward white so dark primary text still reads. The other styles follow the dark semantic tokens.
 
-`FlatPack::Card::Stat::Component` takes the same `tone:` and paints that fill on itself.
+`FlatPack::Card::Stat::Component` takes the same `style:` and paints that fill on itself.
 
 ## Example
 ```erb
-<%= render FlatPack::Card::Component.new(style: :interactive, clickable: true, href: post_path(@post)) do |card| %>
+<%= render FlatPack::Card::Component.new(hover: :strong, clickable: true, href: post_path(@post)) do |card| %>
   <% card.header do %>
     <h3 class="text-lg font-semibold"><%= @post.title %></h3>
   <% end %>
@@ -80,11 +82,11 @@ Light mode defines every token on `:root, [data-theme]`. Default follows `--card
 ```
 
 ```erb
-<%= render FlatPack::Card::Component.new(style: :elevated, tone: :brand) do |card| %>
+<%= render FlatPack::Card::Component.new(style: :brand, shadow: :md) do |card| %>
   <% card.body do %>
     <h3 class="text-lg font-semibold">Paid plan</h3>
     <p class="text-sm text-[var(--surface-muted-content-color)]">Renews on the first.</p>
-    <%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %>
+    <%= render FlatPack::Button::Component.new(text: "Add money", style: :default) %>
   <% end %>
 <% end %>
 ```
@@ -95,7 +97,7 @@ Light mode defines every token on `:root, [data-theme]`. Default follows `--card
   label: "Monthly revenue",
   trend: "+4%",
   trend_direction: :up,
-  tone: :shaded
+  style: :shaded
 ) %>
 ```
 

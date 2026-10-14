@@ -253,9 +253,10 @@
       label: "Card",
       method_call: "render FlatPack::Card::Component.new(style: :default, padding: :md) do |card| ... end",
       variables: [
-        { variable: "style", accepts: ":default, :elevated, :outlined, :interactive, :list", example: "style: :outlined" },
-        { variable: "tone", accepts: ":default, :shaded, :brand, :brand_subtle, :gradient", example: "tone: :brand" },
-        { variable: "hover", accepts: "nil, :none, :subtle, :strong", example: "hover: :subtle" },
+        { variable: "style", accepts: ":default, :shaded, :brand, :brand_subtle, :gradient", example: "style: :brand" },
+        { variable: "shadow", accepts: ":none, :sm, :md", example: "shadow: :md" },
+        { variable: "border", accepts: ":none, :default, :strong", example: "border: :strong" },
+        { variable: "hover", accepts: ":none, :subtle, :strong", example: "hover: :subtle" },
         { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :lg" }
       ]
     },

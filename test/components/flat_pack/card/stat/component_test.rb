@@ -20,22 +20,22 @@ module FlatPack
           assert_includes html, "fp-tabular-nums"
           assert_selector "div", text: "Monthly revenue"
           assert_selector "div", text: "$12,400"
-          assert_includes html, 'data-tone="default"'
-          assert_includes html, "[background:var(--card-tone-default-background)]"
+          assert_includes html, 'data-style="default"'
+          assert_includes html, "[background:var(--card-style-default-background)]"
         end
 
-        def test_tone_paints_the_stat_surface
+        def test_style_paints_the_stat_surface
           render_inline(Component.new(
             value: "86",
             label: "New members",
             trend: "+12%",
             trend_direction: :up,
-            tone: :gradient
+            style: :gradient
           ))
 
           html = page.native.to_html
-          assert_includes html, "[background:var(--card-tone-gradient-background)]"
-          assert_includes html, 'data-tone="gradient"'
+          assert_includes html, "[background:var(--card-style-gradient-background)]"
+          assert_includes html, 'data-style="gradient"'
           refute_includes html, "uppercase"
         end
 

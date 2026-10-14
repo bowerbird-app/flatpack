@@ -204,54 +204,9 @@
     cursor: pointer;
   }
 
-  .fp-card-hover-subtle:hover {
-    background-color: var(--card-hover-subtle-background-color);
-  }
-
   .fp-card-hover-strong {
     transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
     cursor: pointer;
-  }
-
-  .fp-card-hover-strong:hover {
-    box-shadow: var(--card-hover-strong-shadow);
-    border-color: var(--card-hover-strong-border-color);
-  }
-
-  /* Brand and gradient fills are dark or bright enough that page-level button
-   * and badge colours disappear. Re-bind those aliases to the tone's text and
-   * border, which the card already wrote onto the surface tokens. */
-  .fp-card[data-tone="brand"],
-  .fp-card[data-tone="gradient"] {
-    --color-ring: var(--surface-content-color);
-    --button-focus-ring-color: var(--surface-content-color);
-    --button-focus-ring-offset-color: transparent;
-    --button-primary-background-color: var(--surface-content-color);
-    --button-primary-hover-background-color: color-mix(in oklab, var(--surface-content-color) 84%, transparent);
-    --button-primary-text-color: var(--color-primary);
-    --button-primary-border-color: var(--surface-content-color);
-    --button-default-background-color: var(--surface-content-color);
-    --button-default-hover-background-color: color-mix(in oklab, var(--surface-content-color) 84%, transparent);
-    --button-default-text-color: var(--color-primary);
-    --button-default-border-color: var(--surface-content-color);
-    --button-secondary-background-color: transparent;
-    --button-secondary-hover-background-color: color-mix(in oklab, var(--surface-content-color) 14%, transparent);
-    --button-secondary-text-color: var(--surface-content-color);
-    --button-secondary-border-color: var(--surface-border-color);
-    --button-ghost-background-color: transparent;
-    --button-ghost-hover-background-color: color-mix(in oklab, var(--surface-content-color) 14%, transparent);
-    --button-ghost-text-color: var(--surface-content-color);
-    --button-ghost-border-color: transparent;
-    --badge-default-background-color: color-mix(in oklab, var(--surface-content-color) 14%, transparent);
-    --badge-default-text-color: var(--surface-content-color);
-    --badge-default-border-color: var(--surface-border-color);
-    --badge-primary-background-color: var(--surface-content-color);
-    --badge-primary-text-color: var(--color-primary);
-    --badge-primary-border-color: var(--surface-content-color);
-    --badge-secondary-background-color: transparent;
-    --badge-secondary-text-color: var(--surface-content-color);
-    --badge-secondary-border-color: var(--surface-border-color);
-    --card-hover-subtle-background-color: color-mix(in oklab, var(--surface-content-color) 12%, var(--color-primary));
   }
 
   .fp-scrollbar-hidden {
@@ -520,12 +475,24 @@
     height: 0;
   }
 
-  @media (prefers-color-scheme: dark) {
-    .fp-card-hover-strong:hover {
-      box-shadow: var(--card-hover-strong-shadow-dark);
-    }
-  }
+}
 
+/* Unlayered so a style fill or shadow utility cannot cover the hover.
+ * Those utilities live in the host Tailwind layer, which beats @layer components.
+ */
+.fp-card-hover-subtle:hover {
+  background-color: var(--card-hover-subtle-background-color);
+}
+
+.fp-card-hover-strong:hover {
+  box-shadow: var(--card-hover-strong-shadow);
+  border-color: var(--card-hover-strong-border-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .fp-card-hover-strong:hover {
+    box-shadow: var(--card-hover-strong-shadow-dark);
+  }
 }
 
 /* Unlayered so host Tailwind preflight cannot zero the side inset.

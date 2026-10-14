@@ -18,9 +18,12 @@ module FlatPack
           }
         }.freeze
 
-        def initialize(value:, label:, trend:, trend_direction:, value_class: nil, tone: :default, **system_arguments)
+        def initialize(value:, label:, trend:, trend_direction:, value_class: nil, style: :default, **system_arguments)
           if system_arguments.key?(:theme)
             raise ArgumentError, "unknown keyword: :theme"
+          end
+          if system_arguments.key?(:tone)
+            raise ArgumentError, "unknown keyword: :tone"
           end
 
           @value = value
@@ -28,11 +31,11 @@ module FlatPack
           @trend = trend
           @trend_direction = trend_direction.to_sym
           @value_class = value_class
-          @tone = tone&.to_sym
+          @style = style&.to_sym
           @system_arguments = system_arguments
 
           validate_trend_direction!
-          validate_tone!
+          validate_style!
         end
 
         def call
@@ -56,7 +59,7 @@ module FlatPack
 
           {
             class: [container_classes, extra_class].compact.join(" "),
-            data: extra_data.merge(tone: @tone.to_s)
+            data: extra_data.merge(style: @style.to_s)
           }.merge(arguments)
         end
 
@@ -67,7 +70,7 @@ module FlatPack
             "p-[var(--card-padding-md)]",
             "text-center",
             "text-[var(--surface-content-color)]",
-            Tone.classes_for(@tone)
+            Style.classes_for(@style)
           ].join(" ")
         end
 
@@ -94,10 +97,10 @@ module FlatPack
             "Invalid trend_direction: #{@trend_direction}. Must be one of: #{TREND_DIRECTIONS.keys.join(", ")}"
         end
 
-        def validate_tone!
-          return if Tone::CLASSES.key?(@tone)
+        def validate_style!
+          return if Style::CLASSES.key?(@style)
 
-          raise ArgumentError, "Invalid tone: #{@tone.inspect}. Must be one of: #{Tone::NAMES.join(", ")}"
+          raise ArgumentError, "Invalid style: #{@style.inspect}. Must be one of: #{Style::NAMES.join(", ")}"
         end
       end
     end

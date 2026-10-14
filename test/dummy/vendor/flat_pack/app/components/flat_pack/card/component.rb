@@ -56,27 +56,23 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "border" "border-[var(--card-border-color)]" "shadow-md" "dark:shadow-lg" "border-2"
-      STYLES = {
+      # "border" "border-[var(--card-border-color)]" "border-2" "shadow-[var(--shadow-sm)]" "shadow-[var(--shadow-md)]"
+      SHADOWS = {
+        none: "",
+        sm: "shadow-[var(--shadow-sm)]",
+        md: "shadow-[var(--shadow-md)]"
+      }.freeze
+
+      BORDERS = {
+        none: "",
         default: "border border-[var(--card-border-color)]",
-        elevated: "border border-[var(--card-border-color)] shadow-md dark:shadow-lg",
-        outlined: "border-2 border-[var(--card-border-color)]",
-        interactive: "border border-[var(--card-border-color)]",
-        list: "border border-[var(--card-border-color)]"
+        strong: "border-2 border-[var(--card-border-color)]"
       }.freeze
 
       HOVERS = {
         none: "",
         subtle: "fp-card-hover-subtle",
         strong: "fp-card-hover-strong"
-      }.freeze
-
-      STYLE_DEFAULT_HOVERS = {
-        default: :none,
-        elevated: :none,
-        outlined: :none,
-        interactive: :strong,
-        list: :subtle
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -91,20 +87,22 @@ module FlatPack
 
       def initialize(
         style: :default,
-        hover: nil,
+        shadow: :none,
+        border: :default,
+        hover: :none,
         clickable: false,
         href: nil,
         padding: :md,
-        tone: :default,
         **system_arguments
       )
         reject_removed_theme!(system_arguments)
         super(**system_arguments)
         @style = style.to_sym
-        @hover = hover&.to_sym
+        @shadow = shadow.to_sym
+        @border = border.to_sym
+        @hover = (hover || :none).to_sym
         @clickable = clickable
         @padding = padding.to_sym
-        @tone = tone&.to_sym
 
         # Sanitize URL for security and validate
         if href
@@ -115,9 +113,10 @@ module FlatPack
         end
 
         validate_style!
+        validate_shadow!
+        validate_border!
         validate_hover!
         validate_padding!
-        validate_tone!
       end
 
       def call
@@ -147,7 +146,7 @@ module FlatPack
       def container_attributes
         attributes = merge_attributes(
           class: card_classes,
-          data: {tone: @tone.to_s}
+          data: {style: @style.to_s}
         )
 
         attributes.delete("style")
@@ -164,8 +163,9 @@ module FlatPack
           "flex",
           "flex-col",
           "text-[var(--surface-content-color)]",
-          tone_classes,
           style_classes,
+          shadow_classes,
+          border_classes,
           hover_classes,
           container_padding_classes
         )
@@ -194,11 +194,15 @@ module FlatPack
       end
 
       def style_classes
-        STYLES.fetch(@style)
+        Style.classes_for(@style)
       end
 
-      def tone_classes
-        Tone.classes_for(@tone)
+      def shadow_classes
+        SHADOWS.fetch(@shadow)
+      end
+
+      def border_classes
+        BORDERS.fetch(@border)
       end
 
       def padding_classes
@@ -206,16 +210,25 @@ module FlatPack
       end
 
       def hover_classes
-        HOVERS.fetch(resolved_hover)
-      end
-
-      def resolved_hover
-        @hover || STYLE_DEFAULT_HOVERS.fetch(@style)
+        HOVERS.fetch(@hover)
       end
 
       def validate_style!
-        return if STYLES.key?(@style)
-        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
+        return if Style::CLASSES.key?(@style)
+
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{Style::NAMES.join(", ")}"
+      end
+
+      def validate_shadow!
+        return if SHADOWS.key?(@shadow)
+
+        raise ArgumentError, "Invalid shadow: #{@shadow}. Must be one of: #{SHADOWS.keys.join(", ")}"
+      end
+
+      def validate_border!
+        return if BORDERS.key?(@border)
+
+        raise ArgumentError, "Invalid border: #{@border}. Must be one of: #{BORDERS.keys.join(", ")}"
       end
 
       def validate_padding!
@@ -224,20 +237,18 @@ module FlatPack
       end
 
       def validate_hover!
-        return if @hover.nil? || HOVERS.key?(@hover)
+        return if HOVERS.key?(@hover)
+
         raise ArgumentError, "Invalid hover: #{@hover}. Must be one of: #{HOVERS.keys.join(", ")}"
       end
 
-      def validate_tone!
-        return if Tone::CLASSES.key?(@tone)
-
-        raise ArgumentError, "Invalid tone: #{@tone}. Must be one of: #{Tone::NAMES.join(", ")}"
-      end
-
       def reject_removed_theme!(system_arguments)
-        return unless system_arguments.key?(:theme)
+        if system_arguments.key?(:theme)
+          raise ArgumentError, "unknown keyword: :theme"
+        end
+        return unless system_arguments.key?(:tone)
 
-        raise ArgumentError, "unknown keyword: :theme"
+        raise ArgumentError, "unknown keyword: :tone"
       end
 
       def validate_href!(original_href)

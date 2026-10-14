@@ -138,7 +138,7 @@
 <!-- Empty State in Cards -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Inside a card", anchor_link: true, subtitle: "Same pattern in a card body: what is missing, then the action.") %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+  <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
     <% card.header do %>
       <h3 class="text-lg font-semibold">Recent activity</h3>
     <% end %>

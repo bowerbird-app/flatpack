@@ -348,11 +348,11 @@
     ) %>
   </section>
 
-  <!-- Brand tone -->
+  <!-- Brand style -->
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Brand tone", anchor_link: true, subtitle: "The fill stays on this card. The card beside it keeps the surface tone.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Brand style", anchor_link: true, subtitle: "The fill stays on this card. The card beside it keeps the surface style.") %>
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :elevated, tone: :brand) do |card| %>
+      <%= render FlatPack::Card::Component.new(style: :brand, shadow: :md) do |card| %>
         <% card.header(divider: false) do %>
           <div class="flex items-start justify-between gap-4">
             <h3 class="text-2xl font-semibold">Paid plan</h3>
@@ -360,20 +360,20 @@
           </div>
         <% end %>
         <% card.body do %>
-          <p class="max-w-md text-sm text-[var(--surface-muted-content-color)]">Brand fill, contrasting type, and a button that still reads.</p>
+          <p class="max-w-md text-sm text-[var(--surface-muted-content-color)]">Brand fill and contrasting type. The button style is chosen here.</p>
         <% end %>
         <% card.footer(divider: false) do %>
-          <%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %>
+          <%= render FlatPack::Button::Component.new(text: "Add money", style: :default) %>
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+      <%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
         <% card.header do %>
           <h3 class="text-xl font-semibold">Neighboring card</h3>
         <% end %>
         <% card.body do %>
           <div class="space-y-3">
-            <p class="text-sm text-[var(--surface-muted-content-color)]">This card stays on the surface tone.</p>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">This card stays on the surface style.</p>
             <%= render FlatPack::Button::Component.new(text: "Standard action", style: :primary) %>
           </div>
         <% end %>
@@ -381,10 +381,10 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :elevated, tone: :brand) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(style: :brand, shadow: :md) do |card| %&gt;
           &lt;% card.body do %&gt;
             <p class="text-sm text-[var(--surface-muted-content-color)]">Only this card takes the brand fill.</p>
-            &lt;%= render FlatPack::Button::Component.new(text: "Add money", style: :primary) %&gt;
+            &lt;%= render FlatPack::Button::Component.new(text: "Add money", style: :default) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;
       CODE
@@ -396,7 +396,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "List Cards (Horizontal)", anchor_link: true, subtitle: "Examples for List Cards (Horizontal).") %>
     <div class="space-y-2 mb-4">
       <%= render FlatPack::Card::Component.new(
-        style: :list,
+        hover: :subtle,
         padding: :sm
       ) do |card| %>
         <% card.body do %>
@@ -414,7 +414,7 @@
       <% end %>
 
       <%= render FlatPack::Card::Component.new(
-        style: :list,
+        hover: :subtle,
         padding: :sm
       ) do |card| %>
         <% card.body do %>
@@ -432,7 +432,7 @@
       <% end %>
 
       <%= render FlatPack::Card::Component.new(
-        style: :list,
+        hover: :subtle,
         padding: :sm
       ) do |card| %>
         <% card.body do %>
@@ -451,7 +451,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :list, padding: :sm) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(hover: :subtle, padding: :sm) do |card| %&gt;
           &lt;% card.body do %&gt;
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-3">
@@ -473,6 +473,6 @@
   links: [
     {text: "Overview", href: demo_cards_path},
     {text: "Styles", href: demo_cards_styles_path},
-    {text: "Tones", href: demo_cards_tones_path},
+    {text: "Colour", href: demo_cards_tones_path},
     {text: "Media", href: demo_cards_media_path}
   ] %>

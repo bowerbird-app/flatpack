@@ -10,7 +10,7 @@
 
   <!-- Card Styles -->
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Card Styles", anchor_link: true, subtitle: "Border, shadow, and hover. Colour fill is on the tones page.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Shadow, border, and hover", anchor_link: true, subtitle: "Colour fill is on the colour page. These options stack with it.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
         <% card.header do %>
@@ -21,30 +21,30 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+      <%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
         <% card.header do %>
-          <h3 class="text-lg font-semibold">Elevated Card</h3>
+          <h3 class="text-lg font-semibold">Medium shadow</h3>
         <% end %>
         <% card.body do %>
-          <p class="text-sm">Card with shadow, no border.</p>
+          <p class="text-sm">shadow: :md. The border stays the default.</p>
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
         <% card.header do %>
-          <h3 class="text-lg font-semibold">Outlined Card</h3>
+          <h3 class="text-lg font-semibold">Strong border</h3>
         <% end %>
         <% card.body do %>
           <p class="text-sm">Card with strong border.</p>
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :interactive) do |card| %>
+      <%= render FlatPack::Card::Component.new(hover: :strong) do |card| %>
         <% card.header do %>
-          <h3 class="text-lg font-semibold">Interactive Card</h3>
+          <h3 class="text-lg font-semibold">Strong hover</h3>
         <% end %>
         <% card.body do %>
-          <p class="text-sm">Hover effects for clickable cards.</p>
+          <p class="text-sm">Hover to lift the shadow.</p>
         <% end %>
       <% end %>
     </div>
@@ -259,7 +259,7 @@
 <%= render "shared/related_demos",
   links: [
     {text: "Overview", href: demo_cards_path},
-    {text: "Tones", href: demo_cards_tones_path},
+    {text: "Colour", href: demo_cards_tones_path},
     {text: "Media", href: demo_cards_media_path},
     {text: "Composed", href: demo_cards_composed_path}
   ] %>
