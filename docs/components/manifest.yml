@@ -317,6 +317,10 @@ components:
     title: Empty State
     doc: docs/components/empty-state.md
     primary_class: FlatPack::EmptyState::Component
+    related_classes:
+      - FlatPack::Collection::Component
+      - FlatPack::Media::Component
+      - FlatPack::Shared::IconComponent
     status: documented
 
   - key: fab

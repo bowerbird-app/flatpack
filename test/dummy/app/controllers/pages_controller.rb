@@ -54,6 +54,7 @@ class PagesController < ApplicationController
     {action: /\Asidebar(_.*)?\z/, title: "Sidebar", patterns: [/\A--sidebar-/]},
     {action: /\Amodals\z/, title: "Modals", patterns: [/\A--modal-/]},
     {action: /\Adrawer\z/, title: "Drawer", patterns: [/\A--drawer-/]},
+    {action: /\Aempty_state\z/, title: "Empty state", patterns: [/\A--empty-state-/]},
     {action: /\Acommand_palette\z/, title: "Command palette", patterns: [/\A--modal-/, /\A--kbd-/]},
     {action: /\Akbd\z/, title: "Keyboard", patterns: [/\A--kbd-/]},
     {action: /\Askip_link\z/, title: "Skip link", patterns: [/\A--skip-link-/]},

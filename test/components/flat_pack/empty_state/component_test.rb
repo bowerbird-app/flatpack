@@ -23,6 +23,17 @@ module FlatPack
         assert_selector "p", text: "Try adjusting your search"
       end
 
+      def test_root_stretches_and_text_uses_the_medium_measure
+        render_inline(Component.new(title: "Nothing here", description: "Try again later."))
+
+        root = page.find(".fp-empty-state")
+        refute_includes root[:class].to_s, "max-w-"
+        refute_includes root[:class].to_s, "w-fit"
+        refute_includes root[:class].to_s, "inline-block"
+        assert_includes page.native.to_html, "max-w-[var(--empty-state-measure-md)]"
+        refute_includes page.native.to_html, "max-w-md"
+      end
+
       def test_does_not_render_icon_by_default
         render_inline(Component.new(title: "Empty"))
 
@@ -33,6 +44,12 @@ module FlatPack
         render_inline(Component.new(title: "Empty", icon: :inbox))
 
         assert_selector "svg[data-flat-pack--icon-name-value='inbox']"
+      end
+
+      def test_renders_icon_variant
+        render_inline(Component.new(title: "Empty", icon: :sparkles, icon_variant: :solid))
+
+        assert_selector "svg[data-flat-pack--icon-name-value='sparkles'][data-flat-pack--icon-variant-value='solid']"
       end
 
       def test_does_not_render_icon_when_icon_is_nil
@@ -53,44 +70,79 @@ module FlatPack
         assert_selector "svg[data-flat-pack--icon-name-value='arrow-up-tray']"
       end
 
-      def test_renders_slot
+      def test_renders_items_in_a_wrapping_collection
         render_inline(Component.new(title: "Empty")) do |component|
-          component.slot do
-            "Action buttons"
-          end
+          component.item { "Upload" }
+          component.item { "Connect" }
         end
 
-        assert_text "Action buttons"
-        assert_includes page.native.to_html, "mt-4"
+        assert_selector "ul.flex.flex-wrap.justify-center > li", count: 2
+        assert_text "Upload"
+        assert_text "Connect"
+        assert_includes page.native.to_html, "gap: var(--empty-state-gap-md)"
       end
 
-      def test_actions_is_deprecated_in_favor_of_slot
-        _stdout, stderr = capture_io do
-          render_inline(Component.new(title: "Empty")) do |component|
-            component.actions { "Action buttons" }
-          end
+      def test_renders_stacked_actions
+        render_inline(Component.new(title: "Empty", layout: :stack)) do |component|
+          component.item { "Upload" }
+          component.item { "Connect" }
         end
 
-        assert_includes stderr, "FlatPack::EmptyState::Component#actions is deprecated"
-        assert_includes stderr, "#slot"
+        assert_selector "ul.flex.flex-col.items-center > li", count: 2
+        assert_text "Upload"
+        assert_text "Connect"
+        refute_selector "ul.flex-wrap"
       end
 
-      def test_renders_custom_graphic_slot
+      def test_does_not_render_a_collection_without_items
+        render_inline(Component.new(title: "Empty"))
+
+        assert_no_selector "ul"
+      end
+
+      def test_renders_custom_graphic_outside_the_measure
         render_inline(Component.new(title: "Empty")) do |component|
-          component.graphic do
-            "Custom graphic"
-          end
+          component.graphic { "Custom graphic" }
         end
 
         assert_text "Custom graphic"
-        # Should not render default icon when custom graphic provided
+        graphic = page.find(".fp-empty-state > div", text: "Custom graphic", match: :first)
+        assert_includes graphic[:class], "w-full"
+        refute_includes graphic[:class], "max-w-[var(--empty-state-measure-md)]"
+        assert_no_selector "svg"
       end
 
-      def test_does_not_expose_with_actions_or_with_graphic_aliases
+      def test_renders_media_with_its_own_aspect_ratio_inside_the_measure
+        render_inline(Component.new(title: "Empty", width: :sm)) do |component|
+          component.media(src: "/images/hero-stool.jpg", alt: "A wooden stool", width: 1280, height: 850)
+        end
+
+        assert_selector "img[src='/images/hero-stool.jpg'][alt='A wooden stool'][width='1280'][height='850']"
+        assert_includes page.native.to_html, "aspect-ratio: 1280 / 850"
+        assert_includes page.native.to_html, "max-w-[var(--empty-state-measure-sm)]"
+        assert_no_selector "svg"
+      end
+
+      def test_raises_when_graphic_and_media_are_both_set
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(title: "Empty")) do |component|
+            component.graphic { "Mark" }
+            component.media(src: "/images/hero-stool.jpg", alt: "Stool", width: 1280, height: 850)
+          end
+        end
+
+        assert_includes error.message, "graphic or media"
+      end
+
+      def test_does_not_expose_removed_slot_aliases
         component = Component.new(title: "Empty")
 
         assert_not_respond_to component, :with_actions
         assert_not_respond_to component, :with_graphic
+        assert_not_respond_to component, :with_media
+        assert_not_respond_to component, :with_item
+        assert_not_respond_to component, :slot
+        assert_not_respond_to component, :actions
       end
 
       def test_raises_error_without_title
@@ -111,36 +163,78 @@ module FlatPack
         assert_no_selector "svg"
       end
 
+      def test_icon_variant_requires_an_icon
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Empty", icon_variant: :solid)
+        end
+
+        assert_includes error.message, "icon_variant requires icon"
+      end
+
+      def test_raises_for_invalid_icon_variant
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Empty", icon: :inbox, icon_variant: :thick)
+        end
+
+        assert_includes error.message, "Invalid icon_variant"
+      end
+
       def test_accepts_custom_classes
         render_inline(Component.new(title: "Empty", class: "custom-class"))
 
         assert_selector "div.custom-class"
       end
 
-      def test_default_size_is_medium
+      def test_default_size_uses_density_padding_tokens
         render_inline(Component.new(title: "Nothing here", description: "Try again later."))
 
         html = page.native.to_html
-        assert_includes html, "py-12"
-        assert_includes html, "text-lg"
-        assert_includes html, "text-sm"
+        assert_includes html, "py-[var(--empty-state-padding-y-md)]"
+        assert_includes html, "px-[var(--empty-state-padding-x-md)]"
+        assert_includes html, "text-[length:var(--text-lg)]"
+        assert_includes html, "text-[length:var(--text-sm)]"
+        refute_includes html, "py-12"
+        refute_includes html, "px-4"
       end
 
       def test_renders_small_size
         render_inline(Component.new(title: "Nothing here", size: :sm))
 
         html = page.native.to_html
-        assert_includes html, "py-8"
-        assert_includes html, "text-base"
+        assert_includes html, "py-[var(--empty-state-padding-y-sm)]"
+        assert_includes html, "px-[var(--empty-state-padding-x-sm)]"
+        assert_includes html, "text-[length:var(--text-base)]"
       end
 
       def test_renders_large_size
         render_inline(Component.new(title: "Nothing here", description: "Try again later.", size: :lg))
 
         html = page.native.to_html
-        assert_includes html, "py-16"
-        assert_includes html, "text-xl"
-        assert_includes html, "text-base"
+        assert_includes html, "py-[var(--empty-state-padding-y-lg)]"
+        assert_includes html, "px-[var(--empty-state-padding-x-lg)]"
+        assert_includes html, "text-[length:var(--text-xl)]"
+        assert_includes html, "text-[length:var(--text-base)]"
+      end
+
+      def test_title_size_overrides_the_density_heading
+        render_inline(Component.new(title: "Nothing here", size: :sm, title_size: :display))
+
+        assert_selector "h3.fp-display", text: "Nothing here"
+        refute_includes page.find("h3")[:class], "font-semibold"
+      end
+
+      def test_title_size_xxl_uses_the_text_token
+        render_inline(Component.new(title: "Nothing here", title_size: :xxl))
+
+        assert_includes page.find("h3")[:class], "text-[length:var(--text-2xl)]"
+      end
+
+      def test_width_presets
+        %i[sm lg full].each do |width|
+          render_inline(Component.new(title: "Nothing here", width: width))
+
+          assert_includes page.native.to_html, "max-w-[var(--empty-state-measure-#{width})]"
+        end
       end
 
       def test_raises_error_for_invalid_size
@@ -149,6 +243,49 @@ module FlatPack
         end
 
         assert_includes error.message, "Invalid size"
+      end
+
+      def test_raises_error_for_invalid_width
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", width: :xs)
+        end
+
+        assert_includes error.message, "Invalid width"
+      end
+
+      def test_raises_error_for_invalid_layout
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", layout: :grid)
+        end
+
+        assert_includes error.message, "Invalid layout"
+      end
+
+      def test_raises_error_for_invalid_title_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", title_size: :huge)
+        end
+
+        assert_includes error.message, "Invalid title_size"
+      end
+
+      def test_padding_tokens_are_space_times_density
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+
+        assert_includes css, "--empty-state-padding-y-sm: round(nearest, calc(var(--space-6) * var(--density)), 1px);"
+        assert_includes css, "--empty-state-padding-x-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);"
+        assert_includes css, "--empty-state-padding-y-md: round(nearest, calc((var(--space-6) + var(--space-4)) * var(--density)), 1px);"
+        assert_includes css, "--empty-state-padding-y-lg: round(nearest, calc(var(--space-6) * 2 * var(--density)), 1px);"
+        assert_includes css, "--empty-state-measure-md: 28rem;"
+        assert_includes css, "--empty-state-measure-full: none;"
+
+        source = FlatPack::Engine.root.join("app/components/flat_pack/empty_state/component.rb").read
+        refute_includes source, "py-8"
+        refute_includes source, "py-12"
+        refute_includes source, "py-16"
+        refute_includes source, "px-3"
+        refute_includes source, "px-4"
+        refute_includes source, "px-6"
       end
     end
   end
