@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.245] - 2026-10-15
+
+### Changed
+- Outgoing chat bubbles use a light neutral surface instead of the primary fill. `--chat-message-outgoing-background-color` is `var(--surface-hover-background-color)` (`#f0f0f0` on the default palette). `--chat-message-outgoing-text-color` is `var(--surface-content-color)`.
+- Incoming stays `--surface-muted-background-color` (`#e5e5e5`) with the same foreground. Body text is about 11:1 on the sent bubble and about 10:1 on the received bubble.
+- Dark sets `--chat-message-outgoing-background-color` to `oklch(0.32 0.015 250)`. Dark hover and muted are the same lightness, so the hover alias would match incoming. Text stays the surface foreground (about 11:1). Incoming text on the muted surface is about 15:1.
+- Ocean sets `--chat-message-outgoing-background-color` to `oklch(0.90 0.025 220)`. Ocean hover sits on the muted fill, so the sent bubble uses a slightly deeper neutral. Text stays the surface foreground (about 13:1).
+- Timestamps, read receipts, and attachment icons stay on `--surface-muted-content-color`. They sit under the bubble or on the attachment card. Links inside a bubble inherit the bubble text colour.
+- Bumped the gem version to `0.1.245`.
+
+### Upgrade notes
+- There is no compatibility alias and no class that restores the primary bubble. To keep a brand fill, set `--chat-message-outgoing-background-color` and `--chat-message-outgoing-text-color` after Flatpack CSS.
+- Drop a host rule that forced outgoing text to white so it would read on the primary fill. White ink fails on the neutral bubble.
+- A theme whose hover and muted surfaces match should set `--chat-message-outgoing-background-color`, or the sent and received bubbles match. Dark and ocean already do this.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.245`.
+
 ## [0.1.244] - 2026-10-15
 
 ### Added

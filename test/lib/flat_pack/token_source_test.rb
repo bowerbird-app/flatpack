@@ -254,6 +254,10 @@ module FlatPack
         "--chat-message-incoming-background-color" => "var(--surface-muted-background-color)",
         "--chat-message-incoming-text-color" => "var(--surface-content-color)",
         "--chat-message-incoming-meta-color" => "var(--surface-muted-content-color)",
+        "--chat-message-outgoing-background-color" => "var(--surface-hover-background-color)",
+        "--chat-message-outgoing-text-color" => "var(--surface-content-color)",
+        "--chat-message-outgoing-meta-color" => "var(--surface-muted-content-color)",
+        "--chat-message-outgoing-read-receipt-color" => "var(--surface-muted-content-color)",
         "--avatar-background-color" => "var(--surface-muted-background-color)",
         "--avatar-text-color" => "var(--surface-content-color)",
         "--search-input-background-color" => "var(--surface-background-color)"
@@ -270,6 +274,21 @@ module FlatPack
       refute_includes dark_block, "--sidebar-item-hover-background-color"
       refute_includes dark_block, "--chat-message-incoming-background-color"
       refute_includes dark_block, "--avatar-background-color"
+    end
+
+    test "outgoing chat is a neutral surface and dark and ocean keep it apart from incoming" do
+      refute_match(/--chat-message-outgoing-background-color:\s*var\(--color-primary\)/, root_block)
+      refute_match(/--chat-message-outgoing-text-color:\s*var\(--color-primary-text\)/, root_block)
+
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+
+      assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.32 0\.015 250\)/, dark_block)
+      assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.90 0\.025 220\)/, ocean_block)
+      refute_includes dark_block, "--chat-message-outgoing-text-color"
+      refute_includes ocean_block, "--chat-message-outgoing-text-color"
+      refute_includes dark_block, "--chat-message-incoming-background-color"
+      refute_includes ocean_block, "--chat-message-incoming-background-color"
     end
 
     test "alerts and toasts wash status colour instead of filling like buttons" do

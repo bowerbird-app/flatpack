@@ -516,8 +516,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --chat-composer-control-height: calc(1.25rem + (var(--button-icon-only-padding-md) * 2) + 2px);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
-  --chat-message-outgoing-background-color: var(--color-primary);
-  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-outgoing-background-color: var(--surface-hover-background-color);
+  --chat-message-outgoing-text-color: var(--surface-content-color);
   --chat-message-system-text-color: var(--surface-muted-content-color);
   --chat-message-incoming-meta-color: var(--surface-muted-content-color);
   --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
@@ -838,7 +838,7 @@ The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in 
 - `:root, [data-theme] {}` contains the default rounded / charcoal palette and component aliases.
 - `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default and inherit the spacing scale. `[data-theme="rounded"]` shifts the scale. Component aliases re-resolve on `[data-theme]`.
 
-When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring` follows `--color-primary`. `--sidebar-item-active-*`, `--top-nav-item-active-*`, list, pill, table, and pagination selected fills follow `--surface-active-*`. Hover fills follow `--surface-hover-background-color`. Set those semantic tokens once. Set a component token only when that one control should diverge.
+When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring` follows `--color-primary`. `--sidebar-item-active-*`, `--top-nav-item-active-*`, list, pill, table, and pagination selected fills follow `--surface-active-*`. Hover fills follow `--surface-hover-background-color`. Outgoing chat does too: background is `--surface-hover-background-color`, text is `--surface-content-color`. Incoming stays the muted surface. The shipped dark and ocean themes set `--chat-message-outgoing-background-color` because those hover surfaces do not separate the two bubbles. Set that one token when your own hover and muted fills match. Timestamps and read receipts stay on `--surface-muted-content-color`. Set those semantic tokens once. Set a component token only when that one control should diverge.
 
 ## Practical Editing Order
 

@@ -43,7 +43,9 @@ Or override primitives directly:
 These follow `--color-primary` (and `--color-primary-text` for text or icons on that fill). You do not set them on a named theme unless you want them to diverge:
 
 - `--color-ring` — focus rings
-- `--button-primary-*`, `--badge-primary-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, underline tab marks, the tree's 2px bar, and other primary-filled controls
+- `--button-primary-*`, `--badge-primary-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, underline tab marks, the tree's 2px bar, and other primary-filled controls
+
+Outgoing chat follows the hover surface, not primary. `--chat-message-outgoing-background-color` is `var(--surface-hover-background-color)` (`#f0f0f0` on the default palette) and `--chat-message-outgoing-text-color` is `var(--surface-content-color)`. Incoming stays `--surface-muted-background-color` (`#e5e5e5`) with the same foreground. Dark and ocean set their own outgoing fill so the two bubbles stay apart: dark hover matches muted, and ocean hover sits on the muted fill. Timestamps, read receipts, and attachment icons use `--surface-muted-content-color`. They sit under the bubble or on the attachment card. Links inside a bubble inherit the bubble text colour.
 
 Selected and hover chrome follows the surface pair instead. Set these once and sidebar, top nav, lists, pills, table rows, pagination, and the other mapped controls move together:
 

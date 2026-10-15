@@ -1197,8 +1197,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
-  --chat-message-outgoing-background-color: var(--color-primary);
-  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-outgoing-background-color: var(--surface-hover-background-color);
+  --chat-message-outgoing-text-color: var(--surface-content-color);
   --chat-message-system-text-color: var(--surface-muted-content-color);
   --chat-message-incoming-meta-color: var(--surface-muted-content-color);
   --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
@@ -1696,6 +1696,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --inline-edit-placeholder-color: var(--surface-muted-content-color);
   --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 48%, var(--surface-muted-content-color));
   --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 9%, transparent);
+  /* Hover and muted share one lightness, so the sent bubble would match incoming. */
+  --chat-message-outgoing-background-color: oklch(0.32 0.015 250);
 }
 
 /* Ocean theme — overrides only */
@@ -1723,6 +1725,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --overlay-backdrop-color: rgb(3 24 47 / 0.45);
   --surface-hover-background-color: oklch(0.92 0.03 220);
   --surface-active-background-color: oklch(0.88 0.04 220);
+  /* Hover sits on the muted fill. A slightly deeper neutral keeps the sent bubble apart. */
+  --chat-message-outgoing-background-color: oklch(0.90 0.025 220);
   --sidebar-group-item-indent: 0.875rem;
   --avatar-status-ring-color: var(--surface-background-color);
   --modal-backdrop-blur: 5px;
