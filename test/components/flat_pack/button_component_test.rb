@@ -458,6 +458,124 @@ module FlatPack
       ensure
         FlatPack::Button.unregister_style(:spec_partner)
       end
+
+      def test_default_align_is_center_and_lines_clamp_to_one
+        render_inline(Component.new(text: "Save"))
+
+        html = page.native.to_html
+        assert_selector "button.items-center.justify-center"
+        assert_selector "button > span.truncate.min-w-0.max-w-full.text-center", text: "Save"
+        refute_includes html, "line-clamp-2"
+        refute_includes html, "flex-1"
+        refute_includes html, "fp-button-current"
+      end
+
+      def test_align_start_lets_the_label_fill_remaining_space
+        render_inline(Component.new(text: "Logos", align: :start))
+
+        assert_selector "button.justify-start.items-center"
+        assert_selector "button > span.flex-1.min-w-0.text-start.truncate", text: "Logos"
+      end
+
+      def test_lines_two_clamps_and_top_aligns
+        render_inline(Component.new(text: "Logos and lockups", lines: 2, align: :start))
+
+        assert_selector "button.items-start"
+        assert_selector "button > span.line-clamp-2", text: "Logos and lockups"
+      end
+
+      def test_title_sets_the_full_text_tooltip
+        render_inline(Component.new(
+          text: "Logos and lockups",
+          title: "Logos and lockups for print and screen",
+          lines: 2
+        ))
+
+        assert_selector "button[title='Logos and lockups for print and screen']"
+      end
+
+      def test_trailing_slot_is_fixed_width_and_top_aligned_when_the_label_wraps
+        render_inline(Component.new(text: "Logos and lockups", icon: "photo", align: :start, lines: 2)) do |button|
+          button.with_trailing { count_badge }
+        end
+
+        button = page.find("button")
+        children = button.native.element_children
+        assert_equal %w[svg span span], children.map(&:name)
+        assert_equal "Logos and lockups", children[1].text
+        assert_includes children[1]["class"], "flex-1"
+        assert_includes children[1]["class"], "min-w-0"
+        assert_includes children[2]["class"], "shrink-0"
+        assert_includes children[2]["class"], "self-start"
+        assert_equal "12", children[2].text
+        assert_selector "button svg[aria-hidden='true']"
+        assert_includes page.native.to_html, "focus-visible:ring-2"
+      end
+
+      def test_leading_icon_stays_hidden_from_assistive_tech
+        render_inline(Component.new(text: "Search", icon: "magnifying-glass"))
+
+        assert_selector "button svg[aria-hidden='true'][data-flat-pack--icon-name-value='magnifying-glass']"
+        refute_selector "button svg[aria-label]"
+      end
+
+      def test_current_link_sets_aria_current_and_keeps_the_focus_ring
+        render_inline(Component.new(text: "Logos", href: "/logos", current: true))
+
+        html = page.native.to_html
+        assert_selector "a[href='/logos'][aria-current='page'].fp-button-current", text: "Logos"
+        assert_includes html, "focus-visible:ring-2"
+        assert_includes html, "focus-visible:ring-inset"
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        assert_includes css, ".fp-button.fp-button-current"
+        refute_includes css, "justify-content: center"
+      end
+
+      def test_current_button_uses_the_active_look_without_aria_current
+        render_inline(Component.new(text: "Logos", current: true))
+
+        assert_selector "button.fp-button-current", text: "Logos"
+        refute_selector "[aria-current]"
+      end
+
+      def test_loading_hides_the_trailing_slot
+        render_inline(Component.new(text: "Save", loading: true)) do |button|
+          button.with_trailing { count_badge }
+        end
+
+        assert_selector "button", text: "Loading"
+        refute_selector "button", text: "12"
+      end
+
+      def test_icon_only_rejects_a_trailing_slot
+        component = Component.new(icon: "search", icon_only: true, text: "Search")
+        component.with_trailing { "12" }
+
+        error = assert_raises(ArgumentError) { render_inline(component) }
+        assert_match(/icon-only/, error.message)
+      end
+
+      def test_invalid_align_lines_current_and_title
+        error = assert_raises(ArgumentError) { Component.new(text: "Save", align: :end) }
+        assert_match(/align/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(text: "Save", lines: 3) }
+        assert_match(/lines/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(text: "Save", current: "page") }
+        assert_match(/current/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(text: "Save", title: 12) }
+        assert_match(/title/, error.message)
+      end
+
+      private
+
+      def count_badge
+        vc_test_controller.view_context.render(
+          FlatPack::Badge::Component.new(text: "12", size: :sm)
+        )
+      end
     end
   end
 end

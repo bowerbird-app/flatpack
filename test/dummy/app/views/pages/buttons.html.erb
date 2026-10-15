@@ -344,9 +344,53 @@
     ) %>
   </section>
 
+  <section class="mb-12" id="button-menu-row">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Menu row",
+      anchor_link: true,
+      subtitle: "Label at the start. Count at the end. Two lines, then an ellipsis."
+    ) %>
+    <div class="max-w-sm mb-4">
+      <%= render FlatPack::Button::Component.new(
+        text: "Logos and lockups for print, screen, and social",
+        title: "Logos and lockups for print, screen, and social",
+        href: "/demo/collection#logos",
+        icon: "swatch",
+        align: :start,
+        lines: 2,
+        current: true,
+        style: :secondary
+      ) do |button| %>
+        <% button.with_trailing do %>
+          <%= render FlatPack::Badge::Component.new(text: "12", size: :sm) %>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE'),
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Logos and lockups for print, screen, and social",
+          title: "Logos and lockups for print, screen, and social",
+          href: "/press/logos",
+          icon: "swatch",
+          align: :start,
+          lines: 2,
+          current: true,
+          style: :secondary
+        ) do |button| %&gt;
+          &lt;% button.with_trailing do %&gt;
+            &lt;%= render FlatPack::Badge::Component.new(text: "12", size: :sm) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+      class: "mt-4"
+    ) %>
+  </section>
+
 <%= render "shared/related_demos",
     subtitle: "Sibling button-family components live on their own pages.",
     links: [
+      {text: "Collection", href: demo_collection_path},
       {text: "Links", href: demo_links_path},
       {text: "Pill Buttons", href: demo_buttons_pills_path},
       {text: "Segmented", href: demo_buttons_segmented_path},

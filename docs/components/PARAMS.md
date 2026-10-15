@@ -31,7 +31,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
 | Media frame ratio | `aspect_ratio` | Card media, Carousel, and Video preview. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview defaults to `"16/9"`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
-| Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. |
+| Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. Button label alignment is `:center` (default) or `:start`. `:start` left-aligns the label and gives it `flex-1 min-w-0`. |
 | Table column alignment | `align` | `FlatPack::Table::Column` only. `:start` (default), `:center`, `:end`. Logical, so RTL flips start and end. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
@@ -39,7 +39,15 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
 | FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
-| List shape | `layout` | List only. `:items` (default, `<ul>` or `<ol>`) or `:key_value` (`<dl>`). Not FAB `layout`. |
+| List shape | `layout` | List only. `:items` (default, `<ul>` or `<ol>`) or `:key_value` (`<dl>`). Not FAB `layout`. Not Collection `layout`. |
+| Collection arrangement | `layout` | `FlatPack::Collection::Component` only. `:stack` (default, vertical), `:grid` (auto-fill, equal height), or `:wrap` (inline flex-wrap for badges and chips). |
+| Collection element | `as` | `FlatPack::Collection::Component` only. `:list` (default, the `<ul>` alone) or `:nav` (wraps the list in `<nav aria-label>`). |
+| Nav accessible name | `label` | Collection `as: :nav` requires `label:`. That string is the nav's `aria-label`. Not the visible button label (`text`). |
+| Collection item floor | `min_item_width` | Collection `layout: :grid` only. A CSS length such as `"14rem"` (the default). Sets `--fp-collection-min-item-width`. Not Table `min_width`. |
+| Collection gap | `gap` | Collection, Grid, and Masonry. `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
+| Button label lines | `lines` | `FlatPack::Button::Component` only. `1` (default) or `2`. Clamps the label with an ellipsis. |
+| Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
+| Clamped label tooltip | `title` | On Button, the full label for the HTML `title` tooltip when `lines` clamps the visible text. Elsewhere, `title` stays a section heading. |
 | Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |
 | Key column size | `key_width` | List `:key_value` only. `:fit` (widest key) or a CSS length such as `"10rem"`. |
 | Stack key above value | `stack_below` | List `:key_value` only. `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. |
@@ -88,5 +96,9 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `divider` on Table. The param is `dividers`.
 - Do not add a per-column `class` or raw `style` string. Width, min width, max width, align, wrap, and `hide_below` are the column controls.
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.
-- Do not pass FAB `layout: :stack` to List, or List `layout: :key_value` to FAB.
+- Do not pass FAB `layout: :stack` to List or Collection, or List `layout: :key_value` to FAB or Collection. Collection `layout` is `:grid`, `:wrap`, or `:stack`.
+- Do not pass Grid `:stretch` or Hero `:left` to Button `align`. Button accepts `:center` and `:start`.
+- Do not pass Collection `min_item_width` to Table, or a Table column `min_width` to Collection.
+- Do not add a colour `style` or an item class to Collection. Hosts style the items.
+- Button `title` is the full-text tooltip. Do not use it as a heading. Button `label` is not the visible string; use `text`.
 - Do not use `label` for a key/value term. Use `key`. The item block is the value.

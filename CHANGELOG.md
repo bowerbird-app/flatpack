@@ -13,6 +13,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.240] - 2026-10-14
+
+### Added
+- `FlatPack::Button::Component` accepts `align:` (`:center` default, `:start`), `lines:` (`1` default, or `2`), `current:` (`true` / `false`), and `title:` for the full label.
+- `:start` left-aligns the label and gives it `flex-1 min-w-0`. `lines` clamps the label with an ellipsis. `2` top-aligns the row.
+- `with_trailing` renders a fixed-width slot (`shrink-0`) at the end of the button. A count badge or an icon. It is top-aligned when the label wraps. Icon-only buttons reject it.
+- `current: true` adds `.fp-button-current` (the hover fill at rest). On a link it also sets `aria-current="page"`. The focus ring stays.
+- Leading icons stay `aria-hidden`.
+- `FlatPack::Collection::Component` renders `<ul><li>` for each `with_item`. `as: :nav` wraps that list in `<nav aria-label>` and requires `label:`.
+- `layout:` is `:stack` (default), `:grid` (auto-fill, equal height, `min_item_width:` default `"14rem"`), or `:wrap` (inline flex-wrap). `gap:` is `:sm`, `:md`, or `:lg`.
+- Demos: `/demo/collection` (press-kit menu and badge/chip wrap) and `/demo/buttons` (align, lines, trailing, current).
+
+### Changed
+- Button labels clamp to one line. Pass `lines: 2` for two.
+- Bumped the gem version to `0.1.240`.
+
+### Upgrade notes
+- Additive params. `align` defaults to `:center`. `lines` defaults to `1`, so a width-constrained label now ellipsizes instead of wrapping. Pass `lines: 2` for two lines and `title:` for the full string.
+- `current` must be `true` or `false`. It sets `aria-current="page"` only when the button has `href:`.
+- `align` must be `:center` or `:start`. Do not pass Hero `:left` or Grid `:stretch`.
+- `with_trailing` is the trailing slot. Icon-only buttons raise if you set it.
+- Collection `as` is `:list` or `:nav`. `as: :nav` requires `label:`. `label:` on a plain list raises.
+- Collection `layout` is `:grid`, `:wrap`, or `:stack`. `min_item_width` is a CSS length and only works with `:grid`. There is no colour prop and no item class.
+- Rebuild host Tailwind so these literals are generated: `justify-start`, `items-start`, `flex-1`, `min-w-0`, `text-start`, `truncate`, `line-clamp-2`, `shrink-0`, `self-start`, `grid-cols-[repeat(auto-fill,minmax(var(--fp-collection-min-item-width),1fr))]`, `[&>*]:w-full`, `[&>*]:flex-1`, `[&>*]:min-w-0`, `[&>*]:self-stretch`.
+- Reload kit CSS for `.fp-button.fp-button-current`.
+- Redeploy so `meta.gem_version` shows `0.1.240`.
+- Do not tag this PR.
+
 ## [0.1.239] - 2026-10-14
 
 ### Added

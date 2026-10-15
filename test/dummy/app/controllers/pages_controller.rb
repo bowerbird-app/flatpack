@@ -654,6 +654,9 @@ class PagesController < ApplicationController
   def empty_state
   end
 
+  def collection
+  end
+
   def grid
     @products = Array.new(12) do |i|
       OpenStruct.new(

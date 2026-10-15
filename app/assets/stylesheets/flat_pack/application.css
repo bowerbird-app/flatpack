@@ -1654,6 +1654,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: var(--fp-button-hover-background);
 }
 
+.fp-button.fp-button-current {
+  background-color: var(--fp-button-hover-background);
+}
+
 .flat-pack-radio-group-wrapper label.fp-button:has(:checked) {
   --fp-button-background: var(--button-primary-background-color);
   --fp-button-hover-background: var(--button-primary-hover-background-color);

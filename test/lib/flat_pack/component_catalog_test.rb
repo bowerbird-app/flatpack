@@ -317,11 +317,11 @@ module FlatPack
       refute(slots.any? { |slot| slot.fetch(:name).end_with?("_slot") })
     end
 
-    test "show Button and Avatar advertise an empty slots array" do
+    test "show Button advertises the trailing slot and Avatar has none" do
       button = FlatPack::ComponentCatalog.show("Button::Component")
       avatar = FlatPack::ComponentCatalog.show("Avatar::Component")
 
-      assert_equal [], button.fetch(:slots)
+      assert_equal [{name: "trailing", collection: false}], button.fetch(:slots)
       assert_equal [], avatar.fetch(:slots)
     end
 
