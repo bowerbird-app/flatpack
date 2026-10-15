@@ -18,6 +18,8 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `style` | Symbol | `:default` | no | Trigger style. Built-in button styles plus any name registered with `FlatPack::Button.register_style`. Invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Trigger size. Delegates to `FlatPack::Button::Component` sizes (for example `:sm`, `:md`, `:lg`). |
 | `icon` | String/Symbol | `nil` | no | Optional leading icon in the trigger. |
+| `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on the leading icon. Omit to use `default_icon_variant`. The chevron stays on that default. Unknown names raise `ArgumentError`. |
+| `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the trigger text. `:primary`, `:success`, `:warning`, or `:danger` colour the leading icon the same way as Button. The chevron stays the trigger text colour. Unknown names raise `ArgumentError`. |
 | `show_chevron` | Boolean | `true` | no | Shows the dropdown chevron icon when true. |
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
 | `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
@@ -39,6 +41,8 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Item label text. |
 | `icon` | String/Symbol | `nil` | no | Optional leading icon. |
+| `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on that icon. Omit to use `default_icon_variant`. Unknown names raise `ArgumentError`. |
+| `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the item text. `:primary`, `:success`, `:warning`, or `:danger` use the button icon tokens. Unknown names raise `ArgumentError`. |
 | `badge` | String | `nil` | no | Optional badge content. |
 | `badge_style` | Symbol | `:primary` | no | Badge style: `:default`, `:primary`, `:secondary`, `:success`, `:warning`, `:danger`, `:info`; invalid values raise `ArgumentError` when badge is present. |
 | `href` | String | `nil` | no | Link destination. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
@@ -56,6 +60,18 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
   <% dropdown.menu_item(text: "Edit", href: edit_post_path(@post)) %>
   <% dropdown.menu_divider %>
   <% dropdown.menu_item(text: "Delete", destructive: true) %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(
+  text: "Publish",
+  icon: "check-circle",
+  icon_variant: :solid,
+  icon_style: :success
+) do |dropdown| %>
+  <% dropdown.menu_item(text: "Publish now", icon: "check-circle", icon_variant: :solid, icon_style: :success, href: "#") %>
+  <% dropdown.menu_item(text: "Unpublish", icon: "x-circle", icon_style: :danger, href: "#") %>
 <% end %>
 ```
 

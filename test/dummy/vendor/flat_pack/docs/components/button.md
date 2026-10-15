@@ -20,6 +20,8 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
 | `icon` | String, nil | `nil` | no | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
+| `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro`. Omit to use `FlatPack.configuration.default_icon_variant` (`:outline` unless the host changed it). Passed to `FlatPack::Shared::IconComponent` `variant:`. Unknown names raise `ArgumentError`. |
+| `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, or `:danger` paint the glyph from `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`. The class mixes that token toward `--fp-button-text` so it stays readable on every button `style`. When `icon_style` matches `style`, the glyph uses the button text colour. Disabled buttons still mute it with `--button-disabled-opacity`. Unknown names raise `ArgumentError`. There is no `icon_class`. |
 | `icon_only` | Boolean | `false` | no | Uses compact icon-only padding, a 44px hit target (`.fp-hit-target`), and hides visible text. Requires `text:` or `aria: { label: "…" }`. |
 | `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
 | `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
@@ -40,6 +42,8 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - Sizes: `:sm`, `:md`, `:lg`
 - Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only, current (`current: true`)
+- Icon artwork: omit `icon_variant` (host default), or `:outline`, `:solid`, `:mini`, `:micro`
+- Icon colour: omit `icon_style` (button text), or `:primary`, `:success`, `:warning`, `:danger`
 - Label alignment: `:center` (default), `:start`
 - Label lines: `1` (default), `2`
 
@@ -142,6 +146,17 @@ Pass `indicator: :slide` for a sliding fill. Items keep text colour. A normal le
 ) %>
 ```
 
+A default button can carry a solid status glyph. The green comes from `--button-icon-success-color`. It still follows the label when the button itself is `:success`, and a disabled button fades the icon with the label.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Published",
+  icon: "check-circle",
+  icon_variant: :solid,
+  icon_style: :success
+) %>
+```
+
 A menu row leaves the label at the start, clamps it to two lines, and parks a count at the end. `current: true` on a link sets `aria-current="page"`. See [Collection](collection.md) for the press-kit grid.
 
 ```erb
@@ -165,7 +180,7 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 
 ## Accessibility
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
-- Leading icons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`.
+- Leading icons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`. `icon_variant` selects the Heroicon weight. `icon_style` colours that glyph only. The trailing slot is unchanged.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
 - `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover stays on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
 - Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.

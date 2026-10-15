@@ -475,6 +475,10 @@
   --button-danger-hover-background-color: var(--button-danger-hover-background-color);
   --button-danger-text-color: var(--button-danger-text-color);
   --button-danger-border-color: var(--button-danger-border-color);
+  --button-icon-primary-color: var(--button-icon-primary-color);
+  --button-icon-success-color: var(--button-icon-success-color);
+  --button-icon-warning-color: var(--button-icon-warning-color);
+  --button-icon-danger-color: var(--button-icon-danger-color);
   --fp-button-background: var(--fp-button-background);
   --fp-button-hover-background: var(--fp-button-hover-background);
   --fp-button-text: var(--fp-button-text);
@@ -1208,6 +1212,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-danger-hover-background-color: var(--color-danger-hover-background-color);
   --button-danger-text-color: var(--color-danger-text-color);
   --button-danger-border-color: var(--color-danger-border-color);
+  --button-icon-primary-color: var(--color-primary);
+  --button-icon-success-color: var(--color-success-background-color);
+  --button-icon-warning-color: var(--color-warning);
+  --button-icon-danger-color: var(--color-danger-background-color);
   --fp-button-background: var(--button-default-background-color);
   --fp-button-hover-background: var(--button-default-hover-background-color);
   --fp-button-text: var(--button-default-text-color);

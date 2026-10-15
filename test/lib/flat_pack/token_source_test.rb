@@ -256,7 +256,11 @@ module FlatPack
         "--toast-info-icon-color" => "var(--alert-info-icon-color)",
         "--toast-success-border-color" => "var(--alert-success-border-color)",
         "--button-success-background-color" => "var(--color-success-background-color)",
-        "--badge-success-background-color" => "var(--color-success-background-color)"
+        "--badge-success-background-color" => "var(--color-success-background-color)",
+        "--button-icon-primary-color" => "var(--color-primary)",
+        "--button-icon-success-color" => "var(--color-success-background-color)",
+        "--button-icon-warning-color" => "var(--color-warning)",
+        "--button-icon-danger-color" => "var(--color-danger-background-color)"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end

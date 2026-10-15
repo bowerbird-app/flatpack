@@ -89,6 +89,12 @@ module FlatPack
       assert_equal "md", size.fetch(:default)
       assert_equal false, icon_only.fetch(:default)
       assert_nil text.fetch(:default)
+      icon_variant = parameter_named(payload, "icon_variant")
+      icon_style = parameter_named(payload, "icon_style")
+      assert_equal %w[outline solid mini micro], icon_variant.fetch(:enum)
+      assert_nil icon_variant.fetch(:default)
+      assert_equal %w[primary success warning danger], icon_style.fetch(:enum)
+      assert_nil icon_style.fetch(:default)
       assert text.key?(:default)
       refute system_arguments.key?(:default)
     end

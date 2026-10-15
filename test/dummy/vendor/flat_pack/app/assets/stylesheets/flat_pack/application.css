@@ -1726,6 +1726,16 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-button-border: var(--button-danger-border-color);
 }
 
+/* A status icon painted in the same fill as the button disappears.
+   Use the button text colour, which already contrasts. Disabled opacity
+   on .fp-button still mutes the glyph. Do not set opacity here. */
+.fp-button[data-fp-style="primary"] .fp-button-icon[data-icon-style="primary"],
+.fp-button[data-fp-style="success"] .fp-button-icon[data-icon-style="success"],
+.fp-button[data-fp-style="warning"] .fp-button-icon[data-icon-style="warning"],
+.fp-button[data-fp-style="danger"] .fp-button-icon[data-icon-style="danger"] {
+  color: var(--fp-button-text);
+}
+
 .fp-pill-button-slots {
   --tabs-pill-active-background-color: var(--fp-button-background);
   --tabs-pill-active-border-color: var(--fp-button-border);

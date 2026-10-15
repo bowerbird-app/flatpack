@@ -592,6 +592,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --button-danger-hover-background-color: var(--color-danger-hover-background-color);
   --button-danger-text-color: var(--color-danger-text-color);
   --button-danger-border-color: var(--color-danger-border-color);
+  --button-icon-primary-color: var(--color-primary);
+  --button-icon-success-color: var(--color-success-background-color);
+  --button-icon-warning-color: var(--color-warning);
+  --button-icon-danger-color: var(--color-danger-background-color);
   --button-border-radius: var(--radius-md);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-background-color);

@@ -71,7 +71,9 @@ module FlatPack
       {constant: :LAYOUTS, kwargs: %i[layout]},
       {constant: :STACK_BELOWS, kwargs: %i[stack_below]},
       {constant: :LINES, kwargs: %i[lines]},
-      {constant: :AS, kwargs: %i[as]}
+      {constant: :AS, kwargs: %i[as]},
+      {constant: :ICON_VARIANTS, kwargs: %i[icon_variant]},
+      {constant: :ICON_STYLES, kwargs: %i[icon_style]}
     ].freeze
 
     DOC_KEYS = {

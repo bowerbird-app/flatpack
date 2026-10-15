@@ -154,6 +154,28 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", icon: "settings"))
 
         assert_selector "button", text: "Actions"
+        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-name-value='cog-6-tooth']"
+        assert_selector "button svg[data-flat-pack--icon-name-value='chevron-down']:not(.fp-button-icon)"
+      end
+
+      def test_leading_icon_takes_variant_and_style_and_the_chevron_does_not
+        render_inline(Dropdown::Component.new(
+          text: "Publish",
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success
+        ))
+
+        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-icon-style='success'][data-flat-pack--icon-name-value='check-circle']"
+        assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:success)
+        assert_selector "button svg[data-flat-pack--icon-name-value='chevron-down'][data-flat-pack--icon-variant-value='outline']"
+        refute_selector "button svg[data-flat-pack--icon-name-value='chevron-down'][data-icon-style]"
+        refute_selector "button svg[data-flat-pack--icon-name-value='chevron-down'].fp-button-icon"
+      end
+
+      def test_invalid_dropdown_icon_variant_and_icon_style
+        assert_raises(ArgumentError) { Dropdown::Component.new(text: "Actions", icon_variant: :filled) }
+        assert_raises(ArgumentError) { Dropdown::Component.new(text: "Actions", icon_style: :info) }
       end
 
       def test_applies_trigger_attributes_to_button
@@ -206,6 +228,30 @@ module FlatPack
         end
 
         assert_selector "a[href='/edit']", text: "Edit"
+        assert_selector "a[href='/edit'] svg.fp-button-icon[data-flat-pack--icon-name-value='edit']"
+      end
+
+      def test_menu_item_icon_takes_variant_and_style
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(
+            text: "Unpublish",
+            icon: "x-circle",
+            icon_variant: :mini,
+            icon_style: :danger,
+            href: "/unpublish"
+          )
+        end
+
+        assert_selector "a[href='/unpublish'] svg.fp-button-icon[data-flat-pack--icon-variant-value='mini'][data-icon-style='danger'][data-flat-pack--icon-name-value='x-circle']"
+        assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:danger)
+      end
+
+      def test_invalid_menu_item_icon_style
+        dropdown = Dropdown::Component.new(text: "Actions")
+
+        assert_raises(ArgumentError) do
+          dropdown.menu_item(text: "Edit", icon_style: :info)
+        end
       end
 
       def test_renders_item_with_badge
