@@ -75,6 +75,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Lightbox item list | `items` | `FlatPack::Lightbox` only. Each hash has `src`, optional `alt` and `caption`, and `type` `:image` or `:video`. |
 | Slide or item caption | `caption` | Carousel slides and lightbox items. Optional supporting copy under the media. |
 | Lightbox count | `show_count` | `FlatPack::Lightbox` boolean. `true` shows `3 / 12` when there is more than one item. Maps to Carousel `show_counter`. |
+| Lightbox thumbnails | `thumbs` | `FlatPack::Lightbox` boolean. Default `false`. `true` shows the carousel thumb strip when there is more than one item. Maps to Carousel `show_thumbs`. |
+| Lightbox item thumbnail | `thumb_src` | Optional image URL on a lightbox item. Falls back to `src`. Carousel slides use the same key. |
 
 ## Billing namespace notes
 

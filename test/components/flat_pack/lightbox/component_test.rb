@@ -91,6 +91,7 @@ module FlatPack
         assert_raises(ArgumentError) { Component.new(group: "wall", items: [{type: :html, html: "<p>No</p>"}]) }
         assert_raises(ArgumentError) { Component.new(group: "wall", items: []) }
         assert_raises(ArgumentError) { Component.new(group: "wall", items: photos, loop: "yes") }
+        assert_raises(ArgumentError) { Component.new(group: "wall", items: photos, thumbs: "yes") }
         assert_raises(ArgumentError) { Trigger.new(group: "wall", index: 0, class: "ring") }
         assert_raises(ArgumentError) { Trigger.new(group: "wall", index: -1) }
       end
@@ -103,6 +104,44 @@ module FlatPack
 
         refute_includes rendered_content, "javascript:"
         assert_selector "img[alt='Ok']", visible: :all
+      end
+
+      def test_thumbs_default_off_and_a_single_item_stays_hidden
+        render_inline(Component.new(group: "wall", items: photos))
+
+        assert_no_selector "button[data-flat-pack--carousel-target='thumb']", visible: :all
+
+        render_inline(Component.new(group: "poster", items: [photos.first], thumbs: true))
+
+        assert_no_selector "button[data-flat-pack--carousel-target='thumb']", visible: :all
+      end
+
+      def test_thumbs_float_in_a_horizontal_strip_and_prefer_thumb_src
+        render_inline(Component.new(group: "wall", items: [
+          {type: :image, src: "https://images.example.com/one.jpg", alt: "Harbour", thumb_src: "https://images.example.com/one-thumb.jpg"},
+          {type: :image, src: "https://images.example.com/two.jpg", alt: "Cliff", thumb_src: "javascript:alert(1)"},
+          {src: "https://videos.example.com/walk.mp4", poster: "https://images.example.com/poster.jpg", thumb_src: "https://images.example.com/walk-thumb.jpg"}
+        ], thumbs: true))
+
+        strip = page.find("[data-flat-pack--carousel-target='thumbStrip']", visible: :all)
+        assert_includes strip[:class], "absolute"
+        assert_includes strip[:class], "bottom-0"
+        assert_includes strip[:class], "overflow-x-auto"
+        assert_includes strip[:class], "flex-nowrap"
+        refute_includes strip[:class], "flex-wrap"
+
+        thumbs = page.all("button[data-flat-pack--carousel-target='thumb']", visible: :all)
+        assert_equal 3, thumbs.length
+        assert_includes thumbs[0]["data-action"], "click->flat-pack--carousel#goTo"
+        assert_includes thumbs[0][:class], "border-[var(--carousel-thumb-border-color)]"
+        assert_equal "true", thumbs[0]["aria-current"]
+        assert_equal "https://images.example.com/one-thumb.jpg", thumbs[0].find("img", visible: :all)[:src]
+        assert_equal "https://images.example.com/two.jpg", thumbs[1].find("img", visible: :all)[:src]
+        assert_equal "https://images.example.com/walk-thumb.jpg", thumbs[2].find("img", visible: :all)[:src]
+        refute_includes rendered_content, "javascript:"
+
+        stage = page.find("[data-flat-pack-lightbox-stage='true']", visible: :all)
+        assert_includes stage[:class], "pb-20"
       end
     end
   end

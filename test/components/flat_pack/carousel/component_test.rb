@@ -409,6 +409,8 @@ module FlatPack
 
         thumbs = page.all("button[data-flat-pack--carousel-target='thumb']")
         assert_equal 3, thumbs.length
+        assert_includes rendered_content, "flex-wrap"
+        assert_no_selector "[data-flat-pack--carousel-target='thumbStrip']", visible: :all
 
         image_thumb = thumbs[0].find("img")
         assert_equal "https://images.example.com/one.jpg", image_thumb[:src]

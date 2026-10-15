@@ -919,6 +919,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Open the harbour"
     assert_includes response.body, "data-flat-pack--lightbox-group-value=\"poster\""
     assert_includes response.body, "fp-masonry"
+    assert_includes response.body, "data-flat-pack--carousel-target=\"thumbStrip\""
+    assert_includes response.body, "thumbs: true"
     assert_includes response.body, "data-flat-pack--carousel-target=\"lightboxToggle\""
     assert_includes response.body, "FlatPack::Media::Component"
   end

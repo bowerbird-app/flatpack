@@ -167,7 +167,7 @@ Runtime events emitted by the carousel:
 - `carousel:play`
 - `carousel:pause`
 
-`lightbox: true` on an image or video slide renders one [Lightbox](lightbox.md) beside the carousel. The expand control dispatches `flat-pack:lightbox:open` for that group and index. The overlay is the shared full-screen dialog: a transparent viewport, the modal backdrop, close, Escape, and the same carousel for next, previous, arrows, and swipe. Stage media is `object-fit: contain` with no frame behind it. One lightbox item hides the arrows and the count. HTML slides ignore `lightbox`. `:logo_slider` ignores it.
+`lightbox: true` on an image or video slide renders one [Lightbox](lightbox.md) beside the carousel. The expand control dispatches `flat-pack:lightbox:open` for that group and index. The overlay is the shared full-screen dialog: a transparent viewport, the modal backdrop, close, Escape, and the same carousel for next, previous, arrows, and swipe. Stage media is `object-fit: contain` with no frame behind it. One lightbox item hides the arrows and the count. HTML slides ignore `lightbox`. `:logo_slider` ignores it. Lightbox `thumbs: true` uses this carousel's `show_thumbs`. On the stage, that row is a horizontal strip along the bottom instead of a wrapping row.
 
 The dialog uses `.fp-overlay-pad` and `overscroll-behavior: contain` so the overlay clears notches and does not chain scroll into the page. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md). Carousel swipe still uses `touch-action: pan-y` on the viewport when `touch_swipe` is enabled.
 

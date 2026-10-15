@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
-  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "caption", "counter", "lightboxToggle"]
+  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "thumbStrip", "caption", "counter", "lightboxToggle"]
 
   static values = {
     initialIndex: { type: Number, default: 0 },
@@ -64,6 +64,7 @@ export default class extends Controller {
     this.#unbindViewportInteractions()
     this.#unbindResizeListener()
     this.#cancelWindowResizeDispatch()
+    this.#cancelThumbReveal()
 
     if (this.element.flatPackCarousel) {
       delete this.element.flatPackCarousel
@@ -276,6 +277,8 @@ export default class extends Controller {
       thumb.classList.toggle("opacity-100", isActive)
       thumb.setAttribute("aria-current", isActive ? "true" : "false")
     })
+
+    this.#scheduleThumbReveal()
 
     if (this.hasCounterTarget) {
       if (this.#isLogoSliderVariant()) {
@@ -726,6 +729,38 @@ export default class extends Controller {
     this.resizeDispatchFrame = window.requestAnimationFrame(() => {
       this.resizeDispatchFrame = null
       window.dispatchEvent(new Event("resize"))
+    })
+  }
+
+  #scheduleThumbReveal() {
+    if (!this.hasThumbStripTarget) return
+
+    this.#cancelThumbReveal()
+    this.thumbRevealFrame = window.requestAnimationFrame(() => {
+      this.thumbRevealFrame = null
+      this.#revealActiveThumb()
+    })
+  }
+
+  #cancelThumbReveal() {
+    if (!this.thumbRevealFrame) return
+
+    window.cancelAnimationFrame(this.thumbRevealFrame)
+    this.thumbRevealFrame = null
+  }
+
+  #revealActiveThumb() {
+    if (!this.hasThumbStripTarget) return
+
+    const strip = this.thumbStripTarget
+    const thumb = this.thumbTargets[this.currentIndex]
+    if (!thumb || strip.scrollWidth <= strip.clientWidth + 1) return
+
+    const centered = thumb.offsetLeft - ((strip.clientWidth - thumb.clientWidth) / 2)
+    const max = strip.scrollWidth - strip.clientWidth
+    strip.scrollTo({
+      left: Math.max(0, Math.min(centered, max)),
+      behavior: this.#prefersReducedMotion() ? "auto" : "smooth"
     })
   }
 

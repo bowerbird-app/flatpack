@@ -1389,6 +1389,9 @@
   .items-stretch {
     align-items: stretch;
   }
+  .\[justify-content\:safe_center\] {
+    justify-content: safe center;
+  }
   .justify-around {
     justify-content: space-around;
   }
@@ -2793,6 +2796,9 @@
   }
   .pb-16 {
     padding-bottom: calc(var(--spacing) * 16);
+  }
+  .pb-20 {
+    padding-bottom: calc(var(--spacing) * 20);
   }
   .pb-24 {
     padding-bottom: calc(var(--spacing) * 24);

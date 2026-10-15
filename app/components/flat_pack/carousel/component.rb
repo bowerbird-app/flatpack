@@ -14,7 +14,9 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "h-full" "object-contain" "object-cover" "tabular-nums" "flex" "flex-col" "min-h-0" "flex-1" "shrink-0" "w-full"
-      # "bg-transparent" "rounded-none" "border-0" "text-center"
+      # "bg-transparent" "rounded-none" "border-0" "text-center" "pb-20"
+      # "inset-x-0" "bottom-0" "z-30" "flex-nowrap" "overflow-x-auto" "overscroll-x-contain" "px-1" "pb-1"
+      # "[justify-content:safe_center]"
       # "bg-[var(--carousel-lightbox-image-background-color)]"
       # "text-[var(--carousel-caption-overlay-text-color)]"
 
@@ -132,10 +134,10 @@ module FlatPack
       def call
         carousel = content_tag(root_tag, **carousel_attributes) do
           safe_join([
-            (@show_thumbs && @thumbs_position == :top) ? render_thumbs : nil,
+            (thumbs_visible? && @thumbs_position == :top && !stage_layout?) ? render_thumbs : nil,
             render_viewport,
             (@show_captions && @caption_mode == :below) ? render_below_caption : nil,
-            (@show_thumbs && @thumbs_position == :bottom) ? render_thumbs : nil
+            (thumbs_visible? && (@thumbs_position == :bottom || stage_layout?)) ? render_thumbs : nil
           ].compact)
         end
 
@@ -189,6 +191,7 @@ module FlatPack
         classes(
           "flat-pack-carousel relative w-full",
           stage_layout? ? "flex min-h-0 w-full flex-1 flex-col" : nil,
+          stage_thumbs? ? "pb-20" : nil,
           (@variant == :logo_slider) ? "m-0 p-0 bg-transparent" : nil,
           @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
@@ -451,9 +454,36 @@ module FlatPack
       end
 
       def render_thumbs
-        content_tag(:div, class: "mt-3 flex flex-wrap gap-2 #{thumb_alignment_class}") do
+        content_tag(:div, class: thumb_strip_classes, data: thumb_strip_data) do
           safe_join(@slides.map.with_index { |slide, index| render_thumb(slide, index) })
         end
+      end
+
+      def thumb_strip_classes
+        return stage_thumb_strip_classes if stage_layout?
+
+        "mt-3 flex flex-wrap gap-2 #{thumb_alignment_class}"
+      end
+
+      def stage_thumb_strip_classes
+        "flat-pack-carousel__thumbs absolute inset-x-0 bottom-0 z-30 flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [justify-content:safe_center]"
+      end
+
+      def thumb_strip_data
+        return {} unless stage_layout?
+
+        {flat_pack__carousel_target: "thumbStrip"}
+      end
+
+      def thumbs_visible?
+        return false unless @show_thumbs
+        return false if stage_layout? && !multiple_slides?
+
+        true
+      end
+
+      def stage_thumbs?
+        stage_layout? && thumbs_visible?
       end
 
       def render_thumb(slide, index)
@@ -491,6 +521,8 @@ module FlatPack
         when :image
           slide[:thumb_src].presence || slide[:src]
         when :video
+          return slide[:thumb_src].presence || slide[:poster].presence if stage_layout?
+
           slide[:poster]
         else
           slide[:thumb_src]
@@ -636,6 +668,7 @@ module FlatPack
             type: :video,
             src: src,
             poster: FlatPack::AttributeSanitizer.sanitize_url(payload[:poster]),
+            thumb_src: sanitize_thumb_src(payload),
             controls: payload.fetch(:controls, true),
             muted: payload.fetch(:muted, false),
             video_loop: payload.fetch(:video_loop, false),

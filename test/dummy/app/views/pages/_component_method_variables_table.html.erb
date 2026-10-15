@@ -823,7 +823,9 @@
         { variable: "items", accepts: "Array<Hash> (required)", example: "items: [{ type: :image, src: \"/masonry/harbour.svg\", alt: \"Harbour\", caption: \"Harbour at dusk\" }]" },
         { variable: "loop", accepts: "true, false", example: "loop: true" },
         { variable: "show_count", accepts: "true, false", example: "show_count: true" },
+        { variable: "thumbs", accepts: "true, false", example: "thumbs: true" },
         { variable: "items[].src", accepts: "String URL (required)", example: "src: \"/masonry/harbour.svg\"" },
+        { variable: "items[].thumb_src", accepts: "String URL, falls back to src", example: "thumb_src: \"/masonry/harbour.svg\"" },
         { variable: "items[].alt", accepts: "String", example: "alt: \"Harbour at dusk\"" },
         { variable: "items[].caption", accepts: "String", example: "caption: \"Harbour at dusk\"" },
         { variable: "items[].type", accepts: ":image, :video", example: "type: :video" }

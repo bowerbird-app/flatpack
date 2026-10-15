@@ -20,6 +20,7 @@ Use Lightbox when a control should enlarge media that already lives somewhere el
 | `items` | Array<Hash> |  | yes | Media in order. Each hash needs `src`. Optional `alt`, `caption`, and `type` (`:image` or `:video`). `poster`, `controls`, `muted`, `video_loop`, and `playsinline` pass through for video. At least one safe URL is required. |
 | `loop` | Boolean | `true` | no | Wrap from the last item to the first. `true` or `false` only. |
 | `show_count` | Boolean | `true` | no | Show `3 / 12` when there is more than one item. `true` or `false` only. |
+| `thumbs` | Boolean | `false` | no | Show a thumbnail strip when there is more than one item. `true` or `false` only. Passed to Carousel `show_thumbs`. |
 
 There is no `class`, `style`, or colour prop. The dialog fills the viewport and stays transparent. The backdrop is the background. Media keeps its own shape.
 
@@ -30,6 +31,7 @@ There is no `class`, `style`, or colour prop. The dialog fills the viewport and 
 | `src` | String |  | yes | `http(s)` or a relative URL. Unsafe URLs are dropped. |
 | `alt` | String | Item number | no | Accessible name. Falls back to I18n `flatpack.lightbox.item`. |
 | `caption` | String | `""` | no | Copy under the media when any item has one. It sits below the picture or video, on the backdrop. |
+| `thumb_src` | String | `src` | no | Thumbnail URL. A safe `http(s)` or relative URL. Anything else is dropped and the thumb uses `src`. |
 | `type` | Symbol | inferred | no | `:image` or `:video`. A `.mp4` src, or a `poster`, infers `:video`. Anything else raises `ArgumentError`. |
 | `poster` | String | `nil` | no | Video poster URL. |
 | `controls` | Boolean | `true` | no | Native video controls. |
@@ -54,16 +56,19 @@ None. The overlay is full-screen. There is no boxed panel and no prop to bring o
 
 The dialog is `h-dvh`, transparent, and covers the viewport. `::backdrop` uses `--modal-backdrop-color` and `--modal-backdrop-blur`. Each image or video is `object-fit: contain` on a transparent stage, so a square or portrait item stays that shape and does not sit in a frame. Close, previous, next, and the count float on the backdrop. A caption, when any item has one, sits below the media in `--carousel-caption-overlay-text-color`.
 
+`thumbs: true` with more than one item adds the carousel thumbnail row as a strip along the bottom. It floats on the backdrop, highlights the current item, and scrolls horizontally when the row is wider than the screen. Clicking a thumbnail moves to that item. One item hides the strip. There is no prop for thumb size, alignment, or colour.
+
 ## Example
 ```erb
 <%= render FlatPack::Lightbox::Component.new(
   group: "wall",
   items: [
-    { type: :image, src: "/masonry/harbour.svg", alt: "Harbour at dusk", caption: "Harbour at dusk" },
+    { type: :image, src: "/masonry/harbour.svg", alt: "Harbour at dusk", caption: "Harbour at dusk", thumb_src: "/masonry/harbour.svg" },
     { type: :image, src: "/masonry/cliff.svg", alt: "Sea cliff", caption: "Sea cliff" }
   ],
   loop: true,
-  show_count: true
+  show_count: true,
+  thumbs: true
 ) %>
 
 <%= render FlatPack::Lightbox::Trigger.new(group: "wall", index: 0) do %>
@@ -95,4 +100,4 @@ Carousel slides with `lightbox: true` render this component. Image slides defaul
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controllers: `flat-pack--lightbox` and `flat-pack--carousel`.
 - The overlay renders `FlatPack::Carousel::Component` with `stage: true` and `fit: :contain`. Sliding, swipe, arrows, and the count stay on that carousel.
-- Tokens: `--modal-backdrop-color`, `--modal-backdrop-blur`, `--carousel-control-*`, `--carousel-counter-*`, `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` fills a carousel `fit: :contain` frame outside this overlay. It does not paint the lightbox.
+- Tokens: `--modal-backdrop-color`, `--modal-backdrop-blur`, `--carousel-control-*`, `--carousel-counter-*`, `--carousel-caption-overlay-text-color`, `--carousel-thumb-border-color`, `--carousel-thumb-placeholder-*`. `--carousel-lightbox-image-background-color` fills a carousel `fit: :contain` frame outside this overlay. It does not paint the lightbox.

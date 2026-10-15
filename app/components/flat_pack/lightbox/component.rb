@@ -50,11 +50,12 @@ module FlatPack
         raise ArgumentError, "#{name} must be true or false"
       end
 
-      def initialize(group:, items:, loop: true, show_count: true)
+      def initialize(group:, items:, loop: true, show_count: true, thumbs: false)
         super()
         @group = self.class.validate_group!(group)
         @loop = self.class.boolean!(loop, :loop)
         @show_count = self.class.boolean!(show_count, :show_count)
+        @thumbs = self.class.boolean!(thumbs, :thumbs)
         @items = normalize_items(items)
 
         raise ArgumentError, "items must include at least one image or video" if @items.empty?
@@ -141,7 +142,7 @@ module FlatPack
           loop: @loop,
           show_controls: true,
           show_indicators: false,
-          show_thumbs: false,
+          show_thumbs: thumbs_visible?,
           show_captions: captions?,
           caption_mode: :below,
           show_border: false,
@@ -163,6 +164,10 @@ module FlatPack
         @items.any? { |item| item[:caption].present? }
       end
 
+      def thumbs_visible?
+        @thumbs && @items.size > 1
+      end
+
       def normalize_items(items)
         Array(items).filter_map.with_index do |item, index|
           normalize_item(item, index)
@@ -180,6 +185,7 @@ module FlatPack
           src: src,
           alt: payload[:alt].presence || fp_t("lightbox.item", number: index + 1),
           caption: payload[:caption].to_s,
+          thumb_src: FlatPack::AttributeSanitizer.sanitize_url(payload[:thumb_src]),
           poster: FlatPack::AttributeSanitizer.sanitize_url(payload[:poster]),
           controls: payload.fetch(:controls, true),
           muted: payload.fetch(:muted, false),

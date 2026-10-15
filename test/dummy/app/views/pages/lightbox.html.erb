@@ -27,10 +27,10 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Masonry gallery",
     anchor_link: true,
-    subtitle: "Twelve photos, one group. The clicked thumbnail is the slide that opens."
+    subtitle: "Twelve photos, one group. The clicked thumbnail is the slide that opens. The strip along the bottom jumps to that photo."
   ) %>
 
-  <%= render FlatPack::Lightbox::Component.new(group: "wall", items: gallery_items, loop: true, show_count: true) %>
+  <%= render FlatPack::Lightbox::Component.new(group: "wall", items: gallery_items, loop: true, show_count: true, thumbs: true) %>
 
   <div class="mt-4">
     <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
@@ -47,7 +47,7 @@
   <p class="mt-6 mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::Lightbox::Component.new(group: "wall", items: gallery_items, show_count: true) %&gt;
+      &lt;%= render FlatPack::Lightbox::Component.new(group: "wall", items: gallery_items, show_count: true, thumbs: true) %&gt;
 
       &lt;%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}) do |masonry| %&gt;
         &lt;% masonry.with_item do %&gt;

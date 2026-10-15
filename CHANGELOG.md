@@ -21,10 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Triggers are separate. `FlatPack::Lightbox::Trigger`, `flat_pack_lightbox_trigger`, or `FlatPack::Lightbox.trigger_data(group:, index:)` open that group on an index. Thumbnails can sit in Masonry or anywhere else.
 - Several items reuse `FlatPack::Carousel` inside the dialog for next, previous, arrows, swipe, and the count. One item hides the arrows and the count.
 - Demo: `/demo/lightbox`.
+- Lightbox `thumbs:` (default `false`) shows a thumbnail strip when there is more than one item. It passes through to Carousel `show_thumbs`. An item `thumb_src` falls back to `src`.
 
 ### Changed
 - Carousel `lightbox: true` renders this same lightbox. The old overlay markup is gone.
 - The lightbox dialog fills the viewport and stays transparent. Each image or video is `object-fit: contain` and keeps its shape, with no frame behind it. Close, arrows, and the count float on the backdrop. The caption sits below the media.
+- With `thumbs: true`, the thumbnail strip floats along the bottom of that backdrop. It highlights the current item, scrolls horizontally, and a click jumps to that item. One item hides it. There is no thumb styling prop.
 - Image slides still default `lightbox` to `true`. Video slides open the lightbox when `lightbox: true`. HTML slides and `:logo_slider` do not.
 - Carousel accepts `show_counter` (default `true`), `fit` (`:cover` or `:contain`), and `stage` (Lightbox sets this; hosts leave it off).
 - Bumped the gem version to `0.1.241`.
@@ -35,7 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A video slide with `lightbox: true` now opens. It used to ignore that flag. HTML still cannot.
 - Lightbox takes no `class`, `style`, or colour prop, and no boxed-panel option. The dialog fills the viewport and stays transparent. Hosts colour the backdrop with `--modal-backdrop-color` and `--modal-backdrop-blur`. Controls and the count use `--carousel-control-*` and `--carousel-counter-*`. Captions use `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` still fills a carousel `fit: :contain` frame outside the lightbox.
 - `group` must start with a letter. `index` must be zero or greater. `loop` and `show_count` must be `true` or `false`.
-- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `absolute`, `inset-0`, `flex-1`, `rounded-none`, `bg-transparent`, `object-contain`, and `text-[var(--carousel-caption-overlay-text-color)]`.
+- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `absolute`, `inset-0`, `flex-1`, `rounded-none`, `bg-transparent`, `object-contain`, `text-[var(--carousel-caption-overlay-text-color)]`, `overflow-x-auto`, `flex-nowrap`, `pb-20`, and `[justify-content:safe_center]`.
+- `thumbs` must be `true` or `false`.
 - Reload kit CSS. The overscroll rule now targets `[data-controller~="flat-pack--lightbox"]`.
 - Redeploy so `meta.gem_version` shows `0.1.241`.
 - Do not tag this PR.
