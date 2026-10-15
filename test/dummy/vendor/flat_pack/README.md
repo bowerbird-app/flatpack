@@ -327,7 +327,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Toast** - Single dismissible toast notification
 - **Toasts** - Toast region manager for stacked toast display
 - **Notification** - Notification bell with unread badge and recent activity popover
-- **EmptyState** - Empty screen with an icon, image, or graphic, a measured text block, and a row or stack of actions
+- **EmptyState** - Empty screen with an icon, image, or your own markup, a measured text block, and a row or stack of actions
 
 ### Content
 - **CodeBlock** - Syntax-highlighted code block

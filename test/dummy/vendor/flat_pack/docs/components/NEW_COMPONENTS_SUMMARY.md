@@ -54,7 +54,7 @@ Mobile-first responsive CSS grid layout with configurable columns, gaps, and ali
 **Stimulus:** No  
 **Tests:** 9 tests, all passing
 
-User-friendly empty states with optional icons, overridable icon names, actions, and custom graphics.
+User-friendly empty states with an icon, an image, or custom markup, plus actions.
 
 **Usage:**
 ```erb

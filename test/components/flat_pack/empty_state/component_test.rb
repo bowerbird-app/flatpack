@@ -100,15 +100,15 @@ module FlatPack
         assert_no_selector "ul"
       end
 
-      def test_renders_custom_graphic_outside_the_measure
-        render_inline(Component.new(title: "Empty")) do |component|
-          component.graphic { "Custom graphic" }
+      def test_renders_custom_visual_outside_the_measure
+        render_inline(Component.new(title: "Empty", icon: :inbox)) do |component|
+          component.visual { "Custom mark" }
         end
 
-        assert_text "Custom graphic"
-        graphic = page.find(".fp-empty-state > div", text: "Custom graphic", match: :first)
-        assert_includes graphic[:class], "w-full"
-        refute_includes graphic[:class], "max-w-[var(--empty-state-measure-md)]"
+        assert_text "Custom mark"
+        mark = page.find(".fp-empty-state > div", text: "Custom mark", match: :first)
+        assert_includes mark[:class], "w-full"
+        refute_includes mark[:class], "max-w-[var(--empty-state-measure-md)]"
         assert_no_selector "svg"
       end
 
@@ -123,15 +123,34 @@ module FlatPack
         assert_no_selector "svg"
       end
 
-      def test_raises_when_graphic_and_media_are_both_set
+      def test_media_replaces_the_icon
+        render_inline(Component.new(title: "Empty", icon: :inbox, width: :sm)) do |component|
+          component.media(src: "/images/hero-stool.jpg", alt: "A wooden stool", width: 1280, height: 850)
+        end
+
+        assert_selector "img[alt='A wooden stool']"
+        assert_no_selector "svg"
+      end
+
+      def test_raises_when_visual_and_media_are_both_set
         error = assert_raises(ArgumentError) do
           render_inline(Component.new(title: "Empty")) do |component|
-            component.graphic { "Mark" }
+            component.visual { "Mark" }
             component.media(src: "/images/hero-stool.jpg", alt: "Stool", width: 1280, height: 850)
           end
         end
 
-        assert_includes error.message, "graphic or media"
+        assert_includes error.message, "visual or media"
+      end
+
+      def test_raises_when_media_is_given_a_block
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(title: "Empty")) do |component|
+            component.media(src: "/images/hero-stool.jpg", alt: "Stool", width: 1280, height: 850) { "Mark" }
+          end
+        end
+
+        assert_includes error.message, "Pass markup with visual"
       end
 
       def test_does_not_expose_removed_slot_aliases
@@ -139,6 +158,8 @@ module FlatPack
 
         assert_not_respond_to component, :with_actions
         assert_not_respond_to component, :with_graphic
+        assert_not_respond_to component, :graphic
+        assert_not_respond_to component, :with_visual
         assert_not_respond_to component, :with_media
         assert_not_respond_to component, :with_item
         assert_not_respond_to component, :slot

@@ -81,15 +81,12 @@ module FlatPack
       LAYOUTS = %i[wrap stack].freeze
       ICON_VARIANTS = FlatPack::Shared::IconComponent::VIEWBOXES.keys.freeze
 
-      renders_one :graphic
-      renders_one :media, FlatPack::Media::Component
+      renders_one :visual
       renders_many :items
 
-      alias_method :graphic_slot, :graphic
-      alias_method :media_slot, :media
+      alias_method :visual_slot, :visual
 
-      undef_method :with_graphic, :with_graphic_content,
-        :with_media, :with_media_content,
+      undef_method :with_visual, :with_visual_content,
         :with_item, :with_item_content
 
       def initialize(
@@ -128,28 +125,29 @@ module FlatPack
         validate_layout!
       end
 
-      def before_render
-        return unless graphic? && media?
-
-        raise ArgumentError, "Pass graphic or media, not both."
-      end
-
       def call
         content_tag(:div, **container_attributes) do
           safe_join([render_visual, render_copy].compact)
         end
       end
 
-      def graphic(*args, **kwargs, &block)
-        return graphic_slot if args.empty? && kwargs.empty? && !block_given?
+      # One visual above the title. A block is host markup and replaces icon.
+      # Call with no arguments to render the slot.
+      def visual(*args, **kwargs, &block)
+        return visual_slot if args.empty? && kwargs.empty? && !block_given?
 
-        set_slot(:graphic, nil, *args, **kwargs, &block)
+        claim_visual!(:content)
+        set_slot(:visual, nil, *args, **kwargs, &block)
       end
 
+      # The same visual, filled with one Media image. Not a second slot.
       def media(**kwargs, &block)
-        return media_slot if kwargs.empty? && !block_given?
+        if block_given?
+          raise ArgumentError, "Pass markup with visual. media takes src, alt, width, and height."
+        end
 
-        set_slot(:media, nil, **kwargs, &block)
+        claim_visual!(:media)
+        @picture = FlatPack::Media::Component.new(**kwargs)
       end
 
       def item(**kwargs, &block)
@@ -181,24 +179,26 @@ module FlatPack
       end
 
       def render_visual
-        return nil unless visual?
+        return nil unless visual_present?
 
         content_tag(:div, visual_body, class: visual_classes)
       end
 
-      def visual?
-        graphic? || media? || @icon
+      def visual_present?
+        visual? || @picture || @icon
       end
 
       def visual_classes
         ["flex", "w-full", "justify-center", size_config.fetch(:visual_margin)].join(" ")
       end
 
+      # Block, then image, then icon. The block and the image share one slot,
+      # so only one of those is set. Either one replaces the icon.
       def visual_body
-        if graphic?
-          content_tag(:div, graphic, class: "w-full")
-        elsif media?
-          content_tag(:div, media, class: media_classes)
+        if visual?
+          content_tag(:div, visual, class: "w-full")
+        elsif @picture
+          content_tag(:div, render(@picture), class: media_classes)
         else
           icon_tag
         end
@@ -368,6 +368,14 @@ module FlatPack
         return if LAYOUTS.include?(@layout)
 
         raise ArgumentError, "Invalid layout: #{@layout.inspect}. Must be one of: #{LAYOUTS.join(", ")}."
+      end
+
+      def claim_visual!(source)
+        if @visual_source && @visual_source != source
+          raise ArgumentError, "Pass visual or media, not both."
+        end
+
+        @visual_source = source
       end
 
       def normalize_icon(icon)

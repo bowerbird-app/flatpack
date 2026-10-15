@@ -4,7 +4,7 @@
 Invite the person to do the next useful thing when a list, search, or panel has nothing in it yet.
 
 ## When to use
-Use Empty State when a surface is blank and the person can act: create the first item, clear filters, connect a source. Lead with that action. A quiet icon is the usual mark. Use `media` for one picture that keeps its own shape, or `graphic` when the empty screen is the page and needs a large composition above the title.
+Use Empty State when a surface is blank and the person can act: create the first item, clear filters, connect a source. Lead with that action. The visual above the title is one slot. `icon:` is the default. `media` is one picture that keeps its own shape. `visual` is any host markup, and a block replaces the icon.
 
 ## Class
 - Primary: `FlatPack::EmptyState::Component`
@@ -15,7 +15,7 @@ Use Empty State when a surface is blank and the person can act: create the first
 |---|---|---|---|---|
 | `title` | String | `nil` | yes | Heading that names what is missing. |
 | `description` | String | `nil` | no | One sentence on what to do next. |
-| `icon` | Symbol/String/false | `nil` | no | Kit icon name (`:inbox`, `:search`, or any `IconComponent` name). Pass `false` or omit to skip. Ignored when `graphic` or `media` is set. |
+| `icon` | Symbol/String/false | `nil` | no | Kit icon name (`:inbox`, `:search`, or any `IconComponent` name). Pass `false` or omit to skip. A `visual` block or `media` replaces it. |
 | `icon_variant` | Symbol | `nil` | no | Heroicon weight for `icon`: `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. Requires `icon`. |
 | `icon_size` | Symbol | from `size` | no | IconComponent size: `:sm`, `:md`, `:lg`, `:xl`. Requires `icon`. Omit and `:sm` maps to `:md`, `:md` to `:lg`, `:lg` to `:xl`. A `media` image does not use this. It stays on `width:`. |
 | `size` | Symbol | `:md` | no | Preset for padding, gaps, icon, title, and description: `:sm`, `:md`, `:lg`. Padding and gaps read `--empty-state-*` tokens, which are `calc(var(--space-N) * var(--density))`. |
@@ -29,13 +29,13 @@ Use Empty State when a surface is blank and the person can act: create the first
 | name | type | required | description |
 |---|---|---|---|
 | `item` | slot | no | One action. Repeat it. The items render in a Collection using `layout`. |
-| `graphic` | slot | no | Freeform composition above the title. It spans the empty state, so a large hero fits. Not cropped. |
-| `media` | component | no | One image via `FlatPack::Media::Component` (`src`, `alt`, `width`, `height`). The image keeps that aspect ratio and is capped by `width:`. |
+| `visual` | slot | no | Freeform markup above the title. It spans the empty state, so a large composition fits. Not cropped. Replaces `icon`. |
+| `media` | method | no | Fills that same visual with one `FlatPack::Media::Component` (`src`, `alt`, `width`, `height`). The image keeps that aspect ratio and is capped by `width:`. Not a second slot. Replaces `icon`. |
 
-Pass `graphic` or `media`, not both.
+Pass `visual` or `media`, not both.
 
 ## Width
-The root is a block-level flex column. It sets no width and no max-width, so in normal flow it stretches to the full width of its container. Only the description used to be capped (`max-w-md`). `width:` now caps the whole text block, centred in that full-width root. The graphic stays full width of the root so a hero can be wider than the words.
+The root is a block-level flex column. It sets no width and no max-width, so in normal flow it stretches to the full width of its container. Only the description used to be capped (`max-w-md`). `width:` now caps the whole text block, centred in that full-width root. A `visual` block stays full width of the root so a hero can be wider than the words. A `media` image uses the same cap as the text.
 
 ## Variants
 - `size:` `:sm`, `:md`, `:lg` sets padding, gaps, the icon, the title, and the description together.
@@ -76,7 +76,7 @@ A large opening:
   title_size: :display,
   width: :lg
 ) do |state| %>
-  <% state.graphic do %>
+  <% state.visual do %>
     <%# A wide composition. It is not limited to the text measure. %>
   <% end %>
   <% state.item do %>
@@ -98,17 +98,17 @@ A larger sentence on the medium preset:
 ## Empty then content
 The root is `.fp-empty-state`. It fades and rises a few pixels on `--duration-slow` / `--easing-enter` (`@starting-style`). When the first item arrives, hide the empty panel and show content with `.fp-content-enter` so the swap uses the same motion. Reduced motion snaps with no transform.
 
-Dummy `/demo/empty_state` has a Show empty / Show content toggle, plus icon, image, width, stacked actions, a hero graphic, each `size`, and a `description_size` override.
+Dummy `/demo/empty_state` has a Show empty / Show content toggle, an icon, an image, a `visual` block, width, stacked actions, a large opening, each `size`, and a `description_size` override.
 
 ## Accessibility
 - Title and description are semantic text. The title is an `h3`.
 - Put the next step on a real button in `item`, not only in the description.
 - Each `item` is an `<li>` inside the Collection list.
-- `media` requires `alt` (pass `""` when the picture is decorative). A decorative `graphic` should be hidden from assistive tech by the caller.
+- `media` requires `alt` (pass `""` when the picture is decorative). A decorative `visual` should be hidden from assistive tech by the caller.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - `FlatPack::Shared::IconComponent` when `icon` is set.
-- `FlatPack::Media::Component` when `media` is set.
+- `FlatPack::Media::Component` when `media` fills the visual.
 - `FlatPack::Collection::Component` when there is at least one `item`.
 - Kit CSS: `.fp-empty-state`, `.fp-content-enter`, and the `--empty-state-*` tokens (formulas of `--space-*` and `--density`).
