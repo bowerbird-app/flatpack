@@ -448,7 +448,7 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 - Hero `centered_image` overlay: `--hero-overlay-background-color`, `--hero-overlay-left-background`, `--hero-overlay-text-color`, `--hero-overlay-muted-text-color`, `--hero-overlay-button-*`. `on: :light` remaps those to `--hero-overlay-on-light-*`. Min-height is `--hero-overlay-min-height` (`560px`; set `100dvh` to fill the first viewport). Copy sits below a typical TopNav via `--hero-overlay-copy-padding-top`.
 - TopNav frost: `--top-nav-backdrop-blur` (applied after scroll). Height is `--top-nav-height` (`72px`).
 - Carousel chrome: `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, `--carousel-lightbox-image-background-color`
-- Lightbox uses the modal backdrop (`--modal-backdrop-color`, `--modal-backdrop-blur`) and the carousel chrome tokens above. There is no lightbox colour prop.
+- Lightbox fills the viewport. The dialog stays transparent. `--modal-backdrop-color` and `--modal-backdrop-blur` are the background. Controls and the count use the carousel chrome tokens. Captions use `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` is the non-stage `fit: :contain` frame, not a lightbox panel. There is no lightbox colour prop.
 - Picker grid: `--picker-badge-*`, `--picker-selection-idle-*`, `--picker-selection-indicator-*`
 - Badge remove hover: `--badge-remove-hover-background-color` (aliases `--chip-remove-hover-background-color`)
 - Card stat trends: `--color-success-background-color`, `--color-danger-background-color`

@@ -165,12 +165,20 @@ module FlatPack
         stage = dialog.find("[data-flat-pack-lightbox-stage='true']", visible: :all)
         image = stage.find("img[src='https://images.example.com/one.jpg']", visible: :all)
         assert_includes image[:class], "object-contain"
-        assert_includes image[:class], "bg-[var(--carousel-lightbox-image-background-color)]"
+        assert_includes image[:class], "bg-transparent"
+        refute_includes image[:class], "lightbox-image-background-color"
         assert_includes image[:class], "w-full"
+        video = stage.find("video", visible: :all)
+        assert_includes video[:class], "bg-transparent"
+        assert_includes video[:class], "object-contain"
         assert stage.has_css?("video source[src='https://videos.example.com/two.mp4']", visible: :all)
         refute_includes stage.native.to_html, "https://images.example.com/two.jpg"
         assert_includes dialog.native.to_html, "fp-overlay-pad"
-        assert_includes dialog.native.to_html, "place-items-center"
+        refute_includes dialog.native.to_html, "place-items-center"
+        refute_includes dialog.native.to_html, "max-w-[90vw]"
+        viewport = stage.find("[data-flat-pack--carousel-target='viewport']", visible: :all)
+        assert_includes viewport[:class], "rounded-none"
+        assert_includes viewport[:class], "bg-transparent"
       end
 
       def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
@@ -675,8 +683,10 @@ module FlatPack
         assert_no_selector "[data-flat-pack--carousel-target='counter']", visible: :all
         image = page.find("section.flat-pack-carousel > .flat-pack-carousel__viewport img[alt='Slide one']", visible: :all)
         assert_includes image[:class], "object-contain"
+        assert_includes image[:class], "bg-[var(--carousel-lightbox-image-background-color)]"
         viewport = page.find("section.flat-pack-carousel > .flat-pack-carousel__viewport")
         assert_includes viewport[:style], "aspect-ratio"
+        refute_includes viewport[:class], "rounded-none"
       end
 
       def test_requires_at_least_one_valid_slide

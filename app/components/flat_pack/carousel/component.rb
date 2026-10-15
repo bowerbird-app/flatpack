@@ -13,8 +13,10 @@ module FlatPack
       DEFAULT_ARIA_LABEL = "Carousel"
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "h-full" "object-contain" "tabular-nums" "flex" "flex-col" "min-h-0" "flex-1" "shrink-0" "w-full"
+      # "h-full" "object-contain" "object-cover" "tabular-nums" "flex" "flex-col" "min-h-0" "flex-1" "shrink-0" "w-full"
+      # "bg-transparent" "rounded-none" "border-0" "text-center"
       # "bg-[var(--carousel-lightbox-image-background-color)]"
+      # "text-[var(--carousel-caption-overlay-text-color)]"
 
       SANITIZED_HTML_TAGS = %w[
         p div span a ul ol li strong em b i u br
@@ -186,7 +188,7 @@ module FlatPack
       def root_classes
         classes(
           "flat-pack-carousel relative w-full",
-          stage_layout? ? "flex h-full min-h-0 flex-col" : nil,
+          stage_layout? ? "flex min-h-0 w-full flex-1 flex-col" : nil,
           (@variant == :logo_slider) ? "m-0 p-0 bg-transparent" : nil,
           @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
@@ -272,13 +274,13 @@ module FlatPack
               (slide[:poster].present? ? tag.img(
                 src: slide[:poster],
                 alt: "",
-                class: "absolute inset-0 h-full w-full object-cover pointer-events-none",
+                class: poster_classes,
                 loading: "lazy",
                 draggable: false,
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "absolute inset-0 z-10 block h-full w-full bg-[var(--carousel-media-background-color)] object-contain",
+                class: video_classes,
                 style: "width: 100%; height: 100%; object-fit: contain;",
                 controls: slide[:controls],
                 muted: slide[:muted],
@@ -521,10 +523,11 @@ module FlatPack
       end
 
       def caption_classes
-        classes(
-          "mt-3 text-sm text-[var(--carousel-caption-below-text-color)]",
-          stage_layout? ? "shrink-0" : nil
-        )
+        if stage_layout?
+          return "mt-3 shrink-0 text-center text-sm text-[var(--carousel-caption-overlay-text-color)]"
+        end
+
+        "mt-3 text-sm text-[var(--carousel-caption-below-text-color)]"
       end
 
       def slide_frame_classes
@@ -557,12 +560,19 @@ module FlatPack
 
       def viewport_classes
         return logo_slider_viewport_classes if @variant == :logo_slider
+        return stage_viewport_classes if stage_layout?
 
         classes(
           "flat-pack-carousel__viewport group relative overflow-hidden rounded-[var(--radius-lg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          stage_layout? ? "min-h-0 w-full flex-1" : nil,
           @show_border ? "border border-[var(--carousel-viewport-border-color)]" : "border-0",
           @show_background ? "bg-[var(--carousel-viewport-background-color)]" : "bg-transparent",
+          @touch_swipe ? "cursor-grab select-none" : nil
+        )
+      end
+
+      def stage_viewport_classes
+        classes(
+          "flat-pack-carousel__viewport group relative min-h-0 w-full flex-1 overflow-hidden rounded-none border-0 bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end
@@ -674,9 +684,22 @@ module FlatPack
       end
 
       def image_classes
+        return "h-full w-full bg-transparent object-contain" if stage_layout?
         return "h-full w-full object-contain bg-[var(--carousel-lightbox-image-background-color)]" if contain_fit?
 
         "h-full w-full object-cover"
+      end
+
+      def poster_classes
+        return "pointer-events-none absolute inset-0 h-full w-full bg-transparent object-contain" if stage_layout?
+
+        "absolute inset-0 h-full w-full object-cover pointer-events-none"
+      end
+
+      def video_classes
+        return "absolute inset-0 z-10 block h-full w-full bg-transparent object-contain" if stage_layout?
+
+        "absolute inset-0 z-10 block h-full w-full bg-[var(--carousel-media-background-color)] object-contain"
       end
 
       def contain_fit?

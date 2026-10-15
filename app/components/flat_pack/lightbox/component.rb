@@ -19,8 +19,8 @@ module FlatPack
       # "fixed" "inset-0" "z-50" "m-0" "h-dvh" "max-h-none" "w-full" "max-w-none"
       # "overflow-hidden" "border-0" "bg-transparent" "p-0"
       # "backdrop:bg-[var(--modal-backdrop-color)]" "backdrop:backdrop-blur-[var(--modal-backdrop-blur)]"
-      # "fp-overlay-pad" "grid" "h-full" "grid-rows-[auto_minmax(0,1fr)]"
-      # "place-self-end" "place-items-center" "justify-self-center" "min-h-0" "max-w-[90vw]"
+      # "fp-overlay-pad" "absolute" "inset-0" "flex" "flex-col" "h-full" "min-h-0" "w-full" "flex-1" "relative"
+      # "end-0" "top-0" "z-30"
       # "aspect-square" "w-10" "cursor-pointer" "items-center" "rounded-full"
       # "bg-[var(--carousel-control-background-color)]" "text-[var(--carousel-control-text-color)]"
       # "transition-colors" "duration-[var(--duration-fast)]" "ease-[var(--easing-standard)]"
@@ -105,7 +105,7 @@ module FlatPack
       end
 
       def shell_classes
-        "fp-overlay-pad grid h-full w-full grid-rows-[auto_minmax(0,1fr)]"
+        "fp-overlay-pad absolute inset-0 flex h-full w-full flex-col"
       end
 
       def render_close_button
@@ -116,7 +116,7 @@ module FlatPack
 
       def close_classes
         [
-          "place-self-end z-30 flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full",
+          "absolute end-0 top-0 z-30 flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full",
           "bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)]",
           "transition-colors duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "hover:bg-[var(--carousel-control-hover-background-color)]",
@@ -132,7 +132,7 @@ module FlatPack
       end
 
       def stage_classes
-        "grid h-full min-h-0 w-full max-w-[90vw] place-items-center justify-self-center"
+        "relative flex min-h-0 w-full flex-1 flex-col"
       end
 
       def carousel_options

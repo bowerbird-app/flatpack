@@ -21,7 +21,7 @@ Use Lightbox when a control should enlarge media that already lives somewhere el
 | `loop` | Boolean | `true` | no | Wrap from the last item to the first. `true` or `false` only. |
 | `show_count` | Boolean | `true` | no | Show `3 / 12` when there is more than one item. `true` or `false` only. |
 
-There is no `class`, `style`, or colour prop. The dialog uses modal backdrop tokens and carousel chrome tokens.
+There is no `class`, `style`, or colour prop. The dialog fills the viewport and stays transparent. The backdrop is the background. Media keeps its own shape.
 
 ### Item hash
 
@@ -29,7 +29,7 @@ There is no `class`, `style`, or colour prop. The dialog uses modal backdrop tok
 |-----|------|---------|----------|-------------|
 | `src` | String |  | yes | `http(s)` or a relative URL. Unsafe URLs are dropped. |
 | `alt` | String | Item number | no | Accessible name. Falls back to I18n `flatpack.lightbox.item`. |
-| `caption` | String | `""` | no | Copy under the media when any item has one. |
+| `caption` | String | `""` | no | Copy under the media when any item has one. It sits below the picture or video, on the backdrop. |
 | `type` | Symbol | inferred | no | `:image` or `:video`. A `.mp4` src, or a `poster`, infers `:video`. Anything else raises `ArgumentError`. |
 | `poster` | String | `nil` | no | Video poster URL. |
 | `controls` | Boolean | `true` | no | Native video controls. |
@@ -50,7 +50,9 @@ There is no `class`, `style`, or colour prop. The dialog uses modal backdrop tok
 `Trigger` renders its block as the button label. The gallery component has no slots.
 
 ## Variants
-None. One item hides the previous and next arrows and the count. Several items show them. `loop: false` stops at the ends.
+None. The overlay is full-screen. There is no boxed panel and no prop to bring one back. One item hides the previous and next arrows and the count. Several items show them. `loop: false` stops at the ends.
+
+The dialog is `h-dvh`, transparent, and covers the viewport. `::backdrop` uses `--modal-backdrop-color` and `--modal-backdrop-blur`. Each image or video is `object-fit: contain` on a transparent stage, so a square or portrait item stays that shape and does not sit in a frame. Close, previous, next, and the count float on the backdrop. A caption, when any item has one, sits below the media in `--carousel-caption-overlay-text-color`.
 
 ## Example
 ```erb
@@ -93,4 +95,4 @@ Carousel slides with `lightbox: true` render this component. Image slides defaul
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controllers: `flat-pack--lightbox` and `flat-pack--carousel`.
 - The overlay renders `FlatPack::Carousel::Component` with `stage: true` and `fit: :contain`. Sliding, swipe, arrows, and the count stay on that carousel.
-- Tokens: `--modal-backdrop-color`, `--modal-backdrop-blur`, `--carousel-control-*`, `--carousel-counter-*`, `--carousel-lightbox-image-background-color`.
+- Tokens: `--modal-backdrop-color`, `--modal-backdrop-blur`, `--carousel-control-*`, `--carousel-counter-*`, `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` fills a carousel `fit: :contain` frame outside this overlay. It does not paint the lightbox.

@@ -297,6 +297,9 @@
   .end {
     inset-inline-end: var(--spacing);
   }
+  .end-0 {
+    inset-inline-end: calc(var(--spacing) * 0);
+  }
   .-top-1 {
     top: calc(var(--spacing) * -1);
   }
@@ -1066,9 +1069,6 @@
   .max-w-\[75\%\] {
     max-width: 75%;
   }
-  .max-w-\[90vw\] {
-    max-width: 90vw;
-  }
   .max-w-\[150px\] {
     max-width: 150px;
   }
@@ -1356,9 +1356,6 @@
   .grid-cols-subgrid {
     grid-template-columns: subgrid;
   }
-  .grid-rows-\[auto_minmax\(0\,1fr\)\] {
-    grid-template-rows: auto minmax(0,1fr);
-  }
   .flex-col {
     flex-direction: column;
   }
@@ -1373,9 +1370,6 @@
   }
   .flex-wrap {
     flex-wrap: wrap;
-  }
-  .place-items-center {
-    place-items: center;
   }
   .\!items-center {
     align-items: center !important;
@@ -1644,9 +1638,6 @@
     :where(& > :not(:last-child)) {
       border-color: var(--table-row-divider-color);
     }
-  }
-  .place-self-end {
-    place-self: end;
   }
   .self-start {
     align-self: flex-start;

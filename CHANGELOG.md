@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Carousel `lightbox: true` renders this same lightbox. The old overlay markup is gone.
+- The lightbox dialog fills the viewport and stays transparent. Each image or video is `object-fit: contain` and keeps its shape, with no frame behind it. Close, arrows, and the count float on the backdrop. The caption sits below the media.
 - Image slides still default `lightbox` to `true`. Video slides open the lightbox when `lightbox: true`. HTML slides and `:logo_slider` do not.
 - Carousel accepts `show_counter` (default `true`), `fit` (`:cover` or `:contain`), and `stage` (Lightbox sets this; hosts leave it off).
 - Bumped the gem version to `0.1.241`.
@@ -32,9 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - There is one lightbox. Carousel no longer renders `[data-flat-pack--carousel-target="lightbox"]`. Open and close go through `dialog[data-controller="flat-pack--lightbox"]`.
 - `flat-pack:lightbox:open` detail is `{ group, index, trigger }`. `flat-pack:lightbox:close` and `flat-pack:lightbox:close-request` carry `{ group }`.
 - A video slide with `lightbox: true` now opens. It used to ignore that flag. HTML still cannot.
-- Lightbox takes no `class`, `style`, or colour prop. Hosts colour it with `--modal-backdrop-color`, `--modal-backdrop-blur`, and the `--carousel-control-*`, `--carousel-counter-*`, and `--carousel-lightbox-image-background-color` tokens.
+- Lightbox takes no `class`, `style`, or colour prop, and no boxed-panel option. The dialog fills the viewport and stays transparent. Hosts colour the backdrop with `--modal-backdrop-color` and `--modal-backdrop-blur`. Controls and the count use `--carousel-control-*` and `--carousel-counter-*`. Captions use `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` still fills a carousel `fit: :contain` frame outside the lightbox.
 - `group` must start with a letter. `index` must be zero or greater. `loop` and `show_count` must be `true` or `false`.
-- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `grid-rows-[auto_minmax(0,1fr)]`, `place-items-center`, `place-self-end`, `max-w-[90vw]`, and `object-contain`.
+- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `absolute`, `inset-0`, `flex-1`, `rounded-none`, `bg-transparent`, `object-contain`, and `text-[var(--carousel-caption-overlay-text-color)]`.
 - Reload kit CSS. The overscroll rule now targets `[data-controller~="flat-pack--lightbox"]`.
 - Redeploy so `meta.gem_version` shows `0.1.241`.
 - Do not tag this PR.

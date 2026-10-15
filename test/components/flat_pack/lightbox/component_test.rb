@@ -22,18 +22,28 @@ module FlatPack
         assert_includes dialog[:class], "h-dvh"
         assert_includes dialog[:class], "backdrop:bg-[var(--modal-backdrop-color)]"
         assert_includes dialog[:class], "bg-transparent"
-        assert page.has_css?(".fp-overlay-pad.grid.place-items-center, .fp-overlay-pad .place-items-center", visible: :all)
-        assert_includes dialog.native.to_html, "place-items-center"
+        refute_includes dialog.native.to_html, "place-items-center"
+        refute_includes dialog.native.to_html, "max-w-[90vw]"
         refute_includes dialog[:class], "justify-center"
+        close = dialog.find("button[aria-label='Close lightbox']", visible: :all)
+        assert_includes close[:class], "absolute"
+        assert_includes close[:class], "end-0"
+        assert_includes close[:class], "top-0"
 
         stage = dialog.find("[data-flat-pack-lightbox-stage='true']", visible: :all)
         assert_equal "true", stage["data-flat-pack--carousel-loop-value"]
         assert_includes stage[:class], "flex-col"
         image = stage.find("img[alt='Harbour']", visible: :all)
         assert_includes image[:class], "object-contain"
-        assert_includes image[:class], "bg-[var(--carousel-lightbox-image-background-color)]"
+        assert_includes image[:class], "bg-transparent"
+        refute_includes image[:class], "lightbox-image-background-color"
         viewport = stage.find("[data-flat-pack--carousel-target='viewport']", visible: :all)
+        assert_includes viewport[:class], "rounded-none"
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
         refute_includes viewport[:style].to_s, "aspect-ratio"
+        caption = stage.find("[data-flat-pack--carousel-target='caption']", visible: :all)
+        assert_includes caption[:class], "text-[var(--carousel-caption-overlay-text-color)]"
         assert_selector "[data-flat-pack-lightbox-stage='true'] button[data-action='click->flat-pack--carousel#prev']", visible: :all
         assert_selector "[data-flat-pack-lightbox-stage='true'] button[data-action='click->flat-pack--carousel#next']", visible: :all
         assert_selector "[data-flat-pack-lightbox-stage='true'] [data-flat-pack--carousel-target='counter']", visible: :all

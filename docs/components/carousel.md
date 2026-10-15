@@ -167,11 +167,11 @@ Runtime events emitted by the carousel:
 - `carousel:play`
 - `carousel:pause`
 
-`lightbox: true` on an image or video slide renders one [Lightbox](lightbox.md) beside the carousel. The expand control dispatches `flat-pack:lightbox:open` for that group and index. The overlay is the shared dialog: backdrop, close, Escape, and the same carousel for next, previous, arrows, and swipe. One lightbox item hides the arrows and the count. HTML slides ignore `lightbox`. `:logo_slider` ignores it.
+`lightbox: true` on an image or video slide renders one [Lightbox](lightbox.md) beside the carousel. The expand control dispatches `flat-pack:lightbox:open` for that group and index. The overlay is the shared full-screen dialog: a transparent viewport, the modal backdrop, close, Escape, and the same carousel for next, previous, arrows, and swipe. Stage media is `object-fit: contain` with no frame behind it. One lightbox item hides the arrows and the count. HTML slides ignore `lightbox`. `:logo_slider` ignores it.
 
 The dialog uses `.fp-overlay-pad` and `overscroll-behavior: contain` so the overlay clears notches and does not chain scroll into the page. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md). Carousel swipe still uses `touch-action: pan-y` on the viewport when `touch_swipe` is enabled.
 
-Controls, the slide counter, video letterbox, and contained image fill use `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, and `--carousel-lightbox-image-background-color`. The dialog backdrop uses `--modal-backdrop-color` and `--modal-backdrop-blur`. Named themes inherit those unless they override the family.
+Controls, the slide counter, and video letterbox use `--carousel-control-*`, `--carousel-counter-*`, and `--carousel-media-background-color`. `fit: :contain` outside the lightbox fills the frame with `--carousel-lightbox-image-background-color`. The lightbox stage does not. Its backdrop uses `--modal-backdrop-color` and `--modal-backdrop-blur`, and its caption uses `--carousel-caption-overlay-text-color`. Named themes inherit those unless they override the family.
 
 ## Accessibility
 - Viewport uses `role="region"` with configurable `aria-label`.
