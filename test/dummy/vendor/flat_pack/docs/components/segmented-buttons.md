@@ -13,17 +13,17 @@ Use Segmented Buttons for small mutually-related action sets such as view mode o
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `style` | Symbol | `:primary` | no | Button style name for the selected segment. Names are the [Button](button.md) style names. Unknown names raise the same `ArgumentError` as Button. |
+| `style` | Symbol | omitted | no | Button style name for the selected segment. Omit it and the selected segment uses the neutral active surface on a secondary button. A named [Button](button.md) style, including `:primary`, paints that colour. Unknown names raise the same `ArgumentError` as Button. |
 | `size` | Symbol | `:md` | no | Forwards into each `button(...)` unless that call already passes `size:`. Uses Button sizes (`:sm`, `:md`, `:lg`). |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the group wrapper. |
 
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `button` | slot | no | Creates a `FlatPack::Button::Component` via `text:`, `selected:`, and forwarded button args. `selected: true` uses the group `style`. Other segments stay `:secondary`. A per-segment `style:` raises `ArgumentError`. |
+| `button` | slot | no | Creates a `FlatPack::Button::Component` via `text:`, `selected:`, and forwarded button args. `selected: true` uses the group `style`, or the neutral active surface when `style` is omitted. Other segments stay `:secondary`. A per-segment `style:` raises `ArgumentError`. |
 
 ## Variants
-- Selected segment uses the group `style`. The default is `:primary`.
+- Selected segment uses the group `style`. Omit `style:` for the neutral active surface (`.fp-button-current` on a secondary button).
 - Unselected segments stay `:secondary`.
 
 ## Example

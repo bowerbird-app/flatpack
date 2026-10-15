@@ -32,8 +32,8 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "hover:bg-[var(--table-row-hover-background-color)]" "transition-colors" "duration-fast"
-      ROW_HOVER = "hover:bg-[var(--table-row-hover-background-color)] transition-colors duration-fast"
+      # "hover:bg-[var(--table-row-hover-background-color)]" "has-[:checked]:bg-[var(--table-row-selected-background-color)]" "has-[:checked]:hover:bg-[var(--table-row-selected-background-color)]" "transition-colors" "duration-fast"
+      ROW_HOVER = "hover:bg-[var(--table-row-hover-background-color)] has-[:checked]:bg-[var(--table-row-selected-background-color)] has-[:checked]:hover:bg-[var(--table-row-selected-background-color)] transition-colors duration-fast"
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:

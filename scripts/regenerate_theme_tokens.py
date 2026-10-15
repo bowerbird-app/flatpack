@@ -34,24 +34,31 @@ def extract_block(css, start_pat):
     return order, values, m.start(), i
 
 EXPLICIT_REMAPS = {
-    "--sidebar-item-active-background-color": "var(--color-primary)",
-    "--sidebar-item-active-text-color": "var(--color-primary-text)",
-    "--sidebar-item-active-icon-color": "var(--color-primary-text)",
-    "--top-nav-item-active-background-color": "var(--color-primary)",
-    "--top-nav-item-active-text-color": "var(--color-primary-text)",
-    "--top-nav-item-active-icon-color": "var(--color-primary-text)",
+    "--sidebar-item-active-background-color": "var(--surface-active-background-color)",
+    "--sidebar-item-active-text-color": "var(--surface-active-text-color)",
+    "--sidebar-item-active-icon-color": "var(--surface-active-icon-color)",
+    "--top-nav-item-active-background-color": "var(--surface-active-background-color)",
+    "--top-nav-item-active-text-color": "var(--surface-active-text-color)",
+    "--top-nav-item-active-icon-color": "var(--surface-active-icon-color)",
     "--sidebar-border-color": "var(--surface-border-color)",
     "--sidebar-divider-color": "var(--surface-border-color)",
     "--sidebar-item-text-color": "var(--surface-muted-content-color)",
     "--sidebar-item-icon-color": "var(--surface-muted-content-color)",
-    "--sidebar-item-hover-background-color": "var(--surface-muted-background-color)",
+    "--sidebar-item-hover-background-color": "var(--surface-hover-background-color)",
     "--sidebar-item-hover-text-color": "var(--surface-content-color)",
     "--sidebar-footer-text-color": "var(--surface-muted-content-color)",
     "--sidebar-background-color": "var(--surface-background-color)",
     "--top-nav-background-color": "var(--surface-background-color)",
     "--top-nav-item-text-color": "var(--surface-muted-content-color)",
     "--top-nav-item-icon-color": "var(--surface-muted-content-color)",
-    "--top-nav-item-hover-background-color": "var(--surface-muted-background-color)",
+    "--top-nav-item-hover-background-color": "var(--surface-hover-background-color)",
+    "--list-item-hover-background-color": "var(--surface-hover-background-color)",
+    "--list-item-active-background-color": "var(--surface-active-background-color)",
+    "--tabs-pill-active-background-color": "var(--surface-active-background-color)",
+    "--tabs-pill-active-border-color": "var(--surface-active-border-color)",
+    "--tabs-pill-active-text-color": "var(--surface-active-text-color)",
+    "--tabs-pill-inactive-hover-background-color": "var(--surface-hover-background-color)",
+    "--table-row-hover-background-color": "var(--surface-hover-background-color)",
     "--top-nav-item-hover-text-color": "var(--surface-content-color)",
 }
 BRAND_INSERT = [("--brand-hue", "250"), ("--brand-chroma", "0.26"), ("--brand-lightness", "0.52")]
@@ -76,7 +83,15 @@ NEW_TOKENS = [
     ("--transition-base", "var(--duration-base)"),
     ("--transition-slow", "var(--duration-slow)"),
     ("--tabs-pill-list-border-color", "var(--surface-border-color)"),
-    ("--tabs-stacked-pill-list-background-color", "var(--surface-muted-background-color)"),
+    ("--tabs-stacked-pill-list-background-color", "var(--surface-hover-background-color)"),
+    ("--surface-hover-background-color", "#f0f0f0"),
+    ("--surface-active-background-color", "#e4e4e4"),
+    ("--surface-active-text-color", "var(--surface-content-color)"),
+    ("--surface-active-icon-color", "var(--surface-active-text-color)"),
+    ("--surface-active-border-color", "transparent"),
+    ("--table-row-selected-background-color", "var(--surface-active-background-color)"),
+    ("--pagination-current-background-color", "var(--surface-active-background-color)"),
+    ("--pagination-current-text-color", "var(--surface-active-text-color)"),
 ]
 
 def expand_brand(val):
@@ -101,8 +116,9 @@ def apply_base(order, values):
     for k, v in NEW_TOKENS:
         values[k] = v
         if k not in order:
-            if k.startswith("--surface-subtle"):
-                idx = order.index("--surface-muted-background-color") + 1 if "--surface-muted-background-color" in order else len(order)
+            if k.startswith("--surface-subtle") or k.startswith("--surface-hover") or k.startswith("--surface-active"):
+                anchor = "--surface-muted-background-color" if "--surface-muted-background-color" in order else None
+                idx = order.index(anchor) + 1 if anchor else len(order)
             elif k.startswith("--transition-"):
                 idx = order.index("--duration-slow") + 1 if "--duration-slow" in order else len(order)
             elif k.startswith("--tabs-"):

@@ -68,15 +68,11 @@
     color: var(--surface-content-color);
   }
 
-  .flat-pack-richtext-toolbar-btn.is-active {
-    background-color: var(--color-primary);
-    color: var(--color-primary-text, #fff);
-    border-color: var(--color-primary);
-  }
-
+  .flat-pack-richtext-toolbar-btn.is-active,
   .flat-pack-richtext-toolbar-btn.is-active:hover {
-    background-color: var(--color-primary-hover);
-    border-color: var(--color-primary-hover);
+    background-color: var(--surface-active-background-color);
+    color: var(--surface-active-text-color);
+    border-color: var(--surface-active-border-color);
   }
 
   .flat-pack-richtext-toolbar-btn.is-disabled,
@@ -467,10 +463,11 @@
     border-color: var(--surface-border-color);
   }
 
-  .flat-pack-richtext-bubble-btn.is-active {
-    background-color: var(--color-primary);
-    color: var(--color-primary-text, #fff);
-    border-color: var(--color-primary);
+  .flat-pack-richtext-bubble-btn.is-active,
+  .flat-pack-richtext-bubble-btn.is-active:hover {
+    background-color: var(--surface-active-background-color);
+    color: var(--surface-active-text-color);
+    border-color: var(--surface-active-border-color);
   }
 
   .flat-pack-richtext-bubble-sep {

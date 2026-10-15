@@ -16,7 +16,7 @@ Use Chip for tags, filters, selected states, and quick token-like actions.
 | `text` | String | `nil` | no | Chip label; if omitted, block content is used. |
 | `style` | Symbol | `:default` | no | Style: `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`; invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Size: `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
-| `selected` | Boolean | `false` | no | Selected state; applies an inset visual ring for `type: :button`. |
+| `selected` | Boolean | `false` | no | Selected state for `type: :button`. Fills the chip with `--surface-active-*`. Static and link chips ignore it. |
 | `disabled` | Boolean | `false` | no | Disabled state; disables button chips and renders disabled link chips as `<span>`. |
 | `removable` | Boolean | `false` | no | Adds remove control and `flat-pack--chip` controller when not disabled. Without `remove_url`, removal stays client-side only. |
 | `href` | String | `nil` | no | Link URL used when `type: :link` and not disabled. |

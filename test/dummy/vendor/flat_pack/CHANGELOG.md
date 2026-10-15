@@ -13,6 +13,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.242] - 2026-10-15
+
+### Added
+- `--surface-hover-background-color`, `--surface-active-background-color`, `--surface-active-text-color`, `--surface-active-icon-color`, and `--surface-active-border-color`. Light hover is `#f0f0f0` and active is `#e4e4e4`. Dark hover is `oklch(0.22 0.02 250)` and active is `oklch(0.28 0.02 250)`. Ocean hover is `oklch(0.92 0.03 220)` and active is `oklch(0.88 0.04 220)`.
+- `--table-row-selected-background-color` and `--pagination-current-background-color` / `--pagination-current-text-color`, both aliased to the active surface.
+
+### Changed
+- Sidebar, top nav, list, pill, table hover, and pill inactive hover follow the hover or active surface. A checked table row uses the selected token and keeps it on hover. Ocean no longer copies `--list-item-*`; it sets the surface pair.
+- Pill and stacked tabs omit `style:` for the neutral active fill. `style: :primary` (and every other named style) adds `.fp-pill-button-slots` so the active pill uses that button colour. The stacked track uses the hover token.
+- `current: true` on any Button, including `style: :primary`, uses the active surface and keeps it on hover.
+- Segmented buttons and chart filter buttons do the same when `style:` is omitted. A named `style:` still paints that button colour.
+- Inline radios, button chips, single-select options, rich text toolbar and bubble toggles, tree rows, and font-swatch rows use the active surface. Tree bars, underline tabs, and the sliding underline stay `--color-primary`.
+- The neutral active pill is flat. `--tabs-pill-active-shadow` is `none`. Named pill styles, including `:primary`, keep `--shadow-md` through `.fp-pill-button-slots`.
+- Bumped the gem version to `0.1.242`.
+
+### Upgrade notes
+- Selected chrome is one place: set `--surface-hover-background-color` and `--surface-active-*` after Flatpack CSS. Do not recolor each component. Set `--sidebar-item-active-*` (or another component token) only when that one control should diverge.
+- Pill, stacked tab, and segmented `style:` now defaults to omitted. The active control is the neutral surface. Pass `style: :primary` to keep the brand fill. Underline tabs are unchanged.
+- `current: true` is no longer the button's hover fill. A primary button with `current: true` is the neutral active surface, not a darker primary.
+- Chart filter `selected: true` without `style:` is the same neutral surface, not primary.
+- The current pagination page is `--pagination-current-*`, not `bg-primary`. A checked table row is `--table-row-selected-background-color`.
+- A selected button chip fills with the active surface. It no longer draws `ring-[var(--color-ring)]`.
+- The omitted pill shadow is `none`. Pass a named `style:`, including `:primary`, to keep `--shadow-md` on the active pill.
+- Rebuild host Tailwind so the new literals are generated, including `bg-[var(--surface-active-background-color)]`, `text-[var(--surface-active-text-color)]`, `border-[var(--surface-active-border-color)]`, `hover:bg-[var(--surface-hover-background-color)]`, `bg-[var(--pagination-current-background-color)]`, `text-[var(--pagination-current-text-color)]`, `has-[:checked]:bg-[var(--table-row-selected-background-color)]`, and `has-[:checked]:hover:bg-[var(--table-row-selected-background-color)]`. Reload kit CSS for the token values.
+
+## [0.1.241] - 2026-10-15
+
+### Added
+- `FlatPack::Lightbox::Component` is the overlay: a native `<dialog>` with backdrop, close, Escape, a focus trap, and focus returned to the trigger.
+- Items take `src`, optional `alt` and `caption`, and `type` `:image` or `:video`. `group` names the gallery. `loop` and `show_count` are booleans.
+- Triggers are separate. `FlatPack::Lightbox::Trigger`, `flat_pack_lightbox_trigger`, or `FlatPack::Lightbox.trigger_data(group:, index:)` open that group on an index. Thumbnails can sit in Masonry or anywhere else.
+- Several items reuse `FlatPack::Carousel` inside the dialog for next, previous, arrows, swipe, and the count. One item hides the arrows and the count.
+- Demo: `/demo/lightbox`.
+- Lightbox `thumbs:` (default `false`) shows a thumbnail strip when there is more than one item. It passes through to Carousel `show_thumbs`. An item `thumb_src` falls back to `src`.
+
+### Changed
+- Carousel `lightbox: true` renders this same lightbox. The old overlay markup is gone.
+- The lightbox dialog fills the viewport and stays transparent. Each image or video is `object-fit: contain` and keeps its shape, with no frame behind it. Close, arrows, and the count float on the backdrop. The caption sits below the media.
+- With `thumbs: true`, the thumbnail strip floats along the bottom of that backdrop. It highlights the current item, scrolls horizontally, and a click jumps to that item. One item hides it. There is no thumb styling prop.
+- Image slides still default `lightbox` to `true`. Video slides open the lightbox when `lightbox: true`. HTML slides and `:logo_slider` do not.
+- Carousel accepts `show_counter` (default `true`), `fit` (`:cover` or `:contain`), and `stage` (Lightbox sets this; hosts leave it off).
+- Bumped the gem version to `0.1.241`.
+
+### Upgrade notes
+- There is one lightbox. Carousel no longer renders `[data-flat-pack--carousel-target="lightbox"]`. Open and close go through `dialog[data-controller="flat-pack--lightbox"]`.
+- `flat-pack:lightbox:open` detail is `{ group, index, trigger }`. `flat-pack:lightbox:close` and `flat-pack:lightbox:close-request` carry `{ group }`.
+- A video slide with `lightbox: true` now opens. It used to ignore that flag. HTML still cannot.
+- Lightbox takes no `class`, `style`, or colour prop, and no boxed-panel option. The dialog fills the viewport and stays transparent. Hosts colour the backdrop with `--modal-backdrop-color` and `--modal-backdrop-blur`. Controls and the count use `--carousel-control-*` and `--carousel-counter-*`. Captions use `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` still fills a carousel `fit: :contain` frame outside the lightbox.
+- `group` must start with a letter. `index` must be zero or greater. `loop` and `show_count` must be `true` or `false`.
+- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `absolute`, `inset-0`, `flex-1`, `rounded-none`, `bg-transparent`, `object-contain`, `text-[var(--carousel-caption-overlay-text-color)]`, `overflow-x-auto`, `flex-nowrap`, `pb-20`, and `[justify-content:safe_center]`.
+- `thumbs` must be `true` or `false`.
+- Reload kit CSS. The overscroll rule now targets `[data-controller~="flat-pack--lightbox"]`.
+- Redeploy so `meta.gem_version` shows `0.1.241`.
+- Do not tag this PR.
+
 ## [0.1.240] - 2026-10-14
 
 ### Added

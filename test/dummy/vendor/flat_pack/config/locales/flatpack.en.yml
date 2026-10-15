@@ -47,6 +47,10 @@ en:
       thumbnail: Thumbnail %{number}
       video_thumbnail: Video thumbnail %{number}
       slide_fallback: Slide %{number}
+    lightbox:
+      label: Lightbox
+      close: Close lightbox
+      item: Item %{number}
     chart:
       region: Region
       value: Value

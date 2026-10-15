@@ -354,15 +354,15 @@ export default class extends Controller {
 
       if (isSelected) {
         if (this.multipleValue) {
-          option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-          option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+          option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+          option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
         } else {
-          option.classList.add("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-          option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+          option.classList.add("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+          option.classList.remove("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
         }
       } else {
-        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-        option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+        option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
       }
     })
   }
@@ -387,18 +387,18 @@ export default class extends Controller {
 
       if (checked) {
         if (this.multipleValue) {
-          option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]", "bg-[var(--surface-muted-background-color)]")
-          option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+          option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]", "bg-[var(--surface-hover-background-color)]")
+          option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
         } else {
-          option.classList.add("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-          option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-muted-background-color)]")
+          option.classList.add("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+          option.classList.remove("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-hover-background-color)]")
         }
       } else if (indeterminate) {
-        option.classList.add("bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
-        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
+        option.classList.add("bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
       } else {
-        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]", "bg-[var(--surface-muted-background-color)]")
-        option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]", "bg-[var(--surface-hover-background-color)]")
+        option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
       }
     })
   }
@@ -709,9 +709,9 @@ export default class extends Controller {
       ? "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
       : selected
       ? (this.multipleValue
-        ? "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
-        : "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--color-primary)] text-[var(--color-primary-text)] cursor-pointer")
-      : "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        ? "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        : "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] cursor-pointer")
+      : "flex items-center gap-2 px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
     const iconAttr = icon ? ` data-icon="${this.escapeHtml(icon)}"` : ""
 
     return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}"${iconAttr} data-disabled="${disabled}" aria-selected="${selected}">${this.iconMarkup(icon)}<span class="min-w-0 truncate">${label}</span></div>`

@@ -464,12 +464,12 @@ module FlatPack
           "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
           if @multiple
-            "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+            "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
           else
-            "bg-[var(--color-primary)] text-[var(--color-primary-text)] cursor-pointer"
+            "bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] cursor-pointer"
           end
         else
-          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")
@@ -488,9 +488,9 @@ module FlatPack
         base << if disabled
           "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
-          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         else
-          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")

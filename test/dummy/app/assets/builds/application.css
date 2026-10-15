@@ -2027,6 +2027,9 @@
   .border-\[var\(--sidebar-border-color\)\] {
     border-color: var(--sidebar-border-color);
   }
+  .border-\[var\(--surface-active-border-color\)\] {
+    border-color: var(--surface-active-border-color);
+  }
   .border-\[var\(--surface-border-color\)\] {
     border-color: var(--surface-border-color);
   }
@@ -2312,6 +2315,9 @@
   .bg-\[var\(--modal-surface-color\)\] {
     background-color: var(--modal-surface-color);
   }
+  .bg-\[var\(--pagination-current-background-color\)\] {
+    background-color: var(--pagination-current-background-color);
+  }
   .bg-\[var\(--picker-badge-background-color\)\] {
     background-color: var(--picker-badge-background-color);
   }
@@ -2354,11 +2360,17 @@
   .bg-\[var\(--stepper-upcoming-color\)\] {
     background-color: var(--stepper-upcoming-color);
   }
+  .bg-\[var\(--surface-active-background-color\)\] {
+    background-color: var(--surface-active-background-color);
+  }
   .bg-\[var\(--surface-background-color\)\] {
     background-color: var(--surface-background-color);
   }
   .bg-\[var\(--surface-border-color\)\] {
     background-color: var(--surface-border-color);
+  }
+  .bg-\[var\(--surface-hover-background-color\)\] {
+    background-color: var(--surface-hover-background-color);
   }
   .bg-\[var\(--surface-muted-background-color\)\] {
     background-color: var(--surface-muted-background-color);
@@ -2383,6 +2395,9 @@
   }
   .bg-\[var\(--table-header-background-color\)\] {
     background-color: var(--table-header-background-color);
+  }
+  .bg-\[var\(--table-row-hover-background-color\)\] {
+    background-color: var(--table-row-hover-background-color);
   }
   .bg-\[var\(--tabs-pill-active-background-color\)\] {
     background-color: var(--tabs-pill-active-background-color);
@@ -3298,6 +3313,9 @@
   .text-\[var\(--modal-title-color\)\] {
     color: var(--modal-title-color);
   }
+  .text-\[var\(--pagination-current-text-color\)\] {
+    color: var(--pagination-current-text-color);
+  }
   .text-\[var\(--picker-badge-text-color\)\] {
     color: var(--picker-badge-text-color);
   }
@@ -3360,6 +3378,9 @@
   }
   .text-\[var\(--stepper-muted-color\)\] {
     color: var(--stepper-muted-color);
+  }
+  .text-\[var\(--surface-active-text-color\)\] {
+    color: var(--surface-active-text-color);
   }
   .text-\[var\(--surface-content-color\)\] {
     color: var(--surface-content-color);
@@ -3614,9 +3635,6 @@
   .ring-\[var\(--color-primary\)\] {
     --tw-ring-color: var(--color-primary);
   }
-  .ring-\[var\(--color-ring\)\] {
-    --tw-ring-color: var(--color-ring);
-  }
   .ring-\[var\(--color-swatch-selected-ring-color\)\] {
     --tw-ring-color: var(--color-swatch-selected-ring-color);
   }
@@ -3862,6 +3880,9 @@
   .\[--color-primary\:oklch\(72\%_0\.16_240\)\] {
     --color-primary: oklch(72% 0.16 240);
   }
+  .\[--surface-active-background-color\:oklch\(28\%_0\.02_250\)\] {
+    --surface-active-background-color: oklch(28% 0.02 250);
+  }
   .\[--surface-border-color\:oklch\(30\%_0\.02_250\)\] {
     --surface-border-color: oklch(30% 0.02 250);
   }
@@ -3897,6 +3918,9 @@
   }
   .\[--surface-content-color\:var\(--card-style-shaded-text-color\)\] {
     --surface-content-color: var(--card-style-shaded-text-color);
+  }
+  .\[--surface-hover-background-color\:oklch\(26\%_0\.02_250\)\] {
+    --surface-hover-background-color: oklch(26% 0.02 250);
   }
   .\[--surface-muted-content-color\:oklch\(62\%_0_0\)\] {
     --surface-muted-content-color: oklch(62% 0 0);
@@ -4367,6 +4391,13 @@
       }
     }
   }
+  .hover\:bg-\[var\(--surface-hover-background-color\)\] {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--surface-hover-background-color);
+      }
+    }
+  }
   .hover\:bg-\[var\(--surface-muted-background-color\)\] {
     &:hover {
       @media (hover: hover) {
@@ -4615,9 +4646,9 @@
       background-color: var(--search-result-hover-background-color);
     }
   }
-  .focus\:bg-\[var\(--surface-muted-background-color\)\] {
+  .focus\:bg-\[var\(--surface-hover-background-color\)\] {
     &:focus {
-      background-color: var(--surface-muted-background-color);
+      background-color: var(--surface-hover-background-color);
     }
   }
   .focus\:ring-0 {
@@ -4806,14 +4837,14 @@
       opacity: var(--button-disabled-opacity);
     }
   }
-  .has-\[\:checked\]\:border-\[var\(--button-primary-border-color\)\] {
-    &:has(*:is(:checked)) {
-      border-color: var(--button-primary-border-color);
-    }
-  }
   .has-\[\:checked\]\:border-\[var\(--color-primary\)\] {
     &:has(*:is(:checked)) {
       border-color: var(--color-primary);
+    }
+  }
+  .has-\[\:checked\]\:border-\[var\(--surface-active-border-color\)\] {
+    &:has(*:is(:checked)) {
+      border-color: var(--surface-active-border-color);
     }
   }
   .has-\[\:checked\]\:bg-\[color-mix\(in_oklab\,var\(--color-primary\)_12\%\,var\(--surface-background-color\)\)\] {
@@ -4824,14 +4855,19 @@
       }
     }
   }
-  .has-\[\:checked\]\:bg-\[var\(--button-primary-background-color\)\] {
+  .has-\[\:checked\]\:bg-\[var\(--surface-active-background-color\)\] {
     &:has(*:is(:checked)) {
-      background-color: var(--button-primary-background-color);
+      background-color: var(--surface-active-background-color);
     }
   }
-  .has-\[\:checked\]\:text-\[var\(--button-primary-text-color\)\] {
+  .has-\[\:checked\]\:bg-\[var\(--table-row-selected-background-color\)\] {
     &:has(*:is(:checked)) {
-      color: var(--button-primary-text-color);
+      background-color: var(--table-row-selected-background-color);
+    }
+  }
+  .has-\[\:checked\]\:text-\[var\(--surface-active-text-color\)\] {
+    &:has(*:is(:checked)) {
+      color: var(--surface-active-text-color);
     }
   }
   .has-\[\:checked\]\:shadow-\[var\(--button-shadow\)\] {
@@ -4869,11 +4905,20 @@
       }
     }
   }
-  .has-\[\:checked\]\:hover\:bg-\[var\(--button-primary-hover-background-color\)\] {
+  .has-\[\:checked\]\:hover\:bg-\[var\(--surface-active-background-color\)\] {
     &:has(*:is(:checked)) {
       &:hover {
         @media (hover: hover) {
-          background-color: var(--button-primary-hover-background-color);
+          background-color: var(--surface-active-background-color);
+        }
+      }
+    }
+  }
+  .has-\[\:checked\]\:hover\:bg-\[var\(--table-row-selected-background-color\)\] {
+    &:has(*:is(:checked)) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--table-row-selected-background-color);
         }
       }
     }
@@ -4939,9 +4984,9 @@
       background-color: var(--list-item-active-background-color);
     }
   }
-  .aria-selected\:bg-\[var\(--surface-muted-background-color\)\] {
+  .aria-selected\:bg-\[var\(--surface-active-background-color\)\] {
     &[aria-selected="true"] {
-      background-color: var(--surface-muted-background-color);
+      background-color: var(--surface-active-background-color);
     }
   }
   .data-\[results-count\=\'0\'\]\:hidden {

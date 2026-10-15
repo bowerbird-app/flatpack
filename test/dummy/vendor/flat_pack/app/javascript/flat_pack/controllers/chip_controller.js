@@ -2,6 +2,12 @@
 import { Controller } from "@hotwired/stimulus"
 import { playCollapseExit } from "controllers/flat_pack/reduced_motion"
 
+const SELECTED_PAINT = [
+  "bg-[var(--surface-active-background-color)]",
+  "text-[var(--surface-active-text-color)]",
+  "border-[var(--surface-active-border-color)]"
+]
+
 export default class extends Controller {
   static targets = ["chip"]
   static values = {
@@ -32,16 +38,17 @@ export default class extends Controller {
     }
   }
 
+  connect() {
+    if (this.element.getAttribute("aria-pressed") === "true") {
+      this.idlePaint = (this.element.dataset.fpChipPaint || "").split(/\s+/).filter(Boolean)
+    }
+  }
+
   toggle(event) {
-    // Toggle aria-pressed
     const currentPressed = this.element.getAttribute("aria-pressed") === "true"
     const newPressed = !currentPressed
     this.element.setAttribute("aria-pressed", String(newPressed))
-
-    // Toggle selected classes.
-    this.element.classList.toggle("ring-2")
-    this.element.classList.toggle("ring-inset")
-    this.element.classList.toggle("ring-[var(--color-ring)]")
+    this.applySelectedPaint(newPressed)
 
     // Emit chip:toggled event
     const toggleEvent = new CustomEvent("chip:toggled", {
@@ -53,6 +60,20 @@ export default class extends Controller {
       }
     })
     this.element.dispatchEvent(toggleEvent)
+  }
+
+  applySelectedPaint(selected) {
+    if (selected) {
+      this.idlePaint = [...this.element.classList].filter((name) => {
+        return (name.startsWith("bg-") || name.startsWith("text-[") || name.startsWith("border-[")) && !SELECTED_PAINT.includes(name)
+      })
+      this.idlePaint.forEach((name) => this.element.classList.remove(name))
+      SELECTED_PAINT.forEach((name) => this.element.classList.add(name))
+      return
+    }
+
+    SELECTED_PAINT.forEach((name) => this.element.classList.remove(name))
+    ;(this.idlePaint || []).forEach((name) => this.element.classList.add(name))
   }
 
   animateRemoval() {

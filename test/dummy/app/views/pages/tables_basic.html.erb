@@ -44,6 +44,26 @@
   ) %>
 </section>
 
+<section id="table-selected-row" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Selected row",
+    anchor_link: true,
+    subtitle: "A checked control in the row keeps the active surface, including on hover."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(3)) do |table| %>
+    <% table.column(title: "Select", html: ->(user) {
+      render FlatPack::Checkbox::Component.new(
+        name: "selected_user_ids[]",
+        value: user.id,
+        checked: user.id == @users.first.id,
+        aria: {label: "Select #{user.name}"}
+      )
+    }) %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+  <% end %>
+</section>
+
 <section id="table-without-headers" class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "No visible headers",

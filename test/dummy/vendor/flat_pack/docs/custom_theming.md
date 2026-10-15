@@ -33,7 +33,7 @@ That means a custom host-app theme is usually just brand/semantic overrides:
 }
 ```
 
-For an exact primary hex, set `--color-primary`. Hover derives from that colour (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), with a `--brand-*` fallback in browsers that do not support relative colour syntax. Override `--color-primary-hover` only when hover should diverge. Focus rings (`--color-ring`) and active sidebar / top-nav fills follow `--color-primary`. Text and icons on those fills follow `--color-primary-text` (default `#fff` — keep it unless the fill is light). The bottom nav bar is inverted chrome (`--bottom-nav-background-color`); leave it unless you want a different bar colour.
+For an exact primary hex, set `--color-primary`. Hover derives from that colour (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), with a `--brand-*` fallback in browsers that do not support relative colour syntax. Override `--color-primary-hover` only when hover should diverge. Focus rings (`--color-ring`) follow `--color-primary`. Active sidebar and top-nav fills follow `--surface-active-background-color`, with text and icons on `--surface-active-text-color`. Primary button text stays on `--color-primary-text` (default `#fff` — keep it unless the fill is light). The bottom nav bar is inverted chrome (`--bottom-nav-background-color`); leave it unless you want a different bar colour.
 
 Any non-`light` theme value applied to `<html data-theme="...">` (or `<body data-theme="...">`) will activate the matching selector.
 
@@ -142,6 +142,11 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --surface-content-color: oklch(0.20 0.01 250);
 
   --surface-muted-background-color: oklch(0.96 0.01 250);
+  --surface-hover-background-color: #f0f0f0;
+  --surface-active-background-color: #e4e4e4;
+  --surface-active-text-color: var(--surface-content-color);
+  --surface-active-icon-color: var(--surface-active-text-color);
+  --surface-active-border-color: transparent;
   --surface-muted-content-color: oklch(0.45 0.01 250);
 
   --surface-border-color: oklch(0.89 0.01 250);
@@ -293,12 +298,12 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
   --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--button-primary-background-color);
-  --tabs-pill-active-border-color: var(--button-primary-border-color);
-  --tabs-pill-active-text-color: var(--button-primary-text-color);
-  --tabs-pill-active-shadow: var(--shadow-md);
+  --tabs-pill-active-background-color: var(--surface-active-background-color);
+  --tabs-pill-active-border-color: var(--surface-active-border-color);
+  --tabs-pill-active-text-color: var(--surface-active-text-color);
+  --tabs-pill-active-shadow: none;
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
-  --tabs-pill-inactive-hover-background-color: var(--surface-muted-background-color);
+  --tabs-pill-inactive-hover-background-color: var(--surface-hover-background-color);
   --tabs-pill-inactive-hover-text-color: var(--surface-content-color);
   --card-background-color: var(--surface-background-color);
   --card-background-muted-color: var(--surface-muted-background-color);
@@ -449,9 +454,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collection-editor-handle-color: var(--surface-muted-content-color);
   --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: oklch(0.20 0.01 250);
-  --sidebar-item-active-background-color: var(--color-primary);
-  --sidebar-item-active-text-color: var(--color-primary-text);
-  --sidebar-item-active-icon-color: var(--color-primary-text);
+  --sidebar-item-active-background-color: var(--surface-active-background-color);
+  --sidebar-item-active-text-color: var(--surface-active-text-color);
+  --sidebar-item-active-icon-color: var(--surface-active-icon-color);
   --sidebar-group-item-indent: 0.75rem;
   --sidebar-footer-text-color: oklch(0.45 0.01 250);
   --sidebar-header-background-color: var(--sidebar-background-color);
@@ -675,9 +680,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-item-icon-color: oklch(0.45 0.01 250);
   --top-nav-item-hover-background-color: oklch(0.96 0.01 250);
   --top-nav-item-hover-text-color: oklch(0.20 0.01 250);
-  --top-nav-item-active-background-color: var(--color-primary);
-  --top-nav-item-active-text-color: var(--color-primary-text);
-  --top-nav-item-active-icon-color: var(--color-primary-text);
+  --top-nav-item-active-background-color: var(--surface-active-background-color);
+  --top-nav-item-active-text-color: var(--surface-active-text-color);
+  --top-nav-item-active-icon-color: var(--surface-active-icon-color);
   --top-nav-height: 72px;
   --top-nav-backdrop-blur: 16px;
 
@@ -717,7 +722,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --table-header-border-color: var(--surface-border-color);
   --table-header-text-color: var(--surface-muted-content-color);
   --table-row-divider-color: var(--surface-border-color);
-  --table-row-hover-background-color: var(--surface-muted-background-color);
+  --table-row-hover-background-color: var(--surface-hover-background-color);
+  --table-row-selected-background-color: var(--surface-active-background-color);
+  --pagination-current-background-color: var(--surface-active-background-color);
+  --pagination-current-text-color: var(--surface-active-text-color);
   --table-cell-text-color: var(--surface-content-color);
   --table-cell-muted-text-color: var(--surface-muted-content-color);
   --table-empty-state-text-color: var(--surface-muted-content-color);
@@ -808,7 +816,7 @@ The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in 
 - `:root, [data-theme] {}` contains the default rounded / charcoal palette and component aliases.
 - `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default. `[data-theme="rounded"]` is an empty alias of the default. Component aliases re-resolve on `[data-theme]`.
 
-When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring`, `--sidebar-item-active-background-color`, and `--top-nav-item-active-background-color` follow `--color-primary`; you only set them when they should diverge.
+When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring` follows `--color-primary`. `--sidebar-item-active-*`, `--top-nav-item-active-*`, list, pill, table, and pagination selected fills follow `--surface-active-*`. Hover fills follow `--surface-hover-background-color`. Set those semantic tokens once. Set a component token only when that one control should diverge.
 
 ## Practical Editing Order
 

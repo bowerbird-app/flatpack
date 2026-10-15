@@ -181,9 +181,9 @@ module FlatPack
         if disabled
           "#{base} text-[var(--surface-muted-content-color)] cursor-not-allowed opacity-50"
         elsif active
-          "#{base} bg-primary text-primary-text"
+          "#{base} bg-[var(--pagination-current-background-color)] text-[var(--pagination-current-text-color)]"
         else
-          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         end
       end
 

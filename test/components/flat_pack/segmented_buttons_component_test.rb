@@ -16,13 +16,15 @@ module FlatPack
         assert_selector "button", count: 3
       end
 
-      def test_omitted_style_uses_primary_on_the_selected_button
+      def test_omitted_style_uses_the_neutral_current_look_on_the_selected_button
         render_inline(Component.new) do |group|
           group.button(text: "Day", selected: true)
           group.button(text: "Week")
         end
 
-        assert_selector "button[data-fp-style='primary']", text: "Day"
+        assert_selector "button.fp-button-current[data-fp-style='secondary']", text: "Day"
+        refute_selector "button[data-fp-style='primary']"
+        refute_selector "[aria-current]"
         assert_selector "button[data-fp-style='secondary']", text: "Week"
       end
 

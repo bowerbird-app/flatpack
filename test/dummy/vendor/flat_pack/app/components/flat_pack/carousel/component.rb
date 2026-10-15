@@ -9,7 +9,16 @@ module FlatPack
       THUMBS_POSITIONS = %i[top bottom].freeze
       THUMBS_ALIGNMENTS = %i[start center end].freeze
       CAPTION_MODES = %i[below overlay].freeze
+      FITS = %i[cover contain].freeze
       DEFAULT_ARIA_LABEL = "Carousel"
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "h-full" "object-contain" "object-cover" "tabular-nums" "flex" "flex-col" "min-h-0" "flex-1" "shrink-0" "w-full"
+      # "bg-transparent" "rounded-none" "border-0" "text-center" "pb-20"
+      # "inset-x-0" "bottom-0" "z-30" "flex-nowrap" "overflow-x-auto" "overscroll-x-contain" "px-1" "pb-1"
+      # "[justify-content:safe_center]"
+      # "bg-[var(--carousel-lightbox-image-background-color)]"
+      # "text-[var(--carousel-caption-overlay-text-color)]"
 
       SANITIZED_HTML_TAGS = %w[
         p div span a ul ol li strong em b i u br
@@ -64,6 +73,9 @@ module FlatPack
         caption_mode: :below,
         show_border: true,
         show_background: true,
+        show_counter: true,
+        fit: :cover,
+        stage: false,
         aria_label: FlatPack::Copy::OMITTED,
         **system_arguments
       )
@@ -108,56 +120,78 @@ module FlatPack
         @caption_mode = caption_mode.to_sym
         @show_border = !!show_border
         @show_background = !!show_background
+        @show_counter = !!show_counter
+        @fit = fit.to_sym
+        @stage = !!stage
         @aria_label = fp_text(aria_label.equal?(FlatPack::Copy::OMITTED) ? FlatPack::Copy::OMITTED : (aria_label.presence || FlatPack::Copy::OMITTED), "carousel.label")
         @initial_index = normalize_initial_index(initial_index)
+        @lightbox_items = build_lightbox_items
+        @lightbox_group = @lightbox_items.any? ? "carousel-#{SecureRandom.hex(4)}" : nil
 
         validate_configuration!
       end
 
       def call
-        content_tag(:section, **carousel_attributes) do
+        carousel = content_tag(root_tag, **carousel_attributes) do
           safe_join([
-            (@show_thumbs && @thumbs_position == :top) ? render_thumbs : nil,
+            (thumbs_visible? && @thumbs_position == :top && !stage_layout?) ? render_thumbs : nil,
             render_viewport,
             (@show_captions && @caption_mode == :below) ? render_below_caption : nil,
-            (@show_thumbs && @thumbs_position == :bottom) ? render_thumbs : nil,
-            render_lightbox_overlay
+            (thumbs_visible? && (@thumbs_position == :bottom || stage_layout?)) ? render_thumbs : nil
           ].compact)
         end
+
+        lightbox = render_shared_lightbox
+        return carousel if lightbox.blank?
+
+        safe_join([carousel, lightbox])
       end
 
       private
+
+      def root_tag
+        @stage ? :div : :section
+      end
 
       def carousel_attributes
         merge_attributes(
           class: root_classes,
           style: root_style,
-          data: {
-            controller: "flat-pack--carousel",
-            flat_pack__carousel_initial_index_value: @initial_index,
-            flat_pack__carousel_loop_value: @loop,
-            flat_pack__carousel_autoplay_value: @autoplay,
-            flat_pack__carousel_autoplay_interval_value: @autoplay_interval_ms,
-            flat_pack__carousel_pause_on_hover_value: @pause_on_hover,
-            flat_pack__carousel_pause_on_focus_value: @pause_on_focus,
-            flat_pack__carousel_touch_swipe_value: @touch_swipe,
-            flat_pack__carousel_transition_value: @transition,
-            flat_pack__carousel_variant_value: @variant,
-            flat_pack__carousel_items_per_view_mobile_value: @items_per_view_mobile,
-            flat_pack__carousel_items_per_view_tablet_value: @items_per_view_tablet,
-            flat_pack__carousel_items_per_view_desktop_value: @items_per_view_desktop,
-            flat_pack__carousel_side_preview_value: side_preview_enabled?,
-            flat_pack__carousel_logo_items_per_view_mobile_value: @logo_items_per_view_mobile,
-            flat_pack__carousel_logo_items_per_view_tablet_value: @logo_items_per_view_tablet,
-            flat_pack__carousel_logo_items_per_view_desktop_value: @logo_items_per_view_desktop,
-            flat_pack__carousel_logical_slide_count_value: @slides.length
-          }
+          data: carousel_data
         )
+      end
+
+      def carousel_data
+        data = {
+          controller: "flat-pack--carousel",
+          flat_pack__carousel_initial_index_value: @initial_index,
+          flat_pack__carousel_loop_value: @loop,
+          flat_pack__carousel_autoplay_value: @autoplay,
+          flat_pack__carousel_autoplay_interval_value: @autoplay_interval_ms,
+          flat_pack__carousel_pause_on_hover_value: @pause_on_hover,
+          flat_pack__carousel_pause_on_focus_value: @pause_on_focus,
+          flat_pack__carousel_touch_swipe_value: @touch_swipe,
+          flat_pack__carousel_transition_value: @transition,
+          flat_pack__carousel_variant_value: @variant,
+          flat_pack__carousel_items_per_view_mobile_value: @items_per_view_mobile,
+          flat_pack__carousel_items_per_view_tablet_value: @items_per_view_tablet,
+          flat_pack__carousel_items_per_view_desktop_value: @items_per_view_desktop,
+          flat_pack__carousel_side_preview_value: side_preview_enabled?,
+          flat_pack__carousel_logo_items_per_view_mobile_value: @logo_items_per_view_mobile,
+          flat_pack__carousel_logo_items_per_view_tablet_value: @logo_items_per_view_tablet,
+          flat_pack__carousel_logo_items_per_view_desktop_value: @logo_items_per_view_desktop,
+          flat_pack__carousel_logical_slide_count_value: @slides.length
+        }
+        data[:flat_pack_lightbox_group] = @lightbox_group if @lightbox_group
+        data[:flat_pack_lightbox_stage] = "true" if @stage
+        data
       end
 
       def root_classes
         classes(
           "flat-pack-carousel relative w-full",
+          stage_layout? ? "flex min-h-0 w-full flex-1 flex-col" : nil,
+          stage_thumbs? ? "pb-20" : nil,
           (@variant == :logo_slider) ? "m-0 p-0 bg-transparent" : nil,
           @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
@@ -182,7 +216,7 @@ module FlatPack
           safe_join([
             render_slides,
             (controls_visible? ? render_controls : nil),
-            render_lightbox_toggle,
+            (lightbox_toggle_visible? ? render_lightbox_toggle : nil),
             (footer_visible? ? render_footer : nil),
             ((@show_captions && @caption_mode == :overlay) ? render_overlay_caption : nil)
           ].compact)
@@ -216,14 +250,7 @@ module FlatPack
         content_tag(:div,
           class: [slide_classes, slide_state_classes(is_active)].compact.join(" "),
           hidden: hide_slide?(is_active),
-          data: {
-            flat_pack__carousel_target: "slide",
-            index: index,
-            caption: slide[:caption].to_s,
-            lightbox_enabled: slide_lightbox_enabled?(slide).to_s,
-            lightbox_src: slide_lightbox_src(slide),
-            lightbox_alt: slide_lightbox_alt(slide)
-          },
+          data: slide_data(slide, index),
           aria: {
             hidden: aria_hidden.to_s,
             label: fp_t("carousel.slide", current: index + 1, total: @slides.length)
@@ -240,7 +267,7 @@ module FlatPack
           tag.img(
             src: slide[:src],
             alt: slide[:alt],
-            class: "h-full w-full object-cover",
+            class: image_classes,
             loading: "lazy",
             draggable: false
           )
@@ -250,13 +277,13 @@ module FlatPack
               (slide[:poster].present? ? tag.img(
                 src: slide[:poster],
                 alt: "",
-                class: "absolute inset-0 h-full w-full object-cover pointer-events-none",
+                class: poster_classes,
                 loading: "lazy",
                 draggable: false,
                 aria: {hidden: true}
               ) : nil),
               content_tag(:video,
-                class: "absolute inset-0 z-10 block h-full w-full bg-[var(--carousel-media-background-color)] object-contain",
+                class: video_classes,
                 style: "width: 100%; height: 100%; object-fit: contain;",
                 controls: slide[:controls],
                 muted: slide[:muted],
@@ -343,6 +370,7 @@ module FlatPack
 
       def counter_visible?
         return false if @variant == :logo_slider
+        return false unless @show_counter
 
         multiple_slides?
       end
@@ -366,8 +394,14 @@ module FlatPack
       def render_counter
         content_tag(:div,
           "",
-          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium text-[var(--carousel-counter-text-color)]",
+          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium tabular-nums text-[var(--carousel-counter-text-color)]",
           data: {flat_pack__carousel_target: "counter"})
+      end
+
+      def lightbox_toggle_visible?
+        return false if @stage
+
+        @slides.any? { |slide| slide_lightbox_enabled?(slide) }
       end
 
       def render_lightbox_toggle
@@ -384,43 +418,15 @@ module FlatPack
         end
       end
 
-      def render_lightbox_overlay
-        content_tag(:div,
-          class: "fixed inset-0 z-50 hidden bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)] fp-overlay-pad",
-          tabindex: -1,
-          role: "dialog",
-          aria: {modal: true, hidden: "true", label: fp_t("carousel.lightbox")},
-          data: {
-            flat_pack__carousel_target: "lightbox",
-            action: "click->flat-pack--carousel#closeLightbox keydown.esc->flat-pack--carousel#closeLightbox"
-          }) do
-          content_tag(:div, class: "relative flex min-h-full items-center justify-center") do
-            safe_join([
-              content_tag(:button,
-                type: "button",
-                class: "absolute right-2 top-2 z-10 cursor-pointer rounded-full bg-[var(--modal-surface-color)] p-2 text-[var(--modal-close-icon-color)] shadow-sm transition hover:text-[var(--modal-close-icon-hover-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring sm:right-4 sm:top-4",
-                aria: {label: fp_t("carousel.close_lightbox")},
-                data: {action: "click->flat-pack--carousel#closeLightbox"}) do
-                render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md, class: "pointer-events-none")
-              end,
-              content_tag(:figure, class: "inline-flex max-w-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--modal-border-color)] bg-[var(--modal-surface-color)]") do
-                safe_join([
-                  tag.img(
-                    src: "",
-                    alt: "",
-                    class: "h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain bg-[var(--carousel-lightbox-image-background-color)]",
-                    draggable: false,
-                    data: {flat_pack__carousel_target: "lightboxImage"}
-                  ),
-                  content_tag(:figcaption,
-                    "",
-                    class: "hidden border-t border-[var(--modal-border-color)] px-4 py-3 text-sm text-[var(--modal-body-color)]",
-                    data: {flat_pack__carousel_target: "lightboxCaption"})
-                ])
-              end
-            ])
-          end
-        end
+      def render_shared_lightbox
+        return if @stage || @lightbox_items.empty?
+
+        render FlatPack::Lightbox::Component.new(
+          group: @lightbox_group,
+          items: @lightbox_items,
+          loop: @loop,
+          show_count: true
+        )
       end
 
       def render_indicators
@@ -448,9 +454,36 @@ module FlatPack
       end
 
       def render_thumbs
-        content_tag(:div, class: "mt-3 flex flex-wrap gap-2 #{thumb_alignment_class}") do
+        content_tag(:div, class: thumb_strip_classes, data: thumb_strip_data) do
           safe_join(@slides.map.with_index { |slide, index| render_thumb(slide, index) })
         end
+      end
+
+      def thumb_strip_classes
+        return stage_thumb_strip_classes if stage_layout?
+
+        "mt-3 flex flex-wrap gap-2 #{thumb_alignment_class}"
+      end
+
+      def stage_thumb_strip_classes
+        "flat-pack-carousel__thumbs absolute inset-x-0 bottom-0 z-30 flex flex-nowrap gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 [justify-content:safe_center]"
+      end
+
+      def thumb_strip_data
+        return {} unless stage_layout?
+
+        {flat_pack__carousel_target: "thumbStrip"}
+      end
+
+      def thumbs_visible?
+        return false unless @show_thumbs
+        return false if stage_layout? && !multiple_slides?
+
+        true
+      end
+
+      def stage_thumbs?
+        stage_layout? && thumbs_visible?
       end
 
       def render_thumb(slide, index)
@@ -488,6 +521,8 @@ module FlatPack
         when :image
           slide[:thumb_src].presence || slide[:src]
         when :video
+          return slide[:thumb_src].presence || slide[:poster].presence if stage_layout?
+
           slide[:poster]
         else
           slide[:thumb_src]
@@ -515,8 +550,16 @@ module FlatPack
       def render_below_caption
         content_tag(:p,
           "",
-          class: "mt-3 text-sm text-[var(--carousel-caption-below-text-color)]",
+          class: caption_classes,
           data: {flat_pack__carousel_target: "caption"})
+      end
+
+      def caption_classes
+        if stage_layout?
+          return "mt-3 shrink-0 text-center text-sm text-[var(--carousel-caption-overlay-text-color)]"
+        end
+
+        "mt-3 text-sm text-[var(--carousel-caption-below-text-color)]"
       end
 
       def slide_frame_classes
@@ -549,11 +592,19 @@ module FlatPack
 
       def viewport_classes
         return logo_slider_viewport_classes if @variant == :logo_slider
+        return stage_viewport_classes if stage_layout?
 
         classes(
           "flat-pack-carousel__viewport group relative overflow-hidden rounded-[var(--radius-lg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           @show_border ? "border border-[var(--carousel-viewport-border-color)]" : "border-0",
           @show_background ? "bg-[var(--carousel-viewport-background-color)]" : "bg-transparent",
+          @touch_swipe ? "cursor-grab select-none" : nil
+        )
+      end
+
+      def stage_viewport_classes
+        classes(
+          "flat-pack-carousel__viewport group relative min-h-0 w-full flex-1 overflow-hidden rounded-none border-0 bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end
@@ -568,7 +619,7 @@ module FlatPack
 
       def viewport_style
         declarations = []
-        declarations << "aspect-ratio: #{@aspect_ratio}" unless @variant == :logo_slider
+        declarations << "aspect-ratio: #{@aspect_ratio}" unless @variant == :logo_slider || stage_layout?
         declarations << "touch-action: pan-y" if @touch_swipe
         declarations << "height: auto" if @variant == :logo_slider
         declarations << "background: transparent" if @variant == :logo_slider
@@ -617,6 +668,7 @@ module FlatPack
             type: :video,
             src: src,
             poster: FlatPack::AttributeSanitizer.sanitize_url(payload[:poster]),
+            thumb_src: sanitize_thumb_src(payload),
             controls: payload.fetch(:controls, true),
             muted: payload.fetch(:muted, false),
             video_loop: payload.fetch(:video_loop, false),
@@ -645,9 +697,75 @@ module FlatPack
       end
 
       def slide_lightbox_enabled?(slide)
-        return false if @variant == :logo_slider
+        return false if @variant == :logo_slider || @stage
+        return false unless slide[:lightbox] && slide[:src].present?
 
-        slide[:type] == :image && slide[:lightbox] && slide[:src].present?
+        slide[:type] == :image || slide[:type] == :video
+      end
+
+      def slide_data(slide, index)
+        data = {
+          flat_pack__carousel_target: "slide",
+          index: index,
+          caption: slide[:caption].to_s,
+          lightbox_enabled: slide_lightbox_enabled?(slide).to_s,
+          lightbox_src: slide_lightbox_src(slide),
+          lightbox_alt: slide_lightbox_alt(slide)
+        }
+        data[:lightbox_index] = slide[:lightbox_index] unless slide[:lightbox_index].nil?
+        data
+      end
+
+      def image_classes
+        return "h-full w-full bg-transparent object-contain" if stage_layout?
+        return "h-full w-full object-contain bg-[var(--carousel-lightbox-image-background-color)]" if contain_fit?
+
+        "h-full w-full object-cover"
+      end
+
+      def poster_classes
+        return "pointer-events-none absolute inset-0 h-full w-full bg-transparent object-contain" if stage_layout?
+
+        "absolute inset-0 h-full w-full object-cover pointer-events-none"
+      end
+
+      def video_classes
+        return "absolute inset-0 z-10 block h-full w-full bg-transparent object-contain" if stage_layout?
+
+        "absolute inset-0 z-10 block h-full w-full bg-[var(--carousel-media-background-color)] object-contain"
+      end
+
+      def contain_fit?
+        @fit == :contain && @variant != :logo_slider
+      end
+
+      def stage_layout?
+        @stage && @variant != :logo_slider
+      end
+
+      def build_lightbox_items
+        index = 0
+        @slides.filter_map do |slide|
+          next unless slide_lightbox_enabled?(slide)
+
+          slide[:lightbox_index] = index
+          index += 1
+          lightbox_item_from(slide)
+        end
+      end
+
+      def lightbox_item_from(slide)
+        {
+          type: slide[:type],
+          src: slide[:src],
+          alt: slide[:alt],
+          caption: slide[:caption],
+          poster: slide[:poster],
+          controls: slide[:controls],
+          muted: slide[:muted],
+          video_loop: slide[:video_loop],
+          playsinline: slide[:playsinline]
+        }.compact
       end
 
       def sanitize_thumb_src(payload)
@@ -753,6 +871,7 @@ module FlatPack
         validate_option!(:thumbs_alignment, @thumbs_alignment, THUMBS_ALIGNMENTS)
         validate_option!(:transition, @transition, TRANSITIONS)
         validate_option!(:caption_mode, @caption_mode, CAPTION_MODES)
+        validate_option!(:fit, @fit, FITS)
 
         if @variant == :logo_slider && @transition == :fade
           raise ArgumentError, "logo_slider variant only supports :slide transition"

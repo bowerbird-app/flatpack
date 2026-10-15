@@ -527,7 +527,11 @@ module FlatPack
         assert_includes html, "focus-visible:ring-2"
         assert_includes html, "focus-visible:ring-inset"
         css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-        assert_includes css, ".fp-button.fp-button-current"
+        assert_includes css, ".fp-button.fp-button-current,"
+        assert_includes css, ".fp-button.fp-button-current:hover:not(:disabled)"
+        assert_includes css, "background-color: var(--surface-active-background-color);"
+        assert_includes css, "color: var(--surface-active-text-color);"
+        assert_includes css, "border-color: var(--surface-active-border-color);"
         refute_includes css, "justify-content: center"
       end
 

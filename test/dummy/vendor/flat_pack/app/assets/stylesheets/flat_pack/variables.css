@@ -57,6 +57,11 @@
   --surface-muted-content-color: var(--surface-muted-content-color);
   --surface-border-color: var(--surface-border-color);
   --surface-border-hover-color: var(--surface-border-hover-color);
+  --surface-hover-background-color: var(--surface-hover-background-color);
+  --surface-active-background-color: var(--surface-active-background-color);
+  --surface-active-text-color: var(--surface-active-text-color);
+  --surface-active-icon-color: var(--surface-active-icon-color);
+  --surface-active-border-color: var(--surface-active-border-color);
   --overlay-backdrop-color: var(--overlay-backdrop-color);
   --overlay-scrim-color: var(--overlay-scrim-color);
   --overlay-inset-sm: var(--overlay-inset-sm);
@@ -622,6 +627,7 @@
   --table-header-text-color: var(--table-header-text-color);
   --table-row-divider-color: var(--table-row-divider-color);
   --table-row-hover-background-color: var(--table-row-hover-background-color);
+  --table-row-selected-background-color: var(--table-row-selected-background-color);
   --table-cell-text-color: var(--table-cell-text-color);
   --table-cell-muted-text-color: var(--table-cell-muted-text-color);
   --table-empty-state-text-color: var(--table-empty-state-text-color);
@@ -715,6 +721,8 @@
   --transition-slow: var(--transition-slow);
   --transition-base: var(--transition-base);
   --transition-fast: var(--transition-fast);
+  --pagination-current-background-color: var(--pagination-current-background-color);
+  --pagination-current-text-color: var(--pagination-current-text-color);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -779,6 +787,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-content-color: #333;
   --surface-muted-background-color: #e5e5e5;
   --surface-subtle-background-color: var(--surface-muted-background-color);
+  --surface-hover-background-color: #f0f0f0;
+  --surface-active-background-color: #e4e4e4;
+  --surface-active-text-color: var(--surface-content-color);
+  --surface-active-icon-color: var(--surface-active-text-color);
+  --surface-active-border-color: transparent;
   --surface-muted-content-color: #666;
   --surface-border-color: #d1d5db;
   --surface-border-hover-color: #d1d5db;
@@ -897,14 +910,14 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
   --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--button-primary-background-color);
-  --tabs-pill-active-border-color: var(--button-primary-border-color);
-  --tabs-pill-active-text-color: var(--button-primary-text-color);
-  --tabs-stacked-pill-list-background-color: var(--surface-muted-background-color);
+  --tabs-pill-active-background-color: var(--surface-active-background-color);
+  --tabs-pill-active-border-color: var(--surface-active-border-color);
+  --tabs-pill-active-text-color: var(--surface-active-text-color);
+  --tabs-stacked-pill-list-background-color: var(--surface-hover-background-color);
   --tabs-pill-list-border-color: var(--surface-border-color);
-  --tabs-pill-active-shadow: var(--shadow-md);
+  --tabs-pill-active-shadow: none;
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
-  --tabs-pill-inactive-hover-background-color: var(--surface-muted-background-color);
+  --tabs-pill-inactive-hover-background-color: var(--surface-hover-background-color);
   --tabs-pill-inactive-hover-text-color: var(--surface-content-color);
   --card-background-color: var(--surface-background-color);
   --card-background-muted-color: var(--surface-muted-background-color);
@@ -1038,9 +1051,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
   --sidebar-item-icon-color: var(--surface-muted-content-color);
-  --sidebar-item-hover-background-color: var(--surface-muted-background-color);
-  --list-item-hover-background-color: var(--surface-muted-background-color);
-  --list-item-active-background-color: var(--surface-muted-background-color);
+  --sidebar-item-hover-background-color: var(--surface-hover-background-color);
+  --list-item-hover-background-color: var(--surface-hover-background-color);
+  --list-item-active-background-color: var(--surface-active-background-color);
   --list-marker-color: var(--surface-muted-content-color);
   --list-marker-min-width: 1.5rem;
   --list-marker-gap: 0.5rem;
@@ -1055,9 +1068,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collection-editor-handle-color: var(--surface-muted-content-color);
   --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: var(--surface-content-color);
-  --sidebar-item-active-background-color: var(--color-primary);
-  --sidebar-item-active-text-color: var(--color-primary-text);
-  --sidebar-item-active-icon-color: var(--color-primary-text);
+  --sidebar-item-active-background-color: var(--surface-active-background-color);
+  --sidebar-item-active-text-color: var(--surface-active-text-color);
+  --sidebar-item-active-icon-color: var(--surface-active-icon-color);
   --sidebar-group-item-indent: 1rem;
   --sidebar-footer-text-color: var(--surface-muted-content-color);
   --sidebar-header-background-color: var(--sidebar-background-color);
@@ -1304,11 +1317,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);
   --top-nav-item-icon-color: var(--surface-muted-content-color);
-  --top-nav-item-hover-background-color: var(--surface-muted-background-color);
+  --top-nav-item-hover-background-color: var(--surface-hover-background-color);
   --top-nav-item-hover-text-color: var(--surface-content-color);
-  --top-nav-item-active-background-color: var(--color-primary);
-  --top-nav-item-active-text-color: var(--color-primary-text);
-  --top-nav-item-active-icon-color: var(--color-primary-text);
+  --top-nav-item-active-background-color: var(--surface-active-background-color);
+  --top-nav-item-active-text-color: var(--surface-active-text-color);
+  --top-nav-item-active-icon-color: var(--surface-active-icon-color);
   --top-nav-height: 72px;
   --top-nav-backdrop-blur: 16px;
   --search-icon-color: var(--surface-muted-content-color);
@@ -1342,7 +1355,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-header-border-color: var(--surface-border-color);
   --table-header-text-color: var(--surface-muted-content-color);
   --table-row-divider-color: var(--surface-border-color);
-  --table-row-hover-background-color: var(--surface-muted-background-color);
+  --table-row-hover-background-color: var(--surface-hover-background-color);
+  --table-row-selected-background-color: var(--surface-active-background-color);
+  --pagination-current-background-color: var(--surface-active-background-color);
+  --pagination-current-text-color: var(--surface-active-text-color);
   --table-cell-text-color: var(--surface-content-color);
   --table-cell-muted-text-color: var(--surface-muted-content-color);
   --table-empty-state-text-color: var(--surface-muted-content-color);
@@ -1500,6 +1516,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-page-background-color: oklch(0.15 0.01 250);
   --surface-content-color: oklch(0.95 0.01 250);
   --surface-muted-background-color: oklch(0.22 0.02 250);
+  --surface-hover-background-color: oklch(0.22 0.02 250);
+  --surface-active-background-color: oklch(0.28 0.02 250);
   --surface-muted-content-color: oklch(0.65 0.01 250);
   --surface-border-color: oklch(0.30 0.02 250);
   --surface-border-hover-color: oklch(0.40 0.03 250);
@@ -1550,8 +1568,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --bottom-nav-item-color: oklch(0.81 0.04 220);
   --bottom-nav-item-hover-color: oklch(0.99 0.01 220);
   --overlay-backdrop-color: rgb(3 24 47 / 0.45);
-  --list-item-hover-background-color: oklch(0.92 0.03 220);
-  --list-item-active-background-color: oklch(0.88 0.04 220);
+  --surface-hover-background-color: oklch(0.92 0.03 220);
+  --surface-active-background-color: oklch(0.88 0.04 220);
   --sidebar-group-item-indent: 0.875rem;
   --avatar-status-ring-color: var(--surface-background-color);
   --modal-backdrop-blur: 5px;

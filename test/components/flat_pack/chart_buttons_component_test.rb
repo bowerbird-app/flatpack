@@ -11,7 +11,9 @@ module FlatPack
         end
 
         assert_selector "div.flex.flex-wrap.items-center.gap-2.mb-3"
-        assert_selector "a[href='/demo/charts?period=day'][data-turbo-frame='chart-frame'][data-turbo-prefetch='false'][aria-pressed='true']", text: "Day"
+        assert_selector "a.fp-button-current[data-fp-style='secondary'][href='/demo/charts?period=day'][data-turbo-frame='chart-frame'][data-turbo-prefetch='false'][aria-pressed='true']", text: "Day"
+        refute_selector "a[data-fp-style='primary']"
+        refute_selector "[aria-current]"
       end
 
       def test_allows_margin_bottom_override

@@ -6,7 +6,7 @@ Stack mixed-ratio items so each one keeps its natural shape and sits tight under
 ## When to use
 Use Masonry for photo walls, media libraries, and mixed portrait/landscape tiles. Use `Grid` when items should share a row height. Do not change `Grid` to get this layout.
 
-Masonry is layout only. A photo is `FlatPack::Media::Component` inside `with_item`. A link, a filename, or a card is host markup in that same cell.
+Masonry is layout only. A photo is `FlatPack::Media::Component` inside `with_item`. A link, a filename, or a card is host markup in that same cell. Wrap a tile in `FlatPack::Lightbox::Trigger` when the photo should open a [Lightbox](lightbox.md).
 
 ## Class
 - Primary: `FlatPack::Masonry::Component`

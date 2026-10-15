@@ -239,8 +239,9 @@ module FlatPack
 
         selected_option_classes = page.find("div[role='option'][data-value='rails']")[:class]
 
-        assert_includes selected_option_classes, "bg-[var(--color-primary)]"
-        assert_includes selected_option_classes, "text-[var(--color-primary-text)]"
+        assert_includes selected_option_classes, "bg-[var(--surface-active-background-color)]"
+        assert_includes selected_option_classes, "text-[var(--surface-active-text-color)]"
+        refute_includes selected_option_classes, "bg-[var(--color-primary)]"
         refute_includes selected_option_classes, "text-white"
       end
 

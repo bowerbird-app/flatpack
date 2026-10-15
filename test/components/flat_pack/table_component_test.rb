@@ -611,6 +611,9 @@ module FlatPack
         assert_selector "tbody.divide-y"
         assert_selector "thead.border-b"
         assert_selector "tr.hover\\:bg-\\[var\\(--table-row-hover-background-color\\)\\]"
+        html = page.native.to_html
+        assert_includes html, "has-[:checked]:bg-[var(--table-row-selected-background-color)]"
+        assert_includes html, "has-[:checked]:hover:bg-[var(--table-row-selected-background-color)]"
         refute_selector "table.table-fixed"
         refute_selector "colgroup"
       end

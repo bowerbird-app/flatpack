@@ -25,7 +25,7 @@ Use Table for datasets that need consistent headers, rows, formatting, and optio
 | `draggable_rows` | Boolean | `false` | No | Adds `flat-pack--table-sortable` controller and draggable row data hooks. |
 | `min_width` | Symbol/String/nil | `:md` | No | Minimum table width so narrow viewports scroll the wrapper instead of squashing columns. Accepts `:none`, `:sm` (30rem), `:md` (40rem), `:lg` (48rem), or a Tailwind `min-w-*` class String. Independent of a column `min_width:`. |
 | `headers` | Boolean | `true` | No | When `false`, the header row stays in the DOM and is visually hidden with `sr-only`. Column `title:` stays required. Anything other than `true` or `false` raises `ArgumentError`. |
-| `style` | Symbol | `:default` | No | `:default` keeps the outer border, radius, and row hover. `:plain` drops all three. Same param name as Button, Badge, and Card. Anything else raises `ArgumentError`. |
+| `style` | Symbol | `:default` | No | `:default` keeps the outer border, radius, and row hover. `:plain` drops all three. A checked control inside a default row paints `--table-row-selected-background-color` and keeps it on hover. Same param name as Button, Badge, and Card. Anything else raises `ArgumentError`. |
 | `dividers` | Boolean | `true` | No | `true` draws the header rule and the row lines. `false` removes both. Anything other than `true` or `false` raises `ArgumentError`. |
 | `reorder` | Hash | `nil` | No | Optional hash override for reorder settings (`url`, `resource`, `strategy`, `scope`, `version`, `row_id`). |
 | `reorder_url` | String | `nil` | No | PATCH endpoint used by sortable controller to persist order. |

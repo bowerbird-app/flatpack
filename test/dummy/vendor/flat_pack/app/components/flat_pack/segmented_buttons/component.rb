@@ -12,10 +12,11 @@ module FlatPack
           raise ArgumentError, "Pass style: to SegmentedButtons, not to a segment."
         end
 
-        style = selected ? @style : UNSELECTED_STYLE
+        style = selected ? (@style || UNSELECTED_STYLE) : UNSELECTED_STYLE
         FlatPack::Button::Component.new(
           text: text,
           style: style,
+          current: selected && @style.nil?,
           size: size.nil? ? @size : size,
           **args
         )
@@ -23,10 +24,10 @@ module FlatPack
 
       undef_method :with_button, :with_button_content
 
-      def initialize(size: :md, style: :primary, **system_arguments)
+      def initialize(size: :md, style: nil, **system_arguments)
         super(**system_arguments)
         @size = size.to_sym
-        @style = style.to_sym
+        @style = style&.to_sym
         validate_size!
         validate_style!
       end
@@ -70,6 +71,7 @@ module FlatPack
       end
 
       def validate_style!
+        return if @style.nil?
         return if FlatPack::Button::StyleRegistry.known?(@style)
 
         raise ArgumentError, FlatPack::Button::StyleRegistry.invalid_style_message(@style)

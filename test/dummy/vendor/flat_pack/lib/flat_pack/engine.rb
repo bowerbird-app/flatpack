@@ -46,12 +46,14 @@ module FlatPack
         if respond_to?(:helper)
           helper FlatPack::CopyHelper
           helper FlatPack::ModalHelper
+          helper FlatPack::LightboxHelper
         end
       end
 
       ActiveSupport.on_load(:action_view) do
         include FlatPack::CopyHelper
         include FlatPack::ModalHelper
+        include FlatPack::LightboxHelper
       end
     end
 
