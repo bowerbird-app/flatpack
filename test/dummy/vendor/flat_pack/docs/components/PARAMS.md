@@ -46,6 +46,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Collection item floor | `min_item_width` | Collection `layout: :grid` only. A CSS length such as `"14rem"` (the default). Sets `--fp-collection-min-item-width`. Not Table `min_width`. |
 | Collection gap | `gap` | Collection, Grid, and Masonry. `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
 | Button label lines | `lines` | `FlatPack::Button::Component` only. `1` (default) or `2`. Clamps the label with an ellipsis. |
+| Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
+| Button icon colour | `icon_style` | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, `:danger` use `--button-icon-*` tokens. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
 | Clamped label tooltip | `title` | On Button, the full label for the HTML `title` tooltip when `lines` clamps the visible text. Elsewhere, `title` stays a section heading. |
 | Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |
@@ -108,4 +110,5 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not pass Collection `min_item_width` to Table, or a Table column `min_width` to Collection.
 - Do not add a colour `style` or an item class to Collection. Hosts style the items.
 - Button `title` is the full-text tooltip. Do not use it as a heading. Button `label` is not the visible string; use `text`.
+- Do not add `icon_class` on a button. Recolour the glyph with `icon_style` and the `--button-icon-*` tokens.
 - Do not use `label` for a key/value term. Use `key`. The item block is the value.

@@ -413,6 +413,7 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
 - Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in `data-fp-style` values map these from `--button-primary-*` and the other scheme tokens. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. A host-registered style sets the paint tokens on `[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
+- Leading icon colour: `--button-icon-primary-color` (`--color-primary`), `--button-icon-success-color` (`--color-success-background-color`), `--button-icon-warning-color` (`--color-warning`), `--button-icon-danger-color` (`--color-danger-background-color`). `icon_style: nil` uses the button text. A set style mixes that token 55% toward `--fp-button-text` so the glyph stays readable on every button fill, including host-registered styles. When the icon style matches the button style, the glyph uses `--fp-button-text`. Disabled opacity on `.fp-button` still mutes it. There is no per-button icon class.
 - Radius: `--radius-md`
 - Shadow: `--button-shadow`, `--button-shadow-hover`, `--button-shadow-active`
 - Duration: `--duration-fast` for colour, border, and shadow

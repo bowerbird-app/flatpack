@@ -4,6 +4,9 @@ module FlatPack
   module Button
     module DropdownItem
       class Component < FlatPack::BaseComponent
+        ICON_VARIANTS = IconOptions::VARIANTS
+        ICON_STYLES = IconOptions::STYLES
+
         BADGE_STYLES = {
           default: "border border-[var(--badge-default-border-color)] bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)]",
           primary: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
@@ -17,6 +20,8 @@ module FlatPack
         def initialize(
           text:,
           icon: nil,
+          icon_variant: nil,
+          icon_style: nil,
           badge: nil,
           badge_style: :primary,
           href: nil,
@@ -27,6 +32,8 @@ module FlatPack
           super(**system_arguments)
           @text = text
           @icon = icon
+          @icon_variant = IconOptions.normalize_variant!(icon_variant)
+          @icon_style = IconOptions.normalize_style!(icon_style)
           @badge = badge
           @badge_style = badge_style.to_sym
           @href = href
@@ -66,7 +73,16 @@ module FlatPack
 
         def item_content
           content = []
-          content << render(FlatPack::Shared::IconComponent.new(name: @icon, size: :sm)) if @icon
+          if @icon
+            content << render(FlatPack::Shared::IconComponent.new(
+              **IconOptions.component_arguments(
+                name: @icon,
+                size: :sm,
+                icon_variant: @icon_variant,
+                icon_style: @icon_style
+              )
+            ))
+          end
           content << content_tag(:span, @text, class: "flex-1")
           if @badge
             content << content_tag(:span, @badge, class: badge_classes)

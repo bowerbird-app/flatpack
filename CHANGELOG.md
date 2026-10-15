@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.243] - 2026-10-15
+
+### Added
+- `FlatPack::Button::Component`, `FlatPack::Button::Dropdown::Component`, and `FlatPack::Button::DropdownItem::Component` accept `icon_variant:` (`:outline`, `:solid`, `:mini`, `:micro`) and `icon_style:` (`nil`, `:primary`, `:success`, `:warning`, `:danger`).
+- `icon_variant` is passed to `FlatPack::Shared::IconComponent` `variant:`. Omit it to keep `config.default_icon_variant`.
+- `icon_style: nil` inherits the button text through `currentColor`. The other values use `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`.
+- Those tokens alias `--color-primary`, `--color-success-background-color`, `--color-warning`, and `--color-danger-background-color`. The glyph mixes the token toward `--fp-button-text` so it stays readable on every button style. When `icon_style` matches `style`, the glyph uses the button text colour.
+- The dropdown chevron stays the trigger text colour and the default icon weight.
+- Demo: `/demo/buttons#icon-colour`.
+- Bumped the gem version to `0.1.243`.
+
+### Upgrade notes
+- Additive params. Existing buttons keep the configured icon weight and the button text colour.
+- `icon_variant` must be `:outline`, `:solid`, `:mini`, or `:micro`. `icon_style` must be `nil`, `:primary`, `:success`, `:warning`, or `:danger`. Anything else raises `ArgumentError`.
+- There is no `icon_class`. Hosts recolour icons by overriding `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`.
+- A disabled button still uses `--button-disabled-opacity`, which mutes the icon with the label.
+- Rebuild host Tailwind so these literals are generated: `fp-button-icon`, `text-[color-mix(in_oklab,var(--button-icon-primary-color)_55%,var(--fp-button-text))]`, `text-[color-mix(in_oklab,var(--button-icon-success-color)_55%,var(--fp-button-text))]`, `text-[color-mix(in_oklab,var(--button-icon-warning-color)_55%,var(--fp-button-text))]`, and `text-[color-mix(in_oklab,var(--button-icon-danger-color)_55%,var(--fp-button-text))]`.
+- Reload kit CSS for the same-style icon rule.
+- Redeploy so `meta.gem_version` shows `0.1.243`.
+- Do not tag this PR.
+
 ## [0.1.242] - 2026-10-15
 
 ### Added

@@ -172,7 +172,10 @@
       method_call: "render FlatPack::Button::Component.new(text: \"Save\", style: :primary, size: :md)",
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Save\"" },
-        { variable: "style", accepts: ":primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :secondary" },
+        { variable: "style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :secondary" },
+        { variable: "icon", accepts: "String or nil", example: "icon: \"check-circle\"" },
+        { variable: "icon_variant", accepts: ":outline, :solid, :mini, :micro, or nil", example: "icon_variant: :solid" },
+        { variable: "icon_style", accepts: ":primary, :success, :warning, :danger, or nil", example: "icon_style: :success" },
         { variable: "loading", accepts: "true, false", example: "loading: true" },
         { variable: "align", accepts: ":center, :start", example: "align: :start" },
         { variable: "lines", accepts: "1, 2", example: "lines: 2" },

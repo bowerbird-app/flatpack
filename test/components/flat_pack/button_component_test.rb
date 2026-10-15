@@ -519,6 +519,90 @@ module FlatPack
         refute_selector "button svg[aria-label]"
       end
 
+      def test_icon_variant_defaults_to_the_configured_heroicon_weight
+        FlatPack.configuration = nil
+        render_inline(Component.new(text: "Search", icon: "magnifying-glass"))
+
+        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='outline']"
+        refute_selector "button svg[data-icon-style]"
+      ensure
+        FlatPack.configuration = nil
+      end
+
+      def test_icon_variant_and_icon_style_reach_the_leading_icon
+        render_inline(Component.new(
+          text: "Published",
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success
+        ))
+
+        assert_selector "button[data-fp-style='default'] svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-flat-pack--icon-name-value='check-circle'][data-icon-style='success']"
+        assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:success)
+      end
+
+      def test_icon_variant_accepts_a_string_and_icon_style_can_be_omitted
+        render_inline(Component.new(text: "Add", icon: "plus", icon_variant: "mini"))
+
+        assert_selector "button svg[data-flat-pack--icon-variant-value='mini'][viewbox='0 0 20 20']"
+        refute_selector "button svg[data-icon-style]"
+      end
+
+      def test_matching_icon_style_uses_the_button_text_colour
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, '.fp-button[data-fp-style="success"] .fp-button-icon[data-icon-style="success"]'
+        assert_includes css, "color: var(--fp-button-text);"
+        refute_includes css, "justify-content: center"
+        refute_match(/\.fp-button-icon[^{]*\{[^}]*opacity:\s*1/, css)
+      end
+
+      def test_disabled_button_keeps_the_opacity_that_mutes_the_icon
+        render_inline(Component.new(
+          text: "Published",
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success,
+          disabled: true
+        ))
+
+        assert_selector "button[disabled].fp-button svg.fp-button-icon[data-icon-style='success']"
+        assert_includes page.native.to_html, "disabled:opacity-[var(--button-disabled-opacity)]"
+        refute_includes page.native.to_html, "opacity-100"
+      end
+
+      def test_heroicon_options_ignore_a_render_icon_override
+        component = Component.new(
+          text: "Published",
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success
+        )
+        component.define_singleton_method(:render_icon) { raise "host render_icon should not paint a Heroicon" }
+
+        render_inline(component)
+
+        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-icon-style='success']"
+      end
+
+      def test_inline_svg_still_reaches_a_render_icon_override
+        component = Component.new(text: "Google", icon: '<svg data-logo="mark"></svg>', icon_style: :success)
+        component.define_singleton_method(:render_icon) { "<span id=\"host-logo\">logo</span>".html_safe }
+
+        render_inline(component)
+
+        assert_selector "#host-logo", text: "logo"
+        refute_selector "svg[data-flat-pack--icon-name-value]"
+      end
+
+      def test_invalid_icon_variant_and_icon_style
+        variant_error = assert_raises(ArgumentError) { Component.new(text: "Save", icon_variant: :filled) }
+        assert_match(/icon_variant/, variant_error.message)
+
+        style_error = assert_raises(ArgumentError) { Component.new(text: "Save", icon_style: :info) }
+        assert_match(/icon_style/, style_error.message)
+      end
+
       def test_current_link_sets_aria_current_and_keeps_the_focus_ring
         render_inline(Component.new(text: "Logos", href: "/logos", current: true))
 

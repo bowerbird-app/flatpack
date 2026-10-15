@@ -272,6 +272,90 @@
     ) %>
   </section>
 
+  <!-- Icon colour -->
+  <section class="mb-12" id="icon-colour">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Icon colour",
+      anchor_link: true,
+      subtitle: "Status glyphs that stay readable on the button."
+    ) %>
+    <div class="flex flex-wrap items-center gap-3 mb-4" id="published-button">
+      <%= render FlatPack::Button::Component.new(
+        text: "Published",
+        icon: "check-circle",
+        icon_variant: :solid,
+        icon_style: :success
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Published",
+        icon: "check-circle",
+        icon_variant: :solid,
+        icon_style: :success,
+        disabled: true
+      ) %>
+    </div>
+    <div class="flex flex-wrap items-center gap-3 mb-4" id="icon-style-row">
+      <%= render FlatPack::Button::Component.new(text: "Primary", icon: "star", icon_variant: :solid, icon_style: :primary) %>
+      <%= render FlatPack::Button::Component.new(text: "Success", icon: "check-circle", icon_variant: :solid, icon_style: :success) %>
+      <%= render FlatPack::Button::Component.new(text: "Warning", icon: "exclamation-triangle", icon_variant: :solid, icon_style: :warning) %>
+      <%= render FlatPack::Button::Component.new(text: "Danger", icon: "x-circle", icon_variant: :solid, icon_style: :danger) %>
+      <%= render FlatPack::Button::Component.new(text: "Inherit", icon: "plus") %>
+    </div>
+    <div class="flex flex-wrap items-center gap-3 mb-4" id="icon-on-button-styles">
+      <% %i[default primary secondary ghost success warning danger partner].each do |button_style| %>
+        <%= render FlatPack::Button::Component.new(
+          text: button_style.to_s.tr("_", " ").capitalize,
+          style: button_style,
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success
+        ) %>
+      <% end %>
+    </div>
+    <div class="mb-4" id="icon-dropdown">
+      <%= render FlatPack::Button::Dropdown::Component.new(
+        text: "Publish",
+        icon: "check-circle",
+        icon_variant: :solid,
+        icon_style: :success
+      ) do |dropdown| %>
+        <% dropdown.menu_item(text: "Publish now", icon: "check-circle", icon_variant: :solid, icon_style: :success, href: "#") %>
+        <% dropdown.menu_item(text: "Unpublish", icon: "x-circle", icon_style: :danger, href: "#") %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      snippets: [
+        {
+          label: "Published",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Component.new(
+              text: "Published",
+              icon: "check-circle",
+              icon_variant: :solid,
+              icon_style: :success
+            ) %&gt;
+          CODE
+        },
+        {
+          label: "Dropdown",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Dropdown::Component.new(
+              text: "Publish",
+              icon: "check-circle",
+              icon_variant: :solid,
+              icon_style: :success
+            ) do |dropdown| %&gt;
+              &lt;% dropdown.menu_item(text: "Publish now", icon: "check-circle", icon_variant: :solid, icon_style: :success, href: "#") %&gt;
+              &lt;% dropdown.menu_item(text: "Unpublish", icon: "x-circle", icon_style: :danger, href: "#") %&gt;
+            &lt;% end %&gt;
+          CODE
+        }
+      ]
+    ) %>
+  </section>
+
   <!-- Icon Only Buttons -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Icon Only Buttons", anchor_link: true, subtitle: "Examples for Icon Only Buttons.") %>

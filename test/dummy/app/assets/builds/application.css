@@ -3043,6 +3043,30 @@
   .text-\(--top-nav-item-icon-color\) {
     color: var(--top-nav-item-icon-color);
   }
+  .text-\[color-mix\(in_oklab\,var\(--button-icon-danger-color\)_55\%\,var\(--fp-button-text\)\)\] {
+    color: var(--button-icon-danger-color);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab,var(--button-icon-danger-color) 55%,var(--fp-button-text));
+    }
+  }
+  .text-\[color-mix\(in_oklab\,var\(--button-icon-primary-color\)_55\%\,var\(--fp-button-text\)\)\] {
+    color: var(--button-icon-primary-color);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab,var(--button-icon-primary-color) 55%,var(--fp-button-text));
+    }
+  }
+  .text-\[color-mix\(in_oklab\,var\(--button-icon-success-color\)_55\%\,var\(--fp-button-text\)\)\] {
+    color: var(--button-icon-success-color);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab,var(--button-icon-success-color) 55%,var(--fp-button-text));
+    }
+  }
+  .text-\[color-mix\(in_oklab\,var\(--button-icon-warning-color\)_55\%\,var\(--fp-button-text\)\)\] {
+    color: var(--button-icon-warning-color);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab,var(--button-icon-warning-color) 55%,var(--fp-button-text));
+    }
+  }
   .text-\[var\(--accordion-trigger-text-color\)\] {
     color: var(--accordion-trigger-text-color);
   }

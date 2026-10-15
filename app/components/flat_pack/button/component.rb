@@ -42,6 +42,9 @@ module FlatPack
         2 => "shrink-0 self-start"
       }.freeze
 
+      ICON_VARIANTS = IconOptions::VARIANTS
+      ICON_STYLES = IconOptions::STYLES
+
       renders_one :trailing
 
       def initialize(
@@ -52,6 +55,8 @@ module FlatPack
         method: nil,
         target: nil,
         icon: nil,
+        icon_variant: nil,
+        icon_style: nil,
         icon_only: false,
         loading: false,
         type: "button",
@@ -68,6 +73,8 @@ module FlatPack
         @method = method
         @target = target
         @icon = icon
+        @icon_variant = IconOptions.normalize_variant!(icon_variant)
+        @icon_style = IconOptions.normalize_style!(icon_style)
         @icon_only = icon_only
         @loading = loading
         @type = type
@@ -124,7 +131,7 @@ module FlatPack
           content << render(FlatPack::Spinner::Component.new(size: @size, label: nil))
           content << content_tag(:span, fp_t("button.loading"), class: label_classes) unless @icon_only
         else
-          content << render_icon if @icon
+          content << render_leading_icon if @icon
           content << content_tag(:span, @text, class: label_classes) if @text && !@icon_only
           content << render_trailing if show_trailing?
         end
@@ -140,8 +147,30 @@ module FlatPack
         content_tag(:span, trailing, class: TRAILING_CLASSES.fetch(@lines))
       end
 
+      # button_content calls this, not render_icon. A host prepend on render_icon
+      # can still paint an inline SVG mark. Heroicon names stay here so
+      # icon_variant and icon_style are not dropped.
+      def render_leading_icon
+        return render_icon if delegated_svg_icon?
+
+        render FlatPack::Shared::IconComponent.new(
+          **IconOptions.component_arguments(
+            name: @icon,
+            size: @size,
+            icon_variant: @icon_variant,
+            icon_style: @icon_style
+          )
+        )
+      end
+
       def render_icon
-        render FlatPack::Shared::IconComponent.new(name: @icon, size: @size)
+        render_leading_icon
+      end
+
+      def delegated_svg_icon?
+        return false unless @icon.is_a?(String) && @icon.start_with?("<svg")
+
+        method(:render_icon).owner != FlatPack::Button::Component
       end
 
       def icon_size
