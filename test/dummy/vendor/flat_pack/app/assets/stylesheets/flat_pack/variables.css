@@ -915,7 +915,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --tabs-pill-active-text-color: var(--surface-active-text-color);
   --tabs-stacked-pill-list-background-color: var(--surface-hover-background-color);
   --tabs-pill-list-border-color: var(--surface-border-color);
-  --tabs-pill-active-shadow: var(--shadow-md);
+  --tabs-pill-active-shadow: none;
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
   --tabs-pill-inactive-hover-background-color: var(--surface-hover-background-color);
   --tabs-pill-inactive-hover-text-color: var(--surface-content-color);

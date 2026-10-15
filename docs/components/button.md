@@ -71,7 +71,7 @@ CSS loaded after `flat_pack/application`:
 
 The button sets `data-fp-style` to the style name. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Built-in styles map that attribute onto `--button-primary-*` and the other scheme tokens, so theme and hero overlay remaps still apply. A registered style sets `--fp-button-*` directly and does not change the page theme.
 
-A pill group uses the same `[data-fp-style]` rule. Omitting `style:` leaves the active pill on `--tabs-pill-active-*` (the neutral active surface) and does not set `data-fp-style`. Any named style, including `:primary`, adds `fp-pill-button-slots`. That class copies the button slots onto the active pill. A selector that only matches `.fp-button[data-fp-style="partner"]` still paints buttons. Those pill groups need the slots class, which a named pill `style:` adds.
+A pill group uses the same `[data-fp-style]` rule. Omitting `style:` leaves the active pill on `--tabs-pill-active-*` (the neutral active surface, no shadow) and does not set `data-fp-style`. Any named style, including `:primary`, adds `fp-pill-button-slots`. That class copies the button slots onto the active pill and restores `--tabs-pill-active-shadow` to `--shadow-md`. A selector that only matches `.fp-button[data-fp-style="partner"]` still paints buttons. Those pill groups need the slots class, which a named pill `style:` adds.
 
 Do not register over a built-in name. Names are a lowercase letter, then letters, numbers, or underscores. Vendor colours (Stripe, Paddle, and the rest) belong in the host or billing gem CSS, not in FlatPack.
 

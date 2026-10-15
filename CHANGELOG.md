@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `current: true` on any Button, including `style: :primary`, uses the active surface and keeps it on hover.
 - Segmented buttons and chart filter buttons do the same when `style:` is omitted. A named `style:` still paints that button colour.
 - Inline radios, button chips, single-select options, rich text toolbar and bubble toggles, tree rows, and font-swatch rows use the active surface. Tree bars, underline tabs, and the sliding underline stay `--color-primary`.
+- The neutral active pill is flat. `--tabs-pill-active-shadow` is `none`. Named pill styles, including `:primary`, keep `--shadow-md` through `.fp-pill-button-slots`.
 - Bumped the gem version to `0.1.242`.
 
 ### Upgrade notes
@@ -34,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chart filter `selected: true` without `style:` is the same neutral surface, not primary.
 - The current pagination page is `--pagination-current-*`, not `bg-primary`. A checked table row is `--table-row-selected-background-color`.
 - A selected button chip fills with the active surface. It no longer draws `ring-[var(--color-ring)]`.
+- The omitted pill shadow is `none`. Pass a named `style:`, including `:primary`, to keep `--shadow-md` on the active pill.
 - Rebuild host Tailwind so the new literals are generated, including `bg-[var(--surface-active-background-color)]`, `text-[var(--surface-active-text-color)]`, `border-[var(--surface-active-border-color)]`, `hover:bg-[var(--surface-hover-background-color)]`, `bg-[var(--pagination-current-background-color)]`, `text-[var(--pagination-current-text-color)]`, `has-[:checked]:bg-[var(--table-row-selected-background-color)]`, and `has-[:checked]:hover:bg-[var(--table-row-selected-background-color)]`. Reload kit CSS for the token values.
 
 ## [0.1.241] - 2026-10-15

@@ -1730,6 +1730,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --tabs-pill-active-background-color: var(--fp-button-background);
   --tabs-pill-active-border-color: var(--fp-button-border);
   --tabs-pill-active-text-color: var(--fp-button-text);
+  --tabs-pill-active-shadow: var(--shadow-md);
 }
 
 .fp-button-raised {

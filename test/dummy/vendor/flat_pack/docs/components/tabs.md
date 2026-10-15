@@ -24,7 +24,7 @@ None (content is defined through component builder methods).
 
 ## Variants
 - `:underline` horizontal underline tabs. `style:` is accepted. Underline paint does not change.
-- `:pills` pill-style horizontal tabs. Omit `style:` for the neutral active surface. A named style, including `:primary`, paints that button colour on the active control.
+- `:pills` pill-style horizontal tabs. Omit `style:` for the flat neutral active surface (`--tabs-pill-active-shadow: none`). A named style, including `:primary`, paints that button colour on the active control and restores `--shadow-md`.
 - `:stacked` vertical tab list with side-by-side layout on medium+ breakpoints. The track uses `--surface-hover-background-color` so the active pill reads darker. `style:` paints the active control the same way as pills.
 - `indicator: :slide` is opt-in on every variant. Default markup stays the same. One marker follows the selected tab. Tabs keep only the text colour change. Motion is `--duration-base` / `--easing-standard`. `prefers-reduced-motion` snaps.
 

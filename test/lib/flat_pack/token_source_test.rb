@@ -281,11 +281,14 @@ module FlatPack
       assert_match(/--tabs-pill-active-background-color:\s*var\(--surface-active-background-color\)/, root_block)
       assert_match(/--tabs-pill-active-border-color:\s*var\(--surface-active-border-color\)/, root_block)
       assert_match(/--tabs-pill-active-text-color:\s*var\(--surface-active-text-color\)/, root_block)
+      assert_match(/--tabs-pill-active-shadow:\s*none/, root_block)
       assert_match(/--tabs-stacked-pill-list-background-color:\s*var\(--surface-hover-background-color\)/, root_block)
+      refute_match(/--tabs-pill-active-shadow:\s*var\(--shadow-md\)/, root_block)
 
       application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
       assert_includes application, ".fp-pill-button-slots {"
       assert_includes application, "--tabs-pill-active-background-color: var(--fp-button-background);"
+      assert_includes application, "--tabs-pill-active-shadow: var(--shadow-md);"
       refute_includes application, ":not([data-fp-style=\"primary\"])"
       refute_includes application, "--tabs-pill-default-background-color"
     end
