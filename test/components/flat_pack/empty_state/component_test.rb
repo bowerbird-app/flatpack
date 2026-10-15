@@ -191,29 +191,96 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "py-[var(--empty-state-padding-y-md)]"
         assert_includes html, "px-[var(--empty-state-padding-x-md)]"
-        assert_includes html, "text-[length:var(--text-lg)]"
-        assert_includes html, "text-[length:var(--text-sm)]"
+        assert_includes page.find("h3")[:class], "text-[length:var(--text-lg)]"
+        assert_includes page.find("p")[:class], "text-[length:var(--text-base)]"
+        assert_no_selector "svg"
         refute_includes html, "py-12"
         refute_includes html, "px-4"
       end
 
       def test_renders_small_size
-        render_inline(Component.new(title: "Nothing here", size: :sm))
+        render_inline(Component.new(title: "Nothing here", description: "Try again later.", icon: :inbox, size: :sm))
 
         html = page.native.to_html
         assert_includes html, "py-[var(--empty-state-padding-y-sm)]"
         assert_includes html, "px-[var(--empty-state-padding-x-sm)]"
-        assert_includes html, "text-[length:var(--text-base)]"
+        assert_includes page.find("h3")[:class], "text-[length:var(--text-base)]"
+        assert_includes page.find("p")[:class], "text-[length:var(--text-sm)]"
+        assert_selector "svg.w-5.h-5"
       end
 
       def test_renders_large_size
-        render_inline(Component.new(title: "Nothing here", description: "Try again later.", size: :lg))
+        render_inline(Component.new(title: "Nothing here", description: "Try again later.", icon: :inbox, size: :lg))
 
         html = page.native.to_html
         assert_includes html, "py-[var(--empty-state-padding-y-lg)]"
         assert_includes html, "px-[var(--empty-state-padding-x-lg)]"
-        assert_includes html, "text-[length:var(--text-xl)]"
-        assert_includes html, "text-[length:var(--text-base)]"
+        assert_includes page.find("h3")[:class], "text-[length:var(--text-xl)]"
+        assert_includes page.find("p")[:class], "text-[length:var(--text-lg)]"
+        assert_selector "svg.w-8.h-8"
+      end
+
+      def test_default_size_uses_the_large_icon
+        render_inline(Component.new(title: "Nothing here", icon: :inbox))
+
+        assert_selector "svg.w-6.h-6"
+      end
+
+      def test_description_size_overrides_the_preset
+        render_inline(Component.new(
+          title: "Nothing here",
+          description: "Try again later.",
+          size: :md,
+          description_size: :xl
+        ))
+
+        assert_includes page.find("h3")[:class], "text-[length:var(--text-lg)]"
+        assert_includes page.find("p")[:class], "text-[length:var(--text-xl)]"
+        assert_includes page.native.to_html, "py-[var(--empty-state-padding-y-md)]"
+      end
+
+      def test_description_size_can_stay_small_on_a_large_preset
+        render_inline(Component.new(
+          title: "Nothing here",
+          description: "Try again later.",
+          size: :lg,
+          description_size: :sm
+        ))
+
+        assert_includes page.find("h3")[:class], "text-[length:var(--text-xl)]"
+        assert_includes page.find("p")[:class], "text-[length:var(--text-sm)]"
+        assert_includes page.native.to_html, "py-[var(--empty-state-padding-y-lg)]"
+      end
+
+      def test_icon_size_overrides_the_preset
+        render_inline(Component.new(title: "Nothing here", icon: :inbox, size: :lg, icon_size: :sm))
+
+        assert_selector "svg.w-4.h-4"
+        assert_includes page.native.to_html, "py-[var(--empty-state-padding-y-lg)]"
+      end
+
+      def test_icon_size_requires_an_icon
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", icon_size: :lg)
+        end
+
+        assert_includes error.message, "icon_size requires icon"
+      end
+
+      def test_raises_for_invalid_description_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", description_size: :base)
+        end
+
+        assert_includes error.message, "Invalid description_size"
+      end
+
+      def test_raises_for_invalid_icon_size
+        error = assert_raises(ArgumentError) do
+          Component.new(title: "Nothing here", icon: :inbox, icon_size: :xxl)
+        end
+
+        assert_includes error.message, "Invalid icon_size"
       end
 
       def test_title_size_overrides_the_density_heading

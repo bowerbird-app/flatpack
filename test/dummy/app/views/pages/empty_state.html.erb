@@ -82,7 +82,7 @@
 </section>
 
 <section class="mb-12" id="icon">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Any icon", anchor_link: true, subtitle: "Pass a kit icon name, and a weight when the outline is too quiet.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Any icon", anchor_link: true, subtitle: "Pass a kit icon name, a weight, and icon_size when the preset glyph is the wrong scale.") %>
   <div id="icon-preview" class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
       <%= render FlatPack::EmptyState::Component.new(
@@ -101,7 +101,8 @@
         title: "No matches",
         description: "Try a different name, or clear the filters.",
         icon: :sparkles,
-        icon_variant: :solid
+        icon_variant: :solid,
+        icon_size: :xl
       ) do |empty| %>
         <% empty.item do %>
           <%= render FlatPack::Button::Component.new(text: "Clear filters", style: :secondary) %>
@@ -235,23 +236,38 @@
 </section>
 
 <section class="mb-12" id="sizes">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Padding and gaps follow the space scale. Title size can move on its own.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "size: sets padding, gaps, the icon, the title, and the sentence together.") %>
   <div id="sizes-preview" class="space-y-6">
-    <% {sm: :base, md: :lg, lg: :xxl}.each do |size, title_size| %>
-      <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
-        <p class="text-sm text-[var(--surface-muted-content-color)] px-4 pt-3"><%= size == :md ? "Medium, title follows size" : "#{size.to_s.capitalize} density, title #{title_size}" %></p>
+    <% %i[sm md lg].each do |size| %>
+      <div id="size-<%= size %>-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+        <p class="text-sm text-[var(--surface-muted-content-color)] px-4 pt-3"><%= {sm: "Small", md: "Medium", lg: "Large"}.fetch(size) %></p>
         <%= render FlatPack::EmptyState::Component.new(
           title: "No items yet",
           description: "Add something to get started.",
           icon: :inbox,
-          size: size,
-          title_size: (title_size if size == :lg)
+          size: size
         ) do |empty| %>
           <% empty.item do %>
             <%= render FlatPack::Button::Component.new(text: "Add item", style: :primary, size: size) %>
           <% end %>
         <% end %>
       </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="description-size">
+  <%= render FlatPack::SectionTitle::Component.new(title: "A larger sentence", anchor_link: true, subtitle: "description_size: changes the sentence. Padding, the title, and the icon stay on the preset.") %>
+  <div id="description-size-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "No projects yet",
+      description: "Create a project to group work in one place.",
+      icon: :inbox,
+      description_size: :xl
+    ) do |empty| %>
+      <% empty.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Create project", style: :primary) %>
+      <% end %>
     <% end %>
   </div>
 </section>

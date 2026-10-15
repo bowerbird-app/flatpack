@@ -22,8 +22,6 @@ module FlatPack
           visual_margin: "mb-[var(--empty-state-gap-sm)]",
           title_gap: "mb-[var(--empty-state-title-gap-sm)]",
           block_gap: "mb-[var(--empty-state-block-gap-sm)]",
-          description: "text-[length:var(--text-xs)]",
-          icon: :md,
           collection_gap: :sm,
           action_gap: "gap: var(--empty-state-gap-sm)"
         },
@@ -32,8 +30,6 @@ module FlatPack
           visual_margin: "mb-[var(--empty-state-gap-md)]",
           title_gap: "mb-[var(--empty-state-title-gap-md)]",
           block_gap: "mb-[var(--empty-state-block-gap-md)]",
-          description: "text-[length:var(--text-sm)]",
-          icon: :lg,
           collection_gap: :md,
           action_gap: "gap: var(--empty-state-gap-md)"
         },
@@ -42,8 +38,6 @@ module FlatPack
           visual_margin: "mb-[var(--empty-state-gap-lg)]",
           title_gap: "mb-[var(--empty-state-title-gap-lg)]",
           block_gap: "mb-[var(--empty-state-block-gap-lg)]",
-          description: "text-[length:var(--text-base)]",
-          icon: :xl,
           collection_gap: :lg,
           action_gap: "gap: var(--empty-state-gap-lg)"
         }
@@ -61,6 +55,20 @@ module FlatPack
       }.freeze
 
       DEFAULT_TITLE_SIZE = {sm: :base, md: :lg, lg: :xl}.freeze
+
+      # Supporting sentence. One step larger than the old size mapping.
+      # :sm is --text-sm, :md is --text-base, :lg is --text-lg, :xl is --text-xl.
+      DESCRIPTION_SIZES = {
+        sm: "text-[length:var(--text-sm)]",
+        md: "text-[length:var(--text-base)]",
+        lg: "text-[length:var(--text-lg)]",
+        xl: "text-[length:var(--text-xl)]"
+      }.freeze
+
+      DEFAULT_DESCRIPTION_SIZE = {sm: :sm, md: :md, lg: :lg}.freeze
+
+      ICON_SIZES = FlatPack::Shared::IconComponent::SIZES.keys.freeze
+      DEFAULT_ICON_SIZE = {sm: :md, md: :lg, lg: :xl}.freeze
 
       # Content measure. The root still fills its container. full is max-width: none.
       WIDTHS = {
@@ -91,6 +99,8 @@ module FlatPack
         icon_variant: nil,
         size: :md,
         title_size: nil,
+        description_size: nil,
+        icon_size: nil,
         width: :md,
         layout: :wrap,
         **system_arguments
@@ -102,14 +112,18 @@ module FlatPack
         @icon_variant = icon_variant&.to_sym
         @size = size.to_sym
         @title_size = title_size&.to_sym
+        @description_size = description_size&.to_sym
+        @icon_size = icon_size&.to_sym
         @width = width.to_sym
         @layout = layout.to_sym
 
         validate_title!
         validate_icon!
         validate_icon_variant!
+        validate_icon_size!
         validate_size!
         validate_title_size!
+        validate_description_size!
         validate_width!
         validate_layout!
       end
@@ -197,7 +211,7 @@ module FlatPack
       def icon_tag
         arguments = {
           name: @icon,
-          size: size_config.fetch(:icon),
+          size: resolved_icon_size,
           class: "text-[var(--surface-muted-content-color)]"
         }
         arguments[:variant] = @icon_variant if @icon_variant
@@ -238,6 +252,14 @@ module FlatPack
         @title_size || DEFAULT_TITLE_SIZE.fetch(@size)
       end
 
+      def resolved_description_size
+        @description_size || DEFAULT_DESCRIPTION_SIZE.fetch(@size)
+      end
+
+      def resolved_icon_size
+        @icon_size || DEFAULT_ICON_SIZE.fetch(@size)
+      end
+
       def display_title?
         resolved_title_size == :display
       end
@@ -259,7 +281,7 @@ module FlatPack
       def description_classes
         [
           "w-full",
-          size_config.fetch(:description),
+          DESCRIPTION_SIZES.fetch(resolved_description_size),
           "text-[var(--surface-muted-content-color)]",
           "fp-text-pretty",
           (size_config.fetch(:block_gap) if items?)
@@ -318,6 +340,22 @@ module FlatPack
         return if @title_size.nil? || TITLE_SIZES.key?(@title_size)
 
         raise ArgumentError, "Invalid title_size: #{@title_size.inspect}. Must be one of: #{TITLE_SIZES.keys.join(", ")}."
+      end
+
+      def validate_description_size!
+        return if @description_size.nil? || DESCRIPTION_SIZES.key?(@description_size)
+
+        raise ArgumentError, "Invalid description_size: #{@description_size.inspect}. Must be one of: #{DESCRIPTION_SIZES.keys.join(", ")}."
+      end
+
+      def validate_icon_size!
+        if @icon_size && @icon.nil?
+          raise ArgumentError, "icon_size requires icon."
+        end
+        return if @icon_size.nil?
+        return if ICON_SIZES.include?(@icon_size)
+
+        raise ArgumentError, "Invalid icon_size: #{@icon_size.inspect}. Must be one of: #{ICON_SIZES.join(", ")}."
       end
 
       def validate_width!

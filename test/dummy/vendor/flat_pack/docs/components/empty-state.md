@@ -17,8 +17,10 @@ Use Empty State when a surface is blank and the person can act: create the first
 | `description` | String | `nil` | no | One sentence on what to do next. |
 | `icon` | Symbol/String/false | `nil` | no | Kit icon name (`:inbox`, `:search`, or any `IconComponent` name). Pass `false` or omit to skip. Ignored when `graphic` or `media` is set. |
 | `icon_variant` | Symbol | `nil` | no | Heroicon weight for `icon`: `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. Requires `icon`. |
-| `size` | Symbol | `:md` | no | Density for padding, description, icon, and the gaps: `:sm`, `:md`, `:lg`. Padding and gaps read `--empty-state-*` tokens, which are `calc(var(--space-N) * var(--density))`. |
+| `icon_size` | Symbol | from `size` | no | IconComponent size: `:sm`, `:md`, `:lg`, `:xl`. Requires `icon`. Omit and `:sm` maps to `:md`, `:md` to `:lg`, `:lg` to `:xl`. A `media` image does not use this. It stays on `width:`. |
+| `size` | Symbol | `:md` | no | Preset for padding, gaps, icon, title, and description: `:sm`, `:md`, `:lg`. Padding and gaps read `--empty-state-*` tokens, which are `calc(var(--space-N) * var(--density))`. |
 | `title_size` | Symbol | from `size` | no | Heading step: `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit and `:sm` maps to `:base`, `:md` to `:lg`, `:lg` to `:xl`. Not Hero `title_size`. |
+| `description_size` | Symbol | from `size` | no | Sentence step: `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit and it follows `size` under those same names. Not `title_size`. |
 | `width` | Symbol | `:md` | no | Max width of the text block: `:sm`, `:md`, `:lg`, or `:full` (`--empty-state-measure-*`). `:md` is `28rem`. `:full` is `max-width: none`. A `media` image uses the same cap. The root does not. |
 | `layout` | Symbol | `:wrap` | no | Action arrangement: `:wrap` (wrapping row) or `:stack` (one under the next). Renders `FlatPack::Collection::Component`. Not `:grid`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the root. |
@@ -36,10 +38,12 @@ Pass `graphic` or `media`, not both.
 The root is a block-level flex column. It sets no width and no max-width, so in normal flow it stretches to the full width of its container. Only the description used to be capped (`max-w-md`). `width:` now caps the whole text block, centred in that full-width root. The graphic stays full width of the root so a hero can be wider than the words.
 
 ## Variants
-- `size:` `:sm`, `:md`, `:lg` for padding and type density.
+- `size:` `:sm`, `:md`, `:lg` sets padding, gaps, the icon, the title, and the description together.
+- `title_size:`, `description_size:`, and `icon_size:` override one part of that preset.
 - `layout:` `:wrap` or `:stack` for the actions.
-- `width:` `:sm`, `:md`, `:lg`, `:full` for the text measure.
+- `width:` `:sm`, `:md`, `:lg`, `:full` for the text measure. A media image uses this cap, not `icon_size`.
 - `title_size:` including `:display` for a cover heading.
+- `description_size:` `:sm` (`--text-sm`), `:md` (`--text-base`), `:lg` (`--text-lg`), `:xl` (`--text-xl`). The default sentence is one step larger than the old mapping: a medium empty state uses `--text-base`.
 
 ## Example
 ```erb
@@ -81,10 +85,20 @@ A large opening:
 <% end %>
 ```
 
+A larger sentence on the medium preset:
+
+```erb
+<%= render FlatPack::EmptyState::Component.new(
+  title: "No projects yet",
+  description: "Create a project to group work in one place.",
+  description_size: :xl
+) %>
+```
+
 ## Empty then content
 The root is `.fp-empty-state`. It fades and rises a few pixels on `--duration-slow` / `--easing-enter` (`@starting-style`). When the first item arrives, hide the empty panel and show content with `.fp-content-enter` so the swap uses the same motion. Reduced motion snaps with no transform.
 
-Dummy `/demo/empty_state` has a Show empty / Show content toggle, plus icon, image, width, stacked actions, and a hero graphic.
+Dummy `/demo/empty_state` has a Show empty / Show content toggle, plus icon, image, width, stacked actions, a hero graphic, each `size`, and a `description_size` override.
 
 ## Accessibility
 - Title and description are semantic text. The title is an `h3`.

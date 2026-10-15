@@ -59,6 +59,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). |
 | Hero cover step | `title_size` | Hero only. Opt-in `FlatPack::HeroTitle::Component` size (`:md`, `:lg`, `:xl`, `:xxl`) for the headline. Omit to keep today's default or `size: :display` mapping. Not EmptyState `title_size`. |
 | Empty state heading | `title_size` | `FlatPack::EmptyState::Component` only. `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit and the heading follows `size` (`:sm` → `:base`, `:md` → `:lg`, `:lg` → `:xl`). |
+| Empty state sentence | `description_size` | `FlatPack::EmptyState::Component` only. `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit and it follows `size` with those names. Not `title_size` and not `:base`. |
+| Empty state icon | `icon_size` | `FlatPack::EmptyState::Component` only. IconComponent `:sm`, `:md`, `:lg`, or `:xl`. Requires `icon`. Omit and `size` maps `:sm` → `:md`, `:md` → `:lg`, `:lg` → `:xl`. Not EmptyState `size`. |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
 | Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
@@ -110,6 +112,8 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.
 - Do not pass FAB `layout: :stack` to List or Collection, or List `layout: :key_value` to FAB or Collection. Collection `layout` is `:grid`, `:wrap`, or `:stack`. EmptyState `layout` is only `:wrap` or `:stack` for its action row. Do not pass Collection `:grid` or List `:key_value` to EmptyState.
 - Do not pass Hero `title_size` (`:md`, `:lg`, `:xl`, `:xxl`) to EmptyState. EmptyState `title_size` is `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:xxl` is `--text-2xl` there, not HeroTitle's largest step.
+- Do not pass EmptyState `title_size` to `description_size`. `description_size` is `:sm`, `:md`, `:lg`, or `:xl`. `:md` is `--text-base`. `:base` is not a description step.
+- Do not pass EmptyState `size` (`:sm`, `:md`, `:lg`) to `icon_size` and expect the same glyph. `icon_size` is the IconComponent scale. `size: :md` draws a `:lg` icon unless `icon_size` is set.
 - Do not pass Grid `:stretch` or Hero `:left` to Button `align`. Button accepts `:center` and `:start`.
 - Do not pass Collection `min_item_width` to Table, or a Table column `min_width` to Collection.
 - Do not add a colour `style` or an item class to Collection. Hosts style the items.
