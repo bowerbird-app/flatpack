@@ -13,6 +13,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.246] - 2026-10-15
+
+### Added
+- `FlatPack::EmptyState::Component` takes `icon_variant:` (`:outline`, `:solid`, `:mini`, `:micro`) for any kit icon.
+- One visual above the title. `icon:` is the default. `media` fills it with one `FlatPack::Media::Component` (`src`, `alt`, `width`, `height`) and keeps that aspect ratio. `visual` is freeform host markup and spans the empty state, so a large composition fits. A block or an image replaces the icon.
+- `width:` `:sm`, `:md`, `:lg`, or `:full` caps the text block with `--empty-state-measure-*`. Default `:md` is `28rem`. `:full` is `max-width: none`.
+- `title_size:` `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit it and the heading follows `size`.
+- `description_size:` `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit it and the sentence follows `size`.
+- `icon_size:` `:sm`, `:md`, `:lg`, or `:xl` on the kit icon. Omit it and `size` maps `:sm` → `:md`, `:md` → `:lg`, `:lg` → `:xl`. Requires `icon`.
+- `layout:` `:wrap` (default) or `:stack`. Actions are one `item` each and render in `FlatPack::Collection::Component`.
+- `--empty-state-padding-*`, `--empty-state-gap-*`, `--empty-state-title-gap-*`, and `--empty-state-block-gap-*` are `round(nearest, calc(var(--space-N) * var(--density)), 1px)`.
+- Demo: `/demo/empty_state`.
+- Bumped the gem version to `0.1.246`.
+
+### Changed
+- The root is still a block-level flex column with no width of its own, so it fills its container. `width:` caps the words (and a media image), not the root. A `visual` block is not capped.
+- Padding and the gaps no longer use `py-*` / `px-*` / `mb-*` utilities. On the compact scale the medium padding is still `3rem` by `1rem`. Rounded's larger `--space-*` steps loosen it.
+- `slot` and the deprecated `actions` alias are gone. Pass `item` once per button.
+- The default description is one step larger. `size: :sm` is `--text-sm`, `:md` is `--text-base`, `:lg` is `--text-lg`. `size:` still sets padding, gaps, the icon, the title, and the description together.
+
+### Upgrade notes
+- Replace `empty.slot` and `empty.actions` with `empty.item` for each button. `layout: :stack` piles them. The default `:wrap` is the old wrapping row.
+- `icon_variant` must be `:outline`, `:solid`, `:mini`, or `:micro`, and it requires `icon`. Anything else raises `ArgumentError`.
+- Pass `visual` or `media`, not both. There is no `graphic` slot. `media` uses Media's `width` and `height` integers and does not take a block. EmptyState `width:` is `:sm`, `:md`, `:lg`, or `:full`.
+- `title_size` is not Hero's scale. `:xxl` is `--text-2xl`. `:display` is the cover heading.
+- `description_size` is not `title_size`. `:md` is `--text-base`. `:base` raises. Pass `description_size: :sm` to keep the old medium sentence (`--text-sm`).
+- `icon_size` requires `icon` and uses `:sm`, `:md`, `:lg`, or `:xl`. A media image stays on `width:`.
+- The text block defaults to `--empty-state-measure-md` (`28rem`), which was the old description cap. Pass `width: :full` for an uncapped sentence.
+- Hosts that want the old compact padding on a rounded page should not restate these tokens on `[data-theme="rounded"]`. Override `--empty-state-padding-*` only when this panel should diverge.
+- Rebuild host Tailwind so these literals are generated: `py-[var(--empty-state-padding-y-sm)]`, `px-[var(--empty-state-padding-x-sm)]`, `py-[var(--empty-state-padding-y-md)]`, `px-[var(--empty-state-padding-x-md)]`, `py-[var(--empty-state-padding-y-lg)]`, `px-[var(--empty-state-padding-x-lg)]`, `mb-[var(--empty-state-gap-sm)]`, `mb-[var(--empty-state-gap-md)]`, `mb-[var(--empty-state-gap-lg)]`, `mb-[var(--empty-state-title-gap-sm)]`, `mb-[var(--empty-state-title-gap-md)]`, `mb-[var(--empty-state-title-gap-lg)]`, `mb-[var(--empty-state-block-gap-sm)]`, `mb-[var(--empty-state-block-gap-md)]`, `mb-[var(--empty-state-block-gap-lg)]`, `max-w-[var(--empty-state-measure-sm)]`, `max-w-[var(--empty-state-measure-md)]`, `max-w-[var(--empty-state-measure-lg)]`, `max-w-[var(--empty-state-measure-full)]`, `text-[length:var(--text-xs)]`, `text-[length:var(--text-sm)]`, `text-[length:var(--text-base)]`, `text-[length:var(--text-lg)]`, `text-[length:var(--text-xl)]`, and `text-[length:var(--text-2xl)]`.
+- Reload kit CSS for the new tokens.
+- Redeploy so `meta.gem_version` shows `0.1.246`.
+
 ## [0.1.245] - 2026-10-15
 
 ### Changed

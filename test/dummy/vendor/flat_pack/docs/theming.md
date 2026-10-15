@@ -196,6 +196,8 @@ Left/right travel and alignment glyphs get `.fp-icon-directional`. In `[dir="rtl
 
 Use stack gap tokens on parent layout containers (for example, form stacks) to control spacing between components.
 
+Empty State padding, the gap under the icon, image, or visual, the title gap, and the gap before the actions are `--empty-state-padding-*`, `--empty-state-gap-*`, `--empty-state-title-gap-*`, and `--empty-state-block-gap-*`. Each one is `round(nearest, calc(var(--space-N) * var(--density)), 1px)`, so rounded's larger steps loosen the panel. The text measure is `--empty-state-measure-sm` (`20rem`), `--empty-state-measure-md` (`28rem`), `--empty-state-measure-lg` (`36rem`), and `--empty-state-measure-full` (`none`). Those lengths do not follow `--density`.
+
 ### Border Radius
 ```css
 --radius-sm: 0.75rem

@@ -22,7 +22,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Content on media | `placement` | `FlatPack::Overlay::Item` `with_item`. Media and Video preview pass the same argument through. Nine-cell grid: `:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`. Default `:top_left`. Not FAB `position`, and not the floating-layer anchor above. |
 | Gap from the media edge | `inset` | `FlatPack::Overlay::Item` `with_item`. Media and Video preview pass the same argument through. `:sm`, `:md`, `:lg` read `--overlay-inset-sm` (`0.5rem`), `--overlay-inset-md` (`1rem`), and `--overlay-inset-lg` (`1.5rem`). Default `:md`. `:center` ignores it. Edge-centers use it on the edge axis only. |
 | Image description | `alt` | Media, required String (`""` when the image is decorative). Avatar uses `alt` too. |
-| Image box | `width` / `height` | Media only. Positive integers. They set the `img` attributes and `aspect-ratio`. Not Card media or Video preview `aspect_ratio`. |
+| Image box | `width` / `height` | Media only. Positive integers. They set the `img` attributes and `aspect-ratio`. Not Card media or Video preview `aspect_ratio`. Not EmptyState `width`. |
+| Empty state measure | `width` | `FlatPack::EmptyState::Component` only. `:sm`, `:md`, `:lg`, or `:full`. Caps the text block (and a `media` image) with `--empty-state-measure-*`. The root still fills its container. `:full` is `max-width: none`. |
 | Table column track | `width` | `FlatPack::Table::Column` only. `:fit` (shrink to content), `:fill` (remaining space), or a CSS length such as `"12rem"`. A length uses `table-layout: fixed` unless a sibling is `:fit`. The length stays a `max-width` cap on the header and cells. |
 | Table column floor and cap | `min_width` / `max_width` | On a column, CSS lengths such as `"8rem"`. Table `min_width:` stays the scroll floor (`:none`, `:sm`, `:md`, `:lg`, or a `min-w-*` class). |
 | Table column wrapping | `wrap` | `FlatPack::Table::Column` only. `:wrap` (default), `:nowrap`, `:truncate`. Truncated cells expose the full text in `title`. |
@@ -41,12 +42,13 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
 | List shape | `layout` | List only. `:items` (default, `<ul>` or `<ol>`) or `:key_value` (`<dl>`). Not FAB `layout`. Not Collection `layout`. |
 | Collection arrangement | `layout` | `FlatPack::Collection::Component` only. `:stack` (default, vertical), `:grid` (auto-fill, equal height), or `:wrap` (inline flex-wrap for badges and chips). |
+| Empty state actions | `layout` | `FlatPack::EmptyState::Component` only. `:wrap` (default, wrapping row) or `:stack` (one button under the next). The actions render as `FlatPack::Collection::Component` with that layout. Not `:grid`. |
 | Collection element | `as` | `FlatPack::Collection::Component` only. `:list` (default, the `<ul>` alone) or `:nav` (wraps the list in `<nav aria-label>`). |
 | Nav accessible name | `label` | Collection `as: :nav` requires `label:`. That string is the nav's `aria-label`. Not the visible button label (`text`). |
 | Collection item floor | `min_item_width` | Collection `layout: :grid` only. A CSS length such as `"14rem"` (the default). Sets `--fp-collection-min-item-width`. Not Table `min_width`. |
 | Collection gap | `gap` | Collection, Grid, and Masonry. `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
 | Button label lines | `lines` | `FlatPack::Button::Component` only. `1` (default) or `2`. Clamps the label with an ellipsis. |
-| Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
+| Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon and on EmptyState `icon:`. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
 | Button icon colour | `icon_style` | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, `:danger` use `--button-icon-*` tokens. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
 | Clamped label tooltip | `title` | On Button, the full label for the HTML `title` tooltip when `lines` clamps the visible text. Elsewhere, `title` stays a section heading. |
@@ -55,7 +57,11 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Stack key above value | `stack_below` | List `:key_value` only. `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). |
-| Hero cover step | `title_size` | Hero only. Opt-in `FlatPack::HeroTitle::Component` size (`:md`, `:lg`, `:xl`, `:xxl`) for the headline. Omit to keep today's default or `size: :display` mapping. |
+| Hero cover step | `title_size` | Hero only. Opt-in `FlatPack::HeroTitle::Component` size (`:md`, `:lg`, `:xl`, `:xxl`) for the headline. Omit to keep today's default or `size: :display` mapping. Not EmptyState `title_size`. |
+| Empty state heading | `title_size` | `FlatPack::EmptyState::Component` only. `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit and the heading follows `size` (`:sm` → `:base`, `:md` → `:lg`, `:lg` → `:xl`). |
+| Empty state sentence | `description_size` | `FlatPack::EmptyState::Component` only. `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit and it follows `size` with those names. Not `title_size` and not `:base`. |
+| Empty state icon | `icon_size` | `FlatPack::EmptyState::Component` only. IconComponent `:sm`, `:md`, `:lg`, or `:xl`. Requires `icon`. Omit and `size` maps `:sm` → `:md`, `:md` → `:lg`, `:lg` → `:xl`. Not EmptyState `size`. |
+| Empty state visual | `visual` | `FlatPack::EmptyState::Component` only. One slot above the title. A block is host markup and spans the empty state. An image uses `media` (`src`, `alt`, `width`, `height`) and is not a second slot. Either one replaces `icon:`. |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
 | Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
@@ -101,11 +107,15 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Keep `type` only for native HTML control types such as button `type: "submit"`. Carousel slides and lightbox items are the exception: `type` is `:image`, `:video`, or (carousel only) `:html`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`. Table columns use `:start`, `:center`, and `:end`.
-- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor.
+- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor. Do not pass EmptyState `:sm` / `:md` / `:lg` / `:full` to Media or a Table column, or a Media integer to EmptyState `width`.
 - Do not use `divider` on Table. The param is `dividers`.
 - Do not add a per-column `class` or raw `style` string. Width, min width, max width, align, wrap, and `hide_below` are the column controls.
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.
-- Do not pass FAB `layout: :stack` to List or Collection, or List `layout: :key_value` to FAB or Collection. Collection `layout` is `:grid`, `:wrap`, or `:stack`.
+- Do not pass FAB `layout: :stack` to List or Collection, or List `layout: :key_value` to FAB or Collection. Collection `layout` is `:grid`, `:wrap`, or `:stack`. EmptyState `layout` is only `:wrap` or `:stack` for its action row. Do not pass Collection `:grid` or List `:key_value` to EmptyState.
+- Do not pass Hero `title_size` (`:md`, `:lg`, `:xl`, `:xxl`) to EmptyState. EmptyState `title_size` is `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:xxl` is `--text-2xl` there, not HeroTitle's largest step.
+- Do not pass EmptyState `title_size` to `description_size`. `description_size` is `:sm`, `:md`, `:lg`, or `:xl`. `:md` is `--text-base`. `:base` is not a description step.
+- Do not pass EmptyState `size` (`:sm`, `:md`, `:lg`) to `icon_size` and expect the same glyph. `icon_size` is the IconComponent scale. `size: :md` draws a `:lg` icon unless `icon_size` is set.
+- Do not pass `graphic` to EmptyState, and do not pass `visual` and `media` together. Markup is `visual`. An image is `media`. `icon:` is the default when neither is set. A block replaces the icon.
 - Do not pass Grid `:stretch` or Hero `:left` to Button `align`. Button accepts `:center` and `:start`.
 - Do not pass Collection `min_item_width` to Table, or a Table column `min_width` to Collection.
 - Do not add a colour `style` or an item class to Collection. Hosts style the items.

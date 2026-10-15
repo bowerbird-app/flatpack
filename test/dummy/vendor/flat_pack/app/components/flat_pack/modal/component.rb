@@ -445,7 +445,7 @@ module FlatPack
             icon: :exclamation_circle,
             size: :sm
           ) do |empty|
-            empty.slot do
+            empty.item do
               render FlatPack::Button::Component.new(
                 text: fp_t("modal.retry"),
                 style: :primary,

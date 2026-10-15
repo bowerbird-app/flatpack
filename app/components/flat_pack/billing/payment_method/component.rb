@@ -68,7 +68,7 @@ module FlatPack
             title: @empty_title,
             description: @empty_description
           )) do |empty|
-            empty.slot { action_html.html_safe } if action_html.present?
+            empty.item { action_html.html_safe } if action_html.present?
           end
         end
 

@@ -797,6 +797,25 @@
   --badge-padding-y-md: var(--badge-padding-y-md);
   --badge-padding-x-lg: var(--badge-padding-x-lg);
   --badge-padding-y-lg: var(--badge-padding-y-lg);
+  --empty-state-padding-y-sm: var(--empty-state-padding-y-sm);
+  --empty-state-padding-x-sm: var(--empty-state-padding-x-sm);
+  --empty-state-padding-y-md: var(--empty-state-padding-y-md);
+  --empty-state-padding-x-md: var(--empty-state-padding-x-md);
+  --empty-state-padding-y-lg: var(--empty-state-padding-y-lg);
+  --empty-state-padding-x-lg: var(--empty-state-padding-x-lg);
+  --empty-state-gap-sm: var(--empty-state-gap-sm);
+  --empty-state-gap-md: var(--empty-state-gap-md);
+  --empty-state-gap-lg: var(--empty-state-gap-lg);
+  --empty-state-title-gap-sm: var(--empty-state-title-gap-sm);
+  --empty-state-title-gap-md: var(--empty-state-title-gap-md);
+  --empty-state-title-gap-lg: var(--empty-state-title-gap-lg);
+  --empty-state-block-gap-sm: var(--empty-state-block-gap-sm);
+  --empty-state-block-gap-md: var(--empty-state-block-gap-md);
+  --empty-state-block-gap-lg: var(--empty-state-block-gap-lg);
+  --empty-state-measure-sm: var(--empty-state-measure-sm);
+  --empty-state-measure-md: var(--empty-state-measure-md);
+  --empty-state-measure-lg: var(--empty-state-measure-lg);
+  --empty-state-measure-full: var(--empty-state-measure-full);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1023,6 +1042,25 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --card-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --card-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --card-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --empty-state-padding-y-sm: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  --empty-state-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --empty-state-padding-y-md: round(nearest, calc((var(--space-6) + var(--space-4)) * var(--density)), 1px);
+  --empty-state-padding-x-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --empty-state-padding-y-lg: round(nearest, calc(var(--space-6) * 2 * var(--density)), 1px);
+  --empty-state-padding-x-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --empty-state-gap-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --empty-state-gap-md: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --empty-state-gap-lg: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --empty-state-title-gap-sm: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --empty-state-title-gap-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --empty-state-title-gap-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --empty-state-block-gap-sm: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --empty-state-block-gap-md: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --empty-state-block-gap-lg: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  --empty-state-measure-sm: 20rem;
+  --empty-state-measure-md: 28rem;
+  --empty-state-measure-lg: 36rem;
+  --empty-state-measure-full: none;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

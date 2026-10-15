@@ -9,6 +9,10 @@ module FlatPack
         FlatPack.configuration = nil
       end
 
+      teardown do
+        FlatPack.configuration = nil
+      end
+
       # --- SVG shell structure --------------------------------------------------
 
       def test_renders_an_svg_element
