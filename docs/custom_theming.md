@@ -12,7 +12,7 @@ FlatPack's theming surface has three layers:
 
 - `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
 - `:root, [data-theme] {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.). Repeating the wiring on `[data-theme]` re-resolves those aliases when `data-theme` is on `<body>` or another descendant, not only on `<html>`.
-- `[data-theme="rounded"]` is an empty alias of that default.
+- `[data-theme="rounded"]` shifts `--space-2`…`--space-6` and a few menu shells. It does not restate colour. Dark and ocean inherit the compact scale.
 - `[data-theme="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
 - `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
@@ -92,7 +92,7 @@ Example:
 
 ## Complete Starter Template
 
-This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped default look, leave `:root` alone or set `data-theme="rounded"` (an alias of the default).
+This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped charcoal palette, leave `:root` alone. Set `data-theme="rounded"` for the generous spacing scale. Padding tokens below are formulas on the scale. Override `--space-*` or `--density` to move a whole theme. Override one component token only when that control should diverge. Do not self-map a token (`--token: var(--token)`).
 
 Do not copy decorative `--gradient-*` tokens unless this theme actually needs a wash. The kit default has none.
 
@@ -101,6 +101,14 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
 
 ```css
 [data-theme="your-theme-name"] {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --density: 1;
+
   --color-primary: oklch(0.52 0.26 250);
   --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
   --color-primary-text: oklch(1.0 0 0);
@@ -162,9 +170,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collapse-trigger-background-color: var(--surface-background-color);
   --collapse-trigger-hover-background-color: var(--surface-muted-background-color);
   --collapse-trigger-text-color: var(--surface-content-color);
-  --collapse-trigger-padding: 1rem;
+  --collapse-trigger-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collapse-content-background-color: var(--surface-background-color);
-  --collapse-content-padding: 1rem;
+  --collapse-content-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collapse-focus-ring-color: var(--color-ring);
   --collapse-transition-duration: var(--duration-slow);
   --collapse-icon-color: currentColor;
@@ -173,8 +181,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --bottom-nav-item-active-color: oklch(0.98 0.01 250);
   --bottom-nav-item-color: oklch(0.78 0.02 250);
   --bottom-nav-item-hover-color: oklch(1.0 0 0);
-  --bottom-nav-item-padding-x: 0.5rem;
-  --bottom-nav-item-padding-y: 0.5rem;
+  --bottom-nav-item-padding-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --bottom-nav-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --fab-background-color: var(--color-primary);
   --fab-hover-background-color: var(--color-primary-hover);
   --fab-text-color: var(--color-primary-text);
@@ -225,9 +233,13 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --accordion-item-border-color: var(--surface-border-color);
   --accordion-trigger-text-color: var(--surface-content-color);
   --accordion-trigger-hover-background-color: var(--surface-muted-background-color);
-  --accordion-trigger-padding: 1rem;
+  --accordion-trigger-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --accordion-trigger-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --accordion-trigger-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --accordion-content-background-color: var(--surface-background-color);
-  --accordion-content-padding: 1rem;
+  --accordion-content-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --accordion-content-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --accordion-content-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --accordion-focus-ring-color: var(--color-ring);
   --accordion-transition-duration: var(--duration-slow);
   --breadcrumb-current-color: var(--surface-content-color);
@@ -328,9 +340,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --card-style-gradient-text-color: var(--color-primary-text);
   --card-style-gradient-muted-text-color: color-mix(in oklab, var(--color-primary-text) 72%, transparent);
   --card-style-gradient-border-color: color-mix(in oklab, var(--color-primary-text) 28%, transparent);
-  --card-padding-sm: 0.75rem;
-  --card-padding-md: 1rem;
-  --card-padding-lg: 1.25rem;
+  --card-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --card-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --card-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
@@ -421,14 +433,14 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
   --popover-shadow: var(--shadow-lg);
-  --popover-padding: 1rem;
+  --popover-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --popover-radius: var(--radius-md);
   --tooltip-background-color: var(--surface-content-color);
   --tooltip-border-color: var(--surface-border-color);
   --tooltip-text-color: var(--surface-background-color);
   --tooltip-shadow: var(--shadow-lg);
-  --tooltip-padding-x: 0.75rem;
-  --tooltip-padding-y: 0.5rem;
+  --tooltip-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --tooltip-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
@@ -605,17 +617,19 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --button-shadow-active: var(--shadow-button-active);
   --hit-target-min: 2.75rem;
   --hit-target-inline-min: 1.5rem;
-  --button-padding-x-sm: 0.75rem;
-  --button-padding-y-sm: 0.375rem;
-  --button-padding-x-md: 1rem;
-  --button-padding-y-md: 0.5rem;
-  --button-padding-x-lg: 1.5rem;
-  --button-padding-y-lg: 0.75rem;
-  --button-icon-only-padding-sm: 0.375rem;
-  --button-icon-only-padding-md: 0.5rem;
-  --button-icon-only-padding-lg: 0.75rem;
+  --button-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-padding-x-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --button-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-padding-x-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --button-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --alert-border-radius: var(--radius-md);
-  --alert-padding: 1rem;
+  --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --alert-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --alert-title-color: currentColor;
   --alert-description-color: currentColor;
   --alert-dismiss-button-radius: var(--radius-sm);
@@ -639,7 +653,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --alert-danger-text-color: var(--surface-content-color);
   --alert-danger-icon-color: color-mix(in oklab, var(--color-danger-background-color) 78%, black);
   --toast-border-radius: var(--radius-md);
-  --toast-padding: 1rem;
+  --toast-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --toast-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --toast-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --toast-shadow: var(--shadow-lg);
   --toast-dismiss-text-color: var(--surface-muted-content-color);
   --toast-dismiss-hover-text-color: var(--surface-content-color);
@@ -696,9 +712,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
   --search-input-focus-ring-color: var(--color-primary);
-  --search-padding-y-sm: 0.375rem;
-  --search-padding-y-md: 0.5rem;
-  --search-padding-y-lg: 0.75rem;
+  --search-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --search-padding-inline-sm: 2rem;
   --search-padding-inline-md: 2.5rem;
   --search-padding-inline-lg: 3rem;
@@ -718,8 +734,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --stack-gap-lg: 1.5rem;
   --overflow-row-gap: var(--stack-gap-md);
   --overflow-row-fade-size: 2rem;
-  --form-control-padding: 0.75rem;
-  --table-padding: 0.75rem;
+  --form-control-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --form-control-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --table-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --table-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --table-background-color: var(--surface-background-color);
   --table-border-color: var(--surface-border-color);
   --table-header-background-color: var(--surface-background-color);
@@ -737,12 +755,12 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
   --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
-  --chip-padding-x-sm: 0.5rem;
-  --chip-padding-y-sm: 0.125rem;
-  --chip-padding-x-md: 0.75rem;
-  --chip-padding-y-md: 0.25rem;
-  --chip-padding-x-lg: 1rem;
-  --chip-padding-y-lg: 0.375rem;
+  --chip-padding-x-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-x-md: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --chip-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-x-lg: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --chip-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --picker-badge-background-color: rgb(0 0 0 / 0.55);
   --picker-badge-text-color: oklch(1.0 0 0);
   --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
@@ -818,7 +836,7 @@ The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in 
 
 - `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
 - `:root, [data-theme] {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default. `[data-theme="rounded"]` is an empty alias of the default. Component aliases re-resolve on `[data-theme]`.
+- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default and inherit the spacing scale. `[data-theme="rounded"]` shifts the scale. Component aliases re-resolve on `[data-theme]`.
 
 When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring` follows `--color-primary`. `--sidebar-item-active-*`, `--top-nav-item-active-*`, list, pill, table, and pagination selected fills follow `--surface-active-*`. Hover fills follow `--surface-hover-background-color`. Set those semantic tokens once. Set a component token only when that one control should diverge.
 

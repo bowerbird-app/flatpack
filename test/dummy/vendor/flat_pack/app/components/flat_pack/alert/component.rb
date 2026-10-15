@@ -40,25 +40,26 @@ module FlatPack
         }
       }.freeze
 
-      # Density for padding, title, and description. md matches --alert-padding 1rem.
+      # Density for padding, title, and description. Each size uses its own padding token.
       # "gap-2" "gap-3" "gap-4" "text-sm" "text-base" "text-lg" "text-xs"
+      # "p-[var(--alert-padding-sm)]" "p-[var(--alert-padding-md)]" "p-[var(--alert-padding-lg)]"
       SIZES = {
         sm: {
-          padding: "0.75rem",
+          padding: "p-[var(--alert-padding-sm)]",
           gap: "gap-2",
           title: "font-semibold text-sm text-[var(--alert-title-color)]",
           description: "text-xs text-[var(--alert-description-color)]",
           icon: :sm
         },
         md: {
-          padding: "1rem",
+          padding: "p-[var(--alert-padding-md)]",
           gap: "gap-3",
           title: "font-semibold text-[var(--alert-title-color)]",
           description: "text-sm text-[var(--alert-description-color)]",
           icon: :md
         },
         lg: {
-          padding: "1.25rem",
+          padding: "p-[var(--alert-padding-lg)]",
           gap: "gap-4",
           title: "font-semibold text-lg text-[var(--alert-title-color)]",
           description: "text-base text-[var(--alert-description-color)]",
@@ -163,19 +164,10 @@ module FlatPack
       def alert_attributes
         attrs = {
           class: alert_classes,
-          role: "alert",
-          style: padding_style
+          role: "alert"
         }
         attrs[:data] = {controller: "flat-pack--alert", flat_pack__alert_target: "alert"} if @dismissible
         merge_attributes(**attrs)
-      end
-
-      def padding_style
-        declaration = "--alert-padding: #{size_config.fetch(:padding)}"
-        existing = @system_arguments[:style] || @system_arguments["style"]
-        return declaration unless existing.present?
-
-        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
       end
 
       def alert_classes
@@ -183,7 +175,7 @@ module FlatPack
           "relative flex items-center",
           size_config.fetch(:gap),
           "rounded-[var(--alert-border-radius)]",
-          "p-[var(--alert-padding)]",
+          size_config.fetch(:padding),
           style_config[:border],
           style_config[:bg],
           style_config[:text]

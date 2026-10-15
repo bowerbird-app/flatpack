@@ -390,8 +390,8 @@
     /* !important beats Tailwind px-4 / gap-3, which live in the utilities layer. */
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"],
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] {
-      padding-left: 0.25rem !important;
-      padding-right: 0.25rem !important;
+      padding-left: var(--sidebar-item-padding-collapsed) !important;
+      padding-right: var(--sidebar-item-padding-collapsed) !important;
       gap: 0 !important;
       overflow-x: clip;
     }
@@ -401,7 +401,7 @@
       A percentage margin on a flex item is cyclic and computes to 0, so the
       active pill stayed heavier on the left. Centering the whole row pulls the
       icon sideways while the label is still wide. 4rem rail, 1px side border,
-      mx-2, 1.25rem icon, 0.25rem padding.
+      the item inset on both sides, a 1.25rem icon, and the collapsed padding.
     */
     [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
     [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
@@ -411,7 +411,7 @@
 
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
-      margin-left: calc((4rem - 1px - (var(--spacing) * 4) - 1.25rem) / 2 - 0.25rem) !important;
+      margin-left: calc((4rem - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
     }
 
     [data-flat-pack--sidebar-group-target="chevron"] {
@@ -504,9 +504,9 @@
   box-sizing: border-box;
   height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
   padding-top: env(safe-area-inset-top, 0px);
-  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  padding-right: max(var(--top-nav-padding-inline), env(safe-area-inset-right, 0px));
   padding-bottom: 0;
-  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-left: max(var(--top-nav-padding-inline), env(safe-area-inset-left, 0px));
   -webkit-backdrop-filter: blur(0);
   backdrop-filter: blur(0);
   transition-property: backdrop-filter, -webkit-backdrop-filter;
@@ -527,23 +527,23 @@
   }
 }
 
-/* Overlay inset padding: 1rem / 1.5rem, never less than the notch.
+/* Overlay inset padding follows --overlay-padding / --overlay-padding-wide, never less than the notch.
  * Unlayered for the same preflight reason as .fp-top-nav. Modal, drawer,
  * command palette, and lightbox all use this class.
  */
 .fp-overlay-pad {
-  padding-top: max(1rem, env(safe-area-inset-top, 0px));
-  padding-right: max(1rem, env(safe-area-inset-right, 0px));
-  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
-  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-top: max(var(--overlay-padding), env(safe-area-inset-top, 0px));
+  padding-right: max(var(--overlay-padding), env(safe-area-inset-right, 0px));
+  padding-bottom: max(var(--overlay-padding), env(safe-area-inset-bottom, 0px));
+  padding-left: max(var(--overlay-padding), env(safe-area-inset-left, 0px));
 }
 
 @media (min-width: 640px) {
   .fp-overlay-pad {
-    padding-top: max(1.5rem, env(safe-area-inset-top, 0px));
-    padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
-    padding-bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
-    padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    padding-top: max(var(--overlay-padding-wide), env(safe-area-inset-top, 0px));
+    padding-right: max(var(--overlay-padding-wide), env(safe-area-inset-right, 0px));
+    padding-bottom: max(var(--overlay-padding-wide), env(safe-area-inset-bottom, 0px));
+    padding-left: max(var(--overlay-padding-wide), env(safe-area-inset-left, 0px));
   }
 }
 
@@ -2005,7 +2005,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   justify-content: flex-start;
   border-radius: 0;
   min-height: var(--hit-target-min);
-  padding-inline-start: var(--form-control-padding);
+  padding-inline-start: var(--form-control-padding-x);
 }
 
 .flat-pack-collection-editor-heading {
@@ -2116,7 +2116,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   display: flex;
   align-items: center;
   min-height: var(--hit-target-min);
-  padding: 0.25rem var(--form-control-padding);
+  padding: 0.25rem var(--form-control-padding-x);
 }
 
 .flat-pack-collection-editor-chip {
@@ -2201,7 +2201,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   border-radius: var(--radius-md);
   background: var(--surface-background-color);
   color: var(--surface-content-color);
-  padding: 0.5rem var(--form-control-padding);
+  padding: 0.5rem var(--form-control-padding-x);
   font-size: 0.875rem;
 }
 
@@ -2292,11 +2292,11 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-collection-editor-fields label {
-  padding: 0.5rem var(--form-control-padding) 0;
+  padding: 0.5rem var(--form-control-padding-x) 0;
 }
 
 .flat-pack-collection-editor-fields .flat-pack-input-wrapper > p {
-  margin-inline: var(--form-control-padding);
+  margin-inline: var(--form-control-padding-x);
   margin-bottom: 0.5rem;
 }
 
@@ -2356,7 +2356,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .flat-pack-collection-editor-create,
 .flat-pack-collection-editor-create-submit {
-  padding-inline: var(--form-control-padding);
+  padding-inline: var(--form-control-padding-x);
 }
 
 .flat-pack-collection-editor-panel {
@@ -2395,7 +2395,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   box-shadow: none;
   color: var(--surface-content-color);
   padding-block: 0;
-  padding-inline: var(--form-control-padding);
+  padding-inline: var(--form-control-padding-x);
   font-size: 0.875rem;
   appearance: none;
 }
@@ -2496,7 +2496,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0 var(--form-control-padding) var(--form-control-padding);
+  padding: 0 var(--form-control-padding-x) var(--form-control-padding-y);
 }
 
 .flat-pack-modal__body .flat-pack-collection-editor-create-fields,
@@ -2516,11 +2516,11 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .flat-pack-collection-editor-create-error,
 .flat-pack-collection-editor-search-error,
 .flat-pack-collection-editor-no-results {
-  padding-inline: var(--form-control-padding);
+  padding-inline: var(--form-control-padding-x);
 }
 
 .flat-pack-collection-editor-error {
-  padding-bottom: var(--form-control-padding);
+  padding-bottom: var(--form-control-padding-y);
 }
 
 .flat-pack-collection-editor-error,
@@ -2574,7 +2574,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 
   .flat-pack-collection-editor-fields {
-    padding: 0 var(--form-control-padding) 0.75rem;
+    padding: 0 var(--form-control-padding-x) 0.75rem;
   }
 
   .flat-pack-collection-editor-fields + .flat-pack-collection-editor-fields {
@@ -2644,7 +2644,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 
   .flat-pack-collection-editor--orderable .flat-pack-collection-editor-add .fp-button {
-    padding-inline-start: calc(var(--hit-target-min) + var(--form-control-padding));
+    padding-inline-start: calc(var(--hit-target-min) + var(--form-control-padding-x));
   }
 
   .flat-pack-collection-editor-row {
@@ -2680,7 +2680,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
   .flat-pack-collection-editor-actions {
     border-inline-start: 0;
-    padding-inline: var(--form-control-padding);
+    padding-inline: var(--form-control-padding-x);
     min-width: 0;
   }
 
@@ -2691,7 +2691,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 
   .flat-pack-collection-editor-header > span {
-    padding: 0.5rem var(--form-control-padding);
+    padding: 0.5rem var(--form-control-padding-x);
     min-width: 0;
   }
 

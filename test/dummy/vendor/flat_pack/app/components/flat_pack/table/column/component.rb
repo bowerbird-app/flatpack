@@ -152,7 +152,7 @@ module FlatPack
 
         def cell_classes
           [
-            "px-[var(--table-padding)] py-[var(--table-padding)]",
+            "px-[var(--table-padding-x)] py-[var(--table-padding-y)]",
             (@rendering_header ? header_chrome_classes : "text-sm text-[var(--table-cell-text-color)]"),
             ALIGNS.fetch(@align),
             WRAPS[@wrap],

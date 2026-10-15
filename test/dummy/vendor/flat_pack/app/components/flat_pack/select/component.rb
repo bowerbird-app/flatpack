@@ -279,7 +279,7 @@ module FlatPack
       def render_search_input
         return unless @searchable
 
-        content_tag(:div, class: "p-2 border-b border-[var(--surface-border-color)]") do
+        content_tag(:div, class: "p-[var(--select-search-padding)] border-b border-[var(--surface-border-color)]") do
           tag.input(
             type: "text",
             class: search_input_classes,
@@ -294,7 +294,7 @@ module FlatPack
 
       def render_options_list
         content_tag(:div,
-          class: "max-h-60 overflow-y-auto p-1 data-[results-count='0']:hidden",
+          class: "max-h-60 overflow-y-auto p-[var(--select-menu-padding)] data-[results-count='0']:hidden",
           data: {
             flat_pack__select_target: "optionsList",
             results_count: flat_options.length
@@ -311,7 +311,7 @@ module FlatPack
         return unless remote_search?
 
         content_tag(:div,
-          class: "hidden px-3 py-2 text-sm text-[var(--surface-muted-content-color)]",
+          class: "hidden px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
           data: {flat_pack__select_target: "searchStatus"}) do
           safe_join([
             content_tag(:p, fp_t("select.type_to_search", count: @min_search_length), class: "hidden", data: {flat_pack__select_target: "searchHint"}),
@@ -448,13 +448,13 @@ module FlatPack
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
+        "w-full px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)] text-sm rounded-[var(--radius-sm)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
         base = [
-          "flex items-center gap-2",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "flex items-center gap-[var(--dropdown-item-gap)]",
+          "px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)]",
           "text-sm",
           "rounded-[var(--radius-sm)]",
           "transition-colors duration-base"
@@ -477,8 +477,8 @@ module FlatPack
 
       def nested_custom_option_classes(selected, disabled, child)
         base = [
-          "flex items-center gap-2",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "flex items-center gap-[var(--dropdown-item-gap)]",
+          "px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)]",
           "rounded-none",
           "transition-colors duration-base"
         ]

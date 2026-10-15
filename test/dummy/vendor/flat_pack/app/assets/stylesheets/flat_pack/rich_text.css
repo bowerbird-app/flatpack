@@ -183,7 +183,7 @@
   .flat-pack-richtext-editor .ProseMirror {
     /* Inset also comes from FormField::ControlStyles#form_control_padding_classes
        on the editor box so host Tailwind preflight cannot zero the field padding. */
-    padding: var(--form-control-padding, 0.875rem);
+    padding: var(--form-control-padding-y) var(--form-control-padding-x);
     min-height: 8rem;
     max-height: 60vh;
     overflow-y: auto;
