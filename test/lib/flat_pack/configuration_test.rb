@@ -8,6 +8,10 @@ module FlatPack
       FlatPack.configuration = nil
     end
 
+    teardown do
+      FlatPack.configuration = nil
+    end
+
     test "configure initializes configuration with default theme" do
       FlatPack.configure { |_config| }
 
