@@ -51,6 +51,7 @@ module FlatPack
         accordion_controller.js
         collapse_controller.js
         carousel_controller.js
+        lightbox_controller.js
         chat_image_deck_controller.js
         sidebar_group_controller.js
         sidebar_layout_controller.js

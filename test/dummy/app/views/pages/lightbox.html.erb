@@ -1,0 +1,115 @@
+<%
+  gallery = [
+    {src: "/masonry/harbour.svg", alt: "Harbour at dusk", caption: "Harbour at dusk", width: 1120, height: 1400},
+    {src: "/masonry/cliff.svg", alt: "Sea cliff in late light", caption: "Sea cliff in late light", width: 600, height: 400},
+    {src: "/masonry/studio.svg", alt: "Studio window", caption: "Studio window", width: 500, height: 500},
+    {src: "/masonry/orchard.svg", alt: "Orchard path", caption: "Orchard path", width: 450, height: 600},
+    {src: "/masonry/jetty.svg", alt: "Jetty at blue hour", caption: "Jetty at blue hour", width: 640, height: 360},
+    {src: "/masonry/kiln.svg", alt: "Kiln yard", caption: "Kiln yard", width: 500, height: 300},
+    {src: "/masonry/lantern.svg", alt: "Lantern on a porch", caption: "Lantern on a porch", width: 360, height: 540},
+    {src: "/masonry/quay.svg", alt: "Quay stones", caption: "Quay stones", width: 520, height: 520},
+    {src: "/masonry/meadow.svg", alt: "Meadow edge", caption: "Meadow edge", width: 600, height: 450},
+    {src: "/masonry/well.svg", alt: "Stone well", caption: "Stone well", width: 400, height: 520},
+    {src: "/masonry/loft.svg", alt: "Loft beams", caption: "Loft beams", width: 480, height: 320},
+    {src: "/masonry/tide.svg", alt: "Tide line", caption: "Tide line", width: 360, height: 480}
+  ]
+  gallery_items = gallery.map { |photo| {type: :image, src: photo[:src], alt: photo[:alt], caption: photo[:caption]} }
+%>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Lightbox",
+  subtitle: "One overlay. Thumbnails, a button, and a carousel each name the gallery they open."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :lightbox %>
+
+<section id="lightbox-gallery" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Masonry gallery",
+    anchor_link: true,
+    subtitle: "Twelve photos, one group. The clicked thumbnail is the slide that opens."
+  ) %>
+
+  <%= render FlatPack::Lightbox::Component.new(group: "wall", items: gallery_items, loop: true, show_count: true) %>
+
+  <div class="mt-4">
+    <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
+      <% gallery.each_with_index do |photo, index| %>
+        <% masonry.with_item do %>
+          <%= render FlatPack::Lightbox::Trigger.new(group: "wall", index: index) do %>
+            <%= render FlatPack::Media::Component.new(src: photo[:src], alt: photo[:alt], width: photo[:width], height: photo[:height]) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <p class="mt-6 mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Lightbox::Component.new(group: "wall", items: gallery_items, show_count: true) %&gt;
+
+      &lt;%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}) do |masonry| %&gt;
+        &lt;% masonry.with_item do %&gt;
+          &lt;%= render FlatPack::Lightbox::Trigger.new(group: "wall", index: 0) do %&gt;
+            &lt;%= render FlatPack::Media::Component.new(src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 1120, height: 1400) %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section id="lightbox-single" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Single image",
+    anchor_link: true,
+    subtitle: "One item hides the arrows and the count."
+  ) %>
+
+  <%= render FlatPack::Lightbox::Component.new(
+    group: "poster",
+    items: [{type: :image, src: "/masonry/studio.svg", alt: "Studio window", caption: "Studio window"}],
+    show_count: true
+  ) %>
+
+  <div class="mt-4 max-w-xs">
+    <%= render FlatPack::Lightbox::Trigger.new(group: "poster", index: 0) do %>
+      <%= render FlatPack::Media::Component.new(src: "/masonry/studio.svg", alt: "Studio window", width: 500, height: 500) %>
+    <% end %>
+  </div>
+</section>
+
+<section id="lightbox-button" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Button",
+    anchor_link: true,
+    subtitle: "A button elsewhere opens the same wall, on the harbour."
+  ) %>
+
+  <%= render FlatPack::Button::Component.new(
+    text: "Open the harbour",
+    data: FlatPack::Lightbox.trigger_data(group: "wall", index: 0)
+  ) %>
+</section>
+
+<section id="lightbox-carousel" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Carousel",
+    anchor_link: true,
+    subtitle: "lightbox: true uses this same overlay. The expand control opens the active slide."
+  ) %>
+
+  <%= render FlatPack::Carousel::Component.new(
+    slides: [
+      {type: :image, src: "/masonry/harbour.svg", alt: "Harbour at dusk", caption: "Harbour at dusk", lightbox: true},
+      {type: :image, src: "/masonry/cliff.svg", alt: "Sea cliff in late light", caption: "Sea cliff in late light", lightbox: true},
+      {type: :image, src: "/masonry/jetty.svg", alt: "Jetty at blue hour", caption: "Jetty at blue hour", lightbox: true}
+    ],
+    show_controls: true,
+    show_indicators: true,
+    show_captions: true,
+    caption_mode: :below,
+    aria_label: "Lightbox carousel demo"
+  ) %>
+</section>

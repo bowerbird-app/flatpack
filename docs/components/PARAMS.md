@@ -70,6 +70,11 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Clipboard source element | `target` | `FlatPack::CopyButton::Component` only. An element id or CSS selector whose value or text is copied. Not RangeInput `preview_target`. |
 | RangeInput sample letters | `sample` | Text under a `:size` / `:text_size` slider. Default `"Aa"`. Pass `""` to hide. `with_preview` replaces it. |
 | RangeInput step notches | `ticks` | Visible notches under the track, one per `step`. Size and zoom variants show ticks unless you pass `ticks: false`. |
+| Lightbox gallery name | `group` | `FlatPack::Lightbox` and its triggers. A letter, then letters, numbers, hyphens, or underscores. Several triggers can name one group. |
+| Lightbox start item | `index` | Zero-based item in that `group`. Triggers pass it. The gallery opens on the clicked item. |
+| Lightbox item list | `items` | `FlatPack::Lightbox` only. Each hash has `src`, optional `alt` and `caption`, and `type` `:image` or `:video`. |
+| Slide or item caption | `caption` | Carousel slides and lightbox items. Optional supporting copy under the media. |
+| Lightbox count | `show_count` | `FlatPack::Lightbox` boolean. `true` shows `3 / 12` when there is more than one item. Maps to Carousel `show_counter`. |
 
 ## Billing namespace notes
 
@@ -89,7 +94,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.
-- Keep `type` only for native HTML control types such as button `type: "submit"`.
+- Keep `type` only for native HTML control types such as button `type: "submit"`. Carousel slides and lightbox items are the exception: `type` is `:image`, `:video`, or (carousel only) `:html`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`. Table columns use `:start`, `:center`, and `:end`.
 - Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor.

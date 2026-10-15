@@ -47,6 +47,10 @@ fr:
       thumbnail: Vignette %{number}
       video_thumbnail: Vignette vidéo %{number}
       slide_fallback: Diapositive %{number}
+    lightbox:
+      label: Visionneuse
+      close: Fermer la visionneuse
+      item: Élément %{number}
     chart:
       region: Région
       value: Valeur

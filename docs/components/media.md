@@ -6,7 +6,7 @@ Show one image that reserves its shape, rounds with the theme, and can carry a b
 ## When to use
 Use Media anywhere a photo needs `alt`, a reserved box, and optional overlay items. Use `Masonry` when several of those photos should pack without empty holes. Use `Overlay` alone when the thing underneath is not this image. Use `Video preview` when the frame should load a player on click. `Card::Media` is the padded frame inside a card, not this image.
 
-Link wrapping is the host's job. Do not put a button inside that link.
+Link wrapping is the host's job. Do not put a button inside that link. To open a gallery, wrap Media in `FlatPack::Lightbox::Trigger` or put `FlatPack::Lightbox.trigger_data` on a control that is already a button. See [Lightbox](lightbox.md).
 
 ## Class
 - Primary: `FlatPack::Media::Component`

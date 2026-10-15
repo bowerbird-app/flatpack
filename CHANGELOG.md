@@ -13,6 +13,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.241] - 2026-10-15
+
+### Added
+- `FlatPack::Lightbox::Component` is the overlay: a native `<dialog>` with backdrop, close, Escape, a focus trap, and focus returned to the trigger.
+- Items take `src`, optional `alt` and `caption`, and `type` `:image` or `:video`. `group` names the gallery. `loop` and `show_count` are booleans.
+- Triggers are separate. `FlatPack::Lightbox::Trigger`, `flat_pack_lightbox_trigger`, or `FlatPack::Lightbox.trigger_data(group:, index:)` open that group on an index. Thumbnails can sit in Masonry or anywhere else.
+- Several items reuse `FlatPack::Carousel` inside the dialog for next, previous, arrows, swipe, and the count. One item hides the arrows and the count.
+- Demo: `/demo/lightbox`.
+
+### Changed
+- Carousel `lightbox: true` renders this same lightbox. The old overlay markup is gone.
+- Image slides still default `lightbox` to `true`. Video slides open the lightbox when `lightbox: true`. HTML slides and `:logo_slider` do not.
+- Carousel accepts `show_counter` (default `true`), `fit` (`:cover` or `:contain`), and `stage` (Lightbox sets this; hosts leave it off).
+- Bumped the gem version to `0.1.241`.
+
+### Upgrade notes
+- There is one lightbox. Carousel no longer renders `[data-flat-pack--carousel-target="lightbox"]`. Open and close go through `dialog[data-controller="flat-pack--lightbox"]`.
+- `flat-pack:lightbox:open` detail is `{ group, index, trigger }`. `flat-pack:lightbox:close` and `flat-pack:lightbox:close-request` carry `{ group }`.
+- A video slide with `lightbox: true` now opens. It used to ignore that flag. HTML still cannot.
+- Lightbox takes no `class`, `style`, or colour prop. Hosts colour it with `--modal-backdrop-color`, `--modal-backdrop-blur`, and the `--carousel-control-*`, `--carousel-counter-*`, and `--carousel-lightbox-image-background-color` tokens.
+- `group` must start with a letter. `index` must be zero or greater. `loop` and `show_count` must be `true` or `false`.
+- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `grid-rows-[auto_minmax(0,1fr)]`, `place-items-center`, `place-self-end`, `max-w-[90vw]`, and `object-contain`.
+- Reload kit CSS. The overscroll rule now targets `[data-controller~="flat-pack--lightbox"]`.
+- Redeploy so `meta.gem_version` shows `0.1.241`.
+- Do not tag this PR.
+
 ## [0.1.240] - 2026-10-14
 
 ### Added

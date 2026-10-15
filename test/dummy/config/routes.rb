@@ -241,6 +241,7 @@ Rails.application.routes.draw do
   get "demo/chat/composer", to: "pages#chat_composer"
 
   get "demo/carousel", to: "pages#carousel"
+  get "demo/lightbox", to: "pages#lightbox"
 
   namespace :demo do
     get "inline_edit", to: "inline_edits#show", as: :inline_edit

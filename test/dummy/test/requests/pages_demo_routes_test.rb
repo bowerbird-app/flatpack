@@ -136,6 +136,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/typing_indicator
     /demo/chat/composer
     /demo/carousel
+    /demo/lightbox
     /demo/progress
     /demo/collapse
     /demo/accordion
@@ -908,6 +909,20 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "--color-success-background-color"
   end
 
+  test "lightbox demo renders one gallery, a single photo, a button, and a carousel" do
+    get "/demo/lightbox"
+
+    assert_response :success
+    assert_includes response.body, "data-flat-pack--lightbox-group-value=\"wall\""
+    assert_includes response.body, "data-flat-pack-lightbox-group=\"wall\""
+    assert_includes response.body, "data-flat-pack-lightbox-index=\"2\""
+    assert_includes response.body, "Open the harbour"
+    assert_includes response.body, "data-flat-pack--lightbox-group-value=\"poster\""
+    assert_includes response.body, "fp-masonry"
+    assert_includes response.body, "data-flat-pack--carousel-target=\"lightboxToggle\""
+    assert_includes response.body, "FlatPack::Media::Component"
+  end
+
   test "carousel demo renders lightbox control and footer counter copy" do
     get "/demo/carousel"
 
@@ -1002,7 +1017,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Gallery Using Carousel"
     assert_includes response.body, "data-controller=\"flat-pack--carousel\""
     assert_includes response.body, "Expand image"
-    assert_equal 15, response.body.scan('data-flat-pack--carousel-target="slide"').size
+    assert_equal 30, response.body.scan('data-flat-pack--carousel-target="slide"').size
     assert_equal 13, response.body.scan('data-flat-pack--carousel-target="thumb"').size
   end
 

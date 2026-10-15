@@ -278,6 +278,9 @@
         { variable: "thumbs_position", accepts: ":top, :bottom", example: "thumbs_position: :bottom" },
         { variable: "thumbs_alignment", accepts: ":start, :center, :end", example: "thumbs_alignment: :center" },
         { variable: "show_captions", accepts: "true, false", example: "show_captions: true" },
+        { variable: "show_counter", accepts: "true, false", example: "show_counter: true" },
+        { variable: "fit", accepts: ":cover, :contain", example: "fit: :contain" },
+        { variable: "stage", accepts: "true, false (Lightbox sets this; hosts leave it off)", example: "stage: false" },
         { variable: "transition", accepts: ":slide, :fade", example: "transition: :fade" },
         { variable: "autoplay", accepts: "true, false (default: false for :default, true for :logo_slider)", example: "autoplay: true" },
         { variable: "autoplay_interval_ms", accepts: "Integer", example: "autoplay_interval_ms: 4000" },
@@ -311,7 +314,7 @@
         { key: "thumb", applies_to: "image, html", accepts: "String URL", default: "nil", example: "thumb: \"https://...\"" },
         { key: "alt", applies_to: "image", accepts: "String", default: "\"Slide n\"", example: "alt: \"Preview\"" },
         { key: "caption", applies_to: "image, video, html", accepts: "String", default: "\"\"", example: "caption: \"Analytics dashboard concept\"" },
-        { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, others: false", example: "lightbox: false" },
+        { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, video and html: false", example: "lightbox: true" },
         { key: "poster", applies_to: "video", accepts: "String URL", default: "nil", example: "poster: \"https://...\"" },
         { key: "controls", applies_to: "video", accepts: "true, false", default: "true", example: "controls: false" },
         { key: "muted", applies_to: "video", accepts: "true, false", default: "false", example: "muted: true" },
@@ -395,7 +398,7 @@
         { key: "href", applies_to: "image shorthand", accepts: "String URL", default: "nil", example: "href: \"https://images.example.com/full.jpg\"" },
         { key: "thumbnail_url", applies_to: "image shorthand", accepts: "String URL", default: "nil", example: "thumbnail_url: \"https://images.example.com/thumb.jpg\"" },
         { key: "name", applies_to: "image shorthand", accepts: "String", default: "nil", example: "name: \"hero-v2.png\"" },
-        { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, others: false", example: "lightbox: false" }
+        { key: "lightbox", applies_to: "image, video, html", accepts: "true, false", default: "image: true, video and html: false", example: "lightbox: true" }
       ]
     },
     chat_system_message: {
@@ -810,6 +813,20 @@
         { variable: "slot", accepts: "slot block", example: "hero.slot { concat render(FlatPack::Button::Component.new(text: \"Start\", style: :primary, href: \"#\")) }" },
         { variable: "badge", accepts: "slot block", example: "hero.badge { render FlatPack::Badge::Component.new(text: \"New\", style: :success) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"bg-[var(--surface-page-background-color)]\", id: \"main-hero\"" }
+      ]
+    },
+    lightbox: {
+      label: "Lightbox",
+      method_call: "render FlatPack::Lightbox::Component.new(group: \"wall\", items: [{ type: :image, src: \"/masonry/harbour.svg\", alt: \"Harbour\", caption: \"Harbour at dusk\" }])",
+      variables: [
+        { variable: "group", accepts: "String (required, starts with a letter)", example: "group: \"wall\"" },
+        { variable: "items", accepts: "Array<Hash> (required)", example: "items: [{ type: :image, src: \"/masonry/harbour.svg\", alt: \"Harbour\", caption: \"Harbour at dusk\" }]" },
+        { variable: "loop", accepts: "true, false", example: "loop: true" },
+        { variable: "show_count", accepts: "true, false", example: "show_count: true" },
+        { variable: "items[].src", accepts: "String URL (required)", example: "src: \"/masonry/harbour.svg\"" },
+        { variable: "items[].alt", accepts: "String", example: "alt: \"Harbour at dusk\"" },
+        { variable: "items[].caption", accepts: "String", example: "caption: \"Harbour at dusk\"" },
+        { variable: "items[].type", accepts: ":image, :video", example: "type: :video" }
       ]
     },
     list: {

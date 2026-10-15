@@ -856,6 +856,9 @@ class PagesController < ApplicationController
   def chat_composer
   end
 
+  def lightbox
+  end
+
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide
@@ -865,7 +868,7 @@ class PagesController < ApplicationController
     @carousel_notes = [
       "Uses FlatPack::Carousel::Component with image, video, and component-rendered HTML slides.",
       "Demonstrates autoplay, loop, indicators, controls, and thumbnail navigation.",
-      "Image slides enable lightbox by default and can opt out per slide with lightbox: false.",
+      "Image slides open the shared lightbox by default. Video slides open it when lightbox: true. HTML slides do not. Opt out with lightbox: false.",
       "Uses secure defaults for rich content and supports keyboard plus touch interactions.",
       "Includes logo-slider variant with multi-item responsive layout (5 desktop / 3 tablet / 3 mobile).",
       "Includes a side-preview chart carousel demo showing 3.25 slides on desktop and 1.25 slides on mobile/tablet.",

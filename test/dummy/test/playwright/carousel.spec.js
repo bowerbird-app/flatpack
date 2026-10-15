@@ -60,8 +60,8 @@ test.describe('carousel drag swipe', () => {
 
     const carousel = page.locator('section[data-controller="flat-pack--carousel"]').first()
     const expandButton = carousel.locator('button[data-flat-pack--carousel-target="lightboxToggle"]')
-    const lightbox = carousel.locator('[data-flat-pack--carousel-target="lightbox"]')
-    const lightboxImage = carousel.locator('[data-flat-pack--carousel-target="lightboxImage"]')
+    const lightbox = page.locator('dialog[data-controller="flat-pack--lightbox"]').first()
+    const lightboxImage = lightbox.locator("[data-flat-pack-lightbox-stage='true'] img").first()
 
     await expect(expandButton).toBeVisible()
     await expect(lightbox).toBeHidden()

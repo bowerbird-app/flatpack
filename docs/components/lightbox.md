@@ -1,0 +1,96 @@
+# Lightbox
+
+## Purpose
+Open one overlay on a photo or video, starting from the thumbnail, button, or carousel slide the person clicked.
+
+## When to use
+Use Lightbox when a control should enlarge media that already lives somewhere else on the page. The gallery is one component. Triggers are separate, so the thumbnails can sit in Masonry, a grid, a Collection, or several places and still open the same items. Use Carousel `lightbox: true` when the sequence itself should open this overlay. Use Modal when the layer is a form or a page, not a gallery.
+
+## Class
+- Primary: `FlatPack::Lightbox::Component`
+- Related classes: `FlatPack::Lightbox::Trigger`, `FlatPack::Carousel::Component`
+
+`FlatPack::Lightbox.trigger_data(group:, index:)` returns the attributes for a control that is already a button. `flat_pack_lightbox_trigger` renders `FlatPack::Lightbox::Trigger`.
+
+## Props
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `group` | String |  | yes | Gallery name. Starts with a letter. Then letters, numbers, hyphens, or underscores. Triggers use the same name. |
+| `items` | Array<Hash> |  | yes | Media in order. Each hash needs `src`. Optional `alt`, `caption`, and `type` (`:image` or `:video`). `poster`, `controls`, `muted`, `video_loop`, and `playsinline` pass through for video. At least one safe URL is required. |
+| `loop` | Boolean | `true` | no | Wrap from the last item to the first. `true` or `false` only. |
+| `show_count` | Boolean | `true` | no | Show `3 / 12` when there is more than one item. `true` or `false` only. |
+
+There is no `class`, `style`, or colour prop. The dialog uses modal backdrop tokens and carousel chrome tokens.
+
+### Item hash
+
+| key | type | default | required | description |
+|-----|------|---------|----------|-------------|
+| `src` | String |  | yes | `http(s)` or a relative URL. Unsafe URLs are dropped. |
+| `alt` | String | Item number | no | Accessible name. Falls back to I18n `flatpack.lightbox.item`. |
+| `caption` | String | `""` | no | Copy under the media when any item has one. |
+| `type` | Symbol | inferred | no | `:image` or `:video`. A `.mp4` src, or a `poster`, infers `:video`. Anything else raises `ArgumentError`. |
+| `poster` | String | `nil` | no | Video poster URL. |
+| `controls` | Boolean | `true` | no | Native video controls. |
+| `muted` | Boolean | `false` | no | Passed to `<video muted>`. |
+| `video_loop` | Boolean | `false` | no | Passed to `<video loop>`. |
+| `playsinline` | Boolean | `true` | no | Passed to `<video playsinline>`. |
+
+### Trigger
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `group` | String |  | yes | Same rules as the gallery `group`. |
+| `index` | Integer | `0` | no | Zero-based item to open. Negative indexes raise `ArgumentError`. |
+
+`Trigger` does not take `class` or `style`. It renders a `<button type="button">`. Do not put it inside another button. Put `FlatPack::Lightbox.trigger_data` on `FlatPack::Button` instead.
+
+## Slots
+`Trigger` renders its block as the button label. The gallery component has no slots.
+
+## Variants
+None. One item hides the previous and next arrows and the count. Several items show them. `loop: false` stops at the ends.
+
+## Example
+```erb
+<%= render FlatPack::Lightbox::Component.new(
+  group: "wall",
+  items: [
+    { type: :image, src: "/masonry/harbour.svg", alt: "Harbour at dusk", caption: "Harbour at dusk" },
+    { type: :image, src: "/masonry/cliff.svg", alt: "Sea cliff", caption: "Sea cliff" }
+  ],
+  loop: true,
+  show_count: true
+) %>
+
+<%= render FlatPack::Lightbox::Trigger.new(group: "wall", index: 0) do %>
+  <%= render FlatPack::Media::Component.new(src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 1120, height: 1400) %>
+<% end %>
+
+<%= render FlatPack::Button::Component.new(
+  text: "Open the harbour",
+  data: FlatPack::Lightbox.trigger_data(group: "wall", index: 0)
+) %>
+```
+
+Any element can carry the same data attributes: `data-flat-pack-lightbox-group` and `data-flat-pack-lightbox-index`.
+
+Carousel slides with `lightbox: true` render this component. Image slides default to on. Video slides open it only when `lightbox: true`. HTML slides never do.
+
+## Interactive Demo
+- `/demo/lightbox`
+
+## Accessibility
+- The overlay is a native `<dialog>`, opened with `showModal`, so the browser supplies the backdrop, Escape, and the focus trap.
+- Close returns focus to the trigger.
+- The dialog is labelled with I18n `flatpack.lightbox.label`. The close button uses `flatpack.lightbox.close`.
+- Arrow keys move between items unless focus is already in the carousel viewport, a video, or a field.
+- One item has no arrows and no count.
+- Reduced motion skips the scale and fade.
+
+## Dependencies
+- FlatPack install generator setup (`rails generate flat_pack:install`).
+- Stimulus controllers: `flat-pack--lightbox` and `flat-pack--carousel`.
+- The overlay renders `FlatPack::Carousel::Component` with `stage: true` and `fit: :contain`. Sliding, swipe, arrows, and the count stay on that carousel.
+- Tokens: `--modal-backdrop-color`, `--modal-backdrop-blur`, `--carousel-control-*`, `--carousel-counter-*`, `--carousel-lightbox-image-background-color`.
