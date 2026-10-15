@@ -45,7 +45,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rebuild host Tailwind so these literals are generated: `py-[var(--empty-state-padding-y-sm)]`, `px-[var(--empty-state-padding-x-sm)]`, `py-[var(--empty-state-padding-y-md)]`, `px-[var(--empty-state-padding-x-md)]`, `py-[var(--empty-state-padding-y-lg)]`, `px-[var(--empty-state-padding-x-lg)]`, `mb-[var(--empty-state-gap-sm)]`, `mb-[var(--empty-state-gap-md)]`, `mb-[var(--empty-state-gap-lg)]`, `mb-[var(--empty-state-title-gap-sm)]`, `mb-[var(--empty-state-title-gap-md)]`, `mb-[var(--empty-state-title-gap-lg)]`, `mb-[var(--empty-state-block-gap-sm)]`, `mb-[var(--empty-state-block-gap-md)]`, `mb-[var(--empty-state-block-gap-lg)]`, `max-w-[var(--empty-state-measure-sm)]`, `max-w-[var(--empty-state-measure-md)]`, `max-w-[var(--empty-state-measure-lg)]`, `max-w-[var(--empty-state-measure-full)]`, `text-[length:var(--text-xs)]`, `text-[length:var(--text-sm)]`, `text-[length:var(--text-base)]`, `text-[length:var(--text-lg)]`, `text-[length:var(--text-xl)]`, and `text-[length:var(--text-2xl)]`.
 - Reload kit CSS for the new tokens.
 - Redeploy so `meta.gem_version` shows `0.1.246`.
-- Do not tag this PR.
 
 ## [0.1.245] - 2026-10-15
 
