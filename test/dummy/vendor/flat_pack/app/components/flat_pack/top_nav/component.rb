@@ -162,7 +162,7 @@ module FlatPack
           "w-[min(20rem,calc(100vw-2rem))]",
           "flex flex-col items-stretch gap-3",
           "rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]",
-          "bg-[var(--surface-background-color)] p-3 shadow-lg"
+          "bg-[var(--surface-background-color)] p-[var(--top-nav-mobile-padding)] shadow-lg"
         ].join(" ")
       end
 

@@ -26,10 +26,10 @@ module FlatPack
       assert_includes css, ".fp-sidebar-label"
       assert_match(/opacity\s+var\(--duration-fast\)\s+var\(--easing-standard\)/, css)
       assert_includes css, "[data-flat-pack-sidebar-collapsed=\"true\"] .fp-sidebar-label"
-      assert_includes css, "padding-left: 0.25rem !important"
+      assert_includes css, "padding-left: var(--sidebar-item-padding-collapsed) !important"
       assert_includes css, "padding-left: 0 !important"
       assert_includes css, "gap: 0 !important"
-      assert_includes css, "margin-left: calc((4rem - 1px - (var(--spacing) * 4) - 1.25rem) / 2 - 0.25rem) !important"
+      assert_includes css, "margin-left: calc((4rem - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
       refute_includes css, "margin-left: calc((100% - 1.25rem) / 2)"
       refute_includes css, "justify-content: center"
       refute_includes css, "desktopToggle"

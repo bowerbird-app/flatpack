@@ -92,7 +92,7 @@ module FlatPack
       end
 
       def render_search_row
-        content_tag(:div, class: "flex items-center gap-2 border-b border-[var(--surface-border-color)] px-4 py-3") do
+        content_tag(:div, class: "flex items-center gap-2 border-b border-[var(--surface-border-color)] px-[var(--command-palette-field-padding-x)] py-[var(--command-palette-field-padding-y)]") do
           safe_join([
             content_tag(:span, class: "text-[var(--surface-muted-content-color)]", "aria-hidden": "true") do
               render FlatPack::Shared::IconComponent.new(name: "magnifying-glass", size: :sm)
@@ -117,15 +117,15 @@ module FlatPack
       end
 
       def render_results
-        content_tag(:div, class: "max-h-80 overflow-y-auto py-2", data: {"flat-pack--command-palette-target": "results"}) do
+        content_tag(:div, class: "max-h-80 overflow-y-auto py-[var(--command-palette-padding)]", data: {"flat-pack--command-palette-target": "results"}) do
           safe_join(grouped_items.map { |group, items| render_group(group, items) } + [render_empty_row])
         end
       end
 
       def render_group(group, items)
-        content_tag(:div, class: "px-2", data: {"flat-pack--command-palette-target": "group"}) do
+        content_tag(:div, class: "px-[var(--command-palette-padding)]", data: {"flat-pack--command-palette-target": "group"}) do
           safe_join([
-            content_tag(:p, group, class: "px-2 py-1 text-xs font-medium text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, group, class: "px-[var(--command-palette-padding)] py-[var(--command-palette-label-padding-y)] text-xs font-medium text-[var(--surface-muted-content-color)]"),
             content_tag(:ul, role: "listbox") do
               safe_join(items.map { |item| render_item(item) })
             end
@@ -169,7 +169,7 @@ module FlatPack
       # "hover:bg-[var(--list-item-hover-background-color)]" "aria-selected:bg-[var(--list-item-active-background-color)]"
       def item_classes
         [
-          "flex items-center gap-3 rounded-[var(--radius-md)] px-2 py-2 text-sm",
+          "flex items-center gap-[var(--command-palette-item-gap)] rounded-[var(--radius-md)] px-[var(--command-palette-item-padding-x)] py-[var(--command-palette-item-padding-y)] text-sm",
           "text-[var(--surface-content-color)]",
           "hover:bg-[var(--list-item-hover-background-color)]",
           "aria-selected:bg-[var(--list-item-active-background-color)]"
@@ -187,7 +187,7 @@ module FlatPack
       def render_empty_row
         content_tag(:p,
           @empty_text,
-          class: "hidden px-4 py-6 text-sm text-[var(--surface-muted-content-color)]",
+          class: "hidden px-[var(--command-palette-field-padding-x)] py-[var(--command-palette-empty-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
           data: {"flat-pack--command-palette-target": "empty"})
       end
 

@@ -269,7 +269,7 @@ Fallbacks not needed as these are modern browsers.
 
 ### Default Light Palette + Theme Variants
 
-FlatPack defines the default rounded / charcoal palette in `:root` and layers additional variants on top with selectors such as `[data-theme="dark"]`. `[data-theme="rounded"]` is an empty alias of the default.
+FlatPack defines the default charcoal palette in `:root, [data-theme]` and layers additional variants on top with selectors such as `[data-theme="dark"]`. `[data-theme="rounded"]` shifts the spacing scale and does not restate that palette.
 
 ```css
 :root {

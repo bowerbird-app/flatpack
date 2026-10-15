@@ -240,8 +240,8 @@ module FlatPack
           sticky_footer? ? "fp-modal-page-sticky" : nil,
           page_scroll? ? "sm:my-auto" : nil,
           size_classes,
-          "p-4",
-          "sm:p-6",
+          "p-[var(--modal-padding)]",
+          "sm:p-[var(--modal-padding-wide)]",
           "bg-[var(--modal-surface-color)]",
           "rounded-[var(--radius-lg)]",
           "shadow-lg",
@@ -436,7 +436,7 @@ module FlatPack
 
       def render_navigable_error
         content_tag(:div,
-          class: "absolute inset-0 z-10 flex items-center justify-center bg-[var(--modal-surface-color)] p-4",
+          class: "absolute inset-0 z-10 flex items-center justify-center bg-[var(--modal-surface-color)] p-[var(--modal-padding)]",
           hidden: true,
           data: {"flat-pack--navigable-target": "error"}) do
           render FlatPack::EmptyState::Component.new(
@@ -498,7 +498,7 @@ module FlatPack
             "relative",
             body_layout_class,
             body_overflow_class,
-            "pt-4",
+            "pt-[var(--modal-padding)]",
             "text-sm",
             "text-[var(--modal-body-color)]"
           )
@@ -508,7 +508,7 @@ module FlatPack
             "min-h-0",
             body_layout_class,
             body_overflow_class,
-            "pt-4",
+            "pt-[var(--modal-padding)]",
             "text-sm",
             "text-[var(--modal-body-color)]"
           )
@@ -539,7 +539,7 @@ module FlatPack
 
       def footer_classes
         classes(
-          "flat-pack-modal__footer shrink-0 pt-4 flex justify-end gap-3",
+          "flat-pack-modal__footer shrink-0 pt-[var(--modal-padding)] flex justify-end gap-3",
           sticky_footer? ? "fp-modal-sticky-footer" : nil
         )
       end

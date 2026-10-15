@@ -20,7 +20,7 @@ module FlatPack
         def footer_classes
           classes(
             "shrink-0",
-            "p-4",
+            "p-[var(--sidebar-padding)]",
             "border-t",
             "border-[var(--sidebar-border-color)]",
             "text-[var(--sidebar-footer-text-color)]"

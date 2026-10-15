@@ -330,11 +330,11 @@ module FlatPack
       end
 
       def header_cell_classes
-        "px-[var(--table-padding)] py-[var(--table-padding)] text-start text-xs font-medium text-[var(--table-header-text-color)]"
+        "px-[var(--table-padding-x)] py-[var(--table-padding-y)] text-start text-xs font-medium text-[var(--table-header-text-color)]"
       end
 
       def body_cell_classes
-        "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-[var(--table-cell-text-color)]"
+        "px-[var(--table-padding-x)] py-[var(--table-padding-y)] text-sm text-[var(--table-cell-text-color)]"
       end
 
       def column_count

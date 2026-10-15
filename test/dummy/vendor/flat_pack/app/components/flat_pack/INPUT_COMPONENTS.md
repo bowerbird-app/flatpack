@@ -168,7 +168,7 @@ All input components accept these parameters:
 
 ### Base CSS Class
 Text-like inputs share the `flat-pack-input` CSS class (Select uses `flat-pack-select` / `flat-pack-select-trigger`) with consistent chrome from the shared FormField helpers:
-- Padding via `--form-control-padding` (and related form-control tokens)
+- Padding via `--form-control-padding-x` and `--form-control-padding-y` (and related form-control tokens)
 - Rounded corners using CSS variables
 - Border width and color via `form_control_border_classes` (plain `TextArea` and the rich-text editor surface both use this)
 - Border with focus states

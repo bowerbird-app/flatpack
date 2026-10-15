@@ -103,8 +103,8 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "flat-pack-input"
-        assert_includes html, "px-[var(--form-control-padding)]"
-        assert_includes html, "py-[var(--form-control-padding)]"
+        assert_includes html, "px-[var(--form-control-padding-x)]"
+        assert_includes html, "py-[var(--form-control-padding-y)]"
         assert_includes html, "border-[var(--surface-border-color)]"
         assert_match(/(?<=\s|")border(?=\s|")/, html)
       end
@@ -128,7 +128,7 @@ module FlatPack
           probe.form_control_border_classes(error: true)
         )
         assert_equal(
-          ["px-[var(--form-control-padding)]", "py-[var(--form-control-padding)]"],
+          ["px-[var(--form-control-padding-x)]", "py-[var(--form-control-padding-y)]"],
           probe.form_control_padding_classes
         )
       end
@@ -141,8 +141,8 @@ module FlatPack
         assert_includes html, "bg-transparent"
         assert_includes html, "rounded-none"
         assert_includes html, "focus:ring-0"
-        assert_includes html, "px-[var(--form-control-padding)]"
-        assert_includes html, "py-[var(--form-control-padding)]"
+        assert_includes html, "px-[var(--form-control-padding-x)]"
+        assert_includes html, "py-[var(--form-control-padding-y)]"
         refute_includes html, "border-[var(--surface-border-color)]"
         refute_includes html, "border-[var(--color-error)]"
         refute_includes html, "focus:ring-2"

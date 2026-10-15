@@ -2440,10 +2440,10 @@ class PagesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m, :body]
-    return [] if block.blank?
+    bodies = css.scan(/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m).flatten
+    return [] if bodies.empty?
 
-    block.lines.filter_map do |line|
+    bodies.join("\n").lines.filter_map do |line|
       stripped = line.strip
       next if stripped.empty? || stripped.start_with?("/*")
 

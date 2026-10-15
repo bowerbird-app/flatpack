@@ -193,7 +193,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 `flat_pack/variables.css` contains the complete FlatPack theming system:
 - Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens on `:root {}`
 - `@theme inline {}` inventory so Tailwind can emit utilities without copying those values
-- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme="rounded"]` is a no-op alias of the default.
+- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme="rounded"]` shifts the spacing scale and does not restate colour.
 
 **2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — component scanning only:
 
@@ -260,7 +260,8 @@ The imported `variables.css` contains:
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
 - `[data-theme="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
 - `[data-theme="ocean"] {}` — ocean variant (overrides only)
-- `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute). Leave it empty. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
+- A bare `:root {}` after the palette holds `--space-1`…`--space-6`, `--density`, and the menu shells that rounded remaps. Do not move those onto `[data-theme]` or a nested theme resets the scale.
+- `[data-theme="rounded"] {}` — larger `--space-2`…`--space-6` (step 1 stays `0.25rem`) and the remapped menu shells. It does not restate colour, radius, or shadow. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
 To recolor without copying the full token list:
 
@@ -274,7 +275,7 @@ or in host CSS loaded after FlatPack:
 :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
 ```
 
-**Rounded / charcoal is the default.** The `:root {}` block in `variables.css` establishes that palette without requiring any attribute. No `data-theme` attribute is needed. `[data-theme="rounded"]` is an empty alias of the same look.
+**Charcoal is the default palette.** The `:root, [data-theme] {}` block establishes that palette without requiring any attribute. `[data-theme="rounded"]` is the generous spacing scale on that same palette. Set the attribute when you want it. Dark and ocean stay on the compact scale.
 
 To **explicitly force light mode** regardless of any ThemeController state or stored preferences (useful if you are not using the theme switcher), add `data-theme="light"` to your HTML root element in your layout:
 
@@ -950,7 +951,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 
-**Rounded / charcoal is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates that palette automatically. Supported themes: `light` / `rounded` (default alias), `dark`, `ocean` — set via `data-theme` on `<html>`.
+**Charcoal is the default palette.** No `data-theme` attribute is required for colour. Set `data-theme="rounded"` for the generous spacing scale. Supported themes: `light`, `rounded`, `dark`, `ocean` — set via `data-theme` on `<html>`. Dark and ocean keep the compact scale.
 
 No manual path finding, no manual copying of CSS variables, no manual configuration — just run the generator and rebuild CSS.
 

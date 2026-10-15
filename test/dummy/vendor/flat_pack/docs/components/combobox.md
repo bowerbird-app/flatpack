@@ -50,4 +50,4 @@ None.
 ## Dependencies
 - Stimulus controller: `flat-pack--combobox`.
 - Overlay motion: `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`.
-- Surface tokens for the field and list (`--surface-*`, `--list-item-*`, `--form-control-padding`).
+- Surface tokens for the field and list (`--surface-*`, `--list-item-*`, `--form-control-padding-x`, `--form-control-padding-y`, `--combobox-menu-padding`, `--combobox-item-padding-x`, `--combobox-item-padding-y`).

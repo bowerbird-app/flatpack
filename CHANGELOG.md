@@ -13,6 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.244] - 2026-10-15
+
+### Added
+- `--space-1` through `--space-6` and `--density` on bare `:root`. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)`.
+- `[data-theme="rounded"]` shifts steps 2–6 (`0.75rem`, `1rem`, `1.25rem`, `1.75rem`, `2.5rem`) and remaps menu shells plus the search result block axis. `--space-1` stays `0.25rem`. `--density` stays `1`.
+- Family padding tokens for menus, fields, badges, overlays, sidebar, list, modal, and drawer. Badges and search icon gutters stay fixed lengths.
+- Bumped the gem version to `0.1.244`.
+
+### Changed
+- Buttons, fields, chips, pills, tabs, cards, lists, tables, sidebar, top nav, modal, drawer, popover, tooltip, alert, toast, accordion, collapse, and bottom nav read those tokens. Alert, toast, and accordion no longer write a size onto the token with an inline style.
+- Card header and footer follow the card padding step.
+- `--form-control-padding` is `--form-control-padding-x` and `--form-control-padding-y`. `--table-padding` is `--table-padding-x` and `--table-padding-y`. `--alert-padding` and `--toast-padding` are `-sm`, `-md`, and `-lg`. Accordion trigger and content padding are sized the same way.
+- Removed unused `--button-padding-x-xs` and `--button-padding-y-xs`.
+- The dummy app sets `data-theme="rounded"` on its HTML layouts.
+- Dark and ocean inherit the compact scale. A dark region nested inside rounded keeps the generous steps.
+
+### Upgrade notes
+- There are no compatibility aliases. Hosts that set `--form-control-padding`, `--table-padding`, `--alert-padding`, `--toast-padding`, `--button-padding-x-xs`, or `--button-padding-y-xs` must switch to the new names.
+- Set `<html data-theme="rounded">` for the generous scale. Omit it, or use `dark` / `ocean`, and padding stays on the compact scale.
+- Do not restate `--space-*`, `--density`, or the remapped menu shells on a generic `[data-theme]` rule. Do not self-map a token on `rounded`.
+- Rebuild host Tailwind so the new `px-[var(--…)]` / `py-[var(--…)]` / `p-[var(--…)]` / `sm:p-[var(--…)]` literals are generated. Reload kit CSS for the token values.
+- Select options use the menu item steps. At the compact scale that is `12px` by `8px`, down from the old field padding.
+- Redeploy so `meta.gem_version` shows `0.1.244`.
+- Do not tag this PR.
+
 ## [0.1.243] - 2026-10-15
 
 ### Added

@@ -77,7 +77,7 @@ module FlatPack
         assert_selector "span", text: "Small"
         assert_includes page.native.to_html, "text-xs"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-sm)]"
-        assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
+        assert_includes page.native.to_html, "py-[var(--chip-padding-y-sm)]"
       end
 
       def test_renders_medium_size
@@ -86,7 +86,7 @@ module FlatPack
         assert_selector "span", text: "Medium"
         assert_includes page.native.to_html, "text-sm"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-md)]"
-        assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
+        assert_includes page.native.to_html, "py-[var(--chip-padding-y-md)]"
       end
 
       def test_renders_large_size
@@ -95,7 +95,7 @@ module FlatPack
         assert_selector "span", text: "Large"
         assert_includes page.native.to_html, "text-base"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-lg)]"
-        assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
+        assert_includes page.native.to_html, "py-[var(--chip-padding-y-lg)]"
       end
 
       def test_default_size_is_medium

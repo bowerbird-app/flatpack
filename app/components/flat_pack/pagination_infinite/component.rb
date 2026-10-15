@@ -90,13 +90,13 @@ module FlatPack
               safe_join(Array.new(5) do
                 content_tag(:tr, class: "border-t border-[var(--surface-border-color)]") do
                   safe_join([
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "70px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "140px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "170px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "80px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "100px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "90px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]"),
-                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "120px")), class: "px-[var(--table-padding)] py-[var(--table-padding)]")
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "70px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "140px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "170px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "80px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "100px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "90px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"),
+                    content_tag(:td, render(FlatPack::Skeleton::Component.new(variant: :text, width: "120px")), class: "px-[var(--table-padding-x)] py-[var(--table-padding-y)]")
                   ])
                 end
               end)

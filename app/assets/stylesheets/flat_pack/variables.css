@@ -2,18 +2,23 @@
  *
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
- *   2. Semantic tokens (--color-*, --surface-*, --overlay-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
- *   3. Component tokens (--button-*, --sidebar-*, …) — defined once; prefer var(--semantic)
- *      --color-primary-hover follows --color-primary (relative colour; brand-knob fallback)
+ *   2. Spacing scale (--space-1..--space-6) and --density — component padding multiplies a step by density
+ *   3. Semantic tokens (--color-*, --surface-*, --overlay-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
+ *   4. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
  *   and the circular `--x: var(--x)` trap when Tailwind also emits @theme onto :root).
- * :root, [data-theme] is the single source of concrete values (browsers skip @theme when this
- *   file is a stylesheet). Declaring the wiring on [data-theme] as well re-resolves derived
- *   tokens (var(--color-primary), etc.) when a host puts data-theme on <body> or another
- *   descendant — var() inside a custom property is computed on the element that declares it.
- * [data-theme="…"] named blocks override only tokens that differ from the default palette.
- * [data-theme="rounded"] is a no-op alias of the default so hosts can keep the attribute.
+ * :root, [data-theme] is the single source of concrete colour and unremapped padding formulas
+ *   (browsers skip @theme when this file is a stylesheet). Declaring the wiring on [data-theme]
+ *   as well re-resolves derived tokens when a host puts data-theme on <body> or another descendant.
+ * Concrete --space-* and --density live on bare :root only. A nested theme inherits them.
+ * Remapped shells (--dropdown-padding, --select-menu-padding, --combobox-menu-padding,
+ *   --search-menu-padding, --search-result-padding-y) are also bare :root, then overridden on
+ *   [data-theme="rounded"]. Restating the compact formula on [data-theme] would snap a dark
+ *   region inside rounded back to the 4px menu inset.
+ * [data-theme="…"] named blocks override only tokens that differ. Dark and ocean inherit the scale.
+ * [data-theme="rounded"] shifts space-2..space-6 and those remapped shells. It does not restate colour.
+ * Do not assign `--token: var(--token)` on rounded. html[data-theme="rounded"] is :root, so that blanks the token.
  */
 
 @theme inline {
@@ -147,9 +152,13 @@
   --accordion-item-border-color: var(--accordion-item-border-color);
   --accordion-trigger-text-color: var(--accordion-trigger-text-color);
   --accordion-trigger-hover-background-color: var(--accordion-trigger-hover-background-color);
-  --accordion-trigger-padding: var(--accordion-trigger-padding);
+  --accordion-trigger-padding-sm: var(--accordion-trigger-padding-sm);
+  --accordion-trigger-padding-md: var(--accordion-trigger-padding-md);
+  --accordion-trigger-padding-lg: var(--accordion-trigger-padding-lg);
   --accordion-content-background-color: var(--accordion-content-background-color);
-  --accordion-content-padding: var(--accordion-content-padding);
+  --accordion-content-padding-sm: var(--accordion-content-padding-sm);
+  --accordion-content-padding-md: var(--accordion-content-padding-md);
+  --accordion-content-padding-lg: var(--accordion-content-padding-lg);
   --accordion-focus-ring-color: var(--accordion-focus-ring-color);
   --accordion-transition-duration: var(--accordion-transition-duration);
   --breadcrumb-current-color: var(--breadcrumb-current-color);
@@ -492,8 +501,6 @@
   --button-shadow-active: var(--button-shadow-active);
   --hit-target-min: var(--hit-target-min);
   --hit-target-inline-min: var(--hit-target-inline-min);
-  --button-padding-x-xs: var(--button-padding-x-xs);
-  --button-padding-y-xs: var(--button-padding-y-xs);
   --button-padding-x-sm: var(--button-padding-x-sm);
   --button-padding-y-sm: var(--button-padding-y-sm);
   --button-padding-x-md: var(--button-padding-x-md);
@@ -504,7 +511,9 @@
   --button-icon-only-padding-md: var(--button-icon-only-padding-md);
   --button-icon-only-padding-lg: var(--button-icon-only-padding-lg);
   --alert-border-radius: var(--alert-border-radius);
-  --alert-padding: var(--alert-padding);
+  --alert-padding-sm: var(--alert-padding-sm);
+  --alert-padding-md: var(--alert-padding-md);
+  --alert-padding-lg: var(--alert-padding-lg);
   --alert-title-color: var(--alert-title-color);
   --alert-description-color: var(--alert-description-color);
   --alert-dismiss-button-radius: var(--alert-dismiss-button-radius);
@@ -528,7 +537,9 @@
   --alert-danger-text-color: var(--alert-danger-text-color);
   --alert-danger-icon-color: var(--alert-danger-icon-color);
   --toast-border-radius: var(--toast-border-radius);
-  --toast-padding: var(--toast-padding);
+  --toast-padding-sm: var(--toast-padding-sm);
+  --toast-padding-md: var(--toast-padding-md);
+  --toast-padding-lg: var(--toast-padding-lg);
   --toast-shadow: var(--toast-shadow);
   --toast-dismiss-text-color: var(--toast-dismiss-text-color);
   --toast-dismiss-hover-text-color: var(--toast-dismiss-hover-text-color);
@@ -622,8 +633,10 @@
   --stack-gap-sm: var(--stack-gap-sm);
   --stack-gap-md: var(--stack-gap-md);
   --stack-gap-lg: var(--stack-gap-lg);
-  --form-control-padding: var(--form-control-padding);
-  --table-padding: var(--table-padding);
+  --form-control-padding-x: var(--form-control-padding-x);
+  --form-control-padding-y: var(--form-control-padding-y);
+  --table-padding-x: var(--table-padding-x);
+  --table-padding-y: var(--table-padding-y);
   --table-background-color: var(--table-background-color);
   --table-border-color: var(--table-border-color);
   --table-header-background-color: var(--table-header-background-color);
@@ -727,6 +740,63 @@
   --transition-fast: var(--transition-fast);
   --pagination-current-background-color: var(--pagination-current-background-color);
   --pagination-current-text-color: var(--pagination-current-text-color);
+  --space-1: var(--space-1);
+  --space-2: var(--space-2);
+  --space-3: var(--space-3);
+  --space-4: var(--space-4);
+  --space-5: var(--space-5);
+  --space-6: var(--space-6);
+  --density: var(--density);
+  --dropdown-padding: var(--dropdown-padding);
+  --dropdown-item-padding-x: var(--dropdown-item-padding-x);
+  --dropdown-item-padding-y: var(--dropdown-item-padding-y);
+  --dropdown-item-gap: var(--dropdown-item-gap);
+  --dropdown-divider-margin: var(--dropdown-divider-margin);
+  --select-menu-padding: var(--select-menu-padding);
+  --select-option-padding-x: var(--select-option-padding-x);
+  --select-option-padding-y: var(--select-option-padding-y);
+  --select-search-padding: var(--select-search-padding);
+  --combobox-menu-padding: var(--combobox-menu-padding);
+  --combobox-item-padding-x: var(--combobox-item-padding-x);
+  --combobox-item-padding-y: var(--combobox-item-padding-y);
+  --command-palette-padding: var(--command-palette-padding);
+  --command-palette-item-padding-x: var(--command-palette-item-padding-x);
+  --command-palette-item-padding-y: var(--command-palette-item-padding-y);
+  --command-palette-item-gap: var(--command-palette-item-gap);
+  --command-palette-field-padding-x: var(--command-palette-field-padding-x);
+  --command-palette-field-padding-y: var(--command-palette-field-padding-y);
+  --command-palette-label-padding-y: var(--command-palette-label-padding-y);
+  --command-palette-empty-padding-y: var(--command-palette-empty-padding-y);
+  --search-menu-padding: var(--search-menu-padding);
+  --search-result-padding-x: var(--search-result-padding-x);
+  --search-result-padding-y: var(--search-result-padding-y);
+  --list-item-padding-x: var(--list-item-padding-x);
+  --list-item-padding-y: var(--list-item-padding-y);
+  --sidebar-item-padding-x: var(--sidebar-item-padding-x);
+  --sidebar-item-padding-y: var(--sidebar-item-padding-y);
+  --sidebar-item-gap: var(--sidebar-item-gap);
+  --sidebar-item-inset: var(--sidebar-item-inset);
+  --sidebar-item-padding-collapsed: var(--sidebar-item-padding-collapsed);
+  --sidebar-section-padding-x: var(--sidebar-section-padding-x);
+  --sidebar-padding: var(--sidebar-padding);
+  --top-nav-padding-inline: var(--top-nav-padding-inline);
+  --top-nav-mobile-padding: var(--top-nav-mobile-padding);
+  --overlay-padding: var(--overlay-padding);
+  --overlay-padding-wide: var(--overlay-padding-wide);
+  --pill-padding: var(--pill-padding);
+  --tabs-stacked-padding: var(--tabs-stacked-padding);
+  --modal-padding: var(--modal-padding);
+  --modal-padding-wide: var(--modal-padding-wide);
+  --drawer-padding: var(--drawer-padding);
+  --drawer-padding-wide: var(--drawer-padding-wide);
+  --badge-padding-x-xs: var(--badge-padding-x-xs);
+  --badge-padding-y-xs: var(--badge-padding-y-xs);
+  --badge-padding-x-sm: var(--badge-padding-x-sm);
+  --badge-padding-y-sm: var(--badge-padding-y-sm);
+  --badge-padding-x-md: var(--badge-padding-x-md);
+  --badge-padding-y-md: var(--badge-padding-y-md);
+  --badge-padding-x-lg: var(--badge-padding-x-lg);
+  --badge-padding-y-lg: var(--badge-padding-y-lg);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -815,9 +885,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collapse-trigger-background-color: var(--surface-background-color);
   --collapse-trigger-hover-background-color: var(--surface-muted-background-color);
   --collapse-trigger-text-color: var(--surface-content-color);
-  --collapse-trigger-padding: 1rem;
+  --collapse-trigger-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collapse-content-background-color: var(--surface-background-color);
-  --collapse-content-padding: 1rem;
+  --collapse-content-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collapse-focus-ring-color: var(--color-ring);
   --collapse-transition-duration: var(--duration-slow);
   --collapse-icon-color: currentColor;
@@ -826,8 +896,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --bottom-nav-item-active-color: #ffffff;
   --bottom-nav-item-color: #d1d5db;
   --bottom-nav-item-hover-color: #f9fafb;
-  --bottom-nav-item-padding-x: 0.5rem;
-  --bottom-nav-item-padding-y: 0.5rem;
+  --bottom-nav-item-padding-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --bottom-nav-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --fab-background-color: var(--color-primary);
   --fab-hover-background-color: var(--color-primary-hover);
   --fab-text-color: var(--color-primary-text);
@@ -884,9 +954,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --accordion-item-border-color: var(--surface-border-color);
   --accordion-trigger-text-color: var(--surface-content-color);
   --accordion-trigger-hover-background-color: var(--surface-muted-background-color);
-  --accordion-trigger-padding: 1rem;
+  --accordion-trigger-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --accordion-trigger-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --accordion-trigger-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --accordion-content-background-color: var(--surface-background-color);
-  --accordion-content-padding: 1rem;
+  --accordion-content-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --accordion-content-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --accordion-content-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --accordion-focus-ring-color: var(--color-ring);
   --accordion-transition-duration: var(--duration-slow);
   --breadcrumb-current-color: var(--surface-content-color);
@@ -946,9 +1020,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --card-style-gradient-text-color: var(--color-primary-text);
   --card-style-gradient-muted-text-color: color-mix(in oklab, var(--color-primary-text) 72%, transparent);
   --card-style-gradient-border-color: color-mix(in oklab, var(--color-primary-text) 28%, transparent);
-  --card-padding-sm: 0.75rem;
-  --card-padding-md: 1rem;
-  --card-padding-lg: 1.25rem;
+  --card-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --card-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --card-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
@@ -1039,14 +1113,14 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
   --popover-shadow: var(--shadow-lg);
-  --popover-padding: 1rem;
+  --popover-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --popover-radius: var(--radius-md);
   --tooltip-background-color: var(--surface-content-color);
   --tooltip-border-color: var(--surface-border-color);
   --tooltip-text-color: var(--surface-background-color);
   --tooltip-shadow: var(--shadow-lg);
-  --tooltip-padding-x: 0.75rem;
-  --tooltip-padding-y: 0.5rem;
+  --tooltip-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --tooltip-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
@@ -1229,19 +1303,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-shadow-active: var(--shadow-button-active);
   --hit-target-min: 2.75rem;
   --hit-target-inline-min: 1.5rem;
-  --button-padding-x-xs: 0.5rem;
-  --button-padding-y-xs: 0.25rem;
-  --button-padding-x-sm: 0.75rem;
-  --button-padding-y-sm: 0.375rem;
-  --button-padding-x-md: 1rem;
-  --button-padding-y-md: 0.5rem;
-  --button-padding-x-lg: 1.5rem;
-  --button-padding-y-lg: 0.75rem;
-  --button-icon-only-padding-sm: 0.375rem;
-  --button-icon-only-padding-md: 0.5rem;
-  --button-icon-only-padding-lg: 0.75rem;
+  --button-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-padding-x-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --button-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-padding-x-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --button-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --alert-border-radius: var(--radius-md);
-  --alert-padding: 1rem;
+  --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --alert-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --alert-title-color: currentColor;
   --alert-description-color: currentColor;
   --alert-dismiss-button-radius: var(--radius-sm);
@@ -1266,7 +1340,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --alert-danger-text-color: var(--surface-content-color);
   --alert-danger-icon-color: color-mix(in oklab, var(--color-danger-background-color) 78%, black);
   --toast-border-radius: var(--radius-md);
-  --toast-padding: 1rem;
+  --toast-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --toast-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --toast-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --toast-shadow: var(--shadow-lg);
   --toast-dismiss-text-color: var(--surface-muted-content-color);
   --toast-dismiss-hover-text-color: var(--surface-content-color);
@@ -1338,9 +1414,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
   --search-input-focus-ring-color: var(--color-primary);
-  --search-padding-y-sm: 0.375rem;
-  --search-padding-y-md: 0.5rem;
-  --search-padding-y-lg: 0.75rem;
+  --search-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --search-padding-inline-sm: 2rem;
   --search-padding-inline-md: 2.5rem;
   --search-padding-inline-lg: 3rem;
@@ -1355,8 +1431,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
   --stack-gap-lg: 1.5rem;
-  --form-control-padding: 0.875rem;
-  --table-padding: 0.875rem;
+  --form-control-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --form-control-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --table-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --table-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --table-background-color: var(--surface-background-color);
   --table-border-color: var(--surface-border-color);
   --table-header-background-color: var(--surface-background-color);
@@ -1374,12 +1452,12 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
   --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
-  --chip-padding-x-sm: 0.5rem;
-  --chip-padding-y-sm: 0.125rem;
-  --chip-padding-x-md: 0.75rem;
-  --chip-padding-y-md: 0.25rem;
-  --chip-padding-x-lg: 1rem;
-  --chip-padding-y-lg: 0.375rem;
+  --chip-padding-x-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-x-md: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --chip-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-x-lg: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --chip-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --picker-badge-background-color: rgb(0 0 0 / 0.55);
   --picker-badge-text-color: oklch(1.0 0 0);
   --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
@@ -1469,6 +1547,51 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);
   --transition-slow: var(--duration-slow);
+  --dropdown-item-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --dropdown-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --dropdown-item-gap: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --dropdown-divider-margin: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --select-option-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --select-option-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --select-search-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --combobox-item-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --combobox-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-item-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --command-palette-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-item-gap: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-field-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --command-palette-field-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --command-palette-label-padding-y: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --command-palette-empty-padding-y: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --search-result-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --list-item-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --list-item-padding-y: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --sidebar-item-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --sidebar-item-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --sidebar-item-gap: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --sidebar-item-inset: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --sidebar-item-padding-collapsed: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --sidebar-section-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --sidebar-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --top-nav-padding-inline: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --top-nav-mobile-padding: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --overlay-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --overlay-padding-wide: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --pill-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --tabs-stacked-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --modal-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --modal-padding-wide: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --drawer-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --drawer-padding-wide: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --badge-padding-x-xs: 0.5rem;
+  --badge-padding-y-xs: 0.25rem;
+  --badge-padding-x-sm: 0.75rem;
+  --badge-padding-y-sm: 0.25rem;
+  --badge-padding-x-md: 0.75rem;
+  --badge-padding-y-md: 0.25rem;
+  --badge-padding-x-lg: 1rem;
+  --badge-padding-y-lg: 0.5rem;
 }
 
 /* Hover follows --color-primary itself so a host that sets an exact hex (not
@@ -1504,7 +1627,29 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   color: var(--surface-content-color) !important;
 }
 
+
+/* Spacing scale. Concrete lengths on bare :root only, after the palette block.
+ * A nested data-theme inherits these computed values. Component formulas on
+ * :root, [data-theme] re-resolve against them. Remapped shells stay off that
+ * shared selector so a dark region inside rounded keeps the generous inset.
+ */
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --density: 1;
+  --dropdown-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --select-menu-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --combobox-menu-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --search-menu-padding: 0px;
+  --search-result-padding-y: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+}
+
 /* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
+ * Dark inherits --space-* and --density. It does not restate them.
  * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
  * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
  * Modal blur stays a dark-only exception (3px vs 4px light).
@@ -1585,8 +1730,23 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-background-color: oklch(0.97 0.01 220);
 }
 
-/* Rounded theme — no-op alias of :root. Hosts may keep data-theme="rounded". */
+/* Rounded shifts spacing steps 2–6. Colour, radius, and shadow stay on the default palette.
+ * --space-1 stays 4px. --density stays 1. Menu shells and the search result block axis
+ * are the only component remaps. Do not self-map a token here.
+ */
 [data-theme="rounded"] {
+  --space-1: 0.25rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.25rem;
+  --space-5: 1.75rem;
+  --space-6: 2.5rem;
+  --density: 1;
+  --dropdown-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --select-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --combobox-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-result-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
 }
 
 @media (prefers-reduced-motion: reduce) {

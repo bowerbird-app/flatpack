@@ -102,9 +102,9 @@ module FlatPack
 
         def item_classes
           base_classes = [
-            "flex items-center gap-2",
+            "flex items-center gap-[var(--dropdown-item-gap)]",
             "w-full",
-            "px-2 py-1.5",
+            "px-[var(--dropdown-item-padding-x)] py-[var(--dropdown-item-padding-y)]",
             "text-sm",
             "text-left",
             "rounded-[var(--radius-sm)]",

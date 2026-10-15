@@ -70,8 +70,8 @@ module FlatPack
 
       refute_nil rule_at
       assert_operator rule_at, :>, layer_end
-      assert_includes css[rule_at, 500], "padding-left: max(1rem, env(safe-area-inset-left, 0px));"
-      assert_includes css[rule_at, 500], "padding-right: max(1rem, env(safe-area-inset-right, 0px));"
+      assert_includes css[rule_at, 700], "padding-left: max(var(--top-nav-padding-inline), env(safe-area-inset-left, 0px));"
+      assert_includes css[rule_at, 700], "padding-right: max(var(--top-nav-padding-inline), env(safe-area-inset-right, 0px));"
     end
 
     test "overlay pad and modal viewport caps are unlayered and use dvh" do
