@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 export default class extends Controller {
-  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "caption", "counter", "lightboxToggle", "lightbox", "lightboxImage", "lightboxCaption"]
+  static targets = ["viewport", "frame", "slide", "indicator", "thumb", "thumbStrip", "caption", "counter", "lightboxToggle"]
 
   static values = {
     initialIndex: { type: Number, default: 0 },
@@ -34,7 +34,8 @@ export default class extends Controller {
     this.pointerStartY = null
     this.pointerLastX = null
     this.isLightboxOpen = false
-    this.lightboxPreviouslyFocusedElement = null
+    this.onLightboxClose = (event) => this.#onLightboxClose(event)
+    document.addEventListener("flat-pack:lightbox:close", this.onLightboxClose)
 
     this.#bindInteropEvents()
     this.#bindViewportInteractions()
@@ -50,13 +51,20 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.#hideLightbox({ restoreFocus: false, emit: false })
+    document.removeEventListener("flat-pack:lightbox:close", this.onLightboxClose)
+    if (this.isLightboxOpen) {
+      document.dispatchEvent(new CustomEvent("flat-pack:lightbox:close-request", {
+        detail: { group: this.element.dataset.flatPackLightboxGroup }
+      }))
+      this.isLightboxOpen = false
+    }
     this.#clearAutoplayTimer()
     this.#resetPointerDragState()
     this.#unbindInteropEvents()
     this.#unbindViewportInteractions()
     this.#unbindResizeListener()
     this.#cancelWindowResizeDispatch()
+    this.#cancelThumbReveal()
 
     if (this.element.flatPackCarousel) {
       delete this.element.flatPackCarousel
@@ -132,43 +140,35 @@ export default class extends Controller {
     const activeSlide = this.slideTargets[this.currentIndex]
     const source = activeSlide?.dataset?.lightboxSrc
     const enabled = activeSlide?.dataset?.lightboxEnabled === "true"
+    const group = this.element.dataset.flatPackLightboxGroup
 
-    if (!enabled || !source || !this.hasLightboxTarget || !this.hasLightboxImageTarget) {
-      return
-    }
+    if (!enabled || !source || !group) return
+    if (!document.querySelector(`dialog[data-flat-pack--lightbox-group-value="${CSS.escape(group)}"]`)) return
 
-    this.lightboxPreviouslyFocusedElement = document.activeElement
-
-    this.lightboxImageTarget.src = source
-    this.lightboxImageTarget.alt = activeSlide?.dataset?.lightboxAlt || ""
-
-    if (this.hasLightboxCaptionTarget) {
-      const caption = activeSlide?.dataset?.caption || ""
-      this.lightboxCaptionTarget.textContent = caption
-      this.lightboxCaptionTarget.classList.toggle("hidden", caption.trim().length === 0)
-    }
-
-    this.lightboxTarget.classList.remove("hidden")
-    this.lightboxTarget.setAttribute("aria-hidden", "false")
+    const index = Number.parseInt(activeSlide.dataset.lightboxIndex || "0", 10)
+    const trigger = this.hasLightboxToggleTarget ? this.lightboxToggleTarget : document.activeElement
     this.isLightboxOpen = true
-    document.body.classList.add("overflow-hidden")
+    document.dispatchEvent(new CustomEvent("flat-pack:lightbox:open", {
+      bubbles: true,
+      detail: {
+        group,
+        index: Number.isNaN(index) ? 0 : index,
+        trigger
+      }
+    }))
 
     this.pauseReasons.add("lightbox")
     this.#toggleAutoplay(false)
-
-    window.requestAnimationFrame(() => {
-      this.lightboxTarget.focus()
-    })
-
     this.#dispatch("carousel:lightbox-open", { index: this.currentIndex })
   }
 
-  closeLightbox(event) {
-    if (event?.type === "click" && event.currentTarget === this.lightboxTarget && event.target !== event.currentTarget) {
-      return
-    }
+  closeLightbox() {
+    const group = this.element.dataset.flatPackLightboxGroup
+    if (!group) return
 
-    this.#hideLightbox()
+    document.dispatchEvent(new CustomEvent("flat-pack:lightbox:close-request", {
+      detail: { group }
+    }))
   }
 
   handleKeydown(event) {
@@ -277,6 +277,8 @@ export default class extends Controller {
       thumb.classList.toggle("opacity-100", isActive)
       thumb.setAttribute("aria-current", isActive ? "true" : "false")
     })
+
+    this.#scheduleThumbReveal()
 
     if (this.hasCounterTarget) {
       if (this.#isLogoSliderVariant()) {
@@ -730,6 +732,38 @@ export default class extends Controller {
     })
   }
 
+  #scheduleThumbReveal() {
+    if (!this.hasThumbStripTarget) return
+
+    this.#cancelThumbReveal()
+    this.thumbRevealFrame = window.requestAnimationFrame(() => {
+      this.thumbRevealFrame = null
+      this.#revealActiveThumb()
+    })
+  }
+
+  #cancelThumbReveal() {
+    if (!this.thumbRevealFrame) return
+
+    window.cancelAnimationFrame(this.thumbRevealFrame)
+    this.thumbRevealFrame = null
+  }
+
+  #revealActiveThumb() {
+    if (!this.hasThumbStripTarget) return
+
+    const strip = this.thumbStripTarget
+    const thumb = this.thumbTargets[this.currentIndex]
+    if (!thumb || strip.scrollWidth <= strip.clientWidth + 1) return
+
+    const centered = thumb.offsetLeft - ((strip.clientWidth - thumb.clientWidth) / 2)
+    const max = strip.scrollWidth - strip.clientWidth
+    strip.scrollTo({
+      left: Math.max(0, Math.min(centered, max)),
+      behavior: this.#prefersReducedMotion() ? "auto" : "smooth"
+    })
+  }
+
   #cancelWindowResizeDispatch() {
     if (!this.resizeDispatchFrame) {
       return
@@ -826,38 +860,19 @@ export default class extends Controller {
     this.lightboxToggleTarget.hidden = !canOpenLightbox
 
     if (!canOpenLightbox && this.isLightboxOpen) {
-      this.#hideLightbox({ restoreFocus: false, emit: false })
+      this.closeLightbox()
+      this.isLightboxOpen = false
+      this.pauseReasons.delete("lightbox")
+      this.#toggleAutoplay(false)
     }
   }
 
-  #hideLightbox(options = {}) {
-    const { restoreFocus = true, emit = true } = options
-
-    if (!this.hasLightboxTarget) {
-      return
-    }
-
-    this.lightboxTarget.classList.add("hidden")
-    this.lightboxTarget.setAttribute("aria-hidden", "true")
-
-    if (this.hasLightboxImageTarget) {
-      this.lightboxImageTarget.src = ""
-      this.lightboxImageTarget.alt = ""
-    }
+  #onLightboxClose(event) {
+    if (event.detail?.group !== this.element.dataset.flatPackLightboxGroup) return
 
     this.isLightboxOpen = false
-    document.body.classList.remove("overflow-hidden")
     this.pauseReasons.delete("lightbox")
     this.#toggleAutoplay(false)
-
-    if (restoreFocus && this.lightboxPreviouslyFocusedElement instanceof HTMLElement) {
-      this.lightboxPreviouslyFocusedElement.focus()
-    }
-
-    this.lightboxPreviouslyFocusedElement = null
-
-    if (emit) {
-      this.#dispatch("carousel:lightbox-close", { index: this.currentIndex })
-    }
+    this.#dispatch("carousel:lightbox-close", { index: this.currentIndex })
   }
 }

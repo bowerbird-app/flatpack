@@ -182,6 +182,7 @@ class DemoCatalog
         {type: :item, title: "Avatars", path: "/demo/avatars", description: "Avatar examples with images, initials, and status", icon: :user},
         {type: :item, title: "Avatar Groups", path: "/demo/avatar_groups", description: "Stacked avatar groups with overflow and overlap", icon: :users},
         {type: :item, title: "Carousel", path: "/demo/carousel?anchor=component-method-variables-carousel-0", description: "FlatPack carousel demo with mixed media and navigation controls", icon: :image},
+        {type: :item, title: "Lightbox", path: "/demo/lightbox", description: "One overlay for a masonry wall, a single photo, a button, and a carousel", icon: :image},
         {type: :item, title: "Progress", path: "/demo/progress", description: "Progress indicators and loading states", icon: :dashboard},
         {type: :item, title: "Skeletons", path: "/demo/skeletons", description: "Skeleton loading placeholders", icon: :square},
         {type: :item, title: "List", path: "/demo/list", description: "List component demos and selectable rows", icon: :align_left},
