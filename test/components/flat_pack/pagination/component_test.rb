@@ -62,7 +62,9 @@ module FlatPack
         render_inline(Component.new(pagy: pagy))
 
         assert_selector "[aria-label='Page 3'][aria-current='page']"
-        assert_includes page.native.to_html, "bg-primary"
+        assert_includes page.native.to_html, "bg-[var(--pagination-current-background-color)]"
+        assert_includes page.native.to_html, "text-[var(--pagination-current-text-color)]"
+        refute_includes page.native.to_html, "bg-primary"
       end
 
       def test_returns_nil_when_single_page_and_not_compact

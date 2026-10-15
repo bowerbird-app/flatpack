@@ -15,7 +15,7 @@ Use Tabs when content can be split into a small number of peer sections in the s
 | `default_tab` | Integer | `0` | no | Zero-based index of initially active tab/panel. |
 | `variant` | Symbol | `:underline` | no | Visual style: `:underline`, `:pills`, `:stacked`. |
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Button::Pill; invalid values raise). |
-| `style` | Symbol | `:primary` | no | Colour of the active pill or stacked control. Same names as [Button](button.md) `style`. Unknown names raise `ArgumentError`. |
+| `style` | Symbol | omitted | no | Colour of the active pill or stacked control. Omit it for the neutral active surface. A named [Button](button.md) `style`, including `:primary`, paints that button colour. Unknown names raise `ArgumentError`. Underline tabs ignore it. |
 | `indicator` | Symbol | `nil` | no | Omit for today’s instant active swap. `:slide` renders one indicator that follows the selected tab. Unknown names raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for root wrapper. |
 
@@ -24,8 +24,8 @@ None (content is defined through component builder methods).
 
 ## Variants
 - `:underline` horizontal underline tabs. `style:` is accepted. Underline paint does not change.
-- `:pills` pill-style horizontal tabs. `style:` paints the active control. The default `:primary` uses the pill colour.
-- `:stacked` vertical tab list with side-by-side layout on medium+ breakpoints. `style:` paints the active control the same way as pills.
+- `:pills` pill-style horizontal tabs. Omit `style:` for the neutral active surface. A named style, including `:primary`, paints that button colour on the active control.
+- `:stacked` vertical tab list with side-by-side layout on medium+ breakpoints. The track uses `--surface-hover-background-color` so the active pill reads darker. `style:` paints the active control the same way as pills.
 - `indicator: :slide` is opt-in on every variant. Default markup stays the same. One marker follows the selected tab. Tabs keep only the text colour change. Motion is `--duration-base` / `--easing-standard`. `prefers-reduced-motion` snaps.
 
 ## Example
@@ -41,7 +41,7 @@ None (content is defined through component builder methods).
 <% end %>
 ```
 
-Pill and stacked tabs take the same `style:` names as Button. `:primary` is the default.
+Pill and stacked tabs take the same `style:` names as Button. Omit `style:` for the neutral active surface. Pass `style: :primary` for the brand fill.
 
 ```erb
 <%= render FlatPack::Tabs::Component.new(variant: :pills, style: :default) do |tabs| %>

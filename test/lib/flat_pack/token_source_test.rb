@@ -210,12 +210,12 @@ module FlatPack
     test "chrome greys alias surface tokens so named themes inherit" do
       {
         "--tabs-pill-inactive-text-color" => "var(--surface-muted-content-color)",
-        "--tabs-pill-inactive-hover-background-color" => "var(--surface-muted-background-color)",
+        "--tabs-pill-inactive-hover-background-color" => "var(--surface-hover-background-color)",
         "--tabs-pill-inactive-hover-text-color" => "var(--surface-content-color)",
-        "--sidebar-item-hover-background-color" => "var(--surface-muted-background-color)",
-        "--top-nav-item-hover-background-color" => "var(--surface-muted-background-color)",
-        "--list-item-hover-background-color" => "var(--surface-muted-background-color)",
-        "--list-item-active-background-color" => "var(--surface-muted-background-color)",
+        "--sidebar-item-hover-background-color" => "var(--surface-hover-background-color)",
+        "--top-nav-item-hover-background-color" => "var(--surface-hover-background-color)",
+        "--list-item-hover-background-color" => "var(--surface-hover-background-color)",
+        "--list-item-active-background-color" => "var(--surface-active-background-color)",
         "--list-marker-color" => "var(--surface-muted-content-color)",
         "--chat-message-incoming-background-color" => "var(--surface-muted-background-color)",
         "--chat-message-incoming-text-color" => "var(--surface-content-color)",
@@ -277,10 +277,11 @@ module FlatPack
       )
     end
 
-    test "active pill colours alias the primary button tokens" do
-      assert_match(/--tabs-pill-active-background-color:\s*var\(--button-primary-background-color\)/, root_block)
-      assert_match(/--tabs-pill-active-border-color:\s*var\(--button-primary-border-color\)/, root_block)
-      assert_match(/--tabs-pill-active-text-color:\s*var\(--button-primary-text-color\)/, root_block)
+    test "active pill colours alias the neutral active surface" do
+      assert_match(/--tabs-pill-active-background-color:\s*var\(--surface-active-background-color\)/, root_block)
+      assert_match(/--tabs-pill-active-border-color:\s*var\(--surface-active-border-color\)/, root_block)
+      assert_match(/--tabs-pill-active-text-color:\s*var\(--surface-active-text-color\)/, root_block)
+      assert_match(/--tabs-stacked-pill-list-background-color:\s*var\(--surface-hover-background-color\)/, root_block)
 
       application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
       assert_includes application, ".fp-pill-button-slots {"
@@ -318,22 +319,50 @@ module FlatPack
       refute_includes ocean_block, "--range-thumb-border-color"
     end
 
-    test "focus ring and active nav fills follow --color-primary" do
+    test "focus ring follows --color-primary and active nav fills follow the active surface" do
       {
         "--color-ring" => "var(--color-primary)",
-        "--sidebar-item-active-background-color" => "var(--color-primary)",
-        "--top-nav-item-active-background-color" => "var(--color-primary)",
-        "--sidebar-item-active-text-color" => "var(--color-primary-text)",
-        "--sidebar-item-active-icon-color" => "var(--color-primary-text)",
-        "--top-nav-item-active-text-color" => "var(--color-primary-text)",
-        "--top-nav-item-active-icon-color" => "var(--color-primary-text)"
+        "--sidebar-item-active-background-color" => "var(--surface-active-background-color)",
+        "--top-nav-item-active-background-color" => "var(--surface-active-background-color)",
+        "--sidebar-item-active-text-color" => "var(--surface-active-text-color)",
+        "--sidebar-item-active-icon-color" => "var(--surface-active-icon-color)",
+        "--top-nav-item-active-text-color" => "var(--surface-active-text-color)",
+        "--top-nav-item-active-icon-color" => "var(--surface-active-icon-color)"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
 
       refute_match(/--color-ring:\s*#333/, root_block)
-      refute_match(/--sidebar-item-active-background-color:\s*#333/, root_block)
-      refute_match(/--top-nav-item-active-background-color:\s*#333/, root_block)
+      refute_match(/--sidebar-item-active-background-color:\s*var\(--color-primary\)/, root_block)
+      refute_match(/--top-nav-item-active-background-color:\s*var\(--color-primary\)/, root_block)
+    end
+
+    test "hover and active surfaces are one semantic pair" do
+      {
+        "--surface-hover-background-color" => "#f0f0f0",
+        "--surface-active-background-color" => "#e4e4e4",
+        "--surface-active-text-color" => "var(--surface-content-color)",
+        "--surface-active-icon-color" => "var(--surface-active-text-color)",
+        "--surface-active-border-color" => "transparent",
+        "--table-row-hover-background-color" => "var(--surface-hover-background-color)",
+        "--table-row-selected-background-color" => "var(--surface-active-background-color)",
+        "--pagination-current-background-color" => "var(--surface-active-background-color)",
+        "--pagination-current-text-color" => "var(--surface-active-text-color)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
+      end
+
+      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      assert_match(/--surface-hover-background-color:\s*oklch\(0\.22 0\.02 250\)/, dark_block)
+      assert_match(/--surface-active-background-color:\s*oklch\(0\.28 0\.02 250\)/, dark_block)
+      assert_match(/--surface-hover-background-color:\s*oklch\(0\.92 0\.03 220\)/, ocean_block)
+      assert_match(/--surface-active-background-color:\s*oklch\(0\.88 0\.04 220\)/, ocean_block)
+      refute_includes dark_block, "--list-item-hover-background-color"
+      refute_includes dark_block, "--sidebar-item-active-background-color"
+      refute_includes ocean_block, "--list-item-hover-background-color"
+      refute_includes ocean_block, "--list-item-active-background-color"
+      refute_includes ocean_block, "--sidebar-item-active-background-color"
     end
 
     test "default palette re-declares on [data-theme] so descendant themes re-resolve" do

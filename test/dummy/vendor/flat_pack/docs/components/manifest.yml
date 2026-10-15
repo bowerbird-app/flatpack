@@ -441,6 +441,15 @@ components:
     primary_class: FlatPack::Link::Component
     status: documented
 
+  - key: lightbox
+    title: Lightbox
+    doc: docs/components/lightbox.md
+    primary_class: FlatPack::Lightbox::Component
+    related_classes:
+      - FlatPack::Lightbox::Trigger
+      - FlatPack::Carousel::Component
+    status: documented
+
   - key: list
     title: List
     doc: docs/components/list.md

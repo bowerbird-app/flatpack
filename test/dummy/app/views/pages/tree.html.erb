@@ -14,7 +14,7 @@
 
   <%= render FlatPack::Card::Component.new(class: "mt-6 max-w-xl overflow-hidden") do |card| %>
     <% card.body(class: "p-0") do %>
-      <div class="bg-[oklch(21%_0.01_250)] [--surface-content-color:oklch(88%_0_0)] [--surface-muted-content-color:oklch(62%_0_0)] [--surface-border-color:oklch(30%_0.02_250)] [--surface-subtle-background-color:oklch(28%_0.02_250)] [--button-focus-ring-color:oklch(72%_0.16_240)] [--color-primary:oklch(72%_0.16_240)]">
+      <div class="bg-[oklch(21%_0.01_250)] [--surface-content-color:oklch(88%_0_0)] [--surface-muted-content-color:oklch(62%_0_0)] [--surface-border-color:oklch(30%_0.02_250)] [--surface-subtle-background-color:oklch(28%_0.02_250)] [--surface-hover-background-color:oklch(26%_0.02_250)] [--surface-active-background-color:oklch(28%_0.02_250)] [--button-focus-ring-color:oklch(72%_0.16_240)] [--color-primary:oklch(72%_0.16_240)]">
         <%= render FlatPack::Tree::Component.new(compact: true, class: "w-64 p-2 font-sans") do |tree| %>
           <% tree.node(label: "src", expanded: true, icon: :folder) do |src| %>
             <% src.node(label: "components", expanded: true, icon: :folder) do |components| %>
@@ -37,7 +37,7 @@
     language: "erb",
     title: "VS Code-style File Tree",
     code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;div class=&quot;bg-[oklch(21%_0.01_250)] [--surface-content-color:oklch(88%_0_0)] [--surface-muted-content-color:oklch(62%_0_0)] [--surface-border-color:oklch(30%_0.02_250)] [--surface-subtle-background-color:oklch(28%_0.02_250)] [--button-focus-ring-color:oklch(72%_0.16_240)] [--color-primary:oklch(72%_0.16_240)]&quot;&gt;
+      &lt;div class=&quot;bg-[oklch(21%_0.01_250)] [--surface-content-color:oklch(88%_0_0)] [--surface-muted-content-color:oklch(62%_0_0)] [--surface-border-color:oklch(30%_0.02_250)] [--surface-subtle-background-color:oklch(28%_0.02_250)] [--surface-hover-background-color:oklch(26%_0.02_250)] [--surface-active-background-color:oklch(28%_0.02_250)] [--button-focus-ring-color:oklch(72%_0.16_240)] [--color-primary:oklch(72%_0.16_240)]&quot;&gt;
         &lt;%= render FlatPack::Tree::Component.new(compact: true, class: &quot;w-64 p-2 font-sans&quot;) do |tree| %&gt;
           &lt;% tree.node(label: &quot;src&quot;, expanded: true, icon: :folder) do |src| %&gt;
             &lt;% src.node(label: &quot;components&quot;, expanded: true, icon: :folder) do |components| %&gt;

@@ -25,7 +25,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
 | `align` | Symbol | `:center` | no | `:center` keeps the label in the middle. `:start` left-aligns it and lets the label fill the remaining space (`flex-1 min-w-0`). |
 | `lines` | Integer | `1` | no | `1` or `2`. Clamps the label with an ellipsis. `2` top-aligns the row so a wrapped label and the trailing slot share the first line. |
-| `current` | Boolean | `false` | no | Marks the control with the current look (`.fp-button-current`). On a link, also sets `aria-current="page"`. |
+| `current` | Boolean | `false` | no | Marks the control with the neutral active surface (`.fp-button-current`), including a primary button. On a link, also sets `aria-current="page"`. |
 | `title` | String, nil | `nil` | no | Full label for the tooltip when `lines` clamps the visible text. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria. |
 
@@ -71,7 +71,7 @@ CSS loaded after `flat_pack/application`:
 
 The button sets `data-fp-style` to the style name. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Built-in styles map that attribute onto `--button-primary-*` and the other scheme tokens, so theme and hero overlay remaps still apply. A registered style sets `--fp-button-*` directly and does not change the page theme.
 
-A pill group uses the same `[data-fp-style]` rule. It adds `fp-pill-button-slots` when `style` is not `:primary`. That class copies the button slots onto the active pill. `:primary` leaves the pill tokens alone, so a host override of `--tabs-pill-active-*` still applies. A selector that only matches `.fp-button[data-fp-style="partner"]` still paints buttons. Those pill groups inherit the default button slots.
+A pill group uses the same `[data-fp-style]` rule. Omitting `style:` leaves the active pill on `--tabs-pill-active-*` (the neutral active surface) and does not set `data-fp-style`. Any named style, including `:primary`, adds `fp-pill-button-slots`. That class copies the button slots onto the active pill. A selector that only matches `.fp-button[data-fp-style="partner"]` still paints buttons. Those pill groups need the slots class, which a named pill `style:` adds.
 
 Do not register over a built-in name. Names are a lowercase letter, then letters, numbers, or underscores. Vendor colours (Stripe, Paddle, and the rest) belong in the host or billing gem CSS, not in FlatPack.
 
@@ -85,7 +85,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 | --- | --- | --- | --- | --- |
 | `items` | Array<Hash> | none | yes | One or more pill definitions. Each item requires `text` and `href`, and may include `id`, `active`, `target`, `class`, `data`, and `aria`. |
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Tabs via Button size tokens). |
-| `style` | Symbol | `:primary` | no | Active pill colour. Same names as Button `style` above. `:primary` keeps the pill colour. Any other name uses that button colour on the active pill. |
+| `style` | Symbol | omitted | no | Active pill colour. Same names as Button `style` above. Omit it for the neutral active surface. `:primary` and every other name use that button colour on the active pill. |
 | `indicator` | Symbol | `nil` | no | Omit for today’s instant active swap. `:slide` renders one filled marker that follows the active pill, then follows the link. Unknown names raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria for the outer group wrapper. |
 
@@ -98,7 +98,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 ) %>
 ```
 
-`:primary` is the default. Pass `style:` to use another Button style on the active pill.
+The active pill is the neutral active surface until you pass `style:`. Pass `style: :primary` for a brand fill, or another Button style for that colour.
 
 ```erb
 <%= render FlatPack::Button::Pill::Component.new(
@@ -167,7 +167,7 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
 - Leading icons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
-- `current: true` on a link sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
+- `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover stays on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
 - Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
 - Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Colour does not come from per-style Tailwind background classes.

@@ -15,11 +15,15 @@ module FlatPack
         aria: {},
         **system_arguments
       )
+        if style.nil? && selected
+          system_arguments[:class] = [system_arguments[:class], "fp-button-current"].flatten.compact.join(" ")
+        end
+
         super(**system_arguments)
         @text = text
         @href = href
         @selected = selected
-        @style = style || (@selected ? :primary : :secondary)
+        @style = style || :secondary
         @size = size
         @turbo_frame = turbo_frame
         @turbo_prefetch = turbo_prefetch

@@ -30,6 +30,7 @@ None.
 ## Variants
 - `mode`: `:standard`, `:infinite`.
 - `size`: `:normal`, `:compact`.
+- The current page uses `--pagination-current-background-color` and `--pagination-current-text-color` (the active surface). Other pages hover with `--surface-hover-background-color`.
 
 ## Example
 ```erb

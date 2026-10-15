@@ -28,10 +28,10 @@ module FlatPack
       # "px-[var(--button-padding-x-sm)]" "py-[var(--button-padding-y-sm)]" "text-xs"
       # "px-[var(--button-padding-x-md)]" "py-[var(--button-padding-y-md)]" "text-sm"
       # "px-[var(--button-padding-x-lg)]" "py-[var(--button-padding-y-lg)]" "text-base"
-      # "has-[:checked]:bg-[var(--button-primary-background-color)]"
-      # "has-[:checked]:text-[var(--button-primary-text-color)]"
-      # "has-[:checked]:border-[var(--button-primary-border-color)]"
-      # "has-[:checked]:hover:bg-[var(--button-primary-hover-background-color)]"
+      # "has-[:checked]:bg-[var(--surface-active-background-color)]"
+      # "has-[:checked]:text-[var(--surface-active-text-color)]"
+      # "has-[:checked]:border-[var(--surface-active-border-color)]"
+      # "has-[:checked]:hover:bg-[var(--surface-active-background-color)]"
       # "has-[:checked]:shadow-[var(--button-shadow)]"
       # "has-[:checked]:hover:shadow-[var(--button-shadow-hover)]"
       # "has-[:checked]:active:shadow-[var(--button-shadow-active)]"
@@ -425,11 +425,11 @@ module FlatPack
           "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "motion-reduce:transform-none motion-reduce:transition-none",
           FlatPack::Button::Component::SIZES.fetch(@size),
-          "has-[:checked]:bg-[var(--button-primary-background-color)]",
-          "has-[:checked]:text-[var(--button-primary-text-color)]",
-          "has-[:checked]:border-[var(--button-primary-border-color)]",
+          "has-[:checked]:bg-[var(--surface-active-background-color)]",
+          "has-[:checked]:text-[var(--surface-active-text-color)]",
+          "has-[:checked]:border-[var(--surface-active-border-color)]",
           (unless option_disabled
-             "has-[:checked]:hover:bg-[var(--button-primary-hover-background-color)]"
+             "has-[:checked]:hover:bg-[var(--surface-active-background-color)]"
            end),
           "has-[:checked]:shadow-[var(--button-shadow)]",
           (unless option_disabled

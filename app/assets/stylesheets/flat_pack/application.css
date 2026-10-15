@@ -1654,15 +1654,18 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: var(--fp-button-hover-background);
 }
 
-.fp-button.fp-button-current {
-  background-color: var(--fp-button-hover-background);
+.fp-button.fp-button-current,
+.fp-button.fp-button-current:hover:not(:disabled) {
+  background-color: var(--surface-active-background-color);
+  color: var(--surface-active-text-color);
+  border-color: var(--surface-active-border-color);
 }
 
 .flat-pack-radio-group-wrapper label.fp-button:has(:checked) {
-  --fp-button-background: var(--button-primary-background-color);
-  --fp-button-hover-background: var(--button-primary-hover-background-color);
-  --fp-button-text: var(--button-primary-text-color);
-  --fp-button-border: var(--button-primary-border-color);
+  --fp-button-background: var(--surface-active-background-color);
+  --fp-button-hover-background: var(--surface-active-background-color);
+  --fp-button-text: var(--surface-active-text-color);
+  --fp-button-border: var(--surface-active-border-color);
   box-shadow: var(--button-shadow);
 }
 
@@ -2427,9 +2430,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   cursor: pointer;
 }
 
-.flat-pack-collection-editor-option:hover,
-.flat-pack-collection-editor-option[aria-selected="true"] {
+.flat-pack-collection-editor-option:hover {
   background-color: var(--collection-editor-row-hover-background-color);
+}
+
+.flat-pack-collection-editor-option[aria-selected="true"] {
+  background-color: var(--list-item-active-background-color);
 }
 
 .flat-pack-collection-editor-option-title {
@@ -2467,9 +2473,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   border-top: 1px solid var(--popover-border-color);
 }
 
-.flat-pack-collection-editor-create-option:hover,
-.flat-pack-collection-editor-create-option[aria-selected="true"] {
+.flat-pack-collection-editor-create-option:hover {
   background-color: var(--collection-editor-row-hover-background-color);
+}
+
+.flat-pack-collection-editor-create-option[aria-selected="true"] {
+  background-color: var(--list-item-active-background-color);
 }
 
 .flat-pack-collection-editor-create-fields {

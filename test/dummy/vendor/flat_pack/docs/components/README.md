@@ -72,6 +72,7 @@ date_range_input | FlatPack::DateRangeInput::Component | docs/components/date-ra
 date_time_input | FlatPack::DateTimeInput::Component | docs/components/inputs.md
 time_input | FlatPack::TimeInput::Component | docs/components/inputs.md
 link | FlatPack::Link::Component | docs/components/link.md
+lightbox | FlatPack::Lightbox::Component | docs/components/lightbox.md
 list | FlatPack::List::Component | docs/components/list.md
 media | FlatPack::Media::Component | docs/components/media.md
 masonry | FlatPack::Masonry::Component | docs/components/masonry.md

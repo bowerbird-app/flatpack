@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "border-[var(--color-primary)]" "bg-[var(--color-success-background-color)]" "text-[var(--color-success-text)]" "border-[var(--color-success-border)]" "bg-[var(--color-warning-background-color)]" "text-[var(--color-warning-text)]" "border-[var(--color-warning-border)]" "bg-[var(--color-danger-background-color)]" "text-[var(--color-danger-text-color)]" "border-[var(--color-danger-border-color)]" "bg-[var(--color-secondary)]" "text-[var(--color-secondary-text)]" "border-[var(--color-info-border)]"
+      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "border-[var(--color-primary)]" "bg-[var(--color-success-background-color)]" "text-[var(--color-success-text)]" "border-[var(--color-success-border)]" "bg-[var(--color-warning-background-color)]" "text-[var(--color-warning-text)]" "border-[var(--color-warning-border)]" "bg-[var(--color-danger-background-color)]" "text-[var(--color-danger-text-color)]" "border-[var(--color-danger-border-color)]" "bg-[var(--color-secondary)]" "text-[var(--color-secondary-text)]" "border-[var(--color-info-border)]" "bg-[var(--surface-active-background-color)]" "text-[var(--surface-active-text-color)]" "border-[var(--surface-active-border-color)]"
       STYLES = {
         default: "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
         primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)] border-[var(--color-primary)]",
@@ -151,6 +151,8 @@ module FlatPack
             attrs[:data][:"flat-pack--chip-remove-method-value"] = @remove_method.to_s
             attrs[:data][:"flat-pack--chip-remove-params-value"] = @remove_params.to_json if @remove_params.present?
           end
+
+          attrs[:data][:fp_chip_paint] = STYLES.fetch(@style) if @type == :button
         end
 
         # Add button-specific attributes
@@ -189,7 +191,7 @@ module FlatPack
 
       def selected_classes
         return unless @selected && @type == :button
-        "ring-2 ring-inset ring-[var(--color-ring)]"
+        "bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] border-[var(--surface-active-border-color)]"
       end
 
       def focus_classes

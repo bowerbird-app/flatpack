@@ -35,12 +35,12 @@ module FlatPack
           unless sliding_indicator?
             return merge_attributes(
               class: "#{GROUP_CLASSES} #{@pill_style.group_class}",
-              data: {fp_style: @pill_style.name.to_s}
+              data: {fp_style: @pill_style.data_fp_style}
             )
           end
 
           slide_data = merge_data_attributes(
-            {fp_style: @pill_style.name.to_s},
+            {fp_style: @pill_style.data_fp_style},
             FlatPack::Shared::SlideIndicator.list_data(kind: FlatPack::Shared::SlideIndicator::KIND_PILL)
           )
 

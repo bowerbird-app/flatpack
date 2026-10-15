@@ -96,22 +96,30 @@ module FlatPack
           assert_includes error.message, "Invalid size"
         end
 
-        def test_omitted_style_and_primary_stamp_the_group
-          [nil, :primary].each do |style|
-            arguments = {
-              data: {fp_style: "ghost"},
-              items: [{text: "Overview", href: "/demo/buttons", active: true}]
-            }
-            arguments[:style] = style unless style.nil?
+        def test_omitted_style_stays_neutral_and_clears_a_host_style
+          render_inline(Component.new(
+            data: {fp_style: "ghost"},
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
 
-            render_inline(Component.new(**arguments))
+          group = page.find("div.fp-pill-style")
+          assert_nil group["data-fp-style"]
+          assert_includes group[:class].split, "fp-pill-style"
+          refute_includes group[:class].split, "fp-pill-button-slots"
+          assert_includes page.native.to_html, "bg-[var(--tabs-pill-active-background-color)]"
+        end
 
-            group = page.find("div.fp-pill-style")
-            assert_equal "primary", group["data-fp-style"]
-            assert_includes group[:class].split, "fp-pill-style"
-            refute_includes group[:class].split, "fp-pill-button-slots"
-            assert_includes page.native.to_html, "bg-[var(--tabs-pill-active-background-color)]"
-          end
+        def test_primary_style_uses_button_slots
+          render_inline(Component.new(
+            style: :primary,
+            data: {fp_style: "ghost"},
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          group = page.find("div.fp-pill-style")
+          assert_equal "primary", group["data-fp-style"]
+          assert_includes group[:class].split, "fp-pill-style"
+          assert_includes group[:class].split, "fp-pill-button-slots"
         end
 
         def test_default_style_sets_data_fp_style

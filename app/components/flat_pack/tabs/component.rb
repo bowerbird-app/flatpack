@@ -167,7 +167,7 @@ module FlatPack
 
         pill_attributes = attributes.merge(
           class: "#{tab_list_classes} #{@pill_style.group_class}",
-          data: {fp_style: @pill_style.name.to_s}
+          data: {fp_style: @pill_style.data_fp_style}
         )
         return pill_attributes unless sliding_indicator?
 

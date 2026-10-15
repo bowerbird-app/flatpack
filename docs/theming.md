@@ -43,8 +43,15 @@ Or override primitives directly:
 These follow `--color-primary` (and `--color-primary-text` for text or icons on that fill). You do not set them on a named theme unless you want them to diverge:
 
 - `--color-ring` — focus rings
-- `--sidebar-item-active-background-color` / `--top-nav-item-active-background-color` — selected nav fills
-- `--button-primary-*`, `--badge-primary-*`, `--tabs-pill-active-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, and other primary-filled controls
+- `--button-primary-*`, `--badge-primary-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, outgoing chat, underline tab marks, the tree's 2px bar, and other primary-filled controls
+
+Selected and hover chrome follows the surface pair instead. Set these once and sidebar, top nav, lists, pills, table rows, pagination, and the other mapped controls move together:
+
+- `--surface-hover-background-color` — hover grey
+- `--surface-active-background-color` — selected grey
+- `--surface-active-text-color`, `--surface-active-icon-color`, `--surface-active-border-color` — ink and border on that selected grey
+
+`--sidebar-item-active-*`, `--top-nav-item-active-*`, `--list-item-active-background-color`, `--tabs-pill-active-*`, `--table-row-selected-background-color`, and `--pagination-current-*` alias those tokens. Override a component token only when that one control should diverge. Pill `style: :primary` (and any other named pill style) still paints the active pill with that button colour. Omitting `style:` keeps the neutral active surface.
 
 The bottom nav bar (`--bottom-nav-background-color`) is a dark surface, not a brand fill. Dark and ocean set their own bar colours. Active bottom-nav *items* use `--bottom-nav-item-active-color` (contrast on that bar), not `--color-primary`.
 
@@ -395,13 +402,13 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). `--color-ring` and the active sidebar / top-nav fills do the same. You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` instead of editing those component tokens.
+Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). `--color-ring` does the same. Active sidebar, top nav, list, pill, table, and pagination fills map to `--surface-active-*` and `--surface-hover-background-color`. You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` for brand colour, and the surface hover / active tokens for selected chrome.
 
 Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`. Range input paints the native slider through `.fp-range-input` and `--range-*` tokens, not `accent-color`.
 
-Tabs, chat incoming bubbles, sidebar/top-nav hover, list hover, and avatar fallbacks alias `--surface-muted-*` / `--surface-content-color`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
+Chat incoming bubbles, avatar fallbacks, and the filled muted grey alias `--surface-muted-*` / `--surface-content-color`. Sidebar, top nav, list, and pill hover alias `--surface-hover-background-color`. Their selected states alias `--surface-active-*`. Named themes inherit those greys from the surface tokens; do not freeze Tailwind slate hexes on the component tokens.
 
-Collection Editor aliases the same surface and list tokens. `--collection-editor-title-color` follows `--surface-content-color`. `--collection-editor-description-color` follows `--surface-muted-content-color`. Row hover follows `--list-item-hover-background-color`. The drop indicator follows `--color-primary`. Cell lines follow `--collection-editor-border-color`. Override the `--collection-editor-*` names on a parent when only that collection should change. Named themes inherit these aliases and do not need their own copies.
+Collection Editor aliases the same surface and list tokens. `--collection-editor-title-color` follows `--surface-content-color`. `--collection-editor-description-color` follows `--surface-muted-content-color`. Row hover follows `--list-item-hover-background-color`. A selected row follows `--list-item-active-background-color`. The drop indicator follows `--color-primary`. Cell lines follow `--collection-editor-border-color`. Override the `--collection-editor-*` names on a parent when only that collection should change. Named themes inherit these aliases and do not need their own copies.
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
