@@ -164,7 +164,7 @@ module FlatPack
             "rounded-[var(--radius-md)]",
             "border border-[var(--surface-border-color)]",
             "bg-[var(--surface-background-color)]",
-            "p-1",
+            "p-[var(--dropdown-padding)]",
             "shadow-lg",
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
             "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]"

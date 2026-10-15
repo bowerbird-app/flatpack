@@ -244,8 +244,8 @@ module FlatPack
         content_tag(:div, **dropdown_attributes) do
           safe_join([
             content_tag(:ul, "", class: "max-h-72 overflow-y-auto", data: {flat_pack__search_target: "results"}, role: "listbox"),
-            content_tag(:div, @no_results_text, class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "noResults"}),
-            content_tag(:div, fp_t("search.searching"), class: "hidden px-3 py-3 text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "loading"})
+            content_tag(:div, @no_results_text, class: "hidden px-[var(--search-result-padding-x)] py-[var(--search-result-padding-y)] text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "noResults"}),
+            content_tag(:div, fp_t("search.searching"), class: "hidden px-[var(--search-result-padding-x)] py-[var(--search-result-padding-y)] text-sm text-[var(--search-dropdown-muted-text-color)]", data: {flat_pack__search_target: "loading"})
           ])
         end
       end
@@ -265,7 +265,8 @@ module FlatPack
             "border-[var(--search-dropdown-border-color)]",
             "bg-[var(--search-dropdown-background-color)]",
             "shadow-sm",
-            "overflow-hidden"
+            "overflow-hidden",
+            "p-[var(--search-menu-padding)]"
           ),
           data: {
             flat_pack__search_target: "dropdown"

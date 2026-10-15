@@ -125,8 +125,9 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "--accordion-trigger-padding: 1rem"
-        assert_includes html, "--accordion-content-padding: 1rem"
+        assert_includes html, "p-[var(--accordion-trigger-padding-md)]"
+        assert_includes html, "p-[var(--accordion-content-padding-md)]"
+        refute_includes html, "--accordion-trigger-padding:"
       end
 
       def test_renders_small_size
@@ -135,7 +136,7 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "--accordion-trigger-padding: 0.75rem"
+        assert_includes html, "p-[var(--accordion-trigger-padding-sm)]"
         assert_includes html, "text-sm"
       end
 
@@ -145,7 +146,7 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "--accordion-trigger-padding: 1.25rem"
+        assert_includes html, "p-[var(--accordion-trigger-padding-lg)]"
         assert_includes html, "text-lg"
       end
 

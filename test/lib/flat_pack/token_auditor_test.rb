@@ -42,13 +42,15 @@ module FlatPack
       assert_includes css, "overrides only"
     end
 
-    test "rounded theme block does not copy the default palette" do
+    test "rounded theme block shifts spacing and does not copy the palette" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
       rounded_block = css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
-      assert_empty rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
+      assert_includes rounded_block, "--space-2: 0.75rem"
+      assert_includes rounded_block, "--density: 1"
+      refute_empty rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
     end
   end
 end

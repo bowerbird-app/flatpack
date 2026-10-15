@@ -34,10 +34,10 @@ module FlatPack
 
         def wrapper_classes
           classes(
-            (@collapsed ? "px-1" : "px-4"),
+            (@collapsed ? "px-[var(--sidebar-item-padding-collapsed)]" : "px-[var(--sidebar-section-padding-x)]"),
             "pt-2",
             "pb-1",
-            "mx-2",
+            "mx-[var(--sidebar-item-inset)]",
             "overflow-hidden"
           )
         end

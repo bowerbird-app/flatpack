@@ -392,7 +392,7 @@ export default class extends Controller {
 
       for (let columnIndex = 0; columnIndex < columns; columnIndex += 1) {
         const cell = document.createElement("td")
-        cell.className = "px-[var(--table-padding)] py-[var(--table-padding)]"
+        cell.className = "px-[var(--table-padding-x)] py-[var(--table-padding-y)]"
 
         const skeleton = document.createElement("div")
         skeleton.className = skeletonBase

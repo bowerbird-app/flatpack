@@ -402,7 +402,7 @@ test('remote results keep an optional icon and the menu markup', () => {
   assert.match(markup, /data-flat-pack--icon-name-value="user"/)
   assert.match(markup, /aria-hidden="true"/)
   assert.match(markup, />Alice Johnson</)
-  assert.match(markup, /class="[^"]*flex items-center gap-2/)
+  assert.match(markup, /class="[^"]*flex items-center gap-\[var\(--dropdown-item-gap\)\]/)
 })
 
 test('a selected value icon renders in the closed control', () => {

@@ -52,6 +52,7 @@ class ThemesController < ApplicationController
     "Overlay" => [/\A--overlay-/],
     "Backdrop Effects" => [/\A--blur-/],
     "Collection Editor" => [/\A--collection-editor-/],
+    "Spacing" => [/\A--(space-|density\z|dropdown-|select-|combobox-|command-palette-|list-item-padding-|pill-padding|tabs-stacked-padding)/],
     "Other" => [/.*/]
   }.freeze
 
@@ -92,7 +93,7 @@ class ThemesController < ApplicationController
     when "light"
       "Full :root, [data-theme] wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
     when "rounded"
-      "Rounded is a no-op alias of :root. Hosts may keep data-theme=\"rounded\"; this dump is the default palette."
+      "Rounded keeps the default palette and shifts the spacing scale. This dump is the rounded override, not a second copy of :root."
     else
       "Override-only dump from [data-theme]. Component aliases re-resolve from the default wiring unless listed here."
     end
@@ -121,11 +122,12 @@ class ThemesController < ApplicationController
     if theme == "rounded"
       return <<~CODE
         /*
-         * Rounded is the kit default. data-theme="rounded" is a no-op alias of :root
-         * so hosts can keep the attribute without restating the palette.
+         * Rounded keeps the charcoal palette and shifts --space-2 through --space-6.
+         * Menu shells and the search result block axis are remapped here.
+         * Colour, radius, and shadow stay on :root.
          */
 
-        #{extract_selector_block(css, THEME_SELECTORS.fetch("light"))}
+        #{extract_selector_block(css, '[data-theme="rounded"]')}
       CODE
     end
 
@@ -154,10 +156,10 @@ class ThemesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m, :body]
-    return [] if block.blank?
+    bodies = css.scan(/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m).flatten
+    return [] if bodies.empty?
 
-    block.lines.filter_map do |line|
+    bodies.join("\n").lines.filter_map do |line|
       stripped = line.strip
       next if stripped.empty? || stripped.start_with?("/*")
 

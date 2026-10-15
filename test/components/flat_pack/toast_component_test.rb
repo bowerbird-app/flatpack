@@ -35,7 +35,8 @@ module FlatPack
         render_inline(Component.new(text: "Saved"))
 
         html = page.native.to_html
-        assert_includes html, "--toast-padding: 1rem"
+        assert_includes html, "p-[var(--toast-padding-md)]"
+        refute_includes html, "--toast-padding:"
         assert_includes html, "text-sm"
         assert_includes html, "gap-3"
       end
@@ -44,7 +45,7 @@ module FlatPack
         render_inline(Component.new(text: "Saved", size: :sm))
 
         html = page.native.to_html
-        assert_includes html, "--toast-padding: 0.75rem"
+        assert_includes html, "p-[var(--toast-padding-sm)]"
         assert_includes html, "text-xs"
       end
 
@@ -52,7 +53,7 @@ module FlatPack
         render_inline(Component.new(text: "Saved", size: :lg))
 
         html = page.native.to_html
-        assert_includes html, "--toast-padding: 1.25rem"
+        assert_includes html, "p-[var(--toast-padding-lg)]"
         assert_includes html, "text-base"
       end
 

@@ -200,7 +200,7 @@ module FlatPack
         def header_classes
           classes(
             "shrink-0",
-            "p-4",
+            "p-[var(--sidebar-padding)]",
             "bg-[var(--sidebar-header-background-color)]"
           )
         end

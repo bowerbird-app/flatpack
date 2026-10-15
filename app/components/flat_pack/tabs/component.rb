@@ -14,13 +14,13 @@ module FlatPack
           inactive: "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)]"
         },
         pills: {
-          tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-1",
+          tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-[var(--pill-padding)]",
           tab_base: "border border-transparent font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: FlatPack::Button::PillStyle::ACTIVE_CLASSES,
           inactive: FlatPack::Button::PillStyle::INACTIVE_CLASSES
         },
         stacked: {
-          tab_list: "flex flex-col gap-1 [border-radius:1.5rem] p-2 bg-[var(--tabs-stacked-pill-list-background-color)] border border-[var(--tabs-pill-list-border-color)]",
+          tab_list: "flex flex-col gap-1 [border-radius:1.5rem] p-[var(--tabs-stacked-padding)] bg-[var(--tabs-stacked-pill-list-background-color)] border border-[var(--tabs-pill-list-border-color)]",
           tab_base: "w-full [border-radius:var(--tabs-pill-corner-radius)] text-left font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: "border #{FlatPack::Button::PillStyle::ACTIVE_CLASSES}",
           inactive: "border #{FlatPack::Button::PillStyle::INACTIVE_CLASSES}"

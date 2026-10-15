@@ -73,7 +73,7 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     }
   }
   const item = {
-    classList: classListStub(['px-4'])
+    classList: classListStub(['px-[var(--sidebar-item-padding-x)]'])
   }
   const brand = {
     classList: classListStub([])
@@ -153,7 +153,7 @@ test('collapse does not sr-only labels or center icons at click time', () => {
   assert.equal(label.classList.contains('sr-only'), false)
   assert.equal(label.dataset.flatPackSidebarRestHidden, undefined)
   assert.equal(item.classList.contains('justify-center'), false)
-  assert.equal(item.classList.contains('px-4'), true)
+  assert.equal(item.classList.contains('px-[var(--sidebar-item-padding-x)]'), true)
   assert.equal(timeouts.length, 0)
 })
 
@@ -165,7 +165,7 @@ test('width end does not restyle icons or labels', () => {
   assert.equal(timeouts.length, 0)
   assert.equal(label.classList.contains('sr-only'), false)
   assert.equal(item.classList.contains('justify-center'), false)
-  assert.equal(item.classList.contains('px-4'), true)
+  assert.equal(item.classList.contains('px-[var(--sidebar-item-padding-x)]'), true)
 })
 
 test('expand restores the brand before the rail opens', () => {

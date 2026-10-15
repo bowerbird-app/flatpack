@@ -5,22 +5,25 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Density for trigger/content padding and title text. md matches current 1rem padding.
       # "text-sm" "text-base" "text-lg"
+      # "p-[var(--accordion-trigger-padding-sm)]" "p-[var(--accordion-content-padding-sm)]"
+      # "p-[var(--accordion-trigger-padding-md)]" "p-[var(--accordion-content-padding-md)]"
+      # "p-[var(--accordion-trigger-padding-lg)]" "p-[var(--accordion-content-padding-lg)]"
       SIZES = {
         sm: {
-          trigger_padding: "0.75rem",
-          content_padding: "0.75rem",
+          trigger_padding: "p-[var(--accordion-trigger-padding-sm)]",
+          content_padding: "p-[var(--accordion-content-padding-sm)]",
           title: "text-sm font-medium",
           icon: :sm
         },
         md: {
-          trigger_padding: "1rem",
-          content_padding: "1rem",
+          trigger_padding: "p-[var(--accordion-trigger-padding-md)]",
+          content_padding: "p-[var(--accordion-content-padding-md)]",
           title: "font-medium",
           icon: :md
         },
         lg: {
-          trigger_padding: "1.25rem",
-          content_padding: "1.25rem",
+          trigger_padding: "p-[var(--accordion-trigger-padding-lg)]",
+          content_padding: "p-[var(--accordion-content-padding-lg)]",
           title: "text-lg font-medium",
           icon: :lg
         }
@@ -112,7 +115,7 @@ module FlatPack
         # Rails-generated HTML from components captured via block. Never pass
         # unsanitized user input directly to content.
         content_tag(:div, **item_content_attributes(item)) do
-          content_tag(:div, item[:content].html_safe, class: "p-[var(--accordion-content-padding)]")
+          content_tag(:div, item[:content].html_safe, class: size_config.fetch(:content_padding))
         end
       end
 
@@ -122,20 +125,8 @@ module FlatPack
             controller: "flat-pack--accordion",
             "flat-pack--accordion-allow-multiple-value": @allow_multiple
           },
-          class: "border border-[var(--accordion-border-color)] rounded-[var(--accordion-border-radius)] overflow-hidden bg-[var(--accordion-background-color)]",
-          style: padding_style
+          class: "border border-[var(--accordion-border-color)] rounded-[var(--accordion-border-radius)] overflow-hidden bg-[var(--accordion-background-color)]"
         )
-      end
-
-      def padding_style
-        declaration = [
-          "--accordion-trigger-padding: #{size_config.fetch(:trigger_padding)}",
-          "--accordion-content-padding: #{size_config.fetch(:content_padding)}"
-        ].join("; ")
-        existing = @system_arguments[:style] || @system_arguments["style"]
-        return declaration unless existing.present?
-
-        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
       end
 
       def item_trigger_attributes(item)
@@ -154,7 +145,7 @@ module FlatPack
       end
 
       def trigger_classes
-        "w-full flex items-center justify-between cursor-pointer p-[var(--accordion-trigger-padding)] text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
+        "w-full flex items-center justify-between cursor-pointer #{size_config.fetch(:trigger_padding)} text-left text-[var(--accordion-trigger-text-color)] hover:bg-[var(--accordion-trigger-hover-background-color)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accordion-focus-ring-color)] focus-visible:ring-inset"
       end
 
       def item_content_attributes(item)

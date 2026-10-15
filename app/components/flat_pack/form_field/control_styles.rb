@@ -2,13 +2,13 @@
 
 module FlatPack
   module FormField
-    # Shared box class list for form controls that use --form-control-padding.
+    # Shared box class list for form controls that use --form-control-padding-x and --form-control-padding-y.
     # Included by TextInput, Select, TextArea, and the other matching inputs.
     module ControlStyles
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-error)]" "border-[var(--color-error)]"
-      # "px-[var(--form-control-padding)]" "py-[var(--form-control-padding)]"
+      # "px-[var(--form-control-padding-x)]" "py-[var(--form-control-padding-y)]"
       # "bg-[var(--surface-background-color)]" "text-[var(--surface-content-color)]"
       # "border" "border-[var(--surface-border-color)]" "placeholder:text-[var(--surface-muted-content-color)]"
       # "focus:ring-ring" "focus:border-transparent" "appearance-none"
@@ -38,8 +38,8 @@ module FlatPack
 
       def form_control_padding_classes
         [
-          "px-[var(--form-control-padding)]",
-          "py-[var(--form-control-padding)]"
+          "px-[var(--form-control-padding-x)]",
+          "py-[var(--form-control-padding-y)]"
         ]
       end
 

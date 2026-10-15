@@ -127,7 +127,7 @@ module FlatPack
           "flat-pack-list-key-value-row",
           KeyValueLayout.row_classes_for(@stack_below),
           "rounded-[var(--radius-sm)]",
-          "py-4 px-4",
+          "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
           ("bg-[var(--list-item-active-background-color)]" if @active)
@@ -195,7 +195,7 @@ module FlatPack
         classes(
           "flex items-start",
           "rounded-[var(--radius-sm)]",
-          "py-4 px-4",
+          "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
           ("bg-[var(--list-item-active-background-color)]" if @active)

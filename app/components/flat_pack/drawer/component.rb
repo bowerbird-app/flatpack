@@ -169,13 +169,13 @@ module FlatPack
       def render_header_section
         return nil unless header_section?
 
-        content_tag(:div, class: "shrink-0 flex items-start justify-between gap-3 p-4 sm:p-6") do
+        content_tag(:div, class: "shrink-0 flex items-start justify-between gap-3 p-[var(--drawer-padding)] sm:p-[var(--drawer-padding-wide)]") do
           safe_join([render_header_content, render_close_button])
         end
       end
 
       def render_close_button_row
-        content_tag(:div, class: "shrink-0 flex justify-end p-4 pb-0") { render_close_button }
+        content_tag(:div, class: "shrink-0 flex justify-end p-[var(--drawer-padding)] pb-0") { render_close_button }
       end
 
       def render_header_content
@@ -203,13 +203,13 @@ module FlatPack
       def render_body_content
         return nil unless body?
 
-        content_tag(:div, body.to_s.html_safe, class: "fp-drawer-body min-h-0 flex-1 overflow-y-auto px-4 sm:px-6 pb-4 text-sm text-[var(--drawer-body-color)]")
+        content_tag(:div, body.to_s.html_safe, class: "fp-drawer-body min-h-0 flex-1 overflow-y-auto px-[var(--drawer-padding)] sm:px-[var(--drawer-padding-wide)] pb-[var(--drawer-padding)] text-sm text-[var(--drawer-body-color)]")
       end
 
       def render_footer_content
         return nil unless footer?
 
-        content_tag(:div, footer.to_s.html_safe, class: "shrink-0 p-4 sm:p-6 pt-0 flex justify-end gap-3")
+        content_tag(:div, footer.to_s.html_safe, class: "shrink-0 p-[var(--drawer-padding)] sm:p-[var(--drawer-padding-wide)] pt-0 flex justify-end gap-3")
       end
 
       def header_section?

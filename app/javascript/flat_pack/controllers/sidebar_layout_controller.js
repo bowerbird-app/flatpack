@@ -273,13 +273,13 @@ export default class extends Controller {
     })
 
     this.itemNodes().forEach((item) => {
-      item.classList.remove("px-1", "justify-center")
-      item.classList.add("px-4")
+      item.classList.remove("px-[var(--sidebar-item-padding-collapsed)]", "justify-center")
+      item.classList.add("px-[var(--sidebar-item-padding-x)]")
     })
 
     this.sectionTitleNodes().forEach((title) => {
-      title.classList.remove("px-1")
-      title.classList.add("px-4")
+      title.classList.remove("px-[var(--sidebar-item-padding-collapsed)]")
+      title.classList.add("px-[var(--sidebar-section-padding-x)]")
     })
 
     this.groupPanelNodes().forEach((panel) => {

@@ -40,16 +40,16 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     assert_includes code, "--color-primary"
   end
 
-  test "theme_variables_code treats rounded as a :root alias" do
+  test "theme_variables_code shows the rounded spacing override" do
     controller = ThemesController.new
 
     code = controller.send(:theme_variables_code, "rounded")
 
-    assert_includes code, "no-op alias of :root"
-    assert_includes code, ":root, [data-theme]"
-    assert_includes code, "--color-primary"
-    assert_match(/--color-primary:\s*oklch\(/, code)
-    refute_match(/\[data-theme="rounded"\]/, code)
+    assert_includes code, "shifts --space-2 through --space-6"
+    assert_includes code, '[data-theme="rounded"]'
+    assert_includes code, "--space-4: 1.25rem"
+    assert_includes code, "--dropdown-padding:"
+    refute_includes code, "--color-primary"
   end
 
   test "extract_theme_tokens reads concrete values from :root" do
@@ -65,6 +65,10 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     ring = tokens.find { |token| token.fetch(:variable) == "--color-ring" }
     refute_nil ring
     assert_equal "var(--color-primary)", ring.fetch(:default_value)
+
+    density = tokens.find { |token| token.fetch(:variable) == "--density" }
+    refute_nil density
+    assert_equal "1", density.fetch(:default_value)
   end
 
   test "variable_section_label classifies blur and unknown variables" do

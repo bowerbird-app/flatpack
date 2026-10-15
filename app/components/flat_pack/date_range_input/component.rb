@@ -362,7 +362,7 @@ module FlatPack
           "border",
           "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)]",
           "text-sm",
           "transition-colors duration-base",
           "placeholder:text-[var(--surface-muted-content-color)]",

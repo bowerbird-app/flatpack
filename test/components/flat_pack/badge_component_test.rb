@@ -58,7 +58,7 @@ module FlatPack
 
         assert_selector "span", text: "Small"
         assert_includes page.native.to_html, "text-xs"
-        assert_includes page.native.to_html, "px-2.5"
+        assert_includes page.native.to_html, "px-[var(--badge-padding-x-sm)]"
       end
 
       def test_renders_extra_small_size
@@ -66,7 +66,7 @@ module FlatPack
 
         assert_selector "span", text: "Extra Small"
         assert_includes page.native.to_html, "text-[10px]"
-        assert_includes page.native.to_html, "px-2"
+        assert_includes page.native.to_html, "px-[var(--badge-padding-x-xs)]"
       end
 
       def test_renders_medium_size
@@ -74,7 +74,7 @@ module FlatPack
 
         assert_selector "span", text: "Medium"
         assert_includes page.native.to_html, "text-sm"
-        assert_includes page.native.to_html, "px-3"
+        assert_includes page.native.to_html, "px-[var(--badge-padding-x-md)]"
       end
 
       def test_renders_large_size
@@ -82,7 +82,7 @@ module FlatPack
 
         assert_selector "span", text: "Large"
         assert_includes page.native.to_html, "text-base"
-        assert_includes page.native.to_html, "px-4"
+        assert_includes page.native.to_html, "px-[var(--badge-padding-x-lg)]"
       end
 
       def test_default_size_is_medium

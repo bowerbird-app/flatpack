@@ -15,7 +15,8 @@ module FlatPack
         def test_renders_default_footer_classes
           render_inline(Component.new) { "Footer" }
 
-          assert_selector "div.shrink-0.p-4.border-t"
+          assert_includes page.native.to_html, "p-[var(--sidebar-padding)]"
+          assert_selector "div.shrink-0.border-t"
           assert_includes page.native.to_html, "border-[var(--sidebar-border-color)]"
           assert_includes page.native.to_html, "text-[var(--sidebar-footer-text-color)]"
           assert_selector "div[data-flat-pack--sidebar-layout-target='footer']"

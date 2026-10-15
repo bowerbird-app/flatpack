@@ -566,6 +566,17 @@ module FlatPack
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
+      def test_header_and_footer_follow_the_card_padding_step
+        render_inline(Component.new(padding: :lg)) do |component|
+          component.header { "Title" }
+          component.footer { "Actions" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "p-[var(--card-padding-lg)]"
+        refute_includes html, "p-[var(--card-padding-md)]"
+      end
+
       def test_slot_based_cards_do_not_apply_container_padding
         render_inline(Component.new(padding: :lg)) do |component|
           component.body { "Content" }

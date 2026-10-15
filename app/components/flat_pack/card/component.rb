@@ -16,7 +16,7 @@ module FlatPack
       def header(**args, &block)
         return header_slot if args.empty? && !block
 
-        set_slot(:header_slot, nil, **args, &block)
+        set_slot(:header_slot, nil, **header_slot_arguments(args), &block)
       end
 
       def body(**args, &block)
@@ -28,7 +28,7 @@ module FlatPack
       def footer(**args, &block)
         return footer_slot if args.empty? && !block
 
-        set_slot(:footer_slot, nil, **args, &block)
+        set_slot(:footer_slot, nil, **footer_slot_arguments(args), &block)
       end
 
       def media(**args, &block)
@@ -191,6 +191,14 @@ module FlatPack
 
       def default_media_arguments
         {padding: @padding}
+      end
+
+      def header_slot_arguments(args)
+        {padding: @padding}.merge(args)
+      end
+
+      def footer_slot_arguments(args)
+        {padding: @padding}.merge(args)
       end
 
       def style_classes

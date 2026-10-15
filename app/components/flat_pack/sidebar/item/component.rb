@@ -79,15 +79,15 @@ module FlatPack
           classes(
             "flex",
             "items-center",
-            "gap-3",
-            (@collapsed ? "px-1" : "px-4"),
+            "gap-[var(--sidebar-item-gap)]",
+            (@collapsed ? "px-[var(--sidebar-item-padding-collapsed)]" : "px-[var(--sidebar-item-padding-x)]"),
             (@collapsed ? "justify-center" : nil),
-            "py-2.5",
+            "py-[var(--sidebar-item-padding-y)]",
             "text-sm",
             "font-medium",
             "transition-colors",
             "rounded-[var(--radius-lg)]",
-            "mx-2",
+            "mx-[var(--sidebar-item-inset)]",
             state_classes
           )
         end

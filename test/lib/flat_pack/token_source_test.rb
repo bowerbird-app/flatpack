@@ -26,7 +26,13 @@ module FlatPack
       assert_match(/--font-sans:\s*system-ui/, root_block)
       assert_match(/--duration-fast:\s*150ms/, root_block)
       assert_match(/--easing-standard:\s*cubic-bezier/, root_block)
-      assert_match(/--button-padding-x-xs:\s*0\.5rem/, root_block)
+      assert_match(/--button-padding-x-md:\s*round\(nearest, calc\(var\(--space-4\) \* var\(--density\)\), 1px\)/, root_block)
+      assert_match(/--form-control-padding-x:\s*round\(nearest, calc\(var\(--space-4\) \* var\(--density\)\), 1px\)/, root_block)
+      assert_match(/--form-control-padding-y:\s*round\(nearest, calc\(var\(--space-3\) \* var\(--density\)\), 1px\)/, root_block)
+      refute_includes root_block, "--space-1:"
+      refute_includes root_block, "--density:"
+      refute_includes root_block, "--dropdown-padding:"
+      refute_includes root_block, "--button-padding-x-xs"
       assert_match(/--carousel-caption-below-text-color:\s*var\(--surface-muted-content-color\)/, root_block)
       assert_match(/--hero-overlay-background-color:\s*rgb\(0 0 0 \/ 0\.6\)/, root_block)
       assert_match(/--hero-overlay-left-background:\s*linear-gradient/, root_block)
@@ -117,20 +123,44 @@ module FlatPack
 
     test "@theme inline names match :root custom properties" do
       theme_names = token_names(@css[/@theme inline \{.*?^\}/m])
-      root_names = token_names(root_block)
+      root_names = (token_names(root_block) + token_names(scale_block)).uniq.sort
 
       assert_equal root_names, theme_names
     end
 
-    test "rounded is a no-op alias and does not restate the default palette" do
-      rounded_block = @css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
+    test "spacing scale lives on bare :root and rounded shifts steps 2 through 6" do
+      assert_match(/--space-1:\s*0\.25rem/, scale_block)
+      assert_match(/--space-2:\s*0\.5rem/, scale_block)
+      assert_match(/--space-6:\s*2rem/, scale_block)
+      assert_match(/--density:\s*1;/, scale_block)
+      assert_match(/--dropdown-padding:\s*round\(nearest, calc\(var\(--space-1\) \* var\(--density\)\), 1px\)/, scale_block)
+      assert_match(/--search-menu-padding:\s*0px/, scale_block)
+      assert_match(/--search-result-padding-y:\s*round\(nearest, calc\(var\(--space-4\) \* var\(--density\)\), 1px\)/, scale_block)
+
+      rounded_block = rounded_body
+      assert_match(/--space-1:\s*0\.25rem/, rounded_block)
+      assert_match(/--space-2:\s*0\.75rem/, rounded_block)
+      assert_match(/--space-3:\s*1rem/, rounded_block)
+      assert_match(/--space-4:\s*1\.25rem/, rounded_block)
+      assert_match(/--space-5:\s*1\.75rem/, rounded_block)
+      assert_match(/--space-6:\s*2\.5rem/, rounded_block)
+      assert_match(/--density:\s*1;/, rounded_block)
+      assert_match(/--dropdown-padding:\s*round\(nearest, calc\(var\(--space-2\) \* var\(--density\)\), 1px\)/, rounded_block)
+      assert_match(/--search-menu-padding:\s*round\(nearest, calc\(var\(--space-2\) \* var\(--density\)\), 1px\)/, rounded_block)
+      assert_match(/--search-result-padding-y:\s*round\(nearest, calc\(var\(--space-3\) \* var\(--density\)\), 1px\)/, rounded_block)
+    end
+
+    test "rounded shifts spacing and does not restate the default palette" do
+      rounded_block = rounded_body
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
       refute_includes rounded_block, "--radius-md"
       refute_includes rounded_block, "--shadow-sm"
-      custom_properties = rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
-      assert_empty custom_properties, "[data-theme=rounded] must not assign custom properties; :root already holds the palette"
+      refute_includes rounded_block, "--button-padding"
+      rounded_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
+        refute_equal "var(#{name})", value.strip, "[data-theme=rounded] #{name} must not be a circular self-reference"
+      end
     end
 
     test "named theme blocks do not circular-map tokens" do
@@ -147,6 +177,10 @@ module FlatPack
 
       refute_includes dark_block, "--button-primary-background-color"
       refute_includes ocean_block, "--button-primary-background-color"
+      refute_includes dark_block, "--space-"
+      refute_includes dark_block, "--density"
+      refute_includes ocean_block, "--space-"
+      refute_includes ocean_block, "--density"
       assert_includes dark_block, "--color-primary"
       assert_includes ocean_block, "--color-primary"
       assert_match(/--sidebar-background-color:\s*oklch\(0\.17 0\.01 250\)/, dark_block)
@@ -397,6 +431,14 @@ module FlatPack
 
     def root_block
       @css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
+    end
+
+    def scale_block
+      @css[/^\/\* Spacing scale\..*?\n:root \{\n.*?\n\}/m]
+    end
+
+    def rounded_body
+      @css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
     end
   end
 end
