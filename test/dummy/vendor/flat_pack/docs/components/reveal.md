@@ -15,7 +15,7 @@ Use `reveal:` on a component root when the whole block should enter together. Us
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
 | `reveal` | Symbol | none | Yes | How it enters. Allowed: `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, `:zoom`, `:words`, `:lines`. Invalid values raise `ArgumentError`. |
-| `stagger` | Boolean | `false` | No | Box variants only. `true` staggers the element children with `--reveal-index`. Words and lines already stagger each piece. Must be `true` or `false`. |
+| `stagger` | Boolean | `false` | No | Box variants only. `true` writes `--reveal-index` on each child. That index is per element, not a theme token. Words and lines already stagger each piece. Must be `true` or `false`. |
 | `parallax` | Boolean | `false` | No | `true` adds a gentle scroll shift. Only with `:wipe` or `:zoom`. Must be `true` or `false`. |
 | `tag` | Symbol | `:div` | No | Root element. Allowed: `:div`, `:span`, `:p`, `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`, `:blockquote`, `:li`. |
 | `text` | String | `nil` | Conditional | Plain copy for `:words` and `:lines`. Required for those variants unless the block has text. HTML-safe strings raise `ArgumentError`. |
