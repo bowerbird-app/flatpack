@@ -32,6 +32,14 @@ module FlatPack
       --fp-collage-row
       --fp-collage-tracks
       --fp-collage-row-shift
+      --fp-collage-place-x
+      --fp-collage-place-y
+      --fp-collage-center-x
+      --fp-collage-center-y
+      --fp-collage-count
+      --fp-collage-mobile
+      --fp-collage-from-x
+      --fp-collage-from-y
       --fp-trash-button-size
       --fp-collection-min-item-width
       --fp-fab-offset

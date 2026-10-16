@@ -57,7 +57,9 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Stack key above value | `stack_below` | List `:key_value`: `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. Collage: omit it for the phone row. `:sm`, `:md`, `:lg`, or `:xl` makes one column below that breakpoint and drops the tilt. |
 | Collage brick | `rows` | `FlatPack::Collage::Component` only. A list of counts, such as `[5, 4]`. Each count is a row. A shorter row is centered, so it sits between the cards above. Omit it for an even grid of `columns`. |
 | Collage scatter | `scatter` | `FlatPack::Collage::Component` only. `:subtle` (default), `:loose`, or `:none`. A deterministic tilt and offset from the item index. `:none` sits square. |
-| Collage motion | `motion` | `FlatPack::Collage::Component` only. `true` (default) plays the enter rise and the hover lift. `false` leaves the scatter still. `prefers-reduced-motion` also skips both. |
+| Collage entrance | `entrance` | `FlatPack::Collage::Component` only. `:rise` (default, staggered fade-up), `:deal` (from the centre, then the tilt settles), or `:none`. |
+| Collage idle | `idle` | `FlatPack::Collage::Component` only. `:none` (default) or `:drift` (a slow ±1deg sway). Off below `md`. |
+| Collage hover | `hover` | `FlatPack::Collage::Component` only. `:lift` (default), `:focus` (straighten, raise, siblings ease back), or `:none`. Pointer hover needs `(hover: hover)`. Keyboard uses `:focus-visible` and `:focus-within`. Off below `md`. |
 | Collage phone count | `mobile_items` | `FlatPack::Collage::Component` only. Default `4`. How many items stay in the phone row. Later items stay in the markup and are not displayed below `md`. Ignored when `stack_below` is set. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). |

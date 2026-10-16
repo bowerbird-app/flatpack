@@ -377,6 +377,18 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collage-card-sway: 0.1;
   --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
   --collage-item-size-md: 11rem;
+  --collage-duration: var(--duration-slow);
+  --collage-easing: var(--easing-enter);
+  --collage-rise: 4px;
+  --collage-deal: 100%;
+  --collage-deal-duration: 720ms;
+  --collage-drift: 1deg;
+  --collage-drift-duration: 8s;
+  --collage-drift-easing: ease-in-out;
+  --collage-drift-phase: -1.15s;
+  --collage-focus-lift: calc(var(--collage-lift) * 2);
+  --collage-focus-scale: 0.97;
+  --collage-focus-dim: 0.62;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

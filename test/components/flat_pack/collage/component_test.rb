@@ -10,7 +10,8 @@ module FlatPack
           collage.item { "Harbour" }
         end
 
-        assert_selector "div.fp-collage.fp-collage--subtle.fp-collage--teaser.fp-collage--motion"
+        assert_selector "div.fp-collage.fp-collage--subtle.fp-collage--teaser.fp-collage--entrance-rise.fp-collage--idle-none.fp-collage--hover-lift"
+        refute_selector ".fp-collage--motion"
         refute_selector ".fp-collage--stack-md"
         assert_selector ".fp-collage__item > .fp-content-enter", text: "Harbour"
         html = page.native.to_html
@@ -81,12 +82,53 @@ module FlatPack
         assert_match(/Invalid rows/, error.message)
       end
 
-      def test_motion_false_skips_enter
-        render_inline(Component.new(motion: false)) { |collage| collage.item { "Still" } }
+      def test_still_entrance_skips_enter
+        render_inline(Component.new(entrance: :none, hover: :none)) { |collage| collage.item { "Still" } }
 
-        refute_selector ".fp-collage--motion"
+        assert_selector ".fp-collage--entrance-none.fp-collage--hover-none"
         refute_selector ".fp-content-enter"
+        refute_selector ".fp-collage__drift"
         assert_text "Still"
+      end
+
+      def test_deal_places_each_item_against_the_centre
+        render_inline(Component.new(rows: [5, 4], entrance: :deal, idle: :drift, hover: :focus)) do |collage|
+          9.times { |index| collage.item { "Card #{index}" } }
+        end
+
+        assert_selector ".fp-collage--entrance-deal.fp-collage--idle-drift.fp-collage--hover-focus"
+        assert_selector ".fp-collage__item > .fp-collage__drift", count: 9
+        refute_selector ".fp-content-enter"
+        html = page.native.to_html
+        assert_includes html, "--fp-collage-center-x: 2"
+        assert_includes html, "--fp-collage-center-y: 0.5"
+        assert_includes html, "--fp-collage-count: 9"
+        assert_includes html, "--fp-collage-mobile: 4"
+        styles = item_styles(html)
+        assert_includes styles[0], "--fp-collage-place-x: 0"
+        assert_includes styles[0], "--fp-collage-place-y: 0"
+        assert_includes styles[5], "--fp-collage-place-x: 0.5"
+        assert_includes styles[5], "--fp-collage-place-y: 1"
+      end
+
+      def test_even_grid_deal_centres_one_row
+        render_inline(Component.new(columns: 4, entrance: :deal)) do |collage|
+          4.times { |index| collage.item { "Card #{index}" } }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "--fp-collage-center-x: 1.5"
+        assert_includes html, "--fp-collage-center-y: 0"
+        styles = item_styles(html)
+        assert_includes styles[0], "--fp-collage-place-x: 0"
+        assert_includes styles[3], "--fp-collage-place-x: 3"
+        assert_includes styles[3], "--fp-collage-place-y: 0"
+      end
+
+      def test_rise_and_drift_share_one_inner_wrapper
+        render_inline(Component.new(entrance: :rise, idle: :drift)) { |collage| collage.item { "Sway" } }
+
+        assert_selector ".fp-collage__item > .fp-content-enter.fp-collage__drift", text: "Sway"
       end
 
       def test_reading_order_matches_source_order
@@ -199,9 +241,18 @@ module FlatPack
         assert_match(/Invalid stack_below/, error.message)
       end
 
-      def test_rejects_invalid_motion
-        error = assert_raises(ArgumentError) { Component.new(motion: "yes") }
-        assert_match(/Invalid motion/, error.message)
+      def test_rejects_invalid_entrance_idle_and_hover
+        error = assert_raises(ArgumentError) { Component.new(entrance: :zoom) }
+        assert_match(/Invalid entrance/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(idle: :bounce) }
+        assert_match(/Invalid idle/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(hover: :spin) }
+        assert_match(/Invalid hover/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(motion: true) }
+        assert_match(/motion: is gone/, error.message)
       end
 
       def test_rejects_invalid_rotate_offset_and_z
@@ -237,13 +288,34 @@ module FlatPack
         assert_includes collage, "var(--collage-bleed)"
         assert_includes collage, "var(--collage-margin)"
         assert_includes collage, "var(--collage-overlap)"
+        assert_includes collage, "var(--collage-duration)"
+        assert_includes collage, "var(--collage-easing)"
+        assert_includes collage, "var(--collage-rise)"
+        assert_includes collage, "var(--collage-deal)"
+        assert_includes collage, "var(--collage-deal-duration)"
+        assert_includes collage, "var(--collage-drift)"
+        assert_includes collage, "var(--collage-drift-duration)"
+        assert_includes collage, "var(--collage-drift-easing)"
+        assert_includes collage, "var(--collage-focus-lift)"
+        assert_includes collage, "var(--collage-focus-scale)"
+        assert_includes collage, "var(--collage-focus-dim)"
         assert_includes collage, "fp-collage--brick"
+        assert_includes collage, "fp-collage--entrance-deal"
+        assert_includes collage, "fp-collage--entrance-rise"
+        assert_includes collage, "fp-collage--idle-drift"
+        assert_includes collage, "fp-collage--hover-lift"
+        assert_includes collage, "fp-collage--hover-focus"
+        assert_includes collage, "@keyframes fp-collage-deal"
+        assert_includes collage, "@keyframes fp-collage-drift"
+        assert_includes collage, "(hover: hover)"
+        assert_includes collage, ":focus-visible"
+        assert_includes collage, ":focus-within"
+        assert_includes collage, ":has("
         assert_includes collage, "padding: calc(var(--collage-pad) + (var(--collage-offset-y) + var(--collage-bleed)) * var(--fp-collage-scatter))"
         assert_includes collage, "padding: var(--collage-pad)"
-        assert_includes collage, "var(--duration-slow)"
-        assert_includes collage, "var(--easing-enter)"
         assert_includes collage, ".fp-content-enter"
         assert_includes collage, "@media (prefers-reduced-motion: reduce)"
+        assert_includes collage, "animation: none"
         assert_includes collage, "var(--collage-item-size-sm)"
         assert_includes collage, "var(--collage-item-size-md)"
         assert_includes collage, "fp-collage--teaser"
@@ -251,6 +323,8 @@ module FlatPack
         assert_includes collage, "@media (width < 48rem)"
         assert_includes collage, "@media (width >= 48rem) and (width < 64rem)"
         assert_includes collage, "transform: none"
+        refute_includes collage, "var(--duration-slow)"
+        refute_includes collage, "var(--easing-enter)"
         refute_match(/position:\s*absolute/, collage)
       end
 

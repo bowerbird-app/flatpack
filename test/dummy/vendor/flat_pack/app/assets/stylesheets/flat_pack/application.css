@@ -2798,8 +2798,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
  * scaled by the --collage-* ranges.
  * Below md, a teaser is one overlapping row about a third of the viewport tall.
  * From md up to lg, a brick is rows of three at --collage-item-size-md.
- * Entrance is .fp-content-enter (opacity plus a 4px rise on --duration-slow /
- * --easing-enter). Hover lift uses that same duration and easing.
+ * Entrance, idle, and hover are separate. Every duration, distance, and easing
+ * is a --collage-* token. Below md only the entrance runs. Reduced motion skips all of it.
  */
 .fp-collage {
   --fp-collage-scatter: 1;
@@ -2843,7 +2843,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   aspect-ratio: calc(var(--collage-card-ratio) * (1 + var(--fp-collage-scale) * var(--collage-card-sway)));
 }
 
-.fp-collage--brick .fp-collage__item > .fp-content-enter {
+.fp-collage--brick .fp-collage__item > :is(.fp-content-enter, .fp-collage__drift) {
   height: 100%;
 }
 
@@ -2853,39 +2853,185 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-collage-angle: calc(var(--fp-collage-tilt) * var(--collage-rotate) * var(--fp-collage-scatter));
   --fp-collage-row-shift: 0px;
   min-width: 0;
-  transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) var(--fp-collage-y);
+  rotate: var(--fp-collage-angle);
+  scale: 1;
   transform-origin: center center;
   z-index: var(--fp-collage-z);
+  transition:
+    translate var(--collage-duration) var(--collage-easing),
+    rotate var(--collage-duration) var(--collage-easing),
+    scale var(--collage-duration) var(--collage-easing),
+    opacity var(--collage-duration) var(--collage-easing);
 }
 
-.fp-collage--motion .fp-collage__item {
-  transition: transform var(--duration-slow) var(--easing-enter);
-}
-
-.fp-collage--motion .fp-collage__item > .fp-content-enter {
+/* Rise: the shared enter, staggered, with the collage distance and timing. */
+.fp-collage--entrance-rise .fp-collage__item > .fp-content-enter {
+  transition-duration: var(--collage-duration);
+  transition-timing-function: var(--collage-easing);
   transition-delay: calc(min(var(--fp-collage-index), 8) * var(--collage-stagger));
+
+  @starting-style {
+    transform: translateY(var(--collage-rise));
+  }
 }
 
-.fp-collage--motion .fp-collage__item:hover,
-.fp-collage--motion .fp-collage__item:focus-within {
-  transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), calc(var(--fp-collage-y) + var(--collage-lift))) rotate(var(--fp-collage-angle));
-  z-index: calc(var(--fp-collage-z) + 20);
+/* Deal: flat, near the centre, then into place. The tilt settles on the way in. */
+.fp-collage--entrance-deal .fp-collage__item {
+  --fp-collage-from-x: calc(var(--fp-collage-center-x) - var(--fp-collage-place-x));
+  --fp-collage-from-y: calc(var(--fp-collage-center-y) - var(--fp-collage-place-y));
+  /* The animation owns translate and rotate. Hover turns the transition back on. */
+  transition: none;
+  animation: fp-collage-deal var(--collage-deal-duration) var(--collage-easing) backwards;
+  animation-delay: calc(min(var(--fp-collage-index), 8) * var(--collage-stagger));
+}
+
+@keyframes fp-collage-deal {
+  0% {
+    opacity: 0;
+    translate: calc(var(--fp-collage-from-x) * var(--collage-deal)) calc(var(--fp-collage-from-y) * var(--collage-deal));
+    rotate: 0deg;
+  }
+
+  68% {
+    opacity: 1;
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) var(--fp-collage-y);
+    rotate: 0deg;
+  }
+
+  100% {
+    opacity: 1;
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) var(--fp-collage-y);
+    rotate: var(--fp-collage-angle);
+  }
+}
+
+/* Drift: a slow sway on the inner wrapper, so it can run with entrance and hover. */
+.fp-collage--idle-drift .fp-collage__drift {
+  height: 100%;
+  transform-origin: center center;
+  animation: fp-collage-drift var(--collage-drift-duration) var(--collage-drift-easing) infinite;
+  animation-delay: calc(var(--fp-collage-index) * var(--collage-drift-phase));
+}
+
+@keyframes fp-collage-drift {
+  0%,
+  100% {
+    rotate: calc(var(--collage-drift) * -1);
+  }
+
+  50% {
+    rotate: var(--collage-drift);
+  }
+}
+
+/* Pointer hover only. Keyboard focus is outside this query. */
+@media (hover: hover) and (width >= 48rem) {
+  .fp-collage--hover-lift .fp-collage__item,
+  .fp-collage--hover-focus .fp-collage__item {
+    transition:
+      translate var(--collage-duration) var(--collage-easing),
+      rotate var(--collage-duration) var(--collage-easing),
+      scale var(--collage-duration) var(--collage-easing),
+      opacity var(--collage-duration) var(--collage-easing);
+  }
+
+  .fp-collage--hover-lift .fp-collage__item:hover {
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) calc(var(--fp-collage-y) + var(--collage-lift));
+    z-index: calc(var(--fp-collage-z) + 20);
+  }
+
+  .fp-collage--hover-focus:has(.fp-collage__item:hover) .fp-collage__item:not(:hover, :focus-within) {
+    scale: var(--collage-focus-scale);
+    opacity: var(--collage-focus-dim);
+  }
+
+  .fp-collage--hover-focus .fp-collage__item:hover {
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) calc(var(--fp-collage-y) + var(--collage-focus-lift));
+    rotate: 0deg;
+    scale: 1;
+    opacity: 1;
+    z-index: calc(var(--fp-collage-z) + 20);
+  }
+}
+
+@media (width >= 48rem) {
+  .fp-collage--hover-lift .fp-collage__item,
+  .fp-collage--hover-focus .fp-collage__item {
+    transition:
+      translate var(--collage-duration) var(--collage-easing),
+      rotate var(--collage-duration) var(--collage-easing),
+      scale var(--collage-duration) var(--collage-easing),
+      opacity var(--collage-duration) var(--collage-easing);
+  }
+
+  .fp-collage--hover-lift .fp-collage__item:focus-visible,
+  .fp-collage--hover-lift .fp-collage__item:focus-within {
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) calc(var(--fp-collage-y) + var(--collage-lift));
+    z-index: calc(var(--fp-collage-z) + 20);
+  }
+
+  .fp-collage--hover-focus:has(.fp-collage__item:focus-visible, .fp-collage__item:focus-within) .fp-collage__item:not(:hover, :focus-visible, :focus-within) {
+    scale: var(--collage-focus-scale);
+    opacity: var(--collage-focus-dim);
+  }
+
+  .fp-collage--hover-focus .fp-collage__item:focus-visible,
+  .fp-collage--hover-focus .fp-collage__item:focus-within {
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) calc(var(--fp-collage-y) + var(--collage-focus-lift));
+    rotate: 0deg;
+    scale: 1;
+    opacity: 1;
+    z-index: calc(var(--fp-collage-z) + 20);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fp-collage--motion .fp-collage__item,
-  .fp-collage--motion .fp-collage__item:hover,
-  .fp-collage--motion .fp-collage__item:focus-within {
+  .fp-collage__item,
+  .fp-collage__item:hover,
+  .fp-collage__item:focus-visible,
+  .fp-collage__item:focus-within {
     transition: none;
+    animation: none;
+    scale: 1;
+    opacity: 1;
   }
 
-  .fp-collage--motion .fp-collage__item:hover,
-  .fp-collage--motion .fp-collage__item:focus-within {
-    transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  .fp-collage--hover-lift .fp-collage__item:hover,
+  .fp-collage--hover-lift .fp-collage__item:focus-visible,
+  .fp-collage--hover-lift .fp-collage__item:focus-within,
+  .fp-collage--hover-focus .fp-collage__item:hover,
+  .fp-collage--hover-focus .fp-collage__item:focus-visible,
+  .fp-collage--hover-focus .fp-collage__item:focus-within {
+    translate: calc(var(--fp-collage-x) + var(--fp-collage-row-shift)) var(--fp-collage-y);
+    rotate: var(--fp-collage-angle);
+    z-index: var(--fp-collage-z);
   }
 
-  .fp-collage--motion .fp-collage__item > .fp-content-enter {
-    transition-delay: 0s;
+  .fp-collage--hover-focus:has(.fp-collage__item:hover) .fp-collage__item,
+  .fp-collage--hover-focus:has(.fp-collage__item:focus-within) .fp-collage__item {
+    scale: 1;
+    opacity: 1;
+  }
+
+  .fp-collage--idle-drift .fp-collage__drift {
+    animation: none;
+  }
+
+  .fp-collage--entrance-rise .fp-collage__item > .fp-content-enter {
+    transition: none;
+
+    @starting-style {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Below md the entrance still runs. Idle and hover do not. */
+@media (width < 48rem) {
+  .fp-collage--idle-drift .fp-collage__drift {
+    animation: none;
   }
 }
 
@@ -2906,12 +3052,21 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
   .fp-collage--stack-sm .fp-collage__item,
   .fp-collage--stack-sm .fp-collage__item:hover,
+  .fp-collage--stack-sm .fp-collage__item:focus-visible,
   .fp-collage--stack-sm .fp-collage__item:focus-within {
     grid-column: auto;
     grid-row: auto;
+    translate: none;
+    rotate: none;
+    scale: none;
     transform: none;
     z-index: auto;
     transition: none;
+    animation: none;
+  }
+
+  .fp-collage--stack-sm .fp-collage__drift {
+    animation: none;
   }
 }
 
@@ -2932,12 +3087,21 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
   .fp-collage--stack-md .fp-collage__item,
   .fp-collage--stack-md .fp-collage__item:hover,
+  .fp-collage--stack-md .fp-collage__item:focus-visible,
   .fp-collage--stack-md .fp-collage__item:focus-within {
     grid-column: auto;
     grid-row: auto;
+    translate: none;
+    rotate: none;
+    scale: none;
     transform: none;
     z-index: auto;
     transition: none;
+    animation: none;
+  }
+
+  .fp-collage--stack-md .fp-collage__drift {
+    animation: none;
   }
 }
 
@@ -2958,12 +3122,21 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
   .fp-collage--stack-lg .fp-collage__item,
   .fp-collage--stack-lg .fp-collage__item:hover,
+  .fp-collage--stack-lg .fp-collage__item:focus-visible,
   .fp-collage--stack-lg .fp-collage__item:focus-within {
     grid-column: auto;
     grid-row: auto;
+    translate: none;
+    rotate: none;
+    scale: none;
     transform: none;
     z-index: auto;
     transition: none;
+    animation: none;
+  }
+
+  .fp-collage--stack-lg .fp-collage__drift {
+    animation: none;
   }
 }
 
@@ -2984,12 +3157,21 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
   .fp-collage--stack-xl .fp-collage__item,
   .fp-collage--stack-xl .fp-collage__item:hover,
+  .fp-collage--stack-xl .fp-collage__item:focus-visible,
   .fp-collage--stack-xl .fp-collage__item:focus-within {
     grid-column: auto;
     grid-row: auto;
+    translate: none;
+    rotate: none;
+    scale: none;
     transform: none;
     z-index: auto;
     transition: none;
+    animation: none;
+  }
+
+  .fp-collage--stack-xl .fp-collage__drift {
+    animation: none;
   }
 }
 
@@ -3021,8 +3203,13 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     aspect-ratio: calc(var(--collage-card-ratio) * (1 + var(--fp-collage-scale) * var(--collage-card-sway)));
   }
 
-  .fp-collage--teaser .fp-collage__item > .fp-content-enter {
+  .fp-collage--teaser .fp-collage__item > :is(.fp-content-enter, .fp-collage__drift) {
     height: 100%;
+  }
+
+  .fp-collage--teaser.fp-collage--entrance-deal .fp-collage__item {
+    --fp-collage-from-x: calc((min(var(--fp-collage-count), var(--fp-collage-mobile)) - 1) / 2 - min(var(--fp-collage-index), min(var(--fp-collage-count), var(--fp-collage-mobile)) - 1));
+    --fp-collage-from-y: 0;
   }
 
   .fp-collage--teaser .fp-collage__item--spare {
@@ -3057,6 +3244,11 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 5),
   .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 6) {
     --fp-collage-row-shift: 14%;
+  }
+
+  .fp-collage--teaser.fp-collage--brick.fp-collage--entrance-deal .fp-collage__item {
+    --fp-collage-from-x: calc(1 - mod(var(--fp-collage-index), 3));
+    --fp-collage-from-y: calc((round(up, var(--fp-collage-count) / 3, 1) - 1) / 2 - round(down, var(--fp-collage-index) / 3, 1));
   }
 }
 
