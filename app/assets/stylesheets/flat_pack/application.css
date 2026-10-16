@@ -2793,6 +2793,273 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   min-width: 0;
 }
 
+/* Collage: CSS grid plus transforms. No absolute positioning, so source order
+ * stays the reading order. Scatter is a unitless -1..1 triple on each item,
+ * scaled by the --collage-* ranges.
+ * Below md, a teaser is one overlapping row about a third of the viewport tall.
+ * From md up to lg, a brick is rows of three at --collage-item-size-md.
+ * Entrance is .fp-content-enter (opacity plus a 4px rise on --duration-slow /
+ * --easing-enter). Hover lift uses that same duration and easing.
+ */
+.fp-collage {
+  --fp-collage-scatter: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--fp-collage-columns, 3), minmax(0, 1fr));
+  gap: var(--collage-gap);
+  /* Resting inset, plus the shift and the corner swing for this scatter.
+     :none stays on --collage-pad. A stack breakpoint drops back to that inset. */
+  padding: calc(var(--collage-pad) + (var(--collage-offset-y) + var(--collage-bleed)) * var(--fp-collage-scatter));
+  align-items: start;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.fp-collage--subtle {
+  --fp-collage-scatter: 1;
+}
+
+.fp-collage--loose {
+  --fp-collage-scatter: var(--collage-loose);
+}
+
+.fp-collage--none {
+  --fp-collage-scatter: 0;
+}
+
+/* Brick: rows such as 5 then 4. A shorter row is centered on twice-as-many
+ * tracks, so it sits between the cards above. Negative row gap is the corner overlap. */
+.fp-collage--brick {
+  grid-template-columns: repeat(var(--fp-collage-tracks, 10), minmax(0, 1fr));
+  column-gap: var(--collage-gap);
+  row-gap: 0;
+  padding: var(--collage-margin);
+}
+
+.fp-collage--brick .fp-collage__item {
+  grid-column: var(--fp-collage-column);
+  grid-row: var(--fp-collage-row);
+  /* row-gap cannot be negative, so each later row pulls up by --collage-overlap. */
+  margin-top: calc((var(--fp-collage-row, 1) - 1) * var(--collage-overlap));
+  aspect-ratio: calc(var(--collage-card-ratio) * (1 + var(--fp-collage-scale) * var(--collage-card-sway)));
+}
+
+.fp-collage--brick .fp-collage__item > .fp-content-enter {
+  height: 100%;
+}
+
+.fp-collage__item {
+  --fp-collage-x: calc(var(--fp-collage-shift-x) * var(--collage-offset-x) * var(--fp-collage-scatter));
+  --fp-collage-y: calc(var(--fp-collage-shift-y) * var(--collage-offset-y) * var(--fp-collage-scatter));
+  --fp-collage-angle: calc(var(--fp-collage-tilt) * var(--collage-rotate) * var(--fp-collage-scatter));
+  --fp-collage-row-shift: 0px;
+  min-width: 0;
+  transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  transform-origin: center center;
+  z-index: var(--fp-collage-z);
+}
+
+.fp-collage--motion .fp-collage__item {
+  transition: transform var(--duration-slow) var(--easing-enter);
+}
+
+.fp-collage--motion .fp-collage__item > .fp-content-enter {
+  transition-delay: calc(min(var(--fp-collage-index), 8) * var(--collage-stagger));
+}
+
+.fp-collage--motion .fp-collage__item:hover,
+.fp-collage--motion .fp-collage__item:focus-within {
+  transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), calc(var(--fp-collage-y) + var(--collage-lift))) rotate(var(--fp-collage-angle));
+  z-index: calc(var(--fp-collage-z) + 20);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-collage--motion .fp-collage__item,
+  .fp-collage--motion .fp-collage__item:hover,
+  .fp-collage--motion .fp-collage__item:focus-within {
+    transition: none;
+  }
+
+  .fp-collage--motion .fp-collage__item:hover,
+  .fp-collage--motion .fp-collage__item:focus-within {
+    transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  }
+
+  .fp-collage--motion .fp-collage__item > .fp-content-enter {
+    transition-delay: 0s;
+  }
+}
+
+@media (width < 40rem) {
+  .fp-collage--stack-sm {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
+  }
+
+  .fp-collage--brick.fp-collage--stack-sm {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-sm .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
+  .fp-collage--stack-sm .fp-collage__item,
+  .fp-collage--stack-sm .fp-collage__item:hover,
+  .fp-collage--stack-sm .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+@media (width < 48rem) {
+  .fp-collage--stack-md {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
+  }
+
+  .fp-collage--brick.fp-collage--stack-md {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-md .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
+  .fp-collage--stack-md .fp-collage__item,
+  .fp-collage--stack-md .fp-collage__item:hover,
+  .fp-collage--stack-md .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+@media (width < 64rem) {
+  .fp-collage--stack-lg {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
+  }
+
+  .fp-collage--brick.fp-collage--stack-lg {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-lg .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
+  .fp-collage--stack-lg .fp-collage__item,
+  .fp-collage--stack-lg .fp-collage__item:hover,
+  .fp-collage--stack-lg .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+@media (width < 80rem) {
+  .fp-collage--stack-xl {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
+  }
+
+  .fp-collage--brick.fp-collage--stack-xl {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-xl .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
+  .fp-collage--stack-xl .fp-collage__item,
+  .fp-collage--stack-xl .fp-collage__item:hover,
+  .fp-collage--stack-xl .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+/* Phone: one overlapping row, about a third of the viewport. Spare items stay
+ * in the markup and are not shown. Side cards may cross the frame. */
+@media (width < 48rem) {
+  .fp-collage--teaser {
+    display: grid;
+    grid-auto-flow: column;
+    /* Narrower than the card, so neighbours overlap instead of sitting in a row. */
+    grid-auto-columns: calc(var(--collage-item-size-sm) * 0.62);
+    grid-template-columns: none;
+    grid-template-rows: 33dvh;
+    justify-content: unsafe center;
+    align-items: center;
+    height: 33dvh;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .fp-collage--teaser .fp-collage__item {
+    grid-column: auto;
+    grid-row: 1;
+    width: var(--collage-item-size-sm);
+    min-width: var(--collage-item-size-sm);
+    margin-top: 0;
+    margin-inline: 0;
+    aspect-ratio: calc(var(--collage-card-ratio) * (1 + var(--fp-collage-scale) * var(--collage-card-sway)));
+  }
+
+  .fp-collage--teaser .fp-collage__item > .fp-content-enter {
+    height: 100%;
+  }
+
+  .fp-collage--teaser .fp-collage__item--spare {
+    display: none;
+  }
+}
+
+/* Tablet: rows of three, capped so a narrow column does not shrink them to stamps.
+ * The second row of each pair shifts sideways so the corners still cross. */
+@media (width >= 48rem) and (width < 64rem) {
+  .fp-collage--teaser.fp-collage--brick {
+    grid-template-columns: repeat(3, minmax(0, var(--collage-item-size-md)));
+    justify-content: unsafe center;
+    width: 100%;
+    padding: var(--collage-margin);
+  }
+
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item {
+    grid-column: auto;
+    grid-row: auto;
+    width: auto;
+    min-width: 0;
+    margin-top: 0;
+    margin-inline: 0;
+  }
+
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(n + 4) {
+    margin-top: var(--collage-overlap);
+  }
+
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 4),
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 5),
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 6) {
+    --fp-collage-row-shift: 14%;
+  }
+}
+
 /* Sliding active indicator (Tabs + Button::Pill, opt-in `indicator: :slide`) */
 .fp-slide-indicator-list {
   position: relative;

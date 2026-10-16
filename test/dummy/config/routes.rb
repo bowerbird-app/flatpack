@@ -205,6 +205,7 @@ Rails.application.routes.draw do
   get "demo/grid/two_columns", to: "pages#grid_two_columns"
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
   get "demo/masonry", to: "pages#masonry"
+  get "demo/collage", to: "pages#collage"
   get "demo/overlay", to: "pages#overlay"
   get "demo/video_preview", to: "pages#video_preview"
   get "demo/fab", to: "pages#fab"

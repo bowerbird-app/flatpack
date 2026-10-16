@@ -816,6 +816,21 @@
   --empty-state-measure-md: var(--empty-state-measure-md);
   --empty-state-measure-lg: var(--empty-state-measure-lg);
   --empty-state-measure-full: var(--empty-state-measure-full);
+  --collage-rotate: var(--collage-rotate);
+  --collage-offset-x: var(--collage-offset-x);
+  --collage-offset-y: var(--collage-offset-y);
+  --collage-lift: var(--collage-lift);
+  --collage-stagger: var(--collage-stagger);
+  --collage-loose: var(--collage-loose);
+  --collage-gap: var(--collage-gap);
+  --collage-pad: var(--collage-pad);
+  --collage-bleed: var(--collage-bleed);
+  --collage-margin: var(--collage-margin);
+  --collage-overlap: var(--collage-overlap);
+  --collage-card-ratio: var(--collage-card-ratio);
+  --collage-card-sway: var(--collage-card-sway);
+  --collage-item-size-sm: var(--collage-item-size-sm);
+  --collage-item-size-md: var(--collage-item-size-md);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1061,6 +1076,29 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --empty-state-measure-md: 28rem;
   --empty-state-measure-lg: 36rem;
   --empty-state-measure-full: none;
+  /* Collage scatter. Themes override these. Ranges scale a -1..1 unit on each item.
+   * Loose multiplies that unit by --collage-loose. Lift and the offsets follow --space-*.
+   */
+  --collage-rotate: 5deg;
+  --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-lift: calc(var(--collage-offset-y) * -1);
+  --collage-stagger: 40ms;
+  --collage-loose: 2;
+  --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  /* Extra inset, per scatter unit, so a rotated corner stays inside the border box. */
+  --collage-bleed: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  /* Brick frame. 2rem is 32px. Overlap is the vertical corner cross. Ratio is 260/280. */
+  --collage-margin: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  /* Negative on purpose. round() inside another calc() does not resolve, so this stays a plain length. */
+  --collage-overlap: calc(var(--space-5) * var(--density) * -1);
+  --collage-card-ratio: 0.928;
+  --collage-card-sway: 0.1;
+  /* Phone row width. Height follows the ratio, inside a 33dvh frame. */
+  --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
+  /* Tablet brick cap. Three across, then the track shrinks if the column is narrower. */
+  --collage-item-size-md: 11rem;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

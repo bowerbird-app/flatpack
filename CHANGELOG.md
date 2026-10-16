@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.247] - 2026-10-16
+
+### Added
+- `FlatPack::Collage::Component` scatters any host content. `columns:` is an even grid, 1–6 (default 3). `rows:` is a brick, such as `[5, 4]`: five across, then four centered between them. `scatter:` is `:subtle` (default), `:loose`, or `:none`.
+- `collage.item(rotate:, offset:, z:)` takes any markup. Omit `rotate` and `offset` and the tilt comes from the item index, so a re-render stays put. Pass either one to pin that card.
+- Below `md`, the collage is one overlapping row, `33dvh` tall. `mobile_items:` (default `4`) is how many items stay in that row. Later items stay in source order and are not displayed. The outer cards may cross the side edges. `--collage-item-size-sm` is the card width.
+- From `md` up to `lg`, a brick is rows of three, capped by `--collage-item-size-md` (`11rem`). The second row shifts sideways. From `lg` up, `rows: [5, 4]` is five across and four centered between them.
+- `stack_below:` (`:sm`, `:md`, `:lg`, `:xl`) is opt-in. Omit it. Pass it when that width should be one column with the tilt off. DOM order is the reading order. Nothing is absolutely positioned.
+- `--collage-rotate` is `5deg`. `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` are the other ranges. `--collage-loose` scales the subtle unit. A brick insets by `--collage-margin` (about 32px), overlaps rows by `--collage-overlap`, and sizes each slot with `--collage-card-ratio` and `--collage-card-sway`. An even grid still pads with `--collage-pad` plus the offset and `--collage-bleed`. Below `stack_below` the overlap, the tilt, and the extra inset drop off. The kit does not style the item.
+- `motion: true` (default) staggers `.fp-content-enter` and lifts on hover with `--duration-slow` / `--easing-enter`. `motion: false` and `prefers-reduced-motion: reduce` skip both.
+- Demo: `/demo/collage`.
+- Bumped the gem version to `0.1.247`.
+
+### Upgrade notes
+- New component. There is no alias to retire.
+- `stack_below` defaults to omitted. A phone shows the short row, not a list. Pass `stack_below: :md` when that width should stack.
+- Tune a theme with the `--collage-*` tokens. Do not restyle `.fp-collage__item` to change the lean.
+- `scatter: :none` is the square grid. A theme that sets `--collage-rotate: 0deg` and zero offsets flattens every collage, including `:loose`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.247`.
+
 ## [0.1.246] - 2026-10-15
 
 ### Added

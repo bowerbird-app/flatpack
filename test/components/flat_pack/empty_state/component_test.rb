@@ -88,7 +88,8 @@ module FlatPack
           component.item { "Connect" }
         end
 
-        assert_selector "ul.flex.flex-col.items-center > li", count: 2
+        assert_selector "ul.flex.flex-col.w-full > li", count: 2
+        refute_selector "ul.items-center"
         assert_text "Upload"
         assert_text "Connect"
         refute_selector "ul.flex-wrap"

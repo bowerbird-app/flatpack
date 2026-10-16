@@ -17,6 +17,21 @@ module FlatPack
       --flatpack-picker-items-height
       --fp-masonry-gap
       --fp-masonry-row
+      --fp-collage-columns
+      --fp-collage-scatter
+      --fp-collage-shift-x
+      --fp-collage-shift-y
+      --fp-collage-tilt
+      --fp-collage-x
+      --fp-collage-y
+      --fp-collage-angle
+      --fp-collage-index
+      --fp-collage-z
+      --fp-collage-scale
+      --fp-collage-column
+      --fp-collage-row
+      --fp-collage-tracks
+      --fp-collage-row-shift
       --fp-trash-button-size
       --fp-collection-min-item-width
       --fp-fab-offset
