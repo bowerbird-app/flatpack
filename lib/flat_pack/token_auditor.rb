@@ -38,6 +38,7 @@ module FlatPack
       --fp-collage-center-y
       --fp-collage-count
       --reveal-index
+      --fp-number-duration
       --fp-collage-mobile
       --fp-collage-from-x
       --fp-collage-from-y

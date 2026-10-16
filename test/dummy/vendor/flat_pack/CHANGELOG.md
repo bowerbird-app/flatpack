@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.249] - 2026-10-16
+## [0.1.251] - 2026-10-16
 
 ### Added
 - Motion tokens: `--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`, `--motion-ease-out`, `--motion-ease-in-out`, `--motion-ease-spring`, `--motion-distance-sm`, `--motion-distance-md`, `--motion-distance-lg`, and `--reveal-stagger`. A theme tunes reveals, the kit enter, and the collage entrance in one place.
@@ -24,22 +24,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::Number::Component` counts, rolls, or fades a number the first time it enters the view. The finished formatted value is in the page, so a screen reader and a browser without JavaScript get the final number. `value:` is the amount. `format:` is `:number`, `:currency`, `:percent`, or `:compact`. `animate:` is `:count` (default), `:roll`, `:fade`, or `:none`. `duration:` is `:fast`, `:base`, or `:slow`. A later value change animates from the number on screen to the new one. Tabular figures keep the width steady.
 - `observeOnce` in `reduced_motion.js` is the shared in-view trigger for reveals and numbers.
 - Demo: `/demo/motion`.
-- Bumped the gem version to `0.1.249`.
+- Bumped the gem version to `0.1.251`.
 
 ### Changed
 - `.fp-content-enter` and `.fp-empty-state` use `--motion-duration-slow`, `--motion-ease-out`, and `--motion-distance-sm`.
 - `--collage-duration`, `--collage-easing`, `--collage-rise`, and `--collage-stagger` inherit those tokens. A collage token set on its own still wins.
+- `flat-pack--svg-motion` named durations `:fast`, `:base`, and `:slow` follow `--motion-duration-*`. Easing `enter` follows `--motion-ease-out`. `standard` and `exit` stay on `--easing-standard` and `--easing-exit`. A millisecond duration is unchanged.
 - Under `prefers-reduced-motion: reduce`, the motion durations and `--reveal-stagger` are `0ms`.
 
 ### Upgrade notes
 - New tokens and three components. Nothing was renamed.
 - `reveal: :words` and `reveal: :lines` belong on `FlatPack::Reveal::Component`. On any other component they raise `ArgumentError`.
 - `parallax: true` raises unless the reveal is `:wipe` or `:zoom`.
-- Overriding `--motion-duration-slow` or `--motion-ease-out` also retunes `.fp-content-enter` and the collage entrance. Set the `--collage-*` token when one collage should differ.
+- Overriding `--motion-duration-slow` or `--motion-ease-out` also retunes `.fp-content-enter`, the collage entrance, and svg-motion tracks that use a named duration or easing `enter`. Set the `--collage-*` token when one collage should differ. Easing `standard` and `exit` stay on `--easing-standard` and `--easing-exit`.
 - Do not add `stream:` to `FlatPack::Chat::Message::Component`. Render `FlatPack::Text::Stream::Component` in the message.
 - `FlatPack::Number::Component` is new. Billing prices stay on `price_text` and `amount`. A counter takes a numeric `value:`.
 - Percent is a ratio. `0.18` formats as 18%.
 - Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.251`.
+
+## [0.1.250] - 2026-10-16
+
+### Changed
+- Radius is a theme dimension, on the same bare `:root` as `--space-*`.
+- The moderate shape scale is `--radius-xs` (`0.125rem`), `--radius-sm` (`0.25rem`), `--radius-md` (`0.5rem`), `--radius-lg` (`0.75rem`), `--radius-xl` (`1.25rem`), and `--radius-full` (`9999px`).
+- Component radii alias a step: `--button-border-radius`, `--form-control-radius`, `--chip-border-radius`, `--badge-radius`, `--tabs-pill-corner-radius`, `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius`, `--alert-border-radius`, `--toast-border-radius`, and `--chat-composer-radius`.
+- `[data-theme="rounded"]` makes buttons, inputs, badges, tabs, and the chat composer pills, and steps cards, menus, popovers, modals, alerts, and toasts up to `--radius-xl`. Chips stay `--radius-md`. `--sidebar-item-radius` and `--dropdown-item-radius` are `--radius-md` there too, so nav rows and menu highlights stay a soft corner. Dark and ocean keep the moderate shape.
+- Circles stay fixed: avatar circle, status dots, typing dots, stepper and timeline markers, switch, radio, spinners, carousel dots, and the FAB.
+- Bumped the gem version to `0.1.250`.
+
+### Upgrade notes
+- The old default (`--radius-md: 1rem`, `--radius-sm: 0.75rem`, `--radius-lg: 1.5rem`, `--radius-xl: 2rem`) is gone. There is no alias.
+- Hosts that re-set kit radii on unlayered `:root` should copy the new six steps. Tailwind's layered `--radius-md: 0.375rem` still loses to that unlayered block.
+- Rebuild host Tailwind so these classes are generated: `rounded-[var(--form-control-radius)]`, `rounded-[var(--badge-radius)]`, `rounded-[var(--card-radius)]`, `rounded-[var(--menu-radius)]`, `rounded-[var(--modal-radius)]`, `rounded-[var(--chat-composer-radius)]`, `rounded-[var(--button-border-radius)]`, `rounded-[var(--chip-border-radius)]`, `rounded-[var(--sidebar-item-radius)]`, `rounded-[var(--dropdown-item-radius)]`, `rounded-[var(--media-radius)]`, `rounded-[var(--radius-full)]`, `rounded-[var(--radius-xs)]`, `rounded-l-[var(--button-border-radius)]`, `rounded-r-[var(--button-border-radius)]`, `rounded-r-[var(--modal-radius)]`, `rounded-l-[var(--modal-radius)]`, `rounded-t-[var(--modal-radius)]`, and `[border-radius:var(--tabs-pill-corner-radius)]`.
+- Set `data-theme="rounded"` for pill buttons and inputs. Chips, sidebar rows, and menu item highlights stay 8px (`--radius-md`). Without the theme, controls use the 8px step and sidebar rows use 12px.
+- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.250`.
+
+## [0.1.249] - 2026-10-16
+
+### Added
+- `FlatPack::AnimatedCharacter::Component` draws a character from a Ruby hash and plays named states with the Web Animations API.
+- A definition lists nested parts (`circle`, `ellipse`, `rect`, `path`, `line`, `polyline`) and tracks for `translateX`, `translateY`, `scaleX`, `scaleY`, `rotate`, `opacity`, and `strokeDashoffset`.
+- `FlatPack::AnimatedCharacter.bot` and `FlatPack::AnimatedCharacter.pip` are ready-made characters. Bot states are `idle`, `blink`, `happy`, and `thinking`. Blink scales the eye group on Y.
+- `FlatPack::Shared::IconComponent` takes `animate:` (`:wiggle`, `:pop`, `:draw`, `:spin`, `:nudge`) and `trigger:` (`:hover`, `:click`, `:mount`).
+- The Stimulus controller `flat-pack--svg-motion` exposes `setState`, `play`, `stop`, `reset`, `pause`, and `resume`. `prefers-reduced-motion: reduce` keeps the first frame.
+- Demo: `/demo/animated_character`.
+- Bumped the gem version to `0.1.249`.
+
+### Upgrade notes
+- New component, and two optional keyword arguments on `IconComponent`. Nothing was renamed.
+- `definition` is a Hash. A raw SVG string, an unknown shape, or an attribute outside the allowlist raises `ArgumentError`.
+- `state` must be a key in that definition. `size` is `:sm`, `:md`, `:lg`, or `:xl`.
+- `animate` must be `:wiggle`, `:pop`, `:draw`, `:spin`, or `:nudge`. `trigger` must be `:hover`, `:click`, or `:mount`.
+- Pass `label:` when the character should have an accessible name. Without it, the SVG is `aria-hidden`.
+- Durations `:fast`, `:base`, and `:slow` follow `--duration-fast`, `--duration-base`, and `--duration-slow`. Easing `standard`, `enter`, and `exit` follow the matching `--easing-*` tokens.
+- Reload kit CSS and JavaScript. There is no path morphing in this version.
 - Redeploy so `meta.gem_version` shows `0.1.249`.
 
 ## [0.1.248] - 2026-10-16
