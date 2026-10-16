@@ -1,0 +1,22 @@
+<%# locals: (id: nil, entrance: :rise, idle: :none, hover: :lift, anchor: nil) %>
+<%= render FlatPack::Collage::Component.new(
+  rows: [4],
+  scatter: :subtle,
+  entrance: entrance,
+  idle: idle,
+  hover: hover,
+  id: id
+) do |collage| %>
+  <% %w[One Two Three Four].each do |label| %>
+    <% collage.item do %>
+      <%= render FlatPack::Card::Component.new(
+        shadow: :sm,
+        clickable: anchor.present?,
+        href: anchor,
+        class: "flex h-full items-center justify-center"
+      ) do %>
+        <%= label %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
