@@ -1855,6 +1855,9 @@
   .rounded-\[var\(--comments-inline-input-radius\)\] {
     border-radius: var(--comments-inline-input-radius);
   }
+  .rounded-\[var\(--dropdown-item-radius\)\] {
+    border-radius: var(--dropdown-item-radius);
+  }
   .rounded-\[var\(--font-swatch-radius\)\] {
     border-radius: var(--font-swatch-radius);
   }
@@ -1887,6 +1890,9 @@
   }
   .rounded-\[var\(--radius-xl\)\] {
     border-radius: var(--radius-xl);
+  }
+  .rounded-\[var\(--sidebar-item-radius\)\] {
+    border-radius: var(--sidebar-item-radius);
   }
   .rounded-\[var\(--tabs-pill-corner-radius\)\] {
     border-radius: var(--tabs-pill-corner-radius);

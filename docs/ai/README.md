@@ -38,7 +38,7 @@ The running inventory is `FlatPack::ComponentCatalog` (HTTP `GET /recording_stud
 
 ## Shape
 
-Radius is a theme dimension, same pattern as `--space-*`. The moderate scale (`--radius-xs` through `--radius-xl`, plus `--radius-full`) lives on bare `:root`. Component tokens such as `--button-border-radius`, `--form-control-radius`, `--badge-radius`, `--card-radius`, `--menu-radius`, and `--modal-radius` alias a step. `[data-theme="rounded"]` turns buttons, inputs, chips, badges, tabs, and the chat composer into pills and steps cards, menus, and modals up to `--radius-xl`. Dark and ocean inherit the moderate shape. See `docs/theming.md`.
+Radius is a theme dimension, same pattern as `--space-*`. The moderate scale (`--radius-xs` through `--radius-xl`, plus `--radius-full`) lives on bare `:root`. Component tokens such as `--button-border-radius`, `--form-control-radius`, `--badge-radius`, `--card-radius`, `--menu-radius`, and `--modal-radius` alias a step. `[data-theme="rounded"]` turns buttons, inputs, badges, tabs, and the chat composer into pills. Chips, sidebar item highlights, and menu item highlights stay `--radius-md`. Cards, menus, and modals step up to `--radius-xl`. Dark and ocean inherit the moderate shape. See `docs/theming.md`.
 
 ## Notes
 

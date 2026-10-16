@@ -86,7 +86,7 @@ module FlatPack
             "text-sm",
             "font-medium",
             "transition-colors",
-            "rounded-[var(--radius-lg)]",
+            "rounded-[var(--sidebar-item-radius)]",
             "mx-[var(--sidebar-item-inset)]",
             state_classes
           )

@@ -19,15 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Radius is a theme dimension, on the same bare `:root` as `--space-*`.
 - The moderate shape scale is `--radius-xs` (`0.125rem`), `--radius-sm` (`0.25rem`), `--radius-md` (`0.5rem`), `--radius-lg` (`0.75rem`), `--radius-xl` (`1.25rem`), and `--radius-full` (`9999px`).
 - Component radii alias a step: `--button-border-radius`, `--form-control-radius`, `--chip-border-radius`, `--badge-radius`, `--tabs-pill-corner-radius`, `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius`, `--alert-border-radius`, `--toast-border-radius`, and `--chat-composer-radius`.
-- `[data-theme="rounded"]` makes buttons, inputs, chips, badges, tabs, and the chat composer pills, and steps cards, menus, popovers, modals, alerts, and toasts up to `--radius-xl`. Dark and ocean keep the moderate shape.
+- `[data-theme="rounded"]` makes buttons, inputs, badges, tabs, and the chat composer pills, and steps cards, menus, popovers, modals, alerts, and toasts up to `--radius-xl`. Chips stay `--radius-md`. `--sidebar-item-radius` and `--dropdown-item-radius` are `--radius-md` there too, so nav rows and menu highlights stay a soft corner. Dark and ocean keep the moderate shape.
 - Circles stay fixed: avatar circle, status dots, typing dots, stepper and timeline markers, switch, radio, spinners, carousel dots, and the FAB.
 - Bumped the gem version to `0.1.250`.
 
 ### Upgrade notes
 - The old default (`--radius-md: 1rem`, `--radius-sm: 0.75rem`, `--radius-lg: 1.5rem`, `--radius-xl: 2rem`) is gone. There is no alias.
 - Hosts that re-set kit radii on unlayered `:root` should copy the new six steps. Tailwind's layered `--radius-md: 0.375rem` still loses to that unlayered block.
-- Rebuild host Tailwind so these classes are generated: `rounded-[var(--form-control-radius)]`, `rounded-[var(--badge-radius)]`, `rounded-[var(--card-radius)]`, `rounded-[var(--menu-radius)]`, `rounded-[var(--modal-radius)]`, `rounded-[var(--chat-composer-radius)]`, `rounded-[var(--button-border-radius)]`, `rounded-[var(--chip-border-radius)]`, `rounded-[var(--media-radius)]`, `rounded-[var(--radius-full)]`, `rounded-[var(--radius-xs)]`, `rounded-l-[var(--button-border-radius)]`, `rounded-r-[var(--button-border-radius)]`, `rounded-r-[var(--modal-radius)]`, `rounded-l-[var(--modal-radius)]`, `rounded-t-[var(--modal-radius)]`, and `[border-radius:var(--tabs-pill-corner-radius)]`.
-- Set `data-theme="rounded"` for pill buttons and inputs. Without it, controls use the 8px step.
+- Rebuild host Tailwind so these classes are generated: `rounded-[var(--form-control-radius)]`, `rounded-[var(--badge-radius)]`, `rounded-[var(--card-radius)]`, `rounded-[var(--menu-radius)]`, `rounded-[var(--modal-radius)]`, `rounded-[var(--chat-composer-radius)]`, `rounded-[var(--button-border-radius)]`, `rounded-[var(--chip-border-radius)]`, `rounded-[var(--sidebar-item-radius)]`, `rounded-[var(--dropdown-item-radius)]`, `rounded-[var(--media-radius)]`, `rounded-[var(--radius-full)]`, `rounded-[var(--radius-xs)]`, `rounded-l-[var(--button-border-radius)]`, `rounded-r-[var(--button-border-radius)]`, `rounded-r-[var(--modal-radius)]`, `rounded-l-[var(--modal-radius)]`, `rounded-t-[var(--modal-radius)]`, and `[border-radius:var(--tabs-pill-corner-radius)]`.
+- Set `data-theme="rounded"` for pill buttons and inputs. Chips, sidebar rows, and menu item highlights stay 8px (`--radius-md`). Without the theme, controls use the 8px step and sidebar rows use 12px.
 - Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.250`.
 
 ## [0.1.249] - 2026-10-16

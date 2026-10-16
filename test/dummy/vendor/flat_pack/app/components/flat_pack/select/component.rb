@@ -456,7 +456,7 @@ module FlatPack
           "flex items-center gap-[var(--dropdown-item-gap)]",
           "px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)]",
           "text-sm",
-          "rounded-[var(--radius-sm)]",
+          "rounded-[var(--dropdown-item-radius)]",
           "transition-colors duration-base"
         ]
 

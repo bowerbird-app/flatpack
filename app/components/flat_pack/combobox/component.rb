@@ -172,7 +172,7 @@ module FlatPack
       # "bg-[var(--list-item-hover-background-color)]" "bg-[var(--list-item-active-background-color)]"
       def option_classes(selected)
         [
-          "cursor-pointer px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
+          "cursor-pointer rounded-[var(--dropdown-item-radius)] px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
           "text-[var(--surface-content-color)]",
           "aria-selected:bg-[var(--list-item-active-background-color)]",
           selected ? "bg-[var(--list-item-active-background-color)]" : "hover:bg-[var(--list-item-hover-background-color)]"

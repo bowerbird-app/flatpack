@@ -156,7 +156,7 @@ export default class extends Controller {
     listItem.className = "border-b border-[var(--search-result-divider-color)] last:border-b-0"
 
     const link = document.createElement("a")
-    link.className = "block px-[var(--search-result-padding-x)] py-[var(--search-result-padding-y)] hover:bg-[var(--search-result-hover-background-color)] focus:outline-none focus:bg-[var(--search-result-hover-background-color)]"
+    link.className = "block rounded-[var(--dropdown-item-radius)] px-[var(--search-result-padding-x)] py-[var(--search-result-padding-y)] hover:bg-[var(--search-result-hover-background-color)] focus:outline-none focus:bg-[var(--search-result-hover-background-color)]"
     link.href = result.url || "#"
 
     const title = document.createElement("div")

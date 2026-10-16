@@ -169,7 +169,7 @@ module FlatPack
       # "hover:bg-[var(--list-item-hover-background-color)]" "aria-selected:bg-[var(--list-item-active-background-color)]"
       def item_classes
         [
-          "flex items-center gap-[var(--command-palette-item-gap)] rounded-[var(--radius-md)] px-[var(--command-palette-item-padding-x)] py-[var(--command-palette-item-padding-y)] text-sm",
+          "flex items-center gap-[var(--command-palette-item-gap)] rounded-[var(--dropdown-item-radius)] px-[var(--command-palette-item-padding-x)] py-[var(--command-palette-item-padding-y)] text-sm",
           "text-[var(--surface-content-color)]",
           "hover:bg-[var(--list-item-hover-background-color)]",
           "aria-selected:bg-[var(--list-item-active-background-color)]"

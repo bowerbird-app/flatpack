@@ -64,7 +64,7 @@ module FlatPack
       dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
       ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
 
-      %w[--radius- --button-border-radius --form-control-radius --card-radius --menu-radius --modal-radius --badge-radius --chip-border-radius].each do |token|
+      %w[--radius- --button-border-radius --form-control-radius --card-radius --menu-radius --modal-radius --badge-radius --chip-border-radius --sidebar-item-radius --dropdown-item-radius].each do |token|
         refute_includes dark_block, token
         refute_includes ocean_block, token
       end

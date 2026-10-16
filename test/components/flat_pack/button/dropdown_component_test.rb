@@ -208,6 +208,7 @@ module FlatPack
 
         assert_selector "a[href='/edit']", text: "Edit"
         assert_selector "a[href='/delete']", text: "Delete"
+        assert_includes page.native.to_html, "rounded-[var(--dropdown-item-radius)]"
       end
 
       def test_renders_dropdown_menu_items_and_divider

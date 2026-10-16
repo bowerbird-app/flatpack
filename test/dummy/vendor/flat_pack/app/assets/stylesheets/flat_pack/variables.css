@@ -17,12 +17,14 @@
  *   --search-menu-padding, --search-result-padding-y) and the component radii rounded changes
  *   (--button-border-radius, --form-control-radius, --chip-border-radius, --badge-radius,
  *   --tabs-pill-corner-radius, --card-radius, --menu-radius, --popover-radius, --modal-radius,
- *   --alert-border-radius, --toast-border-radius, --chat-composer-radius) are also bare :root,
+ *   --alert-border-radius, --toast-border-radius, --chat-composer-radius,
+ *   --sidebar-item-radius, --dropdown-item-radius) are also bare :root,
  *   then overridden on [data-theme="rounded"]. Restating the moderate value on [data-theme]
  *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
  * [data-theme="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
  * [data-theme="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
- *   It does not restate colour. Buttons, inputs, chips, badges, and tabs become pills.
+ *   It does not restate colour. Buttons, inputs, badges, and tabs become pills.
+ *   Chips, sidebar item highlights, and menu item highlights stay --radius-md.
  *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
  * Do not assign `--token: var(--token)` on rounded. html[data-theme="rounded"] is :root, so that blanks the token.
  */
@@ -664,6 +666,8 @@
   --table-sort-link-hover-color: var(--table-sort-link-hover-color);
   --chip-remove-hover-background-color: var(--chip-remove-hover-background-color);
   --chip-border-radius: var(--chip-border-radius);
+  --sidebar-item-radius: var(--sidebar-item-radius);
+  --dropdown-item-radius: var(--dropdown-item-radius);
   --chip-group-gap: var(--chip-group-gap);
   --chip-padding-x-sm: var(--chip-padding-x-sm);
   --chip-padding-y-sm: var(--chip-padding-y-sm);
@@ -1762,6 +1766,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-border-radius: var(--radius-md);
   --form-control-radius: var(--radius-md);
   --chip-border-radius: var(--radius-md);
+  --sidebar-item-radius: var(--radius-lg);
+  --dropdown-item-radius: var(--radius-sm);
   --badge-radius: var(--radius-md);
   --tabs-pill-corner-radius: var(--radius-md);
   --card-radius: var(--radius-lg);
@@ -1879,7 +1885,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-result-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --button-border-radius: var(--radius-full);
   --form-control-radius: var(--radius-full);
-  --chip-border-radius: var(--radius-full);
+  --chip-border-radius: var(--radius-md);
+  --sidebar-item-radius: var(--radius-md);
+  --dropdown-item-radius: var(--radius-md);
   --badge-radius: var(--radius-full);
   --tabs-pill-corner-radius: var(--radius-full);
   --chat-composer-radius: var(--radius-full);

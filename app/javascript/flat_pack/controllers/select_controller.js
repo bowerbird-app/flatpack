@@ -706,12 +706,12 @@ export default class extends Controller {
     const selected = this.selectedValues.has(item.value)
     const disabled = item.disabled === true
     const optionClasses = disabled
-      ? "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
+      ? "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
       : selected
       ? (this.multipleValue
-        ? "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
-        : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] cursor-pointer")
-      : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        ? "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] cursor-pointer")
+      : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
     const iconAttr = icon ? ` data-icon="${this.escapeHtml(icon)}"` : ""
 
     return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}"${iconAttr} data-disabled="${disabled}" aria-selected="${selected}">${this.iconMarkup(icon)}<span class="min-w-0 truncate">${label}</span></div>`

@@ -107,7 +107,7 @@ module FlatPack
             "px-[var(--dropdown-item-padding-x)] py-[var(--dropdown-item-padding-y)]",
             "text-sm",
             "text-left",
-            "rounded-[var(--radius-sm)]",
+            "rounded-[var(--dropdown-item-radius)]",
             "transition-colors duration-base",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           ]
