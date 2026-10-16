@@ -1,23 +1,28 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Collage",
-  subtitle: "Cards lean a little. On a phone they line up."
+  subtitle: "Five across, four between them. On a phone they line up."
 ) %>
 
-<%= render "pages/component_method_variables_table", components: [:collage, :card, :badge] %>
+<%= render "pages/component_method_variables_table", components: [:collage, :badge, :empty_state] %>
 
 <%
   erb_output_open = "<" + "%="
   erb_tag_close = "%" + ">"
+  shots = [
+    "/images/hero-stool.jpg",
+    "/images/hero-packaging.jpg",
+    "/images/hero-subscription-box.webp"
+  ]
   collage_photos = [
-    {src: "/masonry/harbour.svg", alt: "Harbour at dusk", badge: "Harbour", title: "Blue hour", date: "12 Mar"},
-    {src: "/masonry/cliff.svg", alt: "Sea cliff in late light", badge: "Cliff", title: "The edge", date: "3 Apr"},
-    {src: "/masonry/studio.svg", alt: "Studio window", badge: "Studio", title: "North light", date: "18 Apr"},
-    {src: "/masonry/orchard.svg", alt: "Orchard path", badge: "Orchard", title: "Late fruit", date: "2 May"},
-    {src: "/masonry/jetty.svg", alt: "Jetty at blue hour", badge: "Jetty", title: "Low tide", date: "9 May"},
-    {src: "/masonry/kiln.svg", alt: "Kiln yard", badge: "Kiln", title: "Warm brick", date: "21 May"},
-    {src: "/masonry/lantern.svg", alt: "Lantern on a porch", badge: "Night", title: "Porch", date: "6 Jun"},
-    {src: "/masonry/quay.svg", alt: "Quay stones", badge: "Quay", title: "Stone", date: "14 Jun"},
-    {src: "/masonry/meadow.svg", alt: "Meadow edge", badge: "Field", title: "After rain", date: "30 Jun"}
+    {src: shots[0], alt: "Stool wrapped for delivery", badge: "Press kit", title: "The stool", focus: "center"},
+    {src: shots[1], alt: "Hands closing a mailer box", badge: "Lookbook", title: "Mailer", focus: "center top"},
+    {src: shots[2], alt: "Open subscription box on a table", badge: "Campaign", title: "Unboxed", focus: "center"},
+    {src: shots[0], alt: "Wrapped stool, closer", badge: "Press kit", title: "Wrapped", focus: "center top"},
+    {src: shots[1], alt: "Mailer box on a desk", badge: "Still", title: "On the desk", focus: "center"},
+    {src: shots[2], alt: "Box interior with a card", badge: "Press kit", title: "Inside", focus: "left center"},
+    {src: shots[0], alt: "Stool from the side", badge: "Lookbook", title: "Side light", focus: "left center"},
+    {src: shots[1], alt: "Closing the box", badge: "Campaign", title: "Sealed", focus: "right center"},
+    {src: shots[2], alt: "Subscription box from above", badge: "Press kit", title: "From above", focus: "center bottom"}
   ]
 %>
 
@@ -25,10 +30,10 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "The wall",
     anchor_link: true,
-    subtitle: "Nine photos, then a place to add one."
+    subtitle: "Nine photos in two rows, then a place to start."
   ) %>
-  <div id="collage-wall" class="rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]">
-    <%= render FlatPack::Collage::Component.new(columns: 3, scatter: :subtle, stack_below: :md) do |collage| %>
+  <div id="collage-wall">
+    <%= render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| %>
       <% collage_photos.each do |photo| %>
         <% collage.item do %>
           <%= render "pages/collage_card", photo: photo %>
@@ -36,30 +41,37 @@
       <% end %>
     <% end %>
     <%= render FlatPack::EmptyState::Component.new(
-      title: "No stories yet",
-      description: "Add a photo and it joins the scatter.",
-      icon: :photo,
-      width: :md
+      title: "Your story starts with a press kit",
+      description: "Gather the photos, the facts, and the files in one place.",
+      title_size: :display,
+      layout: :stack,
+      width: :lg
     ) do |empty| %>
       <% empty.item do %>
-        <%= render FlatPack::Button::Component.new(text: "Add a photo", style: :primary) %>
+        <%= render FlatPack::Button::Component.new(text: "Create press kit", style: :primary, class: "w-full") %>
+      <% end %>
+      <% empty.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Add photos", style: :default, class: "w-full") %>
+      <% end %>
+      <% empty.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Invite a writer", style: :default, class: "w-full") %>
       <% end %>
     <% end %>
   </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
-    title: "A card in the scatter (ERB)",
+    title: "A brick of photos (ERB)",
     language: "erb",
     class: "mt-4",
     code: <<~CODE
-      #{erb_output_open} render FlatPack::Collage::Component.new(columns: 3, scatter: :subtle, stack_below: :md) do |collage| #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| #{erb_tag_close}
         #{erb_output_open} collage.item do #{erb_tag_close}
-          #{erb_output_open} render FlatPack::Card::Component.new(shadow: :sm, padding: :none) do |card| #{erb_tag_close}
-            #{erb_output_open} card.media(aspect_ratio: "4/3", padding: :none) do #{erb_tag_close}
-              #{erb_output_open} image_tag "/masonry/harbour.svg", alt: "Harbour at dusk", class: "h-full w-full object-cover" #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Overlay::Component.new(class: "h-full w-full") do |overlay| #{erb_tag_close}
+            #{erb_output_open} overlay.with_media do #{erb_tag_close}
+              #{erb_output_open} image_tag "/images/hero-stool.jpg", alt: "Stool wrapped for delivery", class: "h-full w-full object-cover" #{erb_tag_close}
             #{erb_output_open} end #{erb_tag_close}
-            #{erb_output_open} card.body(padding: :sm) do #{erb_tag_close}
-              #{erb_output_open} render FlatPack::Badge::Component.new(text: "Harbour", size: :xs) #{erb_tag_close}
+            #{erb_output_open} overlay.with_item(placement: :top_left, inset: :sm) do #{erb_tag_close}
+              #{erb_output_open} render FlatPack::Badge::Component.new(text: "Press kit", size: :xs) #{erb_tag_close}
             #{erb_output_open} end #{erb_tag_close}
           #{erb_output_open} end #{erb_tag_close}
         #{erb_output_open} end #{erb_tag_close}
@@ -72,7 +84,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Square, subtle, loose",
     anchor_link: true,
-    subtitle: "The same four cards. Only the scatter changes."
+    subtitle: "The same four cards in a grid. Only the scatter changes."
   ) %>
 
   <div class="mb-8" id="collage-none">
@@ -104,27 +116,6 @@
         <% collage.item do %>
           <%= render "pages/collage_card", photo: photo %>
         <% end %>
-      <% end %>
-    <% end %>
-  </div>
-</section>
-
-<section class="mb-12" id="pinned">
-  <%= render FlatPack::SectionTitle::Component.new(
-    title: "One card steps forward",
-    anchor_link: true,
-    subtitle: "The middle card has its own tilt and sits in front."
-  ) %>
-  <div id="collage-pinned">
-    <%= render FlatPack::Collage::Component.new(columns: 3, scatter: :subtle, stack_below: :md) do |collage| %>
-      <% collage.item do %>
-        <%= render "pages/collage_card", photo: collage_photos[0] %>
-      <% end %>
-      <% collage.item(rotate: -6, offset: ["0.5rem", "-0.75rem"], z: 6) do %>
-        <%= render "pages/collage_card", photo: collage_photos[4] %>
-      <% end %>
-      <% collage.item do %>
-        <%= render "pages/collage_card", photo: collage_photos[2] %>
       <% end %>
     <% end %>
   </div>

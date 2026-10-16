@@ -22,7 +22,7 @@ Use Empty State when a surface is blank and the person can act: create the first
 | `title_size` | Symbol | from `size` | no | Heading step: `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit and `:sm` maps to `:base`, `:md` to `:lg`, `:lg` to `:xl`. Not Hero `title_size`. |
 | `description_size` | Symbol | from `size` | no | Sentence step: `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit and it follows `size` under those same names. Not `title_size`. |
 | `width` | Symbol | `:md` | no | Max width of the text block: `:sm`, `:md`, `:lg`, or `:full` (`--empty-state-measure-*`). `:md` is `28rem`. `:full` is `max-width: none`. A `media` image uses the same cap. The root does not. |
-| `layout` | Symbol | `:wrap` | no | Action arrangement: `:wrap` (wrapping row) or `:stack` (one under the next). Renders `FlatPack::Collection::Component`. Not `:grid`. |
+| `layout` | Symbol | `:wrap` | no | Action arrangement: `:wrap` (wrapping row, centered) or `:stack` (one under the next, stretched to the measure). Renders `FlatPack::Collection::Component`. Not `:grid`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the root. |
 
 ## Slots

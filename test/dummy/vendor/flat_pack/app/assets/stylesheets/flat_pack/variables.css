@@ -825,6 +825,10 @@
   --collage-gap: var(--collage-gap);
   --collage-pad: var(--collage-pad);
   --collage-bleed: var(--collage-bleed);
+  --collage-margin: var(--collage-margin);
+  --collage-overlap: var(--collage-overlap);
+  --collage-card-ratio: var(--collage-card-ratio);
+  --collage-card-sway: var(--collage-card-sway);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1073,7 +1077,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   /* Collage scatter. Themes override these. Ranges scale a -1..1 unit on each item.
    * Loose multiplies that unit by --collage-loose. Lift and the offsets follow --space-*.
    */
-  --collage-rotate: 3deg;
+  --collage-rotate: 5deg;
   --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-lift: calc(var(--collage-offset-y) * -1);
@@ -1083,6 +1087,12 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   /* Extra inset, per scatter unit, so a rotated corner stays inside the border box. */
   --collage-bleed: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  /* Brick frame. 2rem is 32px. Overlap is the vertical corner cross. Ratio is 260/280. */
+  --collage-margin: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  /* Negative on purpose. round() inside another calc() does not resolve, so this stays a plain length. */
+  --collage-overlap: calc(var(--space-5) * var(--density) * -1);
+  --collage-card-ratio: 0.928;
+  --collage-card-sway: 0.1;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

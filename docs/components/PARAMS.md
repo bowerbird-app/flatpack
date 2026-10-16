@@ -36,7 +36,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Table column alignment | `align` | `FlatPack::Table::Column` only. `:start` (default), `:center`, `:end`. Logical, so RTL flips start and end. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
-| Masonry column count | `columns` | Masonry: integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Collage: one integer 1–6, the count at and above `stack_below`. Do not use Grid's `cols` here. |
+| Masonry column count | `columns` | Masonry: integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Collage grid: one integer 1–6, the count at and above `stack_below`. Collage brick uses `rows` instead. Do not use Grid's `cols` here. |
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
 | FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
@@ -55,6 +55,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |
 | Key column size | `key_width` | List `:key_value` only. `:fit` (widest key) or a CSS length such as `"10rem"`. |
 | Stack key above value | `stack_below` | List `:key_value`: `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. Collage: `:sm`, `:md`, `:lg`, or `:xl`. Below that breakpoint the items become one column and the tilt drops. |
+| Collage brick | `rows` | `FlatPack::Collage::Component` only. A list of counts, such as `[5, 4]`. Each count is a row. A shorter row is centered, so it sits between the cards above. Omit it for an even grid of `columns`. |
 | Collage scatter | `scatter` | `FlatPack::Collage::Component` only. `:subtle` (default), `:loose`, or `:none`. A deterministic tilt and offset from the item index. `:none` sits square. |
 | Collage motion | `motion` | `FlatPack::Collage::Component` only. `true` (default) plays the enter rise and the hover lift. `false` leaves the scatter still. `prefers-reduced-motion` also skips both. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |

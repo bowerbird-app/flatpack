@@ -787,9 +787,10 @@
     },
     collage: {
       label: "Collage",
-      method_call: "render FlatPack::Collage::Component.new(columns: 3, scatter: :subtle, stack_below: :md, motion: true) do |collage| ... end",
+      method_call: "render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md, motion: true) do |collage| ... end",
       variables: [
         { variable: "columns", accepts: "Integer 1-6", example: "columns: 3" },
+        { variable: "rows", accepts: "Array of counts 1-8, up to 6 rows, or nil", example: "rows: [5, 4]" },
         { variable: "scatter", accepts: ":subtle, :loose, :none", example: "scatter: :loose" },
         { variable: "stack_below", accepts: ":sm, :md, :lg, :xl", example: "stack_below: :md" },
         { variable: "motion", accepts: "true, false", example: "motion: false" },

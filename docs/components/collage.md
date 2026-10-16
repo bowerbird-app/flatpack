@@ -1,7 +1,7 @@
 # Collage
 
 ## Purpose
-Scatter any host content in a grid, with a slight tilt and offset, and stack it straight on a small screen.
+Scatter any host content. `rows:` is a brick, such as five cards over four. Omit it for an even grid. Either way the items tilt a little, and they stack straight on a small screen.
 
 ## When to use
 Use Collage for a loose cluster of cards, photos, or notes. The kit supplies the layout only. A photo card is `FlatPack::Card::Component` and `FlatPack::Badge::Component` inside `item`. Use `Grid` when every cell should line up. Use `Masonry` when mixed ratios should pack without a shared row.
@@ -14,7 +14,8 @@ Use Collage for a loose cluster of cards, photos, or notes. The kit supplies the
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `columns` | Integer | `3` | No | Column count at and above `stack_below`. An integer from 1 to 6. Invalid values raise `ArgumentError`. |
+| `columns` | Integer | `3` | No | Column count for the even grid, at and above `stack_below`. An integer from 1 to 6. Ignored when `rows` is set. Invalid values raise `ArgumentError`. |
+| `rows` | Array | `nil` | No | Brick pattern. Each entry is how many items are in that row, then the list repeats. `[5, 4]` is five across and four centered underneath. Counts are 1–8, and the list is at most 6 rows. A shorter row sits between the cards above it. Invalid values raise `ArgumentError`. |
 | `scatter` | Symbol | `:subtle` | No | Tilt and offset. Allowed: `:subtle`, `:loose`, `:none`. `:none` sits square. Invalid values raise `ArgumentError`. |
 | `stack_below` | Symbol | `:md` | No | Below this breakpoint the items are one column and the tilt is off. Allowed: `:sm`, `:md`, `:lg`, `:xl`. Not List `stack_below`. Invalid values raise `ArgumentError`. |
 | `motion` | Boolean | `true` | No | `true` staggers the enter rise and lifts on hover. `false` leaves the scatter still. `prefers-reduced-motion: reduce` skips both. Anything else raises `ArgumentError`. |
@@ -27,6 +28,7 @@ Use Collage for a loose cluster of cards, photos, or notes. The kit supplies the
 
 | variant | description |
 |---------|-------------|
+| `rows: [5, 4]` | Brick. Five on the first row, four centered on the next, then it repeats. The next row is pulled up by `--collage-overlap`. Card proportion is `--collage-card-ratio`, swayed by `--collage-card-sway`. The frame inset is `--collage-margin`. |
 | `scatter: :subtle` | Default. Each item tilts within `--collage-rotate` and shifts within `--collage-offset-x` / `--collage-offset-y`. |
 | `scatter: :loose` | Same pattern, multiplied by `--collage-loose` (default `2`). |
 | `scatter: :none` | No tilt and no offset, unless an item passes `rotate` or `offset`. |
@@ -37,7 +39,7 @@ The tilt for an index is a deterministic mix in the range -1 to 1. The same inde
 ## Example
 
 ```erb
-<%= render FlatPack::Collage::Component.new(columns: 3, scatter: :subtle, stack_below: :md) do |collage| %>
+<%= render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| %>
   <% collage.item do %>
     <%= render FlatPack::Card::Component.new(shadow: :sm, padding: :none) do |card| %>
       <% card.media(aspect_ratio: "4/3", padding: :none) do %>
@@ -68,5 +70,6 @@ The grid does not change source order. What you tab and what a screen reader rea
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Entrance uses `.fp-content-enter`: opacity and a 4px rise on `--duration-slow` / `--easing-enter`. Stagger delay is `min(index, 8) * --collage-stagger` (default `40ms`). Hover lift uses the same duration and easing, by `--collage-lift`.
-- `--collage-rotate`, `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, `--collage-stagger`, `--collage-loose`, `--collage-gap`, `--collage-pad`, and `--collage-bleed` are theme tokens. Offsets, lift, gap, pad, and bleed follow `--space-*` and `--density`. Padding is `--collage-pad` plus one `--collage-offset-y` and one `--collage-bleed` per scatter unit, so the tilt stays inside the border box. Below `stack_below` the padding is only `--collage-pad`.
+- `--collage-rotate` (`5deg`), `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, `--collage-stagger`, `--collage-loose`, `--collage-gap`, `--collage-pad`, `--collage-bleed`, `--collage-margin`, `--collage-overlap`, `--collage-card-ratio`, and `--collage-card-sway` are theme tokens. Lengths follow `--space-*` and `--density`, except the ratio (`0.928`, about 260 by 280) and the sway (`0.1`).
+- An even grid pads by `--collage-pad` plus one offset and one bleed per scatter unit. A brick uses `--collage-margin` (about 32px) and pulls the next row up by `--collage-overlap`. Below `stack_below` the overlap and the tilt drop, and the padding is `--collage-pad`.
 - No Stimulus controller. No absolute positioning.

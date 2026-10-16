@@ -34,6 +34,35 @@ module FlatPack
         assert_includes page.native.to_html, "--fp-collage-columns: 4"
       end
 
+      def test_rows_place_a_shorter_row_between_the_one_above
+        render_inline(Component.new(rows: [5, 4])) do |collage|
+          9.times { |index| collage.item { "Card #{index}" } }
+        end
+
+        assert_selector ".fp-collage--brick"
+        assert_includes page.native.to_html, "--fp-collage-tracks: 10"
+        styles = item_styles(page.native.to_html)
+        assert_includes styles[0], "--fp-collage-column: 1 / span 2"
+        assert_includes styles[0], "--fp-collage-row: 1"
+        assert_includes styles[4], "--fp-collage-column: 9 / span 2"
+        assert_includes styles[5], "--fp-collage-column: 2 / span 2"
+        assert_includes styles[5], "--fp-collage-row: 2"
+        assert_includes styles[8], "--fp-collage-column: 8 / span 2"
+        assert_equal %w[Card\ 0 Card\ 1 Card\ 2 Card\ 3 Card\ 4 Card\ 5 Card\ 6 Card\ 7 Card\ 8],
+          page.all(".fp-collage__item").map(&:text)
+      end
+
+      def test_rows_repeat_and_reject_bad_counts
+        spot = Item.spot(9, [5, 4])
+        assert_equal({start: 1, span: 2, row: 3}, spot)
+
+        error = assert_raises(ArgumentError) { Component.new(rows: [0, 4]) }
+        assert_match(/Invalid rows/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(rows: []) }
+        assert_match(/Invalid rows/, error.message)
+      end
+
       def test_motion_false_skips_enter
         render_inline(Component.new(motion: false)) { |collage| collage.item { "Still" } }
 
@@ -188,6 +217,9 @@ module FlatPack
         assert_includes collage, "var(--collage-stagger)"
         assert_includes collage, "var(--collage-loose)"
         assert_includes collage, "var(--collage-bleed)"
+        assert_includes collage, "var(--collage-margin)"
+        assert_includes collage, "var(--collage-overlap)"
+        assert_includes collage, "fp-collage--brick"
         assert_includes collage, "padding: calc(var(--collage-pad) + (var(--collage-offset-y) + var(--collage-bleed)) * var(--fp-collage-scatter))"
         assert_includes collage, "padding: var(--collage-pad)"
         assert_includes collage, "var(--duration-slow)"

@@ -2824,6 +2824,27 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-collage-scatter: 0;
 }
 
+/* Brick: rows such as 5 then 4. A shorter row is centered on twice-as-many
+ * tracks, so it sits between the cards above. Negative row gap is the corner overlap. */
+.fp-collage--brick {
+  grid-template-columns: repeat(var(--fp-collage-tracks, 10), minmax(0, 1fr));
+  column-gap: var(--collage-gap);
+  row-gap: 0;
+  padding: var(--collage-margin);
+}
+
+.fp-collage--brick .fp-collage__item {
+  grid-column: var(--fp-collage-column);
+  grid-row: var(--fp-collage-row);
+  /* row-gap cannot be negative, so each later row pulls up by --collage-overlap. */
+  margin-top: calc((var(--fp-collage-row, 1) - 1) * var(--collage-overlap));
+  aspect-ratio: calc(var(--collage-card-ratio) * (1 + var(--fp-collage-scale) * var(--collage-card-sway)));
+}
+
+.fp-collage--brick .fp-collage__item > .fp-content-enter {
+  height: 100%;
+}
+
 .fp-collage__item {
   --fp-collage-x: calc(var(--fp-collage-shift-x) * var(--collage-offset-x) * var(--fp-collage-scatter));
   --fp-collage-y: calc(var(--fp-collage-shift-y) * var(--collage-offset-y) * var(--fp-collage-scatter));
@@ -2871,9 +2892,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     padding: var(--collage-pad);
   }
 
+  .fp-collage--brick.fp-collage--stack-sm {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-sm .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
   .fp-collage--stack-sm .fp-collage__item,
   .fp-collage--stack-sm .fp-collage__item:hover,
   .fp-collage--stack-sm .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
     transform: none;
     z-index: auto;
     transition: none;
@@ -2886,9 +2918,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     padding: var(--collage-pad);
   }
 
+  .fp-collage--brick.fp-collage--stack-md {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-md .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
   .fp-collage--stack-md .fp-collage__item,
   .fp-collage--stack-md .fp-collage__item:hover,
   .fp-collage--stack-md .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
     transform: none;
     z-index: auto;
     transition: none;
@@ -2901,9 +2944,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     padding: var(--collage-pad);
   }
 
+  .fp-collage--brick.fp-collage--stack-lg {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-lg .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
   .fp-collage--stack-lg .fp-collage__item,
   .fp-collage--stack-lg .fp-collage__item:hover,
   .fp-collage--stack-lg .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
     transform: none;
     z-index: auto;
     transition: none;
@@ -2916,9 +2970,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     padding: var(--collage-pad);
   }
 
+  .fp-collage--brick.fp-collage--stack-xl {
+    row-gap: var(--collage-gap);
+  }
+
+  .fp-collage--brick.fp-collage--stack-xl .fp-collage__item {
+    margin-top: 0;
+    aspect-ratio: var(--collage-card-ratio);
+  }
+
   .fp-collage--stack-xl .fp-collage__item,
   .fp-collage--stack-xl .fp-collage__item:hover,
   .fp-collage--stack-xl .fp-collage__item:focus-within {
+    grid-column: auto;
+    grid-row: auto;
     transform: none;
     z-index: auto;
     transition: none;

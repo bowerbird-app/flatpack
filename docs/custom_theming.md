@@ -362,7 +362,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --empty-state-measure-md: 28rem;
   --empty-state-measure-lg: 36rem;
   --empty-state-measure-full: none;
-  --collage-rotate: 3deg;
+  --collage-rotate: 5deg;
   --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-lift: calc(var(--collage-offset-y) * -1);
@@ -371,6 +371,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --collage-bleed: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-margin: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  --collage-overlap: calc(var(--space-5) * var(--density) * -1);
+  --collage-card-ratio: 0.928;
+  --collage-card-sway: 0.1;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

@@ -7,7 +7,7 @@ module FlatPack
       LENGTH = /\A(?:-?(?:\d+|\d*\.\d+)(?:px|rem|em|%)|var\(--[a-z0-9-]+\))\z/i
       MAX_DEGREES = 180
 
-      attr_writer :index, :motion
+      attr_writer :index, :motion, :rows
 
       def initialize(rotate: nil, offset: nil, z: nil, **system_arguments)
         super(**system_arguments)
@@ -26,8 +26,31 @@ module FlatPack
         {
           tilt: signed(mix(index, 1)),
           x: signed(mix(index, 2)),
-          y: signed(mix(index, 3))
+          y: signed(mix(index, 3)),
+          scale: signed(mix(index, 4))
         }
+      end
+
+      # Where this index sits in a brick. A shorter row is centered, so a row of
+      # one fewer card lands halfway between the cards above it.
+      def self.spot(index, rows)
+        counts = rows.map { |count| Integer(count) }
+        cycle = counts.sum
+        cursor = Integer(index) % cycle
+        cycle_index = Integer(index) / cycle
+        wide = counts.max
+        span = 2
+
+        counts.each_with_index do |count, row_index|
+          next cursor -= count if cursor >= count
+
+          inset = (wide * span - count * span) / 2
+          return {
+            start: inset + (cursor * span) + 1,
+            span: span,
+            row: cycle_index * counts.length + row_index + 1
+          }
+        end
       end
 
       def self.mix(index, salt)
@@ -65,9 +88,15 @@ module FlatPack
           "--fp-collage-tilt: #{css_number(units[:tilt])}",
           "--fp-collage-shift-x: #{css_number(units[:x])}",
           "--fp-collage-shift-y: #{css_number(units[:y])}",
+          "--fp-collage-scale: #{css_number(units[:scale])}",
           "--fp-collage-index: #{index}",
           "--fp-collage-z: #{z_index}"
         ]
+        if @rows
+          spot = self.class.spot(index, @rows)
+          parts << "--fp-collage-column: #{spot[:start]} / span #{spot[:span]}"
+          parts << "--fp-collage-row: #{spot[:row]}"
+        end
         parts << "--fp-collage-angle: #{@rotate}" if @rotate
         if @offset
           parts << "--fp-collage-x: #{@offset[0]}"

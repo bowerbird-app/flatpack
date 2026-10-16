@@ -302,9 +302,13 @@ module FlatPack
         {
           layout: @layout,
           gap: size_config.fetch(:collection_gap),
-          class: "w-full items-center justify-center",
+          class: stacked? ? "w-full" : "w-full items-center justify-center",
           style: size_config.fetch(:action_gap)
         }
+      end
+
+      def stacked?
+        @layout == :stack
       end
 
       def validate_title!

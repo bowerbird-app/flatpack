@@ -9,9 +9,12 @@ module FlatPack
       SCATTERS = %i[subtle loose none].freeze
       STACK_BELOWS = %i[sm md lg xl].freeze
       COLUMN_COUNTS = (1..6)
+      ROW_LIMIT = 8
+      PATTERN_LIMIT = 6
 
       def initialize(
         columns: 3,
+        rows: nil,
         scatter: :subtle,
         stack_below: :md,
         motion: true,
@@ -19,11 +22,13 @@ module FlatPack
       )
         super(**system_arguments)
         @columns = normalize_columns(columns)
+        @rows = normalize_rows(rows)
         @scatter = scatter.to_sym
         @stack_below = stack_below.to_sym
         @motion = motion
 
         validate_columns!
+        validate_rows!
         validate_scatter!
         validate_stack_below!
         validate_motion!
@@ -46,6 +51,7 @@ module FlatPack
         items.each_with_index do |item, index|
           item.index = index
           item.motion = @motion
+          item.rows = @rows
         end
       end
 
@@ -62,12 +68,15 @@ module FlatPack
           "fp-collage",
           "fp-collage--#{@scatter}",
           "fp-collage--stack-#{@stack_below}",
+          ("fp-collage--brick" if @rows),
           ("fp-collage--motion" if @motion)
         )
       end
 
       def collage_style
-        "--fp-collage-columns: #{@columns}"
+        parts = ["--fp-collage-columns: #{@columns}"]
+        parts << "--fp-collage-tracks: #{@rows.max * 2}" if @rows
+        parts.join("; ")
       end
 
       def join_styles(*parts)
@@ -85,6 +94,22 @@ module FlatPack
         return if @columns.is_a?(Integer) && COLUMN_COUNTS.cover?(@columns)
 
         raise ArgumentError, "Invalid columns: #{@columns.inspect}. Must be an integer from 1 to 6."
+      end
+
+      def normalize_rows(rows)
+        return nil if rows.nil?
+
+        Array(rows).map { |count| Integer(count) }
+      rescue ArgumentError, TypeError
+        rows
+      end
+
+      def validate_rows!
+        return if @rows.nil?
+        return if @rows.is_a?(Array) && @rows.any? && @rows.size <= PATTERN_LIMIT &&
+          @rows.all? { |count| count.is_a?(Integer) && count >= 1 && count <= ROW_LIMIT }
+
+        raise ArgumentError, "Invalid rows: #{@rows.inspect}. Pass a list of counts from 1 to #{ROW_LIMIT}, up to #{PATTERN_LIMIT} rows."
       end
 
       def validate_scatter!

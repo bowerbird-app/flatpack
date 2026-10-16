@@ -1,11 +1,19 @@
 <%# locals: (photo:) %>
-<%= render FlatPack::Card::Component.new(shadow: :sm, padding: :none) do |card| %>
-  <% card.media(aspect_ratio: "4/3", padding: :none) do %>
-    <%= image_tag photo[:src], alt: photo[:alt], class: "h-full w-full object-cover" %>
+<div class="h-full bg-white shadow-[var(--shadow-md)]" style="padding: 0.5rem; border-radius: var(--radius-xl);">
+  <%= render FlatPack::Overlay::Component.new(class: "h-full w-full") do |overlay| %>
+    <% overlay.with_media do %>
+      <div class="relative h-full w-full overflow-hidden" style="border-radius: var(--radius-lg);">
+        <%= image_tag photo[:src], alt: photo[:alt], class: "h-full w-full object-cover", style: "object-position: #{photo[:focus]};" %>
+        <div class="pointer-events-none absolute inset-x-0 bottom-0" style="height: 46%; background: linear-gradient(to top, rgb(0 0 0 / 0.72), rgb(0 0 0 / 0));"></div>
+      </div>
+    <% end %>
+    <% overlay.with_item(placement: :top_left, inset: :sm) do %>
+      <div style="--badge-default-background-color: white; --badge-default-text-color: var(--surface-content-color); --badge-default-border-color: transparent;">
+        <%= render FlatPack::Badge::Component.new(text: photo[:badge], size: :xs) %>
+      </div>
+    <% end %>
+    <% overlay.with_item(placement: :bottom_left, inset: :sm) do %>
+      <p class="font-semibold text-white" style="text-shadow: 0 1px 2px rgb(0 0 0 / 0.45);"><%= photo[:title] %></p>
+    <% end %>
   <% end %>
-  <% card.body(padding: :sm) do %>
-    <%= render FlatPack::Badge::Component.new(text: photo[:badge], size: :xs) %>
-    <p class="mt-2 font-semibold"><%= photo[:title] %></p>
-    <p class="text-sm text-[var(--surface-muted-content-color)]"><%= photo[:date] %></p>
-  <% end %>
-<% end %>
+</div>

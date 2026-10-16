@@ -16,10 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.247] - 2026-10-16
 
 ### Added
-- `FlatPack::Collage::Component` scatters any host content in a CSS grid. `columns:` is 1–6 (default 3). `scatter:` is `:subtle` (default), `:loose`, or `:none`.
+- `FlatPack::Collage::Component` scatters any host content. `columns:` is an even grid, 1–6 (default 3). `rows:` is a brick, such as `[5, 4]`: five across, then four centered between them. `scatter:` is `:subtle` (default), `:loose`, or `:none`.
 - `collage.item(rotate:, offset:, z:)` takes any markup. Omit `rotate` and `offset` and the tilt comes from the item index, so a re-render stays put. Pass either one to pin that card.
 - Below `stack_below` (`:sm`, `:md`, `:lg`, `:xl`, default `:md`) the grid is one column and the tilt is off. DOM order is the reading order. Nothing is absolutely positioned.
-- `--collage-rotate`, `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` are the ranges. `--collage-loose` scales the subtle unit. Gap, pad, bleed, offsets, and lift follow `--space-*` and `--density`. Padding grows with the scatter so a tilted card stays inside the border box. Below `stack_below` the extra inset drops off.
+- `--collage-rotate` is `5deg`. `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` are the other ranges. `--collage-loose` scales the subtle unit. A brick insets by `--collage-margin` (about 32px), overlaps rows by `--collage-overlap`, and sizes cards with `--collage-card-ratio` and `--collage-card-sway`. An even grid still pads with `--collage-pad` plus the offset and `--collage-bleed`. Below `stack_below` the overlap, the tilt, and the extra inset drop off.
 - `motion: true` (default) staggers `.fp-content-enter` and lifts on hover with `--duration-slow` / `--easing-enter`. `motion: false` and `prefers-reduced-motion: reduce` skip both.
 - Demo: `/demo/collage`.
 - Bumped the gem version to `0.1.247`.
