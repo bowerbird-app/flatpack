@@ -206,15 +206,17 @@ module FlatPack
     end
 
     def extract_motion_attributes!(system_arguments)
-      return nil unless system_arguments.key?(:reveal) || system_arguments.key?(:stagger) || system_arguments.key?(:parallax)
+      return nil unless system_arguments.key?(:reveal) || system_arguments.key?(:stagger) || system_arguments.key?(:parallax) || system_arguments.key?(:intensity)
 
       stagger = system_arguments.delete(:stagger)
       parallax = system_arguments.delete(:parallax)
+      intensity = system_arguments.delete(:intensity)
 
       FlatPack::Motion.attributes(
         reveal: system_arguments.delete(:reveal),
         stagger: stagger.nil? ? false : stagger,
-        parallax: parallax.nil? ? false : parallax
+        parallax: parallax.nil? ? false : parallax,
+        intensity: intensity
       )
     end
 

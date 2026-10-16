@@ -90,11 +90,18 @@ module FlatPack
       refute_selector ".fp-reveal"
     end
 
+    test "strong intensity adds one class" do
+      render_inline(TestComponent.new(reveal: :scale, intensity: :strong))
+
+      assert_selector ".fp-reveal--scale.fp-reveal--strong"
+    end
+
     test "words, a missing reveal, and a bad parallax pairing raise" do
       assert_raises(ArgumentError) { TestComponent.new(reveal: :words) }
       assert_raises(ArgumentError) { TestComponent.new(stagger: true) }
       assert_raises(ArgumentError) { TestComponent.new(reveal: :scale, parallax: true) }
       assert_raises(ArgumentError) { TestComponent.new(reveal: :fade, stagger: "yes") }
+      assert_raises(ArgumentError) { TestComponent.new(reveal: :fade, intensity: :loud) }
     end
 
     test "allows all safe HTML attributes" do

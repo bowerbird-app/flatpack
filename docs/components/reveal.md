@@ -17,11 +17,12 @@ Use `reveal:` on a component root when the whole block should enter together. Us
 | `reveal` | Symbol | none | Yes | How it enters. Allowed: `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, `:zoom`, `:words`, `:lines`. Invalid values raise `ArgumentError`. |
 | `stagger` | Boolean | `false` | No | Box variants only. `true` writes `--reveal-index` on each child. That index is per element, not a theme token. Words and lines already stagger each piece. Must be `true` or `false`. |
 | `parallax` | Boolean | `false` | No | `true` adds a gentle scroll shift. Only with `:wipe` or `:zoom`. Must be `true` or `false`. |
+| `intensity` | Symbol | none | No | `:strong` uses the strong tokens. Omit it for the default. Anything else raises `ArgumentError`. |
 | `tag` | Symbol | `:div` | No | Root element. Allowed: `:div`, `:span`, `:p`, `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`, `:blockquote`, `:li`. |
 | `text` | String | `nil` | Conditional | Plain copy for `:words` and `:lines`. Required for those variants unless the block has text. HTML-safe strings raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | No | HTML attributes on the root. `class` is merged with the reveal classes. |
 
-`reveal:`, `stagger:`, and `parallax:` are also system arguments on any component whose root calls `merge_attributes`. The classes land on that root, once. `:words` and `:lines` raise there. Pass those to this component so the copy can be split.
+`reveal:`, `stagger:`, `parallax:`, and `intensity:` are also system arguments on any component whose root calls `merge_attributes`. The classes land on that root, once. `:words` and `:lines` raise there. Pass those to this component so the copy can be split.
 
 ## Slots
 None. Box and media variants take a block. `:words` and `:lines` use `text:` or the block text.
@@ -30,18 +31,18 @@ None. Box and media variants take a block. `:words` and `:lines` use `text:` or 
 
 | variant | description |
 |---------|-------------|
-| `:fade` | Opacity only, from `0` to `1`. |
-| `:rise` | Moves up by `--motion-distance-md`. |
-| `:blur` | Sharpens from a blur of `--motion-distance-md`. |
-| `:scale` | Grows from `0.96` to `1`. |
-| `:wipe` | Clip-path wipe from the inline start. |
-| `:zoom` | The direct child scales from `1.05` to `1`. |
+| `:fade` | Hidden, then opacity from `0` to `1`. |
+| `:rise` | Hidden, then up by `--motion-distance-md` (`1rem`). `:strong` uses `--motion-distance-lg` (`3rem`). |
+| `:blur` | Hidden, then sharpens from `--motion-distance-md`. `:strong` uses `--motion-distance-lg`. |
+| `:scale` | Hidden, then grows from `--motion-scale` (`0.95`). `:strong` uses `--motion-scale-strong` (`0.85`). |
+| `:wipe` | Fully clipped, then a clip-path wipe. |
+| `:zoom` | Hidden, then the child settles from `--motion-zoom` (`1.05`). `:strong` uses `--motion-zoom-strong` (`1.2`). |
 | `:words` | Each word slides up out of an overflow mask. |
 | `:lines` | Each line does the same. Split on newlines. |
 | `stagger: true` | Children of a box variant wait `min(index, 12) * --reveal-stagger`. |
 | `parallax: true` | A short shift on `animation-timeline: view()` when the browser supports it. Otherwise the element just reveals. |
 
-The dummy gallery at `/demo/motion` shows each variant with its name. `?clip=fade` (and `rise`, `blur`, `scale`, `wipe`, `zoom`, `words`, `lines`, `stream`) renders that one specimen alone.
+With scripting, a reveal that is not `.is-revealed` is hidden on first paint, so nothing flashes before the entrance. `@media (scripting: none)` and `prefers-reduced-motion: reduce` show the final state. The dummy gallery at `/demo/motion` puts default and `:strong` side by side. `?clip=fade` (and `rise`, `blur`, `scale`, `wipe`, `zoom`, `words`, `lines`, `stream`) renders that specimen.
 
 ## Example
 

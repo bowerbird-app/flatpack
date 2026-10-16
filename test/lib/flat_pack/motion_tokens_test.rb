@@ -13,6 +13,7 @@ module FlatPack
         --motion-duration-fast --motion-duration-base --motion-duration-slow
         --motion-ease-out --motion-ease-in-out --motion-ease-spring
         --motion-distance-sm --motion-distance-md --motion-distance-lg
+        --motion-scale --motion-scale-strong --motion-zoom --motion-zoom-strong
         --reveal-stagger
       ]
 
@@ -29,7 +30,11 @@ module FlatPack
       assert_match(/--motion-ease-spring:\s*var\(--easing-spring\)/, root)
       assert_match(/--motion-distance-sm:\s*4px/, root)
       assert_match(/--motion-distance-md:\s*1rem/, root)
-      assert_match(/--motion-distance-lg:\s*2rem/, root)
+      assert_match(/--motion-distance-lg:\s*3rem/, root)
+      assert_match(/--motion-scale:\s*0\.95/, root)
+      assert_match(/--motion-scale-strong:\s*0\.85/, root)
+      assert_match(/--motion-zoom:\s*1\.05/, root)
+      assert_match(/--motion-zoom-strong:\s*1\.2/, root)
       assert_match(/--reveal-stagger:\s*40ms/, root)
     end
 
@@ -49,18 +54,59 @@ module FlatPack
       assert_includes enter, "var(--motion-distance-sm)"
     end
 
-    test "reveal css rests on the final state and only hides with is-pending" do
+    test "every reveal is hidden until is-revealed" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
 
       refute_match(/\.fp-reveal--fade\s*\{[^}]*opacity:\s*0/, css)
-      assert_includes css, "transform: scale(1.05);"
-      assert_includes css, "transform: scale(0.96);"
+
+      {
+        ".fp-reveal--fade:not(.is-revealed)" => "opacity: 0",
+        ".fp-reveal--rise:not(.is-revealed)" => "opacity: 0",
+        ".fp-reveal--blur:not(.is-revealed)" => "opacity: 0",
+        ".fp-reveal--scale:not(.is-revealed)" => "opacity: 0",
+        ".fp-reveal--zoom:not(.is-revealed)" => "opacity: 0",
+        ".fp-reveal--wipe:not(.is-revealed)" => "clip-path: inset(0 100% 0 0)",
+        ".fp-reveal--words:not(.is-revealed) .fp-reveal__chunk" => "translateY(100%)",
+        ".fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk" => "translateY(100%)"
+      }.each do |selector, hidden|
+        block = declaration_block(css, selector)
+        refute_nil block, "missing hidden rule #{selector}"
+        assert_includes block, hidden
+      end
+
+      rise = css[/\.fp-reveal--rise:not\(\.is-revealed\)\s*\{([^}]+)\}/, 1]
+      assert_includes rise, "var(--motion-distance-md)"
+      strong_rise = css[/\.fp-reveal--strong\.fp-reveal--rise:not\(\.is-revealed\)\s*\{([^}]+)\}/, 1]
+      assert_includes strong_rise, "var(--motion-distance-lg)"
+      assert_includes css, "scale(var(--motion-scale))"
+      assert_includes css, "scale(var(--motion-scale-strong))"
+      assert_includes css, "scale(var(--motion-zoom))"
+      assert_includes css, "scale(var(--motion-zoom-strong))"
+      refute_includes css, "scale(0.96)"
+      refute_includes css, "scale(1.05)"
+      assert_includes css, "@media (scripting: none)"
       assert_includes css, "animation-timeline: view();"
-      assert_includes css, "@supports (animation-timeline: view())"
-      assert_includes css, "prefers-reduced-motion: no-preference"
-      assert_includes css, ".fp-reveal--wipe.is-pending"
-      assert_includes css, ".fp-text-stream__source"
       assert_match(/prefers-reduced-motion: reduce.*?\.fp-reveal--parallax/m, css)
+    end
+
+    private
+
+    def declaration_block(css, selector)
+      index = 0
+      while (found = css.index(selector, index))
+        brace = css.index("{", found)
+        return nil unless brace
+
+        between = css[found + selector.length, brace - (found + selector.length)]
+        if !between.include?("{") && !between.include?("}")
+          close = css.index("}", brace)
+          return css[brace + 1, close - brace - 1]
+        end
+
+        index = found + selector.length
+      end
+
+      nil
     end
   end
 end

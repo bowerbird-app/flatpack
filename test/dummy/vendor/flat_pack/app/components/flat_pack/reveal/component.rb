@@ -6,11 +6,12 @@ module FlatPack
       REVEALS = FlatPack::Motion::REVEALS
       TAGS = FlatPack::Motion::TAGS
 
-      def initialize(reveal:, stagger: false, parallax: false, tag: :div, text: nil, **system_arguments)
+      def initialize(reveal:, stagger: false, parallax: false, intensity: nil, tag: :div, text: nil, **system_arguments)
         super(**system_arguments)
         @reveal = reveal.to_sym
         @stagger = stagger
         @parallax = parallax
+        @intensity = intensity
         @tag = tag
         @text = text
         validate_text_option!(@text, name: :text) unless @text.nil?
@@ -18,6 +19,7 @@ module FlatPack
           reveal: @reveal,
           stagger: @stagger,
           parallax: @parallax,
+          intensity: @intensity,
           text: text_reveal?
         )
       end

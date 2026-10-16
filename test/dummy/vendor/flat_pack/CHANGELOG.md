@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Motion tokens: `--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`, `--motion-ease-out`, `--motion-ease-in-out`, `--motion-ease-spring`, `--motion-distance-sm`, `--motion-distance-md`, `--motion-distance-lg`, and `--reveal-stagger`. A theme tunes reveals, the kit enter, and the collage entrance in one place.
-- `reveal:` on any component root that calls `merge_attributes`. `:fade` is opacity. `:rise`, `:blur`, and `:scale` move, sharpen, or grow. `:wipe` and `:zoom` are the media pair. `stagger: true` indexes the children. `parallax: true` is a gentle scroll shift, only with `:wipe` or `:zoom`.
+- `reveal:` on any component root that calls `merge_attributes`. Every variant starts hidden. `:fade` is opacity. `:rise`, `:blur`, and `:scale` then move, sharpen, or grow. `:wipe` and `:zoom` are the media pair. `intensity: :strong` uses the strong motion tokens. `stagger: true` indexes the children. `parallax: true` is a gentle scroll shift, only with `:wipe` or `:zoom`.
 - `FlatPack::Reveal::Component` is the wrapper. `:words` and `:lines` split the copy on the server. Each piece slides up out of a mask. The plain sentence stays in a visually hidden span. The pieces are `aria-hidden`.
 - `FlatPack::Text::Stream::Component` types a line once it is in view, with a caret. The full string stays in the DOM for screen readers. The typing is decorative. Put it inside a chat message. There is no `stream:` flag.
 - One Stimulus controller, `flat-pack--reveal`, uses `IntersectionObserver` and reveals once. `flat-pack--text-stream` types once. `prefers-reduced-motion: reduce` shows the finished look. With no JavaScript the content stays visible.

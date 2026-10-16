@@ -3348,39 +3348,56 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   grid-area: 1 / 1;
 }
 
-/* Reveal. The resting state is the final state, so no JS still shows the content.
- * The controller adds is-pending, then is-revealed once. Reduced motion snaps.
+/* Reveal. Without scripting, or with reduced motion, the final state shows.
+ * With scripting, :not(.is-revealed) is hidden on first paint. is-pending
+ * keeps that hidden state from animating until the controller reveals once.
  */
 .fp-reveal--fade,
 .fp-reveal--rise,
 .fp-reveal--blur,
-.fp-reveal--scale {
+.fp-reveal--scale,
+.fp-reveal--zoom {
   transition-property: opacity, transform, filter;
   transition-duration: var(--motion-duration-slow);
   transition-timing-function: var(--motion-ease-out);
 }
 
-.fp-reveal--fade.is-pending,
-.fp-reveal--rise.is-pending,
-.fp-reveal--blur.is-pending,
-.fp-reveal--scale.is-pending {
+.fp-reveal.is-pending,
+.fp-reveal.is-pending > *,
+.fp-reveal.is-pending .fp-reveal__chunk {
   transition: none;
 }
 
-.fp-reveal--fade.is-pending {
+.fp-reveal--fade:not(.is-revealed),
+.fp-reveal--rise:not(.is-revealed),
+.fp-reveal--blur:not(.is-revealed),
+.fp-reveal--scale:not(.is-revealed),
+.fp-reveal--zoom:not(.is-revealed) {
   opacity: 0;
 }
 
-.fp-reveal--rise.is-pending {
+.fp-reveal--rise:not(.is-revealed) {
   transform: translateY(var(--motion-distance-md));
 }
 
-.fp-reveal--blur.is-pending {
+.fp-reveal--strong.fp-reveal--rise:not(.is-revealed) {
+  transform: translateY(var(--motion-distance-lg));
+}
+
+.fp-reveal--blur:not(.is-revealed) {
   filter: blur(var(--motion-distance-md));
 }
 
-.fp-reveal--scale.is-pending {
-  transform: scale(0.96);
+.fp-reveal--strong.fp-reveal--blur:not(.is-revealed) {
+  filter: blur(var(--motion-distance-lg));
+}
+
+.fp-reveal--scale:not(.is-revealed) {
+  transform: scale(var(--motion-scale));
+}
+
+.fp-reveal--strong.fp-reveal--scale:not(.is-revealed) {
+  transform: scale(var(--motion-scale-strong));
 }
 
 .fp-reveal--stagger {
@@ -3394,30 +3411,38 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
 }
 
-.fp-reveal--stagger.is-pending {
+.fp-reveal--stagger:not(.is-revealed) {
   opacity: 1;
   transform: none;
   filter: none;
 }
 
-.fp-reveal--stagger.is-pending > :not(.fp-reveal__plain) {
-  transition: none;
-}
-
-.fp-reveal--stagger.fp-reveal--fade.is-pending > :not(.fp-reveal__plain) {
+.fp-reveal--stagger:not(.is-revealed) > :not(.fp-reveal__plain) {
   opacity: 0;
 }
 
-.fp-reveal--stagger.fp-reveal--rise.is-pending > :not(.fp-reveal__plain) {
+.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain) {
   transform: translateY(var(--motion-distance-md));
 }
 
-.fp-reveal--stagger.fp-reveal--blur.is-pending > :not(.fp-reveal__plain) {
+.fp-reveal--strong.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: translateY(var(--motion-distance-lg));
+}
+
+.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain) {
   filter: blur(var(--motion-distance-md));
 }
 
-.fp-reveal--stagger.fp-reveal--scale.is-pending > :not(.fp-reveal__plain) {
-  transform: scale(0.96);
+.fp-reveal--strong.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain) {
+  filter: blur(var(--motion-distance-lg));
+}
+
+.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: scale(var(--motion-scale));
+}
+
+.fp-reveal--strong.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: scale(var(--motion-scale-strong));
 }
 
 .fp-reveal--words,
@@ -3459,9 +3484,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
 }
 
-.fp-reveal--words.is-pending .fp-reveal__chunk,
-.fp-reveal--lines.is-pending .fp-reveal__chunk {
-  transition: none;
+.fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
+.fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk {
   transform: translateY(100%);
 }
 
@@ -3474,8 +3498,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   transition: clip-path var(--motion-duration-slow) var(--motion-ease-out);
 }
 
-.fp-reveal--wipe.is-pending {
-  transition: none;
+.fp-reveal--wipe:not(.is-revealed) {
   clip-path: inset(0 100% 0 0);
 }
 
@@ -3487,9 +3510,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   transition: transform var(--motion-duration-slow) var(--motion-ease-out);
 }
 
-.fp-reveal--zoom.is-pending > * {
-  transition: none;
-  transform: scale(1.05);
+.fp-reveal--zoom:not(.is-revealed) > * {
+  transform: scale(var(--motion-zoom));
+}
+
+.fp-reveal--strong.fp-reveal--zoom:not(.is-revealed) > * {
+  transform: scale(var(--motion-zoom-strong));
 }
 
 .fp-reveal--zoom.is-revealed > * {
@@ -3569,15 +3595,23 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fp-reveal--fade.is-pending,
-  .fp-reveal--rise.is-pending,
-  .fp-reveal--blur.is-pending,
-  .fp-reveal--scale.is-pending,
-  .fp-reveal--stagger.is-pending > :not(.fp-reveal__plain),
-  .fp-reveal--words.is-pending .fp-reveal__chunk,
-  .fp-reveal--lines.is-pending .fp-reveal__chunk,
-  .fp-reveal--wipe.is-pending,
-  .fp-reveal--zoom.is-pending > *,
+  .fp-reveal--fade:not(.is-revealed),
+  .fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--zoom:not(.is-revealed),
+  .fp-reveal--wipe:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--stagger:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--zoom:not(.is-revealed) > *,
+  .fp-reveal--strong.fp-reveal--zoom:not(.is-revealed) > *,
   .fp-reveal--parallax {
     animation: none;
     transition: none;
@@ -3601,6 +3635,33 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   .fp-text-stream__caret {
     display: none;
     animation: none;
+  }
+}
+
+@media (scripting: none) {
+  .fp-reveal--fade:not(.is-revealed),
+  .fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--zoom:not(.is-revealed),
+  .fp-reveal--wipe:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--stagger:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--zoom:not(.is-revealed) > *,
+  .fp-reveal--strong.fp-reveal--zoom:not(.is-revealed) > * {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
   }
 }
 

@@ -271,7 +271,11 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --motion-ease-spring: var(--easing-spring);
   --motion-distance-sm: 4px;
   --motion-distance-md: 1rem;
-  --motion-distance-lg: 2rem;
+  --motion-distance-lg: 3rem;
+  --motion-scale: 0.95;
+  --motion-scale-strong: 0.85;
+  --motion-zoom: 1.05;
+  --motion-zoom-strong: 1.2;
   --reveal-stagger: 40ms;
   --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;

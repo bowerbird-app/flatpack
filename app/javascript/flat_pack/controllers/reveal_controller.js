@@ -2,7 +2,9 @@ import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 // Flips is-revealed once when the element enters the viewport.
-// The resting CSS is the final state, so no JS and reduced motion stay visible.
+// Until that class lands, the reveal stays hidden. is-pending blocks the
+// transition so the first painted frame cannot flash the final state.
+// Reduced motion and browsers without scripting show the final state.
 export default class extends Controller {
   static values = {
     stagger: { type: Boolean, default: false }

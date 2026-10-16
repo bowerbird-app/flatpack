@@ -11,7 +11,7 @@ module FlatPack
     TAGS = %i[div span p h1 h2 h3 h4 h5 h6 blockquote li].freeze
 
     class << self
-      def attributes(reveal:, stagger: false, parallax: false, text: false)
+      def attributes(reveal:, stagger: false, parallax: false, intensity: nil, text: false)
         if reveal.nil? || reveal.to_s.strip.empty?
           raise ArgumentError, "reveal is required"
         end
@@ -33,6 +33,7 @@ module FlatPack
         end
 
         classes = ["fp-reveal", "fp-reveal--#{variant}"]
+        classes << "fp-reveal--strong" if strong!(intensity)
         classes << "fp-reveal--stagger" if stagger && !TEXT_REVEALS.include?(variant)
         classes << "fp-reveal--parallax" if parallax
 
@@ -48,6 +49,14 @@ module FlatPack
         return value if value == true || value == false
 
         raise ArgumentError, "#{name} must be true or false"
+      end
+
+      def strong!(intensity)
+        return false if intensity.nil?
+
+        return true if intensity.to_sym == :strong
+
+        raise ArgumentError, "Invalid intensity: #{intensity}. Must be :strong"
       end
     end
   end

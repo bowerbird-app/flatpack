@@ -64,6 +64,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Scroll reveal | `reveal` | Any component root that calls `merge_attributes`, and `FlatPack::Reveal::Component`. `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, `:zoom`. `:words` and `:lines` are the Reveal component only. |
 | Reveal children | `stagger` | Boolean. `true` sets `--reveal-index` on the children of a box reveal. Not a text-stream prop. |
 | Media scroll shift | `parallax` | Boolean. `true` only with `reveal: :wipe` or `reveal: :zoom`. CSS `animation-timeline: view()` when supported. |
+| Reveal intensity | `intensity` | `:strong` or omit. Strong uses `--motion-distance-lg`, `--motion-scale-strong`, and `--motion-zoom-strong`. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). Animated character sizes are `:sm`, `:md`, `:lg`, `:xl` on a larger scale than icons (`:xl` is `w-40`). |
 | Character definition | `definition` | `FlatPack::AnimatedCharacter::Component` only. A Hash of `parts` and `states`. Not a raw SVG string. |

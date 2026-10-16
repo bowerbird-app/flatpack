@@ -761,6 +761,10 @@
   --motion-distance-sm: var(--motion-distance-sm);
   --motion-distance-md: var(--motion-distance-md);
   --motion-distance-lg: var(--motion-distance-lg);
+  --motion-scale: var(--motion-scale);
+  --motion-scale-strong: var(--motion-scale-strong);
+  --motion-zoom: var(--motion-zoom);
+  --motion-zoom-strong: var(--motion-zoom-strong);
   --reveal-stagger: var(--reveal-stagger);
   --transition-slow: var(--transition-slow);
   --transition-base: var(--transition-base);
@@ -1670,7 +1674,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --motion-ease-spring: var(--easing-spring);
   --motion-distance-sm: 4px;
   --motion-distance-md: 1rem;
-  --motion-distance-lg: 2rem;
+  --motion-distance-lg: 3rem;
+  --motion-scale: 0.95;
+  --motion-scale-strong: 0.85;
+  --motion-zoom: 1.05;
+  --motion-zoom-strong: 1.2;
   --reveal-stagger: 40ms;
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);

@@ -93,6 +93,18 @@ test("reduced motion leaves the element in its final state", () => {
   harness.restore()
 })
 
+test("the element stays hidden until the reveal frame", () => {
+  const harness = build()
+  harness.controller.connect()
+
+  assert.equal(harness.element.classList.contains("is-revealed"), false)
+  assert.ok(harness.element.classList.contains("is-pending"))
+
+  harness.observer.callback([{ isIntersecting: true }])
+  assert.equal(harness.element.classList.contains("is-revealed"), false)
+  harness.restore()
+})
+
 test("connect waits two frames, then reveals once on intersection", () => {
   const harness = build()
   harness.controller.connect()
