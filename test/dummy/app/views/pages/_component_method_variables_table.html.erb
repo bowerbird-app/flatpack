@@ -1249,6 +1249,18 @@
         { variable: "size", accepts: ":sm, :md, :lg", example: "size: :lg" }
       ]
     },
+    reveal: {
+      label: "Reveal",
+      method_call: "render FlatPack::Reveal::Component.new(reveal: :words, tag: :h2, text: \"Pack the walnut\")",
+      variables: [
+        { variable: "reveal", accepts: ":fade, :rise, :blur, :scale, :wipe, :zoom, :words, :lines", example: "reveal: :rise" },
+        { variable: "stagger", accepts: "true, false", example: "stagger: true" },
+        { variable: "parallax", accepts: "true, false. Only with :wipe or :zoom", example: "parallax: true" },
+        { variable: "tag", accepts: ":div, :span, :p, :h1, :h2, :h3, :h4, :h5, :h6, :blockquote, :li", example: "tag: :h2" },
+        { variable: "text", accepts: "String. Words and lines", example: "text: \"Pack the walnut\"" },
+        { variable: "**system_arguments", accepts: "Hash. reveal: on any component root that merges attributes", example: "class: \"max-w-md\", reveal: :fade" }
+      ]
+    },
     section_title: {
       label: "Section Title",
       method_call: "render FlatPack::SectionTitle::Component.new(title: \"Members\", subtitle: \"Who can access this workspace\", size: :md, spacing: :none)",
@@ -1410,6 +1422,15 @@
         { variable: "indicator", accepts: ":slide or omit", example: "indicator: :slide" },
         { variable: "default_tab", accepts: "Integer", example: "default_tab: 1" },
         { variable: "tab / panel", accepts: "id:, label:, block", example: "tabs.tab(id: \"overview\", label: \"Overview\")" }
+      ]
+    },
+    text_stream: {
+      label: "Text Stream",
+      method_call: "render FlatPack::Text::Stream::Component.new(text: \"The walnut stool ships Friday.\")",
+      variables: [
+        { variable: "text", accepts: "String (required)", example: "text: \"The walnut stool ships Friday.\"" },
+        { variable: "tag", accepts: ":div, :span, :p, :h1, :h2, :h3, :h4, :h5, :h6, :blockquote, :li", example: "tag: :p" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"text-lg\", id: \"reply\"" }
       ]
     },
     tree: {

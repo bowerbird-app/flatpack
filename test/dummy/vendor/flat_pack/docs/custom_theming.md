@@ -263,6 +263,16 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --easing-exit: cubic-bezier(0.3, 0, 1, 1);
   --easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1); /* list/layout only */
   --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1); /* list/layout only */
+  --motion-duration-fast: var(--duration-fast);
+  --motion-duration-base: var(--duration-base);
+  --motion-duration-slow: var(--duration-slow);
+  --motion-ease-out: var(--easing-enter);
+  --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-spring: var(--easing-spring);
+  --motion-distance-sm: 4px;
+  --motion-distance-md: 1rem;
+  --motion-distance-lg: 2rem;
+  --reveal-stagger: 40ms;
   --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --text-xs: 0.75rem;
@@ -366,7 +376,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-lift: calc(var(--collage-offset-y) * -1);
-  --collage-stagger: 40ms;
+  --collage-stagger: var(--reveal-stagger);
   --collage-loose: 2;
   --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
@@ -377,9 +387,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collage-card-sway: 0.1;
   --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
   --collage-item-size-md: 11rem;
-  --collage-duration: var(--duration-slow);
-  --collage-easing: var(--easing-enter);
-  --collage-rise: 4px;
+  --collage-duration: var(--motion-duration-slow);
+  --collage-easing: var(--motion-ease-out);
+  --collage-rise: var(--motion-distance-sm);
   --collage-deal: 100%;
   --collage-deal-duration: 720ms;
   --collage-drift: 1deg;

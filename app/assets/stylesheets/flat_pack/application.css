@@ -144,12 +144,12 @@
     opacity: 1;
     transform: translateY(0);
     transition:
-      opacity var(--duration-slow) var(--easing-enter),
-      transform var(--duration-slow) var(--easing-enter);
+      opacity var(--motion-duration-slow) var(--motion-ease-out),
+      transform var(--motion-duration-slow) var(--motion-ease-out);
 
     @starting-style {
       opacity: 0;
-      transform: translateY(4px);
+      transform: translateY(var(--motion-distance-sm));
     }
   }
 
@@ -3346,5 +3346,255 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   min-height: 0;
   border: 0;
   grid-area: 1 / 1;
+}
+
+/* Reveal. The resting state is the final state, so no JS still shows the content.
+ * The controller adds is-pending, then is-revealed once. Reduced motion snaps.
+ */
+.fp-reveal--fade,
+.fp-reveal--rise,
+.fp-reveal--blur,
+.fp-reveal--scale {
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--motion-duration-slow);
+  transition-timing-function: var(--motion-ease-out);
+}
+
+.fp-reveal--fade.is-pending,
+.fp-reveal--rise.is-pending,
+.fp-reveal--blur.is-pending,
+.fp-reveal--scale.is-pending {
+  transition: none;
+  opacity: 0;
+}
+
+.fp-reveal--rise.is-pending {
+  transform: translateY(var(--motion-distance-md));
+}
+
+.fp-reveal--blur.is-pending {
+  filter: blur(var(--motion-distance-md));
+}
+
+.fp-reveal--scale.is-pending {
+  transform: scale(0.96);
+}
+
+.fp-reveal--stagger {
+  transition: none;
+}
+
+.fp-reveal--stagger > :not(.fp-reveal__plain) {
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--motion-duration-slow);
+  transition-timing-function: var(--motion-ease-out);
+  transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
+}
+
+.fp-reveal--stagger.is-pending {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.fp-reveal--stagger.is-pending > :not(.fp-reveal__plain) {
+  transition: none;
+  opacity: 0;
+}
+
+.fp-reveal--stagger.fp-reveal--rise.is-pending > :not(.fp-reveal__plain) {
+  transform: translateY(var(--motion-distance-md));
+}
+
+.fp-reveal--stagger.fp-reveal--blur.is-pending > :not(.fp-reveal__plain) {
+  filter: blur(var(--motion-distance-md));
+}
+
+.fp-reveal--stagger.fp-reveal--scale.is-pending > :not(.fp-reveal__plain) {
+  transform: scale(0.96);
+}
+
+.fp-reveal--words,
+.fp-reveal--lines {
+  position: relative;
+}
+
+.fp-reveal__plain {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fp-reveal__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.fp-reveal--lines .fp-reveal__mask {
+  display: block;
+}
+
+.fp-reveal--words .fp-reveal__mask {
+  white-space: nowrap;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+}
+
+.fp-reveal__chunk {
+  display: inline-block;
+  transition: transform var(--motion-duration-slow) var(--motion-ease-out);
+  transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
+}
+
+.fp-reveal--words.is-pending .fp-reveal__chunk,
+.fp-reveal--lines.is-pending .fp-reveal__chunk {
+  transition: none;
+  transform: translateY(100%);
+}
+
+.fp-reveal--wipe,
+.fp-reveal--zoom {
+  overflow: hidden;
+}
+
+.fp-reveal--wipe {
+  transition: clip-path var(--motion-duration-slow) var(--motion-ease-out);
+}
+
+.fp-reveal--wipe.is-pending {
+  transition: none;
+  clip-path: inset(0 100% 0 0);
+}
+
+.fp-reveal--wipe.is-revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+.fp-reveal--zoom > * {
+  transition: transform var(--motion-duration-slow) var(--motion-ease-out);
+}
+
+.fp-reveal--zoom.is-pending > * {
+  transition: none;
+  transform: scale(1.05);
+}
+
+.fp-reveal--zoom.is-revealed > * {
+  transform: scale(1);
+}
+
+@keyframes fp-reveal-parallax {
+  from {
+    transform: translateY(var(--motion-distance-md));
+  }
+
+  to {
+    transform: translateY(calc(var(--motion-distance-md) * -1));
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .fp-reveal--parallax {
+      animation-name: fp-reveal-parallax;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 10% cover 90%;
+    }
+  }
+}
+
+.fp-text-stream {
+  display: grid;
+  justify-items: start;
+  white-space: pre-wrap;
+}
+
+.fp-text-stream__sizer,
+.fp-text-stream__source,
+.fp-text-stream__live {
+  grid-area: 1 / 1;
+}
+
+.fp-text-stream__sizer {
+  visibility: hidden;
+}
+
+.fp-text-stream__live {
+  align-self: start;
+  justify-self: start;
+}
+
+.fp-text-stream.is-streaming .fp-text-stream__source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fp-text-stream__caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-inline-start: 1px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: fp-text-stream-caret 1s steps(1, end) infinite;
+}
+
+@keyframes fp-text-stream-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-reveal--fade.is-pending,
+  .fp-reveal--rise.is-pending,
+  .fp-reveal--blur.is-pending,
+  .fp-reveal--scale.is-pending,
+  .fp-reveal--stagger.is-pending > :not(.fp-reveal__plain),
+  .fp-reveal--words.is-pending .fp-reveal__chunk,
+  .fp-reveal--lines.is-pending .fp-reveal__chunk,
+  .fp-reveal--wipe.is-pending,
+  .fp-reveal--zoom.is-pending > *,
+  .fp-reveal--parallax {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
+  }
+
+  .fp-text-stream.is-streaming .fp-text-stream__source {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: pre-wrap;
+  }
+
+  .fp-text-stream__live,
+  .fp-text-stream__caret {
+    display: none;
+    animation: none;
+  }
 }
 

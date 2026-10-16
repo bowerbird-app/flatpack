@@ -73,7 +73,8 @@ module FlatPack
       {constant: :LINES, kwargs: %i[lines]},
       {constant: :AS, kwargs: %i[as]},
       {constant: :ICON_VARIANTS, kwargs: %i[icon_variant]},
-      {constant: :ICON_STYLES, kwargs: %i[icon_style]}
+      {constant: :ICON_STYLES, kwargs: %i[icon_style]},
+      {constant: :REVEALS, kwargs: %i[reveal]}
     ].freeze
 
     DOC_KEYS = {
@@ -94,7 +95,8 @@ module FlatPack
       "text_area" => "inputs",
       "text_input" => "inputs",
       "url_input" => "inputs",
-      "comments" => "comments-thread"
+      "comments" => "comments-thread",
+      "text" => "text-stream"
     }.freeze
 
     TYPE_RULES = [

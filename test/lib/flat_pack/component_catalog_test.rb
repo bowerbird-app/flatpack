@@ -402,6 +402,23 @@ module FlatPack
       end
     end
 
+    test "show Reveal binds REVEALS to reveal and documents the component" do
+      payload = FlatPack::ComponentCatalog.show("Reveal::Component")
+
+      assert_equal "Reveal::Component", payload.fetch(:name)
+      reveal = parameter_named(payload, "reveal")
+      assert_equal FlatPack::Reveal::Component::REVEALS.map(&:to_s), reveal.fetch(:enum)
+      refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
+    test "show Text Stream documents the typed line" do
+      payload = FlatPack::ComponentCatalog.show("Text::Stream::Component")
+
+      assert_equal "Text::Stream::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "caret"
+      refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
     test "show returns nil for unknown names and accepts URL aliases" do
       assert_nil FlatPack::ComponentCatalog.show("nope")
 

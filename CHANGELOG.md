@@ -13,6 +13,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.251] - 2026-10-16
+
+### Added
+- Motion tokens: `--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`, `--motion-ease-out`, `--motion-ease-in-out`, `--motion-ease-spring`, `--motion-distance-sm`, `--motion-distance-md`, `--motion-distance-lg`, and `--reveal-stagger`. A theme tunes reveals, the kit enter, and the collage entrance in one place.
+- `reveal:` on any component root that calls `merge_attributes`. `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, and `:zoom`. `stagger: true` indexes the children. `parallax: true` is a gentle scroll shift, only with `:wipe` or `:zoom`.
+- `FlatPack::Reveal::Component` is the wrapper. `:words` and `:lines` split the copy on the server. Each piece slides up out of a mask. The plain sentence stays in a visually hidden span. The pieces are `aria-hidden`.
+- `FlatPack::Text::Stream::Component` types a line once it is in view, with a caret. The full string stays in the DOM for screen readers. The typing is decorative. Put it inside a chat message. There is no `stream:` flag.
+- One Stimulus controller, `flat-pack--reveal`, uses `IntersectionObserver` and reveals once. `flat-pack--text-stream` types once. `prefers-reduced-motion: reduce` shows the finished look. With no JavaScript the content stays visible.
+- Demo: `/demo/motion`.
+- Bumped the gem version to `0.1.249`.
+
+### Changed
+- `.fp-content-enter` and `.fp-empty-state` use `--motion-duration-slow`, `--motion-ease-out`, and `--motion-distance-sm`.
+- `--collage-duration`, `--collage-easing`, `--collage-rise`, and `--collage-stagger` inherit those tokens. A collage token set on its own still wins.
+- Under `prefers-reduced-motion: reduce`, the motion durations and `--reveal-stagger` are `0ms`.
+
+### Upgrade notes
+- New tokens and two components. Nothing was renamed.
+- `reveal: :words` and `reveal: :lines` belong on `FlatPack::Reveal::Component`. On any other component they raise `ArgumentError`.
+- `parallax: true` raises unless the reveal is `:wipe` or `:zoom`.
+- Overriding `--motion-duration-slow` or `--motion-ease-out` also retunes `.fp-content-enter` and the collage entrance. Set the `--collage-*` token when one collage should differ.
+- Do not add `stream:` to `FlatPack::Chat::Message::Component`. Render `FlatPack::Text::Stream::Component` in the message.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.249`.
+
 ## [0.1.250] - 2026-10-16
 
 ### Changed

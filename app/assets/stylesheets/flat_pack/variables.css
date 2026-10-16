@@ -4,7 +4,7 @@
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
  *   2. Spacing scale (--space-1..--space-6) and --density — component padding multiplies a step by density
  *   3. Shape scale (--radius-xs..--radius-xl, --radius-full) — component radii alias a step
- *   4. Semantic tokens (--color-*, --surface-*, --overlay-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
+ *   4. Semantic tokens (--color-*, --surface-*, --overlay-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --motion-*)
  *   5. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
@@ -752,6 +752,16 @@
   --easing-exit: var(--easing-exit);
   --easing-spring: var(--easing-spring);
   --easing-spring-snappy: var(--easing-spring-snappy);
+  --motion-duration-fast: var(--motion-duration-fast);
+  --motion-duration-base: var(--motion-duration-base);
+  --motion-duration-slow: var(--motion-duration-slow);
+  --motion-ease-out: var(--motion-ease-out);
+  --motion-ease-in-out: var(--motion-ease-in-out);
+  --motion-ease-spring: var(--motion-ease-spring);
+  --motion-distance-sm: var(--motion-distance-sm);
+  --motion-distance-md: var(--motion-distance-md);
+  --motion-distance-lg: var(--motion-distance-lg);
+  --reveal-stagger: var(--reveal-stagger);
   --transition-slow: var(--transition-slow);
   --transition-base: var(--transition-base);
   --transition-fast: var(--transition-fast);
@@ -1111,7 +1121,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --collage-lift: calc(var(--collage-offset-y) * -1);
-  --collage-stagger: 40ms;
+  --collage-stagger: var(--reveal-stagger);
   --collage-loose: 2;
   --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
@@ -1127,10 +1137,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
   /* Tablet brick cap. Three across, then the track shrinks if the column is narrower. */
   --collage-item-size-md: 11rem;
-  /* Motion. Durations and easings stay on collage tokens so a theme can retune one collage. */
-  --collage-duration: var(--duration-slow);
-  --collage-easing: var(--easing-enter);
-  --collage-rise: 4px;
+  /* Motion. Defaults follow the shared motion tokens. Override a collage token to retune one collage. */
+  --collage-duration: var(--motion-duration-slow);
+  --collage-easing: var(--motion-ease-out);
+  --collage-rise: var(--motion-distance-sm);
   --collage-deal: 100%;
   --collage-deal-duration: 720ms;
   --collage-drift: 1deg;
@@ -1651,6 +1661,17 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   /* List / layout only — overlays stay on enter/exit with no bounce. */
   --easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1);
   --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1);
+  /* Reveals, type, and media. Themes tune these. Component motion inherits them. */
+  --motion-duration-fast: var(--duration-fast);
+  --motion-duration-base: var(--duration-base);
+  --motion-duration-slow: var(--duration-slow);
+  --motion-ease-out: var(--easing-enter);
+  --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-spring: var(--easing-spring);
+  --motion-distance-sm: 4px;
+  --motion-distance-md: 1rem;
+  --motion-distance-lg: 2rem;
+  --reveal-stagger: 40ms;
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);
   --transition-slow: var(--duration-slow);
@@ -1906,6 +1927,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
     --duration-base: 0ms;
     --duration-slow: 0ms;
     --skeleton-shimmer-duration: 0ms;
+    --motion-duration-fast: 0ms;
+    --motion-duration-base: 0ms;
+    --motion-duration-slow: 0ms;
+    --reveal-stagger: 0ms;
   }
 }
 

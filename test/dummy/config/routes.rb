@@ -207,6 +207,7 @@ Rails.application.routes.draw do
   get "demo/masonry", to: "pages#masonry"
   get "demo/collage", to: "pages#collage"
   get "demo/animated_character", to: "pages#animated_character"
+  get "demo/motion", to: "pages#motion"
   get "demo/overlay", to: "pages#overlay"
   get "demo/video_preview", to: "pages#video_preview"
   get "demo/fab", to: "pages#fab"

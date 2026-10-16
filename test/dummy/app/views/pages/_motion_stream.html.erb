@@ -1,0 +1,7 @@
+<div id="motion-stream" class="flex min-h-screen items-center">
+  <div class="w-full max-w-lg">
+    <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "9:41 AM") do %>
+      <%= render FlatPack::Text::Stream::Component.new(text: "The walnut stool ships Friday. I can hold the last one if you want it.") %>
+    <% end %>
+  </div>
+</div>

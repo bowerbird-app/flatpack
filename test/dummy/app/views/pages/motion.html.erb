@@ -1,0 +1,115 @@
+<% if @motion_clip.present? %>
+  <div id="motion-clip" class="mx-auto w-full max-w-5xl px-6 py-8">
+    <div class="min-h-screen" aria-hidden="true"></div>
+    <%= render "pages/motion_#{@motion_clip}" %>
+    <div class="h-screen" aria-hidden="true"></div>
+  </div>
+<% else %>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Motion",
+  subtitle: "One set of tokens. Scroll reveals, split type, media, and a typed line."
+) %>
+
+<%= render "pages/component_method_variables_table", components: [:reveal, :text_stream] %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-16" id="tokens">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Tokens",
+    anchor_link: true,
+    subtitle: "Same rise. The fast card uses the fast duration."
+  ) %>
+  <%= render "pages/motion_tokens" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Fast and slow (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      <div style="--motion-duration-slow: var(--motion-duration-fast)">
+        #{erb_output_open} render FlatPack::Card::Component.new(reveal: :rise, shadow: :sm) do #{erb_tag_close}
+          Same rise
+        #{erb_output_open} end #{erb_tag_close}
+      </div>
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="reveal">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Scroll reveal",
+    anchor_link: true,
+    subtitle: "Fade, rise, blur, scale. Then the children, one after another."
+  ) %>
+  <%= render "pages/motion_reveal" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A staggered rise (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, stagger: true) do #{erb_tag_close}
+        <div>Oak</div>
+        <div>Walnut</div>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="text">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Text",
+    anchor_link: true,
+    subtitle: "Words, then lines. Each one slides up out of a mask."
+  ) %>
+  <%= render "pages/motion_text" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Words (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :words, tag: :h2, text: "Pack the walnut") #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="media">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Media",
+    anchor_link: true,
+    subtitle: "A wipe, a zoom, and a zoom that drifts as you scroll."
+  ) %>
+  <%= render "pages/motion_media" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Zoom with parallax (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :zoom, parallax: true) do #{erb_tag_close}
+        #{erb_output_open} image_tag "/images/hero-stool.jpg", alt: "A wooden stool" #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="stream">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Streaming text",
+    anchor_link: true,
+    subtitle: "The line types when you reach it. The caret is just paint."
+  ) %>
+  <%= render "pages/motion_stream" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A typed reply (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chat::Message::Component.new(direction: :incoming) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Text::Stream::Component.new(text: "The walnut stool ships Friday.") #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+<% end %>

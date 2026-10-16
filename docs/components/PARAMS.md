@@ -61,6 +61,9 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Collage idle | `idle` | `FlatPack::Collage::Component` only. `:none` (default) or `:drift` (a slow ±1deg sway). Off below `md`. |
 | Collage hover | `hover` | `FlatPack::Collage::Component` only. `:lift` (default), `:focus` (straighten, raise, siblings ease back), or `:none`. Pointer hover needs `(hover: hover)`. Keyboard uses `:focus-visible` and `:focus-within`. Off below `md`. |
 | Collage phone count | `mobile_items` | `FlatPack::Collage::Component` only. Default `4`. How many items stay in the phone row. Later items stay in the markup and are not displayed below `md`. Ignored when `stack_below` is set. |
+| Scroll reveal | `reveal` | Any component root that calls `merge_attributes`, and `FlatPack::Reveal::Component`. `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, `:zoom`. `:words` and `:lines` are the Reveal component only. |
+| Reveal children | `stagger` | Boolean. `true` sets `--reveal-index` on the children of a box reveal. Not a text-stream prop. |
+| Media scroll shift | `parallax` | Boolean. `true` only with `reveal: :wipe` or `reveal: :zoom`. CSS `animation-timeline: view()` when supported. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). Animated character sizes are `:sm`, `:md`, `:lg`, `:xl` on a larger scale than icons (`:xl` is `w-40`). |
 | Character definition | `definition` | `FlatPack::AnimatedCharacter::Component` only. A Hash of `parts` and `states`. Not a raw SVG string. |
@@ -132,3 +135,6 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Button `title` is the full-text tooltip. Do not use it as a heading. Button `label` is not the visible string; use `text`.
 - Do not add `icon_class` on a button. Recolour the glyph with `icon_style` and the `--button-icon-*` tokens.
 - Do not use `label` for a key/value term. Use `key`. The item block is the value.
+- Do not pass `reveal: :words` or `reveal: :lines` as a system argument. Those split the copy in `FlatPack::Reveal::Component`.
+- Do not pass `parallax: true` with `:fade`, `:rise`, `:blur`, `:scale`, `:words`, or `:lines`. It belongs on `:wipe` and `:zoom`.
+- Do not add `stream:` to a chat message. Render `FlatPack::Text::Stream::Component` inside the message.
