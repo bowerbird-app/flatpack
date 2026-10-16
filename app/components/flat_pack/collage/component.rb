@@ -7,6 +7,9 @@ module FlatPack
       undef_method :with_item, :with_item_content
 
       SCATTERS = %i[subtle loose none].freeze
+      ENTRANCES = %i[rise deal none].freeze
+      IDLES = %i[none drift].freeze
+      HOVERS = %i[lift focus none].freeze
       STACK_BELOWS = %i[sm md lg xl].freeze
       COLUMN_COUNTS = (1..6)
       ROW_LIMIT = 8
@@ -20,23 +23,33 @@ module FlatPack
         scatter: :subtle,
         stack_below: nil,
         mobile_items: MOBILE_ITEMS_DEFAULT,
-        motion: true,
+        entrance: :rise,
+        idle: :none,
+        hover: :lift,
         **system_arguments
       )
+        if system_arguments.key?(:motion)
+          raise ArgumentError, "motion: is gone. Pass entrance:, idle:, and hover:."
+        end
+
         super(**system_arguments)
         @columns = normalize_columns(columns)
         @rows = normalize_rows(rows)
-        @scatter = scatter.to_sym
+        @scatter = normalize_choice(scatter)
         @stack_below = normalize_stack_below(stack_below)
         @mobile_items = normalize_mobile_items(mobile_items)
-        @motion = motion
+        @entrance = normalize_choice(entrance)
+        @idle = normalize_choice(idle)
+        @hover = normalize_choice(hover)
 
         validate_columns!
         validate_rows!
         validate_scatter!
         validate_stack_below!
         validate_mobile_items!
-        validate_motion!
+        validate_entrance!
+        validate_idle!
+        validate_hover!
       end
 
       def item(**kwargs, &block)
@@ -55,9 +68,15 @@ module FlatPack
       def prepare_items!
         items.each_with_index do |item, index|
           item.index = index
-          item.motion = @motion
+          item.entrance = @entrance
+          item.idle = @idle
           item.rows = @rows
           item.spare = index >= @mobile_items
+          next unless @entrance == :deal
+
+          x, y = item_place(index)
+          item.place_x = x
+          item.place_y = y
         end
       end
 
@@ -76,13 +95,21 @@ module FlatPack
           ("fp-collage--stack-#{@stack_below}" if @stack_below),
           ("fp-collage--teaser" unless @stack_below),
           ("fp-collage--brick" if @rows),
-          ("fp-collage--motion" if @motion)
+          "fp-collage--entrance-#{@entrance}",
+          "fp-collage--idle-#{@idle}",
+          "fp-collage--hover-#{@hover}"
         )
       end
 
       def collage_style
         parts = ["--fp-collage-columns: #{@columns}"]
         parts << "--fp-collage-tracks: #{@rows.max * 2}" if @rows
+        if @entrance == :deal
+          parts << "--fp-collage-center-x: #{css_number(center_x)}"
+          parts << "--fp-collage-center-y: #{css_number(center_y)}"
+          parts << "--fp-collage-count: #{items.size}"
+          parts << "--fp-collage-mobile: #{@mobile_items}"
+        end
         parts.join("; ")
       end
 
@@ -152,10 +179,59 @@ module FlatPack
         raise ArgumentError, "Invalid mobile_items: #{@mobile_items.inspect}. Must be an integer from 1 to 24."
       end
 
-      def validate_motion!
-        return if @motion == true || @motion == false
+      def validate_entrance!
+        return if ENTRANCES.include?(@entrance)
 
-        raise ArgumentError, "Invalid motion: #{@motion.inspect}. Must be true or false."
+        raise ArgumentError, "Invalid entrance: #{@entrance.inspect}. Must be one of: #{ENTRANCES.join(", ")}."
+      end
+
+      def validate_idle!
+        return if IDLES.include?(@idle)
+
+        raise ArgumentError, "Invalid idle: #{@idle.inspect}. Must be one of: #{IDLES.join(", ")}."
+      end
+
+      def validate_hover!
+        return if HOVERS.include?(@hover)
+
+        raise ArgumentError, "Invalid hover: #{@hover.inspect}. Must be one of: #{HOVERS.join(", ")}."
+      end
+
+      def normalize_choice(value)
+        value.to_sym
+      rescue NoMethodError
+        value
+      end
+
+      # Card widths from the collage centre. CSS multiplies by --collage-deal.
+      # A shorter brick row is already centered, so its place sits on the wide row's scale.
+      def item_place(index)
+        if @rows
+          spot = Item.spot(index, @rows)
+          [(spot[:start] - 1) / spot[:span].to_f, spot[:row] - 1]
+        else
+          [index % @columns, index / @columns]
+        end
+      end
+
+      def center_x
+        wide = @rows ? @rows.max : @columns
+        (wide - 1) / 2.0
+      end
+
+      def center_y
+        count = items.size
+        return 0.0 if count.zero?
+
+        if @rows
+          (Item.spot(count - 1, @rows)[:row] - 1) / 2.0
+        else
+          ((count.to_f / @columns).ceil - 1) / 2.0
+        end
+      end
+
+      def css_number(number)
+        format("%.2f", number).sub(/0+\z/, "").sub(/\.\z/, "")
       end
     end
   end

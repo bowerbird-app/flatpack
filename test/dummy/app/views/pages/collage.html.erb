@@ -1,3 +1,19 @@
+<% if @collage_clip.present? %>
+  <div id="collage-clip" class="flex min-h-dvh w-full flex-col justify-center">
+    <% case @collage_clip %>
+    <% when "rise" %>
+      <%= render "pages/collage_cards", id: "clip-rise", entrance: :rise, idle: :none, hover: :none %>
+    <% when "deal" %>
+      <%= render "pages/collage_cards", id: "clip-deal", entrance: :deal, idle: :none, hover: :none %>
+    <% when "drift" %>
+      <%= render "pages/collage_cards", id: "clip-drift", entrance: :none, idle: :drift, hover: :none %>
+    <% when "lift" %>
+      <%= render "pages/collage_cards", id: "clip-lift", entrance: :none, idle: :none, hover: :lift, anchor: "#clip-lift" %>
+    <% when "focus" %>
+      <%= render "pages/collage_cards", id: "clip-focus", entrance: :none, idle: :none, hover: :focus, anchor: "#clip-focus" %>
+    <% end %>
+  </div>
+<% else %>
 <%= render FlatPack::PageTitle::Component.new(
   title: "Collage",
   subtitle: "Five across, four between them. On a phone, four cards in a short row."
@@ -125,3 +141,83 @@
     <% end %>
   <% end %>
 </section>
+
+<section class="mb-12" id="collage-entrance">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Entrance",
+    anchor_link: true,
+    subtitle: "How the cards come in."
+  ) %>
+
+  <div class="mb-8" id="entrance-rise">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Rise", subtitle: "They fade up, one after another.") %>
+    <%= render "pages/collage_cards", id: "collage-rise", entrance: :rise, idle: :none, hover: :none %>
+  </div>
+
+  <div class="mb-8" id="entrance-deal">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Deal", subtitle: "Flat in the middle, then they lean into place.") %>
+    <%= render "pages/collage_cards", id: "collage-deal", entrance: :deal, idle: :none, hover: :none %>
+  </div>
+
+  <div id="entrance-none">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Still", subtitle: "No entrance.") %>
+    <%= render "pages/collage_cards", id: "collage-entrance-none", entrance: :none, idle: :none, hover: :none %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Entrance, idle, and hover (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Collage::Component.new(rows: [4], entrance: :deal, idle: :drift, hover: :focus) do |collage| #{erb_tag_close}
+        #{erb_output_open} collage.item do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Card::Component.new(shadow: :sm) do #{erb_tag_close}
+            One
+          #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="collage-idle">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Idle",
+    anchor_link: true,
+    subtitle: "After they land. The default is still."
+  ) %>
+
+  <div class="mb-8" id="idle-none">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Still", subtitle: "The cards stay where they landed.") %>
+    <%= render "pages/collage_cards", id: "collage-idle-none", entrance: :none, idle: :none, hover: :none %>
+  </div>
+
+  <div id="idle-drift">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Drift", subtitle: "A slow sway, about a degree, each card on its own beat.") %>
+    <%= render "pages/collage_cards", id: "collage-drift", entrance: :none, idle: :drift, hover: :none %>
+  </div>
+</section>
+
+<section class="mb-12" id="collage-hover">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Hover",
+    anchor_link: true,
+    subtitle: "Under the pointer. Tab to a card for the same move."
+  ) %>
+
+  <div class="mb-8" id="hover-lift">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Lift", subtitle: "The card rises. The lean stays.") %>
+    <%= render "pages/collage_cards", id: "collage-lift", entrance: :none, idle: :none, hover: :lift, anchor: "#hover-lift" %>
+  </div>
+
+  <div class="mb-8" id="hover-focus">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Focus", subtitle: "It straightens and comes forward. The others ease back.") %>
+    <%= render "pages/collage_cards", id: "collage-focus", entrance: :none, idle: :none, hover: :focus, anchor: "#hover-focus" %>
+  </div>
+
+  <div id="hover-none">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Still", subtitle: "No hover.") %>
+    <%= render "pages/collage_cards", id: "collage-hover-none", entrance: :none, idle: :none, hover: :none %>
+  </div>
+</section>
+<% end %>

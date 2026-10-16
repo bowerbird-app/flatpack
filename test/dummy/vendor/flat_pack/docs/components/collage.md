@@ -19,7 +19,9 @@ Use Collage when several pieces of host content should sit in a loose cluster. T
 | `scatter` | Symbol | `:subtle` | No | Tilt and offset. Allowed: `:subtle`, `:loose`, `:none`. `:none` sits square. Invalid values raise `ArgumentError`. |
 | `stack_below` | Symbol | `nil` | No | Opt in to a straight list. Below this breakpoint the items are one column and the tilt is off. Allowed: `:sm`, `:md`, `:lg`, `:xl`, or omit it. Not List `stack_below`. Invalid values raise `ArgumentError`. |
 | `mobile_items` | Integer | `4` | No | How many items stay in the phone row. Later items stay in source order and are not displayed below `md`. From 1 to 24. Ignored when `stack_below` is set, because that list shows every item. Invalid values raise `ArgumentError`. |
-| `motion` | Boolean | `true` | No | `true` staggers the enter rise and lifts on hover. `false` leaves the scatter still. `prefers-reduced-motion: reduce` skips both. Anything else raises `ArgumentError`. |
+| `entrance` | Symbol | `:rise` | No | How the cards arrive. `:rise` staggers a fade-up. `:deal` starts each item flat and near the centre, moves it into place, then settles the tilt. `:none` is already there. Invalid values raise `ArgumentError`. |
+| `idle` | Symbol | `:none` | No | What the cards do after they land. `:drift` is a slow sway of about ±1deg, each item on its own beat. `:none` holds still. Invalid values raise `ArgumentError`. |
+| `hover` | Symbol | `:lift` | No | What a card does under the pointer, from `md` up. `:lift` raises it and keeps the lean. `:focus` straightens it, raises it, and brings it forward while the others ease back. `:none` leaves them. Keyboard focus does the same. Invalid values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the collage container. |
 
 ## Slots
@@ -34,7 +36,13 @@ Use Collage when several pieces of host content should sit in a loose cluster. T
 | `scatter: :subtle` | Default. Each item tilts within `--collage-rotate` and shifts within `--collage-offset-x` / `--collage-offset-y`. |
 | `scatter: :loose` | Same pattern, multiplied by `--collage-loose` (default `2`). |
 | `scatter: :none` | No tilt and no offset, unless an item passes `rotate` or `offset`. |
-| `motion: false` | No enter stagger and no hover lift. The scatter stays. |
+| `entrance: :rise` | Default. Each item fades and rises `--collage-rise` (4px), staggered by `min(index, 8) * --collage-stagger`. |
+| `entrance: :deal` | Each item starts flat and near the centre, moves to its place, then settles into its tilt. Same stagger. On a phone the centre is the phone row. From `md` to `lg` a brick deals from the three-across rows. |
+| `entrance: :none` | No entrance. The scatter is already in place. |
+| `idle: :drift` | After landing, each item sways by `--collage-drift` (`1deg`) over `--collage-drift-duration` (`8s`). The delay is the index times `--collage-drift-phase`, so neighbours are out of step. Off below `md`. |
+| `hover: :lift` | Default, from `md` up, and only when the device can hover. The item moves by `--collage-lift` and paints in front. `:focus-visible` and `:focus-within` do the same for the keyboard. |
+| `hover: :focus` | The hovered item straightens (`rotate: 0deg`), rises by `--collage-focus-lift`, and paints in front. Siblings scale to `--collage-focus-scale` and fade to `--collage-focus-dim`. Same for keyboard focus. Off below `md`. |
+| `hover: :none` | No hover and no focus move. |
 
 The tilt for an index is a deterministic mix in the range -1 to 1. The same index renders the same lean. Per-item `rotate` and `offset` replace that lean. `z` sets the paint order. The default is the index plus one, so a later card paints over an earlier one where they overlap.
 
@@ -66,17 +74,24 @@ A straight list below `md`:
 Square, and still:
 
 ```erb
-<%= render FlatPack::Collage::Component.new(scatter: :none, motion: false, columns: 3) do |collage| %>
+<%= render FlatPack::Collage::Component.new(scatter: :none, entrance: :none, hover: :none, columns: 3) do |collage| %>
+  <% collage.item { "Notes" } %>
+<% end %>
+```
+
+Deal, then a slow sway, and a focus hover:
+
+```erb
+<%= render FlatPack::Collage::Component.new(rows: [5, 4], entrance: :deal, idle: :drift, hover: :focus) do |collage| %>
   <% collage.item { "Notes" } %>
 <% end %>
 ```
 
 ## Accessibility
-The grid does not change source order. What you tab and what a screen reader reads is the order of the `item` calls. Below `md`, items past `mobile_items` are `display: none`. They stay in the markup, in the same order, and they come back on a wider screen, so the markup does not set `aria-hidden`. Below `stack_below` every item is in the list and the tilt is off. Image `alt` belongs on the host image. Hover lift also runs for `:focus-within`, and it does not run under `prefers-reduced-motion: reduce` or `motion: false`.
+The grid does not change source order. What you tab and what a screen reader reads is the order of the `item` calls. Below `md`, items past `mobile_items` are `display: none`. They stay in the markup, in the same order, and they come back on a wider screen, so the markup does not set `aria-hidden`. Below `stack_below` every item is in the list and the tilt is off. Image `alt` belongs on the host image. Pointer hover runs only under `(hover: hover)` and only from `md` up. `:focus-visible` and `:focus-within` repeat that move for the keyboard, so a link or button inside the item is enough. `prefers-reduced-motion: reduce` skips the entrance, the sway, and the hover. Below `md`, only the entrance runs.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Entrance uses `.fp-content-enter`: opacity and a 4px rise on `--duration-slow` / `--easing-enter`. Stagger delay is `min(index, 8) * --collage-stagger` (default `40ms`). Hover lift uses the same duration and easing, by `--collage-lift`.
-- `--collage-rotate` (`5deg`), `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, `--collage-stagger`, `--collage-loose`, `--collage-gap`, `--collage-pad`, `--collage-bleed`, `--collage-margin`, `--collage-overlap`, `--collage-card-ratio`, `--collage-card-sway`, `--collage-item-size-sm`, and `--collage-item-size-md` are theme tokens. Lengths follow `--space-*` and `--density`, except the ratio (`0.928`, about 260 by 280), the sway (`0.1`), the phone width (about `0.7 * 33dvh` times the ratio), and the tablet cap (`11rem`).
+- No Stimulus controller. No JavaScript. No absolute positioning. `:rise` uses `.fp-content-enter` with `--collage-rise`, `--collage-duration`, and `--collage-easing`. `:deal` is a CSS animation on the item. `:drift` is a CSS animation on an inner wrapper. `:focus` uses `:has()` and sibling selectors. Stagger delay is `min(index, 8) * --collage-stagger` (default `40ms`).
+- `--collage-rotate` (`5deg`), `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, `--collage-stagger`, `--collage-loose`, `--collage-gap`, `--collage-pad`, `--collage-bleed`, `--collage-margin`, `--collage-overlap`, `--collage-card-ratio`, `--collage-card-sway`, `--collage-item-size-sm`, and `--collage-item-size-md` are the layout tokens. Motion tokens are `--collage-duration` (`--duration-slow`), `--collage-easing` (`--easing-enter`), `--collage-rise` (`4px`), `--collage-deal` (`100%`), `--collage-deal-duration` (`720ms`), `--collage-drift` (`1deg`), `--collage-drift-duration` (`8s`), `--collage-drift-easing` (`ease-in-out`), `--collage-drift-phase` (`-1.15s`), `--collage-focus-lift`, `--collage-focus-scale` (`0.97`), and `--collage-focus-dim` (`0.62`). Layout lengths follow `--space-*` and `--density`, except the ratio (`0.928`, about 260 by 280), the card sway (`0.1`), the phone width (about `0.7 * 33dvh` times the ratio), and the tablet cap (`11rem`).
 - An even grid pads by `--collage-pad` plus one offset and one bleed per scatter unit. A brick uses `--collage-margin` (about 32px) and pulls the next row up by `--collage-overlap`. Below `md` the phone row is `33dvh` tall with no inset, so the side cards can cross the frame. Below `stack_below` the overlap and the tilt drop, and the padding is `--collage-pad`.
-- No Stimulus controller. No absolute positioning.

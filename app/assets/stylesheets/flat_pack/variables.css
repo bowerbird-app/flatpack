@@ -831,6 +831,18 @@
   --collage-card-sway: var(--collage-card-sway);
   --collage-item-size-sm: var(--collage-item-size-sm);
   --collage-item-size-md: var(--collage-item-size-md);
+  --collage-duration: var(--collage-duration);
+  --collage-easing: var(--collage-easing);
+  --collage-rise: var(--collage-rise);
+  --collage-deal: var(--collage-deal);
+  --collage-deal-duration: var(--collage-deal-duration);
+  --collage-drift: var(--collage-drift);
+  --collage-drift-duration: var(--collage-drift-duration);
+  --collage-drift-easing: var(--collage-drift-easing);
+  --collage-drift-phase: var(--collage-drift-phase);
+  --collage-focus-lift: var(--collage-focus-lift);
+  --collage-focus-scale: var(--collage-focus-scale);
+  --collage-focus-dim: var(--collage-focus-dim);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1099,6 +1111,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
   /* Tablet brick cap. Three across, then the track shrinks if the column is narrower. */
   --collage-item-size-md: 11rem;
+  /* Motion. Durations and easings stay on collage tokens so a theme can retune one collage. */
+  --collage-duration: var(--duration-slow);
+  --collage-easing: var(--easing-enter);
+  --collage-rise: 4px;
+  --collage-deal: 100%;
+  --collage-deal-duration: 720ms;
+  --collage-drift: 1deg;
+  --collage-drift-duration: 8s;
+  --collage-drift-easing: ease-in-out;
+  --collage-drift-phase: -1.15s;
+  --collage-focus-lift: calc(var(--collage-lift) * 2);
+  --collage-focus-scale: 0.97;
+  --collage-focus-dim: 0.62;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

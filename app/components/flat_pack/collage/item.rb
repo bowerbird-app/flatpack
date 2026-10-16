@@ -7,7 +7,7 @@ module FlatPack
       LENGTH = /\A(?:-?(?:\d+|\d*\.\d+)(?:px|rem|em|%)|var\(--[a-z0-9-]+\))\z/i
       MAX_DEGREES = 180
 
-      attr_writer :index, :motion, :rows, :spare
+      attr_writer :index, :entrance, :idle, :rows, :spare, :place_x, :place_y
 
       def initialize(rotate: nil, offset: nil, z: nil, **system_arguments)
         super(**system_arguments)
@@ -69,9 +69,12 @@ module FlatPack
       private
 
       def item_body
-        return content unless motion?
+        classes = []
+        classes << "fp-content-enter" if rise?
+        classes << "fp-collage__drift" if drift?
+        return content if classes.empty?
 
-        content_tag(:div, content, class: "fp-content-enter")
+        content_tag(:div, content, class: classes.join(" "))
       end
 
       def item_attributes
@@ -102,6 +105,10 @@ module FlatPack
           parts << "--fp-collage-x: #{@offset[0]}"
           parts << "--fp-collage-y: #{@offset[1]}"
         end
+        if deal?
+          parts << "--fp-collage-place-x: #{css_number(@place_x)}"
+          parts << "--fp-collage-place-y: #{css_number(@place_y)}"
+        end
         parts.join("; ")
       end
 
@@ -121,8 +128,16 @@ module FlatPack
         @index || 0
       end
 
-      def motion?
-        @motion != false
+      def rise?
+        @entrance == :rise
+      end
+
+      def drift?
+        @idle == :drift
+      end
+
+      def deal?
+        @entrance == :deal && !@place_x.nil? && !@place_y.nil?
       end
 
       def z_index

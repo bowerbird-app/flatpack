@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.248] - 2026-10-16
+
+### Changed
+- `FlatPack::Collage::Component` takes `entrance:`, `idle:`, and `hover:` instead of `motion:`.
+- `entrance:` is `:rise` (default, the staggered fade-up), `:deal` (flat, near the centre, then into place, then the tilt settles), or `:none`.
+- `idle:` is `:none` (default) or `:drift` (a slow sway of about ±1deg, each item on its own beat).
+- `hover:` is `:lift` (default), `:focus` (straighten, raise, and bring forward while siblings ease back), or `:none`. Pointer hover runs under `(hover: hover)`. Keyboard focus uses `:focus-visible` and `:focus-within`.
+- Below `md`, only the entrance runs. `prefers-reduced-motion: reduce` skips the entrance, the sway, and the hover.
+- Motion durations, distances, and easings are `--collage-*` tokens: `--collage-duration`, `--collage-easing`, `--collage-rise`, `--collage-deal`, `--collage-deal-duration`, `--collage-drift`, `--collage-drift-duration`, `--collage-drift-easing`, `--collage-drift-phase`, `--collage-focus-lift`, `--collage-focus-scale`, and `--collage-focus-dim`.
+- Demo: `/demo/collage` has a section for each option.
+- Bumped the gem version to `0.1.248`.
+
+### Upgrade notes
+- `motion:` is gone. Pass `entrance:`, `idle:`, and `hover:`. There is no alias.
+- The old default (`motion: true`) is `entrance: :rise`, `idle: :none`, `hover: :lift`.
+- The old `motion: false` is `entrance: :none, hover: :none`.
+- `:drift` and both hover styles are off below `md`. Pass `entrance: :none` when a phone should not animate.
+- Tune the motion with the new `--collage-*` tokens. `--collage-duration` follows `--duration-slow`, and `--collage-easing` follows `--easing-enter`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.248`.
+
 ## [0.1.247] - 2026-10-16
 
 ### Added
