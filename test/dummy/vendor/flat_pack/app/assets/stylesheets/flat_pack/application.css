@@ -3665,3 +3665,130 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+/* Number. The finished string is in the page. With scripting, the stage
+ * paints the count, roll, or fade, and the finished string is clipped
+ * until reduced motion or a browser without scripting restores it.
+ */
+.fp-number {
+  display: inline-grid;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.fp-number__sizer,
+.fp-number__final,
+.fp-number__stage {
+  grid-area: 1 / 1;
+}
+
+.fp-number__sizer {
+  visibility: hidden;
+}
+
+.fp-number__stage {
+  display: none;
+  justify-self: end;
+}
+
+.fp-number:not(.is-static) .fp-number__final {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fp-number:not(.is-static) .fp-number__stage {
+  display: block;
+}
+
+.fp-number__roll,
+.fp-number__columns {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.fp-number__digit {
+  display: block;
+  height: 1em;
+  width: 1ch;
+  overflow: hidden;
+}
+
+.fp-number__glyph {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.fp-number__mark,
+.fp-number__affix {
+  line-height: 1;
+}
+
+.fp-number__strip {
+  display: block;
+  transition: transform var(--fp-number-duration, var(--motion-duration-slow)) var(--motion-ease-out);
+}
+
+.fp-number--fade .fp-number__stage {
+  opacity: 0;
+  transition: opacity var(--fp-number-duration, var(--motion-duration-slow)) var(--motion-ease-out);
+}
+
+.fp-number--fade.is-settled .fp-number__stage {
+  opacity: 1;
+}
+
+.fp-number.is-pending .fp-number__strip,
+.fp-number.is-pending.fp-number--fade .fp-number__stage {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-number:not(.is-static) .fp-number__final {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: nowrap;
+  }
+
+  .fp-number:not(.is-static) .fp-number__stage,
+  .fp-number__stage {
+    display: none;
+  }
+
+  .fp-number__strip,
+  .fp-number--fade .fp-number__stage {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (scripting: none) {
+  .fp-number:not(.is-static) .fp-number__final {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: nowrap;
+  }
+
+  .fp-number:not(.is-static) .fp-number__stage,
+  .fp-number__stage {
+    display: none;
+  }
+}
+

@@ -1,0 +1,39 @@
+<div id="motion-numbers" class="flex flex-col gap-12">
+  <div>
+    <p class="mb-4 text-sm font-medium">Styles</p>
+    <div class="grid items-end gap-8 md:grid-cols-4">
+      <% [
+        [:count, "Count", 2480, :number],
+        [:roll, "Roll", 2480, :number],
+        [:fade, "Fade", 2480, :number],
+        [:none, "None", 2480, :number]
+      ].each do |animate, label, value, format| %>
+        <div id="number-<%= animate %>">
+          <p class="mb-3 text-sm font-medium"><%= label %></p>
+          <%= render FlatPack::Number::Component.new(value: value, animate: animate, format: format, class: "text-3xl font-semibold") %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div>
+    <p class="mb-4 text-sm font-medium">Formats</p>
+    <div class="grid items-end gap-8 md:grid-cols-4">
+      <div id="number-currency">
+        <p class="mb-3 text-sm font-medium">Currency</p>
+        <%= render FlatPack::Number::Component.new(value: 1280, format: :currency, currency: "USD", class: "text-3xl font-semibold") %>
+      </div>
+      <div id="number-percent">
+        <p class="mb-3 text-sm font-medium">Percent</p>
+        <%= render FlatPack::Number::Component.new(value: 0.64, format: :percent, class: "text-3xl font-semibold") %>
+      </div>
+      <div id="number-compact">
+        <p class="mb-3 text-sm font-medium">Compact</p>
+        <%= render FlatPack::Number::Component.new(value: 12_000, format: :compact, class: "text-3xl font-semibold") %>
+      </div>
+      <div id="number-affix">
+        <p class="mb-3 text-sm font-medium">Prefix</p>
+        <%= render FlatPack::Number::Component.new(value: 18, prefix: "About ", suffix: " left", class: "text-3xl font-semibold") %>
+      </div>
+    </div>
+  </div>
+</div>

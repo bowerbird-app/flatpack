@@ -1424,6 +1424,23 @@
         { variable: "tab / panel", accepts: "id:, label:, block", example: "tabs.tab(id: \"overview\", label: \"Overview\")" }
       ]
     },
+    number: {
+      label: "Number",
+      method_call: "render FlatPack::Number::Component.new(value: 2480, format: :number, animate: :count)",
+      variables: [
+        { variable: "value", accepts: "Numeric or plain numeric String (required)", example: "value: 2480" },
+        { variable: "from", accepts: "Numeric or plain numeric String", example: "from: 0" },
+        { variable: "format", accepts: ":number, :currency, :percent, :compact", example: "format: :currency" },
+        { variable: "currency", accepts: "Three-letter String, required for :currency", example: "currency: \"USD\"" },
+        { variable: "decimals", accepts: "Integer 0–20 or nil", example: "decimals: 0" },
+        { variable: "prefix", accepts: "String or nil", example: "prefix: \"About \"" },
+        { variable: "suffix", accepts: "String or nil", example: "suffix: \" left\"" },
+        { variable: "duration", accepts: ":fast, :base, :slow", example: "duration: :slow" },
+        { variable: "animate", accepts: ":count, :roll, :fade, :none", example: "animate: :roll" },
+        { variable: "tag", accepts: ":div, :span, :p, :h1, :h2, :h3, :h4, :h5, :h6, :blockquote, :li", example: "tag: :span" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"text-3xl\", id: \"total\"" }
+      ]
+    },
     text_stream: {
       label: "Text Stream",
       method_call: "render FlatPack::Text::Stream::Component.new(text: \"The walnut stool ships Friday.\")",

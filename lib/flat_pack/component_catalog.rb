@@ -74,7 +74,10 @@ module FlatPack
       {constant: :AS, kwargs: %i[as]},
       {constant: :ICON_VARIANTS, kwargs: %i[icon_variant]},
       {constant: :ICON_STYLES, kwargs: %i[icon_style]},
-      {constant: :REVEALS, kwargs: %i[reveal]}
+      {constant: :REVEALS, kwargs: %i[reveal]},
+      {constant: :FORMATS, kwargs: %i[format]},
+      {constant: :ANIMATIONS, kwargs: %i[animate]},
+      {constant: :DURATIONS, kwargs: %i[duration]}
     ].freeze
 
     DOC_KEYS = {

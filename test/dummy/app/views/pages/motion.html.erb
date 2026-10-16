@@ -1,6 +1,6 @@
 <% if @motion_specimen.present? %>
   <div id="motion-clip" class="mx-auto flex min-h-dvh w-full max-w-5xl items-center px-6">
-    <% if @motion_specimen == "stream" %>
+    <% if %w[stream count roll number-fade].include?(@motion_specimen) %>
       <%= render "pages/motion_one", variant: @motion_specimen %>
     <% else %>
       <div class="grid w-full items-start gap-8 md:grid-cols-2">
@@ -18,10 +18,10 @@
 <% else %>
 <%= render FlatPack::PageTitle::Component.new(
   title: "Motion",
-  subtitle: "One set of tokens. Scroll reveals, split type, media, and a typed line."
+  subtitle: "One set of tokens. Scroll reveals, split type, media, a typed line, and a number."
 ) %>
 
-<%= render "pages/component_method_variables_table", components: [:reveal, :text_stream] %>
+<%= render "pages/component_method_variables_table", components: [:reveal, :text_stream, :number] %>
 
 <%
   erb_output_open = "<" + "%="
@@ -64,6 +64,25 @@
       #{erb_output_open} render FlatPack::Card::Component.new(reveal: :fade, style: :brand) do #{erb_tag_close}
         Fade
       #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="numbers">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Numbers",
+    anchor_link: true,
+    subtitle: "Count, roll, or fade. The finished number is already in the page."
+  ) %>
+  <%= render "pages/motion_numbers" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A counted total (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Number::Component.new(value: 2480) #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Number::Component.new(value: 1280, format: :currency, currency: "USD", animate: :roll) #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Number::Component.new(value: 0.64, format: :percent, animate: :fade) #{erb_tag_close}
     CODE
   ) %>
 </section>

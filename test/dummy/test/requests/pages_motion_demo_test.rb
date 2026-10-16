@@ -36,8 +36,20 @@ class PagesMotionDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Pack the walnut"
     assert_includes response.body, "fp-text-stream"
     assert_includes response.body, "The walnut stool ships Friday."
+    assert_includes response.body, "Numbers"
+    assert_includes response.body, "fp-number--count"
+    assert_includes response.body, "fp-number--roll"
+    assert_includes response.body, "fp-number--fade"
+    assert_includes response.body, "fp-number--none"
+    assert_includes response.body, "is-static"
+    assert_includes response.body, ">2,480<"
+    assert_includes response.body, "$1,280.00"
+    assert_includes response.body, ">64%<"
+    assert_includes response.body, ">12K<"
+    assert_includes response.body, "About 18 left"
     refute_includes response.body, "is-pending"
     refute_includes response.body, "is-streaming"
+    refute_includes response.body, "is-settled"
   end
 
   test "motion specimen clip renders one reveal" do
@@ -65,6 +77,31 @@ class PagesMotionDemoTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "fp-reveal--wipe"
     refute_includes response.body, "fp-text-stream"
     refute_includes response.body, "Same rise"
+  end
+
+  test "motion number clip renders one counter" do
+    get "/demo/motion?clip=count"
+
+    assert_response :success
+    assert_includes response.body, "id=\"motion-clip\""
+    assert_includes response.body, "fp-number--count"
+    assert_includes response.body, ">2,480<"
+    assert_includes response.body, ">Count<"
+    refute_includes response.body, "fp-number--roll"
+    refute_includes response.body, "fp-reveal--fade"
+    refute_includes response.body, "is-pending"
+    refute_includes response.body, "Same rise"
+  end
+
+  test "motion number fade clip renders one fade" do
+    get "/demo/motion?clip=number-fade"
+
+    assert_response :success
+    assert_includes response.body, "fp-number--fade"
+    assert_includes response.body, ">Fade<"
+    assert_includes response.body, ">2,480<"
+    refute_includes response.body, "fp-reveal--fade"
+    refute_includes response.body, "fp-number--count"
   end
 
   test "sidebar includes motion" do

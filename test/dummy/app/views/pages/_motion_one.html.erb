@@ -12,7 +12,10 @@
     parallax: "Parallax",
     words: "Words",
     lines: "Lines",
-    stream: "Streaming text"
+    stream: "Streaming text",
+    count: "Count",
+    roll: "Roll",
+    "number-fade": "Fade"
   }.fetch(variant)
   compact = local_assigns[:compact]
   box_class = compact ? "w-full justify-center py-10" : "min-h-72 w-full justify-center"
@@ -56,6 +59,18 @@
       tag: :p,
       text: "Fold the shirt.\nTape the box.\nShip it Friday.",
       class: "text-3xl font-medium leading-tight"
+    ) %>
+  <% when :count, :roll %>
+    <%= render FlatPack::Number::Component.new(
+      value: 2480,
+      animate: variant,
+      class: compact ? "text-3xl font-semibold" : "text-5xl font-semibold"
+    ) %>
+  <% when :"number-fade" %>
+    <%= render FlatPack::Number::Component.new(
+      value: 2480,
+      animate: :fade,
+      class: compact ? "text-3xl font-semibold" : "text-5xl font-semibold"
     ) %>
   <% when :stream %>
     <div class="max-w-lg">

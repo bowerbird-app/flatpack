@@ -411,6 +411,16 @@ module FlatPack
       refute_includes payload.fetch(:description), "No dedicated documentation"
     end
 
+    test "show Number documents the finished value" do
+      payload = FlatPack::ComponentCatalog.show("Number::Component")
+
+      assert_equal "Number::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "finished value"
+      assert_equal %w[number currency percent compact], parameter_named(payload, "format").fetch(:enum)
+      assert_equal %w[count roll fade none], parameter_named(payload, "animate").fetch(:enum)
+      refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
     test "show Text Stream documents the typed line" do
       payload = FlatPack::ComponentCatalog.show("Text::Stream::Component")
 

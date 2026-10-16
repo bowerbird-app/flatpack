@@ -66,6 +66,7 @@ module FlatPack
         fab_controller.js
         reveal_controller.js
         text_stream_controller.js
+        number_controller.js
       ]
 
       controllers.each do |name|

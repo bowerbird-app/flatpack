@@ -8,7 +8,7 @@ Use `reveal:` on a component root when the whole block should enter together. Us
 
 ## Class
 - Primary: `FlatPack::Reveal::Component`
-- Related classes: `FlatPack::Motion`, `FlatPack::Text::Stream::Component`, `FlatPack::Card::Component`
+- Related classes: `FlatPack::Motion`, `FlatPack::Text::Stream::Component`, `FlatPack::Number::Component`, `FlatPack::Card::Component`
 
 ## Props
 
