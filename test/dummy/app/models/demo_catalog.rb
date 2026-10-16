@@ -177,6 +177,7 @@ class DemoCatalog
         },
         {type: :item, title: "Masonry", path: "/demo/masonry", description: "A photo wall. Each tile is a link, a badge, and a filename", icon: :image},
         {type: :item, title: "Collage", path: "/demo/collage", description: "Tilted cards in a grid. They stack straight on a small screen", icon: :photo},
+        {type: :item, title: "Animated characters", path: "/demo/animated_character", description: "A tiny bot with moods, and icons that wiggle, pop, draw, spin, or nudge", icon: :sparkles},
         {type: :item, title: "Overlay", path: "/demo/overlay", description: "Place a badge, icon, or button on a photo", icon: :image},
         {type: :item, title: "Video preview", path: "/demo/video_preview", description: "Play a clip when you ask. The player stays unloaded until then", icon: :play},
         {type: :item, title: "Code Blocks", path: "/demo/code_blocks", description: "Reusable snippets for demo pages", icon: :type},

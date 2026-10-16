@@ -1562,6 +1562,18 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+.fp-animated-character {
+  display: block;
+  overflow: visible;
+}
+
+.fp-animated-character,
+.fp-animated-character [data-part],
+.fp-icon-motion {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 .fp-spinner {
   animation: fp-spinner-spin 1s linear infinite;
 }

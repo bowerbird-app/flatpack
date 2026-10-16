@@ -81,13 +81,16 @@ module FlatPack
         "keyboard" => "rectangle-group"
       }.freeze
 
-      def initialize(name:, size: :md, variant: nil, **system_arguments)
+      def initialize(name:, size: :md, variant: nil, animate: nil, trigger: :hover, **system_arguments)
         super(**system_arguments)
         @name = name
         @size = size.to_sym
         @variant = normalize_variant(variant)
+        @animate = animate&.to_sym
+        @trigger = trigger.to_sym
 
         validate_size!
+        validate_motion!
       end
 
       def call
@@ -107,11 +110,7 @@ module FlatPack
           stroke: "currentColor",
           "stroke-width": "var(--icon-stroke-width, 1.5)",
           aria: {hidden: "true"},
-          data: {
-            controller: "flat-pack--icon",
-            "flat-pack--icon-name-value": heroicon_name,
-            "flat-pack--icon-variant-value": @variant.to_s
-          }
+          data: icon_data
         )
       end
 
@@ -119,7 +118,7 @@ module FlatPack
         user_class = @system_arguments.delete(:class)
         merger = TailwindMerge::Merger.new
         merger.merge(
-          ["block", "shrink-0", size_classes, optical_nudge_class, directional_class, user_class]
+          ["block", "shrink-0", size_classes, optical_nudge_class, directional_class, motion_class, user_class]
             .compact
             .join(" ")
         )
@@ -138,6 +137,48 @@ module FlatPack
         return false if DIRECTIONAL_EXCEPTIONS.include?(name)
 
         name.match?(/-(left|right)(?:-|\z)/)
+      end
+
+      def motion_class
+        return unless @animate
+
+        names = ["fp-icon-motion"]
+        names << "cursor-pointer" if @trigger == :hover || @trigger == :click
+        names.join(" ")
+      end
+
+      def icon_data
+        data = {
+          controller: stimulus_controllers,
+          "flat-pack--icon-name-value": heroicon_name,
+          "flat-pack--icon-variant-value": @variant.to_s
+        }
+        return data unless @animate
+
+        data.merge(
+          "flat-pack--svg-motion-definition-value": motion_definition.to_json,
+          "flat-pack--svg-motion-state-value": "play",
+          "flat-pack--svg-motion-trigger-value": @trigger.to_s
+        )
+      end
+
+      def stimulus_controllers
+        controllers = ["flat-pack--icon"]
+        controllers << "flat-pack--svg-motion" if @animate
+        controllers.join(" ")
+      end
+
+      def motion_definition
+        @motion_definition ||= FlatPack::AnimatedCharacter::Presets.fetch(@animate)
+      end
+
+      def validate_motion!
+        return if @animate.nil?
+
+        motion_definition
+        return if FlatPack::AnimatedCharacter::Presets::TRIGGERS.include?(@trigger)
+
+        raise ArgumentError, "Invalid trigger: #{@trigger}. Must be one of: #{FlatPack::AnimatedCharacter::Presets::TRIGGERS.join(", ")}"
       end
 
       def size_classes

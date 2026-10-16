@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.249] - 2026-10-16
+
+### Added
+- `FlatPack::AnimatedCharacter::Component` draws a character from a Ruby hash and plays named states with the Web Animations API.
+- A definition lists nested parts (`circle`, `ellipse`, `rect`, `path`, `line`, `polyline`) and tracks for `translateX`, `translateY`, `scaleX`, `scaleY`, `rotate`, `opacity`, and `strokeDashoffset`.
+- `FlatPack::AnimatedCharacter.bot` and `FlatPack::AnimatedCharacter.pip` are ready-made characters. Bot states are `idle`, `blink`, `happy`, and `thinking`. Blink scales the eye group on Y.
+- `FlatPack::Shared::IconComponent` takes `animate:` (`:wiggle`, `:pop`, `:draw`, `:spin`, `:nudge`) and `trigger:` (`:hover`, `:click`, `:mount`).
+- The Stimulus controller `flat-pack--svg-motion` exposes `setState`, `play`, `stop`, `reset`, `pause`, and `resume`. `prefers-reduced-motion: reduce` keeps the first frame.
+- Demo: `/demo/animated_character`.
+- Bumped the gem version to `0.1.249`.
+
+### Upgrade notes
+- New component, and two optional keyword arguments on `IconComponent`. Nothing was renamed.
+- `definition` is a Hash. A raw SVG string, an unknown shape, or an attribute outside the allowlist raises `ArgumentError`.
+- `state` must be a key in that definition. `size` is `:sm`, `:md`, `:lg`, or `:xl`.
+- `animate` must be `:wiggle`, `:pop`, `:draw`, `:spin`, or `:nudge`. `trigger` must be `:hover`, `:click`, or `:mount`.
+- Pass `label:` when the character should have an accessible name. Without it, the SVG is `aria-hidden`.
+- Durations `:fast`, `:base`, and `:slow` follow `--duration-fast`, `--duration-base`, and `--duration-slow`. Easing `standard`, `enter`, and `exit` follow the matching `--easing-*` tokens.
+- Reload kit CSS and JavaScript. There is no path morphing in this version.
+- Redeploy so `meta.gem_version` shows `0.1.249`.
+
 ## [0.1.248] - 2026-10-16
 
 ### Changed
