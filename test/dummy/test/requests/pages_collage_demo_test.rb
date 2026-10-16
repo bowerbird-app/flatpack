@@ -3,7 +3,7 @@
 require "test_helper"
 
 class PagesCollageDemoTest < ActionDispatch::IntegrationTest
-  test "collage demo renders a brick of photos, the scatters, and an empty state" do
+  test "collage demo renders a brick of cards, the scatters, and an empty state" do
     get "/demo/collage"
 
     assert_response :success
@@ -25,8 +25,11 @@ class PagesCollageDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "title_size"
     assert_includes response.body, "fp-empty-state"
     assert_includes response.body, "fp-display"
-    assert_includes response.body, "Press kit"
-    assert_includes response.body, 'src="/images/hero-stool.jpg"'
+    assert_includes response.body, "fp-card"
+    assert_match(/fp-card[^>]*>\s*One\s*</, response.body)
+    assert_match(/fp-card[^>]*>\s*Nine\s*</, response.body)
+    refute_includes response.body, "collage_card"
+    refute_includes response.body, "object-cover"
     refute_includes response.body, "position: absolute"
     refute_includes response.body, "position:absolute"
   end

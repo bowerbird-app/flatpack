@@ -4,7 +4,7 @@
 Scatter any host content. `rows:` is a brick, such as five cards over four. Omit it for an even grid. Either way the items tilt a little, and they stack straight on a small screen.
 
 ## When to use
-Use Collage for a loose cluster of cards, photos, or notes. The kit supplies the layout only. A photo card is `FlatPack::Card::Component` and `FlatPack::Badge::Component` inside `item`. Use `Grid` when every cell should line up. Use `Masonry` when mixed ratios should pack without a shared row.
+Use Collage when several pieces of host content should sit in a loose cluster. The kit owns the layout: the brick or the grid, the tilt, the corner overlap, the inset, the stack, and the motion. It does not style what goes in an item. Put a card, a note, or anything else in the slot. Use `Grid` when every cell should line up. Use `Masonry` when mixed ratios should pack without a shared row.
 
 ## Class
 - Primary: `FlatPack::Collage::Component`
@@ -28,7 +28,7 @@ Use Collage for a loose cluster of cards, photos, or notes. The kit supplies the
 
 | variant | description |
 |---------|-------------|
-| `rows: [5, 4]` | Brick. Five on the first row, four centered on the next, then it repeats. The next row is pulled up by `--collage-overlap`. Card proportion is `--collage-card-ratio`, swayed by `--collage-card-sway`. The frame inset is `--collage-margin`. |
+| `rows: [5, 4]` | Brick. Five on the first row, four centered on the next, then it repeats. The next row is pulled up by `--collage-overlap`. Slot proportion is `--collage-card-ratio`, swayed by `--collage-card-sway`. The frame inset is `--collage-margin`. |
 | `scatter: :subtle` | Default. Each item tilts within `--collage-rotate` and shifts within `--collage-offset-x` / `--collage-offset-y`. |
 | `scatter: :loose` | Same pattern, multiplied by `--collage-loose` (default `2`). |
 | `scatter: :none` | No tilt and no offset, unless an item passes `rotate` or `offset`. |
@@ -41,17 +41,14 @@ The tilt for an index is a deterministic mix in the range -1 to 1. The same inde
 ```erb
 <%= render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| %>
   <% collage.item do %>
-    <%= render FlatPack::Card::Component.new(shadow: :sm, padding: :none) do |card| %>
-      <% card.media(aspect_ratio: "4/3", padding: :none) do %>
-        <%= image_tag "/photos/harbour.jpg", alt: "Harbour at dusk", class: "h-full w-full object-cover" %>
-      <% end %>
-      <% card.body(padding: :sm) do %>
-        <%= render FlatPack::Badge::Component.new(text: "Harbour", size: :xs) %>
-      <% end %>
+    <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+      One
     <% end %>
   <% end %>
   <% collage.item(rotate: -4, offset: ["0.5rem", "-8px"], z: 4) do %>
-    <%= render FlatPack::Card::Component.new(shadow: :sm) { "Pinned" } %>
+    <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+      Pinned
+    <% end %>
   <% end %>
 <% end %>
 ```

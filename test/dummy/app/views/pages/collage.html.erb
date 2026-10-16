@@ -3,40 +3,27 @@
   subtitle: "Five across, four between them. On a phone they line up."
 ) %>
 
-<%= render "pages/component_method_variables_table", components: [:collage, :badge, :empty_state] %>
+<%= render "pages/component_method_variables_table", components: [:collage, :empty_state] %>
 
 <%
   erb_output_open = "<" + "%="
   erb_tag_close = "%" + ">"
-  shots = [
-    "/images/hero-stool.jpg",
-    "/images/hero-packaging.jpg",
-    "/images/hero-subscription-box.webp"
-  ]
-  collage_photos = [
-    {src: shots[0], alt: "Stool wrapped for delivery", badge: "Press kit", title: "The stool", focus: "center"},
-    {src: shots[1], alt: "Hands closing a mailer box", badge: "Lookbook", title: "Mailer", focus: "center top"},
-    {src: shots[2], alt: "Open subscription box on a table", badge: "Campaign", title: "Unboxed", focus: "center"},
-    {src: shots[0], alt: "Wrapped stool, closer", badge: "Press kit", title: "Wrapped", focus: "center top"},
-    {src: shots[1], alt: "Mailer box on a desk", badge: "Still", title: "On the desk", focus: "center"},
-    {src: shots[2], alt: "Box interior with a card", badge: "Press kit", title: "Inside", focus: "left center"},
-    {src: shots[0], alt: "Stool from the side", badge: "Lookbook", title: "Side light", focus: "left center"},
-    {src: shots[1], alt: "Closing the box", badge: "Campaign", title: "Sealed", focus: "right center"},
-    {src: shots[2], alt: "Subscription box from above", badge: "Press kit", title: "From above", focus: "center bottom"}
-  ]
+  labels = %w[One Two Three Four Five Six Seven Eight Nine]
 %>
 
 <section class="mb-12" id="wall">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "The wall",
     anchor_link: true,
-    subtitle: "Nine photos in two rows, then a place to start."
+    subtitle: "Nine cards in two rows, then a place to start. The cards are ordinary. The collage only places them."
   ) %>
   <div id="collage-wall">
     <%= render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| %>
-      <% collage_photos.each do |photo| %>
+      <% labels.each do |label| %>
         <% collage.item do %>
-          <%= render "pages/collage_card", photo: photo %>
+          <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+            <%= label %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
@@ -60,19 +47,14 @@
   </div>
 
   <%= render FlatPack::CodeBlock::Component.new(
-    title: "A brick of photos (ERB)",
+    title: "A brick of cards (ERB)",
     language: "erb",
     class: "mt-4",
     code: <<~CODE
       #{erb_output_open} render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| #{erb_tag_close}
         #{erb_output_open} collage.item do #{erb_tag_close}
-          #{erb_output_open} render FlatPack::Overlay::Component.new(class: "h-full w-full") do |overlay| #{erb_tag_close}
-            #{erb_output_open} overlay.with_media do #{erb_tag_close}
-              #{erb_output_open} image_tag "/images/hero-stool.jpg", alt: "Stool wrapped for delivery", class: "h-full w-full object-cover" #{erb_tag_close}
-            #{erb_output_open} end #{erb_tag_close}
-            #{erb_output_open} overlay.with_item(placement: :top_left, inset: :sm) do #{erb_tag_close}
-              #{erb_output_open} render FlatPack::Badge::Component.new(text: "Press kit", size: :xs) #{erb_tag_close}
-            #{erb_output_open} end #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Card::Component.new(shadow: :sm) do #{erb_tag_close}
+            One
           #{erb_output_open} end #{erb_tag_close}
         #{erb_output_open} end #{erb_tag_close}
       #{erb_output_open} end #{erb_tag_close}
@@ -90,9 +72,11 @@
   <div class="mb-8" id="collage-none">
     <%= render FlatPack::SectionTitle::Component.new(title: "Square", subtitle: "No tilt, no shift.") %>
     <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :none, stack_below: :md) do |collage| %>
-      <% collage_photos.first(4).each do |photo| %>
+      <% labels.first(4).each do |label| %>
         <% collage.item do %>
-          <%= render "pages/collage_card", photo: photo %>
+          <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+            <%= label %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
@@ -101,9 +85,11 @@
   <div class="mb-8" id="collage-subtle">
     <%= render FlatPack::SectionTitle::Component.new(title: "Subtle", subtitle: "The default lean.") %>
     <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :subtle, stack_below: :md) do |collage| %>
-      <% collage_photos.first(4).each do |photo| %>
+      <% labels.first(4).each do |label| %>
         <% collage.item do %>
-          <%= render "pages/collage_card", photo: photo %>
+          <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+            <%= label %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
@@ -112,9 +98,11 @@
   <div id="collage-loose">
     <%= render FlatPack::SectionTitle::Component.new(title: "Loose", subtitle: "The same pattern, leaned further.") %>
     <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :loose, stack_below: :md) do |collage| %>
-      <% collage_photos.first(4).each do |photo| %>
+      <% labels.first(4).each do |label| %>
         <% collage.item do %>
-          <%= render "pages/collage_card", photo: photo %>
+          <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+            <%= label %>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>

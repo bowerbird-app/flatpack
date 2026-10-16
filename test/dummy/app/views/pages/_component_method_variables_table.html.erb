@@ -794,7 +794,7 @@
         { variable: "scatter", accepts: ":subtle, :loose, :none", example: "scatter: :loose" },
         { variable: "stack_below", accepts: ":sm, :md, :lg, :xl", example: "stack_below: :md" },
         { variable: "motion", accepts: "true, false", example: "motion: false" },
-        { variable: "item", accepts: "slot block", example: "collage.item { render FlatPack::Card::Component.new { \"Harbour\" } }" },
+        { variable: "item", accepts: "slot block", example: "collage.item { render FlatPack::Card::Component.new(shadow: :sm).with_content(\"One\") }" },
         { variable: "rotate", accepts: "Number of degrees, CSS angle, or nil", example: "collage.item(rotate: -4) { \"Pinned\" }" },
         { variable: "offset", accepts: "[x, y] lengths, or nil", example: "collage.item(offset: [\"0.5rem\", \"-8px\"]) { \"Pinned\" }" },
         { variable: "z", accepts: "Integer or nil", example: "collage.item(z: 4) { \"Pinned\" }" },
