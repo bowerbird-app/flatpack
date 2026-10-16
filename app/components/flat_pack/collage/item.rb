@@ -7,7 +7,7 @@ module FlatPack
       LENGTH = /\A(?:-?(?:\d+|\d*\.\d+)(?:px|rem|em|%)|var\(--[a-z0-9-]+\))\z/i
       MAX_DEGREES = 180
 
-      attr_writer :index, :motion, :rows
+      attr_writer :index, :motion, :rows, :spare
 
       def initialize(rotate: nil, offset: nil, z: nil, **system_arguments)
         super(**system_arguments)
@@ -77,7 +77,7 @@ module FlatPack
       def item_attributes
         user_style = @system_arguments.delete(:style)
         merge_attributes(
-          class: "fp-collage__item",
+          class: item_class,
           style: join_styles(item_style, user_style)
         )
       end
@@ -103,6 +103,18 @@ module FlatPack
           parts << "--fp-collage-y: #{@offset[1]}"
         end
         parts.join("; ")
+      end
+
+      def item_class
+        spare? ? "fp-collage__item fp-collage__item--spare" : "fp-collage__item"
+      end
+
+      # Past mobile_items. The phone row hides these with display: none, which
+      # also drops them from the accessibility tree at that width. The nodes
+      # stay in source order, and they stay visible on a wider screen, so the
+      # markup does not set aria-hidden.
+      def spare?
+        @spare == true
       end
 
       def index

@@ -11,12 +11,15 @@ module FlatPack
       COLUMN_COUNTS = (1..6)
       ROW_LIMIT = 8
       PATTERN_LIMIT = 6
+      MOBILE_ITEM_COUNTS = (1..24)
+      MOBILE_ITEMS_DEFAULT = 4
 
       def initialize(
         columns: 3,
         rows: nil,
         scatter: :subtle,
-        stack_below: :md,
+        stack_below: nil,
+        mobile_items: MOBILE_ITEMS_DEFAULT,
         motion: true,
         **system_arguments
       )
@@ -24,13 +27,15 @@ module FlatPack
         @columns = normalize_columns(columns)
         @rows = normalize_rows(rows)
         @scatter = scatter.to_sym
-        @stack_below = stack_below.to_sym
+        @stack_below = normalize_stack_below(stack_below)
+        @mobile_items = normalize_mobile_items(mobile_items)
         @motion = motion
 
         validate_columns!
         validate_rows!
         validate_scatter!
         validate_stack_below!
+        validate_mobile_items!
         validate_motion!
       end
 
@@ -52,6 +57,7 @@ module FlatPack
           item.index = index
           item.motion = @motion
           item.rows = @rows
+          item.spare = index >= @mobile_items
         end
       end
 
@@ -67,7 +73,8 @@ module FlatPack
         classes(
           "fp-collage",
           "fp-collage--#{@scatter}",
-          "fp-collage--stack-#{@stack_below}",
+          ("fp-collage--stack-#{@stack_below}" if @stack_below),
+          ("fp-collage--teaser" unless @stack_below),
           ("fp-collage--brick" if @rows),
           ("fp-collage--motion" if @motion)
         )
@@ -118,10 +125,31 @@ module FlatPack
         raise ArgumentError, "Invalid scatter: #{@scatter.inspect}. Must be one of: #{SCATTERS.join(", ")}."
       end
 
+      def normalize_stack_below(value)
+        return if value.nil?
+
+        value.to_sym
+      rescue NoMethodError
+        value
+      end
+
       def validate_stack_below!
+        return if @stack_below.nil?
         return if STACK_BELOWS.include?(@stack_below)
 
-        raise ArgumentError, "Invalid stack_below: #{@stack_below.inspect}. Must be one of: #{STACK_BELOWS.join(", ")}."
+        raise ArgumentError, "Invalid stack_below: #{@stack_below.inspect}. Must be one of: #{STACK_BELOWS.join(", ")}, or omit it."
+      end
+
+      def normalize_mobile_items(value)
+        Integer(value)
+      rescue ArgumentError, TypeError
+        value
+      end
+
+      def validate_mobile_items!
+        return if @mobile_items.is_a?(Integer) && MOBILE_ITEM_COUNTS.cover?(@mobile_items)
+
+        raise ArgumentError, "Invalid mobile_items: #{@mobile_items.inspect}. Must be an integer from 1 to 24."
       end
 
       def validate_motion!

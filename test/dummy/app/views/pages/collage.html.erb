@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Collage",
-  subtitle: "Five across, four between them. On a phone they line up."
+  subtitle: "Five across, four between them. On a phone, four cards in a short row."
 ) %>
 
 <%= render "pages/component_method_variables_table", components: [:collage, :empty_state] %>
@@ -15,10 +15,10 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "The wall",
     anchor_link: true,
-    subtitle: "Nine cards in two rows, then a place to start. The cards are ordinary. The collage only places them."
+    subtitle: "Nine ordinary cards. Wide screens use two rows. A tablet uses rows of three. A phone keeps the first four in one short row."
   ) %>
   <div id="collage-wall">
-    <%= render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| %>
+    <%= render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle) do |collage| %>
       <% labels.each do |label| %>
         <% collage.item do %>
           <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
@@ -51,7 +51,7 @@
     language: "erb",
     class: "mt-4",
     code: <<~CODE
-      #{erb_output_open} render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle, stack_below: :md) do |collage| #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Collage::Component.new(rows: [5, 4], scatter: :subtle) do |collage| #{erb_tag_close}
         #{erb_output_open} collage.item do #{erb_tag_close}
           #{erb_output_open} render FlatPack::Card::Component.new(shadow: :sm) do #{erb_tag_close}
             One
@@ -71,7 +71,7 @@
 
   <div class="mb-8" id="collage-none">
     <%= render FlatPack::SectionTitle::Component.new(title: "Square", subtitle: "No tilt, no shift.") %>
-    <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :none, stack_below: :md) do |collage| %>
+    <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :none) do |collage| %>
       <% labels.first(4).each do |label| %>
         <% collage.item do %>
           <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
@@ -84,7 +84,7 @@
 
   <div class="mb-8" id="collage-subtle">
     <%= render FlatPack::SectionTitle::Component.new(title: "Subtle", subtitle: "The default lean.") %>
-    <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :subtle, stack_below: :md) do |collage| %>
+    <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :subtle) do |collage| %>
       <% labels.first(4).each do |label| %>
         <% collage.item do %>
           <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
@@ -97,7 +97,7 @@
 
   <div id="collage-loose">
     <%= render FlatPack::SectionTitle::Component.new(title: "Loose", subtitle: "The same pattern, leaned further.") %>
-    <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :loose, stack_below: :md) do |collage| %>
+    <%= render FlatPack::Collage::Component.new(columns: 4, scatter: :loose) do |collage| %>
       <% labels.first(4).each do |label| %>
         <% collage.item do %>
           <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
@@ -107,4 +107,21 @@
       <% end %>
     <% end %>
   </div>
+</section>
+
+<section class="mb-12" id="list">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "As a list",
+    anchor_link: true,
+    subtitle: "Pass stack_below when a small screen should line the cards up."
+  ) %>
+  <%= render FlatPack::Collage::Component.new(columns: 3, scatter: :subtle, stack_below: :md) do |collage| %>
+    <% labels.first(3).each do |label| %>
+      <% collage.item do %>
+        <%= render FlatPack::Card::Component.new(shadow: :sm) do %>
+          <%= label %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
 </section>

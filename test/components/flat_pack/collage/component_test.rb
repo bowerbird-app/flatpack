@@ -10,7 +10,8 @@ module FlatPack
           collage.item { "Harbour" }
         end
 
-        assert_selector "div.fp-collage.fp-collage--subtle.fp-collage--stack-md.fp-collage--motion"
+        assert_selector "div.fp-collage.fp-collage--subtle.fp-collage--teaser.fp-collage--motion"
+        refute_selector ".fp-collage--stack-md"
         assert_selector ".fp-collage__item > .fp-content-enter", text: "Harbour"
         html = page.native.to_html
         assert_includes html, "--fp-collage-columns: 3"
@@ -31,7 +32,24 @@ module FlatPack
         render_inline(Component.new(columns: 4, stack_below: :lg)) { |collage| collage.item { "Jetty" } }
 
         assert_selector ".fp-collage--stack-lg"
+        refute_selector ".fp-collage--teaser"
         assert_includes page.native.to_html, "--fp-collage-columns: 4"
+      end
+
+      def test_phone_row_hides_items_past_mobile_items_and_keeps_source_order
+        render_inline(Component.new(rows: [5, 4], mobile_items: 4)) do |collage|
+          6.times { |index| collage.item { "Card #{index}" } }
+        end
+
+        items = page.all(".fp-collage__item")
+        assert_equal ["Card 0", "Card 1", "Card 2", "Card 3", "Card 4", "Card 5"], items.map(&:text)
+        assert_equal [false, false, false, false, true, true], items.map { |item| item[:class].include?("fp-collage__item--spare") }
+        items.each { |item| assert_nil item[:"aria-hidden"] }
+      end
+
+      def test_rejects_invalid_mobile_items
+        error = assert_raises(ArgumentError) { Component.new(mobile_items: 0) }
+        assert_match(/Invalid mobile_items/, error.message)
       end
 
       def test_rows_place_a_shorter_row_between_the_one_above
@@ -226,7 +244,12 @@ module FlatPack
         assert_includes collage, "var(--easing-enter)"
         assert_includes collage, ".fp-content-enter"
         assert_includes collage, "@media (prefers-reduced-motion: reduce)"
+        assert_includes collage, "var(--collage-item-size-sm)"
+        assert_includes collage, "var(--collage-item-size-md)"
+        assert_includes collage, "fp-collage--teaser"
+        assert_includes collage, "33dvh"
         assert_includes collage, "@media (width < 48rem)"
+        assert_includes collage, "@media (width >= 48rem) and (width < 64rem)"
         assert_includes collage, "transform: none"
         refute_match(/position:\s*absolute/, collage)
       end

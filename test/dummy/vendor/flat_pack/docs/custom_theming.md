@@ -375,6 +375,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collage-overlap: calc(var(--space-5) * var(--density) * -1);
   --collage-card-ratio: 0.928;
   --collage-card-sway: 0.1;
+  --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
+  --collage-item-size-md: 11rem;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

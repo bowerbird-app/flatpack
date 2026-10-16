@@ -829,6 +829,8 @@
   --collage-overlap: var(--collage-overlap);
   --collage-card-ratio: var(--collage-card-ratio);
   --collage-card-sway: var(--collage-card-sway);
+  --collage-item-size-sm: var(--collage-item-size-sm);
+  --collage-item-size-md: var(--collage-item-size-md);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1093,6 +1095,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collage-overlap: calc(var(--space-5) * var(--density) * -1);
   --collage-card-ratio: 0.928;
   --collage-card-sway: 0.1;
+  /* Phone row width. Height follows the ratio, inside a 33dvh frame. */
+  --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
+  /* Tablet brick cap. Three across, then the track shrinks if the column is narrower. */
+  --collage-item-size-md: 11rem;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

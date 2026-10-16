@@ -13,7 +13,10 @@ class PagesCollageDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "fp-collage--none"
     assert_includes response.body, "fp-collage--loose"
     assert_includes response.body, "fp-collage--motion"
+    assert_includes response.body, "fp-collage--teaser"
+    assert_includes response.body, "fp-collage__item--spare"
     assert_includes response.body, "fp-collage--stack-md"
+    assert_equal 5, response.body.scan("fp-collage__item--spare").size
     assert_includes response.body, "fp-content-enter"
     assert_includes response.body, "--fp-collage-tracks: 10"
     assert_includes response.body, "--fp-collage-column: 1 / span 2"

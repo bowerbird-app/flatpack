@@ -2794,8 +2794,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 /* Collage: CSS grid plus transforms. No absolute positioning, so source order
- * stays the reading order and the cells reflow. Scatter is a unitless -1..1
- * triple on each item, scaled by the --collage-* ranges.
+ * stays the reading order. Scatter is a unitless -1..1 triple on each item,
+ * scaled by the --collage-* ranges.
+ * Below md, a teaser is one overlapping row about a third of the viewport tall.
+ * From md up to lg, a brick is rows of three at --collage-item-size-md.
  * Entrance is .fp-content-enter (opacity plus a 4px rise on --duration-slow /
  * --easing-enter). Hover lift uses that same duration and easing.
  */
@@ -2849,8 +2851,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-collage-x: calc(var(--fp-collage-shift-x) * var(--collage-offset-x) * var(--fp-collage-scatter));
   --fp-collage-y: calc(var(--fp-collage-shift-y) * var(--collage-offset-y) * var(--fp-collage-scatter));
   --fp-collage-angle: calc(var(--fp-collage-tilt) * var(--collage-rotate) * var(--fp-collage-scatter));
+  --fp-collage-row-shift: 0px;
   min-width: 0;
-  transform: translate(var(--fp-collage-x), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
   transform-origin: center center;
   z-index: var(--fp-collage-z);
 }
@@ -2865,7 +2868,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-collage--motion .fp-collage__item:hover,
 .fp-collage--motion .fp-collage__item:focus-within {
-  transform: translate(var(--fp-collage-x), calc(var(--fp-collage-y) + var(--collage-lift))) rotate(var(--fp-collage-angle));
+  transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), calc(var(--fp-collage-y) + var(--collage-lift))) rotate(var(--fp-collage-angle));
   z-index: calc(var(--fp-collage-z) + 20);
 }
 
@@ -2878,7 +2881,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
   .fp-collage--motion .fp-collage__item:hover,
   .fp-collage--motion .fp-collage__item:focus-within {
-    transform: translate(var(--fp-collage-x), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+    transform: translate(calc(var(--fp-collage-x) + var(--fp-collage-row-shift)), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
   }
 
   .fp-collage--motion .fp-collage__item > .fp-content-enter {
@@ -2987,6 +2990,73 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     transform: none;
     z-index: auto;
     transition: none;
+  }
+}
+
+/* Phone: one overlapping row, about a third of the viewport. Spare items stay
+ * in the markup and are not shown. Side cards may cross the frame. */
+@media (width < 48rem) {
+  .fp-collage--teaser {
+    display: grid;
+    grid-auto-flow: column;
+    /* Narrower than the card, so neighbours overlap instead of sitting in a row. */
+    grid-auto-columns: calc(var(--collage-item-size-sm) * 0.62);
+    grid-template-columns: none;
+    grid-template-rows: 33dvh;
+    justify-content: center;
+    align-items: center;
+    height: 33dvh;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .fp-collage--teaser .fp-collage__item {
+    grid-column: auto;
+    grid-row: 1;
+    width: var(--collage-item-size-sm);
+    min-width: var(--collage-item-size-sm);
+    margin-top: 0;
+    margin-inline: 0;
+    aspect-ratio: calc(var(--collage-card-ratio) * (1 + var(--fp-collage-scale) * var(--collage-card-sway)));
+  }
+
+  .fp-collage--teaser .fp-collage__item > .fp-content-enter {
+    height: 100%;
+  }
+
+  .fp-collage--teaser .fp-collage__item--spare {
+    display: none;
+  }
+}
+
+/* Tablet: rows of three, capped so a narrow column does not shrink them to stamps.
+ * The second row of each pair shifts sideways so the corners still cross. */
+@media (width >= 48rem) and (width < 64rem) {
+  .fp-collage--teaser.fp-collage--brick {
+    grid-template-columns: repeat(3, minmax(0, var(--collage-item-size-md)));
+    justify-content: center;
+    width: 100%;
+    padding: var(--collage-margin);
+  }
+
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item {
+    grid-column: auto;
+    grid-row: auto;
+    width: auto;
+    min-width: 0;
+    margin-top: 0;
+    margin-inline: 0;
+  }
+
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(n + 4) {
+    margin-top: var(--collage-overlap);
+  }
+
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 4),
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 5),
+  .fp-collage--teaser.fp-collage--brick .fp-collage__item:nth-child(6n + 6) {
+    --fp-collage-row-shift: 14%;
   }
 }
 
