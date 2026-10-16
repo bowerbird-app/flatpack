@@ -10,8 +10,37 @@ function loadController({ reduced = false } = {}) {
   const transformed = source
     .replace('import { Controller } from "@hotwired/stimulus"', "class Controller {}")
     .replace(
-      'import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"',
-      `function prefersReducedMotion() { return ${reduced} }`
+      'import { observeOnce, prefersReducedMotion } from "controllers/flat_pack/reduced_motion"',
+      `function prefersReducedMotion() { return ${reduced} }
+function observeOnce(element, onEnter) {
+  let armed = false
+  let waiting = false
+  let stopped = false
+  const observer = new IntersectionObserver((entries) => {
+    if (stopped) return
+    if (!entries.some((entry) => entry.isIntersecting)) return
+    if (armed) finish()
+    else waiting = true
+  })
+  observer.observe(element)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (stopped) return
+      armed = true
+      if (waiting) finish()
+    })
+  })
+  function finish() {
+    if (stopped) return
+    stopped = true
+    observer.disconnect()
+    onEnter()
+  }
+  return () => {
+    stopped = true
+    observer.disconnect()
+  }
+}`
     )
     .replace("export default class extends Controller", "class RevealController extends Controller") +
     "\nmodule.exports = RevealController\n"

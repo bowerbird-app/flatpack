@@ -17,6 +17,51 @@ export function motionDuration(token = "slow") {
   return readDurationToken(token)
 }
 
+export function motionTokenMs(token = "slow") {
+  if (prefersReducedMotion()) return 0
+
+  const fallback = DURATION_MS[token] ?? DURATION_MS.slow
+  return readDurationProperty(`--motion-duration-${token}`, fallback)
+}
+
+// One in-view trigger for reveals and numbers. The callback runs once,
+// after two frames, so the first paint can stay blank.
+export function observeOnce(element, onEnter) {
+  let armed = false
+  let waiting = false
+  let stopped = false
+  const observer = new IntersectionObserver((entries) => {
+    if (stopped) return
+    if (!entries.some((entry) => entry.isIntersecting)) return
+
+    if (armed) finish()
+    else waiting = true
+  })
+  observer.observe(element)
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (stopped) return
+
+      armed = true
+      if (waiting) finish()
+    })
+  })
+
+  function finish() {
+    if (stopped) return
+
+    stopped = true
+    observer.disconnect()
+    onEnter()
+  }
+
+  return () => {
+    stopped = true
+    observer.disconnect()
+  }
+}
+
 export function motionTransition(properties, { duration = "base", easing = "standard" } = {}) {
   const list = Array.isArray(properties)
     ? properties
@@ -168,12 +213,15 @@ export function playCollapseExit(element, { axis = "both", onHidden } = {}) {
 
 function readDurationToken(token) {
   const fallback = DURATION_MS[token] ?? DURATION_MS.slow
+  return readDurationProperty(`--duration-${token}`, fallback)
+}
 
+function readDurationProperty(property, fallback) {
   if (typeof document === "undefined" || !document.documentElement) {
     return fallback
   }
 
-  const raw = getComputedStyle(document.documentElement).getPropertyValue(`--duration-${token}`).trim()
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(property).trim()
   if (!raw) return fallback
 
   const value = Number.parseFloat(raw)

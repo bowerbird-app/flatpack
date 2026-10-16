@@ -16,9 +16,12 @@ module FlatPack
       source = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/reveal_controller.js").read
 
       assert_includes source, "controllers/flat_pack/reduced_motion"
-      assert_includes source, "IntersectionObserver"
+      assert_includes source, "observeOnce"
       assert_includes source, "is-revealed"
       assert_includes source, "is-pending"
+      helper = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/reduced_motion.js").read
+      assert_includes helper, "export function observeOnce"
+      assert_includes helper, "IntersectionObserver"
       refute_match(/prefers-reduced-motion/, source)
     end
   end

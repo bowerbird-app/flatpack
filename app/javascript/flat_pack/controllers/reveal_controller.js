@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
+import { observeOnce, prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 // Flips is-revealed once when the element enters the viewport.
 // Until that class lands, the reveal stays hidden. is-pending blocks the
@@ -16,39 +16,21 @@ export default class extends Controller {
 
     this.assignStaggerIndexes()
     this.element.classList.add("is-pending")
-    this.observer = new IntersectionObserver((entries) => this.onIntersect(entries))
-    this.observer.observe(this.element)
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        this.armed = true
-        if (this.waiting) this.finish()
-      })
-    })
+    this.stopObserving = observeOnce(this.element, () => this.finish())
   }
 
   disconnect() {
     this.stopped = true
-    this.observer?.disconnect()
-    this.observer = null
-  }
-
-  onIntersect(entries) {
-    if (!entries.some((entry) => entry.isIntersecting)) return
-
-    if (this.armed) {
-      this.finish()
-    } else {
-      this.waiting = true
-    }
+    this.stopObserving?.()
+    this.stopObserving = null
   }
 
   finish() {
     if (this.done || this.stopped) return
 
     this.done = true
-    this.observer?.disconnect()
-    this.observer = null
+    this.stopObserving?.()
+    this.stopObserving = null
     this.element.classList.add("is-revealed")
     this.element.classList.remove("is-pending")
   }
