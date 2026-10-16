@@ -68,5 +68,5 @@ The grid does not change source order. What you tab and what a screen reader rea
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Entrance uses `.fp-content-enter`: opacity and a 4px rise on `--duration-slow` / `--easing-enter`. Stagger delay is `min(index, 8) * --collage-stagger` (default `40ms`). Hover lift uses the same duration and easing, by `--collage-lift`.
-- `--collage-rotate`, `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, `--collage-stagger`, `--collage-loose`, `--collage-gap`, and `--collage-pad` are theme tokens. Offsets, lift, gap, and pad follow `--space-*` and `--density`.
+- `--collage-rotate`, `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, `--collage-stagger`, `--collage-loose`, `--collage-gap`, `--collage-pad`, and `--collage-bleed` are theme tokens. Offsets, lift, gap, pad, and bleed follow `--space-*` and `--density`. Padding is `--collage-pad` plus one `--collage-offset-y` and one `--collage-bleed` per scatter unit, so the tilt stays inside the border box. Below `stack_below` the padding is only `--collage-pad`.
 - No Stimulus controller. No absolute positioning.

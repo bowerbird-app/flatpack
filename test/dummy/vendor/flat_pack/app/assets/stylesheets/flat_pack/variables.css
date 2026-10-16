@@ -824,6 +824,7 @@
   --collage-loose: var(--collage-loose);
   --collage-gap: var(--collage-gap);
   --collage-pad: var(--collage-pad);
+  --collage-bleed: var(--collage-bleed);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1080,6 +1081,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --collage-loose: 2;
   --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  /* Extra inset, per scatter unit, so a rotated corner stays inside the border box. */
+  --collage-bleed: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

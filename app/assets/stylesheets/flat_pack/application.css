@@ -2804,7 +2804,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   display: grid;
   grid-template-columns: repeat(var(--fp-collage-columns, 3), minmax(0, 1fr));
   gap: var(--collage-gap);
-  padding: var(--collage-pad);
+  /* Resting inset, plus the shift and the corner swing for this scatter.
+     :none stays on --collage-pad. A stack breakpoint drops back to that inset. */
+  padding: calc(var(--collage-pad) + (var(--collage-offset-y) + var(--collage-bleed)) * var(--fp-collage-scatter));
   align-items: start;
   overflow: visible;
   isolation: isolate;
@@ -2866,6 +2868,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 @media (width < 40rem) {
   .fp-collage--stack-sm {
     grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
   }
 
   .fp-collage--stack-sm .fp-collage__item,
@@ -2880,6 +2883,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 @media (width < 48rem) {
   .fp-collage--stack-md {
     grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
   }
 
   .fp-collage--stack-md .fp-collage__item,
@@ -2894,6 +2898,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 @media (width < 64rem) {
   .fp-collage--stack-lg {
     grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
   }
 
   .fp-collage--stack-lg .fp-collage__item,
@@ -2908,6 +2913,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 @media (width < 80rem) {
   .fp-collage--stack-xl {
     grid-template-columns: minmax(0, 1fr);
+    padding: var(--collage-pad);
   }
 
   .fp-collage--stack-xl .fp-collage__item,

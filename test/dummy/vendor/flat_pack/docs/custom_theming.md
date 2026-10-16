@@ -370,6 +370,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --collage-loose: 2;
   --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --collage-bleed: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
