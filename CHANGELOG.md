@@ -13,6 +13,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.251] - 2026-10-16
+
+### Added
+- Motion tokens: `--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`, `--motion-ease-out`, `--motion-ease-in-out`, `--motion-ease-spring`, `--motion-distance-sm`, `--motion-distance-md`, `--motion-distance-lg`, and `--reveal-stagger`. A theme tunes reveals, the kit enter, and the collage entrance in one place.
+- `reveal:` on any component root that calls `merge_attributes`. Every variant starts hidden. `:fade` is opacity. `:rise`, `:blur`, and `:scale` then move, sharpen, or grow. `:wipe` and `:zoom` are the media pair. `intensity: :strong` uses the strong motion tokens. `stagger: true` indexes the children. `parallax: true` is a gentle scroll shift, only with `:wipe` or `:zoom`.
+- `FlatPack::Reveal::Component` is the wrapper. `:words` and `:lines` split the copy on the server. Each piece slides up out of a mask. The plain sentence stays in a visually hidden span. The pieces are `aria-hidden`.
+- `FlatPack::Text::Stream::Component` types a line once it is in view, with a caret. The full string stays in the DOM for screen readers. The typing is decorative. Put it inside a chat message. There is no `stream:` flag.
+- One Stimulus controller, `flat-pack--reveal`, reveals once. `flat-pack--text-stream` types once. Both share the reduced-motion helper. `prefers-reduced-motion: reduce` shows the finished look. With no JavaScript the content stays visible.
+- `FlatPack::Number::Component` counts, rolls, or fades a number the first time it enters the view. The finished formatted value is in the page, so a screen reader and a browser without JavaScript get the final number. `value:` is the amount. `format:` is `:number`, `:currency`, `:percent`, or `:compact`. `animate:` is `:count` (default), `:roll`, `:fade`, or `:none`. `duration:` is `:fast`, `:base`, or `:slow`. A later value change animates from the number on screen to the new one. Tabular figures keep the width steady.
+- `observeOnce` in `reduced_motion.js` is the shared in-view trigger for reveals and numbers.
+- Demo: `/demo/motion`.
+- Bumped the gem version to `0.1.251`.
+
+### Changed
+- `.fp-content-enter` and `.fp-empty-state` use `--motion-duration-slow`, `--motion-ease-out`, and `--motion-distance-sm`.
+- `--collage-duration`, `--collage-easing`, `--collage-rise`, and `--collage-stagger` inherit those tokens. A collage token set on its own still wins.
+- `flat-pack--svg-motion` named durations `:fast`, `:base`, and `:slow` follow `--motion-duration-*`. Easing `enter` follows `--motion-ease-out`. `standard` and `exit` stay on `--easing-standard` and `--easing-exit`. A millisecond duration is unchanged.
+- Under `prefers-reduced-motion: reduce`, the motion durations and `--reveal-stagger` are `0ms`.
+
+### Upgrade notes
+- New tokens and three components. Nothing was renamed.
+- `reveal: :words` and `reveal: :lines` belong on `FlatPack::Reveal::Component`. On any other component they raise `ArgumentError`.
+- `parallax: true` raises unless the reveal is `:wipe` or `:zoom`.
+- Overriding `--motion-duration-slow` or `--motion-ease-out` also retunes `.fp-content-enter`, the collage entrance, and svg-motion tracks that use a named duration or easing `enter`. Set the `--collage-*` token when one collage should differ. Easing `standard` and `exit` stay on `--easing-standard` and `--easing-exit`.
+- Do not add `stream:` to `FlatPack::Chat::Message::Component`. Render `FlatPack::Text::Stream::Component` in the message.
+- `FlatPack::Number::Component` is new. Billing prices stay on `price_text` and `amount`. A counter takes a numeric `value:`.
+- Percent is a ratio. `0.18` formats as 18%.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.251`.
+
 ## [0.1.250] - 2026-10-16
 
 ### Changed

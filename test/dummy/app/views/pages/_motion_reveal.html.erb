@@ -1,0 +1,16 @@
+<div id="motion-reveal" class="flex flex-col gap-16">
+  <% { fade: "Fade", rise: "Rise", blur: "Blur", scale: "Scale" }.each do |variant, label| %>
+    <div id="reveal-<%= variant %>" class="flex min-h-screen items-center">
+      <%= render FlatPack::Card::Component.new(reveal: variant, shadow: :sm, class: "w-full max-w-md") do %>
+        <p class="text-3xl font-semibold"><%= label %></p>
+      <% end %>
+    </div>
+  <% end %>
+  <div id="reveal-stagger" class="flex min-h-screen items-center">
+    <%= render FlatPack::Reveal::Component.new(reveal: :rise, stagger: true, class: "grid w-full max-w-md gap-4") do %>
+      <% %w[Oak Walnut Maple Ash].each do |name| %>
+        <div class="rounded-[var(--radius-md)] border border-[var(--card-border-color)] bg-[var(--card-background-color)] px-4 py-4 text-lg font-medium"><%= name %></div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

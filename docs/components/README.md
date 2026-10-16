@@ -81,6 +81,7 @@ masonry | FlatPack::Masonry::Component | docs/components/masonry.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
 notification | FlatPack::Notification::Component | docs/components/notification.md
+number | FlatPack::Number::Component | docs/components/number.md
 overlay | FlatPack::Overlay::Component | docs/components/overlay.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
 page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md
@@ -92,6 +93,7 @@ popover | FlatPack::Popover::Component | docs/components/popover.md
 progress | FlatPack::Progress::Component | docs/components/progress.md
 quote | FlatPack::Quote::Component | docs/components/quote.md
 range_input | FlatPack::RangeInput::Component | docs/components/range-input.md
+reveal | FlatPack::Reveal::Component | docs/components/reveal.md
 search | FlatPack::Search::Component | docs/components/search.md
 section_title | FlatPack::SectionTitle::Component | docs/components/section-title.md
 segmented_buttons | FlatPack::SegmentedButtons::Component | docs/components/segmented-buttons.md
@@ -107,6 +109,7 @@ sortable_tables_examples | FlatPack::Table::Component | docs/components/sortable
 stepper | FlatPack::Stepper::Component | docs/components/stepper.md
 table | FlatPack::Table::Component | docs/components/table.md
 tabs | FlatPack::Tabs::Component | docs/components/tabs.md
+text_stream | FlatPack::Text::Stream::Component | docs/components/text-stream.md
 timeline | FlatPack::Timeline::Component | docs/components/timeline.md
 timestamp | FlatPack::Timestamp::Component | docs/components/timestamp.md
 tree | FlatPack::Tree::Component | docs/components/tree.md

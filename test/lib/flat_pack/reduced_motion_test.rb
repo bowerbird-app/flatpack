@@ -9,7 +9,10 @@ module FlatPack
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
 
       assert_includes css, "@media (prefers-reduced-motion: reduce)"
-      %w[--duration-fast --duration-base --duration-slow --skeleton-shimmer-duration].each do |token|
+      %w[
+        --duration-fast --duration-base --duration-slow --skeleton-shimmer-duration
+        --motion-duration-fast --motion-duration-base --motion-duration-slow --reveal-stagger
+      ].each do |token|
         assert_match(/#{Regexp.escape(token)}:\s*0ms/, css)
       end
     end
@@ -61,6 +64,9 @@ module FlatPack
         list_orderable_controller.js
         trash_button_controller.js
         fab_controller.js
+        reveal_controller.js
+        text_stream_controller.js
+        number_controller.js
       ]
 
       controllers.each do |name|

@@ -62,7 +62,7 @@ Shapes are `circle`, `ellipse`, `rect`, `path`, `line`, and `polyline`. Attribut
 
 Parts can nest. Each `name` is a letter, then letters, numbers, or hyphens, and it is unique. A part may set `opacity` from 0 to 1 for a shape that starts hidden.
 
-A track targets a `part` and one `property`: `translateX`, `translateY`, `scaleX`, `scaleY`, `rotate`, `opacity`, or `strokeDashoffset`. `keyframes` is a list of numbers (at least two). A keyframe may be `{ value:, offset: }` when the change should sit at a point in the timeline, from 0 to 1. `duration` is milliseconds, or `:fast`, `:base`, `:slow` (`--duration-fast`, `--duration-base`, `--duration-slow`). `easing` is `standard`, `enter`, `exit`, or `linear` (the `--easing-*` tokens, except `linear`). `delay` is milliseconds. `iterations` is a positive integer or `"infinite"`.
+A track targets a `part` and one `property`: `translateX`, `translateY`, `scaleX`, `scaleY`, `rotate`, `opacity`, or `strokeDashoffset`. `keyframes` is a list of numbers (at least two). A keyframe may be `{ value:, offset: }` when the change should sit at a point in the timeline, from 0 to 1. `duration` is milliseconds, or `:fast`, `:base`, `:slow` (`--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`). `easing` is `standard` (`--easing-standard`), `enter` (`--motion-ease-out`), `exit` (`--easing-exit`), or `linear`. `delay` is milliseconds. `iterations` is a positive integer or `"infinite"`.
 
 `strokeDashoffset` may use the keyframe `"length"`, which is the shape's measured length. That is how a stroke draws on. Path `d` does not animate.
 
@@ -117,5 +117,5 @@ Demo: `/demo/animated_character`.
 
 - Stimulus controller `flat-pack--svg-motion` (`app/javascript/flat_pack/controllers/svg_motion_controller.js`).
 - `controllers/flat_pack/reduced_motion` for the reduced-motion check and for `:fast`, `:base`, and `:slow` durations.
-- `--duration-fast`, `--duration-base`, `--duration-slow`, `--easing-standard`, `--easing-enter`, `--easing-exit`.
+- `--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`, `--motion-ease-out`, `--easing-standard`, `--easing-exit`.
 - Heroicons, when an icon uses `animate:`.

@@ -89,7 +89,8 @@ class PagesController < ApplicationController
     {action: /\Anotification\z/, title: "Notification", patterns: [/\A--popover-/, /\A--list-item-/]},
     {action: /\Atree\z/, title: "Tree", patterns: []},
     {action: /\Afab\z/, title: "FAB", patterns: [/\A--fab-/]},
-    {action: /\Ainline_edit\z/, title: "Inline Edit", patterns: [/\A--inline-edit-/]}
+    {action: /\Ainline_edit\z/, title: "Inline Edit", patterns: [/\A--inline-edit-/]},
+    {action: /\Amotion\z/, title: "Motion", patterns: [/\A--motion-/, /\A--reveal-stagger\z/]}
   ].freeze
 
   before_action :load_table_demo_data, only: %i[tables_basic tables_sortable tables_draggable]
@@ -689,6 +690,13 @@ class PagesController < ApplicationController
   end
 
   def animated_character
+  end
+
+  def motion
+    clip = params[:clip].to_s
+    @motion_specimen = %w[fade rise blur scale wipe zoom words lines stream count roll number-fade].include?(clip) ? clip : nil
+    @motion_clip = @motion_specimen || (%w[tokens reveal text media stream].include?(clip) ? clip : nil)
+    render layout: "fullpage" if @motion_clip
   end
 
   def overlay

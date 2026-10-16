@@ -5,6 +5,7 @@ module FlatPack
     # System arguments pattern for consistent API across components
     # Handles: class, data, aria, id, and other HTML attributes
     def initialize(**system_arguments)
+      @motion_attributes = extract_motion_attributes!(system_arguments)
       @system_arguments = sanitize_args(system_arguments)
     end
 
@@ -92,12 +93,29 @@ module FlatPack
       @system_arguments.except(:class, :data, :aria)
     end
 
-    # Merge all attributes for rendering
+    # Merge all attributes for rendering.
+    # A reveal: system argument is applied once, on the first call.
     def merge_attributes(**additional_attrs)
+      motion = take_motion_attributes
+      extra_class = additional_attrs.delete(:class)
+      extra_data = additional_attrs.delete(:data) || {}
+      extra_aria = additional_attrs.delete(:aria) || {}
+
+      if motion
+        extra_class = [extra_class, motion[:class]].compact.join(" ")
+        extra_data = merge_data_attributes(extra_data, motion[:data])
+      end
+
+      merged_data = if motion
+        merge_data_attributes(data_attributes, extra_data)
+      else
+        data_attributes.merge(extra_data)
+      end
+
       {
-        class: classes(additional_attrs.delete(:class)),
-        data: data_attributes.merge(additional_attrs.delete(:data) || {}),
-        aria: aria_attributes.merge(additional_attrs.delete(:aria) || {})
+        class: classes(extra_class),
+        data: merged_data,
+        aria: aria_attributes.merge(extra_aria)
       }.merge(html_attributes).merge(additional_attrs).compact
     end
 
@@ -185,6 +203,27 @@ module FlatPack
 
       merged[:describedby] = tokens.join(" ") if tokens.any?
       merged
+    end
+
+    def extract_motion_attributes!(system_arguments)
+      return nil unless system_arguments.key?(:reveal) || system_arguments.key?(:stagger) || system_arguments.key?(:parallax) || system_arguments.key?(:intensity)
+
+      stagger = system_arguments.delete(:stagger)
+      parallax = system_arguments.delete(:parallax)
+      intensity = system_arguments.delete(:intensity)
+
+      FlatPack::Motion.attributes(
+        reveal: system_arguments.delete(:reveal),
+        stagger: stagger.nil? ? false : stagger,
+        parallax: parallax.nil? ? false : parallax,
+        intensity: intensity
+      )
+    end
+
+    def take_motion_attributes
+      motion = @motion_attributes
+      @motion_attributes = nil
+      motion
     end
 
     def merge_space_tokens(left_value, right_value)

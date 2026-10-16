@@ -587,6 +587,14 @@ components:
     primary_class: FlatPack::RangeInput::Component
     status: documented
 
+  - key: reveal
+    title: Reveal
+    doc: docs/components/reveal.md
+    primary_class: FlatPack::Reveal::Component
+    related_classes:
+      - FlatPack::Text::Stream::Component
+    status: documented
+
   - key: search
     title: Search
     doc: docs/components/search.md
@@ -696,6 +704,15 @@ components:
     title: Tabs
     doc: docs/components/tabs.md
     primary_class: FlatPack::Tabs::Component
+    status: documented
+
+  - key: text_stream
+    title: Text Stream
+    doc: docs/components/text-stream.md
+    primary_class: FlatPack::Text::Stream::Component
+    related_classes:
+      - FlatPack::Chat::Message::Component
+      - FlatPack::Reveal::Component
     status: documented
 
   - key: timeline

@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"
+import { prefersReducedMotion, motionTokenMs } from "controllers/flat_pack/reduced_motion"
 
 const EASING = {
   standard: "cubic-bezier(0.2, 0, 0, 1)",
@@ -10,7 +10,7 @@ const EASING = {
 
 const EASING_TOKEN = {
   standard: "--easing-standard",
-  enter: "--easing-enter",
+  enter: "--motion-ease-out",
   exit: "--easing-exit"
 }
 
@@ -216,7 +216,7 @@ export default class extends Controller {
   #milliseconds(value) {
     if (typeof value === "number") return value
 
-    return motionDuration(String(value))
+    return motionTokenMs(String(value))
   }
 
   #easing(name) {

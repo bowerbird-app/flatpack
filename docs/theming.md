@@ -198,7 +198,7 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 
 Empty State padding, the gap under the icon, image, or visual, the title gap, and the gap before the actions are `--empty-state-padding-*`, `--empty-state-gap-*`, `--empty-state-title-gap-*`, and `--empty-state-block-gap-*`. Each one is `round(nearest, calc(var(--space-N) * var(--density)), 1px)`, so rounded's larger steps loosen the panel. The text measure is `--empty-state-measure-sm` (`20rem`), `--empty-state-measure-md` (`28rem`), `--empty-state-measure-lg` (`36rem`), and `--empty-state-measure-full` (`none`). Those lengths do not follow `--density`.
 
-Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`5deg`), `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` (`40ms`). Entrance, idle, and hover use `--collage-duration`, `--collage-easing`, `--collage-rise` (`4px`), `--collage-deal` (`100%`), `--collage-deal-duration` (`720ms`), `--collage-drift` (`1deg` over `8s`), `--collage-focus-lift`, `--collage-focus-scale` (`0.97`), and `--collage-focus-dim` (`0.62`). The offsets, the lift, `--collage-gap`, `--collage-pad`, `--collage-bleed`, `--collage-margin`, and `--collage-overlap` are `round(nearest, calc(var(--space-N) * var(--density)), 1px)`, so a rounded page loosens the scatter. `--collage-lift` is `calc(var(--collage-offset-y) * -1)`. `--collage-loose` (`2`) multiplies the subtle unit for `scatter: :loose`. An even grid pads by `--collage-pad` plus `(--collage-offset-y + --collage-bleed)` for each scatter unit. A brick (`rows:`) uses `--collage-margin` (`2rem`, about 32px) and overlaps rows by `--collage-overlap` (a negative `--space-5`). Slot proportion is `--collage-card-ratio` (`0.928`) swayed by `--collage-card-sway` (`0.1`). Below `md` the phone row is `33dvh` tall and each card is `--collage-item-size-sm` wide (about `0.7 * 33dvh` times the ratio). From `md` to `lg` a brick caps each card at `--collage-item-size-md` (`11rem`). Below `stack_below` the extra inset, the overlap, and the tilt drop off. Set `--collage-rotate: 0deg` on a theme to flatten every collage without passing `scatter: :none`.
+Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`5deg`), `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` (`--reveal-stagger`, `40ms`). Entrance, idle, and hover use `--collage-duration` (`--motion-duration-slow`), `--collage-easing` (`--motion-ease-out`), `--collage-rise` (`--motion-distance-sm`, `4px`), `--collage-deal` (`100%`), `--collage-deal-duration` (`720ms`), `--collage-drift` (`1deg` over `8s`), `--collage-focus-lift`, `--collage-focus-scale` (`0.97`), and `--collage-focus-dim` (`0.62`). The offsets, the lift, `--collage-gap`, `--collage-pad`, `--collage-bleed`, `--collage-margin`, and `--collage-overlap` are `round(nearest, calc(var(--space-N) * var(--density)), 1px)`, so a rounded page loosens the scatter. `--collage-lift` is `calc(var(--collage-offset-y) * -1)`. `--collage-loose` (`2`) multiplies the subtle unit for `scatter: :loose`. An even grid pads by `--collage-pad` plus `(--collage-offset-y + --collage-bleed)` for each scatter unit. A brick (`rows:`) uses `--collage-margin` (`2rem`, about 32px) and overlaps rows by `--collage-overlap` (a negative `--space-5`). Slot proportion is `--collage-card-ratio` (`0.928`) swayed by `--collage-card-sway` (`0.1`). Below `md` the phone row is `33dvh` tall and each card is `--collage-item-size-sm` wide (about `0.7 * 33dvh` times the ratio). From `md` to `lg` a brick caps each card at `--collage-item-size-md` (`11rem`). Below `stack_below` the extra inset, the overlap, and the tilt drop off. Set `--collage-rotate: 0deg` on a theme to flatten every collage without passing `scatter: :none`.
 
 ### Border Radius
 ```css
@@ -333,6 +333,26 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 ```
 
 `--easing-*` are set on `:root`, for the same reason as durations. Kit overlays use `ease-[var(--easing-enter)]` / `ease-[var(--easing-exit)]`, or `motionTransition()` in Stimulus. In-place motion (switch, progress, sidebar, and the opt-in Tabs/Pill `indicator: :slide` marker) uses `--easing-standard`. Overlay enter/exit stay bounce-free. `--easing-spring` and `--easing-spring-snappy` are the exception for list (and future layout) reorder settle — do not use them on modals, drawers, toasts, popovers, or tooltips.
+
+### Motion
+```css
+--motion-duration-fast: var(--duration-fast)   /* 150ms */
+--motion-duration-base: var(--duration-base)   /* 200ms */
+--motion-duration-slow: var(--duration-slow)   /* 300ms */
+--motion-ease-out: var(--easing-enter)
+--motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1)
+--motion-ease-spring: var(--easing-spring)
+--motion-distance-sm: 4px
+--motion-distance-md: 1rem
+--motion-distance-lg: 3rem
+--motion-scale: 0.95
+--motion-scale-strong: 0.85
+--motion-zoom: 1.05
+--motion-zoom-strong: 1.2
+--reveal-stagger: 40ms
+```
+
+`--motion-*` and `--reveal-stagger` are the shared reveal scale. `FlatPack::Number::Component` reads the same duration and `--motion-ease-out` for a count, roll, or fade. Character and icon tracks do too: `:fast`, `:base`, and `:slow` follow `--motion-duration-*`, and easing `enter` follows `--motion-ease-out`. `standard` and `exit` stay on `--easing-standard` and `--easing-exit`. A millisecond duration is unchanged. `.fp-content-enter` and the collage entrance inherit the duration, ease, and `--motion-distance-sm`, so one theme change retunes the kit enter, the collage, and `FlatPack::Reveal`. Default rise and blur use `--motion-distance-md`. `intensity: :strong` uses `--motion-distance-lg`, `--motion-scale-strong`, and `--motion-zoom-strong`. Override a `--collage-*` motion token when a single collage should differ. Reveals use `--motion-ease-out`. Set that to `var(--motion-ease-spring)` or `var(--motion-ease-in-out)` when a theme wants a different curve. `--motion-ease-spring` is the list spring; overlays stay bounce-free. Under `prefers-reduced-motion: reduce`, the motion durations and `--reveal-stagger` become `0ms`.
 
 Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field. List orderable sibling shifts use `--easing-spring`; drop settle uses `--easing-spring-snappy`. Under reduced motion, list reorder snaps with no spring.
 

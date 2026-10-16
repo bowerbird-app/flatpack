@@ -144,12 +144,12 @@
     opacity: 1;
     transform: translateY(0);
     transition:
-      opacity var(--duration-slow) var(--easing-enter),
-      transform var(--duration-slow) var(--easing-enter);
+      opacity var(--motion-duration-slow) var(--motion-ease-out),
+      transform var(--motion-duration-slow) var(--motion-ease-out);
 
     @starting-style {
       opacity: 0;
-      transform: translateY(4px);
+      transform: translateY(var(--motion-distance-sm));
     }
   }
 
@@ -3346,5 +3346,449 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   min-height: 0;
   border: 0;
   grid-area: 1 / 1;
+}
+
+/* Reveal. Without scripting, or with reduced motion, the final state shows.
+ * With scripting, :not(.is-revealed) is hidden on first paint. is-pending
+ * keeps that hidden state from animating until the controller reveals once.
+ */
+.fp-reveal--fade,
+.fp-reveal--rise,
+.fp-reveal--blur,
+.fp-reveal--scale,
+.fp-reveal--zoom {
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--motion-duration-slow);
+  transition-timing-function: var(--motion-ease-out);
+}
+
+.fp-reveal.is-pending,
+.fp-reveal.is-pending > *,
+.fp-reveal.is-pending .fp-reveal__chunk {
+  transition: none;
+}
+
+.fp-reveal--fade:not(.is-revealed),
+.fp-reveal--rise:not(.is-revealed),
+.fp-reveal--blur:not(.is-revealed),
+.fp-reveal--scale:not(.is-revealed),
+.fp-reveal--zoom:not(.is-revealed) {
+  opacity: 0;
+}
+
+.fp-reveal--rise:not(.is-revealed) {
+  transform: translateY(var(--motion-distance-md));
+}
+
+.fp-reveal--strong.fp-reveal--rise:not(.is-revealed) {
+  transform: translateY(var(--motion-distance-lg));
+}
+
+.fp-reveal--blur:not(.is-revealed) {
+  filter: blur(var(--motion-distance-md));
+}
+
+.fp-reveal--strong.fp-reveal--blur:not(.is-revealed) {
+  filter: blur(var(--motion-distance-lg));
+}
+
+.fp-reveal--scale:not(.is-revealed) {
+  transform: scale(var(--motion-scale));
+}
+
+.fp-reveal--strong.fp-reveal--scale:not(.is-revealed) {
+  transform: scale(var(--motion-scale-strong));
+}
+
+.fp-reveal--stagger {
+  transition: none;
+}
+
+.fp-reveal--stagger > :not(.fp-reveal__plain) {
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--motion-duration-slow);
+  transition-timing-function: var(--motion-ease-out);
+  transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
+}
+
+.fp-reveal--stagger:not(.is-revealed) {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.fp-reveal--stagger:not(.is-revealed) > :not(.fp-reveal__plain) {
+  opacity: 0;
+}
+
+.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: translateY(var(--motion-distance-md));
+}
+
+.fp-reveal--strong.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: translateY(var(--motion-distance-lg));
+}
+
+.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain) {
+  filter: blur(var(--motion-distance-md));
+}
+
+.fp-reveal--strong.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain) {
+  filter: blur(var(--motion-distance-lg));
+}
+
+.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: scale(var(--motion-scale));
+}
+
+.fp-reveal--strong.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain) {
+  transform: scale(var(--motion-scale-strong));
+}
+
+.fp-reveal--words,
+.fp-reveal--lines {
+  position: relative;
+}
+
+.fp-reveal__plain {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fp-reveal__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.fp-reveal--lines .fp-reveal__mask {
+  display: block;
+}
+
+.fp-reveal--words .fp-reveal__mask {
+  white-space: nowrap;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+}
+
+.fp-reveal__chunk {
+  display: inline-block;
+  transition: transform var(--motion-duration-slow) var(--motion-ease-out);
+  transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
+}
+
+.fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
+.fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk {
+  transform: translateY(100%);
+}
+
+.fp-reveal--wipe,
+.fp-reveal--zoom {
+  overflow: hidden;
+}
+
+.fp-reveal--wipe {
+  transition: clip-path var(--motion-duration-slow) var(--motion-ease-out);
+}
+
+.fp-reveal--wipe:not(.is-revealed) {
+  clip-path: inset(0 100% 0 0);
+}
+
+.fp-reveal--wipe.is-revealed {
+  clip-path: inset(0 0 0 0);
+}
+
+.fp-reveal--zoom > * {
+  transition: transform var(--motion-duration-slow) var(--motion-ease-out);
+}
+
+.fp-reveal--zoom:not(.is-revealed) > * {
+  transform: scale(var(--motion-zoom));
+}
+
+.fp-reveal--strong.fp-reveal--zoom:not(.is-revealed) > * {
+  transform: scale(var(--motion-zoom-strong));
+}
+
+.fp-reveal--zoom.is-revealed > * {
+  transform: scale(1);
+}
+
+@keyframes fp-reveal-parallax {
+  from {
+    transform: translateY(var(--motion-distance-md));
+  }
+
+  to {
+    transform: translateY(calc(var(--motion-distance-md) * -1));
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .fp-reveal--parallax {
+      animation-name: fp-reveal-parallax;
+      animation-duration: auto;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: cover 10% cover 90%;
+    }
+  }
+}
+
+.fp-text-stream {
+  display: grid;
+  justify-items: start;
+  white-space: pre-wrap;
+}
+
+.fp-text-stream__sizer,
+.fp-text-stream__source,
+.fp-text-stream__live {
+  grid-area: 1 / 1;
+}
+
+.fp-text-stream__sizer {
+  visibility: hidden;
+}
+
+.fp-text-stream__live {
+  align-self: start;
+  justify-self: start;
+}
+
+.fp-text-stream.is-streaming .fp-text-stream__source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fp-text-stream__caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-inline-start: 1px;
+  background: currentColor;
+  vertical-align: text-bottom;
+  animation: fp-text-stream-caret 1s steps(1, end) infinite;
+}
+
+@keyframes fp-text-stream-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-reveal--fade:not(.is-revealed),
+  .fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--zoom:not(.is-revealed),
+  .fp-reveal--wipe:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--stagger:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--zoom:not(.is-revealed) > *,
+  .fp-reveal--strong.fp-reveal--zoom:not(.is-revealed) > *,
+  .fp-reveal--parallax {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
+  }
+
+  .fp-text-stream.is-streaming .fp-text-stream__source {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: pre-wrap;
+  }
+
+  .fp-text-stream__live,
+  .fp-text-stream__caret {
+    display: none;
+    animation: none;
+  }
+}
+
+@media (scripting: none) {
+  .fp-reveal--fade:not(.is-revealed),
+  .fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--zoom:not(.is-revealed),
+  .fp-reveal--wipe:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--rise:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--blur:not(.is-revealed),
+  .fp-reveal--strong.fp-reveal--scale:not(.is-revealed),
+  .fp-reveal--stagger:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--rise:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--blur:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--strong.fp-reveal--stagger.fp-reveal--scale:not(.is-revealed) > :not(.fp-reveal__plain),
+  .fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--lines:not(.is-revealed) .fp-reveal__chunk,
+  .fp-reveal--zoom:not(.is-revealed) > *,
+  .fp-reveal--strong.fp-reveal--zoom:not(.is-revealed) > * {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+    clip-path: none;
+  }
+}
+
+/* Number. The finished string is in the page. With scripting, the stage
+ * paints the count, roll, or fade, and the finished string is clipped
+ * until reduced motion or a browser without scripting restores it.
+ */
+.fp-number {
+  display: inline-grid;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.fp-number__sizer,
+.fp-number__final,
+.fp-number__stage {
+  grid-area: 1 / 1;
+}
+
+.fp-number__sizer {
+  visibility: hidden;
+}
+
+.fp-number__stage {
+  display: none;
+  justify-self: end;
+}
+
+.fp-number:not(.is-static) .fp-number__final {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fp-number:not(.is-static) .fp-number__stage {
+  display: block;
+}
+
+.fp-number__roll,
+.fp-number__columns {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.fp-number__digit {
+  display: block;
+  height: 1em;
+  width: 1ch;
+  overflow: hidden;
+}
+
+.fp-number__glyph {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+.fp-number__mark,
+.fp-number__affix {
+  line-height: 1;
+}
+
+.fp-number__strip {
+  display: block;
+  transition: transform var(--fp-number-duration, var(--motion-duration-slow)) var(--motion-ease-out);
+}
+
+.fp-number--fade .fp-number__stage {
+  opacity: 0;
+  transition: opacity var(--fp-number-duration, var(--motion-duration-slow)) var(--motion-ease-out);
+}
+
+.fp-number--fade.is-settled .fp-number__stage {
+  opacity: 1;
+}
+
+.fp-number.is-pending .fp-number__strip,
+.fp-number.is-pending.fp-number--fade .fp-number__stage {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-number:not(.is-static) .fp-number__final {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: nowrap;
+  }
+
+  .fp-number:not(.is-static) .fp-number__stage,
+  .fp-number__stage {
+    display: none;
+  }
+
+  .fp-number__strip,
+  .fp-number--fade .fp-number__stage {
+    animation: none;
+    transition: none;
+  }
+}
+
+@media (scripting: none) {
+  .fp-number:not(.is-static) .fp-number__final {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: nowrap;
+  }
+
+  .fp-number:not(.is-static) .fp-number__stage,
+  .fp-number__stage {
+    display: none;
+  }
 }
 

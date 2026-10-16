@@ -1,0 +1,16 @@
+<div id="motion-tokens" class="grid items-start gap-8 md:grid-cols-2" style="--motion-distance-md: var(--motion-distance-lg)">
+  <div style="--motion-duration-slow: var(--motion-duration-fast)">
+    <p class="mb-3 text-sm font-medium">Fast</p>
+    <%= render FlatPack::Card::Component.new(reveal: :rise, shadow: :sm) do %>
+      <p class="text-2xl font-semibold">Same rise</p>
+      <p class="mt-2 text-sm">150ms</p>
+    <% end %>
+  </div>
+  <div>
+    <p class="mb-3 text-sm font-medium">Slow</p>
+    <%= render FlatPack::Card::Component.new(reveal: :rise, shadow: :sm) do %>
+      <p class="text-2xl font-semibold">Same rise</p>
+      <p class="mt-2 text-sm">300ms</p>
+    <% end %>
+  </div>
+</div>

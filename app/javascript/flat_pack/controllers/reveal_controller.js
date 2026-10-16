@@ -1,0 +1,50 @@
+import { Controller } from "@hotwired/stimulus"
+import { observeOnce, prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
+
+// Flips is-revealed once when the element enters the viewport.
+// Until that class lands, the reveal stays hidden. is-pending blocks the
+// transition so the first painted frame cannot flash the final state.
+// Reduced motion and browsers without scripting show the final state.
+export default class extends Controller {
+  static values = {
+    stagger: { type: Boolean, default: false }
+  }
+
+  connect() {
+    if (prefersReducedMotion()) return
+    if (this.element.classList.contains("is-revealed")) return
+
+    this.assignStaggerIndexes()
+    this.element.classList.add("is-pending")
+    this.stopObserving = observeOnce(this.element, () => this.finish())
+  }
+
+  disconnect() {
+    this.stopped = true
+    this.stopObserving?.()
+    this.stopObserving = null
+  }
+
+  finish() {
+    if (this.done || this.stopped) return
+
+    this.done = true
+    this.stopObserving?.()
+    this.stopObserving = null
+    this.element.classList.add("is-revealed")
+    this.element.classList.remove("is-pending")
+  }
+
+  assignStaggerIndexes() {
+    if (!this.staggerValue) return
+
+    let index = 0
+    Array.from(this.element.children).forEach((child) => {
+      if (child.classList.contains("fp-reveal__plain")) return
+      if (child.style.getPropertyValue("--reveal-index") !== "") return
+
+      child.style.setProperty("--reveal-index", String(index))
+      index += 1
+    })
+  }
+}

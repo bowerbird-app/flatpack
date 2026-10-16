@@ -4,20 +4,26 @@ const fs = require("node:fs")
 const path = require("node:path")
 const vm = require("node:vm")
 
-function loadController({ reduced = false } = {}) {
+function loadController({ reduced = false, tokens = null } = {}) {
   const filePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "controllers", "svg_motion_controller.js")
   const source = fs.readFileSync(filePath, "utf8")
   const transformed = source
     .replace('import { Controller } from "@hotwired/stimulus"', "class Controller {}")
     .replace(
-      'import { prefersReducedMotion, motionDuration } from "controllers/flat_pack/reduced_motion"',
-      `function prefersReducedMotion() { return ${reduced} }\nfunction motionDuration(token) { return token === "fast" ? 150 : 200 }`
+      'import { prefersReducedMotion, motionTokenMs } from "controllers/flat_pack/reduced_motion"',
+      `function prefersReducedMotion() { return ${reduced} }\nfunction motionTokenMs(token) { return token === "fast" ? 150 : token === "slow" ? 300 : 200 }`
     )
     .replace("export default class extends Controller", "class SvgMotionController extends Controller")
     + "\nmodule.exports = SvgMotionController\n"
 
   const context = { module: { exports: {} }, exports: {}, globalThis: {} }
   context.globalThis = context
+  if (tokens) {
+    context.document = { documentElement: {} }
+    context.getComputedStyle = () => ({
+      getPropertyValue(name) { return tokens[name] || "" }
+    })
+  }
   vm.runInNewContext(transformed, context, { filename: filePath })
   return context.module.exports
 }
@@ -71,8 +77,8 @@ function buildElement() {
   return element
 }
 
-function mount(definition, { state = "idle", trigger = "mount", reduced = false } = {}) {
-  const SvgMotionController = loadController({ reduced })
+function mount(definition, { state = "idle", trigger = "mount", reduced = false, tokens = null } = {}) {
+  const SvgMotionController = loadController({ reduced, tokens })
   const element = buildElement()
   const controller = new SvgMotionController()
   controller.element = element
@@ -170,6 +176,51 @@ test("draw animates stroke length to zero", () => {
   assert.equal(record.frames[1].strokeDashoffset, 0)
   assert.equal(record.timing.duration, 200)
   assert.equal(record.timing.easing, "cubic-bezier(0.05, 0.7, 0.1, 1)")
+})
+
+test("named durations and enter easing read the motion tokens", () => {
+  const draw = {
+    states: {
+      play: {
+        tracks: [
+          { part: "strokes", property: "strokeDashoffset", keyframes: ["length", 0], duration: "slow", delay: 0, easing: "enter", iterations: 1 }
+        ]
+      }
+    }
+  }
+  const { element } = mount(draw, {
+    state: "play",
+    tokens: { "--motion-ease-out": "cubic-bezier(0.1, 0.2, 0.3, 1)" }
+  })
+
+  assert.equal(element.records[0].timing.duration, 300)
+  assert.equal(element.records[0].timing.easing, "cubic-bezier(0.1, 0.2, 0.3, 1)")
+})
+
+test("standard, exit, and linear stay off the motion ease", () => {
+  const spec = {
+    states: {
+      play: {
+        tracks: [
+          { part: "root", property: "opacity", keyframes: [0, 1], duration: 100, delay: 0, easing: "standard", iterations: 1 },
+          { part: "root", property: "opacity", keyframes: [1, 0], duration: 100, delay: 0, easing: "exit", iterations: 1 },
+          { part: "root", property: "opacity", keyframes: [0, 1], duration: 100, delay: 0, easing: "linear", iterations: 1 }
+        ]
+      }
+    }
+  }
+  const { element } = mount(spec, {
+    state: "play",
+    tokens: {
+      "--easing-standard": "cubic-bezier(0.11, 0, 0, 1)",
+      "--easing-exit": "cubic-bezier(0.4, 0, 1, 1)",
+      "--motion-ease-out": "cubic-bezier(0.9, 0, 0, 1)"
+    }
+  })
+
+  assert.equal(element.records[0].timing.easing, "cubic-bezier(0.11, 0, 0, 1)")
+  assert.equal(element.records[1].timing.easing, "cubic-bezier(0.4, 0, 1, 1)")
+  assert.equal(element.records[2].timing.easing, "linear")
 })
 
 test("matching scale axes become one scale animation", () => {

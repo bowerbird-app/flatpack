@@ -61,6 +61,18 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Collage idle | `idle` | `FlatPack::Collage::Component` only. `:none` (default) or `:drift` (a slow ±1deg sway). Off below `md`. |
 | Collage hover | `hover` | `FlatPack::Collage::Component` only. `:lift` (default), `:focus` (straighten, raise, siblings ease back), or `:none`. Pointer hover needs `(hover: hover)`. Keyboard uses `:focus-visible` and `:focus-within`. Off below `md`. |
 | Collage phone count | `mobile_items` | `FlatPack::Collage::Component` only. Default `4`. How many items stay in the phone row. Later items stay in the markup and are not displayed below `md`. Ignored when `stack_below` is set. |
+| Scroll reveal | `reveal` | Any component root that calls `merge_attributes`, and `FlatPack::Reveal::Component`. `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, `:zoom`. `:words` and `:lines` are the Reveal component only. |
+| Reveal children | `stagger` | Boolean. `true` sets `--reveal-index` on the children of a box reveal. Not a text-stream prop. |
+| Media scroll shift | `parallax` | Boolean. `true` only with `reveal: :wipe` or `reveal: :zoom`. CSS `animation-timeline: view()` when supported. |
+| Reveal intensity | `intensity` | `:strong` or omit. Strong uses `--motion-distance-lg`, `--motion-scale-strong`, and `--motion-zoom-strong`. |
+| Animated number | `value` | `FlatPack::Number::Component` only. The numeric amount. A number or a plain numeric string. |
+| Number start | `from` | Number only. Where the count or roll begins. Default `0`. |
+| Number format | `format` | Number only. `:number` (default), `:currency`, `:percent`, or `:compact`. Percent is a ratio: `0.18` is 18%. |
+| Number currency | `currency` | Number only, required with `format: :currency`. A three-letter code such as `"USD"`. |
+| Number places | `decimals` | Number only. Omit for the format's own places. `0`–`20` sets both the minimum and the maximum. |
+| Number affixes | `prefix` / `suffix` | Number only. Extra text outside the formatted number, such as `"About "` and `" left"`. |
+| Number duration | `duration` | Number only. `:fast`, `:base`, or `:slow` (default). Reads `--motion-duration-*`. |
+| Number motion | `animate` | Number only. `:count` (default), `:roll`, `:fade`, or `:none`. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
 | Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). Animated character sizes are `:sm`, `:md`, `:lg`, `:xl` on a larger scale than icons (`:xl` is `w-40`). |
 | Character definition | `definition` | `FlatPack::AnimatedCharacter::Component` only. A Hash of `parts` and `states`. Not a raw SVG string. |
@@ -77,7 +89,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
 | List of records | `items` | Search catalogs, pickers, avatar groups, billing plan/invoice rows, and other collections already in the page |
 | Open / closed start state | `open` | Whether a collapse, group, or layout starts expanded |
-| Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts; FlatPack does not format currency |
+| Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts. Billing does not format currency. `FlatPack::Number::Component` is the counter, and its `value:` is the numeric amount. |
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
 | Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
 | Sliding active marker | `indicator` | Tabs and Button::Pill. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
@@ -103,7 +115,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Prefer `items` for plan picker and invoice collections (do not invent `plans` or `invoices` as prop names).
 - Prefer `href` for Change plan, Update card, and invoice Download/View navigation.
 - Prefer `empty_title` / `empty_description` for payment-method and invoice empty states.
-- Prefer `price_text` and `amount` as preformatted strings; do not add a `currency` formatter in FlatPack.
+- Prefer `price_text` and `amount` as preformatted strings on billing. Do not add a billing currency formatter. `FlatPack::Number::Component` formats a single `value:` for display.
 - Prefer `cta_text` for plan-picker button copy (action label pattern via `*_text` / `text`).
 - Keep PCI out of FlatPack: never add props for full PAN, CVC, or Elements mount points.
 
@@ -132,3 +144,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Button `title` is the full-text tooltip. Do not use it as a heading. Button `label` is not the visible string; use `text`.
 - Do not add `icon_class` on a button. Recolour the glyph with `icon_style` and the `--button-icon-*` tokens.
 - Do not use `label` for a key/value term. Use `key`. The item block is the value.
+- Do not pass `reveal: :words` or `reveal: :lines` as a system argument. Those split the copy in `FlatPack::Reveal::Component`.
+- Do not pass `parallax: true` with `:fade`, `:rise`, `:blur`, `:scale`, `:words`, or `:lines`. It belongs on `:wipe` and `:zoom`.
+- Do not add `stream:` to a chat message. Render `FlatPack::Text::Stream::Component` inside the message.
+- Do not pass billing `price_text` or `amount` to `FlatPack::Number::Component`. Pass the numeric `value:`. Do not pass Number `currency:` to a billing plan.
