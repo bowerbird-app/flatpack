@@ -3003,7 +3003,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
     grid-auto-columns: calc(var(--collage-item-size-sm) * 0.62);
     grid-template-columns: none;
     grid-template-rows: 33dvh;
-    justify-content: center;
+    justify-content: unsafe center;
     align-items: center;
     height: 33dvh;
     gap: 0;
@@ -3035,7 +3035,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 @media (width >= 48rem) and (width < 64rem) {
   .fp-collage--teaser.fp-collage--brick {
     grid-template-columns: repeat(3, minmax(0, var(--collage-item-size-md)));
-    justify-content: center;
+    justify-content: unsafe center;
     width: 100%;
     padding: var(--collage-margin);
   }
