@@ -14,9 +14,9 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-The kit default (no `data-theme`) is the charcoal palette on the compact spacing scale. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` keeps that palette and shifts `--space-2` through `--space-6`, plus the menu-shell and search-result remaps. Dark and ocean inherit the compact scale. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)` on `:root, [data-theme]`, so a descendant theme re-resolves it. Concrete `--space-*` and `--density` live on bare `:root` only. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto a named theme. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
+The kit default (no `data-theme`) is the charcoal palette on the compact spacing scale and the moderate shape scale. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` keeps that palette, shifts `--space-2` through `--space-6`, remaps the menu shells, and changes shape: buttons, inputs, badges, tabs, and the chat composer become pills (`--radius-full`). Chips, sidebar item highlights, and menu item highlights stay `--radius-md` (8px). Cards, menus, popovers, modals, alerts, and toasts step up to `--radius-xl`. Dark and ocean inherit the compact spacing and the moderate shape. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)` on `:root, [data-theme]`, so a descendant theme re-resolves it. Concrete `--space-*`, `--density`, and `--radius-*` live on bare `:root` only. Component radii that rounded changes live on that same bare `:root`, not on `[data-theme]`, so a dark region inside rounded keeps the pill or the larger shell. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto a named theme. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
 
-On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme="rounded"]`. Rounded only sets the spacing scale. Set `<html data-theme="rounded">` when the generous steps should show. Without the attribute, the compact scale applies.
+On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme="rounded"]`. Rounded sets spacing and shape. Set `<html data-theme="rounded">` when the generous steps and pill controls should show. Without the attribute, the compact scale and moderate corners apply.
 
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
 
@@ -77,9 +77,9 @@ Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-p
 | Host wants the same primary as FlatPack | Set `--color-primary` in the host stylesheet (last). That is an override, not a clash. |
 | Host needs a different primary than FlatPack | Keep the host color as `--my-app-primary` (or similar). Leave `--color-primary` for FlatPack, or set it only if you intend FlatPack to match. |
 | Host already uses `--color-primary` for something else | Rename the **host** token. Do not rename FlatPack's. |
-| Host Tailwind loads after kit CSS | Tailwind `@layer theme` sets `--font-sans` to `ui-sans-serif` and `--radius-md` to `0.375rem`. Re-set `--font-sans` / `--font-mono` and `--radius-sm` / `--radius-md` / `--radius-lg` / `--radius-xl` on unlayered `:root` in the host stylesheet so the kit face and kit radii win. Putting them in `@theme` does not replace Tailwind’s defaults. `var(--radius-md, 1rem)` in kit CSS only applies when the token is unset. |
+| Host Tailwind loads after kit CSS | Tailwind `@layer theme` sets `--font-sans` to `ui-sans-serif` and `--radius-md` to `0.375rem`. Re-set `--font-sans` / `--font-mono` and `--radius-xs` through `--radius-full` on unlayered `:root` in the host stylesheet so the kit face and kit radii win. Putting them in `@theme` does not replace Tailwind’s defaults. `var(--radius-md, 0.5rem)` in kit CSS only applies when the token is unset. |
 
-`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities. FlatPack's default radii are the larger rounded scale (`1rem` for `--radius-md`). Kit class names use `rounded-[var(--radius-*)]` so they do not collide with Tailwind's `rounded-md` scale.
+`--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities. FlatPack's default `--radius-md` is `0.5rem`. Kit class names use `rounded-[var(--radius-*)]` so they do not collide with Tailwind's `rounded-md` scale.
 
 ## Overview
 
@@ -202,28 +202,46 @@ Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`5deg`), `
 
 ### Border Radius
 ```css
---radius-sm: 0.75rem
---radius-md: 1rem
---radius-lg: 1.5rem
---radius-xl: 2rem
+--radius-xs: 0.125rem   /* 2px */
+--radius-sm: 0.25rem    /* 4px */
+--radius-md: 0.5rem     /* 8px */
+--radius-lg: 0.75rem    /* 12px */
+--radius-xl: 1.25rem    /* 20px */
+--radius-full: 9999px
 ```
 
-Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, or a component alias such as `--button-border-radius`. Rich text and content editor CSS use `var(--radius-md, 1rem)` / `var(--radius-sm, 0.75rem)` so toolbar and bubble chrome match those tokens. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. Keep `rounded-full` for pills and avatars, and `rounded-none` for segmented groups.
+The shape scale lives on bare `:root`, same as `--space-*`. Component radii alias a step and can be overridden:
 
-If host Tailwind loads after `flat_pack/variables`, re-set the four kit radii on unlayered `:root` (same block as `--font-sans`):
+| Token | Default | `[data-theme="rounded"]` |
+|---|---|---|
+| `--button-border-radius` | `--radius-md` | `--radius-full` |
+| `--form-control-radius` | `--radius-md` | `--radius-full` |
+| `--badge-radius`, `--tabs-pill-corner-radius` | `--radius-md` | `--radius-full` |
+| `--chip-border-radius` | `--radius-md` | `--radius-md` |
+| `--sidebar-item-radius` | `--radius-lg` | `--radius-md` |
+| `--dropdown-item-radius` | `--radius-sm` | `--radius-md` |
+| `--chat-composer-radius` | `--radius-lg` | `--radius-full` |
+| `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius` | `--radius-lg` | `--radius-xl` |
+| `--alert-border-radius`, `--toast-border-radius` | `--radius-lg` | `--radius-xl` |
+
+Inputs, select, textarea, and search fields use `--form-control-radius`. `--checkbox-radius` is `--radius-xs`. `--comments-inline-input-radius` follows `--form-control-radius`. `--media-radius`, accordion, collapse, and the collection editor follow `--card-radius`. Drawers use `--modal-radius`.
+
+Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, `rounded-[var(--radius-full)]`, or the component alias. Rich text and content editor CSS use `var(--radius-md, 0.5rem)` / `var(--radius-sm, 0.25rem)` so toolbar and bubble chrome match those tokens. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. `rounded-full` stays on true circles: avatar circle, status dots, typing dots, stepper and timeline markers, switch, radio, spinner artwork, carousel dots, and the FAB. `rounded-none` stays on segmented inner edges and collection-editor cells.
+
+If host Tailwind loads after `flat_pack/variables`, re-set the kit radii on unlayered `:root` (same block as `--font-sans`):
 
 ```css
 :root {
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
 }
 ```
 
-`Button` already skips its default radius when the host passes a `rounded-*` class. Other components merge with last-wins, so a host `class: "rounded-xl"` on Card does not replace the kit token. Kit maintainers run `bin/rake flat_pack:audit_radius_language` from this repo. That task audits the gem, not host markup. Remap leftovers with `ruby scripts/rewrite_radius_language.rb` in a checkout of this repository. The gem package does not ship `scripts/`.
-
-`--chip-border-radius` (`0.5rem`) and `--checkbox-radius` (`0.125rem`) stay as named component tokens off the four-step scale.
+`Button` already skips its default radius when the host passes a `rounded-*` class. Other components merge with last-wins, so a host `class: "rounded-xl"` on Card does not replace `--card-radius`. Kit maintainers run `bin/rake flat_pack:audit_radius_language` from this repo. That task audits the gem, not host markup. Remap leftovers with `ruby scripts/rewrite_radius_language.rb` in a checkout of this repository. The gem package does not ship `scripts/`.
 
 ### Shadows
 ```css

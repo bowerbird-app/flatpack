@@ -69,7 +69,7 @@ A button on the photo. The host leaves this one unlinked:
 ```
 
 ## Theming
-`--media-radius` defaults to `--radius-md`. `--media-outline-color` is a 12% mix of `--surface-content-color`. Set either token on `:root` or a named `[data-theme]` block. There is no prop that resets them.
+`--media-radius` follows `--card-radius` (default `--radius-lg`). `--media-outline-color` is a 12% mix of `--surface-content-color`. Set either token on `:root` or a named `[data-theme]` block. There is no prop that resets them.
 
 The image uses `loading="lazy"` and `decoding="async"`. `width` and `height` write `aspect-ratio` so the box is reserved before the file arrives. A muted surface fill shows in that box.
 

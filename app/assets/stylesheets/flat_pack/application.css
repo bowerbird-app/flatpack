@@ -1137,7 +1137,7 @@
 .fp-content code {
   background-color: var(--surface-muted-background-color);
   border: 1px solid var(--surface-border-color);
-  border-radius: var(--radius-sm, 0.75rem);
+  border-radius: var(--radius-sm, 0.25rem);
   font-family: var(--font-mono);
   font-size: 0.875em;
   padding: 0.1em 0.35em;
@@ -1146,7 +1146,7 @@
 .fp-content pre {
   background-color: var(--surface-muted-background-color);
   border: 1px solid var(--surface-border-color);
-  border-radius: var(--radius-md, 1rem);
+  border-radius: var(--radius-md, 0.5rem);
   font-size: var(--text-sm, 0.875rem);
   margin-top: 2rem;
   overflow-x: auto;
@@ -1160,7 +1160,7 @@
 }
 
 .fp-content img {
-  border-radius: var(--radius-md, 1rem);
+  border-radius: var(--radius-md, 0.5rem);
   display: block;
   height: auto;
   margin-top: 2rem;
@@ -1204,7 +1204,7 @@
   width: 100%;
   height: var(--range-track-height);
   border: 0;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background-color: var(--range-track-color);
   background-image: linear-gradient(var(--range-fill-color), var(--range-fill-color));
   background-repeat: no-repeat;
@@ -1240,14 +1240,14 @@
 .fp-range-input::-moz-range-track {
   height: var(--range-track-height);
   border: 0;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background: var(--range-track-color);
 }
 
 .fp-range-input::-moz-range-progress {
   height: var(--range-track-height);
   border: 0;
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   background: var(--range-fill-color);
 }
 

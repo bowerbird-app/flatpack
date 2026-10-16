@@ -86,7 +86,7 @@ module FlatPack
             style: :primary,
             size: :sm,
             disabled: @disabled,
-            class: "shrink-0 rounded-full"
+            class: "shrink-0"
           }
           args[:form] = @form if @form
           args

@@ -243,7 +243,7 @@ module FlatPack
           "p-[var(--modal-padding)]",
           "sm:p-[var(--modal-padding-wide)]",
           "bg-[var(--modal-surface-color)]",
-          "rounded-[var(--radius-lg)]",
+          "rounded-[var(--modal-radius)]",
           "shadow-lg",
           "border",
           "border-[var(--modal-border-color)]",

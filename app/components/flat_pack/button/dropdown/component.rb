@@ -161,7 +161,7 @@ module FlatPack
             "fixed z-50",
             "min-w-[12rem]",
             "overflow-auto",
-            "rounded-[var(--radius-md)]",
+            "rounded-[var(--menu-radius)]",
             "border border-[var(--surface-border-color)]",
             "bg-[var(--surface-background-color)]",
             "p-[var(--dropdown-padding)]",

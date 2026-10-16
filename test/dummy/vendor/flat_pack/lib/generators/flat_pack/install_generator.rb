@@ -293,7 +293,7 @@ module FlatPack
         say "  :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }"
         say "\nRe-set kit radii on unlayered :root so Tailwind @layer theme does not"
         say "keep --radius-md at 0.375rem (rich-text chrome follows that token):\n"
-        say "  :root { --radius-sm: 0.75rem; --radius-md: 1rem; --radius-lg: 1.5rem; --radius-xl: 2rem; }"
+        say "  :root { --radius-xs: 0.125rem; --radius-sm: 0.25rem; --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1.25rem; --radius-full: 9999px; }"
         say "\nFor complete configuration, see: docs/installation.md", :cyan
         say "=" * 70, :cyan
       end

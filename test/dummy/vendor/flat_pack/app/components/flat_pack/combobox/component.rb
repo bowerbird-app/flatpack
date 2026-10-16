@@ -88,7 +88,7 @@ module FlatPack
 
       def control_classes
         [
-          "flex items-center gap-2 w-full rounded-[var(--radius-md)]",
+          "flex items-center gap-2 w-full rounded-[var(--form-control-radius)]",
           "border border-[var(--surface-border-color)]",
           "bg-[var(--surface-background-color)]",
           "px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)]",
@@ -144,7 +144,7 @@ module FlatPack
           role: "listbox",
           class: [
             "absolute z-40 mt-1 hidden max-h-60 w-full overflow-y-auto",
-            "rounded-[var(--radius-md)] border border-[var(--surface-border-color)]",
+            "rounded-[var(--menu-radius)] border border-[var(--surface-border-color)]",
             "bg-[var(--surface-background-color)] shadow-md p-[var(--combobox-menu-padding)]"
           ].join(" "),
           data: {"flat-pack--combobox-target": "list"}
@@ -172,7 +172,7 @@ module FlatPack
       # "bg-[var(--list-item-hover-background-color)]" "bg-[var(--list-item-active-background-color)]"
       def option_classes(selected)
         [
-          "cursor-pointer px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
+          "cursor-pointer rounded-[var(--dropdown-item-radius)] px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
           "text-[var(--surface-content-color)]",
           "aria-selected:bg-[var(--list-item-active-background-color)]",
           selected ? "bg-[var(--list-item-active-background-color)]" : "hover:bg-[var(--list-item-hover-background-color)]"

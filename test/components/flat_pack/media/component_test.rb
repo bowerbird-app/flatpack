@@ -41,7 +41,8 @@ module FlatPack
           end
         end
 
-        assert_selector "[data-fp-placement='bottom_left'] .rounded-full", text: "JPG · 1120×1400 · 4:5"
+        badge = page.find("[data-fp-placement='bottom_left']", text: "JPG · 1120×1400 · 4:5")
+        assert_includes badge.native.to_html, "rounded-[var(--badge-radius)]"
       end
 
       def test_accepts_relative_src_and_empty_alt

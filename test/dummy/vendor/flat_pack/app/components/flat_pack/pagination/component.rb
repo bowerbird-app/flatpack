@@ -86,7 +86,7 @@ module FlatPack
       end
 
       def pagination_wrapper_classes
-        "inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] p-1.5"
+        "inline-flex items-center gap-1.5 rounded-[var(--button-border-radius)] bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] p-1.5"
       end
 
       def render_prev_button

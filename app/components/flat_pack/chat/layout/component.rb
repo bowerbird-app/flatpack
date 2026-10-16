@@ -116,7 +116,7 @@ module FlatPack
             "h-full",
             "min-h-0",
             "border border-[var(--chat-border-color)]",
-            "rounded-[var(--radius-lg)]",
+            "rounded-[var(--card-radius)]",
             "overflow-hidden",
             "bg-[var(--chat-background-color)]",
             "flex flex-col",

@@ -3,21 +3,29 @@
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
  *   2. Spacing scale (--space-1..--space-6) and --density — component padding multiplies a step by density
- *   3. Semantic tokens (--color-*, --surface-*, --overlay-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
- *   4. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
+ *   3. Shape scale (--radius-xs..--radius-xl, --radius-full) — component radii alias a step
+ *   4. Semantic tokens (--color-*, --surface-*, --overlay-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
+ *   5. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
  *   and the circular `--x: var(--x)` trap when Tailwind also emits @theme onto :root).
  * :root, [data-theme] is the single source of concrete colour and unremapped padding formulas
  *   (browsers skip @theme when this file is a stylesheet). Declaring the wiring on [data-theme]
  *   as well re-resolves derived tokens when a host puts data-theme on <body> or another descendant.
- * Concrete --space-* and --density live on bare :root only. A nested theme inherits them.
+ * Concrete --space-* , --density, and --radius-* live on bare :root only. A nested theme inherits them.
  * Remapped shells (--dropdown-padding, --select-menu-padding, --combobox-menu-padding,
- *   --search-menu-padding, --search-result-padding-y) are also bare :root, then overridden on
- *   [data-theme="rounded"]. Restating the compact formula on [data-theme] would snap a dark
- *   region inside rounded back to the 4px menu inset.
- * [data-theme="…"] named blocks override only tokens that differ. Dark and ocean inherit the scale.
- * [data-theme="rounded"] shifts space-2..space-6 and those remapped shells. It does not restate colour.
+ *   --search-menu-padding, --search-result-padding-y) and the component radii rounded changes
+ *   (--button-border-radius, --form-control-radius, --chip-border-radius, --badge-radius,
+ *   --tabs-pill-corner-radius, --card-radius, --menu-radius, --popover-radius, --modal-radius,
+ *   --alert-border-radius, --toast-border-radius, --chat-composer-radius,
+ *   --sidebar-item-radius, --dropdown-item-radius) are also bare :root,
+ *   then overridden on [data-theme="rounded"]. Restating the moderate value on [data-theme]
+ *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
+ * [data-theme="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
+ * [data-theme="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
+ *   It does not restate colour. Buttons, inputs, badges, and tabs become pills.
+ *   Chips, sidebar item highlights, and menu item highlights stay --radius-md.
+ *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
  * Do not assign `--token: var(--token)` on rounded. html[data-theme="rounded"] is :root, so that blanks the token.
  */
 
@@ -626,10 +634,17 @@
   --search-result-divider-color: var(--search-result-divider-color);
   --color-ring: var(--color-ring);
   --icon-stroke-width: var(--icon-stroke-width);
+  --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+  --form-control-radius: var(--form-control-radius);
+  --badge-radius: var(--badge-radius);
+  --card-radius: var(--card-radius);
+  --menu-radius: var(--menu-radius);
+  --modal-radius: var(--modal-radius);
   --stack-gap-sm: var(--stack-gap-sm);
   --stack-gap-md: var(--stack-gap-md);
   --stack-gap-lg: var(--stack-gap-lg);
@@ -651,6 +666,8 @@
   --table-sort-link-hover-color: var(--table-sort-link-hover-color);
   --chip-remove-hover-background-color: var(--chip-remove-hover-background-color);
   --chip-border-radius: var(--chip-border-radius);
+  --sidebar-item-radius: var(--sidebar-item-radius);
+  --dropdown-item-radius: var(--dropdown-item-radius);
   --chip-group-gap: var(--chip-group-gap);
   --chip-padding-x-sm: var(--chip-padding-x-sm);
   --chip-padding-y-sm: var(--chip-padding-y-sm);
@@ -920,14 +937,14 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --overlay-inset-sm: 0.5rem;
   --overlay-inset-md: 1rem;
   --overlay-inset-lg: 1.5rem;
-  --media-radius: var(--radius-md);
+  --media-radius: var(--card-radius);
   --media-outline-color: color-mix(in oklch, var(--surface-content-color) 12%, transparent);
   --checkbox-size: 1.25rem;
-  --checkbox-radius: 0.125rem;
+  --checkbox-radius: var(--radius-xs);
   --checkbox-label-gap: 0.75rem;
   --collapse-background-color: var(--surface-background-color);
   --collapse-border-color: var(--surface-border-color);
-  --collapse-border-radius: var(--radius-md);
+  --collapse-border-radius: var(--card-radius);
   --collapse-trigger-background-color: var(--surface-background-color);
   --collapse-trigger-hover-background-color: var(--surface-muted-background-color);
   --collapse-trigger-text-color: var(--surface-content-color);
@@ -996,7 +1013,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --timeline-line-min-height: 2rem;
   --accordion-background-color: var(--surface-background-color);
   --accordion-border-color: var(--surface-border-color);
-  --accordion-border-radius: var(--radius-md);
+  --accordion-border-radius: var(--card-radius);
   --accordion-item-border-color: var(--surface-border-color);
   --accordion-trigger-text-color: var(--surface-content-color);
   --accordion-trigger-hover-background-color: var(--surface-muted-background-color);
@@ -1033,7 +1050,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --code-block-tab-hover-color: var(--surface-content-color);
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
-  --tabs-pill-corner-radius: 9999px;
   --tabs-pill-active-background-color: var(--surface-active-background-color);
   --tabs-pill-active-border-color: var(--surface-active-border-color);
   --tabs-pill-active-text-color: var(--surface-active-text-color);
@@ -1215,7 +1231,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --popover-text-color: var(--surface-content-color);
   --popover-shadow: var(--shadow-lg);
   --popover-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
-  --popover-radius: var(--radius-md);
   --tooltip-background-color: var(--surface-content-color);
   --tooltip-border-color: var(--surface-border-color);
   --tooltip-text-color: var(--surface-background-color);
@@ -1238,7 +1253,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --list-marker-gap: 0.5rem;
   --collection-editor-background-color: var(--surface-background-color);
   --collection-editor-border-color: var(--surface-border-color);
-  --collection-editor-radius: var(--radius-md);
+  --collection-editor-radius: var(--card-radius);
   --collection-editor-row-background-color: transparent;
   --collection-editor-row-hover-background-color: var(--list-item-hover-background-color);
   --collection-editor-row-padding: 0.75rem;
@@ -1288,7 +1303,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-header-border-color: var(--surface-border-color);
   --chat-composer-background-color: var(--surface-background-color);
   --chat-composer-border-color: var(--surface-border-color);
-  --chat-composer-radius: var(--radius-md);
   --chat-input-background-color: var(--surface-background-color);
   --chat-input-border-color: var(--surface-border-color);
   --chat-input-text-color: var(--surface-content-color);
@@ -1349,7 +1363,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-submit-background-color: var(--color-primary);
   --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
   --comments-composer-submit-text-color: var(--color-primary-text);
-  --comments-inline-input-radius: 9999px;
+  --comments-inline-input-radius: var(--form-control-radius);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
   --comments-thread-count-color: var(--surface-muted-content-color);
@@ -1395,7 +1409,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --fp-button-hover-background: var(--button-default-hover-background-color);
   --fp-button-text: var(--button-default-text-color);
   --fp-button-border: var(--button-default-border-color);
-  --button-border-radius: var(--radius-md);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-background-color);
   --button-disabled-opacity: 0.5;
@@ -1413,7 +1426,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
-  --alert-border-radius: var(--radius-md);
   --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --alert-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
@@ -1440,7 +1452,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --alert-danger-border-color: color-mix(in oklab, var(--color-danger-background-color) 42%, var(--surface-border-color));
   --alert-danger-text-color: var(--surface-content-color);
   --alert-danger-icon-color: color-mix(in oklab, var(--color-danger-background-color) 78%, black);
-  --toast-border-radius: var(--radius-md);
   --toast-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --toast-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --toast-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
@@ -1551,7 +1562,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
   --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
-  --chip-border-radius: 0.5rem;
   --chip-group-gap: 0.5rem;
   --chip-padding-x-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --chip-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
@@ -1631,11 +1641,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-backdrop-blur: 4px;
   --drawer-backdrop-blur: var(--modal-backdrop-blur);
   --icon-stroke-width: 1.5;
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
-  /* Concrete values live here. @theme inline only registers names for Tailwind. */
+  /* Shape steps live on the bare :root scale below. @theme inline only registers names. */
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
@@ -1733,6 +1739,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * A nested data-theme inherits these computed values. Component formulas on
  * :root, [data-theme] re-resolve against them. Remapped shells stay off that
  * shared selector so a dark region inside rounded keeps the generous inset.
+ *
+ * Shape scale sits here too. Moderate corners are the default. Component radii
+ * that [data-theme="rounded"] changes are declared here, not on [data-theme],
+ * for the same reason as the menu shells.
  */
 :root {
   --space-1: 0.25rem;
@@ -1747,10 +1757,30 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --combobox-menu-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
   --search-menu-padding: 0px;
   --search-result-padding-y: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
+  --button-border-radius: var(--radius-md);
+  --form-control-radius: var(--radius-md);
+  --chip-border-radius: var(--radius-md);
+  --sidebar-item-radius: var(--radius-lg);
+  --dropdown-item-radius: var(--radius-sm);
+  --badge-radius: var(--radius-md);
+  --tabs-pill-corner-radius: var(--radius-md);
+  --card-radius: var(--radius-lg);
+  --menu-radius: var(--radius-lg);
+  --popover-radius: var(--menu-radius);
+  --modal-radius: var(--radius-lg);
+  --alert-border-radius: var(--radius-lg);
+  --toast-border-radius: var(--radius-lg);
+  --chat-composer-radius: var(--radius-lg);
 }
 
 /* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
- * Dark inherits --space-* and --density. It does not restate them.
+ * Dark inherits --space-*, --density, and the shape scale. It does not restate them.
  * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
  * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
  * Modal blur stays a dark-only exception (3px vs 4px light).
@@ -1835,9 +1865,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-background-color: oklch(0.97 0.01 220);
 }
 
-/* Rounded shifts spacing steps 2–6. Colour, radius, and shadow stay on the default palette.
- * --space-1 stays 4px. --density stays 1. Menu shells and the search result block axis
- * are the only component remaps. Do not self-map a token here.
+/* Rounded shifts spacing steps 2–6 and the shape of controls and shells.
+ * Colour and shadow stay on the default palette. --space-1 stays 4px.
+ * --density stays 1. The global --radius-* steps stay moderate; this block
+ * only remaps component radii. Do not self-map a token here.
  */
 [data-theme="rounded"] {
   --space-1: 0.25rem;
@@ -1852,6 +1883,20 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --combobox-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-result-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-border-radius: var(--radius-full);
+  --form-control-radius: var(--radius-full);
+  --chip-border-radius: var(--radius-md);
+  --sidebar-item-radius: var(--radius-md);
+  --dropdown-item-radius: var(--radius-md);
+  --badge-radius: var(--radius-full);
+  --tabs-pill-corner-radius: var(--radius-full);
+  --chat-composer-radius: var(--radius-full);
+  --card-radius: var(--radius-xl);
+  --menu-radius: var(--radius-xl);
+  --popover-radius: var(--radius-xl);
+  --modal-radius: var(--radius-xl);
+  --alert-border-radius: var(--radius-xl);
+  --toast-border-radius: var(--radius-xl);
 }
 
 @media (prefers-reduced-motion: reduce) {

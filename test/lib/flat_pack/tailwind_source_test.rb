@@ -25,10 +25,12 @@ module FlatPack
       root_block = content[/^:root \{.*?^\}/m]
 
       refute_nil root_block, "expected an unlayered :root block in dummy application.tailwind.css"
-      assert_includes root_block, "--radius-sm: 0.75rem;"
-      assert_includes root_block, "--radius-md: 1rem;"
-      assert_includes root_block, "--radius-lg: 1.5rem;"
-      assert_includes root_block, "--radius-xl: 2rem;"
+      assert_includes root_block, "--radius-xs: 0.125rem;"
+      assert_includes root_block, "--radius-sm: 0.25rem;"
+      assert_includes root_block, "--radius-md: 0.5rem;"
+      assert_includes root_block, "--radius-lg: 0.75rem;"
+      assert_includes root_block, "--radius-xl: 1.25rem;"
+      assert_includes root_block, "--radius-full: 9999px;"
       refute_includes root_block, "@layer"
     end
 
@@ -37,23 +39,27 @@ module FlatPack
       root_block = content[/^:root \{.*?^\}/m]
 
       refute_nil root_block, "expected an unlayered :root block in tailwind_config.css.tt"
-      assert_includes root_block, "--radius-sm: 0.75rem;"
-      assert_includes root_block, "--radius-md: 1rem;"
-      assert_includes root_block, "--radius-lg: 1.5rem;"
-      assert_includes root_block, "--radius-xl: 2rem;"
+      assert_includes root_block, "--radius-xs: 0.125rem;"
+      assert_includes root_block, "--radius-sm: 0.25rem;"
+      assert_includes root_block, "--radius-md: 0.5rem;"
+      assert_includes root_block, "--radius-lg: 0.75rem;"
+      assert_includes root_block, "--radius-xl: 1.25rem;"
+      assert_includes root_block, "--radius-full: 9999px;"
       assert_no_match SELF_REFERENTIAL_VARIABLE_PATTERN, content
     end
 
     test "compiled dummy CSS keeps kit radii outside @layer theme" do
       compiled = Rails.root.join("app/assets/builds/application.css").read
       layered_defaults = compiled[/@layer theme \{.*?--radius-md:\s*0\.375rem;.*?^\}/m]
-      unlayered_root = compiled.scan(/^:root \{.*?^\}/m).find { |block| block.include?("--radius-md: 1rem;") }
+      unlayered_root = compiled.scan(/^:root \{.*?^\}/m).find { |block| block.include?("--radius-md: 0.5rem;") }
 
       refute_nil layered_defaults, "expected Tailwind @layer theme to still emit --radius-md: 0.375rem"
-      refute_nil unlayered_root, "expected compiled dummy CSS to re-set --radius-md: 1rem on unlayered :root"
-      assert_includes unlayered_root, "--radius-sm: 0.75rem;"
-      assert_includes unlayered_root, "--radius-lg: 1.5rem;"
-      assert_includes unlayered_root, "--radius-xl: 2rem;"
+      refute_nil unlayered_root, "expected compiled dummy CSS to re-set --radius-md: 0.5rem on unlayered :root"
+      assert_includes unlayered_root, "--radius-xs: 0.125rem;"
+      assert_includes unlayered_root, "--radius-sm: 0.25rem;"
+      assert_includes unlayered_root, "--radius-lg: 0.75rem;"
+      assert_includes unlayered_root, "--radius-xl: 1.25rem;"
+      assert_includes unlayered_root, "--radius-full: 9999px;"
     end
   end
 end

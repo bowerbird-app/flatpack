@@ -55,7 +55,7 @@ module FlatPack
         classes = frame[:class]
 
         assert_includes classes, "aspect-[16/9]"
-        assert_includes classes, "rounded-[var(--radius-lg)]"
+        assert_includes classes, "rounded-[var(--media-radius)]"
         assert_includes classes, "overflow-hidden"
       end
 

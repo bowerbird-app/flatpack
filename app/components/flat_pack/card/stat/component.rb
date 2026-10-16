@@ -6,7 +6,7 @@ module FlatPack
       class Component < ViewComponent::Base
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "text-[var(--surface-content-color)]" "mt-2" "text-[var(--color-success-background-color)]" "text-[var(--color-danger-background-color)]" "text-center" "fp-tabular-nums" "fp-card" "rounded-[var(--radius-lg)]" "p-[var(--card-padding-md)]"
+        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "text-[var(--surface-content-color)]" "mt-2" "text-[var(--color-success-background-color)]" "text-[var(--color-danger-background-color)]" "text-center" "fp-tabular-nums" "fp-card" "rounded-[var(--card-radius)]" "p-[var(--card-padding-md)]"
         TREND_DIRECTIONS = {
           up: {
             icon: "↑",
@@ -66,7 +66,7 @@ module FlatPack
         def container_classes
           [
             "fp-card",
-            "rounded-[var(--radius-lg)]",
+            "rounded-[var(--card-radius)]",
             "p-[var(--card-padding-md)]",
             "text-center",
             "text-[var(--surface-content-color)]",
