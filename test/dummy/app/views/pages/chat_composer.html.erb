@@ -116,7 +116,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Demo (Fully Rounded)", anchor: "demo-fully-rounded", anchor_link: true, subtitle: "Composer with token-driven full corner radius and round action/send buttons.") %>
 
     <div class="mb-4 mt-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
-      <%= render FlatPack::Chat::Composer::Component.new(style: "--chat-composer-radius: 9999px;") do |composer| %>
+      <%= render FlatPack::Chat::Composer::Component.new(style: "--chat-composer-radius: var(--radius-full);") do |composer| %>
         <% composer.left do %>
           <%= render FlatPack::Button::Component.new(
             icon: "plus",
@@ -124,7 +124,7 @@
             style: :default,
             size: :md,
             aria: {label: "Add attachment"},
-            class: "[--button-border-radius:9999px]"
+            class: "[--button-border-radius:var(--radius-full)]"
           ) %>
         <% end %>
 
@@ -135,7 +135,7 @@
             rows: 1,
             autogrow: true,
             submit_on_enter: false,
-            class: "min-h-[var(--chat-composer-control-height)] rounded-[9999px] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
+            class: "min-h-[var(--chat-composer-control-height)] rounded-[var(--radius-full)] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
           ) %>
         <% end %>
 
@@ -147,7 +147,7 @@
             size: :md,
             type: "submit",
             aria: {label: "Send message"},
-            class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] [--button-border-radius:9999px]"
+            class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] [--button-border-radius:var(--radius-full)]"
           ) %>
         <% end %>
       <% end %>
@@ -157,7 +157,7 @@
       title: "ERB",
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Chat::Composer::Component.new(style: "--chat-composer-radius: 9999px;") do |composer| %&gt;
+        &lt;%= render FlatPack::Chat::Composer::Component.new(style: "--chat-composer-radius: var(--radius-full);") do |composer| %&gt;
           &lt;% composer.left do %&gt;
             &lt;%= render FlatPack::Button::Component.new(
               icon: "plus",
@@ -165,7 +165,7 @@
               style: :default,
               size: :md,
               aria: {label: "Add attachment"},
-              class: "[--button-border-radius:9999px]"
+              class: "[--button-border-radius:var(--radius-full)]"
             ) %&gt;
           &lt;% end %&gt;
 
@@ -176,7 +176,7 @@
               rows: 1,
               autogrow: true,
               submit_on_enter: false,
-              class: "min-h-[var(--chat-composer-control-height)] rounded-[9999px] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
+              class: "min-h-[var(--chat-composer-control-height)] rounded-[var(--radius-full)] border-[var(--chat-input-border-color)] bg-[var(--chat-input-background-color)] px-4 py-[var(--chat-composer-control-padding-y)] text-sm leading-5 text-[var(--chat-input-text-color)] placeholder:text-[var(--chat-input-placeholder-color)] focus:ring-[var(--chat-input-focus-ring-color)] max-h-32"
             ) %&gt;
           &lt;% end %&gt;
 
@@ -188,7 +188,7 @@
               size: :md,
               type: "submit",
               aria: {label: "Send message"},
-              class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] [--button-border-radius:9999px]"
+              class: "min-h-[var(--chat-composer-control-height)] min-w-[var(--chat-composer-control-height)] shrink-0 border-transparent bg-[var(--chat-send-button-background-color)] text-[var(--chat-send-button-text-color)] hover:bg-[var(--chat-send-button-hover-background-color)] focus-visible:ring-[var(--chat-send-button-focus-ring-color)] [--button-border-radius:var(--radius-full)]"
             ) %&gt;
           &lt;% end %&gt;
         &lt;% end %&gt;

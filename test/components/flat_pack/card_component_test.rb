@@ -550,7 +550,7 @@ module FlatPack
 
       def test_card_has_rounded_corners
         render_inline(Component.new)
-        assert_includes page.native.to_html, "rounded-[var(--radius-lg)]"
+        assert_includes page.native.to_html, "rounded-[var(--card-radius)]"
       end
 
       def test_card_without_media_has_overflow_visible

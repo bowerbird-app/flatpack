@@ -36,6 +36,10 @@ bin/rake flat_pack:verify_install
 
 The running inventory is `FlatPack::ComponentCatalog` (HTTP `GET /recording_studio_api/api/v1/flatpack/components` on a host that registers those endpoints, including this dummy). `manifest.yml` is not the runtime catalog. `list` is skinny records plus `meta`. `show(name)` adds `parameters`, `slots`, and `examples` from the component doc `## Example` section. A parameter may include `default` when the `initialize` kwarg is a JSON-safe literal. The key is omitted when that default is unknown.
 
+## Shape
+
+Radius is a theme dimension, same pattern as `--space-*`. The moderate scale (`--radius-xs` through `--radius-xl`, plus `--radius-full`) lives on bare `:root`. Component tokens such as `--button-border-radius`, `--form-control-radius`, `--badge-radius`, `--card-radius`, `--menu-radius`, and `--modal-radius` alias a step. `[data-theme="rounded"]` turns buttons, inputs, chips, badges, tabs, and the chat composer into pills and steps cards, menus, and modals up to `--radius-xl`. Dark and ocean inherit the moderate shape. See `docs/theming.md`.
+
 ## Notes
 
 - Treat the installed gem as the primary source of truth.

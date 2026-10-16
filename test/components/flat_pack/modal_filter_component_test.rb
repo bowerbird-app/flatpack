@@ -37,7 +37,7 @@ module FlatPack
         end
 
         assert_selector "button span", text: "Filter"
-        assert_selector "button span.rounded-full", text: "2"
+        assert_includes page.find("button", text: "2").native.to_html, "rounded-[var(--badge-radius)]"
       end
 
       def test_hides_active_count_badge_when_count_is_zero
@@ -53,7 +53,7 @@ module FlatPack
         end
 
         assert_selector "button", text: "Filter"
-        assert_no_selector "button span.rounded-full"
+        refute_includes page.find("button", text: "Filter").native.to_html, "rounded-[var(--badge-radius)]"
       end
 
       def test_renders_reset_and_submit_actions

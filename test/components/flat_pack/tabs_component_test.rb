@@ -61,7 +61,7 @@ module FlatPack
         tablist = page.find("div[role='tablist']")
         assert_includes tablist[:class], "bg-[var(--tabs-stacked-pill-list-background-color)]"
         assert_includes tablist[:class], "border-[var(--tabs-pill-list-border-color)]"
-        assert_includes tablist[:class], "[border-radius:1.5rem]"
+        assert_includes tablist[:class], "[border-radius:var(--tabs-pill-corner-radius)]"
         assert_includes tablist[:class].split, "fp-pill-style"
         refute_includes tablist[:class].split, "fp-pill-button-slots"
         assert_nil tablist["data-fp-style"]

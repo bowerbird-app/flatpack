@@ -541,7 +541,7 @@ export default class extends Controller {
       <span class="inline-flex items-center gap-1.5 rounded-(--chip-border-radius) font-medium border transition-colors duration-base bg-(--surface-muted-background-color) text-(--surface-content-color) border-(--surface-border-color) text-xs px-(--chip-padding-x-sm) py-(--button-padding-y-sm)">
         ${icon}
         <span>${this.escapeHtml(label)}</span>
-        <span class="inline-flex items-center justify-center cursor-pointer rounded-full" role="button" tabindex="0" aria-label="${this.escapeHtml(flatPackCopy("select.remove", {label}))}" data-action="click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown" data-value="${this.escapeHtml(value)}">
+        <span class="inline-flex items-center justify-center cursor-pointer rounded-(--chip-border-radius)" role="button" tabindex="0" aria-label="${this.escapeHtml(flatPackCopy("select.remove", {label}))}" data-action="click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown" data-value="${this.escapeHtml(value)}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>

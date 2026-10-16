@@ -148,6 +148,22 @@ module FlatPack
       assert_match(/--dropdown-padding:\s*round\(nearest, calc\(var\(--space-2\) \* var\(--density\)\), 1px\)/, rounded_block)
       assert_match(/--search-menu-padding:\s*round\(nearest, calc\(var\(--space-2\) \* var\(--density\)\), 1px\)/, rounded_block)
       assert_match(/--search-result-padding-y:\s*round\(nearest, calc\(var\(--space-3\) \* var\(--density\)\), 1px\)/, rounded_block)
+      assert_match(/--radius-xs:\s*0\.125rem/, scale_block)
+      assert_match(/--radius-sm:\s*0\.25rem/, scale_block)
+      assert_match(/--radius-md:\s*0\.5rem/, scale_block)
+      assert_match(/--radius-lg:\s*0\.75rem/, scale_block)
+      assert_match(/--radius-xl:\s*1\.25rem/, scale_block)
+      assert_match(/--radius-full:\s*9999px/, scale_block)
+      assert_match(/--button-border-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--form-control-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--badge-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--tabs-pill-corner-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--card-radius:\s*var\(--radius-lg\)/, scale_block)
+      assert_match(/--menu-radius:\s*var\(--radius-lg\)/, scale_block)
+      assert_match(/--modal-radius:\s*var\(--radius-lg\)/, scale_block)
+      refute_includes root_block, "--radius-md:"
+      refute_includes root_block, "--button-border-radius:"
     end
 
     test "rounded shifts spacing and does not restate the default palette" do
@@ -155,7 +171,12 @@ module FlatPack
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
-      refute_includes rounded_block, "--radius-md"
+      refute_match(/--radius-(?:xs|sm|md|lg|xl|full)\s*:/, rounded_block)
+      assert_match(/--button-border-radius:\s*var\(--radius-full\)/, rounded_block)
+      assert_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
+      assert_match(/--card-radius:\s*var\(--radius-xl\)/, rounded_block)
+      assert_match(/--menu-radius:\s*var\(--radius-xl\)/, rounded_block)
+      assert_match(/--modal-radius:\s*var\(--radius-xl\)/, rounded_block)
       refute_includes rounded_block, "--shadow-sm"
       refute_includes rounded_block, "--button-padding"
       rounded_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|

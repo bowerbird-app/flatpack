@@ -150,7 +150,7 @@ module FlatPack
         def render_system_badge
           content_tag(:span,
             fp_t("comments.system"),
-            class: "ml-2 inline-flex items-center rounded-full border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] px-2 py-0.5 text-[10px] font-medium text-[var(--badge-info-text-color)]")
+            class: "ml-2 inline-flex items-center rounded-[var(--badge-radius)] border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] px-2 py-0.5 text-[10px] font-medium text-[var(--badge-info-text-color)]")
         end
 
         def render_timestamp

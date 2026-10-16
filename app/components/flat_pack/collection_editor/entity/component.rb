@@ -139,7 +139,7 @@ module FlatPack
         def render_chip_remove
           button_tag(
             type: "button",
-            class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-[var(--chip-remove-hover-background-color)]",
+            class: "ml-1 inline-flex items-center justify-center rounded-[var(--chip-border-radius)] fp-hit-target-inline hover:bg-[var(--chip-remove-hover-background-color)]",
             aria: {label: chip_remove_label},
             data: {
               collection_editor_chip_remove: "true",

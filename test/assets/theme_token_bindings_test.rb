@@ -38,10 +38,11 @@ module FlatPack
 
     test "rich text and content editor radius fallbacks match the kit scale" do
       [rich_text_css, content_editor_css].each do |css|
-        assert_includes css, "var(--radius-md, 1rem)"
-        assert_includes css, "var(--radius-sm, 0.75rem)"
+        assert_includes css, "var(--radius-md, 0.5rem)"
+        assert_includes css, "var(--radius-sm, 0.25rem)"
         refute_includes css, "var(--radius-md, 0.375rem)"
-        refute_includes css, "var(--radius-sm, 0.25rem)"
+        refute_includes css, "var(--radius-md, 1rem)"
+        refute_includes css, "var(--radius-sm, 0.75rem)"
       end
     end
   end

@@ -83,7 +83,7 @@ module FlatPack
       def dialog_classes
         [
           "relative mx-auto mt-[12vh] w-full max-w-lg",
-          "overflow-hidden rounded-[var(--radius-lg)]",
+          "overflow-hidden rounded-[var(--modal-radius)]",
           "border border-[var(--modal-border-color)]",
           "bg-[var(--modal-surface-color)] shadow-lg",
           "opacity-0 scale-95 motion-reduce:scale-100",

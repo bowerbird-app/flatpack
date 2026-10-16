@@ -24,9 +24,9 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "overflow-x-auto" "rounded-[var(--radius-lg)]" "border" "border-[var(--table-border-color)]"
+      # "overflow-x-auto" "rounded-[var(--card-radius)]" "border" "border-[var(--table-border-color)]"
       STYLES = {
-        default: "overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--table-border-color)]",
+        default: "overflow-x-auto rounded-[var(--card-radius)] border border-[var(--table-border-color)]",
         plain: "overflow-x-auto"
       }.freeze
 

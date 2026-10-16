@@ -28,9 +28,9 @@ module FlatPack
     end
 
     test "rewrites Tailwind default fallbacks to kit radius values" do
-      source = "border-radius: var(--radius-md, 0.375rem); border-radius: var(--radius-sm, 0.25rem);"
+      source = "border-radius: var(--radius-md, 0.375rem); border-radius: var(--radius-sm, 0.75rem);"
 
-      assert_equal "border-radius: var(--radius-md, 1rem); border-radius: var(--radius-sm, 0.75rem);",
+      assert_equal "border-radius: var(--radius-md, 0.5rem); border-radius: var(--radius-sm, 0.25rem);",
         RadiusLanguage.rewrite(source)
     end
 

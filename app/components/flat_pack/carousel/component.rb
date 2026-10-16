@@ -394,7 +394,7 @@ module FlatPack
       def render_counter
         content_tag(:div,
           "",
-          class: "justify-self-end rounded-full bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium tabular-nums text-[var(--carousel-counter-text-color)]",
+          class: "justify-self-end rounded-[var(--badge-radius)] bg-[var(--carousel-counter-background-color)] px-2 py-1 text-xs font-medium tabular-nums text-[var(--carousel-counter-text-color)]",
           data: {flat_pack__carousel_target: "counter"})
       end
 
@@ -431,7 +431,7 @@ module FlatPack
 
       def render_indicators
         content_tag(:div, class: "justify-self-center") do
-          content_tag(:div, class: "flex items-center gap-2 rounded-full bg-[var(--carousel-indicator-track-background-color)] px-3 py-2") do
+          content_tag(:div, class: "flex items-center gap-2 rounded-[var(--radius-full)] bg-[var(--carousel-indicator-track-background-color)] px-3 py-2") do
             safe_join(@slides.map.with_index { |_slide, index| render_indicator(index) })
           end
         end

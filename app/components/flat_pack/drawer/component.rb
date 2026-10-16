@@ -142,11 +142,11 @@ module FlatPack
       def side_classes
         case @side
         when :left
-          "inset-y-0 left-0 w-full border-r rounded-r-[var(--radius-lg)] -translate-x-full motion-reduce:translate-x-0"
+          "inset-y-0 left-0 w-full border-r rounded-r-[var(--modal-radius)] -translate-x-full motion-reduce:translate-x-0"
         when :right
-          "inset-y-0 right-0 w-full border-l rounded-l-[var(--radius-lg)] translate-x-full motion-reduce:translate-x-0"
+          "inset-y-0 right-0 w-full border-l rounded-l-[var(--modal-radius)] translate-x-full motion-reduce:translate-x-0"
         else
-          "inset-x-0 bottom-0 w-full border-t rounded-t-[var(--radius-lg)] translate-y-full motion-reduce:translate-y-0"
+          "inset-x-0 bottom-0 w-full border-t rounded-t-[var(--modal-radius)] translate-y-full motion-reduce:translate-y-0"
         end
       end
 

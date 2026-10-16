@@ -42,7 +42,7 @@ module FlatPack
             "py-[var(--badge-padding-y-xs)]",
             "text-xs",
             "font-medium",
-            "rounded-full",
+            "rounded-[var(--badge-radius)]",
             style_classes
           )
         end

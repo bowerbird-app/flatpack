@@ -97,11 +97,11 @@ module FlatPack
       end
 
       def bar_container_classes
-        "w-full bg-[var(--surface-muted-background-color)] rounded-full overflow-hidden #{SIZES.fetch(@size)}"
+        "w-full bg-[var(--surface-muted-background-color)] rounded-[var(--radius-full)] overflow-hidden #{SIZES.fetch(@size)}"
       end
 
       def bar_fill_classes
-        "h-full #{STYLES.fetch(@style)} transition-[width] duration-[var(--duration-slow)] ease-[var(--easing-standard)] rounded-full"
+        "h-full #{STYLES.fetch(@style)} transition-[width] duration-[var(--duration-slow)] ease-[var(--easing-standard)] rounded-[var(--radius-full)]"
       end
 
       def percentage

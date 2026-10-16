@@ -156,7 +156,7 @@ module FlatPack
             "px-4 py-2",
             "bg-[var(--chat-jump-button-background-color)]",
             "border border-[var(--chat-jump-button-border-color)]",
-            "rounded-full",
+            "rounded-[var(--button-border-radius)]",
             "shadow-lg",
             "text-sm font-medium",
             "text-[var(--chat-jump-button-text-color)]",

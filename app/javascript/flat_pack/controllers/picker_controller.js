@@ -393,7 +393,7 @@ export default class extends Controller {
       : this.#gridFallbackPreviewMarkup(kind, item)
 
     const badgeMarkup = badge
-      ? `<span class="pointer-events-none absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-[var(--picker-badge-background-color)] px-2 py-1 text-[11px] font-medium text-[var(--picker-badge-text-color)]">${badge}</span>`
+      ? `<span class="pointer-events-none absolute left-3 top-3 z-10 inline-flex items-center rounded-[var(--badge-radius)] bg-[var(--picker-badge-background-color)] px-2 py-1 text-[11px] font-medium text-[var(--picker-badge-text-color)]">${badge}</span>`
       : ""
 
     return `

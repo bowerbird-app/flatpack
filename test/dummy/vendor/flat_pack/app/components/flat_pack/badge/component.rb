@@ -68,7 +68,7 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-[var(--badge-remove-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-offset-2 focus:ring-ring",
+          class: "ml-1 inline-flex items-center justify-center rounded-[var(--badge-radius)] fp-hit-target-inline hover:bg-[var(--badge-remove-hover-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-offset-2 focus:ring-ring",
           "aria-label": fp_t("badge.remove"),
           data: {action: "click->flat-pack--badge#remove"}) do
           # X icon (close)
@@ -92,7 +92,7 @@ module FlatPack
       def badge_classes
         classes(
           "inline-flex items-center gap-1",
-          "rounded-full font-medium",
+          "rounded-[var(--badge-radius)] font-medium",
           "transition-[color,background-color,border-color] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           VARIANTS.fetch(@style),
           SIZES.fetch(@size)

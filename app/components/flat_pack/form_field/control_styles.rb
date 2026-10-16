@@ -10,7 +10,7 @@ module FlatPack
       # "text-[var(--color-error)]" "border-[var(--color-error)]"
       # "px-[var(--form-control-padding-x)]" "py-[var(--form-control-padding-y)]"
       # "bg-[var(--surface-background-color)]" "text-[var(--surface-content-color)]"
-      # "border" "border-[var(--surface-border-color)]" "placeholder:text-[var(--surface-muted-content-color)]"
+      # "border" "border-[var(--surface-border-color)]" "rounded-[var(--form-control-radius)]" "placeholder:text-[var(--surface-muted-content-color)]"
       # "focus:ring-ring" "focus:border-transparent" "appearance-none"
       # "border-0" "bg-transparent" "rounded-none" "focus:outline-none" "focus:ring-0"
 
@@ -75,7 +75,7 @@ module FlatPack
         [
           control_class,
           "w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-[var(--form-control-radius)]",
           *form_control_border_classes(error: error),
           ("appearance-none" if appearance_none),
           "bg-[var(--surface-background-color)]",

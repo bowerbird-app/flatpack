@@ -88,7 +88,7 @@ module FlatPack
         assert_includes counter[:class], "justify-self-end"
         assert_includes counter[:class], "bg-[var(--carousel-counter-background-color)]"
         assert_includes counter[:class], "text-[var(--carousel-counter-text-color)]"
-        assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-full"
+        assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-[var(--radius-full)]"
       end
 
       def test_renders_circular_flex_chevron_controls_with_tinted_round_background

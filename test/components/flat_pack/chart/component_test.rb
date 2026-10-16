@@ -161,10 +161,10 @@ module FlatPack
         render_inline(Component.new(series: series))
 
         card = page.native.css("div").find { |node|
-          node["class"].to_s.split.include?("rounded-[var(--radius-lg)]")
+          node["class"].to_s.split.include?("rounded-[var(--card-radius)]")
         }
 
-        assert card, "expected a div with rounded-[var(--radius-lg)]"
+        assert card, "expected a div with rounded-[var(--card-radius)]"
       end
 
       def test_renders_chart_without_card

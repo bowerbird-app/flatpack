@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "fp-video-preview" "relative" "w-full" "max-w-full" "overflow-hidden" "rounded-[var(--radius-lg)]"
+      # "fp-video-preview" "relative" "w-full" "max-w-full" "overflow-hidden" "rounded-[var(--media-radius)]"
       # "bg-[var(--surface-muted-background-color)]" "aspect-[16/9]" "aspect-[4/3]" "aspect-square"
       # "absolute" "inset-0" "h-full" "w-full" "cursor-pointer"
       # "[&>img]:block" "[&>img]:h-full" "[&>img]:w-full" "[&>img]:max-w-none" "[&>img]:object-cover"
@@ -80,7 +80,7 @@ module FlatPack
           "w-full",
           "max-w-full",
           "overflow-hidden",
-          "rounded-[var(--radius-lg)]",
+          "rounded-[var(--media-radius)]",
           "bg-[var(--surface-muted-background-color)]",
           aspect_class
         ].join(" ")

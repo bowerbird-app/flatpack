@@ -19,7 +19,7 @@ Do not use it for a photo with a badge (that is `FlatPack::Media::Component`) or
 | `aspect_ratio` | String | `"16/9"` | no | Frame shape. Same values as Card media: `"16/9"`, `"4/3"`, `"1/1"` (`aspect-square`), or a custom ratio such as `"21/9"`. Invalid values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the frame. |
 
-There is no `style`, colour, or theme prop. The frame uses Card media rounding (`rounded-[var(--radius-lg)]`) and the play control uses button surface tokens.
+There is no `style`, colour, or theme prop. The frame uses `--media-radius` (the card radius) and the play control is a fixed circle.
 
 ## Slots
 | name | type | required | description |

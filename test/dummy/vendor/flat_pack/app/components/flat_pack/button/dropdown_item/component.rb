@@ -128,7 +128,7 @@ module FlatPack
 
         def badge_classes
           classes(
-            "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-full",
+            "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-[var(--badge-radius)]",
             BADGE_STYLES.fetch(@badge_style)
           )
         end

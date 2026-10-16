@@ -241,7 +241,7 @@ module FlatPack
         end
         chip.trailing do
           content_tag(:span,
-            class: "inline-flex items-center justify-center cursor-pointer rounded-full",
+            class: "inline-flex items-center justify-center cursor-pointer rounded-[var(--chip-border-radius)]",
             role: "button",
             tabindex: "0",
             aria: {label: fp_t("select.remove", label: option[:label])},
@@ -444,11 +444,11 @@ module FlatPack
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-[var(--radius-md)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-[var(--menu-radius)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)] text-sm rounded-[var(--radius-sm)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
+        "w-full px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)] text-sm rounded-[var(--form-control-radius)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)

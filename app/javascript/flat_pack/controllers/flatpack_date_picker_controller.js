@@ -505,7 +505,7 @@ export default class extends Controller {
         "justify-center",
         "text-center",
         "leading-none",
-        "rounded-[var(--radius-md)]",
+        "rounded-[var(--button-border-radius)]",
         "text-sm",
         "transition-colors",
         "duration-base",
@@ -523,9 +523,9 @@ export default class extends Controller {
         )
 
         if (isRangeStart && !isRangeEnd) {
-          classes.push("rounded-r-none", "rounded-l-[var(--radius-md)]")
+          classes.push("rounded-r-none", "rounded-l-[var(--button-border-radius)]")
         } else if (isRangeEnd && !isRangeStart) {
-          classes.push("rounded-l-none", "rounded-r-[var(--radius-md)]")
+          classes.push("rounded-l-none", "rounded-r-[var(--button-border-radius)]")
         }
       } else if (inRange) {
         classes.push(

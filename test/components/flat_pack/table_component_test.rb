@@ -586,7 +586,7 @@ module FlatPack
         refute_selector "table.table-fixed"
         assert_selector "td[style='max-width: 8rem']", text: "alice@example.com"
         refute_selector "div.border"
-        refute_selector "div.rounded-\\[var\\(--radius-lg\\)\\]"
+        refute_selector "div.rounded-\\[var\\(--card-radius\\)\\]"
         refute_selector "tr[class]"
         assert_selector "td", text: "Alice"
       end
@@ -607,7 +607,7 @@ module FlatPack
           component.column(title: "Name", html: ->(user) { user.name })
         end
 
-        assert_selector "div.overflow-x-auto.rounded-\\[var\\(--radius-lg\\)\\].border"
+        assert_selector "div.overflow-x-auto.rounded-\\[var\\(--card-radius\\)\\].border"
         assert_selector "tbody.divide-y"
         assert_selector "thead.border-b"
         assert_selector "tr.hover\\:bg-\\[var\\(--table-row-hover-background-color\\)\\]"
