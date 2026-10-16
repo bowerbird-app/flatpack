@@ -1,4 +1,8 @@
-<% if @motion_clip.present? %>
+<% if @motion_specimen.present? %>
+  <div id="motion-clip" class="mx-auto flex min-h-dvh w-full max-w-3xl items-center px-6" style="--motion-distance-md: var(--motion-distance-lg)">
+    <%= render "pages/motion_one", variant: @motion_specimen %>
+  </div>
+<% elsif @motion_clip.present? %>
   <div id="motion-clip" class="mx-auto w-full max-w-5xl px-6 py-8">
     <div class="min-h-screen" aria-hidden="true"></div>
     <%= render "pages/motion_#{@motion_clip}" %>
@@ -38,57 +42,20 @@
   ) %>
 </section>
 
-<section class="mb-16" id="reveal">
+<section class="mb-16" id="gallery">
   <%= render FlatPack::SectionTitle::Component.new(
-    title: "Scroll reveal",
+    title: "Gallery",
     anchor_link: true,
-    subtitle: "Fade, rise, blur, scale. Then the children, one after another."
+    subtitle: "Fade, rise, blur, scale, wipe, and zoom. Then words and lines."
   ) %>
-  <%= render "pages/motion_reveal" %>
+  <%= render "pages/motion_gallery" %>
   <%= render FlatPack::CodeBlock::Component.new(
-    title: "A staggered rise (ERB)",
+    title: "One labelled reveal (ERB)",
     language: "erb",
     class: "mt-4",
     code: <<~CODE
-      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, stagger: true) do #{erb_tag_close}
-        <div>Oak</div>
-        <div>Walnut</div>
-      #{erb_output_open} end #{erb_tag_close}
-    CODE
-  ) %>
-</section>
-
-<section class="mb-16" id="text">
-  <%= render FlatPack::SectionTitle::Component.new(
-    title: "Text",
-    anchor_link: true,
-    subtitle: "Words, then lines. Each one slides up out of a mask."
-  ) %>
-  <%= render "pages/motion_text" %>
-  <%= render FlatPack::CodeBlock::Component.new(
-    title: "Words (ERB)",
-    language: "erb",
-    class: "mt-4",
-    code: <<~CODE
-      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :words, tag: :h2, text: "Pack the walnut") #{erb_tag_close}
-    CODE
-  ) %>
-</section>
-
-<section class="mb-16" id="media">
-  <%= render FlatPack::SectionTitle::Component.new(
-    title: "Media",
-    anchor_link: true,
-    subtitle: "A wipe, a zoom, and a zoom that drifts as you scroll."
-  ) %>
-  <%= render "pages/motion_media" %>
-  <%= render FlatPack::CodeBlock::Component.new(
-    title: "Zoom with parallax (ERB)",
-    language: "erb",
-    class: "mt-4",
-    code: <<~CODE
-      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :zoom, parallax: true) do #{erb_tag_close}
-        #{erb_output_open} image_tag "/images/hero-stool.jpg", alt: "A wooden stool" #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Card::Component.new(reveal: :fade, style: :brand) do #{erb_tag_close}
+        Fade
       #{erb_output_open} end #{erb_tag_close}
     CODE
   ) %>

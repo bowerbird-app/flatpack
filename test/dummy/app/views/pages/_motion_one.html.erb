@@ -1,0 +1,59 @@
+<%
+  variant = local_assigns.fetch(:variant).to_sym
+  label = {
+    fade: "Fade",
+    rise: "Rise",
+    blur: "Blur",
+    scale: "Scale",
+    wipe: "Wipe",
+    zoom: "Zoom",
+    parallax: "Parallax",
+    words: "Words",
+    lines: "Lines",
+    stream: "Streaming text"
+  }.fetch(variant)
+  compact = local_assigns[:compact]
+  box_class = compact ? "w-full justify-center py-10" : "min-h-72 w-full justify-center"
+  media_class = compact ? "block h-40 w-full object-cover" : "block h-72 w-full object-cover"
+%>
+<div id="reveal-<%= variant %>" class="w-full">
+  <p class="mb-3 text-sm font-medium"><%= label %></p>
+  <% case variant %>
+  <% when :fade, :rise, :blur, :scale %>
+    <%= render FlatPack::Card::Component.new(reveal: variant, style: :brand, shadow: :sm, class: box_class) do %>
+      <p class="text-3xl font-semibold"><%= label %></p>
+    <% end %>
+  <% when :wipe %>
+    <%= render FlatPack::Reveal::Component.new(reveal: :wipe, class: "overflow-hidden rounded-[var(--radius-lg)]") do %>
+      <%= image_tag "/images/hero-stool.jpg", alt: "A wooden stool", class: media_class %>
+    <% end %>
+  <% when :zoom %>
+    <%= render FlatPack::Reveal::Component.new(reveal: :zoom, class: "overflow-hidden rounded-[var(--radius-lg)]") do %>
+      <%= image_tag "/images/hero-packaging.jpg", alt: "A shipping box", class: media_class %>
+    <% end %>
+  <% when :parallax %>
+    <%= render FlatPack::Reveal::Component.new(reveal: :zoom, parallax: true, class: "overflow-hidden rounded-[var(--radius-lg)]") do %>
+      <%= image_tag "/images/hero-subscription-box.webp", alt: "A subscription box", class: media_class %>
+    <% end %>
+  <% when :words %>
+    <%= render FlatPack::Reveal::Component.new(
+      reveal: :words,
+      tag: :h2,
+      text: "Pack the walnut",
+      class: "text-5xl font-semibold tracking-tight"
+    ) %>
+  <% when :lines %>
+    <%= render FlatPack::Reveal::Component.new(
+      reveal: :lines,
+      tag: :p,
+      text: "Fold the shirt.\nTape the box.\nShip it Friday.",
+      class: "text-3xl font-medium leading-tight"
+    ) %>
+  <% when :stream %>
+    <div class="max-w-lg">
+      <%= render FlatPack::Chat::Message::Component.new(direction: :incoming, timestamp: "9:41 AM") do %>
+        <%= render FlatPack::Text::Stream::Component.new(text: "The walnut stool ships Friday. I can hold the last one if you want it.") %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

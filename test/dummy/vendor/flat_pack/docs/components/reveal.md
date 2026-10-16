@@ -30,16 +30,18 @@ None. Box and media variants take a block. `:words` and `:lines` use `text:` or 
 
 | variant | description |
 |---------|-------------|
-| `:fade` | Opacity only. |
-| `:rise` | Fade plus a move of `--motion-distance-md`. |
-| `:blur` | Fade plus a blur of `--motion-distance-md`. |
-| `:scale` | Fade plus a scale from `0.96` to `1`. |
+| `:fade` | Opacity only, from `0` to `1`. |
+| `:rise` | Moves up by `--motion-distance-md`. |
+| `:blur` | Sharpens from a blur of `--motion-distance-md`. |
+| `:scale` | Grows from `0.96` to `1`. |
 | `:wipe` | Clip-path wipe from the inline start. |
 | `:zoom` | The direct child scales from `1.05` to `1`. |
 | `:words` | Each word slides up out of an overflow mask. |
 | `:lines` | Each line does the same. Split on newlines. |
 | `stagger: true` | Children of a box variant wait `min(index, 12) * --reveal-stagger`. |
 | `parallax: true` | A short shift on `animation-timeline: view()` when the browser supports it. Otherwise the element just reveals. |
+
+The dummy gallery at `/demo/motion` shows each variant with its name. `?clip=fade` (and `rise`, `blur`, `scale`, `wipe`, `zoom`, `words`, `lines`, `stream`) renders that one specimen alone.
 
 ## Example
 
