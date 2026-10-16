@@ -2793,6 +2793,132 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   min-width: 0;
 }
 
+/* Collage: CSS grid plus transforms. No absolute positioning, so source order
+ * stays the reading order and the cells reflow. Scatter is a unitless -1..1
+ * triple on each item, scaled by the --collage-* ranges.
+ * Entrance is .fp-content-enter (opacity plus a 4px rise on --duration-slow /
+ * --easing-enter). Hover lift uses that same duration and easing.
+ */
+.fp-collage {
+  --fp-collage-scatter: 1;
+  display: grid;
+  grid-template-columns: repeat(var(--fp-collage-columns, 3), minmax(0, 1fr));
+  gap: var(--collage-gap);
+  padding: var(--collage-pad);
+  align-items: start;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.fp-collage--subtle {
+  --fp-collage-scatter: 1;
+}
+
+.fp-collage--loose {
+  --fp-collage-scatter: var(--collage-loose);
+}
+
+.fp-collage--none {
+  --fp-collage-scatter: 0;
+}
+
+.fp-collage__item {
+  --fp-collage-x: calc(var(--fp-collage-shift-x) * var(--collage-offset-x) * var(--fp-collage-scatter));
+  --fp-collage-y: calc(var(--fp-collage-shift-y) * var(--collage-offset-y) * var(--fp-collage-scatter));
+  --fp-collage-angle: calc(var(--fp-collage-tilt) * var(--collage-rotate) * var(--fp-collage-scatter));
+  min-width: 0;
+  transform: translate(var(--fp-collage-x), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  transform-origin: center center;
+  z-index: var(--fp-collage-z);
+}
+
+.fp-collage--motion .fp-collage__item {
+  transition: transform var(--duration-slow) var(--easing-enter);
+}
+
+.fp-collage--motion .fp-collage__item > .fp-content-enter {
+  transition-delay: calc(min(var(--fp-collage-index), 8) * var(--collage-stagger));
+}
+
+.fp-collage--motion .fp-collage__item:hover,
+.fp-collage--motion .fp-collage__item:focus-within {
+  transform: translate(var(--fp-collage-x), calc(var(--fp-collage-y) + var(--collage-lift))) rotate(var(--fp-collage-angle));
+  z-index: calc(var(--fp-collage-z) + 20);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-collage--motion .fp-collage__item,
+  .fp-collage--motion .fp-collage__item:hover,
+  .fp-collage--motion .fp-collage__item:focus-within {
+    transition: none;
+  }
+
+  .fp-collage--motion .fp-collage__item:hover,
+  .fp-collage--motion .fp-collage__item:focus-within {
+    transform: translate(var(--fp-collage-x), var(--fp-collage-y)) rotate(var(--fp-collage-angle));
+  }
+
+  .fp-collage--motion .fp-collage__item > .fp-content-enter {
+    transition-delay: 0s;
+  }
+}
+
+@media (width < 40rem) {
+  .fp-collage--stack-sm {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fp-collage--stack-sm .fp-collage__item,
+  .fp-collage--stack-sm .fp-collage__item:hover,
+  .fp-collage--stack-sm .fp-collage__item:focus-within {
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+@media (width < 48rem) {
+  .fp-collage--stack-md {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fp-collage--stack-md .fp-collage__item,
+  .fp-collage--stack-md .fp-collage__item:hover,
+  .fp-collage--stack-md .fp-collage__item:focus-within {
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+@media (width < 64rem) {
+  .fp-collage--stack-lg {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fp-collage--stack-lg .fp-collage__item,
+  .fp-collage--stack-lg .fp-collage__item:hover,
+  .fp-collage--stack-lg .fp-collage__item:focus-within {
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
+@media (width < 80rem) {
+  .fp-collage--stack-xl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fp-collage--stack-xl .fp-collage__item,
+  .fp-collage--stack-xl .fp-collage__item:hover,
+  .fp-collage--stack-xl .fp-collage__item:focus-within {
+    transform: none;
+    z-index: auto;
+    transition: none;
+  }
+}
+
 /* Sliding active indicator (Tabs + Button::Pill, opt-in `indicator: :slide`) */
 .fp-slide-indicator-list {
   position: relative;

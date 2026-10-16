@@ -44,6 +44,7 @@ drawer | FlatPack::Drawer::Component | docs/components/drawer.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
 collection | FlatPack::Collection::Component | docs/components/collection.md
+collage | FlatPack::Collage::Component | docs/components/collage.md
 collection_editor | FlatPack::CollectionEditor::Component | docs/components/collection-editor.md
 combobox | FlatPack::Combobox::Component | docs/components/combobox.md
 command_palette | FlatPack::CommandPalette::Component | docs/components/command-palette.md

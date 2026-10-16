@@ -682,6 +682,9 @@ class PagesController < ApplicationController
   def masonry
   end
 
+  def collage
+  end
+
   def overlay
   end
 

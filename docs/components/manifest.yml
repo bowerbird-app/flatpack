@@ -243,6 +243,16 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: collage
+    title: Collage
+    doc: docs/components/collage.md
+    primary_class: FlatPack::Collage::Component
+    related_classes:
+      - FlatPack::Collage::Item
+      - FlatPack::Card::Component
+      - FlatPack::EmptyState::Component
+    status: documented
+
   - key: collection
     title: Collection
     doc: docs/components/collection.md

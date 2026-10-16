@@ -816,6 +816,14 @@
   --empty-state-measure-md: var(--empty-state-measure-md);
   --empty-state-measure-lg: var(--empty-state-measure-lg);
   --empty-state-measure-full: var(--empty-state-measure-full);
+  --collage-rotate: var(--collage-rotate);
+  --collage-offset-x: var(--collage-offset-x);
+  --collage-offset-y: var(--collage-offset-y);
+  --collage-lift: var(--collage-lift);
+  --collage-stagger: var(--collage-stagger);
+  --collage-loose: var(--collage-loose);
+  --collage-gap: var(--collage-gap);
+  --collage-pad: var(--collage-pad);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -1061,6 +1069,17 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --empty-state-measure-md: 28rem;
   --empty-state-measure-lg: 36rem;
   --empty-state-measure-full: none;
+  /* Collage scatter. Themes override these. Ranges scale a -1..1 unit on each item.
+   * Loose multiplies that unit by --collage-loose. Lift and the offsets follow --space-*.
+   */
+  --collage-rotate: 3deg;
+  --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-lift: calc(var(--collage-offset-y) * -1);
+  --collage-stagger: 40ms;
+  --collage-loose: 2;
+  --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);

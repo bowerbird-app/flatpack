@@ -198,6 +198,8 @@ Use stack gap tokens on parent layout containers (for example, form stacks) to c
 
 Empty State padding, the gap under the icon, image, or visual, the title gap, and the gap before the actions are `--empty-state-padding-*`, `--empty-state-gap-*`, `--empty-state-title-gap-*`, and `--empty-state-block-gap-*`. Each one is `round(nearest, calc(var(--space-N) * var(--density)), 1px)`, so rounded's larger steps loosen the panel. The text measure is `--empty-state-measure-sm` (`20rem`), `--empty-state-measure-md` (`28rem`), `--empty-state-measure-lg` (`36rem`), and `--empty-state-measure-full` (`none`). Those lengths do not follow `--density`.
 
+Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`3deg`), `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` (`40ms`). The offsets, the lift, `--collage-gap`, and `--collage-pad` are `round(nearest, calc(var(--space-N) * var(--density)), 1px)`, so a rounded page loosens the scatter. `--collage-lift` is `calc(var(--collage-offset-y) * -1)`. `--collage-loose` (`2`) multiplies the subtle unit for `scatter: :loose`. Set `--collage-rotate: 0deg` on a theme to flatten every collage without passing `scatter: :none`.
+
 ### Border Radius
 ```css
 --radius-sm: 0.75rem

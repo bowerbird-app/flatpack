@@ -273,6 +273,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Card** - Flexible content containers with header, body, footer, and media slots
 - **Grid** - Responsive CSS grid layout with configurable columns and gaps
 - **Masonry** - Mixed-ratio photos and tiles stacked without empty holes
+- **Collage** - A CSS grid of tilted, offset items that stacks straight below a breakpoint
 - **Overflow Row** - One-row layout that scrolls sideways when same-size items do not fit
 - **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content
 - **Hero** - Full-width landing-page hero with seven layout variants

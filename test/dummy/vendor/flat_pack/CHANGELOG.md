@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.247] - 2026-10-16
+
+### Added
+- `FlatPack::Collage::Component` scatters any host content in a CSS grid. `columns:` is 1–6 (default 3). `scatter:` is `:subtle` (default), `:loose`, or `:none`.
+- `collage.item(rotate:, offset:, z:)` takes any markup. Omit `rotate` and `offset` and the tilt comes from the item index, so a re-render stays put. Pass either one to pin that card.
+- Below `stack_below` (`:sm`, `:md`, `:lg`, `:xl`, default `:md`) the grid is one column and the tilt is off. DOM order is the reading order. Nothing is absolutely positioned.
+- `--collage-rotate`, `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` are the ranges. `--collage-loose` scales the subtle unit. Gap, pad, offsets, and lift follow `--space-*` and `--density`.
+- `motion: true` (default) staggers `.fp-content-enter` and lifts on hover with `--duration-slow` / `--easing-enter`. `motion: false` and `prefers-reduced-motion: reduce` skip both.
+- Demo: `/demo/collage`.
+- Bumped the gem version to `0.1.247`.
+
+### Upgrade notes
+- New component. Existing layouts stay as they are. There is no alias to retire.
+- Tune a theme with the `--collage-*` tokens. Do not restyle `.fp-collage__item` to change the lean.
+- `scatter: :none` is the square grid. A theme that sets `--collage-rotate: 0deg` and zero offsets flattens every collage, including `:loose`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.247`.
+
 ## [0.1.246] - 2026-10-15
 
 ### Added

@@ -15,6 +15,8 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--collection-editor-columns"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-gap"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-row"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collage-tilt"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collage-angle"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-trash-button-size"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-offset"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-nav-offset"
