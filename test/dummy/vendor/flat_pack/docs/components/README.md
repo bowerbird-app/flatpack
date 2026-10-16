@@ -13,6 +13,7 @@ Format: `key | primary class | doc`
 ```text
 accordion | FlatPack::Accordion::Component | docs/components/accordion.md
 alert | FlatPack::Alert::Component | docs/components/alert.md
+animated_character | FlatPack::AnimatedCharacter::Component | docs/components/animated-character.md
 avatar | FlatPack::Avatar::Component | docs/components/avatar.md
 avatar_group | FlatPack::AvatarGroup::Component | docs/components/avatar-group.md
 badge | FlatPack::Badge::Component | docs/components/badge.md

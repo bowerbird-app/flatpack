@@ -19,6 +19,14 @@ components:
     primary_class: FlatPack::Alert::Component
     status: documented
 
+  - key: animated_character
+    title: Animated Character
+    doc: docs/components/animated-character.md
+    primary_class: FlatPack::AnimatedCharacter::Component
+    related_classes:
+      - FlatPack::Shared::IconComponent
+    status: documented
+
   - key: avatar
     title: Avatar
     doc: docs/components/avatar.md

@@ -305,6 +305,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Avatar** - User avatar with image, initials, and size variants
 - **AvatarGroup** - Stacked avatar group for compact multi-user display
 - **Skeleton** - Loading placeholder animations for content regions
+- **Animated character** - A hash-drawn mascot with named moods, plus icon wiggle, pop, draw, spin, and nudge
 
 ### Interactive
 - **Button** - Buttons and links with multiple styles and loading states

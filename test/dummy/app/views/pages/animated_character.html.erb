@@ -1,0 +1,106 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Animated characters",
+  subtitle: "A tiny bot with a few moods, and icons that move when you point, click, or land."
+) %>
+
+<div data-controller="animated-character-demo">
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Characters", anchor_link: true) %>
+
+    <div class="flex flex-wrap items-end gap-10 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-lg)] text-[var(--surface-content-color)]">
+      <div class="flex flex-col items-center gap-3">
+        <%= render FlatPack::AnimatedCharacter::Component.new(
+          definition: FlatPack::AnimatedCharacter.bot,
+          state: :idle,
+          size: :xl,
+          label: "Flatpack bot",
+          id: "bot"
+        ) %>
+        <p class="text-sm text-[var(--surface-muted-content-color)]">Bot</p>
+      </div>
+      <div class="flex flex-col items-center gap-3">
+        <%= render FlatPack::AnimatedCharacter::Component.new(
+          definition: FlatPack::AnimatedCharacter.pip,
+          state: :idle,
+          size: :lg,
+          label: "Pip",
+          id: "pip"
+        ) %>
+        <p class="text-sm text-[var(--surface-muted-content-color)]">Pip</p>
+      </div>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      <% %w[idle blink happy thinking].each do |state| %>
+        <%= render FlatPack::Button::Component.new(
+          text: state.capitalize,
+          style: :secondary,
+          data: {
+            action: "click->animated-character-demo#setState",
+            animated_character_demo_state_param: state
+          }
+        ) %>
+      <% end %>
+      <% {pause: "Pause", resume: "Resume", stop: "Stop", reset: "Reset", play: "Play"}.each do |action, label| %>
+        <%= render FlatPack::Button::Component.new(
+          text: label,
+          style: :ghost,
+          data: {action: "click->animated-character-demo##{action}"}
+        ) %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Icon presets", anchor_link: true) %>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <% [
+        ["Wiggle", :bell, :wiggle, :hover, "Hover the bell"],
+        ["Pop", :heart, :pop, :click, "Click the heart"],
+        ["Draw", :check, :draw, :hover, "Hover the check"],
+        ["Spin", "arrow-path", :spin, :mount, "Spins on load"],
+        ["Nudge", "arrow-right", :nudge, :hover, "Hover the arrow"]
+      ].each do |title, icon, preset, trigger, hint| %>
+        <div class="flex flex-col items-center gap-3 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-[var(--radius-lg)] text-[var(--surface-content-color)]">
+          <p class="text-sm font-medium"><%= title %></p>
+          <%= render FlatPack::Shared::IconComponent.new(
+            name: icon,
+            size: :xl,
+            variant: (preset == :pop ? :solid : :outline),
+            animate: preset,
+            trigger: trigger,
+            id: "#{preset}-icon"
+          ) %>
+          <p class="text-sm text-[var(--surface-muted-content-color)]"><%= hint %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-4">
+      <%= render FlatPack::Button::Component.new(
+        text: "Spin again",
+        style: :secondary,
+        data: {
+          action: "click->animated-character-demo#play",
+          animated_character_demo_selector_param: "#spin-icon"
+        }
+      ) %>
+    </div>
+  </section>
+</div>
+
+<%= render FlatPack::CodeBlock::Component.new(
+  code: CGI.unescapeHTML(<<~'CODE'),
+    &lt;%= render FlatPack::AnimatedCharacter::Component.new(
+      definition: FlatPack::AnimatedCharacter.bot,
+      state: :idle,
+      size: :xl,
+      label: "Flatpack bot"
+    ) %&gt;
+
+    &lt;%= render FlatPack::Shared::IconComponent.new(name: :bell, animate: :wiggle, trigger: :hover) %&gt;
+  CODE
+  language: "erb",
+  title: "Character and icon"
+) %>

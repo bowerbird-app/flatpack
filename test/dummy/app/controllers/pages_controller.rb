@@ -688,6 +688,9 @@ class PagesController < ApplicationController
     render layout: "fullpage" if @collage_clip
   end
 
+  def animated_character
+  end
+
   def overlay
   end
 

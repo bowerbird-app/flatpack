@@ -243,6 +243,28 @@ module FlatPack
         render_inline(IconComponent.new(name: :search, class: "fp-red-dot"))
         assert_selector "svg.fp-red-dot"
       end
+
+      def test_animate_opts_into_svg_motion
+        render_inline(IconComponent.new(name: :bell, animate: :wiggle, trigger: :hover))
+
+        assert_selector "svg[data-controller='flat-pack--icon flat-pack--svg-motion']"
+        assert_selector "svg[data-flat-pack--svg-motion-state-value='play']"
+        assert_selector "svg[data-flat-pack--svg-motion-trigger-value='hover']"
+        assert_selector "svg.fp-icon-motion.cursor-pointer"
+        assert_includes rendered_content, "rotate"
+      end
+
+      def test_mount_trigger_does_not_add_a_pointer_cursor
+        render_inline(IconComponent.new(name: "arrow-path", animate: :spin, trigger: :mount))
+
+        assert_selector "svg[data-flat-pack--svg-motion-trigger-value='mount']"
+        refute_selector "svg.cursor-pointer"
+      end
+
+      def test_unknown_animate_or_trigger_raises
+        assert_raises(ArgumentError) { IconComponent.new(name: :bell, animate: :bounce) }
+        assert_raises(ArgumentError) { IconComponent.new(name: :bell, animate: :pop, trigger: :scroll) }
+      end
     end
   end
 end
