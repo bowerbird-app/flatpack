@@ -266,6 +266,13 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --motion-duration-fast: var(--duration-fast);
   --motion-duration-base: var(--duration-base);
   --motion-duration-slow: var(--duration-slow);
+  --motion-duration-slower: 600ms;
+  --motion-delay-sm: 120ms;
+  --motion-delay-md: 250ms;
+  --motion-delay-lg: 450ms;
+  --motion-stagger-sm: 40ms;
+  --motion-stagger-md: 80ms;
+  --motion-stagger-lg: 120ms;
   --motion-ease-out: var(--easing-enter);
   --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-spring: var(--easing-spring);

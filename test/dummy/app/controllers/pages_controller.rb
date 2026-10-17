@@ -695,7 +695,7 @@ class PagesController < ApplicationController
   def motion
     clip = params[:clip].to_s
     @motion_specimen = %w[fade rise blur scale wipe zoom words lines stream count roll number-fade].include?(clip) ? clip : nil
-    @motion_clip = @motion_specimen || (%w[tokens reveal text media stream].include?(clip) ? clip : nil)
+    @motion_clip = @motion_specimen || (%w[tokens reveal text media stream sequence].include?(clip) ? clip : nil)
     render layout: "fullpage" if @motion_clip
   end
 

@@ -62,7 +62,9 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Collage hover | `hover` | `FlatPack::Collage::Component` only. `:lift` (default), `:focus` (straighten, raise, siblings ease back), or `:none`. Pointer hover needs `(hover: hover)`. Keyboard uses `:focus-visible` and `:focus-within`. Off below `md`. |
 | Collage phone count | `mobile_items` | `FlatPack::Collage::Component` only. Default `4`. How many items stay in the phone row. Later items stay in the markup and are not displayed below `md`. Ignored when `stack_below` is set. |
 | Scroll reveal | `reveal` | Any component root that calls `merge_attributes`, and `FlatPack::Reveal::Component`. `:fade`, `:rise`, `:blur`, `:scale`, `:wipe`, `:zoom`. `:words` and `:lines` are the Reveal component only. |
-| Reveal children | `stagger` | Boolean. `true` sets `--reveal-index` on the children of a box reveal. Not a text-stream prop. |
+| Reveal delay | `delay` | Reveal timing. `:sm`, `:md`, or `:lg` (`--motion-delay-*`, 120ms, 250ms, 450ms). A non-negative Integer is milliseconds. Omit it to start at once. Not Number `duration`. |
+| Reveal duration | `duration` | On a reveal: `:fast`, `:base`, `:slow`, or `:slower` (`--motion-duration-*`; `:slower` is 600ms). A non-negative Integer is milliseconds. Omit it for `--motion-duration-slow`. Number `duration` is still only `:fast`, `:base`, or `:slow`. |
+| Reveal children | `stagger` | `false`, `true` (`--reveal-stagger`), `:sm`, `:md`, `:lg` (`--motion-stagger-*`, 40ms, 80ms, 120ms), or a non-negative Integer of milliseconds per step. `true` sets `--reveal-index` on the children of a box reveal. Not a text-stream prop. |
 | Media scroll shift | `parallax` | Boolean. `true` only with `reveal: :wipe` or `reveal: :zoom`. CSS `animation-timeline: view()` when supported. |
 | Reveal intensity | `intensity` | `:strong` or omit. Strong uses `--motion-distance-lg`, `--motion-scale-strong`, and `--motion-zoom-strong`. |
 | Animated number | `value` | `FlatPack::Number::Component` only. The numeric amount. A number or a plain numeric string. |
@@ -145,6 +147,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not add `icon_class` on a button. Recolour the glyph with `icon_style` and the `--button-icon-*` tokens.
 - Do not use `label` for a key/value term. Use `key`. The item block is the value.
 - Do not pass `reveal: :words` or `reveal: :lines` as a system argument. Those split the copy in `FlatPack::Reveal::Component`.
+- Do not pass Number `duration: :slow` and expect `:slower`. `:slower` is a reveal step. Do not pass a millisecond string. Use a step, or an Integer.
 - Do not pass `parallax: true` with `:fade`, `:rise`, `:blur`, `:scale`, `:words`, or `:lines`. It belongs on `:wipe` and `:zoom`.
 - Do not add `stream:` to a chat message. Render `FlatPack::Text::Stream::Component` inside the message.
 - Do not pass billing `price_text` or `amount` to `FlatPack::Number::Component`. Pass the numeric `value:`. Do not pass Number `currency:` to a billing plan.

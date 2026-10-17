@@ -5,23 +5,39 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       REVEALS = FlatPack::Motion::REVEALS
       TAGS = FlatPack::Motion::TAGS
+      DELAYS = FlatPack::Motion::DELAYS
+      DURATIONS = FlatPack::Motion::DURATIONS
 
-      def initialize(reveal:, stagger: false, parallax: false, intensity: nil, tag: :div, text: nil, **system_arguments)
+      def initialize(
+        reveal:,
+        stagger: false,
+        parallax: false,
+        intensity: nil,
+        delay: nil,
+        duration: nil,
+        tag: :div,
+        text: nil,
+        **system_arguments
+      )
         super(**system_arguments)
         @reveal = reveal.to_sym
         @stagger = stagger
         @parallax = parallax
         @intensity = intensity
+        @delay = delay
+        @duration = duration
         @tag = tag
         @text = text
         validate_text_option!(@text, name: :text) unless @text.nil?
-        @motion_attributes = FlatPack::Motion.attributes(
+        @motion_attributes = apply_motion_style!(@system_arguments, FlatPack::Motion.attributes(
           reveal: @reveal,
           stagger: @stagger,
           parallax: @parallax,
           intensity: @intensity,
+          delay: @delay,
+          duration: @duration,
           text: text_reveal?
-        )
+        ))
       end
 
       def call
