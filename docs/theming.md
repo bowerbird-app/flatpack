@@ -339,6 +339,13 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --motion-duration-fast: var(--duration-fast)   /* 150ms */
 --motion-duration-base: var(--duration-base)   /* 200ms */
 --motion-duration-slow: var(--duration-slow)   /* 300ms */
+--motion-duration-slower: 600ms
+--motion-delay-sm: 120ms
+--motion-delay-md: 250ms
+--motion-delay-lg: 450ms
+--motion-stagger-sm: 40ms
+--motion-stagger-md: 80ms
+--motion-stagger-lg: 120ms
 --motion-ease-out: var(--easing-enter)
 --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1)
 --motion-ease-spring: var(--easing-spring)
@@ -352,7 +359,7 @@ Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-
 --reveal-stagger: 40ms
 ```
 
-`--motion-*` and `--reveal-stagger` are the shared reveal scale. `FlatPack::Number::Component` reads the same duration and `--motion-ease-out` for a count, roll, or fade. Character and icon tracks do too: `:fast`, `:base`, and `:slow` follow `--motion-duration-*`, and easing `enter` follows `--motion-ease-out`. `standard` and `exit` stay on `--easing-standard` and `--easing-exit`. A millisecond duration is unchanged. `.fp-content-enter` and the collage entrance inherit the duration, ease, and `--motion-distance-sm`, so one theme change retunes the kit enter, the collage, and `FlatPack::Reveal`. Default rise and blur use `--motion-distance-md`. `intensity: :strong` uses `--motion-distance-lg`, `--motion-scale-strong`, and `--motion-zoom-strong`. Override a `--collage-*` motion token when a single collage should differ. Reveals use `--motion-ease-out`. Set that to `var(--motion-ease-spring)` or `var(--motion-ease-in-out)` when a theme wants a different curve. `--motion-ease-spring` is the list spring; overlays stay bounce-free. Under `prefers-reduced-motion: reduce`, the motion durations and `--reveal-stagger` become `0ms`.
+`--motion-*` and `--reveal-stagger` are the shared reveal scale. `FlatPack::Number::Component` reads the same duration and `--motion-ease-out` for a count, roll, or fade. Character and icon tracks do too: `:fast`, `:base`, and `:slow` follow `--motion-duration-*`, and easing `enter` follows `--motion-ease-out`. `standard` and `exit` stay on `--easing-standard` and `--easing-exit`. A millisecond duration is unchanged. `.fp-content-enter` and the collage entrance inherit the duration, ease, and `--motion-distance-sm`, so one theme change retunes the kit enter, the collage, and `FlatPack::Reveal`. Default rise and blur use `--motion-distance-md`. `intensity: :strong` uses `--motion-distance-lg`, `--motion-scale-strong`, and `--motion-zoom-strong`. Override a `--collage-*` motion token when a single collage should differ. Reveals use `--motion-ease-out`. Set that to `var(--motion-ease-spring)` or `var(--motion-ease-in-out)` when a theme wants a different curve. `--motion-ease-spring` is the list spring; overlays stay bounce-free. `delay:`, `duration:`, and `stagger:` on a reveal write `--reveal-delay`, `--reveal-duration`, and `--reveal-stagger` on that element. Named steps are the API: delay `:sm` / `:md` / `:lg`, duration `:fast` / `:base` / `:slow` / `:slower`, and stagger `true` (the `--reveal-stagger` default) or `:sm` / `:md` / `:lg`. A non-negative Integer of milliseconds is the escape hatch. Omit a step and the theme token applies (`0ms` for delay, `--motion-duration-slow` for duration). `FlatPack::Number::Component` duration stays `:fast`, `:base`, or `:slow`. Under `prefers-reduced-motion: reduce`, the motion durations, the delay steps, the stagger steps, and `--reveal-stagger` become `0ms`. An instance millisecond is forced to `0ms` on `.fp-reveal` as well.
 
 Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popover, and tooltip entrance. Use `--easing-exit` for their leave. Modal, drawer, and command palette enter on `--duration-slow` and exit on `--duration-base`. Popover, tooltip, searchable Select, Combobox, and the FlatPack date picker stay on `--duration-base` both ways, with a few pixels of offset from the trigger. Those form panels share `playOverlayEnter` / `playOverlayExit` in `controllers/flat_pack/reduced_motion`, so a close in flight can reverse and `hidden` is applied after the exit duration. Form invalid is colour only; do not shake the field. List orderable sibling shifts use `--easing-spring`; drop settle uses `--easing-spring-snappy`. Under reduced motion, list reorder snaps with no spring.
 

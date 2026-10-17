@@ -3351,6 +3351,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 /* Reveal. Without scripting, or with reduced motion, the final state shows.
  * With scripting, :not(.is-revealed) is hidden on first paint. is-pending
  * keeps that hidden state from animating until the controller reveals once.
+ * --reveal-duration, --reveal-delay, and --reveal-stagger are per element.
+ * Omit them and the theme tokens apply.
  */
 .fp-reveal--fade,
 .fp-reveal--rise,
@@ -3358,8 +3360,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-reveal--scale,
 .fp-reveal--zoom {
   transition-property: opacity, transform, filter;
-  transition-duration: var(--motion-duration-slow);
+  transition-duration: var(--reveal-duration, var(--motion-duration-slow));
   transition-timing-function: var(--motion-ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .fp-reveal.is-pending,
@@ -3406,9 +3409,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-reveal--stagger > :not(.fp-reveal__plain) {
   transition-property: opacity, transform, filter;
-  transition-duration: var(--motion-duration-slow);
+  transition-duration: var(--reveal-duration, var(--motion-duration-slow));
   transition-timing-function: var(--motion-ease-out);
-  transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
+  transition-delay: calc(var(--reveal-delay, 0ms) + min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
 }
 
 .fp-reveal--stagger:not(.is-revealed) {
@@ -3480,8 +3483,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-reveal__chunk {
   display: inline-block;
-  transition: transform var(--motion-duration-slow) var(--motion-ease-out);
-  transition-delay: calc(min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
+  transition-property: transform;
+  transition-duration: var(--reveal-duration, var(--motion-duration-slow));
+  transition-timing-function: var(--motion-ease-out);
+  transition-delay: calc(var(--reveal-delay, 0ms) + min(var(--reveal-index, 0), 12) * var(--reveal-stagger));
 }
 
 .fp-reveal--words:not(.is-revealed) .fp-reveal__chunk,
@@ -3495,7 +3500,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-reveal--wipe {
-  transition: clip-path var(--motion-duration-slow) var(--motion-ease-out);
+  transition-property: clip-path;
+  transition-duration: var(--reveal-duration, var(--motion-duration-slow));
+  transition-timing-function: var(--motion-ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .fp-reveal--wipe:not(.is-revealed) {
@@ -3507,7 +3515,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-reveal--zoom > * {
-  transition: transform var(--motion-duration-slow) var(--motion-ease-out);
+  transition-property: transform;
+  transition-duration: var(--reveal-duration, var(--motion-duration-slow));
+  transition-timing-function: var(--motion-ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .fp-reveal--zoom:not(.is-revealed) > * {
@@ -3595,6 +3606,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .fp-reveal {
+    --reveal-delay: 0ms !important;
+    --reveal-duration: 0ms !important;
+    --reveal-stagger: 0ms !important;
+  }
+
   .fp-reveal--fade:not(.is-revealed),
   .fp-reveal--rise:not(.is-revealed),
   .fp-reveal--blur:not(.is-revealed),

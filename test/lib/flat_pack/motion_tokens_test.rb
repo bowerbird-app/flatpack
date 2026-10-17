@@ -10,7 +10,9 @@ module FlatPack
       root = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
       names = %w[
-        --motion-duration-fast --motion-duration-base --motion-duration-slow
+        --motion-duration-fast --motion-duration-base --motion-duration-slow --motion-duration-slower
+        --motion-delay-sm --motion-delay-md --motion-delay-lg
+        --motion-stagger-sm --motion-stagger-md --motion-stagger-lg
         --motion-ease-out --motion-ease-in-out --motion-ease-spring
         --motion-distance-sm --motion-distance-md --motion-distance-lg
         --motion-scale --motion-scale-strong --motion-zoom --motion-zoom-strong
@@ -25,6 +27,13 @@ module FlatPack
       assert_match(/--motion-duration-fast:\s*var\(--duration-fast\)/, root)
       assert_match(/--motion-duration-base:\s*var\(--duration-base\)/, root)
       assert_match(/--motion-duration-slow:\s*var\(--duration-slow\)/, root)
+      assert_match(/--motion-duration-slower:\s*600ms/, root)
+      assert_match(/--motion-delay-sm:\s*120ms/, root)
+      assert_match(/--motion-delay-md:\s*250ms/, root)
+      assert_match(/--motion-delay-lg:\s*450ms/, root)
+      assert_match(/--motion-stagger-sm:\s*40ms/, root)
+      assert_match(/--motion-stagger-md:\s*80ms/, root)
+      assert_match(/--motion-stagger-lg:\s*120ms/, root)
       assert_match(/--motion-ease-out:\s*var\(--easing-enter\)/, root)
       assert_match(/--motion-ease-in-out:\s*cubic-bezier\(0\.4, 0, 0\.2, 1\)/, root)
       assert_match(/--motion-ease-spring:\s*var\(--easing-spring\)/, root)
@@ -85,6 +94,9 @@ module FlatPack
       refute_includes css, "scale(0.96)"
       refute_includes css, "scale(1.05)"
       assert_includes css, "@media (scripting: none)"
+      assert_includes css, "var(--reveal-duration, var(--motion-duration-slow))"
+      assert_includes css, "var(--reveal-delay, 0ms)"
+      assert_includes css, "calc(var(--reveal-delay, 0ms) + min(var(--reveal-index, 0), 12) * var(--reveal-stagger))"
       assert_includes css, "animation-timeline: view();"
       assert_match(/prefers-reduced-motion: reduce.*?\.fp-reveal--parallax/m, css)
     end

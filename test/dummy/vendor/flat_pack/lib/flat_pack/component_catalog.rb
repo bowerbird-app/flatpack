@@ -75,6 +75,7 @@ module FlatPack
       {constant: :ICON_VARIANTS, kwargs: %i[icon_variant]},
       {constant: :ICON_STYLES, kwargs: %i[icon_style]},
       {constant: :REVEALS, kwargs: %i[reveal]},
+      {constant: :DELAYS, kwargs: %i[delay]},
       {constant: :FORMATS, kwargs: %i[format]},
       {constant: :ANIMATIONS, kwargs: %i[animate]},
       {constant: :DURATIONS, kwargs: %i[duration]}

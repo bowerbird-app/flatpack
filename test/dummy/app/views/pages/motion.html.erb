@@ -1,4 +1,8 @@
-<% if @motion_specimen.present? %>
+<% if @motion_clip == "sequence" %>
+  <div id="motion-clip" class="mx-auto flex min-h-dvh w-full max-w-5xl items-center px-6">
+    <%= render "pages/motion_sequence", frame: :stage %>
+  </div>
+<% elsif @motion_specimen.present? %>
   <div id="motion-clip" class="mx-auto flex min-h-dvh w-full max-w-5xl items-center px-6">
     <% if %w[stream count roll number-fade].include?(@motion_specimen) %>
       <%= render "pages/motion_one", variant: @motion_specimen %>
@@ -27,6 +31,38 @@
   erb_output_open = "<" + "%="
   erb_tag_close = "%" + ">"
 %>
+
+<section class="mb-16" id="timed-hero">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sequence",
+    anchor_link: true,
+    subtitle: "Headline, then the line, then the buttons."
+  ) %>
+  <%= render "pages/motion_sequence" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A timed hero (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, duration: :slower, tag: :h2) do #{erb_tag_close}
+        Pack it once
+      #{erb_output_open} end #{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :fade, delay: :md, tag: :p) do #{erb_tag_close}
+        Walnut, oiled, ready Friday.
+      #{erb_output_open} end #{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, delay: :lg) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Button::Component.new(text: "Start packing", style: :primary) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, stagger: :lg, class: "grid gap-4") do #{erb_tag_close}
+        <div>Oak</div>
+        <div>Walnut</div>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
 
 <section class="mb-16" id="tokens">
   <%= render FlatPack::SectionTitle::Component.new(

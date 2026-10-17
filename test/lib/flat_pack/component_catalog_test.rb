@@ -408,6 +408,9 @@ module FlatPack
       assert_equal "Reveal::Component", payload.fetch(:name)
       reveal = parameter_named(payload, "reveal")
       assert_equal FlatPack::Reveal::Component::REVEALS.map(&:to_s), reveal.fetch(:enum)
+      assert_equal %w[sm md lg], parameter_named(payload, "delay").fetch(:enum)
+      assert_equal %w[fast base slow slower], parameter_named(payload, "duration").fetch(:enum)
+      assert_equal %w[fast base slow], parameter_named(FlatPack::ComponentCatalog.show("Number::Component"), "duration").fetch(:enum)
       refute_includes payload.fetch(:description), "No dedicated documentation"
     end
 

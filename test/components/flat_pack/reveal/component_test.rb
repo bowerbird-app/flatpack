@@ -18,6 +18,33 @@ module FlatPack
         render_inline(Component.new(reveal: :fade, stagger: true)) { "<div>One</div><div>Two</div>".html_safe }
 
         assert_selector ".fp-reveal--stagger[data-flat-pack--reveal-stagger-value='true']"
+        refute_selector "[style*='--reveal-stagger']"
+      end
+
+      test "named timing writes the instance properties" do
+        render_inline(Component.new(reveal: :rise, delay: :md, duration: :slower, stagger: :lg)) do
+          "<div>One</div><div>Two</div>".html_safe
+        end
+
+        assert_selector ".fp-reveal--stagger[style*='--reveal-delay: var(--motion-delay-md)']"
+        assert_selector "[style*='--reveal-duration: var(--motion-duration-slower)']"
+        assert_selector "[style*='--reveal-stagger: var(--motion-stagger-lg)']"
+      end
+
+      test "millisecond timing is accepted" do
+        render_inline(Component.new(reveal: :fade, delay: 250, duration: 600, stagger: 120)) { "Hello" }
+
+        assert_selector "[style*='--reveal-delay: 250ms']"
+        assert_selector "[style*='--reveal-duration: 600ms']"
+        assert_selector "[style*='--reveal-stagger: 120ms']"
+      end
+
+      test "a stagger step on words changes the gap without the box class" do
+        render_inline(Component.new(reveal: :words, text: "Pack it", stagger: :lg, delay: :sm))
+
+        assert_selector ".fp-reveal--words[style*='--reveal-stagger: var(--motion-stagger-lg)']"
+        assert_selector "[style*='--reveal-delay: var(--motion-delay-sm)']"
+        refute_selector ".fp-reveal--stagger"
       end
 
       test "zoom parallax is a class on the root" do
@@ -76,6 +103,9 @@ module FlatPack
         assert_raises(ArgumentError) { Component.new(reveal: :spin) }
         assert_raises(ArgumentError) { Component.new(reveal: :fade, parallax: true) }
         assert_raises(ArgumentError) { Component.new(reveal: :words, text: "<b>no</b>".html_safe) }
+        assert_raises(ArgumentError) { Component.new(reveal: :fade, delay: "250") }
+        assert_raises(ArgumentError) { Component.new(reveal: :fade, duration: :zip) }
+        assert_raises(ArgumentError) { Component.new(reveal: :fade, stagger: :huge) }
 
         error = assert_raises(ArgumentError) do
           render_inline(Component.new(reveal: :fade, tag: :script)) { "Hi" }

@@ -9,9 +9,16 @@ module FlatPack
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
 
       assert_includes css, "@media (prefers-reduced-motion: reduce)"
+      reveal = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      assert_match(/--reveal-delay:\s*0ms !important/, reveal)
+      assert_match(/--reveal-duration:\s*0ms !important/, reveal)
+      assert_match(/--reveal-stagger:\s*0ms !important/, reveal)
       %w[
         --duration-fast --duration-base --duration-slow --skeleton-shimmer-duration
-        --motion-duration-fast --motion-duration-base --motion-duration-slow --reveal-stagger
+        --motion-duration-fast --motion-duration-base --motion-duration-slow --motion-duration-slower
+        --motion-delay-sm --motion-delay-md --motion-delay-lg
+        --motion-stagger-sm --motion-stagger-md --motion-stagger-lg
+        --reveal-stagger
       ].each do |token|
         assert_match(/#{Regexp.escape(token)}:\s*0ms/, css)
       end

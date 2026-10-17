@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.252] - 2026-10-17
+
+### Added
+- Reveal timing. `delay:` is `:sm`, `:md`, or `:lg` (`--motion-delay-sm` 120ms, `--motion-delay-md` 250ms, `--motion-delay-lg` 450ms). `duration:` is `:fast`, `:base`, `:slow`, or `:slower` (`--motion-duration-slower` is 600ms). `stagger:` stays `true` for `--reveal-stagger`, and also accepts `:sm`, `:md`, or `:lg` (`--motion-stagger-sm` 40ms, `--motion-stagger-md` 80ms, `--motion-stagger-lg` 120ms).
+- Each step writes `--reveal-delay`, `--reveal-duration`, or `--reveal-stagger` on that element. Omit a step and the theme token applies.
+- A non-negative Integer of milliseconds is the escape hatch for any of the three.
+- Demo: the Sequence section on `/demo/motion`.
+- Bumped the gem version to `0.1.252`.
+
+### Upgrade notes
+- New optional arguments. `stagger: true` and `stagger: false` still mean the same thing.
+- Named steps are the API. A millisecond Integer still works when a step is the wrong size.
+- `FlatPack::Number::Component` `duration:` is still `:fast`, `:base`, or `:slow`. `:slower` is a reveal step.
+- Under `prefers-reduced-motion: reduce`, the new delay, duration, and stagger tokens are `0ms`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.252`.
+
 ## [0.1.251] - 2026-10-16
 
 ### Added

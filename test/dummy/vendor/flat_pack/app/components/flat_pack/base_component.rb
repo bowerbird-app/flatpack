@@ -2,6 +2,8 @@
 
 module FlatPack
   class BaseComponent < ViewComponent::Base
+    MOTION_KEYS = %i[reveal stagger parallax intensity delay duration].freeze
+
     # System arguments pattern for consistent API across components
     # Handles: class, data, aria, id, and other HTML attributes
     def initialize(**system_arguments)
@@ -206,18 +208,38 @@ module FlatPack
     end
 
     def extract_motion_attributes!(system_arguments)
-      return nil unless system_arguments.key?(:reveal) || system_arguments.key?(:stagger) || system_arguments.key?(:parallax) || system_arguments.key?(:intensity)
+      return nil unless MOTION_KEYS.any? { |key| system_arguments.key?(key) }
 
-      stagger = system_arguments.delete(:stagger)
-      parallax = system_arguments.delete(:parallax)
-      intensity = system_arguments.delete(:intensity)
-
-      FlatPack::Motion.attributes(
+      motion = FlatPack::Motion.attributes(
         reveal: system_arguments.delete(:reveal),
-        stagger: stagger.nil? ? false : stagger,
-        parallax: parallax.nil? ? false : parallax,
-        intensity: intensity
+        stagger: motion_flag(system_arguments, :stagger, false),
+        parallax: motion_flag(system_arguments, :parallax, false),
+        intensity: system_arguments.delete(:intensity),
+        delay: system_arguments.delete(:delay),
+        duration: system_arguments.delete(:duration)
       )
+      apply_motion_style!(system_arguments, motion)
+    end
+
+    def apply_motion_style!(arguments, motion)
+      style = motion.delete(:style)
+      return motion if style.nil?
+
+      if arguments.key?("style")
+        arguments["style"] = join_styles(arguments["style"], style)
+      else
+        arguments[:style] = join_styles(arguments[:style], style)
+      end
+      motion
+    end
+
+    def motion_flag(arguments, key, default)
+      value = arguments.delete(key)
+      value.nil? ? default : value
+    end
+
+    def join_styles(current, extra)
+      [current.presence, extra].compact.map(&:to_s).join("; ")
     end
 
     def take_motion_attributes

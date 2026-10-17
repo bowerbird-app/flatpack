@@ -8,6 +8,18 @@ class PagesMotionDemoTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Motion"
+    assert_includes response.body, "Sequence"
+    assert_includes response.body, "Pack it once"
+    assert_includes response.body, "Walnut, oiled, ready Friday."
+    assert_includes response.body, "Start packing"
+    assert_includes response.body, "--reveal-duration: var(--motion-duration-slower)"
+    assert_includes response.body, "--reveal-delay: var(--motion-delay-md)"
+    assert_includes response.body, "--reveal-delay: var(--motion-delay-lg)"
+    assert_includes response.body, "--reveal-stagger: var(--motion-stagger-lg)"
+    assert_includes response.body, "duration: :slower"
+    assert_includes response.body, "delay: :md"
+    assert_includes response.body, "delay: :lg"
+    assert_includes response.body, "stagger: :lg"
     assert_includes response.body, "Same rise"
     assert_includes response.body, "--motion-duration-slow: var(--motion-duration-fast)"
     assert_includes response.body, "Gallery"
@@ -102,6 +114,22 @@ class PagesMotionDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">2,480<"
     refute_includes response.body, "fp-reveal--fade"
     refute_includes response.body, "fp-number--count"
+  end
+
+  test "motion sequence clip renders the timed hero" do
+    get "/demo/motion?clip=sequence"
+
+    assert_response :success
+    assert_includes response.body, "id=\"motion-clip\""
+    assert_includes response.body, "Pack it once"
+    assert_includes response.body, "var(--motion-duration-slower)"
+    assert_includes response.body, "var(--motion-delay-md)"
+    assert_includes response.body, "var(--motion-delay-lg)"
+    assert_includes response.body, "var(--motion-stagger-lg)"
+    assert_includes response.body, "Start packing"
+    refute_includes response.body, "Same rise"
+    refute_includes response.body, ">Gallery<"
+    refute_includes response.body, "is-pending"
   end
 
   test "sidebar includes motion" do

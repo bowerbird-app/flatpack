@@ -755,6 +755,13 @@
   --motion-duration-fast: var(--motion-duration-fast);
   --motion-duration-base: var(--motion-duration-base);
   --motion-duration-slow: var(--motion-duration-slow);
+  --motion-duration-slower: var(--motion-duration-slower);
+  --motion-delay-sm: var(--motion-delay-sm);
+  --motion-delay-md: var(--motion-delay-md);
+  --motion-delay-lg: var(--motion-delay-lg);
+  --motion-stagger-sm: var(--motion-stagger-sm);
+  --motion-stagger-md: var(--motion-stagger-md);
+  --motion-stagger-lg: var(--motion-stagger-lg);
   --motion-ease-out: var(--motion-ease-out);
   --motion-ease-in-out: var(--motion-ease-in-out);
   --motion-ease-spring: var(--motion-ease-spring);
@@ -1669,6 +1676,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --motion-duration-fast: var(--duration-fast);
   --motion-duration-base: var(--duration-base);
   --motion-duration-slow: var(--duration-slow);
+  --motion-duration-slower: 600ms;
+  --motion-delay-sm: 120ms;
+  --motion-delay-md: 250ms;
+  --motion-delay-lg: 450ms;
+  --motion-stagger-sm: 40ms;
+  --motion-stagger-md: 80ms;
+  --motion-stagger-lg: 120ms;
   --motion-ease-out: var(--easing-enter);
   --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-spring: var(--easing-spring);
@@ -1938,6 +1952,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
     --motion-duration-fast: 0ms;
     --motion-duration-base: 0ms;
     --motion-duration-slow: 0ms;
+    --motion-duration-slower: 0ms;
+    --motion-delay-sm: 0ms;
+    --motion-delay-md: 0ms;
+    --motion-delay-lg: 0ms;
+    --motion-stagger-sm: 0ms;
+    --motion-stagger-md: 0ms;
+    --motion-stagger-lg: 0ms;
     --reveal-stagger: 0ms;
   }
 }

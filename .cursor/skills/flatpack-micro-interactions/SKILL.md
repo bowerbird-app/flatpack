@@ -22,6 +22,7 @@ Existing:
 - `--duration-fast` 150ms. Hover, colour, icon rotate.
 - `--duration-base` 200ms. Press, toggle, tooltip, form invalid.
 - `--duration-slow` 300ms. Modal, drawer, toast, list insert/remove, skeleton-to-content.
+- Reveal steps live on the motion scale, not a second one: `--motion-duration-slower` 600ms, `--motion-delay-sm` / `md` / `lg` (120ms, 250ms, 450ms), `--motion-stagger-sm` / `md` / `lg` (40ms, 80ms, 120ms). `stagger: true` keeps `--reveal-stagger`.
 - `--easing-standard` `cubic-bezier(0.2, 0, 0, 1)`. In-place motion.
 - `--easing-enter` `cubic-bezier(0.05, 0.7, 0.1, 1)`. Overlay entrance (decelerate).
 - `--easing-exit` `cubic-bezier(0.3, 0, 1, 1)`. Overlay exit (accelerate). No bounce.
