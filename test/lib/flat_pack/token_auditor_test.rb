@@ -43,7 +43,7 @@ module FlatPack
 
     test "named themes only override tokens (do not redeclare full button alias sets)" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      dark_block = css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      dark_block = css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
 
       refute_nil dark_block
       refute_includes dark_block, "--button-primary-background-color"
@@ -52,7 +52,7 @@ module FlatPack
 
     test "rounded theme block shifts spacing and does not copy the palette" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      rounded_block = css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
+      rounded_block = css[/\[data-theme~="rounded"\]\s*\{(.*?)\}/m, 1]
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"

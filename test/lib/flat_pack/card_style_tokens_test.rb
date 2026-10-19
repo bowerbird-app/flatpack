@@ -37,7 +37,7 @@ module FlatPack
     end
 
     test "dark mode keeps gradient text on the light side of the brand colour" do
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
 
       assert_match(/--card-style-gradient-background:\s*linear-gradient\(/, dark_block)
       refute_includes dark_block, "--card-style-brand-background:"

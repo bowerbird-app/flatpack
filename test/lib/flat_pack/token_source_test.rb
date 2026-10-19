@@ -8,6 +8,16 @@ module FlatPack
       @css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
     end
 
+    test "named themes use word match and the default base stays an attribute presence selector" do
+      assert_includes @css, '[data-theme~="dark"]'
+      assert_includes @css, '[data-theme~="ocean"]'
+      assert_includes @css, '[data-theme~="rounded"]'
+      refute_includes @css, '[data-theme="dark"]'
+      refute_includes @css, '[data-theme="ocean"]'
+      refute_includes @css, '[data-theme="rounded"]'
+      assert_match(/^:root,\s*\[data-theme\]\s*\{/, @css)
+    end
+
     test "theme inventory is @theme inline pointing at :root names" do
       theme_block = @css[/@theme inline \{.*?^\}/m]
 
@@ -107,9 +117,9 @@ module FlatPack
 
     test "dummy sunrise theme sets brand lightness so primary recolors" do
       css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
-      sunrise = css[/\[data-theme="sunrise"\]\s*\{[^}]*--brand-hue:[^}]*\}/m]
+      sunrise = css[/\[data-theme~="sunrise"\]\s*\{[^}]*--brand-hue:[^}]*\}/m]
 
-      refute_nil sunrise, "expected a [data-theme=\"sunrise\"] block"
+      refute_nil sunrise, "expected a [data-theme~=\"sunrise\"] block"
       assert_includes sunrise, "--brand-hue: 35"
       assert_includes sunrise, "--brand-chroma: 0.19"
       assert_includes sunrise, "--brand-lightness: 0.52"
@@ -117,11 +127,11 @@ module FlatPack
 
     test "dummy featured-in themes set only semantic tokens" do
       css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
-      light = css[/\[data-theme="featured-in"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
-      dark = css[/\[data-theme="featured-in-dark"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
+      light = css[/\[data-theme~="featured-in"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
+      dark = css[/\[data-theme~="featured-in-dark"\]\s*\{([^}]*--color-primary:[^}]*)\}/m, 1]
 
-      refute_nil light, "expected a [data-theme=\"featured-in\"] block with --color-primary"
-      refute_nil dark, "expected a [data-theme=\"featured-in-dark\"] block with --color-primary"
+      refute_nil light, "expected a [data-theme~=\"featured-in\"] block with --color-primary"
+      refute_nil dark, "expected a [data-theme~=\"featured-in-dark\"] block with --color-primary"
       assert_includes light, "--color-primary:"
       refute_includes light, "--color-primary-hover"
       refute_includes light, "--color-ghost-text"
@@ -131,6 +141,17 @@ module FlatPack
       refute_includes dark, "--color-ghost-text"
       refute_includes dark, "--button-"
       refute_includes dark, "--list-item-hover-background-color"
+    end
+
+    test "dummy harbor theme is a semantic override that can stack on rounded" do
+      css = Rails.root.join("app/assets/stylesheets/application.tailwind.css").read
+      harbor = css[/\[data-theme~="harbor"\]\s*\{([^}]*)\}/m, 1]
+
+      refute_nil harbor, "expected a [data-theme~=\"harbor\"] block"
+      assert_includes harbor, "--color-primary:"
+      refute_includes harbor, "--button-"
+      refute_includes harbor, "--space-"
+      refute_includes harbor, "--radius-"
     end
 
     test "@theme inline names match :root custom properties" do
@@ -211,7 +232,7 @@ module FlatPack
     end
 
     test "named theme blocks do not circular-map tokens" do
-      @css.scan(/\[data-theme="([^"]+)"\]\s*\{(.*?)\}/m).each do |theme, body|
+      @css.scan(/\[data-theme~="([^"]+)"\]\s*\{(.*?)\}/m).each do |theme, body|
         body.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
           refute_equal "var(#{name})", value.strip, "[data-theme=#{theme}] #{name} must not be a circular self-reference"
         end
@@ -219,8 +240,8 @@ module FlatPack
     end
 
     test "dark and ocean stay override-only" do
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
-      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
 
       refute_includes dark_block, "--button-primary-background-color"
       refute_includes ocean_block, "--button-primary-background-color"
@@ -261,7 +282,7 @@ module FlatPack
     end
 
     test "dark block no longer restates derived component colours" do
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
 
       %w[
         --color-secondary
@@ -318,7 +339,7 @@ module FlatPack
         refute_includes root_block, hex
       end
 
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
       refute_includes dark_block, "--tabs-pill-inactive-text-color"
       refute_includes dark_block, "--sidebar-item-hover-background-color"
       refute_includes dark_block, "--chat-message-incoming-background-color"
@@ -329,8 +350,8 @@ module FlatPack
       refute_match(/--chat-message-outgoing-background-color:\s*var\(--color-primary\)/, root_block)
       refute_match(/--chat-message-outgoing-text-color:\s*var\(--color-primary-text\)/, root_block)
 
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
-      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
 
       assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.32 0\.015 250\)/, dark_block)
       assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.90 0\.025 220\)/, ocean_block)
@@ -420,8 +441,8 @@ module FlatPack
       assert_includes application, ".fp-range-input-sample"
       assert_includes application, "font-family: var(--font-sans)"
 
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
-      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
       refute_includes dark_block, "--range-thumb-color"
       refute_includes ocean_block, "--range-thumb-color"
       refute_includes dark_block, "--range-thumb-border-color"
@@ -461,8 +482,8 @@ module FlatPack
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
 
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
-      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
       assert_match(/--surface-hover-background-color:\s*oklch\(0\.22 0\.02 250\)/, dark_block)
       assert_match(/--surface-active-background-color:\s*oklch\(0\.28 0\.02 250\)/, dark_block)
       assert_match(/--surface-hover-background-color:\s*oklch\(0\.92 0\.03 220\)/, ocean_block)
@@ -479,8 +500,8 @@ module FlatPack
     end
 
     test "dark and ocean do not freeze --color-ring; they follow --color-primary" do
-      dark_block = @css[/\[data-theme="dark"\]\s*\{(.*?)\}/m, 1]
-      ocean_block = @css[/\[data-theme="ocean"\]\s*\{(.*?)\}/m, 1]
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
 
       refute_includes dark_block, "--color-ring"
       refute_includes ocean_block, "--color-ring"
@@ -506,7 +527,7 @@ module FlatPack
     end
 
     def rounded_body
-      @css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
+      @css[/\[data-theme~="rounded"\]\s*\{(.*?)\}/m, 1]
     end
   end
 end
