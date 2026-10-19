@@ -337,23 +337,56 @@
    * The inline FOUC-prevention script sets data-flat-pack-sidebar-collapsed on
    * the sidebar wrapper before <aside> is parsed. JS then toggles this attribute
    * for user interactions, letting CSS transitions handle the animation.
-   * !important overrides Tailwind's w-64 / md:w-auto utilities.
+   * !important overrides Tailwind width utilities (md:w-auto and any host w-*).
+   * The mobile drawer stays on --sidebar-width. Content width is desktop only.
    */
+    .fp-sidebar {
+      width: var(--sidebar-width);
+    }
+
+    .fp-sidebar-drawer,
+    .fp-sidebar-drawer > aside {
+      width: var(--sidebar-width) !important;
+    }
+
+    [data-flat-pack-sidebar-width="content"] {
+      interpolate-size: allow-keywords;
+    }
+
   @media (min-width: 768px) {
     [data-flat-pack-sidebar-collapsed="true"] {
-      width: 4rem !important;
+      width: var(--sidebar-collapsed-width) !important;
     }
 
     [data-flat-pack-sidebar-collapsed="true"] > aside {
-      width: 4rem !important;
+      width: var(--sidebar-collapsed-width) !important;
     }
 
     [data-flat-pack-sidebar-collapsed="false"] {
-      width: 16rem !important;
+      width: var(--sidebar-width) !important;
     }
 
     [data-flat-pack-sidebar-collapsed="false"] > aside {
-      width: 16rem !important;
+      width: var(--sidebar-width) !important;
+    }
+
+    [data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"],
+    [data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside {
+      width: var(--sidebar-measured-width, max-content) !important;
+      min-width: var(--sidebar-measured-width, var(--sidebar-content-min-width)) !important;
+      max-width: var(--sidebar-measured-width, var(--sidebar-content-max-width)) !important;
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"][data-flat-pack-sidebar-width="content"],
+    [data-flat-pack-sidebar-collapsed="true"][data-flat-pack-sidebar-width="content"] aside {
+      width: var(--sidebar-collapsed-width) !important;
+      min-width: var(--sidebar-collapsed-width) !important;
+      max-width: var(--sidebar-collapsed-width) !important;
+    }
+
+    [data-flat-pack-sidebar-width="content"],
+    [data-flat-pack-sidebar-width="content"] aside {
+      transition-property: width, min-width, max-width, transform !important;
     }
 
     .fp-sidebar-label {
@@ -361,7 +394,7 @@
       min-width: 0;
       overflow: hidden;
       opacity: 1;
-      max-width: 20rem;
+      max-width: var(--sidebar-content-max-width);
       transition:
         opacity var(--duration-fast) var(--easing-standard),
         max-width var(--duration-slow) var(--easing-standard),
@@ -374,9 +407,15 @@
       flex-grow: 0 !important;
     }
 
+    [data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] .fp-sidebar-label {
+      flex: 0 1 auto !important;
+      width: max-content !important;
+      max-width: min(100%, var(--sidebar-content-max-width));
+    }
+
     /* Section titles fade, but their block stays in flow so row height does not jump. */
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-section-title="true"] .fp-sidebar-label {
-      max-width: 20rem !important;
+      max-width: var(--sidebar-content-max-width) !important;
       flex-grow: 1 !important;
     }
 
@@ -400,7 +439,7 @@
       Center the icon in the collapsed row with a length, not a percentage.
       A percentage margin on a flex item is cyclic and computes to 0, so the
       active pill stayed heavier on the left. Centering the whole row pulls the
-      icon sideways while the label is still wide. 4rem rail, 1px side border,
+      icon sideways while the label is still wide. Collapsed rail, 1px side border,
       the item inset on both sides, a 1.25rem icon, and the collapsed padding.
     */
     [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
@@ -411,7 +450,7 @@
 
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
     [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
-      margin-left: calc((4rem - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
+      margin-left: calc((var(--sidebar-collapsed-width) - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
     }
 
     [data-flat-pack--sidebar-group-target="chevron"] {
@@ -513,7 +552,7 @@
 
     [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
     [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
-      margin-left: calc((4rem - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
+      margin-left: calc((var(--sidebar-collapsed-width) - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
     }
   }
 

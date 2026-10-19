@@ -31,6 +31,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set `--carousel-bleed` on the parent when the card padding is not `--card-padding-md`. When a later release defines `--card-inset`, bleed picks it up without a call-site change.
 - Redeploy so `meta.gem_version` shows `0.1.262`.
 
+## [0.1.260] - 2026-10-19
+
+### Added
+- `FlatPack::SidebarLayout::Component` accepts `width:` (`:fixed` by default, or `:content`). `:fixed` keeps the open desktop rail at `--sidebar-width`. `:content` sizes that rail to its widest item. Collapsed width stays `--sidebar-collapsed-width`. The mobile drawer stays `--sidebar-width`. Unknown values raise `ArgumentError`.
+- Tokens on `:root, [data-theme]`: `--sidebar-width` (`16rem`), `--sidebar-collapsed-width` (`4rem`), `--sidebar-content-min-width` (`12rem`), and `--sidebar-content-max-width` (`20rem`). The content max matches the label ceiling, so a long label can grow past the old `16rem` rail and a short menu can shrink to `12rem`. Set `--sidebar-content-max-width: var(--sidebar-width)` when content mode should not exceed the fixed rail.
+- The open desktop rail reads those tokens, including the collapsed icon offset, the label max-width, and the mobile drawer. `!important` stays where it beats a width utility.
+- `width: :content` works with `floating: true`, `height: :content`, and `floating_top_nav: true`. The floating cards still share `--layout-content-inset` with `.fp-layout-content`.
+- Dummy chrome reads `?width=content`. `/demo/sidebar_layout?width=content` hugs the labels.
+- Bumped the gem version to `0.1.260`.
+
+### Upgrade notes
+- Additive. Hosts that omit `width:` keep a `16rem` open rail and a `4rem` collapsed rail. No call site has to change.
+- Reload kit CSS and JS so the tokens and `rememberOpenWidth` load. New tokens: `--sidebar-width`, `--sidebar-collapsed-width`, `--sidebar-content-min-width`, `--sidebar-content-max-width`. Rounded, dark, and ocean do not remap them. `--sidebar-measured-width` is a runtime length on the column after layout. It is not a theme token. Do not set it on `:root`.
+- No new Tailwind class literals. `w-64` is gone from `Sidebar` and from the layout column. Do not rebuild Tailwind for this change. Do not rerun `bin/rails generate flat_pack:install`. The install generator does not stamp these widths.
+- A host stylesheet that still sets `width: 16rem !important` or `width: 4rem !important` on `[data-flat-pack-sidebar-collapsed]` wins over the tokens. Point those rules at `var(--sidebar-width)` and `var(--sidebar-collapsed-width)`. The dummy `application.tailwind.css` had that copy and now uses the tokens.
+- Redeploy so `meta.gem_version` shows `0.1.260`.
+
 ## [0.1.259] - 2026-10-19
 
 ### Added

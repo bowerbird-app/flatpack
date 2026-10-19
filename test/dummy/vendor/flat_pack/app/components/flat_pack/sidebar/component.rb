@@ -101,7 +101,7 @@ module FlatPack
           "md:transition-[width]",
           "duration-[var(--duration-slow)]",
           "ease-[var(--easing-standard)]",
-          "w-64"
+          "fp-sidebar"
         )
       end
 

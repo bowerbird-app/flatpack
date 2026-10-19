@@ -102,6 +102,7 @@
     <% floating_top_nav = params[:floating_top_nav].in?(%w[1 true]) %>
     <% content_scroll = params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind %>
     <% sidebar_height = params[:height].in?(%w[full content]) ? params[:height].to_sym : :full %>
+    <% sidebar_width = params[:width].in?(%w[fixed content]) ? params[:width].to_sym : :fixed %>
     <% content_height = sidebar_floating && sidebar_height == :content %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
@@ -109,7 +110,8 @@
       floating: sidebar_floating,
       floating_top_nav: floating_top_nav,
       content_scroll: content_scroll,
-      height: sidebar_height
+      height: sidebar_height,
+      width: sidebar_width
     ) do |layout| %>
       <% if sidebar_background %>
         <% layout.background do %>
@@ -124,7 +126,8 @@
               <%= render FlatPack::Sidebar::Header::Component.new(
                 brand_abbr: "FP",
                 title: "FlatPack",
-                subtitle: "Short rail"
+                subtitle: "Short rail",
+                show_version: false
               ) %>
             <% end %>
             <% sidebar.items do %>

@@ -76,6 +76,8 @@ module FlatPack
         render_inline(Component.new)
         assert_includes page.native.to_html, "flex flex-col"
         assert_includes page.native.to_html, "h-full"
+        assert_includes page.native.to_html, "fp-sidebar"
+        refute_includes page.native.to_html, "w-64"
       end
 
       def test_has_border

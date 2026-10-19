@@ -654,6 +654,10 @@ components:
       - --top-nav-float-radius
       - --top-nav-float-clearance
       - --sidebar-float-inset
+      - --sidebar-width
+      - --sidebar-collapsed-width
+      - --sidebar-content-min-width
+      - --sidebar-content-max-width
     status: documented
 
   - key: skeleton
