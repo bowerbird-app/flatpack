@@ -116,6 +116,20 @@ Styles: `:primary`, `:secondary`, `:ghost`. `round: true` makes a label a pill a
 
 Styles: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Shadow: `:none`, `:sm`, `:md`. Border: `:none`, `:default`, `:strong`. Hover: `:none`, `:subtle`, `:strong`.
 
+A photo inside the padding can follow the card corner. The card publishes its padding step, and `radius: :card_inner` uses max(0, card radius minus card inset). On the default theme that inner corner is square. The class `fp-card-inner-radius` is the same length for markup that is not Media. A photo in the media slot stays on the card corner.
+
+```erb
+<%= render FlatPack::Card::Component.new(padding: :md) do %>
+  <%= render FlatPack::Media::Component.new(
+    src: "/photos/harbour.jpg",
+    alt: "Harbour",
+    width: 1200,
+    height: 800,
+    radius: :card_inner
+  ) %>
+<% end %>
+```
+
 ### Breadcrumb Component
 
 ```erb
