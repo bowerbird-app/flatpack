@@ -146,7 +146,7 @@ module FlatPack
       def container_attributes
         attributes = merge_attributes(
           class: card_classes,
-          data: {style: @style.to_s}
+          data: {style: @style.to_s, fp_card_padding: @padding.to_s}
         )
 
         attributes.delete("style")

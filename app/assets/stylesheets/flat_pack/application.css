@@ -663,6 +663,48 @@
   }
 }
 
+/* Unlayered so a host rounded utility cannot cover the inner radius.
+ * Utilities live in the host Tailwind layer, which loses to unlayered kit CSS.
+ */
+.fp-card {
+  --card-inner-radius: max(0px, calc(var(--card-radius) - var(--card-inset)));
+}
+
+.fp-card[data-fp-card-padding="none"] {
+  --card-inset: 0px;
+}
+
+.fp-card[data-fp-card-padding="sm"] {
+  --card-inset: var(--card-padding-sm);
+}
+
+.fp-card[data-fp-card-padding="md"] {
+  --card-inset: var(--card-padding-md);
+}
+
+.fp-card[data-fp-card-padding="lg"] {
+  --card-inset: var(--card-padding-lg);
+}
+
+.fp-card-inner-radius {
+  border-radius: var(--card-inner-radius);
+}
+
+.fp-media__frame {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  background-color: var(--surface-muted-background-color);
+  outline: 1px solid var(--media-outline-color);
+  outline-offset: -1px;
+  border-radius: var(--media-radius);
+}
+
+.fp-media__frame.fp-card-inner-radius {
+  border-radius: var(--card-inner-radius);
+}
+
 /* Unlayered so host Tailwind preflight cannot zero the side inset.
  * Flatpack CSS is linked first, which creates @layer components before the
  * host sheet orders @layer base after it. Preflight's * { padding: 0 } then
