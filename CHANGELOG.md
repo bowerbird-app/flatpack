@@ -43,24 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The generator still links `variables` and `rich_text` beside `application`. Those two tags repeat imports already inside `application.css`. The repeat is harmless. Leave the tags.
 - A host that rewrote bare `@import` strings with its own Propshaft compiler can delete that workaround.
 - Redeploy so `meta.gem_version` shows `0.1.265`.
-=======
-## [0.1.263] - 2026-10-19
-
-### Added
-- `FlatPack::ReadMore::Component` clamps a block to `lines:` (default `4`) and shows the rest. `open:` starts expanded. Omitted `more_label` and `less_label` use `flatpack.read_more.more` and `flatpack.read_more.less` (`Show more` and `Show less`).
-- The closed clip uses `max-height: calc(var(--read-more-lines) * 1lh)`. Opening transitions to `max-content` with `interpolate-size: allow-keywords`, `--duration-slow`, and `--easing-standard`. A fade shows only when the clip is closed and the body overflows. `--read-more-fade-height` is `2.5rem` on `:root, [data-theme]`. `--read-more-lines` is set on the root at render time and is not a theme token.
-- Stimulus controller `flat-pack--read-more` tracks `open` and `overflowing`. The button stays in the page and starts hidden. It appears when the body is taller than the clamp. Demo at `/demo/read_more`.
-- Bumped the gem version to `0.1.263`.
-
-### Upgrade notes
-- New component. Existing call sites stay as they are.
-- New token `--read-more-fade-height` (`2.5rem`). Reload kit CSS so it loads. `--read-more-lines` is a runtime length on the component root. Do not set it in a theme.
-- Importmap hosts already pin `app/javascript/flat_pack/controllers` with `pin_all_from`. No new pin.
-- esbuild, webpack, and Vite hosts must register `flat-pack--read-more`. Import `ReadMoreController` from `read_more_controller.js` and call `application.register("flat-pack--read-more", ReadMoreController)`.
-- No Tailwind rebuild. The clamp and the fade live in kit CSS. The button reuses the ghost button classes the kit already ships. No `bin/rails generate flat_pack:install` rerun.
-- Where `interpolate-size` is missing, the height snaps. The clamp still works.
-- Redeploy so `meta.gem_version` shows `0.1.263`.
->>>>>>> f57e24be (chore(release): bump FlatPack to 0.1.263)
 
 ## [0.1.262] - 2026-10-19
 

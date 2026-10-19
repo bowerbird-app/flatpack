@@ -44,6 +44,7 @@ The toggle is a `button` with `type="button"`. `aria-expanded` is the string `"t
 - `.fp-read-more-line` is the `1lh` strut. The controller reads that element's height when it decides overflow.
 - Stimulus controller `flat-pack--read-more` (`read_more_controller.js`). It reads `open` and `overflowing`. It does not set `max-height`.
 - Importmap hosts already pin `app/javascript/flat_pack/controllers` with `pin_all_from`. Do not add a pin. Do not rerun `bin/rails generate flat_pack:install`.
+- No Tailwind rebuild. The clamp and the fade live in kit CSS. The button reuses the ghost button classes the kit already ships.
 - esbuild, webpack, and Vite hosts must register the controller. Import `ReadMoreController` from `read_more_controller.js` and call `application.register("flat-pack--read-more", ReadMoreController)`.
 - `--read-more-fade-height` is `2.5rem` on `:root, [data-theme]`. `--read-more-lines` is set on the component root at render time. Do not declare `--read-more-lines` in a theme.
 - The open height uses `interpolate-size: allow-keywords`. Where that property is missing, the height snaps. The clamp still works. Reduced motion sets `--duration-slow` to `0ms`, so the height snaps there too.
