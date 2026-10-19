@@ -559,8 +559,8 @@
   }
 
   .flat-pack-rt-link-apply-btn:hover {
-    background-color: var(--color-primary-hover);
-    border-color: var(--color-primary-hover);
+    background-color: var(--fp-primary-hover-fill);
+    border-color: var(--fp-primary-hover-fill);
   }
 
   .flat-pack-rt-link-remove-btn {

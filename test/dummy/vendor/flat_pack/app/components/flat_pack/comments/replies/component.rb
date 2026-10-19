@@ -55,7 +55,7 @@ module FlatPack
         def render_collapsed_state
           content_tag(:button,
             type: "button",
-            class: "inline-flex items-center gap-2 text-sm font-bold text-[var(--comments-replies-toggle-color)] transition-colors duration-base hover:text-[var(--comments-replies-toggle-hover-color)]") do
+            class: "fp-comments-replies-toggle inline-flex items-center gap-2 text-sm font-bold text-[var(--comments-replies-toggle-color)] transition-colors duration-base hover:text-[var(--comments-replies-toggle-hover-color)]") do
             safe_join([
               render(FlatPack::Shared::IconComponent.new(name: "chevron-down", size: :sm)),
               content_tag(:span, @collapsed_label)

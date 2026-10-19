@@ -104,32 +104,29 @@ module FlatPack
         /--color-primary:\s*oklch\(var\(--brand-lightness\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
         root_block
       )
-      assert_match(
-        /--color-primary-hover:\s*oklch\(calc\(var\(--brand-lightness\) - 0\.10\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
-        root_block
-      )
+      refute_match(/--color-primary-hover\s*:/, root_block)
       refute_match(/--color-primary:\s*oklch\(0\.3211 0 0\);/, root_block)
       refute_includes root_block, "calc(var(--brand-chroma) - 0.02)"
     end
 
-    test "primary hover derives from --color-primary with a brand-knob fallback" do
-      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
-      assert_match(
-        /--color-primary-hover:\s*oklch\(calc\(var\(--brand-lightness\) - 0\.10\)\s+var\(--brand-chroma\)\s+var\(--brand-hue\)\);/,
-        root_block
-      )
-      refute_match(
-        /--color-primary-hover:\s*oklch\(from var\(--color-primary\)/,
-        root_block
-      )
+    test "primary hover is a pin except on ocean" do
+      refute_match(/--color-primary-hover\s*:/, root_block)
+      refute_match(/--color-primary-hover\s*:/, scale_block)
 
-      supports_block = @css[/@supports \(color: oklch\(from red calc\(l - 0\.1\) c h\)\)\s*\{.*?^\}/m]
-      refute_nil supports_block, "expected an @supports relative-color block for --color-primary-hover"
-      assert_match(
-        /--color-primary-hover:\s*oklch\(from var\(--color-primary\) calc\(l - 0\.1\) c h\);/,
-        supports_block
-      )
-      refute_includes supports_block, "color-mix("
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
+
+      refute_match(/--color-primary-hover\s*:/, dark_block)
+      assert_match(/--primary-shade-mix-target:\s*white;/, dark_block)
+      assert_match(/--bottom-nav-item-active-color:\s*oklch\(0\.72 0\.15 250\);/, dark_block)
+      assert_match(/--color-primary-hover:\s*oklch\(0\.42 0\.18 220\);/, ocean_block)
+      assert_match(/--primary-shade-mix-target:\s*black;/, ocean_block)
+      assert_match(/--primary-shade-mix-target:\s*black;/, scale_block)
+
+      kit_css = Dir[FlatPack::Engine.root.join("app/assets/stylesheets/**/*.css").to_s].map { |path| File.read(path) }.join
+      refute_includes kit_css, "oklch(from"
+      assert_equal 1, kit_css.scan("var(--color-primary) 88%").size
+      assert_equal 1, kit_css.scan("var(--color-primary) 80%").size
     end
 
     test "dummy sunrise theme sets brand lightness so primary recolors" do
@@ -198,10 +195,35 @@ module FlatPack
     end
 
     test "@theme inline names match :root custom properties" do
-      theme_names = token_names(@css[/@theme inline \{.*?^\}/m])
-      root_names = (token_names(root_block) + token_names(scale_block)).uniq.sort
+      theme_block = @css[/@theme inline \{.*?^\}/m]
+      theme_names = token_names(theme_block)
+      root_names = (token_names(root_block) + token_names(scale_block)).uniq
 
-      assert_equal root_names, theme_names
+      unset_pins = %w[
+        --color-primary-hover
+        --button-primary-background-color
+        --button-primary-hover-background-color
+        --button-primary-text-color
+        --button-primary-border-color
+        --button-primary-active-background-color
+        --fab-background-color
+        --fab-text-color
+        --fab-hover-background-color
+        --chat-send-button-background-color
+        --chat-send-button-text-color
+        --chat-send-button-hover-background-color
+        --comments-composer-submit-background-color
+        --comments-composer-submit-text-color
+        --comments-composer-submit-hover-background-color
+        --comments-replies-toggle-color
+        --comments-replies-toggle-hover-color
+      ]
+
+      assert_equal unset_pins.sort, (theme_names - root_names).sort
+      assert_equal ["--primary-shade-mix-target"], (root_names - theme_names).sort
+      refute_includes theme_block, "--primary-shade-mix-target"
+      refute_match(/--button-primary-active-background-color:\s*var\(--color-/, root_block)
+      refute_match(/--button-primary-active-background-color:\s*oklch/, @css)
     end
 
     test "spacing scale lives on bare :root and rounded shifts steps 2 through 6" do
@@ -347,7 +369,8 @@ module FlatPack
       assert_match(/--modal-backdrop-blur:\s*3px/, dark_block)
       assert_match(/--overlay-backdrop-color:\s*rgb\(0 0 0 \/ 0\.65\)/, dark_block)
       assert_match(/--overlay-scrim-color:\s*rgb\(15 20 36 \/ 0\.72\)/, dark_block)
-      assert_includes dark_block, "--color-primary-hover"
+      refute_includes dark_block, "--color-primary-hover"
+      assert_includes dark_block, "--primary-shade-mix-target: white"
       assert_includes dark_block, "--shadow-sm"
       assert_includes dark_block, "--bottom-nav-background-color"
       assert_includes dark_block, "--top-nav-background-color"
@@ -553,6 +576,53 @@ module FlatPack
     test "bottom nav bar stays a surface, not a brand fill" do
       assert_match(/--bottom-nav-background-color:\s*#2f2f2f/, root_block)
       refute_match(/--bottom-nav-background-color:\s*var\(--color-primary\)/, root_block)
+    end
+
+    test "primary painters mix the wrapper colour and a host pin wins" do
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      painter = application[/\[data-fp-style="primary"\],\s*\.fp-fab__trigger,.*?\}/m]
+
+      refute_nil painter, "expected the primary shade recipe on the painters"
+      assert_includes painter, "--fp-primary-hover-fill: var(--color-primary-hover, color-mix(in oklab, var(--color-primary) 88%, var(--primary-shade-mix-target, black)))"
+      assert_includes painter, "--fp-primary-pressed-fill: var(--button-primary-active-background-color, color-mix(in oklab, var(--color-primary) 80%, var(--primary-shade-mix-target, black)))"
+      assert_includes painter, ".flat-pack-comments-composer-input > button[type=\"submit\"]"
+      assert_includes painter, ".fp-comments-replies-toggle"
+      assert_includes painter, "[data-flat-pack-date-picker-command=\"preset\"]"
+      assert_includes painter, "[data-flat-pack-date-picker-command=\"show-calendar\"]"
+
+      primary = application[/\[data-fp-style="primary"\] \{\s*--fp-button-background:.*?\}/m]
+      assert_match(
+        /--fp-button-hover-background:\s*var\(--button-primary-hover-background-color,/,
+        primary
+      )
+      assert_match(
+        /--fp-button-background:\s*var\(--button-primary-background-color,\s*var\(--color-primary\)\)/,
+        primary
+      )
+
+      assert_includes application, ".fp-button:active:not(:disabled)"
+      assert_includes application, "transform: translateY(1px);"
+      assert_includes application, "--button-primary-active-background-color: var(--hero-overlay-button-primary-hover-background-color);"
+      assert_includes application, "background-color: var(--fab-hover-background-color, var(--fp-primary-hover-fill));"
+      assert_includes application, "background-color: var(--fab-background-color, var(--color-primary));"
+      assert_includes application, ".fp-button[data-fp-style=\"primary\"]:active:not(:disabled):not(.fp-button-current):not(:has(:checked))"
+      assert_includes application, ".flat-pack-radio-group-wrapper label.fp-button:has(:checked):active"
+      assert_includes application, "background-color: var(--comments-composer-submit-background-color, var(--color-primary));"
+      assert_includes application, "background-color: var(--comments-composer-submit-hover-background-color, var(--fp-primary-hover-fill));"
+      assert_includes application, "[data-flat-pack-date-picker-command=\"day\"].bg-\\[var\\(--button-primary-background-color\\)\\]"
+      assert_includes application, "[data-flat-pack-date-picker-command=\"day\"].bg-\\[var\\(--button-primary-background-color\\)\\]\\/20"
+      refute_includes painter, "[data-flat-pack-date-picker-command=\"day\"]"
+
+      fab_active = application[/\.fp-fab__trigger:active \{.*?\}/m]
+      refute_includes fab_active, "background-color"
+      refute_includes fab_active, "--fp-primary-pressed-fill"
+      assert_includes fab_active, "translateY(1px)"
+
+      rich_text = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/rich_text.css").read
+      assert_includes rich_text, "background-color: var(--fp-primary-hover-fill);"
+      assert_includes rich_text, "border-color: var(--fp-primary-hover-fill);"
+      refute_includes application, "color-mix(in oklab, var(--color-primary) 90%, black)"
+      refute_includes @css, "color-mix(in oklab, var(--color-primary) 90%, black)"
     end
 
     private

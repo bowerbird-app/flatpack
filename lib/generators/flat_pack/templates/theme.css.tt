@@ -1,11 +1,12 @@
 /* FlatPack brand theme: <%= theme_slug %>
  *
  * Change --brand-hue / --brand-chroma / --brand-lightness to recolor primary.
- * :root, [data-theme] maps those knobs to --color-primary. Hover follows --color-primary
- * (0.10 darker on lightness). Focus rings follow --color-primary.
+ * :root, [data-theme] maps those knobs to --color-primary.
+ * Hover and pressed mix that colour on the button. Focus rings follow --color-primary.
  * Active sidebar / top-nav fills follow --surface-active-background-color.
  * Hover follows --surface-hover-background-color.
- * For an exact hex, set --color-primary. Hover derives from it; override --color-primary-hover to diverge.
+ * For an exact hex, set --color-primary and --color-primary-text.
+ * Set --color-primary-hover only when hover should diverge.
  * Surfaces stay independent unless you override --surface-*.
  * Component tokens re-resolve from semantic tokens — you usually do not override them.
  *
