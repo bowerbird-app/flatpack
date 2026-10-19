@@ -94,7 +94,7 @@ Use Inline Edit on a show page when people change a title, a short note, or a ri
 
 ## Dependencies
 - Stimulus controller `flat-pack--inline-edit`.
-- Stylesheet `flat_pack/inline_edit.css` (also bundled from `flat_pack/application.css`).
+- Stylesheet `flat_pack/inline_edit.css`. `flat_pack/application.css` imports it with `@import url("inline_edit.css")`, and Propshaft serves the digested file. A layout that links `flat_pack/application` does not need a separate `inline_edit` tag.
 - Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover (and keyboard `:focus-visible` before edit) uses `--inline-edit-hover-bg` (~7% light, ~9% dark). Caret uses `--inline-edit-focus-color`. Placeholder copy darkens a little on hover and keyboard focus.
 - The surface uses `white-space: pre-wrap` at rest and while editing. That matches the UA `contenteditable` wrap, so a wrapped headline does not grow when the caret appears.
 - `:rich` reuses the Content Editor balloon (`FlatPack::Shared::ExecCommandBalloon` and `exec_command_bubble.js`).

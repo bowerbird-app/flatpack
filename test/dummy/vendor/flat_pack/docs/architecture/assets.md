@@ -43,8 +43,9 @@ config.assets.compile = false
 
 ```
 app/assets/stylesheets/flat_pack/
-├── application.css       # Convenience bundle importing FlatPack stylesheets
+├── application.css       # Component helpers. Imports the other kit sheets.
 ├── content_editor.css    # Content editor surface styles
+├── inline_edit.css       # Inline edit surface styles
 ├── rich_text.css         # TipTap rich text editor styles
 └── variables.css         # Theme tokens and built-in theme variants
 ```
@@ -61,7 +62,20 @@ Load FlatPack stylesheets in your application layout:
 <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 ```
 
-Propshaft resolves the correct digested path for each file. Using `stylesheet_link_tag` (not `@import`) is required because Propshaft fingerprints asset filenames — a bare CSS `@import "flat_pack/variables.css"` in a statically-served stylesheet would request an un-digested URL that Propshaft does not serve.
+`flat_pack/application.css` starts with sibling imports, before `@layer`:
+
+```css
+@import url("variables.css");
+@import url("rich_text.css");
+@import url("content_editor.css");
+@import url("inline_edit.css");
+```
+
+Propshaft `CssAssetUrls` rewrites each `url()` to a digested path under `flat_pack/`, such as `/assets/flat_pack/content_editor-<digest>.css`. `referenced_by` includes those files, so the `application.css` digest changes when an imported file changes. A host that links `flat_pack/application` receives `content_editor` and `inline_edit` without extra link tags.
+
+The install generator also links `variables` and `rich_text`. Those tags repeat imports already inside `application.css`. The repeat is harmless. Leave the generator tags. Do not add link tags for `content_editor` or `inline_edit` unless you load those sheets without `application.css`.
+
+A bare `@import "flat_pack/variables.css"` is not rewritten. The browser resolves it from `/assets/flat_pack/` and requests `/assets/flat_pack/flat_pack/variables.css`, which 404s. Use `stylesheet_link_tag` for the layout tags. Inside a kit sheet, use `@import url()` with a path relative to that file.
 
 Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii and the kit face on unlayered `:root` in the host stylesheet so rich-text chrome and kit surfaces keep the kit scale. Rich-text `TextArea` also applies the shared `border` and `--form-control-padding-x` / `--form-control-padding-y` utilities (not only kit CSS) so preflight cannot zero the editor outline or inset. See [Theming](../theming.md).
 
@@ -225,7 +239,7 @@ If assets aren't loading:
    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    ```
-   Avoid `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet — Propshaft only serves files at their fingerprinted URLs.
+   Avoid a bare `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet. Propshaft serves files at fingerprinted URLs, and `CssAssetUrls` only rewrites `url()`. `@import url("variables.css")` from a sibling in the same directory is rewritten.
 
 ### Tailwind Not Picking Up Classes
 

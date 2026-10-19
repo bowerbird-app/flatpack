@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.265] - 2026-10-19
+
+### Fixed
+- `flat_pack/application.css` imports `variables.css`, `rich_text.css`, `content_editor.css`, and `inline_edit.css` with `@import url(...)`. Propshaft `CssAssetUrls` rewrites each `url()` to a digested file such as `/assets/flat_pack/content_editor-<digest>.css`. `referenced_by` includes those files, so the `application.css` digest changes when one of them changes. A bare `@import "flat_pack/variables.css"` stayed in the compiled sheet. The browser then requested `/assets/flat_pack/flat_pack/variables.css` and got a 404. Hosts that linked only the install-contract sheets never received `content_editor` or `inline_edit` styles.
+- The dummy layout links the same kit sheets as the install generator, `variables`, `application`, and `rich_text`, then the host `application` sheet.
+- Bumped the gem version to `0.1.265`.
+
+### Upgrade notes
+- Hosts now load `content_editor` and `inline_edit` styles through `flat_pack/application`. Inline edit and the content editor may change to the kit look those files already describe.
+- Reload kit CSS. No `bin/rails generate flat_pack:install` rerun. No Tailwind rebuild.
+- The generator still links `variables` and `rich_text` beside `application`. Those two tags repeat imports already inside `application.css`. The repeat is harmless. Leave the tags.
+- A host that rewrote bare `@import` strings with its own Propshaft compiler can delete that workaround.
+- Redeploy so `meta.gem_version` shows `0.1.265`.
+
 ## [0.1.262] - 2026-10-19
 
 ### Added
