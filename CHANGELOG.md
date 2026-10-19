@@ -20,11 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Named kit selectors are word matches: `[data-theme~="rounded"]`, `[data-theme~="dark"]`, and `[data-theme~="ocean"]`. `:root, [data-theme]` is unchanged. The floating sidebar and floating top-nav cards use `:not([data-theme~="rounded"])`, so `data-theme="rounded harbor"` keeps the pill corners.
 - `flat-pack--theme` swaps the base name and keeps names that are not in the picker list. Light clears owned base names and removes the attribute when nothing remains. Dark mode is true when the list contains the whole name `dark`.
 - `bin/rails generate flat_pack:theme NAME --inherits=rounded` writes an overrides-only file and tells you to set `data-theme="rounded NAME"`. The generated selector is `[data-theme~="NAME"]`. There is no full-fork theme generator.
-- Dummy themes page shows Harbor stacked on rounded.
+- Dummy themes page shows Harbor stacked on rounded. Those samples are cards, so the corners follow `--card-radius` (`--radius-xl` on the rounded page).
 - Bumped the gem version to `0.1.259`.
 
 ### Upgrade notes
 - Single-name themes keep working. `data-theme="rounded"` still matches `[data-theme~="rounded"]`. `data-theme="dark"` still matches dark. Picking light while the only name is a base theme still removes the attribute.
+- A nested `data-theme="harbor"` inside a rounded page keeps the rounded shape. Harbor does not restate radii, and `[data-theme]` does not put the moderate radii back. The moderate shape is `data-theme="harbor"` on the root, with no rounded ancestor.
 - A host selector that is an exact match, `[data-theme="brand"]`, does not match `data-theme="rounded brand"`. Change that host selector to `[data-theme~="brand"]` when you stack. Load the host file after `flat_pack/variables`. Specificity is unchanged, so source order still decides the winner. Kit CSS is not in a cascade layer. Putting it in one would let unlayered host CSS beat the kit even when the host file loads first.
 - The picker stores the base name, not the full list. A custom name rendered in the HTML stays when the base changes.
 - Reload kit CSS. No Tailwind rebuild is required for the kit selector change. Rebuild Tailwind only if a host stylesheet that Tailwind compiles still uses exact `data-theme` selectors you are stacking. No `bin/rails generate flat_pack:install` rerun.

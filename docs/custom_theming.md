@@ -927,6 +927,8 @@ bin/rails generate flat_pack:theme featured-in --inherits=rounded --hue=330
 
 The stylesheet is overrides only. Set `data-theme="rounded featured-in"`. The generated selector is `[data-theme~="featured-in"]`, so `data-theme="featured-in"` still matches.
 
+A nested `data-theme="featured-in"` inside a rounded page keeps the rounded shape. The color file does not restate radii, and `[data-theme]` does not put the moderate radii back. The moderate shape is that name on the root, with no `rounded` ancestor. `data-theme="rounded featured-in"` on the nested element is how that region opts into rounded when the page is not already rounded.
+
 ## Where the Canonical Variables Live
 
 The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in the FlatPack gem or repository.

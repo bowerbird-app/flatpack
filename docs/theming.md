@@ -36,6 +36,8 @@ bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.5
 
 That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller). Pass `--as_root` to write brand overrides on `:root` instead, so no `data-theme` attribute is needed. Pass `--inherits=rounded` to stack on rounded and set `data-theme="rounded sunrise"`. Named kit selectors are word matches (`[data-theme~="rounded"]`). A single name still matches. A host block loaded later, at the same specificity, wins where the two disagree.
 
+A nested color theme keeps the ancestor's shape. On a page with `data-theme="rounded"`, a region with only `data-theme="harbor"` still uses `--card-radius: var(--radius-xl)` and pill controls. Harbor does not set those tokens, and `:root, [data-theme]` does not restate the moderate radii, so the region inherits them. The moderate shape is `data-theme="harbor"` on the root, where no ancestor includes `rounded`. Put `rounded` on the nested element (`data-theme="rounded harbor"`) when that region should be rounded and the page is not. Moving the moderate radii onto `[data-theme]` would make a nested color theme snap back to the default corners. Do not do that.
+
 Or override primitives directly:
 
 ```css

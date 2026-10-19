@@ -21,6 +21,24 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'data-theme="rounded"'
     assert_includes response.body, 'data-theme="rounded harbor"'
     assert_includes response.body, 'id="theme-default"'
+    assert_includes response.body, "keeps that shape"
+  end
+
+  test "stacked theme samples are cards so they follow card radius" do
+    get themes_path
+
+    assert_response :success
+
+    %w[theme-default theme-rounded theme-harbor].each do |element_id|
+      tag = response.body[/<div[^>]*id="#{element_id}"[^>]*>/]
+      assert tag, "expected ##{element_id}"
+      assert_includes tag, "fp-card"
+      assert_includes tag, "rounded-[var(--card-radius)]"
+    end
+
+    assert_includes response.body[/<div[^>]*id="theme-rounded"[^>]*>/], 'data-theme="rounded"'
+    assert_includes response.body[/<div[^>]*id="theme-harbor"[^>]*>/], 'data-theme="rounded harbor"'
+    refute_includes response.body[/<div[^>]*id="theme-default"[^>]*>/], "data-theme"
   end
 
   test "theme demo pages load for each supported theme" do

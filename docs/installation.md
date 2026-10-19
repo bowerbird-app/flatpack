@@ -264,7 +264,7 @@ The imported `variables.css` contains:
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
 - `[data-theme~="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
 - `[data-theme~="ocean"] {}` — ocean variant (overrides only)
-- A bare `:root {}` after the palette holds `--space-1`…`--space-6`, `--density`, the menu shells that rounded remaps, and the shape scale (`--radius-xs` through `--radius-full`) plus the component radii rounded changes. Do not move those onto `[data-theme]` or a nested theme resets the scale or the corners.
+- A bare `:root {}` after the palette holds `--space-1`…`--space-6`, `--density`, the menu shells that rounded remaps, and the shape scale (`--radius-xs` through `--radius-full`) plus the component radii rounded changes. Leave them there. A nested `data-theme="harbor"` inside a rounded page then keeps the rounded shape. Moving those tokens onto `[data-theme]` would make that nested color theme reset the scale or the corners.
 - `[data-theme~="rounded"] {}` — larger `--space-2`…`--space-6` (step 1 stays `0.25rem`), the remapped menu shells, and the shape overrides (pill controls, larger cards, menus, and modals). It does not restate colour or shadow, and it does not restate the global `--radius-*` steps. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
 To recolor without copying the full token list:

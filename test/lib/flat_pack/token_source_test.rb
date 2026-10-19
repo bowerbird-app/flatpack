@@ -165,6 +165,32 @@ module FlatPack
       refute_includes harbor, "--button-"
       refute_includes harbor, "--space-"
       refute_includes harbor, "--radius-"
+      refute_includes harbor, "--card-radius"
+    end
+
+    test "shared theme selector does not restate radii a nested color theme would inherit" do
+      %w[
+        --button-border-radius
+        --form-control-radius
+        --chip-border-radius
+        --badge-radius
+        --tabs-pill-corner-radius
+        --card-radius
+        --menu-radius
+        --popover-radius
+        --modal-radius
+        --alert-border-radius
+        --toast-border-radius
+        --chat-composer-radius
+        --sidebar-item-radius
+        --dropdown-item-radius
+      ].each do |token|
+        refute_match(
+          /#{Regexp.escape(token)}\s*:/,
+          root_block,
+          "#{token} on :root, [data-theme] would snap a nested data-theme=\"harbor\" inside rounded back to the moderate shape"
+        )
+      end
     end
 
     test "@theme inline names match :root custom properties" do
