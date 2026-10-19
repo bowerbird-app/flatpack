@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.256] - 2026-10-19
+## [0.1.257] - 2026-10-19
 
 ### Added
 - `FlatPack::SidebarLayout::Component` accepts `floating_top_nav:` (`false` by default). The full-width bar becomes cards on the page. `TopNav` `left` and `center` are each one card sized to their contents. Each direct child of `right` is its own card. The cards use `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--top-nav-float-radius`.
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dummy chrome reads `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` shows the cards over the photo. `content_scroll=below` parks the cards above the scroll pane.
 - `height:` is `:full` (default) or `:content`. `:content` sizes the floating desktop rail to its items and caps it at the viewport minus `--sidebar-float-inset`. The list scrolls inside that cap. It does nothing when `floating` is false. The mobile drawer stays full height.
 - Dummy chrome reads `?height=content`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&height=content` shows the short rail.
-- Bumped the gem version to `0.1.256`.
+- Bumped the gem version to `0.1.257`.
 
 ### Upgrade notes
 - Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats. Hosts that do not pass `height: :content` keep the full-height floating rail.
@@ -30,6 +30,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Below `768px`, floating `left` and `center` cards use `0.25rem` of inline padding and the row gap is `0.5rem`. Text buttons in those cards use `0.625rem` of inline padding. The cards shrink before the row wraps.
 - When the floating cards are more than `8px` taller than `--top-nav-float-clearance`, the layout sets that token on the main column to the bottom of the band so a wrapped row does not cover the page.
 - Reload kit CSS. There are no new Tailwind class literals for this layout. Do not rerun `flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.257`.
+
+## [0.1.256] - 2026-10-19
+
+### Fixed
+- `FlatPack::Copy.t` (and `fp_t` / `fp_text`) uses the English `flatpack.*` string when the active locale has no translation for that key. A translation already in the active locale still wins, including a host English file that overrides the gem string. `I18n.t`, `I18n.fallbacks`, and `I18n.exception_handler` are unchanged.
+- `Copy.t` raises `ArgumentError` if you pass `scope:`. The key is already under `flatpack.`, so a scope cannot move the fallback onto another namespace.
+- A silent English fallback publishes `fallback.flat_pack_copy` with `key` and `locale`.
+- Bumped the gem version to `0.1.256`.
+
+### Upgrade notes
+- A host locale can omit kit keys. Chrome rendered through `FlatPack::Copy.t` shows English until the host translates that key. A host English file replaces the gem string for that key, and that host string is the fallback.
+- Do not pass `scope:` to `FlatPack::Copy.t`, `fp_t`, or `fp_text`.
+- `config.i18n.raise_on_missing_translations` still raises for a missing host key, and for a `flatpack.*` key that English does not define either.
 - Redeploy so `meta.gem_version` shows `0.1.256`.
 
 ## [0.1.255] - 2026-10-19
