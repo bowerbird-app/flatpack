@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.259] - 2026-10-19
+
+### Added
+- `data-theme` can list more than one name, base first. `data-theme="rounded featured-in"` applies rounded, then the custom theme's tokens where they differ.
+- Named kit selectors are word matches: `[data-theme~="rounded"]`, `[data-theme~="dark"]`, and `[data-theme~="ocean"]`. `:root, [data-theme]` is unchanged. The floating sidebar and floating top-nav cards use `:not([data-theme~="rounded"])`, so `data-theme="rounded harbor"` keeps the pill corners.
+- `flat-pack--theme` swaps the base name and keeps names that are not in the picker list. Light clears owned base names and removes the attribute when nothing remains. Dark mode is true when the list contains the whole name `dark`.
+- `bin/rails generate flat_pack:theme NAME --inherits=rounded` writes an overrides-only file and tells you to set `data-theme="rounded NAME"`. The generated selector is `[data-theme~="NAME"]`. There is no full-fork theme generator.
+- Dummy themes page shows Harbor stacked on rounded. Those samples are cards, so the corners follow `--card-radius` (`--radius-xl` on the rounded page).
+- Bumped the gem version to `0.1.259`.
+
+### Upgrade notes
+- Single-name themes keep working. `data-theme="rounded"` still matches `[data-theme~="rounded"]`. `data-theme="dark"` still matches dark. Picking light while the only name is a base theme still removes the attribute.
+- A nested `data-theme="harbor"` inside a rounded page keeps the rounded shape. Harbor does not restate radii, and `[data-theme]` does not put the moderate radii back. The moderate shape is `data-theme="harbor"` on the root, with no rounded ancestor.
+- A host selector that is an exact match, `[data-theme="brand"]`, does not match `data-theme="rounded brand"`. Change that host selector to `[data-theme~="brand"]` when you stack. Load the host file after `flat_pack/variables`. Specificity is unchanged, so source order still decides the winner. Kit CSS is not in a cascade layer. Putting it in one would let unlayered host CSS beat the kit even when the host file loads first.
+- The picker stores the base name, not the full list. A custom name rendered in the HTML stays when the base changes.
+- Reload kit CSS. No Tailwind rebuild is required for the kit selector change. Rebuild Tailwind only if a host stylesheet that Tailwind compiles still uses exact `data-theme` selectors you are stacking. No `bin/rails generate flat_pack:install` rerun.
+- Redeploy so `meta.gem_version` shows `0.1.259`.
+
 ## [0.1.258] - 2026-10-19
 
 ### Added
@@ -41,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats. Hosts that do not pass `height: :content` keep the full-height floating rail.
-- New tokens `--top-nav-float-clearance` and `--top-nav-float-radius`. The radius defaults to `var(--sidebar-float-radius)`. `[data-theme="rounded"]` sets it to `var(--radius-full)`, so the cards are pills. The rail still uses `--sidebar-float-radius`. The content-height cap reuses `--sidebar-float-inset`. No token was renamed.
+- New tokens `--top-nav-float-clearance` and `--top-nav-float-radius`. The radius defaults to `var(--sidebar-float-radius)`. `[data-theme~="rounded"]` sets it to `var(--radius-full)`, so the cards are pills. The rail still uses `--sidebar-float-radius`. The content-height cap reuses `--sidebar-float-inset`. No token was renamed.
 - `--layout-content-inset` is the horizontal page padding: `1rem`, then `2rem` from `640px`. `.fp-layout-content` applies it to the main pane. `.fp-layout-column` is the page column inside that pane. `--layout-content-max-width` defaults to `100%`, so the column fills the pane. A length centers that measure, and the floating bar follows it. The bar's left and right edges use the inset plus `--top-nav-float-offset` (`0px`) plus that centering. A nested `max-width` with auto margins is a second column and will not meet the bar. Override `--layout-content-inset` to move the page and the bar together. The docked bar still uses `--top-nav-padding-inline`.
 - Below `768px`, floating `left` and `center` cards use `0.25rem` of inline padding and the row gap is `0.5rem`. Text buttons in those cards use `0.625rem` of inline padding. The cards shrink before the row wraps.
 - When the floating cards are more than `8px` taller than `--top-nav-float-clearance`, the layout sets that token on the main column to the bottom of the band so a wrapped row does not cover the page.

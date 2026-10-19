@@ -437,6 +437,7 @@ module FlatPack
         say "   bin/rake flat_pack:verify_install"
         say "\n3. Optional — scaffold a brand theme override:"
         say "   bin/rails generate flat_pack:theme BrandName --hue=160 --chroma=0.18 --lightness=0.52"
+        say "   Pass --inherits=rounded to stack that brand on rounded."
         say "\n4. Restart your Rails server and render a component:"
         say "   <%= render FlatPack::Button::Component.new("
         say "     text: 'Click me',"

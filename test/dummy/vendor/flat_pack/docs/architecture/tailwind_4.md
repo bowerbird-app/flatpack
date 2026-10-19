@@ -79,7 +79,7 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
 }
 
 /* Named themes override brand/semantic tokens only */
-[data-theme="dark"] {
+[data-theme~="dark"] {
   --color-primary: oklch(0.70 0.20 250);
 }
 ```
@@ -269,14 +269,14 @@ Fallbacks not needed as these are modern browsers.
 
 ### Default Light Palette + Theme Variants
 
-FlatPack defines the default charcoal palette in `:root, [data-theme]` and layers additional variants on top with selectors such as `[data-theme="dark"]`. `[data-theme="rounded"]` shifts the spacing scale and does not restate that palette.
+FlatPack defines the default charcoal palette in `:root, [data-theme]` and layers additional variants on top with selectors such as `[data-theme~="dark"]`. `[data-theme~="rounded"]` shifts the spacing scale and does not restate that palette.
 
 ```css
 :root {
   --surface-background-color: oklch(1 0 0);
 }
 
-[data-theme="dark"] {
+[data-theme~="dark"] {
   --surface-background-color: oklch(0.15 0.01 250);
 }
 ```

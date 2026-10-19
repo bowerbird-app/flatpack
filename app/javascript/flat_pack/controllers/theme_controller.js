@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { composeThemeAttribute, themeListIncludes } from "controllers/flat_pack/theme_attribute"
 
 export default class extends Controller {
   static targets = ["select"]
@@ -39,33 +40,29 @@ export default class extends Controller {
 
   applyTheme(themeValue) {
     const root = document.documentElement
-    let isDark = false
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const nextBase = themeValue === 'system' ? (prefersDark ? 'dark' : 'light') : themeValue
+    const nextAttribute = composeThemeAttribute(
+      root.getAttribute('data-theme'),
+      nextBase,
+      this.themeOptions.map((option) => option.value)
+    )
+
+    if (nextAttribute) {
+      root.setAttribute('data-theme', nextAttribute)
+    } else {
+      root.removeAttribute('data-theme')
+    }
 
     if (themeValue === 'system') {
-      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
-      if (isDark) {
-        root.setAttribute('data-theme', 'dark')
-      } else {
-        root.removeAttribute('data-theme')
-      }
-
       localStorage.removeItem(this.storageKeyValue)
       localStorage.removeItem(this.legacyStorageKeyValue)
     } else {
-      isDark = themeValue === 'dark'
-
-      if (themeValue === 'light') {
-        root.removeAttribute('data-theme')
-      } else {
-        root.setAttribute('data-theme', themeValue)
-      }
-
       localStorage.setItem(this.storageKeyValue, themeValue)
       localStorage.setItem(this.legacyStorageKeyValue, themeValue)
     }
 
-    // Keep legacy class selectors in sync for components that still use them.
+    const isDark = themeListIncludes(nextAttribute, 'dark')
     root.classList.toggle('dark', isDark)
     root.classList.toggle('light', !isDark)
   }

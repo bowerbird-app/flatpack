@@ -14,15 +14,15 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-The kit default (no `data-theme`) is the charcoal palette on the compact spacing scale and the moderate shape scale. Named themes (`[data-theme="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme="rounded"]` keeps that palette, shifts `--space-2` through `--space-6`, remaps the menu shells, and changes shape: buttons, inputs, badges, tabs, and the chat composer become pills (`--radius-full`). Chips, sidebar item highlights, and menu item highlights stay `--radius-md` (8px). Cards, menus, popovers, modals, alerts, and toasts step up to `--radius-xl`. Dark and ocean inherit the compact spacing and the moderate shape. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)` on `:root, [data-theme]`, so a descendant theme re-resolves it. Concrete `--space-*`, `--density`, and `--radius-*` live on bare `:root` only. Component radii that rounded changes live on that same bare `:root`, not on `[data-theme]`, so a dark region inside rounded keeps the pill or the larger shell. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto a named theme. `html[data-theme="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
+The kit default (no `data-theme`) is the charcoal palette on the compact spacing scale and the moderate shape scale. Named themes (`[data-theme~="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme~="rounded"]` keeps that palette, shifts `--space-2` through `--space-6`, remaps the menu shells, and changes shape: buttons, inputs, badges, tabs, and the chat composer become pills (`--radius-full`). Chips, sidebar item highlights, and menu item highlights stay `--radius-md` (8px). Cards, menus, popovers, modals, alerts, and toasts step up to `--radius-xl`. Dark and ocean inherit the compact spacing and the moderate shape. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)` on `:root, [data-theme]`, so a descendant theme re-resolves it. Concrete `--space-*`, `--density`, and `--radius-*` live on bare `:root` only. Component radii that rounded changes live on that same bare `:root`, not on `[data-theme]`, so a dark region inside rounded keeps the pill or the larger shell. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto a named theme. `html[data-theme~="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
 
-On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme="rounded"]`. Rounded sets spacing and shape. Set `<html data-theme="rounded">` when the generous steps and pill controls should show. Without the attribute, the compact scale and moderate corners apply.
+On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme~="rounded"]`. Rounded sets spacing and shape. Set `<html data-theme="rounded">` when the generous steps and pill controls should show. Without the attribute, the compact scale and moderate corners apply.
 
-`SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel on the rounded palette (no `data-theme`, or `data-theme="rounded"`). Other named themes stay square. The flush rail ignores these tokens.
+`SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel when there is no `data-theme`, or when the list contains `rounded`. Other named themes stay square. The flush rail ignores these tokens.
 
 `height: :content` on a floating rail uses that same inset as a max-height. The flush rail and the mobile drawer ignore it.
 
-`floating_top_nav: true` uses the rail fill and shadow for the top cards, at every breakpoint. The vertical gap stays `--sidebar-float-inset`. The left and right edges use `--layout-content-inset` plus `--top-nav-float-offset` (`0px`), then the centering from `--layout-content-max-width`. `--layout-content-inset` is the page's horizontal padding: `1rem`, then `2rem` from `640px`. Those lengths match `p-4` and `p-8`, and default `--space-4` and `--space-6`. `.fp-layout-content` applies that padding to the main pane. `.fp-layout-column` is the page column. `--layout-content-max-width` defaults to `100%`, so the column fills the pane and the bar stays on the inset. Set a length to center a measure; the bar follows that column. A nested `max-width` with auto margins does not. Override `--layout-content-inset` to move the page and the bar together. Override `--top-nav-float-offset` when the bar should sit off that edge. `--top-nav-float-radius` rounds the cards. It defaults to `var(--sidebar-float-radius)`, so the cards match the rail until a theme sets it. `[data-theme="rounded"]` sets it to `var(--radius-full)` (pills). The rail keeps `--sidebar-float-radius`. `--top-nav-float-clearance` is the padding on the scroll pane when content runs under the cards. It defaults to the float inset (or the top safe area, whichever is larger) plus `3.25rem`. Override that token when the cards are taller than a toolbar. If the rendered band is still more than `8px` past the token, the layout raises `--top-nav-float-clearance` on the main column to the bottom of the cards. The docked bar still uses `--top-nav-padding-inline`.
+`floating_top_nav: true` uses the rail fill and shadow for the top cards, at every breakpoint. The vertical gap stays `--sidebar-float-inset`. The left and right edges use `--layout-content-inset` plus `--top-nav-float-offset` (`0px`), then the centering from `--layout-content-max-width`. `--layout-content-inset` is the page's horizontal padding: `1rem`, then `2rem` from `640px`. Those lengths match `p-4` and `p-8`, and default `--space-4` and `--space-6`. `.fp-layout-content` applies that padding to the main pane. `.fp-layout-column` is the page column. `--layout-content-max-width` defaults to `100%`, so the column fills the pane and the bar stays on the inset. Set a length to center a measure; the bar follows that column. A nested `max-width` with auto margins does not. Override `--layout-content-inset` to move the page and the bar together. Override `--top-nav-float-offset` when the bar should sit off that edge. `--top-nav-float-radius` rounds the cards. It defaults to `var(--sidebar-float-radius)`, so the cards match the rail until a theme sets it. `[data-theme~="rounded"]` sets it to `var(--radius-full)` (pills). The rail keeps `--sidebar-float-radius`. `--top-nav-float-clearance` is the padding on the scroll pane when content runs under the cards. It defaults to the float inset (or the top safe area, whichever is larger) plus `3.25rem`. Override that token when the cards are taller than a toolbar. If the rendered band is still more than `8px` past the token, the layout raises `--top-nav-float-clearance` on the main column to the bottom of the cards. The docked bar still uses `--top-nav-padding-inline`.
 
 `SidebarLayout`'s `background` slot blurs its photo with `--layout-background-blur` (`40px`) and washes it with `--layout-background-tint-color` (the page colour) at `--layout-background-tint-opacity` (`0.55`, `0.78` on dark). Set those tokens to recolour the wash. The slot does not use hero or dialog overlay tokens.
 
@@ -34,7 +34,9 @@ If you want a complete copy-pasteable custom theme with every current FlatPack v
 bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.52
 ```
 
-That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller). Pass `--as_root` to write brand overrides on `:root` instead, so no `data-theme` attribute is needed.
+That writes `app/assets/stylesheets/flat_pack_theme_sunrise.css`. Load it after `flat_pack/variables`, then set `<html data-theme="sunrise">` (or use the `flat-pack--theme` controller). Pass `--as_root` to write brand overrides on `:root` instead, so no `data-theme` attribute is needed. Pass `--inherits=rounded` to stack on rounded and set `data-theme="rounded sunrise"`. Named kit selectors are word matches (`[data-theme~="rounded"]`). A single name still matches. A host block loaded later, at the same specificity, wins where the two disagree.
+
+A nested color theme keeps the ancestor's shape. On a page with `data-theme="rounded"`, a region with only `data-theme="harbor"` still uses `--card-radius: var(--radius-xl)` and pill controls. Harbor does not set those tokens, and `:root, [data-theme]` does not restate the moderate radii, so the region inherits them. The moderate shape is `data-theme="harbor"` on the root, where no ancestor includes `rounded`. Put `rounded` on the nested element (`data-theme="rounded harbor"`) when that region should be rounded and the page is not. Moving the moderate radii onto `[data-theme]` would make a nested color theme snap back to the default corners. Do not do that.
 
 Or override primitives directly:
 
@@ -113,7 +115,7 @@ FlatPack variables are loaded via `stylesheet_link_tag` in your layout (added by
 }
 ```
 
-For a named host-app variant such as `[data-theme="sunrise"]`, see the theme generator or the [Custom Theming Guide](custom_theming.md).
+For a named host-app variant such as `[data-theme~="sunrise"]`, see the theme generator or the [Custom Theming Guide](custom_theming.md).
 
 ## Available Variables
 
@@ -220,7 +222,7 @@ Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`5deg`), `
 
 The shape scale lives on bare `:root`, same as `--space-*`. Component radii alias a step and can be overridden:
 
-| Token | Default | `[data-theme="rounded"]` |
+| Token | Default | `[data-theme~="rounded"]` |
 |---|---|---|
 | `--button-border-radius` | `--radius-md` | `--radius-full` |
 | `--button-round-border-radius` | `--radius-full` | `--radius-full` (not remapped) |
@@ -267,7 +269,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the kit radii on unla
 
 `--button-shadow` is the rest elevation. `--button-shadow-hover` aliases `--shadow-button`. `--button-shadow-active` aliases `--shadow-button-active`. Ghost and secondary stay unshadowed at rest.
 
-Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`. Overlay item gaps are `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg`. Set those on `:root` or a named theme when the gap should differ from `0.5rem` / `1rem` / `1.5rem`.
+Dark theme (`[data-theme~="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`. Overlay item gaps are `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg`. Set those on `:root` or a named theme when the gap should differ from `0.5rem` / `1rem` / `1.5rem`.
 
 ### Hit targets
 ```css
@@ -278,7 +280,7 @@ Dark theme (`[data-theme="dark"]`) adds a faint white hairline to `--shadow-sm` 
 Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `.fp-hit-target` grows the painted box to 44px. `.fp-hit-slop` keeps the control icon-sized and expands the hit with a pseudo-element — toast close uses that so the X is not a 44px empty square. Hosts get those classes from `flat_pack/application` without a Tailwind rebuild.
 
 ### Color scheme
-`:root` sets `color-scheme: light`. `[data-theme="dark"]` sets `color-scheme: dark` so native controls, scrollbars, and form chrome match the theme.
+`:root` sets `color-scheme: light`. `[data-theme~="dark"]` sets `color-scheme: dark` so native controls, scrollbars, and form chrome match the theme.
 
 ### Typography
 ```css

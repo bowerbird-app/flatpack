@@ -161,18 +161,18 @@
 
 /* Dummy app override: remove sidebar header bottom border in every theme */
 :root,
-[data-theme="light"],
-[data-theme="dark"],
-[data-theme="ocean"],
-[data-theme="rounded"],
-[data-theme="sunrise"],
-[data-theme="featured-in"],
-[data-theme="featured-in-dark"] {
+[data-theme~="light"],
+[data-theme~="dark"],
+[data-theme~="ocean"],
+[data-theme~="rounded"],
+[data-theme~="sunrise"],
+[data-theme~="featured-in"],
+[data-theme~="featured-in-dark"] {
 	--sidebar-header-border-color: transparent;
 }
 
 /* Example host theme: change brand primitives, plus a few surface tweaks */
-[data-theme="sunrise"] {
+[data-theme~="sunrise"] {
 	--brand-hue: 35;
 	--brand-chroma: 0.19;
 	--brand-lightness: 0.52;
@@ -184,7 +184,7 @@
 }
 
 /* Semantic-only brand pair: hover, ghost, and list chrome must follow these. */
-[data-theme="featured-in"] {
+[data-theme~="featured-in"] {
 	--color-primary: #c41e6a;
 	--color-primary-text: #fff;
 	--surface-page-background-color: oklch(0.98 0.01 350);
@@ -195,7 +195,19 @@
 	--surface-muted-content-color: oklch(0.45 0.03 350);
 }
 
-[data-theme="featured-in-dark"] {
+/* Example stacked brand. Rounded supplies shape. Harbor supplies colour. */
+[data-theme~="harbor"] {
+	--color-primary: #0f766e;
+	--color-primary-text: #ffffff;
+	--surface-page-background-color: oklch(0.97 0.015 190);
+	--surface-background-color: oklch(0.99 0.008 190);
+	--surface-muted-background-color: oklch(0.94 0.02 190);
+	--surface-border-color: oklch(0.84 0.03 190);
+	--surface-content-color: oklch(0.25 0.04 200);
+	--surface-muted-content-color: oklch(0.45 0.03 200);
+}
+
+[data-theme~="featured-in-dark"] {
 	color-scheme: dark;
 	--color-primary: oklch(0.72 0.18 350);
 	--color-primary-text: oklch(0.18 0.04 350);

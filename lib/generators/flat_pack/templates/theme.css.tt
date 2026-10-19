@@ -10,6 +10,12 @@
  * Component tokens re-resolve from semantic tokens — you usually do not override them.
  *
  * Load this stylesheet AFTER flat_pack/variables.
+<% if inherited_theme -%>
+ * Inherits <%= inherited_theme %>. Set data-theme="<%= inherited_theme %> <%= theme_slug %>".
+ * This block overrides only the tokens below. <%= inherited_theme %> still applies.
+<% elsif !as_root? -%>
+ * Word match: data-theme="<%= theme_slug %>" and a stack such as data-theme="rounded <%= theme_slug %>" both hit this block.
+<% end -%>
  */
 <%= selector %> {
   --brand-hue: <%= brand_hue %>;

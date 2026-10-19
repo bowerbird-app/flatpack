@@ -20,7 +20,7 @@ module FlatPack
           path = destination.join("app/assets/stylesheets/flat_pack_theme_sunrise.css")
           assert path.exist?
           content = path.read
-          assert_includes content, '[data-theme="sunrise"]'
+          assert_includes content, '[data-theme~="sunrise"]'
           assert_includes content, "--brand-hue: 35"
           assert_includes content, "--brand-chroma: 0.2"
           assert_includes content, "--brand-lightness: 0.6"
@@ -45,7 +45,37 @@ module FlatPack
           content = destination.join("app/assets/stylesheets/flat_pack_theme_acme.css").read
           assert_includes content, ":root {"
           assert_includes content, "--brand-hue: 200"
-          refute_match(/^\s*\[data-theme=/, content)
+          refute_match(/\[data-theme[~=]/, content)
+        end
+      end
+
+      test "inherits a base and writes an overrides-only stack" do
+        Dir.mktmpdir("flatpack-theme-generator") do |tmpdir|
+          destination = Pathname.new(tmpdir)
+          generator = ThemeGenerator.new(["Harbor"], {inherits: "Rounded", hue: 180, chroma: 0.12, lightness: 0.48}, destination_root: destination.to_s)
+          generator.destination_root = destination.to_s
+
+          capture_io { generator.invoke_all }
+
+          content = destination.join("app/assets/stylesheets/flat_pack_theme_harbor.css").read
+          assert_includes content, '[data-theme~="harbor"]'
+          assert_includes content, 'data-theme="rounded harbor"'
+          assert_includes content, "--brand-hue: 180"
+          refute_includes content, "--space-"
+          refute_includes content, "--button-"
+          refute_includes content, "--color-primary:"
+        end
+      end
+
+      test "refuses to combine as_root and inherits" do
+        Dir.mktmpdir("flatpack-theme-generator") do |tmpdir|
+          destination = Pathname.new(tmpdir)
+          generator = ThemeGenerator.new(["Harbor"], {as_root: true, inherits: "rounded"}, destination_root: destination.to_s)
+          generator.destination_root = destination.to_s
+
+          assert_raises(Thor::Error) do
+            capture_io { generator.invoke_all }
+          end
         end
       end
     end

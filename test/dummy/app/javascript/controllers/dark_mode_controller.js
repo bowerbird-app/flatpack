@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { composeThemeAttribute, readPickerThemeNames, themeListIncludes } from "controllers/flat_pack/theme_attribute"
 
 export default class extends Controller {
   static targets = ["toggle"]
@@ -29,22 +30,26 @@ export default class extends Controller {
 
   applyTheme(theme) {
     const root = document.documentElement
-    const isDark = theme === "dark"
+    const nextAttribute = composeThemeAttribute(root.getAttribute("data-theme"), theme, this.ownedThemeNames())
 
-    // Tailwind v4 theme variables are keyed by data-theme.
-    if (theme === "light") {
-      root.removeAttribute("data-theme")
+    if (nextAttribute) {
+      root.setAttribute("data-theme", nextAttribute)
     } else {
-      root.setAttribute("data-theme", theme)
+      root.removeAttribute("data-theme")
     }
 
-    // Keep legacy classes for any selectors still relying on them.
+    const isDark = themeListIncludes(nextAttribute, "dark")
     root.classList.toggle("dark", isDark)
     root.classList.toggle("light", !isDark)
 
     if (this.hasToggleTarget) {
       this.toggleTarget.checked = isDark
     }
+  }
+
+  ownedThemeNames() {
+    const pickerNames = readPickerThemeNames(document)
+    return pickerNames.length ? pickerNames : ["light", "dark", "ocean", "rounded", "sunrise"]
   }
 
   get storageKey() {

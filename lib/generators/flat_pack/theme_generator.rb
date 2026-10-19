@@ -29,9 +29,17 @@ module FlatPack
         default: false,
         desc: "Write overrides to :root instead of [data-theme]"
 
+      class_option :inherits,
+        type: :string,
+        desc: "Base theme to stack under this one (for example rounded)"
+
       desc "Generate a FlatPack brand theme override stylesheet"
 
       def create_theme_stylesheet
+        if options[:as_root] && inherited_theme
+          raise Thor::Error, "Pass --as-root or --inherits, not both"
+        end
+
         destination = "app/assets/stylesheets/flat_pack_theme_#{theme_slug}.css"
         template "theme.css.tt", destination
 
@@ -42,7 +50,7 @@ module FlatPack
           say "  Brand overrides are on :root — no data-theme attribute needed.", :cyan
         else
           say "  Ensure this stylesheet loads after flat_pack/variables, then set:", :cyan
-          say "  <html data-theme=\"#{theme_slug}\">", :cyan
+          say "  <html data-theme=\"#{theme_attribute}\">", :cyan
           say "  Or use the flat-pack--theme Stimulus controller.", :cyan
         end
         say "\nTweaking color later:", :cyan
@@ -68,8 +76,21 @@ module FlatPack
         options[:lightness].to_f
       end
 
+      def inherited_theme
+        slug = options[:inherits].to_s.strip.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-|-\z/, "")
+        slug.empty? ? nil : slug
+      end
+
+      def theme_attribute
+        inherited_theme ? "#{inherited_theme} #{theme_slug}" : theme_slug
+      end
+
+      def as_root?
+        options[:as_root]
+      end
+
       def selector
-        options[:as_root] ? ":root" : %([data-theme="#{theme_slug}"])
+        as_root? ? ":root" : %([data-theme~="#{theme_slug}"])
       end
     end
   end

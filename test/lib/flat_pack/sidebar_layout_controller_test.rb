@@ -44,7 +44,7 @@ module FlatPack
       assert_includes css, ".fp-layout-background-media {\n    visibility: hidden;\n  }"
       assert_includes css, "@supports not ((filter: blur(1px)) or (-webkit-filter: blur(1px)))"
       assert_includes css, "--surface-page-background-color: transparent;"
-      assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-sidebar-floating=\"true\"] aside"
+      assert_includes css, "html[data-theme]:not([data-theme~=\"rounded\"]) [data-flat-pack-sidebar-floating=\"true\"] aside"
       assert_includes css, "[data-flat-pack-top-nav-floating=\"behind\"]"
       assert_includes css, ".fp-layout-content"
       assert_includes css, "padding-inline: var(--layout-content-inset);"
@@ -72,7 +72,7 @@ module FlatPack
       assert_includes css, "[data-flat-pack-top-nav-section=\"right\"] > *"
       assert_includes css, "[data-flat-pack-top-nav-section=\"right\"] > [class*=\"--button-round-border-radius\"]"
       assert_includes css, "border-radius: var(--button-round-border-radius);"
-      assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-top-nav-floating]"
+      assert_includes css, "html[data-theme]:not([data-theme~=\"rounded\"]) [data-flat-pack-top-nav-floating]"
       top_nav_float = css[/Floating top nav\..*?^\}/m]
       refute_nil top_nav_float
       refute_includes top_nav_float, "@media (min-width: 768px)"
