@@ -2,8 +2,6 @@
 
 module FlatPack
   module Button
-    # Built-in and host-registered button colourways.
-    # Colour paint lives in kit CSS on `.fp-button[data-fp-style]`.
     # A host or gem registers a name here, then ships CSS for that attribute.
     module StyleRegistry
       PRESS_VALUES = %i[raised flat].freeze

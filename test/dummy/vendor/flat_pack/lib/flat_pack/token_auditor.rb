@@ -12,8 +12,46 @@ module FlatPack
     /x
 
     RUNTIME_TOKENS = %w[
+      --collection-editor-columns
       --flatpack-modal-body-height
       --flatpack-picker-items-height
+      --fp-masonry-gap
+      --fp-masonry-row
+      --fp-collage-columns
+      --fp-collage-scatter
+      --fp-collage-shift-x
+      --fp-collage-shift-y
+      --fp-collage-tilt
+      --fp-collage-x
+      --fp-collage-y
+      --fp-collage-angle
+      --fp-collage-index
+      --fp-collage-z
+      --fp-collage-scale
+      --fp-collage-column
+      --fp-collage-row
+      --fp-collage-tracks
+      --fp-collage-row-shift
+      --fp-collage-place-x
+      --fp-collage-place-y
+      --fp-collage-center-x
+      --fp-collage-center-y
+      --fp-collage-count
+      --reveal-index
+      --reveal-delay
+      --reveal-duration
+      --fp-number-duration
+      --fp-collage-mobile
+      --fp-collage-from-x
+      --fp-collage-from-y
+      --fp-trash-button-size
+      --fp-collection-min-item-width
+      --fp-fab-offset
+      --fp-fab-nav-offset
+      --fp-list-key-width
+      --fp-range-max
+      --fp-range-scale
+      --fp-range-value
       --range-progress
       --spacing
     ].freeze

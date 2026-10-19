@@ -18,6 +18,7 @@ module FlatPack
 
         assert_selector "button", text: "Filter"
         assert_selector "div#modal-table-filters-modal"
+        assert_no_selector "[data-flat-pack--modal-origin-value]"
         assert_selector "form#modal-table-filters-mobile-form[data-turbo-frame='modal-filter-table-frame']"
         assert_selector "#modal-only-filter"
         assert_no_selector "div.hidden.md\\:block"
@@ -36,7 +37,7 @@ module FlatPack
         end
 
         assert_selector "button span", text: "Filter"
-        assert_selector "button span.rounded-full", text: "2"
+        assert_includes page.find("button", text: "2").native.to_html, "rounded-[var(--badge-radius)]"
       end
 
       def test_hides_active_count_badge_when_count_is_zero
@@ -52,7 +53,7 @@ module FlatPack
         end
 
         assert_selector "button", text: "Filter"
-        assert_no_selector "button span.rounded-full"
+        refute_includes page.find("button", text: "Filter").native.to_html, "rounded-[var(--badge-radius)]"
       end
 
       def test_renders_reset_and_submit_actions

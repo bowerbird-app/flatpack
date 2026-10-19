@@ -24,7 +24,9 @@ class DemoCatalogTest < ActiveSupport::TestCase
     assert_includes titles, "Chip Groups"
     assert_includes titles, "Date Range Input"
     assert_includes titles, "Page Nav"
+    assert_includes titles, "Type scale"
     assert_includes titles, "Articles"
+    assert_includes titles, "Brand on body"
   end
 
   test "searchable item urls are absolute demo paths" do
@@ -48,7 +50,7 @@ class DemoCatalogTest < ActiveSupport::TestCase
     interactive = DemoCatalog.sections.find { |section| section[:title] == "Interactive" }
     buttons = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Buttons" }
 
-    assert_equal 6, buttons[:children].length
+    assert_equal 8, buttons[:children].length
 
     billing = interactive[:entries].find { |entry| entry[:type] == :group && entry[:title] == "Billing" }
     assert_equal 7, billing[:children].length

@@ -21,8 +21,10 @@ module FlatPack
         min: nil,
         max: nil,
         step: 1,
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name

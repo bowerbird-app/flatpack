@@ -219,6 +219,210 @@
   ) %>
 </section>
 
+<section class="mb-12" id="size-slider-text">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Text size", anchor_link: true) %>
+
+  <%= render FlatPack::RangeInput::Component.new(
+    name: "reading_size",
+    id: "reading_size",
+    label: "Text size",
+    variant: :size,
+    min: 14,
+    max: 32,
+    step: 3,
+    value: 23,
+    show_value: false,
+    help_text: "Snaps to seven sizes. Arrow keys move one step. The Aa below follows the slider."
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RangeInput::Component.new(
+        name: &quot;reading_size&quot;,
+        label: &quot;Text size&quot;,
+        variant: :size,
+        min: 14,
+        max: 32,
+        step: 3,
+        value: 23,
+        show_value: false
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Text size"
+  ) %>
+</section>
+
+<section class="mb-12" id="size-slider-sample">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom sample", anchor_link: true) %>
+
+  <%= render FlatPack::RangeInput::Component.new(
+    name: "reading_size_sample",
+    id: "reading_size_sample",
+    label: "Text size",
+    variant: :size,
+    sample: "Embiggen",
+    min: 14,
+    max: 32,
+    step: 3,
+    value: 23,
+    show_value: false,
+    help_text: "Pass sample: to swap the letters under the slider."
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RangeInput::Component.new(
+        name: &quot;reading_size_sample&quot;,
+        label: &quot;Text size&quot;,
+        variant: :size,
+        sample: &quot;Embiggen&quot;,
+        min: 14,
+        max: 32,
+        step: 3,
+        value: 23,
+        show_value: false
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Custom sample"
+  ) %>
+</section>
+
+<section class="mb-12 -mx-6 px-6 py-8 sm:-mx-10 sm:px-10 rounded-[var(--radius-lg)] bg-[var(--surface-page-background-color)]" id="size-slider-text-dark" data-theme="dark">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Text size on dark", anchor_link: true) %>
+
+  <%= render FlatPack::RangeInput::Component.new(
+    name: "reading_size_dark",
+    id: "reading_size_dark",
+    label: "Text size",
+    variant: :size,
+    min: 14,
+    max: 32,
+    step: 3,
+    value: 32,
+    show_value: false
+  ) %>
+</section>
+
+<section class="mb-12" id="size-slider-zoom">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Icon size", anchor_link: true) %>
+
+  <%= render FlatPack::RangeInput::Component.new(
+    name: "icon_size",
+    id: "icon_size",
+    label: "Icon size",
+    variant: :zoom,
+    min: 1,
+    max: 3,
+    step: 0.5,
+    value: 2,
+    help_text: "Snaps to five sizes. The photo follows the slider."
+  ) do |range| %>
+    <% range.with_preview do %>
+      <span
+        class="inline-flex text-[var(--color-primary)]"
+        style="width: calc(var(--fp-range-value) * 1.5rem); height: calc(var(--fp-range-value) * 1.5rem);"
+        aria-hidden="true"
+      >
+        <%= render FlatPack::Shared::IconComponent.new(name: :photo, size: :xl, class: "w-full h-full") %>
+      </span>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RangeInput::Component.new(
+        name: &quot;icon_size&quot;,
+        label: &quot;Icon size&quot;,
+        variant: :zoom,
+        min: 1,
+        max: 3,
+        step: 0.5,
+        value: 2
+      ) do |range| %&gt;
+        &lt;% range.with_preview do %&gt;
+          &lt;span style=&quot;display: inline-flex; width: calc(var(--fp-range-value) * 1.5rem); height: calc(var(--fp-range-value) * 1.5rem);&quot;&gt;
+            &lt;%= render FlatPack::Shared::IconComponent.new(name: :photo, size: :xl, class: &quot;w-full h-full&quot;) %&gt;
+          &lt;/span&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Icon size"
+  ) %>
+</section>
+
+<section class="mb-12" id="size-slider-custom">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom end icons", anchor_link: true) %>
+
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
+    <%= render FlatPack::RangeInput::Component.new(
+      name: "custom_ends",
+      id: "custom_ends",
+      label: "Amount",
+      start_icon: :minus,
+      end_icon: :plus,
+      min: 0,
+      max: 100,
+      value: 40
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RangeInput::Component.new(
+        name: &quot;custom_ends&quot;,
+        label: &quot;Amount&quot;,
+        start_icon: :minus,
+        end_icon: :plus,
+        min: 0,
+        max: 100,
+        value: 40
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Custom end icons"
+  ) %>
+</section>
+
+<section class="mb-12" id="size-slider-disabled">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Disabled size slider", anchor_link: true) %>
+
+  <div class="space-y-6 p-6 bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] rounded-lg">
+    <%= render FlatPack::RangeInput::Component.new(
+      name: "text_size_disabled",
+      id: "text_size_disabled",
+      label: "Text size",
+      variant: :size,
+      min: 14,
+      max: 32,
+      step: 3,
+      value: 23,
+      show_value: false,
+      disabled: true
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RangeInput::Component.new(
+        name: &quot;text_size_disabled&quot;,
+        label: &quot;Text size&quot;,
+        variant: :size,
+        min: 14,
+        max: 32,
+        step: 3,
+        value: 23,
+        show_value: false,
+        disabled: true
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Disabled size slider"
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Interactive Demo", anchor_link: true) %>
   

@@ -201,7 +201,8 @@ module FlatPack
         render_inline(Component.new(title: "Heads up"))
 
         html = page.native.to_html
-        assert_includes html, "--alert-padding: 1rem"
+        assert_includes html, "p-[var(--alert-padding-md)]"
+        refute_includes html, "--alert-padding:"
         assert_includes html, "gap-3"
       end
 
@@ -209,7 +210,7 @@ module FlatPack
         render_inline(Component.new(title: "Heads up", size: :sm))
 
         html = page.native.to_html
-        assert_includes html, "--alert-padding: 0.75rem"
+        assert_includes html, "p-[var(--alert-padding-sm)]"
         assert_includes html, "text-sm"
       end
 
@@ -217,7 +218,7 @@ module FlatPack
         render_inline(Component.new(title: "Heads up", description: "More detail", size: :lg))
 
         html = page.native.to_html
-        assert_includes html, "--alert-padding: 1.25rem"
+        assert_includes html, "p-[var(--alert-padding-lg)]"
         assert_includes html, "text-lg"
         assert_includes html, "text-base"
       end

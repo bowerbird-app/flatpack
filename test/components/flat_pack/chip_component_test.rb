@@ -77,7 +77,7 @@ module FlatPack
         assert_selector "span", text: "Small"
         assert_includes page.native.to_html, "text-xs"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-sm)]"
-        assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
+        assert_includes page.native.to_html, "py-[var(--chip-padding-y-sm)]"
       end
 
       def test_renders_medium_size
@@ -86,7 +86,7 @@ module FlatPack
         assert_selector "span", text: "Medium"
         assert_includes page.native.to_html, "text-sm"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-md)]"
-        assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
+        assert_includes page.native.to_html, "py-[var(--chip-padding-y-md)]"
       end
 
       def test_renders_large_size
@@ -95,7 +95,7 @@ module FlatPack
         assert_selector "span", text: "Large"
         assert_includes page.native.to_html, "text-base"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-lg)]"
-        assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
+        assert_includes page.native.to_html, "py-[var(--chip-padding-y-lg)]"
       end
 
       def test_default_size_is_medium
@@ -154,16 +154,23 @@ module FlatPack
         assert_selector "button[aria-pressed='false']"
       end
 
-      def test_selected_button_has_ring_classes
+      def test_selected_button_uses_the_active_surface
         render_inline(Component.new(text: "Selected", type: :button, selected: true))
 
-        assert_includes page.native.to_html, "ring-2"
-        assert_includes page.native.to_html, "ring-[var(--color-ring)]"
+        button = page.find("button")
+        classes = button[:class]
+        assert_includes classes, "bg-[var(--surface-active-background-color)]"
+        assert_includes classes, "text-[var(--surface-active-text-color)]"
+        assert_includes classes, "border-[var(--surface-active-border-color)]"
+        refute_includes classes, "ring-[var(--color-ring)]"
+        refute_includes classes, "bg-[var(--surface-muted-background-color)]"
+        assert_includes button["data-fp-chip-paint"], "bg-[var(--surface-muted-background-color)]"
       end
 
-      def test_selected_static_does_not_add_ring_classes
+      def test_selected_static_does_not_add_the_active_fill
         render_inline(Component.new(text: "Selected Static", type: :static, selected: true))
 
+        refute_includes page.native.to_html, "bg-[var(--surface-active-background-color)]"
         refute_includes page.native.to_html, "ring-2"
       end
 
@@ -185,6 +192,18 @@ module FlatPack
 
         assert_selector "button[type='button'][aria-label='Remove']"
         assert_selector "button svg"
+      end
+
+      def test_custom_remove_button_replaces_the_default
+        render_inline(Component.new(text: "Alice Chen", style: :info, removable: true)) do |chip|
+          chip.remove_button do
+            %(<button type="button" aria-label="Remove Alice Chen" data-collection-editor-chip-remove="true">x</button>).html_safe
+          end
+        end
+
+        assert_selector "button[type='button'][aria-label='Remove Alice Chen'][data-collection-editor-chip-remove]"
+        assert_no_selector "button[aria-label='Remove']"
+        assert_selector "span.bg-\\[var\\(--color-secondary\\)\\]", text: "Alice Chen"
       end
 
       def test_removable_with_value

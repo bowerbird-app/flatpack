@@ -9,9 +9,9 @@ Use these components when you need FlatPack-styled form controls with consistent
 ## Class
 - Primary: `FlatPack::TextInput::Component`
 - Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Combobox::Component`, `FlatPack::Switch::Component`
-- Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding`. Keep rendering the public input components above — do not switch hosts to FormField.
+- Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding-x` and `--form-control-padding-y`. Keep rendering the public input components above — do not switch hosts to FormField.
 - Related Stimulus controller: `flat-pack--nested-multiselect` for legacy hierarchical checkbox groups that submit hidden inputs.
-- Related docs: [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Combobox](combobox.md) (`FlatPack::Combobox::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
+- Related docs: [Fieldset](fieldset.md) (`FlatPack::Fieldset::Component`) for a titled group of controls, [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Combobox](combobox.md) (`FlatPack::Combobox::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
 
 ## Props
 Common props used across most input components:
@@ -24,6 +24,7 @@ Common props used across most input components:
 | `label` | String | `nil` | no | Visible label text. |
 | `help_text` | String | `nil` | no | Optional plain-text guidance rendered below the control using the same muted text style as character counts. Only plain `String` values are accepted; HTML-like content is escaped as text. |
 | `error` | String | `nil` | no | Error message; enables invalid styling and `aria-describedby`. |
+| `chrome` | Symbol | `:field` | no | `:field` keeps the bordered control. `:cell` drops the border, radius, and background so a collection editor cell can draw them. Text input, email, phone, URL, number, password, search, text area, date, time, date-time, and select accept it. Any other name raises `ArgumentError`. |
 | `disabled` | Boolean | `false` | no | Disables interaction and submission for the control. |
 | `required` | Boolean | `false` | no | Marks the control as required. |
 | `**system_arguments` | Hash | `{}` | no | Standard HTML attributes (`id`, `class`, `data`, `aria`, etc.). |
@@ -34,7 +35,7 @@ Component-specific props:
 | --- | --- | --- | --- | --- |
 | `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
-| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` and plain `TextArea` from both field click and a trailing copy icon button, with toast feedback; the control is rendered `readonly` when enabled. Not applied when `TextArea` uses `rich_text: true`. |
+| `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` and plain `TextArea` from both a field click and a trailing icon button. The control is `readonly`. Feedback is a toast, then the icon swaps to a check or an error icon. The check keeps the field’s icon colour. Not applied when `TextArea` uses `rich_text: true`. |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
 | `rich_text_options` | Hash | `{}` | no | Fine-grained config for the rich text editor; see [Rich Text Options](#rich-text-options) below. |
 | `min_characters` | Integer | `nil` | no | Low threshold warning for `TextInput` and `TextArea` count color. |
@@ -52,13 +53,16 @@ Component-specific props:
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
-| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. |
+| `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). Select hashes may include `icon:` (Heroicon name). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. Child hashes may include `icon:` too. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
 | `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
 | `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
-| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). |
+| `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. On `variant: :swatches` it maps to ColorSwatch circle sizes (`:sm` 2rem, `:md` 2.5rem, `:lg` 3rem). |
+| `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description), `:swatches` (wrapping colour circles). Invalid names raise `ArgumentError`. |
+| `show_tooltip` | Boolean | `true` | no | RadioGroup `variant: :swatches` only. Wraps each circle in `FlatPack::Tooltip::Component` when the option `label` is present. Other variants ignore it. |
+| `tooltip_placement` | Symbol | `:top` | no | RadioGroup `variant: :swatches` only. Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
 
 ## Slots
 None.
@@ -66,15 +70,19 @@ None.
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
+- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, the neutral active surface when selected (`--surface-active-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
+- Select option `icon:` is a Heroicon name. The custom menu (including local search, remote search results, nested parent and child rows, and multiselect chips) draws it with `FlatPack::Shared::IconComponent` at size `:sm` (`w-4 h-4`), the same size as the select chevron, so it matches the `text-sm` control. The icon is decorative (`aria-hidden`). The text label stays. The closed control shows the icon for the selected value. Remote JSON may include `"icon"`. A native `<select>` cannot draw icons; the value and label still submit. An icon that is not a Heroicon name (`letter`, `letter-number` pieces) raises `ArgumentError`.
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
-- In searchable multiselect dropdown rows, selected state is indicated by checkbox state with neutral row styling (no primary selected row background)
+- In searchable single select, the selected option uses `--surface-active-background-color` and `--surface-active-text-color`. Hover, multiselect, and indeterminate rows use `--surface-hover-background-color`.
+- In searchable multiselect dropdown rows, selected state is indicated by checkbox state with that hover row (no primary selected row background)
 - Nested multiselect option rows use square corners (`rounded-none`) to align child option grouping under parent rows
 - Hierarchical nested multiselect via `FlatPack::Select::Component` with `multiple: true` and option `children:`, including parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
 - Legacy hierarchical nested multiselect via `flat-pack--nested-multiselect`; prefer Select for new usage
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
+- `chrome: :cell` on those same controls removes the control border. The collection editor cell draws the line, the focus ring, and the error ring. Select menus and their search field keep their own border. A normal form omits `chrome` and stays bordered.
 
 ## Example
 ```erb
@@ -138,6 +146,20 @@ Additional focused examples:
   help_text: "Choose the country used for billing and tax rules.",
   searchable: true,
   placeholder: "Search..."
+) %>
+```
+
+```erb
+<%= render FlatPack::Select::Component.new(
+  name: "task[priority]",
+  label: "Priority",
+  value: "high",
+  searchable: true,
+  options: [
+    { label: "Low", value: "low", icon: "arrow-down" },
+    { label: "Medium", value: "medium", icon: "minus" },
+    { label: "High", value: "high", icon: "arrow-up" }
+  ]
 ) %>
 ```
 
@@ -232,14 +254,16 @@ Nested Select options require `multiple: true`. Selecting a parent selects the p
 Remote endpoint response format for `Select` supports either:
 
 ```json
-[{ "label": "Alice Johnson", "value": "alice-johnson" }]
+[{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }]
 ```
 
 or:
 
 ```json
-{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson" }] }
+{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }] }
 ```
+
+`icon` is optional. When present it is a Heroicon name. The menu and the closed control use it. A native select ignores it.
 
 ```erb
 <%= render FlatPack::FileInput::Component.new(
@@ -248,6 +272,57 @@ or:
   accept: "image/png,image/jpeg",
   max_size: 2_097_152,
   preview: true
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "size",
+  options: ["Small", "Medium", "Large"],
+  label: "Choose a size",
+  value: "Medium"
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "check_in",
+  variant: :inline,
+  label: "How often should we check in?",
+  value: "weekly",
+  options: [
+    {label: "Daily", value: "daily", icon: "sun"},
+    {label: "Weekly", value: "weekly", icon: "calendar-days"},
+    {label: "Monthly", value: "monthly", icon: "moon"}
+  ]
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "send_how",
+  variant: :cards,
+  label: "How should we send this?",
+  value: "email",
+  options: [
+    {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
+    {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
+    {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."}
+  ]
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "cover_color",
+  variant: :swatches,
+  label: "Cover colour",
+  value: "#1d4ed8",
+  options: [
+    {label: "Ocean", value: "#1d4ed8"},
+    {label: "Snow", value: "#ffffff"},
+    {label: "Ink", value: "#0a0a0a"}
+  ]
 ) %>
 ```
 
@@ -279,7 +354,7 @@ The popup renders as side-by-side quick ranges + calendar on larger screens and 
 
 ## Rich Text Mode
 
-When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime. The editor surface uses the same `FormField::ControlStyles#form_control_border_classes` and `#form_control_padding_classes` as a plain textarea (`border` plus `--surface-border-color`, or `--color-error` when invalid, and `--form-control-padding`) so host Tailwind preflight cannot wipe the field chrome. Toolbar, bubble, and editor chrome use kit `--radius-md` / `--radius-sm` (with `1rem` / `0.75rem` fallbacks). If host Tailwind loads last, re-set those radii on unlayered `:root` so Tailwind’s `0.375rem` default does not show up as tight editor corners. See [Theming](../theming.md).
+When `rich_text: true` is set on `FlatPack::TextArea::Component`, the native `<textarea>` is replaced with a fully featured [TipTap](https://tiptap.dev) editor. The editor is rendered server-side as empty containers and bootstrapped by the `flat-pack--tiptap` Stimulus controller at runtime. The editor surface uses the same `FormField::ControlStyles#form_control_border_classes` and `#form_control_padding_classes` as a plain textarea (`border` plus `--surface-border-color`, or `--color-error` when invalid, and `--form-control-padding-x` / `--form-control-padding-y`) so host Tailwind preflight cannot wipe the field chrome. Toolbar, bubble, and editor chrome use kit `--radius-md` / `--radius-sm` (with `0.5rem` / `0.25rem` fallbacks). Field corners use `--form-control-radius`. If host Tailwind loads last, re-set those radii on unlayered `:root` so Tailwind’s `0.375rem` default does not show up as tight editor corners. See [Theming](../theming.md).
 
 `FlatPack::Comments::Composer::Component` and `FlatPack::Comments::InlineInput::Component` both forward `rich_text` and `rich_text_options` directly to this same `TextArea` API, so the toolbar, bubble menu, and preset behavior documented below also apply to those comments components.
 
@@ -621,10 +696,14 @@ Always sanitize HTML output before rendering it back to users:
 
 `FlatPack::RichTextSanitizer` strips all tags and attributes not on its allowlist. `<img src="...">` tags rendered by TipTap are preserved.
 
+## Grouping fields
+Use [Fieldset](fieldset.md) when several controls share one name, such as an address or a set of preferences. The title is a `<legend>` inside a `<fieldset>`. Each control keeps its own `label`. `SectionTitle` stays a document heading.
+
 ## Accessibility
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
 - Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`. Invalid borders and helper text use `--color-error` (danger red), not `--color-warning`. Character-count thresholds still use `--color-warning-border`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
+- RadioGroup `variant: :swatches` keeps a native radio per colour. The option `label` is the accessible name (visually hidden) and the default tooltip copy.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Password show/hide is `aria-pressed` with “Show password” / “Hide password”. The two icons crossfade on `--duration-fast` in a fixed box; they do not snap `hidden`.
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.
@@ -635,6 +714,7 @@ Always sanitize HTML output before rendering it back to users:
 ## Dependencies
 - Core install: `rails generate flat_pack:install`
 - Stimulus controllers used by input components:
+  - `flat-pack--tooltip` (`RadioGroup` when `variant: :swatches` and tooltips are on)
   - `flat-pack--password-input` (`PasswordInput`)
   - `flat-pack--search-input` (`SearchInput`)
   - `flat-pack--text-area` (`TextArea` plain mode)

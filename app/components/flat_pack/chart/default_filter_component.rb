@@ -10,7 +10,7 @@ module FlatPack
         end_date_value: nil,
         status_name: "status",
         status: nil,
-        status_placeholder: "All",
+        status_placeholder: FlatPack::Copy::OMITTED,
         hide_labels: false,
         minimized: true,
         minimized_options: {},
@@ -24,7 +24,7 @@ module FlatPack
         @status_name = status_name
         @status = status
         @status_lists = status_lists
-        @status_placeholder = status_placeholder
+        @status_placeholder = fp_text(status_placeholder, "chart.all")
         @hide_labels = hide_labels
         @minimized = minimized
         @minimized_options = minimized_options || {}
@@ -106,7 +106,7 @@ module FlatPack
           end_name: @end_date_name,
           start_value: @start_date_value,
           end_value: @end_date_value,
-          label: (hide_labels ? nil : "Date range"),
+          label: (hide_labels ? nil : fp_t("chart.date_range")),
           class: "w-[220px]"
         )
       end
@@ -119,7 +119,7 @@ module FlatPack
           options: @status_lists,
           value: @status,
           placeholder: @status_placeholder,
-          label: (hide_labels ? nil : "Status")
+          label: (hide_labels ? nil : fp_t("chart.status"))
         )
       end
 

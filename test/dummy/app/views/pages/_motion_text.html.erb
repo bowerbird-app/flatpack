@@ -1,0 +1,18 @@
+<div id="motion-text" class="flex flex-col">
+  <div id="reveal-words" class="flex min-h-screen items-center">
+    <%= render FlatPack::Reveal::Component.new(
+      reveal: :words,
+      tag: :h2,
+      text: "Pack the walnut",
+      class: "text-5xl font-semibold tracking-tight"
+    ) %>
+  </div>
+  <div id="reveal-lines" class="flex min-h-screen items-center">
+    <%= render FlatPack::Reveal::Component.new(
+      reveal: :lines,
+      tag: :p,
+      text: "Fold the shirt.\nTape the box.\nShip it Friday.",
+      class: "text-3xl font-medium leading-tight"
+    ) %>
+  </div>
+</div>

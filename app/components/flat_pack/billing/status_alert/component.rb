@@ -9,26 +9,10 @@ module FlatPack
         undef_method :with_actions, :with_actions_content
 
         STATUSES = {
-          past_due: {
-            style: :warning,
-            title: "Past due",
-            description: "Update your payment method to keep this workspace on its plan."
-          },
-          trial_ending: {
-            style: :info,
-            title: "Trial ending soon",
-            description: "Add a payment method before the trial ends to avoid interruption."
-          },
-          payment_failed: {
-            style: :danger,
-            title: "Payment failed",
-            description: "Your last payment did not go through. Try another card or contact your bank."
-          },
-          canceled: {
-            style: :info,
-            title: "Plan canceled",
-            description: "This workspace is no longer on a paid plan."
-          }
+          past_due: {style: :warning},
+          trial_ending: {style: :info},
+          payment_failed: {style: :danger},
+          canceled: {style: :info}
         }.freeze
 
         ALERT_STYLES = %i[info success warning danger].freeze
@@ -86,11 +70,17 @@ module FlatPack
         end
 
         def resolved_title
-          @title.presence || status_defaults&.dig(:title)
+          @title.presence || status_copy("title")
         end
 
         def resolved_description
-          @description.presence || status_defaults&.dig(:description)
+          @description.presence || status_copy("description")
+        end
+
+        def status_copy(field)
+          return nil if @status.nil?
+
+          fp_t("billing.status_alert.#{@status}.#{field}")
         end
 
         def resolved_style

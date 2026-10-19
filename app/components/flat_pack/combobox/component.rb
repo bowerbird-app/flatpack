@@ -8,10 +8,10 @@ module FlatPack
         options:,
         value: nil,
         label: nil,
-        placeholder: "Search",
+        placeholder: FlatPack::Copy::OMITTED,
         disabled: false,
         required: false,
-        empty_text: "No matches",
+        empty_text: FlatPack::Copy::OMITTED,
         **system_arguments
       )
         super(**system_arguments)
@@ -19,10 +19,10 @@ module FlatPack
         @options = normalize_options(options)
         @value = value.to_s.presence
         @label = label
-        @placeholder = placeholder
+        @placeholder = fp_text(placeholder, "combobox.placeholder")
         @disabled = disabled
         @required = required
-        @empty_text = empty_text
+        @empty_text = fp_text(empty_text, "combobox.empty")
         @list_id = "fp-combobox-#{SecureRandom.hex(4)}"
         validate_name!
         validate_options!
@@ -88,10 +88,10 @@ module FlatPack
 
       def control_classes
         [
-          "flex items-center gap-2 w-full rounded-[var(--radius-md)]",
+          "flex items-center gap-2 w-full rounded-[var(--form-control-radius)]",
           "border border-[var(--surface-border-color)]",
           "bg-[var(--surface-background-color)]",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)]",
           "focus-within:ring-2 focus-within:ring-inset focus-within:ring-ring"
         ].join(" ")
       end
@@ -144,8 +144,8 @@ module FlatPack
           role: "listbox",
           class: [
             "absolute z-40 mt-1 hidden max-h-60 w-full overflow-y-auto",
-            "rounded-[var(--radius-md)] border border-[var(--surface-border-color)]",
-            "bg-[var(--surface-background-color)] shadow-md py-1"
+            "rounded-[var(--menu-radius)] border border-[var(--surface-border-color)]",
+            "bg-[var(--surface-background-color)] shadow-md p-[var(--combobox-menu-padding)]"
           ].join(" "),
           data: {"flat-pack--combobox-target": "list"}
         }
@@ -172,7 +172,7 @@ module FlatPack
       # "bg-[var(--list-item-hover-background-color)]" "bg-[var(--list-item-active-background-color)]"
       def option_classes(selected)
         [
-          "cursor-pointer px-3 py-2 text-sm",
+          "cursor-pointer rounded-[var(--dropdown-item-radius)] px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
           "text-[var(--surface-content-color)]",
           "aria-selected:bg-[var(--list-item-active-background-color)]",
           selected ? "bg-[var(--list-item-active-background-color)]" : "hover:bg-[var(--list-item-hover-background-color)]"
@@ -182,7 +182,7 @@ module FlatPack
       def render_empty_row
         content_tag(:li,
           @empty_text,
-          class: "hidden px-3 py-2 text-sm text-[var(--surface-muted-content-color)]",
+          class: "hidden px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
           data: {"flat-pack--combobox-target": "empty"})
       end
 

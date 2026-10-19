@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="jetty">
+  <rect width="100%" height="100%" fill="#2a2140"/>
+  <rect y="209" width="100%" height="151" fill="#1a3348"/>
+  <rect y="188" width="100%" height="43" fill="#d08a5a" opacity="0.55"/>
+  <circle cx="499" cy="79" r="51" fill="#d08a5a" opacity="0.85"/>
+</svg>

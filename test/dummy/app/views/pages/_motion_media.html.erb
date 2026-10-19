@@ -1,0 +1,17 @@
+<div id="motion-media" class="flex flex-col">
+  <div id="reveal-wipe" class="flex min-h-screen items-center">
+    <%= render FlatPack::Reveal::Component.new(reveal: :wipe, class: "w-full max-w-3xl overflow-hidden rounded-[var(--radius-lg)]") do %>
+      <%= image_tag "/images/hero-stool.jpg", alt: "A wooden stool", class: "block w-full" %>
+    <% end %>
+  </div>
+  <div id="reveal-zoom" class="flex min-h-screen items-center">
+    <%= render FlatPack::Reveal::Component.new(reveal: :zoom, class: "w-full max-w-3xl overflow-hidden rounded-[var(--radius-lg)]") do %>
+      <%= image_tag "/images/hero-packaging.jpg", alt: "A shipping box", class: "block w-full" %>
+    <% end %>
+  </div>
+  <div id="reveal-parallax" class="flex min-h-screen items-center">
+    <%= render FlatPack::Reveal::Component.new(reveal: :zoom, parallax: true, class: "w-full max-w-3xl overflow-hidden rounded-[var(--radius-lg)]") do %>
+      <%= image_tag "/images/hero-subscription-box.webp", alt: "A subscription box", class: "block w-full" %>
+    <% end %>
+  </div>
+</div>

@@ -4,6 +4,7 @@ module FlatPack
   module TextArea
     class Component < FlatPack::BaseComponent
       include FlatPack::FormField::ControlStyles
+      include FlatPack::Clipboard::QuickCopy
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
@@ -27,8 +28,10 @@ module FlatPack
         max_characters: nil,
         rich_text: false,
         rich_text_options: {},
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -80,14 +83,15 @@ module FlatPack
       # ── Shared helpers used in both modes ────────────────────────────────────
 
       def render_textarea
-        return content_tag(:textarea, @value, **textarea_attributes) unless @quick_copy
+        field = content_tag(:textarea, @value, **textarea_attributes)
+        return field unless @quick_copy
 
-        content_tag(:div, class: quick_copy_wrapper_classes) do
-          safe_join([
-            content_tag(:textarea, @value, **textarea_attributes),
-            render_copy_button
-          ])
-        end
+        render_quick_copy_field(
+          target_id: field_id,
+          button_label: fp_t("text.copy_textarea"),
+          disabled: @disabled,
+          button_position: :top
+        ) { field }
       end
 
       def textarea_attributes
@@ -111,22 +115,6 @@ module FlatPack
         attrs[:aria][:invalid] = "true" if @error
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
-      end
-
-      def render_copy_button
-        content_tag(
-          :button,
-          type: "button",
-          class: copy_button_classes,
-          disabled: @disabled,
-          data: {
-            action: "click->flat-pack--text-area#copyFromButton",
-            flat_pack__text_area_target: "copyButton"
-          },
-          aria: {label: "Copy textarea value"}
-        ) do
-          render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
-        end
       end
 
       # ── Plain textarea mode ──────────────────────────────────────────────────
@@ -169,7 +157,7 @@ module FlatPack
           class: "flat-pack-richtext-toolbar",
           role: "toolbar",
           data: {flat_pack__tiptap_target: "toolbar"},
-          aria: {label: "Formatting toolbar"}
+          aria: {label: fp_t("text.formatting_toolbar")}
         )
       end
 
@@ -214,7 +202,7 @@ module FlatPack
 
         content_tag(
           :p,
-          "0 characters",
+          fp_t("text.characters", count: 0),
           id: character_count_id,
           class: character_count_classes,
           data: {flat_pack__tiptap_target: "characterCount"}
@@ -249,8 +237,7 @@ module FlatPack
             flat_pack__text_area_submit_on_enter_value: @submit_on_enter,
             flat_pack__text_area_min_characters_value: @min_characters,
             flat_pack__text_area_max_characters_value: @max_characters,
-            flat_pack__text_area_character_count_enabled_value: @character_count,
-            flat_pack__text_area_quick_copy_enabled_value: @quick_copy
+            flat_pack__text_area_character_count_enabled_value: @character_count
           }.compact
         }
       end
@@ -289,6 +276,17 @@ module FlatPack
       end
 
       def rich_text_editor_container_classes
+        if cell_chrome?
+          return classes(
+            "flat-pack-richtext-editor",
+            "flat-pack-richtext-editor--cell",
+            "border-0",
+            "bg-transparent",
+            "rounded-none",
+            *form_control_padding_classes
+          )
+        end
+
         classes(
           "flat-pack-richtext-editor",
           *form_control_border_classes(error: @error),
@@ -317,23 +315,6 @@ module FlatPack
 
       def rich_text_character_count?
         @character_count || @rich_text_options.options[:character_count]
-      end
-
-      def quick_copy_wrapper_classes
-        "relative"
-      end
-
-      def copy_button_classes
-        classes(
-          "absolute right-2 top-2",
-          "inline-flex items-center justify-center",
-          "h-6 w-6 rounded",
-          "text-[var(--surface-muted-content-color)]",
-          "hover:text-[var(--surface-content-color)]",
-          "hover:bg-[var(--surface-muted-background-color)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          "disabled:opacity-50 disabled:cursor-not-allowed"
-        )
       end
 
       # ── ID helpers ───────────────────────────────────────────────────────────
@@ -365,9 +346,9 @@ module FlatPack
         count = (@value || "").to_s.length
 
         if @max_characters
-          "#{count}/#{@max_characters} characters"
+          fp_t("text.characters_with_limit", count: count, limit: @max_characters)
         else
-          "#{count} characters"
+          fp_t("text.characters", count: count)
         end
       end
 
@@ -379,7 +360,6 @@ module FlatPack
         actions = ["input->flat-pack--text-area#updateCharacterCount"]
         actions.unshift("input->flat-pack--text-area#autoExpand") if @autogrow
         actions << "keydown->flat-pack--text-area#handleKeydown" if @submit_on_enter
-        actions << "click->flat-pack--text-area#copyFromTextarea" if @quick_copy
         actions.join(" ")
       end
 

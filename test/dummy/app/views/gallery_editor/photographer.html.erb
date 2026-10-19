@@ -1,0 +1,23 @@
+<%= flat_pack_modal_screen(modal_id: GalleryEditorDemo::MODAL_ID, title: "Edit photographer") do |screen| %>
+  <% screen.footer do %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Save",
+      style: :primary,
+      data: {fp_nav: "back"}
+    ) %>
+  <% end %>
+
+  <div class="space-y-4">
+    <%= render FlatPack::TextInput::Component.new(
+      name: "photographer[name]",
+      label: "Name",
+      value: @photographer.fetch(:name)
+    ) %>
+    <%= render FlatPack::TextArea::Component.new(
+      name: "photographer[bio]",
+      label: "Bio",
+      value: @photographer.fetch(:bio),
+      rows: 4
+    ) %>
+  </div>
+<% end %>

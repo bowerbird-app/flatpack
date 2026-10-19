@@ -19,6 +19,7 @@ function loadController() {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key) { return ({ "password.show": "Show password", "password.hide": "Hide password" })[key] || key }')
     .replace('export default class extends Controller', 'class PasswordInputController extends Controller') + '\nmodule.exports = PasswordInputController\n'
 
   const context = {

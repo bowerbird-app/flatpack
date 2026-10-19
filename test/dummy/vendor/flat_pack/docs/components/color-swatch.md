@@ -4,11 +4,13 @@
 Render a circular colour control that shows a colour, optionally names it in a tooltip, and opens the native browser colour picker on click.
 
 ## When to use
-Use Color Swatch in theme editors and brand settings. Compose several swatches in a flex row with kit gap tokens when you need a named palette (for example Background, Text, Accent). Do not wrap swatches in `ChipGroup` — that component is for chips.
+Use Color Swatch when the person should edit a colour with the native picker — theme editors, brand settings, a single accent well. Compose several pickers in a flex row with kit gap tokens for named roles such as Background, Text, Accent.
+
+To let someone pick one colour from a fixed palette (press-kit covers, accent presets), use `FlatPack::RadioGroup::Component` with `variant: :swatches`. That keeps real radios, one submitted value, and the same circle/ring tokens. Do not wrap either control in `ChipGroup`.
 
 ## Class
 - Primary: `FlatPack::ColorSwatch::Component`
-- Related classes: `FlatPack::Tooltip::Component`
+- Related classes: `FlatPack::Tooltip::Component`, `FlatPack::RadioGroup::Component` (`variant: :swatches` for a fixed palette)
 
 ## Props
 | name | type | default | required | description |

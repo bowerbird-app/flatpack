@@ -6,17 +6,21 @@ module FlatPack
       include FlatPack::FormField::ControlStyles
 
       SEARCH_MODES = %i[local remote].freeze
+      # Select controls are text-sm. :sm is w-4 h-4, the same size as the chevron.
+      OPTION_ICON_SIZE = :sm
+      ICON_NAME = /\A[a-z0-9]+(?:-[a-z0-9]+)*\z/
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-error)]" "border-[var(--color-error)]" "text-[var(--color-primary-text)]"
+      # "flex" "w-full" "min-w-0" "items-center" "gap-2" "shrink-0" "truncate" "inline-flex" "hidden"
 
       def initialize(
         name:,
         options:,
         value: nil,
         label: nil,
-        placeholder: "Select an option",
+        placeholder: FlatPack::Copy::OMITTED,
         disabled: false,
         required: false,
         searchable: false,
@@ -27,8 +31,10 @@ module FlatPack
         multiple: false,
         error: nil,
         help_text: nil,
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -36,7 +42,7 @@ module FlatPack
         @options = normalize_options(options)
         @value = value
         @label = label
-        @placeholder = placeholder
+        @placeholder = fp_text(placeholder, "select.placeholder")
         @disabled = disabled
         @required = required
         @searchable = searchable
@@ -173,10 +179,41 @@ module FlatPack
             invalid: (@error.present? ? "true" : nil)
           }) do
           @multiple ? render_multiselect_trigger_content : safe_join([
-            content_tag(:span, display_text, class: "block truncate"),
+            render_single_trigger_content(selected_option, display_text),
             render_chevron_icon
           ])
         end
+      end
+
+      def render_single_trigger_content(selected_option, display_text)
+        content_tag(:span, class: "flex w-full min-w-0 items-center gap-2") do
+          safe_join([
+            render_trigger_icon(selected_option),
+            content_tag(:span, display_text, class: "block min-w-0 truncate", data: {flat_pack__select_target: "valueLabel"})
+          ])
+        end
+      end
+
+      def render_trigger_icon(option)
+        icon = option&.dig(:icon)
+        content_tag(
+          :span,
+          class: icon.present? ? "inline-flex shrink-0" : "inline-flex shrink-0 hidden",
+          data: {flat_pack__select_target: "valueIcon"}
+        ) do
+          render_option_icon(option) if icon.present?
+        end
+      end
+
+      def render_option_icon(option)
+        name = option&.dig(:icon)
+        return if name.blank?
+
+        render FlatPack::Shared::IconComponent.new(
+          name: name,
+          size: OPTION_ICON_SIZE,
+          class: "pointer-events-none"
+        )
       end
 
       def render_multiselect_trigger_content
@@ -197,12 +234,17 @@ module FlatPack
       def render_trigger_chip(option)
         selected = selected_value?(option[:value])
         chip = FlatPack::Chip::Component.new(text: option[:label], size: :sm)
+        if option[:icon].present?
+          chip.leading do
+            render_option_icon(option)
+          end
+        end
         chip.trailing do
           content_tag(:span,
-            class: "inline-flex items-center justify-center cursor-pointer rounded-full",
+            class: "inline-flex items-center justify-center cursor-pointer rounded-[var(--chip-border-radius)]",
             role: "button",
             tabindex: "0",
-            aria: {label: "Remove #{option[:label]}"},
+            aria: {label: fp_t("select.remove", label: option[:label])},
             data: {
               action: "click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown",
               value: option[:value]
@@ -237,11 +279,11 @@ module FlatPack
       def render_search_input
         return unless @searchable
 
-        content_tag(:div, class: "p-2 border-b border-[var(--surface-border-color)]") do
+        content_tag(:div, class: "p-[var(--select-search-padding)] border-b border-[var(--surface-border-color)]") do
           tag.input(
             type: "text",
             class: search_input_classes,
-            placeholder: "Search...",
+            placeholder: fp_t("select.search"),
             data: {
               action: "input->flat-pack--select#search",
               flat_pack__select_target: "searchInput"
@@ -252,7 +294,7 @@ module FlatPack
 
       def render_options_list
         content_tag(:div,
-          class: "max-h-60 overflow-y-auto p-1 data-[results-count='0']:hidden",
+          class: "max-h-60 overflow-y-auto p-[var(--select-menu-padding)] data-[results-count='0']:hidden",
           data: {
             flat_pack__select_target: "optionsList",
             results_count: flat_options.length
@@ -269,12 +311,12 @@ module FlatPack
         return unless remote_search?
 
         content_tag(:div,
-          class: "hidden px-3 py-2 text-sm text-[var(--surface-muted-content-color)]",
+          class: "hidden px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
           data: {flat_pack__select_target: "searchStatus"}) do
           safe_join([
-            content_tag(:p, "Type at least #{@min_search_length} characters to search", class: "hidden", data: {flat_pack__select_target: "searchHint"}),
-            content_tag(:p, "Searching...", class: "hidden", data: {flat_pack__select_target: "loadingState"}),
-            content_tag(:p, "No options found", class: "hidden", data: {flat_pack__select_target: "emptyState"})
+            content_tag(:p, fp_t("select.type_to_search", count: @min_search_length), class: "hidden", data: {flat_pack__select_target: "searchHint"}),
+            content_tag(:p, fp_t("select.searching"), class: "hidden", data: {flat_pack__select_target: "loadingState"}),
+            content_tag(:p, fp_t("select.empty"), class: "hidden", data: {flat_pack__select_target: "emptyState"})
           ])
         end
       end
@@ -283,16 +325,15 @@ module FlatPack
         selected = selected_value?(option[:value])
 
         content_tag(:div,
-          option[:label],
           class: custom_option_classes(selected, option[:disabled]),
           role: "option",
-          data: {
-            action: "click->flat-pack--select#selectOption",
-            value: option[:value],
-            label: option[:label],
-            disabled: option[:disabled]
-          },
-          aria: {selected: selected.to_s})
+          data: option_data(option, action: "click->flat-pack--select#selectOption"),
+          aria: {selected: selected.to_s}) do
+          safe_join([
+            render_option_icon(option),
+            content_tag(:span, option[:label], class: "min-w-0 truncate")
+          ].compact)
+        end
       end
 
       def render_nested_custom_option_group(option)
@@ -309,14 +350,12 @@ module FlatPack
         content_tag(:div,
           class: nested_custom_option_classes(selected, option[:disabled], child),
           role: "option",
-          data: {
+          data: option_data(
+            option,
             action: "click->flat-pack--select#selectNestedOption",
-            value: option[:value],
-            label: option[:label],
-            disabled: option[:disabled],
             parent_value: parent_value,
             option_type: type
-          },
+          ),
           aria: {selected: selected.to_s}) do
           safe_join([
             tag.input(
@@ -328,8 +367,9 @@ module FlatPack
               data: {flat_pack__select_target: "nestedCheckbox"},
               aria: {hidden: "true"}
             ),
-            content_tag(:span, option[:label], class: child ? "text-sm" : "font-medium")
-          ])
+            render_option_icon(option),
+            content_tag(:span, option[:label], class: child ? "min-w-0 truncate text-sm" : "min-w-0 truncate font-medium")
+          ].compact)
         end
       end
 
@@ -379,7 +419,7 @@ module FlatPack
       end
 
       def wrapper_classes
-        "flat-pack-select-wrapper"
+        "flat-pack-input-wrapper flat-pack-select-wrapper"
       end
 
       def select_classes
@@ -404,18 +444,19 @@ module FlatPack
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-[var(--radius-md)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
+        "absolute z-10 mt-1 w-full hidden rounded-[var(--menu-radius)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
       end
 
       def search_input_classes
-        "w-full px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
+        "w-full px-[var(--form-control-padding-x)] py-[var(--form-control-padding-y)] text-sm rounded-[var(--form-control-radius)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] text-[var(--surface-content-color)] focus:outline-none focus:ring-1 focus:ring-inset focus:ring-ring"
       end
 
       def custom_option_classes(selected, disabled)
         base = [
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "flex items-center gap-[var(--dropdown-item-gap)]",
+          "px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)]",
           "text-sm",
-          "rounded-[var(--radius-sm)]",
+          "rounded-[var(--dropdown-item-radius)]",
           "transition-colors duration-base"
         ]
 
@@ -423,12 +464,12 @@ module FlatPack
           "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
           if @multiple
-            "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+            "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
           else
-            "bg-[var(--color-primary)] text-[var(--color-primary-text)] cursor-pointer"
+            "bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] cursor-pointer"
           end
         else
-          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")
@@ -436,8 +477,8 @@ module FlatPack
 
       def nested_custom_option_classes(selected, disabled, child)
         base = [
-          "flex items-center gap-2",
-          "px-[var(--form-control-padding)] py-[var(--form-control-padding)]",
+          "flex items-center gap-[var(--dropdown-item-gap)]",
+          "px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)]",
           "rounded-none",
           "transition-colors duration-base"
         ]
@@ -447,9 +488,9 @@ module FlatPack
         base << if disabled
           "opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
         elsif selected
-          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         else
-          "hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+          "hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
         end
 
         base.join(" ")
@@ -541,9 +582,9 @@ module FlatPack
         options.map do |option|
           case option
           when String
-            {label: option, value: option, disabled: false, children: []}
+            {label: option, value: option, disabled: false, icon: nil, children: []}
           when Array
-            {label: option[0].to_s, value: option[1].to_s, disabled: false, children: []}
+            {label: option[0].to_s, value: option[1].to_s, disabled: false, icon: nil, children: []}
           when Hash
             normalize_hash_option(option)
           else
@@ -561,6 +602,7 @@ module FlatPack
           label: label.to_s,
           value: value.to_s,
           disabled: option[:disabled] || option["disabled"] || false,
+          icon: normalize_icon(option[:icon] || option["icon"]),
           children: Array(children).map { |child| normalize_child_option(child) }
         }
       end
@@ -568,9 +610,9 @@ module FlatPack
       def normalize_child_option(option)
         case option
         when String
-          {label: option, value: option, disabled: false}
+          {label: option, value: option, disabled: false, icon: nil}
         when Array
-          {label: option[0].to_s, value: option[1].to_s, disabled: false}
+          {label: option[0].to_s, value: option[1].to_s, disabled: false, icon: nil}
         when Hash
           value = option[:value] || option["value"] || option[:id] || option["id"]
           label = option[:label] || option["label"] || value
@@ -578,11 +620,32 @@ module FlatPack
           {
             label: label.to_s,
             value: value.to_s,
-            disabled: option[:disabled] || option["disabled"] || false
+            disabled: option[:disabled] || option["disabled"] || false,
+            icon: normalize_icon(option[:icon] || option["icon"])
           }
         else
           raise ArgumentError, "Invalid option format: #{option.inspect}"
         end
+      end
+
+      def option_data(option, **extra)
+        data = {
+          value: option[:value],
+          label: option[:label],
+          disabled: option[:disabled]
+        }
+        data[:icon] = option[:icon] if option[:icon].present?
+        extra.merge(data)
+      end
+
+      def normalize_icon(icon)
+        return if icon.nil? || icon == false
+
+        name = icon.to_s.strip.downcase
+        return if name.empty?
+        return name if name.match?(ICON_NAME)
+
+        raise ArgumentError, "Invalid icon: #{icon.inspect}. Use a Heroicon name such as \"camera\"."
       end
 
       def validate_name!

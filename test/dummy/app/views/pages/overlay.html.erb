@@ -1,0 +1,106 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Overlay",
+  subtitle: "Put a badge, an icon, or a button on a photo. You choose the spot."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :overlay %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  spots = [
+    [:top_left, "Top left"],
+    [:top_center, "Top"],
+    [:top_right, "Top right"],
+    [:middle_left, "Left"],
+    [:center, "Center"],
+    [:middle_right, "Right"],
+    [:bottom_left, "Bottom left"],
+    [:bottom_center, "Bottom"],
+    [:bottom_right, "Bottom right"]
+  ]
+%>
+
+<section class="mb-12" id="every-spot">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Every spot",
+    anchor_link: true,
+    subtitle: "Nine places. The photo stays put."
+  ) %>
+
+  <div class="max-w-3xl" id="overlay-nine">
+    <%= render FlatPack::Overlay::Component.new(class: "w-full") do |overlay| %>
+      <% overlay.with_media do %>
+        <%= image_tag "/images/hero-stool.jpg", alt: "Stool in a box", class: "block h-auto w-full rounded-[var(--radius-lg)]" %>
+      <% end %>
+      <% spots.each do |placement, label| %>
+        <% overlay.with_item(placement: placement, inset: :md) do %>
+          <%= render FlatPack::Badge::Component.new(text: label, size: :sm) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Overlay::Component.new(class: "w-full") do |overlay| #{erb_tag_close}
+        #{erb_output_open} overlay.with_media do #{erb_tag_close}
+          #{erb_output_open} image_tag photo_path, alt: "Stool in a box", class: "block h-auto w-full" #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} overlay.with_item(placement: :top_left, inset: :md) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Badge::Component.new(text: "Top left", size: :sm) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="badge-icon-button">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Badge, icon, button",
+    anchor_link: true,
+    subtitle: "Each one keeps its own look. The overlay only places it."
+  ) %>
+
+  <div class="max-w-3xl" id="overlay-example">
+    <%= render FlatPack::Overlay::Component.new(class: "w-full") do |overlay| %>
+      <% overlay.with_media do %>
+        <%= image_tag "/images/hero-packaging.jpg", alt: "Closed cardboard box", class: "block h-auto w-full rounded-[var(--radius-lg)]" %>
+      <% end %>
+      <% overlay.with_item(placement: :top_left, inset: :sm) do %>
+        <%= render FlatPack::Badge::Component.new(text: "New", style: :primary, size: :sm) %>
+      <% end %>
+      <% overlay.with_item(placement: :top_right, inset: :md) do %>
+        <%= render FlatPack::Shared::IconComponent.new(name: :heart, size: :lg) %>
+      <% end %>
+      <% overlay.with_item(placement: :bottom_right, inset: :lg) do %>
+        <%= render FlatPack::Button::Component.new(text: "Share", style: :primary, size: :sm) %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Overlay::Component.new(class: "w-full") do |overlay| #{erb_tag_close}
+        #{erb_output_open} overlay.with_media do #{erb_tag_close}
+          #{erb_output_open} image_tag photo_path, alt: "Closed cardboard box", class: "block h-auto w-full" #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} overlay.with_item(placement: :top_left, inset: :sm) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Badge::Component.new(text: "New", style: :primary, size: :sm) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} overlay.with_item(placement: :top_right, inset: :md) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Shared::IconComponent.new(name: :heart, size: :lg) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} overlay.with_item(placement: :bottom_right, inset: :lg) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Share", style: :primary, size: :sm) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>

@@ -22,6 +22,16 @@ module FlatPack
       assert_includes css, "--hero-overlay-copy-padding-top"
       assert_includes css, ".fp-toast-region"
       assert_includes css, ".fp-bottom-nav"
+      assert_includes css, ".fp-fab"
+      assert_includes css, ".fp-fab--contained"
+      assert_includes css, "position: absolute"
+      assert_includes css, "--fab-z-index"
+      assert_includes css, "--fab-size-sm"
+      assert_includes css, '[data-fp-size="sm"] .fp-fab__trigger--extended'
+      assert_includes css, "env(safe-area-inset-bottom, 0px)"
+      assert_includes css, "--fp-fab-nav-offset"
+      assert_includes css, '[data-fp-position="top_right"] .fp-fab__cluster'
+      assert_includes css, '.fp-fab__action[data-fp-style="danger"]'
       assert_includes css, ".fp-sidebar-drawer"
       assert_includes css, "overscroll-behavior: contain"
       assert_includes css, "env(safe-area-inset-top, 0px)"
@@ -30,17 +40,27 @@ module FlatPack
       assert_includes css, "env(safe-area-inset-left, 0px)"
       assert_includes css, "[data-controller~=\"flat-pack--modal\"]"
       assert_includes css, "[data-controller~=\"flat-pack--drawer\"]"
+      assert_includes css, "[data-controller~=\"flat-pack--navigable\"]"
+      assert_includes css, "[data-fp-navigable-busy]"
       assert_includes css, "[data-controller~=\"flat-pack--command-palette\"]"
       assert_includes css, ".fp-drawer-body"
       assert_includes css, ".fp-progress-fill"
       assert_includes css, ".fp-stepper-marker"
       assert_includes css, ".fp-range-input"
+      assert_includes css, ".fp-range-input-ends"
+      assert_includes css, ".fp-range-input-glyph"
+      assert_includes css, ".fp-range-input-preview"
+      assert_includes css, ".fp-range-input-ticks"
+      assert_includes css, ".fp-range-input-sample"
       assert_includes css, "::-webkit-slider-thumb"
+      assert_includes css, "::-moz-range-thumb"
       assert_includes css, "::-moz-range-progress"
       assert_includes css, "--range-progress"
+      assert_includes css, "var(--range-thumb-color)"
+      assert_includes css, "var(--range-thumb-border-color)"
       assert_includes css, ".flat-pack-list-item-icon"
       assert_includes css, ".fp-skip-link"
-      assert_includes css, "[data-flat-pack--carousel-target=\"lightbox\"]"
+      assert_includes css, "[data-controller~=\"flat-pack--lightbox\"]"
       assert_includes css, ".flat-pack-modal__body"
     end
 
@@ -50,8 +70,26 @@ module FlatPack
 
       refute_nil rule_at
       assert_operator rule_at, :>, layer_end
-      assert_includes css[rule_at, 500], "padding-left: max(1rem, env(safe-area-inset-left, 0px));"
-      assert_includes css[rule_at, 500], "padding-right: max(1rem, env(safe-area-inset-right, 0px));"
+      assert_includes css[rule_at, 700], "padding-left: max(var(--top-nav-padding-inline), env(safe-area-inset-left, 0px));"
+      assert_includes css[rule_at, 700], "padding-right: max(var(--top-nav-padding-inline), env(safe-area-inset-right, 0px));"
+    end
+
+    test "overlay pad and modal viewport caps are unlayered and use dvh" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      layer_end = layered_components_end_index(css)
+      pad_at = css.index(/^\.fp-overlay-pad \{/)
+
+      refute_nil pad_at
+      assert_operator pad_at, :>, layer_end
+      assert_includes css, ".fp-modal-overlay-min"
+      assert_includes css, ".fp-modal-dialog-cap"
+      assert_includes css, ".fp-modal-page-sticky"
+      assert_includes css, ".fp-modal-sticky-footer"
+      assert_includes css, ".fp-modal-sticky-header"
+      assert_includes css, "min-height: 100vh;"
+      assert_includes css, "min-height: 100dvh;"
+      assert_includes css, "max-height: calc(100vh - 2rem);"
+      assert_includes css, "max-height: calc(100dvh - 2rem);"
     end
 
     def layered_components_end_index(css)
@@ -74,6 +112,7 @@ module FlatPack
     test "drawer and command palette animate Tailwind v4 translate and scale" do
       drawer = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/drawer_controller.js").read
       palette = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/command_palette_controller.js").read
+      modal = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/modal_controller.js").read
 
       assert_includes drawer, "style.translate"
       assert_includes drawer, "closedTranslate"
@@ -84,6 +123,13 @@ module FlatPack
       refute_includes drawer, "style.transform"
       assert_includes palette, "style.scale"
       refute_includes palette, "style.transform"
+      assert_includes modal, "style.scale"
+      assert_includes modal, "this.element.scrollTop = 0"
+      refute_includes modal, "style.transform"
+
+      helper = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/trigger_origin.js").read
+      assert_includes helper, "style.transform"
+      assert_includes helper, "translate("
     end
 
     test "modal body lock also sets overscroll-behavior none" do

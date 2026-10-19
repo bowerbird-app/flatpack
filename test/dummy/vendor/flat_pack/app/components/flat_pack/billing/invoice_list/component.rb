@@ -9,25 +9,25 @@ module FlatPack
         undef_method :with_actions, :with_actions_content
 
         STATUS_BADGES = {
-          paid: {text: "Paid", style: :success},
-          open: {text: "Open", style: :info},
-          failed: {text: "Failed", style: :danger},
-          void: {text: "Void", style: :default}
+          paid: {key: "paid", style: :success},
+          open: {key: "open", style: :info},
+          failed: {key: "failed", style: :danger},
+          void: {key: "void", style: :default}
         }.freeze
 
         def initialize(
           items: [],
-          title: "Invoices",
-          empty_title: "No invoices yet",
-          empty_description: "They’ll show up here after your first payment.",
+          title: FlatPack::Copy::OMITTED,
+          empty_title: FlatPack::Copy::OMITTED,
+          empty_description: FlatPack::Copy::OMITTED,
           pagy: nil,
           **system_arguments
         )
           super(**system_arguments)
           @items = Array(items).map { |item| normalize_item(item) }
-          @title = title
-          @empty_title = empty_title
-          @empty_description = empty_description
+          @title = fp_text(title, "billing.invoice_list.title")
+          @empty_title = fp_text(empty_title, "billing.invoice_list.empty_title")
+          @empty_description = fp_text(empty_description, "billing.invoice_list.empty_description")
           @pagy = pagy
         end
 
@@ -64,18 +64,18 @@ module FlatPack
           return render_empty if @items.empty?
 
           render FlatPack::Table::Component.new(data: @items) do |table|
-            table.column(title: "Date", html: ->(item) { item[:date] })
-            table.column(title: "Amount", html: ->(item) { item[:amount] })
-            table.column(title: "Status", html: ->(item) {
+            table.column(title: fp_t("billing.invoice_list.date"), html: ->(item) { item[:date] })
+            table.column(title: fp_t("billing.invoice_list.amount"), html: ->(item) { item[:amount] })
+            table.column(title: fp_t("billing.invoice_list.status"), html: ->(item) {
               badge = status_badge(item[:status])
               render FlatPack::Badge::Component.new(text: badge[:text], style: badge[:style], size: :sm)
             })
-            table.column(title: "Actions", html: ->(item) {
+            table.column(title: fp_t("billing.invoice_list.actions"), html: ->(item) {
               if item[:href].blank?
                 ""
               else
                 render FlatPack::Button::Component.new(
-                  text: "Download",
+                  text: fp_t("billing.invoice_list.download"),
                   href: item[:href],
                   style: :ghost,
                   size: :sm
@@ -100,7 +100,13 @@ module FlatPack
 
         def status_badge(status)
           key = status.to_s.downcase.to_sym
-          STATUS_BADGES.fetch(key) do
+          config = STATUS_BADGES[key]
+          if config
+            {
+              text: fp_t("billing.invoice_list.#{config[:key]}"),
+              style: config[:style]
+            }
+          else
             {
               text: status.to_s.tr("_", " ").split.map(&:capitalize).join(" "),
               style: :default

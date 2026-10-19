@@ -57,6 +57,12 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
     removed: false,
     attributes: {},
     classList: {
+      add(...tokens) {
+        tokens.forEach((token) => classNames.add(token))
+      },
+      remove(...tokens) {
+        tokens.forEach((token) => classNames.delete(token))
+      },
       toggle(token) {
         if (classNames.has(token)) {
           classNames.delete(token)
@@ -65,6 +71,9 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
 
         classNames.add(token)
         return true
+      },
+      [Symbol.iterator]() {
+        return classNames.values()
       }
     },
     getAttribute(name) {
@@ -74,7 +83,7 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
       this.attributes[name] = value
     },
     querySelector(selector) {
-      if (selector === "button[aria-label='Remove']") return button
+      if (selector === "[data-fp-chip-remove]") return button
 
       return null
     },
@@ -117,25 +126,30 @@ function buildController({ fetchImpl, method = 'post', params = {}, value = 'rub
   return { button, classNames, controller, dispatchedEvents, element }
 }
 
-test('toggle applies and removes the inset selected ring', () => {
+test('toggle applies and removes the active surface', () => {
   const { classNames, controller, dispatchedEvents, element } = buildController({
     fetchImpl: async () => ({ ok: true, status: 200 })
   })
+  element.classList.add('bg-[var(--surface-muted-background-color)]')
+  element.classList.add('text-[var(--surface-content-color)]')
+  element.classList.add('border-[var(--surface-border-color)]')
 
   controller.toggle()
 
   assert.equal(element.attributes['aria-pressed'], 'true')
-  assert.equal(classNames.has('ring-2'), true)
-  assert.equal(classNames.has('ring-inset'), true)
-  assert.equal(classNames.has('ring-[var(--color-ring)]'), true)
+  assert.equal(classNames.has('bg-[var(--surface-active-background-color)]'), true)
+  assert.equal(classNames.has('text-[var(--surface-active-text-color)]'), true)
+  assert.equal(classNames.has('border-[var(--surface-active-border-color)]'), true)
+  assert.equal(classNames.has('bg-[var(--surface-muted-background-color)]'), false)
   assert.equal(dispatchedEvents[0].detail.selected, true)
 
   controller.toggle()
 
   assert.equal(element.attributes['aria-pressed'], 'false')
-  assert.equal(classNames.has('ring-2'), false)
-  assert.equal(classNames.has('ring-inset'), false)
-  assert.equal(classNames.has('ring-[var(--color-ring)]'), false)
+  assert.equal(classNames.has('bg-[var(--surface-active-background-color)]'), false)
+  assert.equal(classNames.has('bg-[var(--surface-muted-background-color)]'), true)
+  assert.equal(classNames.has('text-[var(--surface-content-color)]'), true)
+  assert.equal(classNames.has('border-[var(--surface-border-color)]'), true)
 })
 
 test('failed remove request preserves the chip and emits chip:remove-failed', async () => {

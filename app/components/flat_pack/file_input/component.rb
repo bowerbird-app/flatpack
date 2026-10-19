@@ -96,9 +96,9 @@ module FlatPack
             content_tag(:div, class: "flex justify-center text-sm/6 text-[var(--surface-muted-content-color)]") do
               safe_join([
                 content_tag(:button, type: "button", class: "relative cursor-pointer rounded-[var(--radius-md)] bg-transparent font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:text-primary/80", data: {action: "flat-pack--file-input#clickInput"}) do
-                  content_tag(:span, "Upload a file")
+                  content_tag(:span, fp_t("file_input.upload"))
                 end,
-                content_tag(:p, " or drag and drop", class: "pl-1")
+                content_tag(:p, fp_t("file_input.or_drag"), class: "pl-1")
               ])
             end
           ]
@@ -242,7 +242,7 @@ module FlatPack
       def file_constraints_text
         constraints = []
         constraints << @accept.split(",").map(&:strip).join(", ") if @accept
-        constraints << "Max size: #{format_file_size(@max_size)}" if @max_size
+        constraints << fp_t("file_input.max_size", size: format_file_size(@max_size)) if @max_size
         constraints.join(" • ") if constraints.any?
       end
 

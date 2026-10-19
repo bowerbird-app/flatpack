@@ -133,10 +133,12 @@ module FlatPack
         render_inline(Component.new(name: "api_key", value: "abc123", quick_copy: true))
 
         assert_selector "div[data-controller='flat-pack--text-area']"
-        assert_selector "div[data-flat-pack--text-area-quick-copy-enabled-value='true']"
+        refute_selector "[data-flat-pack--text-area-quick-copy-enabled-value]"
+        assert_selector "div.fp-quick-copy[data-controller='flat-pack--clipboard'][data-flat-pack--clipboard-feedback-value='toast'][data-action='click->flat-pack--clipboard#copy']"
         assert_selector "textarea[data-flat-pack--text-area-target='textarea']"
-        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount click->flat-pack--text-area#copyFromTextarea']"
-        assert_selector "button[aria-label='Copy textarea value'][data-action='click->flat-pack--text-area#copyFromButton']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount']"
+        assert_selector "button[aria-label='Copy textarea value'][data-flat-pack--clipboard-target='button'].top-2"
+        refute_selector "button[data-action]"
         assert_selector "svg[data-flat-pack--icon-name-value='clipboard-document']"
       end
 
@@ -149,8 +151,8 @@ module FlatPack
         ))
 
         assert_selector "div[data-flat-pack--text-area-character-count-enabled-value='true']"
-        assert_selector "div[data-flat-pack--text-area-quick-copy-enabled-value='true']"
-        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount keydown->flat-pack--text-area#handleKeydown click->flat-pack--text-area#copyFromTextarea']"
+        assert_selector "div.fp-quick-copy[data-controller='flat-pack--clipboard']"
+        assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount keydown->flat-pack--text-area#handleKeydown']"
       end
 
       def test_quick_copy_button_is_disabled_with_disabled_textarea

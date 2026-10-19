@@ -43,11 +43,20 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "System theme tracks the OS preference"
   end
 
-  test "rounded theme demo explains the alias and shows :root values" do
+  test "rounded theme demo shows the spacing scale" do
     get theme_demo_path(theme: "rounded")
 
     assert_response :success
-    assert_includes response.body, "no-op alias of :root"
-    assert_includes response.body, "--color-primary"
+    assert_includes response.body, "shifts --space-2 through --space-6"
+    assert_includes response.body, "--space-2: 0.75rem"
+    assert_includes response.body, "--dropdown-padding:"
+  end
+
+  test "brand theme demo sets data-theme on body" do
+    get "/demo/brand_theme/dark"
+
+    assert_response :success
+    assert_includes response.body, 'data-theme="featured-in-dark"'
+    assert_includes response.body, "Sign out"
   end
 end

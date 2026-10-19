@@ -37,12 +37,13 @@ module FlatPack
         }
       }.freeze
 
-      # Density for padding, gap, and text. md matches --toast-padding 1rem + text-sm.
+      # Density for padding, gap, and text. Each size uses its own padding token.
       # "gap-2" "gap-3" "gap-4" "text-xs" "text-sm" "text-base" "w-4" "h-4" "w-5" "h-5" "w-6" "h-6"
+      # "p-[var(--toast-padding-sm)]" "p-[var(--toast-padding-md)]" "p-[var(--toast-padding-lg)]"
       SIZES = {
-        sm: {padding: "0.75rem", gap: "gap-2", text: "text-xs", icon: "w-4 h-4"},
-        md: {padding: "1rem", gap: "gap-3", text: "text-sm", icon: "w-5 h-5"},
-        lg: {padding: "1.25rem", gap: "gap-4", text: "text-base", icon: "w-6 h-6"}
+        sm: {padding: "p-[var(--toast-padding-sm)]", gap: "gap-2", text: "text-xs", icon: "w-4 h-4"},
+        md: {padding: "p-[var(--toast-padding-md)]", gap: "gap-3", text: "text-sm", icon: "w-5 h-5"},
+        lg: {padding: "p-[var(--toast-padding-lg)]", gap: "gap-4", text: "text-base", icon: "w-6 h-6"}
       }.freeze
 
       def initialize(
@@ -87,21 +88,12 @@ module FlatPack
           role: "status",
           aria: {live: "polite", atomic: "true"},
           class: toast_classes,
-          style: padding_style,
           data: {
             controller: "flat-pack--toast",
             "flat-pack--toast-timeout-value": @timeout,
             "flat-pack--toast-dismissible-value": @dismissible
           }
         )
-      end
-
-      def padding_style
-        declaration = "--toast-padding: #{size_config.fetch(:padding)}"
-        existing = @system_arguments[:style] || @system_arguments["style"]
-        return declaration unless existing.present?
-
-        "#{existing.to_s.rstrip.sub(/;+\z/, "")}; #{declaration}"
       end
 
       def toast_classes
@@ -111,7 +103,7 @@ module FlatPack
           "items-center",
           "pointer-events-auto",
           size_config.fetch(:gap),
-          "p-[var(--toast-padding)]",
+          size_config.fetch(:padding),
           "rounded-[var(--toast-border-radius)]",
           "border",
           "shadow-[var(--toast-shadow)]",
@@ -198,7 +190,7 @@ module FlatPack
         content_tag(:button,
           type: "button",
           class: dismiss_button_classes,
-          aria: {label: "Dismiss"},
+          aria: {label: fp_t("toast.dismiss")},
           data: {action: "flat-pack--toast#dismiss"}) do
           render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :sm)
         end

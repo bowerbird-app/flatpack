@@ -1,3 +1,5 @@
+import { flatPackCopy } from "flat_pack/copy"
+
 export function initLocalTimes(root = document, now = new Date()) {
   root.querySelectorAll("time.local-time").forEach((element) => {
     updateLocalTimeElement(element, now)
@@ -42,23 +44,47 @@ export function formatLocalTime(date) {
 export function formatRelativeTime(date, now = new Date(), shorten = false) {
   const elapsedSeconds = Math.floor((now - date) / 1000)
 
-  if (elapsedSeconds < 60) return shorten ? "a min ago" : "Just now"
+  if (elapsedSeconds < 60) {
+    return shorten ? flatPackCopy("timestamp.short_a_min_ago") : flatPackCopy("timestamp.just_now")
+  }
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60)
-  if (elapsedMinutes < 60) return shorten ? `${elapsedMinutes === 1 ? "a" : elapsedMinutes} min ago` : `${elapsedMinutes} minutes ago`
+  if (elapsedMinutes < 60) {
+    return shorten
+      ? (elapsedMinutes === 1 ? flatPackCopy("timestamp.short_a_min_ago") : flatPackCopy("timestamp.short_min_ago", {count: elapsedMinutes}))
+      : flatPackCopy("timestamp.minutes_ago", {count: elapsedMinutes})
+  }
 
   const elapsedHours = Math.floor(elapsedMinutes / 60)
-  if (elapsedHours < 24) return shorten ? `${elapsedHours}hr ago` : `${elapsedHours} hours ago`
+  if (elapsedHours < 24) {
+    return shorten
+      ? flatPackCopy("timestamp.short_hr_ago", {count: elapsedHours})
+      : flatPackCopy("timestamp.hours_ago", {count: elapsedHours})
+  }
 
   const elapsedDays = Math.floor(elapsedHours / 24)
-  if (elapsedDays < 2) return shorten ? "1d ago" : "Yesterday"
-  if (elapsedDays < 7) return shorten ? `${elapsedDays}d ago` : `${elapsedDays} days ago`
+  if (elapsedDays < 2) {
+    return shorten ? flatPackCopy("timestamp.short_yesterday") : flatPackCopy("timestamp.yesterday")
+  }
+  if (elapsedDays < 7) {
+    return shorten
+      ? flatPackCopy("timestamp.short_d_ago", {count: elapsedDays})
+      : flatPackCopy("timestamp.days_ago", {count: elapsedDays})
+  }
 
   const elapsedWeeks = Math.floor(elapsedDays / 7)
-  if (elapsedDays < 30) return shorten ? `${elapsedWeeks}wk ago` : `${elapsedWeeks} weeks ago`
+  if (elapsedDays < 30) {
+    return shorten
+      ? flatPackCopy("timestamp.short_wk_ago", {count: elapsedWeeks})
+      : flatPackCopy("timestamp.weeks_ago", {count: elapsedWeeks})
+  }
 
   const elapsedMonths = Math.floor(elapsedDays / 30)
-  if (elapsedDays < 365) return shorten ? `${elapsedMonths}mo ago` : `${elapsedMonths} months ago`
+  if (elapsedDays < 365) {
+    return shorten
+      ? flatPackCopy("timestamp.short_mo_ago", {count: elapsedMonths})
+      : flatPackCopy("timestamp.months_ago", {count: elapsedMonths})
+  }
 
   return formatAbsoluteDate(date)
 }

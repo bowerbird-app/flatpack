@@ -20,7 +20,7 @@ module FlatPack
         turbo_frame: nil,
         infinite_url: nil,
         has_more: true,
-        loading_text: "Loading more…",
+        loading_text: FlatPack::Copy::OMITTED,
         loading_variant: :table,
         **system_arguments
       )
@@ -32,7 +32,7 @@ module FlatPack
         @turbo_frame = turbo_frame.to_s.presence
         @infinite_url = infinite_url
         @has_more = has_more
-        @loading_text = loading_text
+        @loading_text = fp_text(loading_text, "pagination.loading_more")
         @loading_variant = loading_variant.to_sym
 
         validate_mode!
@@ -72,7 +72,7 @@ module FlatPack
       def container_attributes
         merge_attributes(
           class: container_classes,
-          aria: {label: "Pagination"}
+          aria: {label: fp_t("pagination.label")}
         )
       end
 
@@ -86,7 +86,7 @@ module FlatPack
       end
 
       def pagination_wrapper_classes
-        "inline-flex items-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] p-1.5"
+        "inline-flex items-center gap-1.5 rounded-[var(--button-border-radius)] bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] p-1.5"
       end
 
       def render_prev_button
@@ -97,13 +97,13 @@ module FlatPack
             :span,
             previous_icon,
             class: page_button_classes(disabled: true),
-            aria: {label: "Previous page", disabled: "true"}
+            aria: {label: fp_t("pagination.previous"), disabled: "true"}
           )
         else
           link_to(
             page_url(@pagy.prev),
             class: page_button_classes,
-            aria: {label: "Previous page"},
+            aria: {label: fp_t("pagination.previous")},
             data: link_data_attributes
           ) do
             previous_icon
@@ -119,13 +119,13 @@ module FlatPack
             :span,
             next_icon,
             class: page_button_classes(disabled: true),
-            aria: {label: "Next page", disabled: "true"}
+            aria: {label: fp_t("pagination.next"), disabled: "true"}
           )
         else
           link_to(
             page_url(@pagy.next),
             class: page_button_classes,
-            aria: {label: "Next page"},
+            aria: {label: fp_t("pagination.next")},
             data: link_data_attributes
           ) do
             next_icon
@@ -158,14 +158,14 @@ module FlatPack
             :span,
             page.to_s,
             class: page_button_classes(active: true),
-            aria: {label: "Page #{page}", current: "page"}
+            aria: {label: fp_t("pagination.page", number: page), current: "page"}
           )
         else
           link_to(
             page.to_s,
             page_url(page),
             class: page_button_classes,
-            aria: {label: "Page #{page}"},
+            aria: {label: fp_t("pagination.page", number: page)},
             data: link_data_attributes
           )
         end
@@ -181,9 +181,9 @@ module FlatPack
         if disabled
           "#{base} text-[var(--surface-muted-content-color)] cursor-not-allowed opacity-50"
         elsif active
-          "#{base} bg-primary text-primary-text"
+          "#{base} bg-[var(--pagination-current-background-color)] text-[var(--pagination-current-text-color)]"
         else
-          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+          "#{base} text-[var(--surface-content-color)] hover:bg-[var(--surface-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         end
       end
 

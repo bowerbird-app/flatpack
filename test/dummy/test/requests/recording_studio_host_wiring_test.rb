@@ -199,17 +199,19 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
     assert_equal "/studio", controller.after_sign_in_path_for(User.new)
   end
 
-  test "password sign in form disables turbo" do
+  test "password sign in uses email-first continue then password step" do
     skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
 
     get "/users/sign_in"
     assert_response :success
-    assert_match(/data-turbo="false"|data-turbo='false'/, response.body)
+    assert_includes response.body, "Continue with email"
+    assert_no_match(/name="user\[password\]"/, response.body)
 
     post "/users/sign_in", params: {user: {email: "admin@admin.com"}}
+    assert_response :redirect
     follow_redirect!
     assert_response :success
-    assert_match(/data-turbo="false"|data-turbo='false'/, response.body)
+    assert_match(/name="user\[password\]"/, response.body)
   end
 
   test "password sign in with stored admin location lands on studio" do

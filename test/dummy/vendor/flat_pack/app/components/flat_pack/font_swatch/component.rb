@@ -7,8 +7,9 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "h-6" "w-6" "h-8" "w-8" "h-10" "w-10" "h-12" "w-12"
       # "text-[10px]" "text-xs" "text-sm" "text-base"
-      # "min-w-[12rem]" "hover:bg-[var(--surface-muted-background-color)]"
-      # "aria-selected:bg-[var(--surface-muted-background-color)]"
+      # "min-w-[12rem]" "hover:bg-[var(--surface-hover-background-color)]"
+      # "focus:bg-[var(--surface-hover-background-color)]"
+      # "aria-selected:bg-[var(--surface-active-background-color)]"
       SIZES = {
         xs: "h-6 w-6",
         sm: "h-8 w-8",
@@ -233,9 +234,9 @@ module FlatPack
         classes(
           "flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-2 py-1.5 text-left text-sm",
           "text-[var(--popover-text-color)]",
-          "hover:bg-[var(--surface-muted-background-color)]",
-          "focus:outline-none focus:bg-[var(--surface-muted-background-color)]",
-          "aria-selected:bg-[var(--surface-muted-background-color)]"
+          "hover:bg-[var(--surface-hover-background-color)]",
+          "focus:outline-none focus:bg-[var(--surface-hover-background-color)]",
+          "aria-selected:bg-[var(--surface-active-background-color)]"
         )
       end
 
@@ -248,7 +249,7 @@ module FlatPack
       end
 
       def accessible_name
-        tooltip_text.presence || "Font"
+        tooltip_text.presence || fp_t("font_swatch.fallback")
       end
 
       def selected_option_label

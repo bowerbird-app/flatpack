@@ -13,9 +13,9 @@ module FlatPack
           :with_actions, :with_actions_content
 
         def initialize(
-          placeholder: "Write a comment...",
-          submit_label: "Comment",
-          cancel_label: "Cancel",
+          placeholder: FlatPack::Copy::OMITTED,
+          submit_label: FlatPack::Copy::OMITTED,
+          cancel_label: FlatPack::Copy::OMITTED,
           show_cancel: false,
           disabled: false,
           compact: false,
@@ -29,9 +29,9 @@ module FlatPack
           **system_arguments
         )
           super(**system_arguments)
-          @placeholder = placeholder
-          @submit_label = submit_label
-          @cancel_label = cancel_label
+          @placeholder = fp_text(placeholder, "comments.placeholder")
+          @submit_label = fp_text(submit_label, "comments.submit")
+          @cancel_label = fp_text(cancel_label, "comments.cancel")
           @show_cancel = show_cancel
           @disabled = disabled
           @compact = compact
@@ -99,7 +99,7 @@ module FlatPack
           return if @compact
 
           avatar_options = {
-            name: @avatar.is_a?(Hash) ? (@avatar[:name] || "You") : "You",
+            name: @avatar.is_a?(Hash) ? (@avatar[:name] || fp_t("comments.you")) : fp_t("comments.you"),
             alt: @avatar.is_a?(Hash) ? @avatar[:alt] : nil,
             src: @avatar.is_a?(Hash) ? @avatar[:src] : nil,
             initials: @avatar.is_a?(Hash) ? @avatar[:initials] : nil,

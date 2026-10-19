@@ -22,7 +22,7 @@ Use this as a sibling controls container when chart filtering UI can vary by scr
 | name | type | description |
 | --- | --- | --- |
 | `control` | slot | Accepts a custom component instance or block content for fully custom controls. |
-| `button` | helper | Renders a Turbo link button helper (`text`, `href`, `selected`, and forwarded button args). |
+| `button` | helper | Renders a Turbo link button helper (`text`, `href`, `selected`, `style`, and forwarded button args). `selected: true` without `style:` uses the neutral active surface. A named `style:` keeps that button colour. |
 | `dropdown` | helper | Renders a dropdown helper with Turbo-linked options. |
 | `checkbox` | helper | Renders a Turbo GET form with checkbox toggle behavior and optional auto-submit. |
 

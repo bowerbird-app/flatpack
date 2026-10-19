@@ -1,0 +1,5 @@
+<%= render FlatPack::List::Component.new(divider: true, spacing: :dense) do %>
+  <%= render FlatPack::List::Item.new(trailing: "Owner", class: "px-0") do %>Alice Ng<% end %>
+  <%= render FlatPack::List::Item.new(trailing: "Editor", class: "px-0") do %>Ben Ortiz<% end %>
+  <%= render FlatPack::List::Item.new(trailing: "Viewer", class: "px-0") do %>Chen Li<% end %>
+<% end %>

@@ -20,7 +20,7 @@ module FlatPack
         def divider_classes
           classes(
             "h-px",
-            "my-1",
+            "my-[var(--dropdown-divider-margin)]",
             "bg-[var(--surface-border-color)]"
           )
         end

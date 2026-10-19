@@ -193,7 +193,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 `flat_pack/variables.css` contains the complete FlatPack theming system:
 - Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens on `:root {}`
 - `@theme inline {}` inventory so Tailwind can emit utilities without copying those values
-- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme="rounded"]` is a no-op alias of the default.
+- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme="rounded"]` shifts the spacing scale and the shape tokens. It does not restate colour.
 
 **2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — component scanning only:
 
@@ -208,10 +208,12 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 
 /* Unlayered so this beats Tailwind @layer theme --radius-md: 0.375rem. */
 :root {
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
 }
 ```
 
@@ -256,11 +258,12 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 **Variables are loaded automatically.** The `rails generate flat_pack:install` command adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your application layout. Propshaft resolves the correct digested file URLs at request time, so the complete FlatPack variable system loads without any manual copying.
 
 The imported `variables.css` contains:
-- `:root {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use)
+- `:root, [data-theme] {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use). `[data-theme]` repeats the wiring so a named theme on `<body>` re-resolves aliases
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
-- `[data-theme="dark"] {}` — dark overrides only (component aliases inherit)
+- `[data-theme="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
 - `[data-theme="ocean"] {}` — ocean variant (overrides only)
-- `[data-theme="rounded"] {}` — empty alias of the default (same look; safe for hosts that already set the attribute). Leave it empty. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
+- A bare `:root {}` after the palette holds `--space-1`…`--space-6`, `--density`, the menu shells that rounded remaps, and the shape scale (`--radius-xs` through `--radius-full`) plus the component radii rounded changes. Do not move those onto `[data-theme]` or a nested theme resets the scale or the corners.
+- `[data-theme="rounded"] {}` — larger `--space-2`…`--space-6` (step 1 stays `0.25rem`), the remapped menu shells, and the shape overrides (pill controls, larger cards, menus, and modals). It does not restate colour or shadow, and it does not restate the global `--radius-*` steps. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
 To recolor without copying the full token list:
 
@@ -274,13 +277,13 @@ or in host CSS loaded after FlatPack:
 :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
 ```
 
-**Rounded / charcoal is the default.** The `:root {}` block in `variables.css` establishes that palette without requiring any attribute. No `data-theme` attribute is needed. `[data-theme="rounded"]` is an empty alias of the same look.
+**Charcoal is the default palette.** The `:root, [data-theme] {}` block establishes that palette without requiring any attribute. `[data-theme="rounded"]` is the generous spacing scale and the pill shape on that same palette. Set the attribute when you want it. Dark and ocean stay on the compact scale and the moderate corners.
 
 To **explicitly force light mode** regardless of any ThemeController state or stored preferences (useful if you are not using the theme switcher), add `data-theme="light"` to your HTML root element in your layout:
 
 ```erb
 <%# app/views/layouts/application.html.erb %>
-<html data-theme="light" lang="<%= I18n.locale %>">
+<html data-theme="light" lang="<%= I18n.locale %>" <%= tag.attributes(data: flat_pack_copy_data) %>>
 ```
 
 > **Note:** When `data-theme` is absent or set to `"light"`, the `:root {}` light palette from `variables.css` is active. The FlatPack `ThemeController` stores user preference in `localStorage` under the key `flatpack-theme` and sets `data-theme` on `document.documentElement` accordingly. If you add `data-theme="light"` to the static HTML, JavaScript will override it once the controller connects — remove the static attribute if you want the ThemeController to manage theme state.
@@ -292,8 +295,7 @@ To **customize the theme**, override CSS variables in your own stylesheet:
 
 /* Override FlatPack defaults (loaded via stylesheet_link_tag in the layout) */
 :root {
-  --color-primary: oklch(0.55 0.22 160);        /* teal primary */
-  --color-primary-hover: oklch(0.45 0.22 160);
+  --color-primary: oklch(0.55 0.22 160);        /* teal primary; hover follows */
   --surface-background-color: oklch(1.0 0 0);   /* white background */
   --surface-content-color: oklch(0.20 0.01 250); /* dark text */
 }
@@ -325,6 +327,12 @@ pin_all_from FlatPack::Engine.root.join("app/javascript/flat_pack/tiptap"),
 
 # Local/relative time enhancer for <time class="local-time">
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+
+# Kit copy for Stimulus (pairs with data-fp-copy on <html>)
+pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
+
+# Shared clipboard writer used by CopyButton, quick copy, and section-title anchors
+pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
@@ -370,6 +378,8 @@ If you need to manually configure JavaScript:
                 to: "flat_pack/tiptap",
                 preload: false
    pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+   pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
+   pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 
@@ -438,8 +448,10 @@ import ChatSenderController       from "${controllersDir}/chat_sender_controller
 import ChipController             from "${controllersDir}/chip_controller.js";
 import CodeBlockTabsController    from "${controllersDir}/code_block_tabs_controller.js";
 import CollapseController         from "${controllersDir}/collapse_controller.js";
+import CollectionEditorController from "${controllersDir}/collection_editor_controller.js";
 import ContentEditorController    from "${controllersDir}/content_editor_controller.js";
 import DateInputController        from "${controllersDir}/date_input_controller.js";
+import FabController              from "${controllersDir}/fab_controller.js";
 import FileInputController        from "${controllersDir}/file_input_controller.js";
 import FormValidationController   from "${controllersDir}/form_validation_controller.js";
 import GridSortableController     from "${controllersDir}/grid_sortable_controller.js";
@@ -459,6 +471,7 @@ import SelectController           from "${controllersDir}/select_controller.js";
 import SidebarController          from "${controllersDir}/sidebar_controller.js";
 import SidebarGroupController     from "${controllersDir}/sidebar_group_controller.js";
 import SidebarLayoutController    from "${controllersDir}/sidebar_layout_controller.js";
+import SlideIndicatorController   from "${controllersDir}/slide_indicator_controller.js";
 import TableController            from "${controllersDir}/table_controller.js";
 import TableSortableController    from "${controllersDir}/table_sortable_controller.js";
 import TabsController             from "${controllersDir}/tabs_controller.js";
@@ -468,6 +481,7 @@ import TiptapController           from "${controllersDir}/tiptap_controller.js";
 import ToastController            from "${controllersDir}/toast_controller.js";
 import ToastsRegionController     from "${controllersDir}/toasts_region_controller.js";
 import TooltipController          from "${controllersDir}/tooltip_controller.js";
+import UnsavedChangesController   from "${controllersDir}/unsaved_changes_controller.js";
 
 const application = Application.start();
 application.register("flat-pack--accordion",           AccordionController);
@@ -484,8 +498,10 @@ application.register("flat-pack--chat-sender",         ChatSenderController);
 application.register("flat-pack--chip",                ChipController);
 application.register("flat-pack--code-block-tabs",     CodeBlockTabsController);
 application.register("flat-pack--collapse",            CollapseController);
+application.register("flat-pack--collection-editor",   CollectionEditorController);
 application.register("flat-pack--content-editor",      ContentEditorController);
 application.register("flat-pack--date-input",          DateInputController);
+application.register("flat-pack--fab",                 FabController);
 application.register("flat-pack--file-input",          FileInputController);
 application.register("flat-pack--form-validation",     FormValidationController);
 application.register("flat-pack--grid-sortable",       GridSortableController);
@@ -505,6 +521,7 @@ application.register("flat-pack--select",              SelectController);
 application.register("flat-pack--sidebar",             SidebarController);
 application.register("flat-pack--sidebar-group",       SidebarGroupController);
 application.register("flat-pack--sidebar-layout",      SidebarLayoutController);
+application.register("flat-pack--slide-indicator",     SlideIndicatorController);
 application.register("flat-pack--table",               TableController);
 application.register("flat-pack--table-sortable",      TableSortableController);
 application.register("flat-pack--tabs",                TabsController);
@@ -514,6 +531,7 @@ application.register("flat-pack--tiptap",              TiptapController);
 application.register("flat-pack--toast",               ToastController);
 application.register("flat-pack--toasts-region",       ToastsRegionController);
 application.register("flat-pack--tooltip",             TooltipController);
+application.register("flat-pack--unsaved-changes",     UnsavedChangesController);
 `.trim()
 
 const tmpDir = path.join(__dirname, "../tmp")
@@ -720,7 +738,7 @@ If the install generator didn't automatically configure Tailwind CSS 4:
 
 **Symptom:** Components render without expected styles — border radius, focus rings, transitions, or colors are missing — even after a successful Tailwind build. No build errors appear.
 
-**Root cause:** In Tailwind CSS 4, a normal `@theme { --radius-md: 1rem; }` block is emitted onto `:root`. If you also write `--radius-md: var(--radius-md)` on `:root` (or `[data-theme]`), CSS treats that as a circular reference and the token becomes invalid.
+**Root cause:** In Tailwind CSS 4, a normal `@theme { --radius-md: 0.5rem; }` block is emitted onto `:root`. If you also write `--radius-md: var(--radius-md)` on `:root` (or `[data-theme]`), CSS treats that as a circular reference and the token becomes invalid.
 
 FlatPack avoids that by using `@theme inline` for the inventory (`--radius-md: var(--radius-md)`) and putting the concrete `1rem` only on `:root`. Browsers skip `@theme` when `flat_pack/variables` is a `stylesheet_link_tag`. The `--token: var(--token)` lines in `@theme inline` are Tailwind registrations, not runtime assignments.
 
@@ -763,7 +781,7 @@ Check these host blocks:
    ```
 5. Verify the compiled output (`app/assets/builds/application.css`) resolves each previously-broken variable to a concrete value, not another `var()`:
    ```
-   GOOD: --radius-md:1rem;
+   GOOD: --radius-md:0.5rem;
    BAD:  --radius-md:var(--radius-md);
    ```
 
@@ -935,7 +953,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 
-**Rounded / charcoal is the default.** No `data-theme` attribute is required. The `:root {}` block in `variables.css` activates that palette automatically. Supported themes: `light` / `rounded` (default alias), `dark`, `ocean` — set via `data-theme` on `<html>`.
+**Charcoal is the default palette.** No `data-theme` attribute is required for colour. Set `data-theme="rounded"` for the generous spacing scale and pill controls. Supported themes: `light`, `rounded`, `dark`, `ocean` — set via `data-theme` on `<html>`. Dark and ocean keep the compact scale and the moderate corners.
 
 No manual path finding, no manual copying of CSS variables, no manual configuration — just run the generator and rebuild CSS.
 

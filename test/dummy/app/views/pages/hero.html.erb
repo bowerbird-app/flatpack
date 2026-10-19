@@ -373,4 +373,41 @@
     ) %>
   </section>
 
+  <!-- Display -->
+  <section class="mb-12" id="display">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Display", anchor_link: true, subtitle: "Opt-in cover headline. Default heroes stay on the product scale.") %>
+    <div class="mb-4 flex justify-end">
+      <%= render FlatPack::Button::Component.new(text: "View full-page demo", style: :secondary, href: pages_hero_display_path, target: "_blank") %>
+    </div>
+    <%= render FlatPack::Hero::Component.new(
+      variant: :centered,
+      size: :display,
+      tagline: "Press kit",
+      headline: "A press kit for the Northlight collection",
+      description: "Stills, credits, and download packs."
+    ) do |hero|
+      hero.slot do
+        concat render(FlatPack::Button::Component.new(text: "Download stills", style: :primary, href: "#"))
+        concat render(FlatPack::Button::Component.new(text: "Credits", style: :secondary, href: "#"))
+      end
+    end %>
+    <%= render FlatPack::CodeBlock::Component.new(
+      class: "mt-4",
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Hero::Component.new(
+          variant: :centered,
+          size: :display,
+          tagline: "Press kit",
+          headline: "A press kit for the Northlight collection",
+          description: "Stills, credits, and download packs."
+        ) do |hero|
+          hero.slot do
+            concat render(FlatPack::Button::Component.new(text: "Download stills", style: :primary, href: "#"))
+          end
+        end %&gt;
+      CODE
+    ) %>
+  </section>
+
 </div>

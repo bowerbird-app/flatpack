@@ -116,7 +116,7 @@ module FlatPack
             "h-full",
             "min-h-0",
             "border border-[var(--chat-border-color)]",
-            "rounded-[var(--radius-lg)]",
+            "rounded-[var(--card-radius)]",
             "overflow-hidden",
             "bg-[var(--chat-background-color)]",
             "flex flex-col",
@@ -216,13 +216,13 @@ module FlatPack
 
           content_tag(:div, class: mobile_back_container_classes) do
             render FlatPack::Button::Component.new(
-              text: "Back",
+              text: fp_t("chat.back"),
               icon: "chevron-left",
               style: :ghost,
               size: :sm,
               type: "button",
               data: {action: "click->flat-pack--chat-layout#showSidebar"},
-              aria: {label: "Back to conversations"}
+              aria: {label: fp_t("chat.back_to_conversations")}
             )
           end
         end

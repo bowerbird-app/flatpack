@@ -6,9 +6,9 @@ module FlatPack
   class IconTokensTest < ActiveSupport::TestCase
     test "outline stroke width is concrete on :root" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--icon-stroke-width:\s*1\.5/, root_block)
     end
 

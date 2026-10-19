@@ -92,6 +92,7 @@ export default class extends Controller {
     this.optionTargets.forEach((item) => {
       item.setAttribute("aria-selected", item === option ? "true" : "false")
     })
+    this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }))
     this.close()
     this.inputTarget.focus()
   }

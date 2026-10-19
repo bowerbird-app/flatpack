@@ -4,6 +4,7 @@ module FlatPack
   module TextInput
     class Component < FlatPack::BaseComponent
       include FlatPack::FormField::ControlStyles
+      include FlatPack::Clipboard::QuickCopy
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
@@ -22,8 +23,10 @@ module FlatPack
         quick_copy: false,
         min_characters: nil,
         max_characters: nil,
+        chrome: :field,
         **system_arguments
       )
+        assign_control_chrome!(chrome)
         @custom_class = system_arguments[:class]
         super(**system_arguments)
         @name = name
@@ -59,30 +62,14 @@ module FlatPack
       private
 
       def render_input
-        return tag.input(**input_attributes) unless @quick_copy
+        field = tag.input(**input_attributes)
+        return field unless @quick_copy
 
-        content_tag(:div, class: quick_copy_wrapper_classes) do
-          safe_join([
-            tag.input(**input_attributes),
-            render_copy_button
-          ])
-        end
-      end
-
-      def render_copy_button
-        content_tag(
-          :button,
-          type: "button",
-          class: copy_button_classes,
-          disabled: @disabled,
-          data: {
-            action: "click->flat-pack--text-input#copyFromButton",
-            flat_pack__text_input_target: "copyButton"
-          },
-          aria: {label: "Copy input value"}
-        ) do
-          render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
-        end
+        render_quick_copy_field(
+          target_id: input_id,
+          button_label: fp_t("text.copy_input"),
+          disabled: @disabled
+        ) { field }
       end
 
       def render_character_count
@@ -127,7 +114,6 @@ module FlatPack
         attrs[:data] = {
           controller: "flat-pack--text-input",
           flat_pack__text_input_character_count_enabled_value: @character_count,
-          flat_pack__text_input_quick_copy_enabled_value: @quick_copy,
           flat_pack__text_input_min_characters_value: @min_characters,
           flat_pack__text_input_max_characters_value: @max_characters
         }.compact
@@ -152,37 +138,18 @@ module FlatPack
         data_attributes = {
           flat_pack__text_input_target: "input"
         }
-
-        data_attributes[:action] = input_actions
+        data_attributes[:action] = input_actions if input_actions
         data_attributes
       end
 
       def input_actions
-        actions = []
-        actions << "input->flat-pack--text-input#updateCharacterCount" if @character_count
-        actions << "click->flat-pack--text-input#copyFromInput" if @quick_copy
-        actions.join(" ")
+        return unless @character_count
+
+        "input->flat-pack--text-input#updateCharacterCount"
       end
 
       def behavior_enabled?
         @character_count || @quick_copy
-      end
-
-      def quick_copy_wrapper_classes
-        "relative"
-      end
-
-      def copy_button_classes
-        classes(
-          "absolute right-2 top-1/2 -translate-y-1/2",
-          "inline-flex items-center justify-center",
-          "h-6 w-6 rounded",
-          "text-[var(--surface-muted-content-color)]",
-          "hover:text-[var(--surface-content-color)]",
-          "hover:bg-[var(--surface-muted-background-color)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          "disabled:opacity-50 disabled:cursor-not-allowed"
-        )
       end
 
       def input_id
@@ -205,9 +172,9 @@ module FlatPack
         count = (@value || "").to_s.length
 
         if @max_characters
-          "#{count}/#{@max_characters} characters"
+          fp_t("text.characters_with_limit", count: count, limit: @max_characters)
         else
-          "#{count} characters"
+          fp_t("text.characters", count: count)
         end
       end
 

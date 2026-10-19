@@ -5,8 +5,8 @@ module FlatPack
     module InlineInput
       class Component < FlatPack::BaseComponent
         def initialize(
-          placeholder: "Write a comment...",
-          submit_label: "Comment",
+          placeholder: FlatPack::Copy::OMITTED,
+          submit_label: FlatPack::Copy::OMITTED,
           disabled: false,
           form: nil,
           name: "comment",
@@ -17,8 +17,8 @@ module FlatPack
           **system_arguments
         )
           super(**system_arguments)
-          @placeholder = placeholder
-          @submit_label = submit_label
+          @placeholder = fp_text(placeholder, "comments.placeholder")
+          @submit_label = fp_text(submit_label, "comments.submit")
           @disabled = disabled
           @form = form
           @name = name
@@ -86,7 +86,7 @@ module FlatPack
             style: :primary,
             size: :sm,
             disabled: @disabled,
-            class: "shrink-0 rounded-full"
+            class: "shrink-0"
           }
           args[:form] = @form if @form
           args

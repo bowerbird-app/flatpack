@@ -8,10 +8,10 @@ module FlatPack
       # "w-4" "h-4" "w-5" "h-5" "w-6" "h-6" "w-8" "h-8"
       SIZES = FlatPack::Shared::IconComponent::SIZES
 
-      def initialize(size: :md, label: "Loading", **system_arguments)
+      def initialize(size: :md, label: FlatPack::Copy::OMITTED, **system_arguments)
         super(**system_arguments)
         @size = size.to_sym
-        @label = label
+        @label = fp_text(label, "spinner.loading")
         validate_size!
       end
 

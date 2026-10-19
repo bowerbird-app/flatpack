@@ -12,7 +12,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. Image slides accept `lightbox` (default `true`), while non-image slides default `lightbox` to `false`. |
+| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. Image slides accept `lightbox` (default `true`). Video and HTML default `lightbox` to `false`. |
 | `initial_index` | Integer | `0` | no | Zero-based starting slide index. |
 | `show_thumbs` | Boolean | `false` | no | Render clickable thumbnail navigation. |
 | `thumbs_position` | Symbol | `:bottom` | no | Thumbnail row position: `:top`, `:bottom`. |
@@ -38,10 +38,15 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-slider mode (`0.0..1.0`). |
 | `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-slider rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
+| `show_border` | Boolean | `true` | no | Draw the viewport border. `:logo_slider` stays borderless. |
+| `show_background` | Boolean | `true` | no | Fill the viewport. `:logo_slider` stays transparent. |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
 | `touch_swipe` | Boolean | `true` | no | Enable pointer swipe navigation. |
 | `show_captions` | Boolean | `true` | no | Render active slide captions. |
 | `caption_mode` | Symbol | `:below` | no | Caption location: `:below`, `:overlay`. |
+| `show_counter` | Boolean | `true` | no | Show the `3 / 12` count when more than one slide is visible. |
+| `fit` | Symbol | `:cover` | no | Image fit: `:cover` or `:contain`. `:contain` letterboxes the image. A normal carousel still keeps `aspect_ratio`. |
+| `stage` | Boolean | `false` | no | Composition-only. `FlatPack::Lightbox` sets this so the overlay carousel fills the dialog and does not open another lightbox. Hosts leave it off. |
 | `aria_label` | String | `"Carousel"` | no | Accessible region label for the viewport. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for root wrapper. |
 
@@ -58,7 +63,10 @@ None.
 - Default count targets: desktop `5`, tablet `3`, mobile `3`.
 - Logo-slider mode only renders image slides (video/html slide payloads are ignored).
 - Fade transition is not supported in logo-slider mode.
-- Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode.
+- Wrapper and viewport use no extra margin/padding and remain transparent in logo-slider mode. `show_border` and `show_background` do not change that.
+
+## Viewport chrome
+The default viewport draws a border and a muted fill. `show_border: false` replaces the border with `border-0`. `show_background: false` replaces the fill with `bg-transparent`. Leave a flag on and its token still paints it: `--carousel-viewport-border-color` and `--carousel-viewport-background-color`. A host `style:` that sets those tokens to `transparent` still works while the classes stay on.
 
 ## Side Preview Notes
 - Applies only to `variant: :default` with `transition: :slide`.
@@ -76,7 +84,7 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   slides: [
     {type: :image, src: "https://images.example.com/hero.jpg", alt: "Hero", caption: "Hero image", lightbox: true},
     {type: :video, src: "https://videos.example.com/teaser.mp4", poster: "https://images.example.com/poster.jpg", caption: "Teaser"},
-    {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", caption: "Custom card"}
+    {type: :html, html: "<div class='p-6'><h3>Release Notes</h3><p>Shipped this week.</p></div>", thumb_src: "https://images.example.com/notes.jpg", caption: "Custom card"}
   ],
   show_thumbs: true,
   autoplay: true,
@@ -112,7 +120,9 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   show_controls: true,
   show_indicators: true,
   show_captions: true,
-  caption_mode: :below
+  caption_mode: :below,
+  show_border: false,
+  show_background: false
 ) %>
 ```
 
@@ -122,17 +132,19 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
 | `type` | image, video, html | `:image`, `:video`, `:html` | inferred | Optional if inferable from payload. |
 | `src` | image, video | String URL | required | Required for image/video slides. |
 | `url` | image | String URL | `nil` | Optional click-through URL. In `:logo_slider` mode, wraps the logo image in a link that opens in a new tab. |
-| `thumb_src` | image | String URL | `nil` | Thumbnail source for `show_thumbs`. |
-| `thumb` | image | String URL | `nil` | Alias for `thumb_src`. |
-| `alt` | image | String | `"Slide n"` | Falls back to slide index label. |
+| `thumb_src` | image, html | String URL | `nil` | Thumbnail for `show_thumbs`. Image slides fall back to `src`. HTML slides without a usable URL show the slide number. |
+| `thumb` | image, html | String URL | `nil` | Alias for `thumb_src`. |
+| `alt` | image | String | I18n `flatpack.carousel.slide_fallback` | Falls back to the kit copy for slide `%{number}`. |
 | `caption` | image, video, html | String | `""` | Used by caption rendering modes. |
-| `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Only image slides can actually open lightbox. |
+| `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` | Image and video open `FlatPack::Lightbox`. HTML never does. `:logo_slider` never does. |
 | `poster` | video | String URL | `nil` | Poster image behind video element. |
 | `controls` | video | `true`, `false` | `true` | Native video controls toggle. |
 | `muted` | video | `true`, `false` | `false` | Passed to `<video muted>`. |
 | `video_loop` | video | `true`, `false` | `false` | Passed to `<video loop>`. |
 | `playsinline` | video | `true`, `false` | `true` | Passed to `<video playsinline>`. |
 | `html` | html | String HTML | required for `:html` | HTML content is sanitized before render. |
+
+HTML slides use the same `thumb_src` and `thumb` keys as images. A safe URL (`http`, `https`, or a relative path) becomes the thumbnail. Leave it off, or pass a rejected URL, and the thumb stays the slide number. Video thumbnails still come from `poster`.
 
 ## JS API (owl-style)
 The Stimulus controller exposes methods both as component actions and as an imperative API:
@@ -155,9 +167,11 @@ Runtime events emitted by the carousel:
 - `carousel:play`
 - `carousel:pause`
 
-Image lightbox uses `.fp-overlay-pad` and `overscroll-behavior: contain` so the overlay clears notches and does not chain scroll into the page. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md). Carousel swipe still uses `touch-action: pan-y` on the viewport when `touch_swipe` is enabled.
+`lightbox: true` on an image or video slide renders one [Lightbox](lightbox.md) beside the carousel. The expand control dispatches `flat-pack:lightbox:open` for that group and index. The overlay is the shared full-screen dialog: a transparent viewport, the modal backdrop, close, Escape, and the same carousel for next, previous, arrows, and swipe. Stage media is `object-fit: contain` with no frame behind it. One lightbox item hides the arrows and the count. HTML slides ignore `lightbox`. `:logo_slider` ignores it. Lightbox `thumbs: true` uses this carousel's `show_thumbs`. On the stage, that row is a horizontal strip along the bottom instead of a wrapping row.
 
-Controls, the slide counter, video letterbox, and lightbox image fill use `--carousel-control-*`, `--carousel-counter-*`, `--carousel-media-background-color`, and `--carousel-lightbox-image-background-color`. Named themes inherit those unless they override the family.
+The dialog uses `.fp-overlay-pad` and `overscroll-behavior: contain` so the overlay clears notches and does not chain scroll into the page. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md). Carousel swipe still uses `touch-action: pan-y` on the viewport when `touch_swipe` is enabled.
+
+Controls, the slide counter, and video letterbox use `--carousel-control-*`, `--carousel-counter-*`, and `--carousel-media-background-color`. `fit: :contain` outside the lightbox fills the frame with `--carousel-lightbox-image-background-color`. The lightbox stage does not. Its backdrop uses `--modal-backdrop-color` and `--modal-backdrop-blur`, and its caption uses `--carousel-caption-overlay-text-color`. Named themes inherit those unless they override the family.
 
 ## Accessibility
 - Viewport uses `role="region"` with configurable `aria-label`.
@@ -168,3 +182,4 @@ Controls, the slide counter, video letterbox, and lightbox image fill use `--car
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controller: `flat-pack--carousel`.
+- Lightbox overlay: `FlatPack::Lightbox::Component` and `flat-pack--lightbox` when any slide can open it.

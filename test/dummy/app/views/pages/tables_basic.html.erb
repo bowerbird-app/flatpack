@@ -44,6 +44,51 @@
   ) %>
 </section>
 
+<section id="table-selected-row" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Selected row",
+    anchor_link: true,
+    subtitle: "A checked control in the row keeps the active surface, including on hover."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(3)) do |table| %>
+    <% table.column(title: "Select", html: ->(user) {
+      render FlatPack::Checkbox::Component.new(
+        name: "selected_user_ids[]",
+        value: user.id,
+        checked: user.id == @users.first.id,
+        aria: {label: "Select #{user.name}"}
+      )
+    }) %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+  <% end %>
+</section>
+
+<section id="table-without-headers" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "No visible headers",
+    anchor_link: true,
+    subtitle: "Column names stay in the table for screen readers."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(3), headers: false) do |table| %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+    <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: @users.first(3), headers: false) do |table| %&gt;
+        &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }) %&gt;
+        &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }) %&gt;
+        &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Visually hidden headers"
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Table with Generic Filter Controls",
@@ -328,6 +373,155 @@
     CODE
     language: "erb",
     title: "Formatted Columns"
+  ) %>
+</section>
+
+<section id="table-column-widths" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Column widths",
+    anchor_link: true,
+    subtitle: "Fit the id, fix the name, and let the address take the rest."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(4), min_width: :none) do |table| %>
+    <% table.column(title: "ID", width: :fit, wrap: :nowrap, align: :end, html: ->(user) { user.id.to_s }) %>
+    <% table.column(title: "Name", width: "12rem", min_width: "8rem", html: ->(user) { user.name }) %>
+    <% table.column(
+      title: "Email",
+      width: :fill,
+      wrap: :truncate,
+      html: ->(user) { "#{user.email} — #{user.name} keeps a very long delivery address so this fill column clips with an ellipsis instead of wrapping onto a second line" }
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: @users.first(4), min_width: :none) do |table| %&gt;
+        &lt;% table.column(title: &quot;ID&quot;, width: :fit, wrap: :nowrap, align: :end, html: -&gt;(user) { user.id.to_s }) %&gt;
+        &lt;% table.column(title: &quot;Name&quot;, width: &quot;12rem&quot;, min_width: &quot;8rem&quot;, html: -&gt;(user) { user.name }) %&gt;
+        &lt;% table.column(
+          title: &quot;Email&quot;,
+          width: :fill,
+          wrap: :truncate,
+          html: -&gt;(user) { &quot;#{user.email} — #{user.name} keeps a very long delivery address so this fill column clips with an ellipsis instead of wrapping onto a second line&quot; }
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Column widths"
+  ) %>
+</section>
+
+<section id="table-align-wrap" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Alignment and wrapping",
+    anchor_link: true,
+    subtitle: "Start, center, and end. A long note clips and keeps the full text on hover."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(4), min_width: :none) do |table| %>
+    <% table.column(title: "Name", align: :start, html: ->(user) { user.name }) %>
+    <% table.column(title: "Status", align: :center, html: ->(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %>
+    <% table.column(title: "Views", align: :end, wrap: :nowrap, html: ->(user) { number_with_delimiter(user.views_count) }) %>
+    <% table.column(
+      title: "Note",
+      width: "14rem",
+      wrap: :truncate,
+      html: ->(user) { "#{user.name} published this row and the rest of the sentence is only in the tooltip." }
+    ) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;% table.column(title: &quot;Name&quot;, align: :start, html: -&gt;(user) { user.name }) %&gt;
+      &lt;% table.column(title: &quot;Status&quot;, align: :center, html: -&gt;(user) { render FlatPack::Badge::Component.new(text: user.status.capitalize, size: :sm) }) %&gt;
+      &lt;% table.column(title: &quot;Views&quot;, align: :end, wrap: :nowrap, html: -&gt;(user) { number_with_delimiter(user.views_count) }) %&gt;
+      &lt;% table.column(title: &quot;Note&quot;, width: &quot;14rem&quot;, wrap: :truncate, html: -&gt;(user) { &quot;#{user.name} published this row and the rest of the sentence is only in the tooltip.&quot; }) %&gt;
+    CODE
+    language: "erb",
+    title: "Alignment and wrapping"
+  ) %>
+</section>
+
+<section id="table-hide-below" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Hidden on small screens",
+    anchor_link: true,
+    subtitle: "Category leaves below md. Published leaves below lg."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(4), min_width: :none) do |table| %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+    <% table.column(title: "Category", hide_below: :md, html: ->(user) { user.category.to_s.titleize }) %>
+    <% table.column(title: "Published", hide_below: :lg, html: ->(user) { user.published_at.strftime("%b %d, %Y") }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }) %&gt;
+      &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }) %&gt;
+      &lt;% table.column(title: &quot;Category&quot;, hide_below: :md, html: -&gt;(user) { user.category.to_s.titleize }) %&gt;
+      &lt;% table.column(title: &quot;Published&quot;, hide_below: :lg, html: -&gt;(user) { user.published_at.strftime(&quot;%b %d, %Y&quot;) }) %&gt;
+    CODE
+    language: "erb",
+    title: "Hidden on small screens"
+  ) %>
+</section>
+
+<section id="table-plain-rows" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Plain rows",
+    anchor_link: true,
+    subtitle: "No frame. An icon, a fixed key, and a value that fills."
+  ) %>
+  <% plain_rows = [
+    {icon: "envelope", key: "Email", value: "ada@example.com"},
+    {icon: "phone", key: "Phone", value: "+1 555 0100"},
+    {icon: "map-pin", key: "Studio", value: "12 Harbour Lane, Wellington"}
+  ] %>
+  <%= render FlatPack::Table::Component.new(data: plain_rows, headers: false, style: :plain, min_width: :none) do |table| %>
+    <% table.column(title: "Icon", width: :fit, align: :center, wrap: :nowrap, html: ->(row) {
+      render FlatPack::Shared::IconComponent.new(name: row[:icon], size: :sm, class: "text-[var(--surface-muted-content-color)]")
+    }) %>
+    <% table.column(title: "Key", width: "8rem", wrap: :nowrap, html: ->(row) { tag.span(row[:key], class: "font-medium") }) %>
+    <% table.column(title: "Value", width: :fill, html: ->(row) { row[:value] }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: plain_rows, headers: false, style: :plain, min_width: :none) do |table| %&gt;
+        &lt;% table.column(title: &quot;Icon&quot;, width: :fit, align: :center, wrap: :nowrap, html: -&gt;(row) {
+          render FlatPack::Shared::IconComponent.new(name: row[:icon], size: :sm, class: &quot;text-[var(--surface-muted-content-color)]&quot;)
+        }) %&gt;
+        &lt;% table.column(title: &quot;Key&quot;, width: &quot;8rem&quot;, wrap: :nowrap, html: -&gt;(row) { tag.span(row[:key], class: &quot;font-medium&quot;) }) %&gt;
+        &lt;% table.column(title: &quot;Value&quot;, width: :fill, html: -&gt;(row) { row[:value] }) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Plain rows"
+  ) %>
+</section>
+
+<section id="table-no-dividers" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "No row lines",
+    anchor_link: true,
+    subtitle: "The frame stays. The lines between rows do not."
+  ) %>
+  <%= render FlatPack::Table::Component.new(data: @users.first(3), dividers: false, min_width: :none) do |table| %>
+    <% table.column(title: "Name", html: ->(user) { user.name }) %>
+    <% table.column(title: "Email", html: ->(user) { user.email }) %>
+    <% table.column(title: "Category", html: ->(user) { user.category.to_s.titleize }) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Table::Component.new(data: @users.first(3), dividers: false, min_width: :none) do |table| %&gt;
+        &lt;% table.column(title: &quot;Name&quot;, html: -&gt;(user) { user.name }) %&gt;
+        &lt;% table.column(title: &quot;Email&quot;, html: -&gt;(user) { user.email }) %&gt;
+        &lt;% table.column(title: &quot;Category&quot;, html: -&gt;(user) { user.category.to_s.titleize }) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "No row lines"
   ) %>
 </section>
 

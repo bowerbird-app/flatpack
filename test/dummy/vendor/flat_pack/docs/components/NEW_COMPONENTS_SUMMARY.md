@@ -54,16 +54,18 @@ Mobile-first responsive CSS grid layout with configurable columns, gaps, and ali
 **Stimulus:** No  
 **Tests:** 9 tests, all passing
 
-User-friendly empty states with optional icons, overridable icon names, actions, and custom graphics.
+User-friendly empty states with an icon, an image, or custom markup, plus actions.
 
 **Usage:**
 ```erb
 <%= render FlatPack::EmptyState::Component.new(
   title: "No results found",
   description: "Try adjusting your search",
-  icon: :search
+  icon: :search,
+  icon_variant: :outline,
+  layout: :wrap
 ) do |component| %>
-  <% component.slot do %>
+  <% component.item do %>
     <%= render FlatPack::Button::Component.new(text: "Clear filters") %>
   <% end %>
 <% end %>

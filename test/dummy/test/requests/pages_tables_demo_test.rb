@@ -15,6 +15,10 @@ class PagesTablesDemoTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "Basic Table Demos"
+    assert_includes response.body, "Column widths"
+    assert_includes response.body, "Plain rows"
+    assert_includes response.body, "Hidden on small screens"
+    assert_includes response.body, "width: :fit"
     assert_includes response.body, "Actions"
     assert_includes response.body, "View User 1"
   end

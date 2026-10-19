@@ -1,0 +1,118 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Fieldset",
+  subtitle: "Name a group of fields that belong together."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :fieldset %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Address", anchor_link: true, subtitle: "A title, a short hint, and the fields inside.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::Fieldset::Component.new(
+        title: "Shipping address",
+        description: "Where should we send this order?"
+      ) do %>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "line1",
+          label: "Street",
+          placeholder: "123 Market Street"
+        ) %>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "city",
+          label: "City",
+          placeholder: "Portland"
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Fieldset::Component.new(
+        title: &quot;Shipping address&quot;,
+        description: &quot;Where should we send this order?&quot;
+      ) do %&gt;
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;line1&quot;,
+          label: &quot;Street&quot;,
+          placeholder: &quot;123 Market Street&quot;
+        ) %&gt;
+        &lt;%= render FlatPack::TextInput::Component.new(
+          name: &quot;city&quot;,
+          label: &quot;City&quot;,
+          placeholder: &quot;Portland&quot;
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Address"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Preferences", anchor_link: true, subtitle: "Several choices under one name.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::Fieldset::Component.new(
+        title: "Email updates",
+        description: "Pick what you want to hear about."
+      ) do %>
+        <%= render FlatPack::Checkbox::Component.new(
+          name: "product_news",
+          label: "Product news"
+        ) %>
+        <%= render FlatPack::Checkbox::Component.new(
+          name: "tips",
+          label: "Tips and guides",
+          checked: true
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Needs attention", anchor_link: true, subtitle: "A message for the whole group.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::Fieldset::Component.new(
+        title: "Billing address",
+        error: "Add a street."
+      ) do %>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "billing_line1",
+          label: "Street",
+          error: "Street is required."
+        ) %>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "billing_city",
+          label: "City"
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Unavailable", anchor_link: true, subtitle: "The whole group is turned off.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::Fieldset::Component.new(
+        title: "Account owner",
+        description: "This name is managed for you.",
+        disabled: true
+      ) do %>
+        <%= render FlatPack::TextInput::Component.new(
+          name: "owner_name",
+          label: "Name",
+          value: "Jordan Lee"
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>

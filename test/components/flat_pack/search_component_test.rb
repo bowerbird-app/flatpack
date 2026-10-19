@@ -119,7 +119,7 @@ module FlatPack
       def test_search_result_rows_use_roomy_padding
         controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/search_controller.js").read
 
-        assert_includes controller, 'link.className = "block px-4 py-4 '
+        assert_includes controller, 'link.className = "block rounded-[var(--dropdown-item-radius)] px-[var(--search-result-padding-x)] py-[var(--search-result-padding-y)] '
         refute_includes controller, 'link.className = "block px-3 py-2 '
       end
     end

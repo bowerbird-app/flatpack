@@ -38,14 +38,14 @@ module FlatPack
         def initialize(
           logo: nil,
           brand_abbr: "FP",
-          title: "FlatPack",
+          title: FlatPack::Copy::OMITTED,
           subtitle: nil,
           collapsible: true,
           show_version: true,
           **system_arguments
         )
           super(**system_arguments)
-          @title = title
+          @title = fp_text(title, "sidebar.title")
           @subtitle = subtitle
           @collapsible = collapsible
           @show_version = show_version
@@ -179,14 +179,14 @@ module FlatPack
 
         def collapsed_toggle_aria_attributes
           {
-            label: "Open sidebar",
+            label: fp_t("sidebar.open"),
             expanded: false
           }
         end
 
         def desktop_toggle_aria_attributes
           {
-            label: "Collapse sidebar",
+            label: fp_t("sidebar.collapse"),
             expanded: true
           }
         end
@@ -200,7 +200,7 @@ module FlatPack
         def header_classes
           classes(
             "shrink-0",
-            "p-4",
+            "p-[var(--sidebar-padding)]",
             "bg-[var(--sidebar-header-background-color)]"
           )
         end

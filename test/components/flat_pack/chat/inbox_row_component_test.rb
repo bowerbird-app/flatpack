@@ -11,8 +11,8 @@ module FlatPack
 
           item = page.find("li[role='listitem']", visible: :all)
 
-          assert_includes item[:class], "py-3"
-          assert_includes item[:class], "px-4"
+          assert_includes item[:class], "py-[var(--list-item-padding-y)]"
+          assert_includes item[:class], "px-[var(--list-item-padding-x)]"
           assert_includes item[:class], "rounded-[var(--radius-sm)]"
           refute_includes item[:class], "overflow-hidden"
         end

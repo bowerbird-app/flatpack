@@ -7,12 +7,12 @@ module FlatPack
 
       DEFAULT_TOOLTIP_FORMAT = "%e %b %Y %l:%M%P"
 
-      def initialize(timestamp:, tooltip_placement: :top, fallback_text: "-", shorten_timestamp: false, **system_arguments)
+      def initialize(timestamp:, tooltip_placement: :top, fallback_text: FlatPack::Copy::OMITTED, shorten_timestamp: false, **system_arguments)
         super(**system_arguments)
         @extra_class = @system_arguments.delete(:class)
         @timestamp_value = timestamp
         @tooltip_placement = tooltip_placement.to_sym
-        @fallback_text = fallback_text.to_s
+        @fallback_text = fp_text(fallback_text, "timestamp.fallback").to_s
         @shorten_timestamp = ActiveModel::Type::Boolean.new.cast(shorten_timestamp)
         @parsed_timestamp = normalize_timestamp(@timestamp_value)
 
@@ -67,9 +67,9 @@ module FlatPack
         distance = shortened_distance(distance) if @shorten_timestamp
 
         if @parsed_timestamp > now
-          "In #{distance}"
+          fp_t("timestamp.in", distance: distance)
         else
-          "#{distance} ago"
+          fp_t("timestamp.ago", distance: distance)
         end
       end
 

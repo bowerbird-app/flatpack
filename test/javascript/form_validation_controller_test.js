@@ -9,6 +9,7 @@ function loadController(overrides = {}) {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key) { return ({ "form.please_select": "Please select an option.", "form.invalid_selection": "Invalid selection.", "form.invalid_value": "Invalid value." })[key] || key }')
     .replace('export default class extends Controller', 'class FormValidationController extends Controller') + '\nmodule.exports = FormValidationController\n'
 
   const context = {

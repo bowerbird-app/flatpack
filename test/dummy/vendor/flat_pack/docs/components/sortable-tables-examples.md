@@ -38,7 +38,7 @@ Drag reorder props:
 | `reorder_version` | String | `nil` | no | Optional optimistic-lock token. |
 
 ## Slots
-- `column(...)`: define sortable headers and cell rendering.
+- `column(...)`: define sortable headers and cell rendering. `width: :fit` is the drag-handle width. `align`, `wrap`, and `hide_below` apply to sortable headers too.
 
 ## Variants
 - Header sorting only.

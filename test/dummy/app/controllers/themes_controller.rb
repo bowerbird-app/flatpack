@@ -5,6 +5,7 @@ class ThemesController < ApplicationController
     "Brand primitives" => [/\A--brand-/],
     "Color Swatch" => [/\A--color-swatch-/],
     "Font Swatch" => [/\A--font-swatch-/],
+    "Type" => [/\A--(font-|text-|leading-|display-)/],
     "Overflow Row" => [/\A--overflow-row-/],
     "Core Colors and Surfaces" => [/\A--(color-|surface-)/],
     "Badges" => [/\A--badge-/],
@@ -17,6 +18,8 @@ class ThemesController < ApplicationController
     "Collapse" => [/\A--collapse-/],
     "Breadcrumbs" => [/\A--breadcrumb-/],
     "Bottom Nav" => [/\A--bottom-nav-/],
+    "FAB" => [/\A--fab-/],
+    "Inline Edit" => [/\A--inline-edit-/],
     "Code Blocks" => [/\A--code-block-/],
     "Comments" => [/\A--comments-/],
     "Content" => [/\A--content-/],
@@ -46,7 +49,10 @@ class ThemesController < ApplicationController
     "Radii" => [/\A--radius-/],
     "Shadows" => [/\A--shadow-/],
     "Motion" => [/\A--(duration-|transition-)/],
+    "Overlay" => [/\A--overlay-/],
     "Backdrop Effects" => [/\A--blur-/],
+    "Collection Editor" => [/\A--collection-editor-/],
+    "Spacing" => [/\A--(space-|density\z|dropdown-|select-|combobox-|command-palette-|list-item-padding-|pill-padding|tabs-stacked-padding)/],
     "Other" => [/.*/]
   }.freeze
 
@@ -59,7 +65,7 @@ class ThemesController < ApplicationController
   }.freeze
 
   THEME_SELECTORS = {
-    "light" => ":root",
+    "light" => ":root, [data-theme]",
     "dark" => "[data-theme=\"dark\"]",
     "ocean" => "[data-theme=\"ocean\"]"
   }.freeze
@@ -68,6 +74,7 @@ class ThemesController < ApplicationController
 
   def index
     @theme_token_groups = build_theme_token_groups
+    @collection_editor_preview = CollectionEditorPreview.new(id: 1, person_id: 1, role: "Designer")
   end
 
   def demo
@@ -84,11 +91,11 @@ class ThemesController < ApplicationController
   def theme_demo_variables_subtitle(theme)
     case theme
     when "light"
-      "Full :root wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
+      "Full :root, [data-theme] wiring from flat_pack/variables.css (semantic tokens plus component aliases)."
     when "rounded"
-      "Rounded is a no-op alias of :root. Hosts may keep data-theme=\"rounded\"; this dump is the default palette."
+      "Rounded keeps the default palette and shifts the spacing scale. This dump is the rounded override, not a second copy of :root."
     else
-      "Override-only dump from [data-theme]. Component aliases inherit from :root unless listed here."
+      "Override-only dump from [data-theme]. Component aliases re-resolve from the default wiring unless listed here."
     end
   end
 
@@ -115,11 +122,12 @@ class ThemesController < ApplicationController
     if theme == "rounded"
       return <<~CODE
         /*
-         * Rounded is the kit default. data-theme="rounded" is a no-op alias of :root
-         * so hosts can keep the attribute without restating the palette.
+         * Rounded keeps the charcoal palette and shifts --space-2 through --space-6.
+         * Menu shells and the search result block axis are remapped here.
+         * Colour, radius, and shadow stay on :root.
          */
 
-        #{extract_selector_block(css, THEME_SELECTORS.fetch("light"))}
+        #{extract_selector_block(css, '[data-theme="rounded"]')}
       CODE
     end
 
@@ -148,10 +156,10 @@ class ThemesController < ApplicationController
 
   def extract_theme_tokens
     css = cached_theme_variables_css
-    block = css[/^:root \{(?<body>.*?)^\}/m, :body]
-    return [] if block.blank?
+    bodies = css.scan(/^:root(?:,\s*\[data-theme\])?\s*\{(?<body>.*?)^\}/m).flatten
+    return [] if bodies.empty?
 
-    block.lines.filter_map do |line|
+    bodies.join("\n").lines.filter_map do |line|
       stripped = line.strip
       next if stripped.empty? || stripped.start_with?("/*")
 
@@ -260,6 +268,10 @@ class ThemesController < ApplicationController
       "Breadcrumbs"
     when /\A--bottom-nav-/
       "Bottom nav"
+    when /\A--fab-/
+      "FAB"
+    when /\A--inline-edit-/
+      "Inline Edit"
     when /\A--modal-/
       "Modal"
     when /\A--drawer-/
@@ -304,6 +316,8 @@ class ThemesController < ApplicationController
       "Color Swatch"
     when /\A--font-swatch-/
       "Font Swatch"
+    when /\A--(font-|text-|leading-|display-)/
+      "Type"
     when /\A--overflow-row-/
       "Overflow Row"
     when /\A--top-nav-/

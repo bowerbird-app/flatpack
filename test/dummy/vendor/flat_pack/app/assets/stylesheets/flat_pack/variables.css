@@ -2,14 +2,31 @@
  *
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
- *   2. Semantic tokens (--color-*, --surface-*, --radius-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*)
- *   3. Component tokens (--button-*, --sidebar-*, …) — defined once; prefer var(--semantic)
+ *   2. Spacing scale (--space-1..--space-6) and --density — component padding multiplies a step by density
+ *   3. Shape scale (--radius-xs..--radius-xl, --radius-full) — component radii alias a step
+ *   4. Semantic tokens (--color-*, --surface-*, --overlay-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --motion-*)
+ *   5. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
  *
  * @theme inline registers Tailwind utility names without emitting values (avoids duplicating :root
  *   and the circular `--x: var(--x)` trap when Tailwind also emits @theme onto :root).
- * :root is the single source of concrete values (browsers skip @theme when this file is a stylesheet).
- * [data-theme="…"] overrides only tokens that differ from :root.
- * [data-theme="rounded"] is a no-op alias of the default so hosts can keep the attribute.
+ * :root, [data-theme] is the single source of concrete colour and unremapped padding formulas
+ *   (browsers skip @theme when this file is a stylesheet). Declaring the wiring on [data-theme]
+ *   as well re-resolves derived tokens when a host puts data-theme on <body> or another descendant.
+ * Concrete --space-* , --density, and --radius-* live on bare :root only. A nested theme inherits them.
+ * Remapped shells (--dropdown-padding, --select-menu-padding, --combobox-menu-padding,
+ *   --search-menu-padding, --search-result-padding-y) and the component radii rounded changes
+ *   (--button-border-radius, --form-control-radius, --chip-border-radius, --badge-radius,
+ *   --tabs-pill-corner-radius, --card-radius, --menu-radius, --popover-radius, --modal-radius,
+ *   --alert-border-radius, --toast-border-radius, --chat-composer-radius,
+ *   --sidebar-item-radius, --dropdown-item-radius) are also bare :root,
+ *   then overridden on [data-theme="rounded"]. Restating the moderate value on [data-theme]
+ *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
+ * [data-theme="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
+ * [data-theme="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
+ *   It does not restate colour. Buttons, inputs, badges, and tabs become pills.
+ *   Chips, sidebar item highlights, and menu item highlights stay --radius-md.
+ *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
+ * Do not assign `--token: var(--token)` on rounded. html[data-theme="rounded"] is :root, so that blanks the token.
  */
 
 @theme inline {
@@ -53,6 +70,18 @@
   --surface-muted-content-color: var(--surface-muted-content-color);
   --surface-border-color: var(--surface-border-color);
   --surface-border-hover-color: var(--surface-border-hover-color);
+  --surface-hover-background-color: var(--surface-hover-background-color);
+  --surface-active-background-color: var(--surface-active-background-color);
+  --surface-active-text-color: var(--surface-active-text-color);
+  --surface-active-icon-color: var(--surface-active-icon-color);
+  --surface-active-border-color: var(--surface-active-border-color);
+  --overlay-backdrop-color: var(--overlay-backdrop-color);
+  --overlay-scrim-color: var(--overlay-scrim-color);
+  --overlay-inset-sm: var(--overlay-inset-sm);
+  --overlay-inset-md: var(--overlay-inset-md);
+  --overlay-inset-lg: var(--overlay-inset-lg);
+  --media-radius: var(--media-radius);
+  --media-outline-color: var(--media-outline-color);
   --checkbox-size: var(--checkbox-size);
   --checkbox-radius: var(--checkbox-radius);
   --checkbox-label-gap: var(--checkbox-label-gap);
@@ -75,6 +104,38 @@
   --bottom-nav-item-hover-color: var(--bottom-nav-item-hover-color);
   --bottom-nav-item-padding-x: var(--bottom-nav-item-padding-x);
   --bottom-nav-item-padding-y: var(--bottom-nav-item-padding-y);
+  --fab-background-color: var(--fab-background-color);
+  --fab-hover-background-color: var(--fab-hover-background-color);
+  --fab-text-color: var(--fab-text-color);
+  --fab-backdrop-color: var(--fab-backdrop-color);
+  --fab-action-background-color: var(--fab-action-background-color);
+  --fab-action-hover-background-color: var(--fab-action-hover-background-color);
+  --fab-action-text-color: var(--fab-action-text-color);
+  --fab-label-background-color: var(--fab-label-background-color);
+  --fab-label-text-color: var(--fab-label-text-color);
+  --fab-label-shadow: var(--fab-label-shadow);
+  --fab-shadow: var(--fab-shadow);
+  --fab-shadow-hover: var(--fab-shadow-hover);
+  --fab-shadow-active: var(--fab-shadow-active);
+  --fab-action-shadow: var(--fab-action-shadow);
+  --fab-focus-ring-color: var(--fab-focus-ring-color);
+  --fab-focus-ring-offset-color: var(--fab-focus-ring-offset-color);
+  --fab-size: var(--fab-size);
+  --fab-size-sm: var(--fab-size-sm);
+  --fab-size-lg: var(--fab-size-lg);
+  --fab-action-size: var(--fab-action-size);
+  --fab-action-size-sm: var(--fab-action-size-sm);
+  --fab-action-size-lg: var(--fab-action-size-lg);
+  --fab-inset: var(--fab-inset);
+  --fab-action-gap: var(--fab-action-gap);
+  --fab-action-gap-sm: var(--fab-action-gap-sm);
+  --fab-z-index: var(--fab-z-index);
+  --inline-edit-cue-color: var(--inline-edit-cue-color);
+  --inline-edit-focus-color: var(--inline-edit-focus-color);
+  --inline-edit-error-color: var(--inline-edit-error-color);
+  --inline-edit-placeholder-color: var(--inline-edit-placeholder-color);
+  --inline-edit-placeholder-hover-color: var(--inline-edit-placeholder-hover-color);
+  --inline-edit-hover-bg: var(--inline-edit-hover-bg);
   --quote-border-color: var(--quote-border-color);
   --quote-border-width: var(--quote-border-width);
   --quote-padding-left: var(--quote-padding-left);
@@ -99,9 +160,13 @@
   --accordion-item-border-color: var(--accordion-item-border-color);
   --accordion-trigger-text-color: var(--accordion-trigger-text-color);
   --accordion-trigger-hover-background-color: var(--accordion-trigger-hover-background-color);
-  --accordion-trigger-padding: var(--accordion-trigger-padding);
+  --accordion-trigger-padding-sm: var(--accordion-trigger-padding-sm);
+  --accordion-trigger-padding-md: var(--accordion-trigger-padding-md);
+  --accordion-trigger-padding-lg: var(--accordion-trigger-padding-lg);
   --accordion-content-background-color: var(--accordion-content-background-color);
-  --accordion-content-padding: var(--accordion-content-padding);
+  --accordion-content-padding-sm: var(--accordion-content-padding-sm);
+  --accordion-content-padding-md: var(--accordion-content-padding-md);
+  --accordion-content-padding-lg: var(--accordion-content-padding-lg);
   --accordion-focus-ring-color: var(--accordion-focus-ring-color);
   --accordion-transition-duration: var(--accordion-transition-duration);
   --breadcrumb-current-color: var(--breadcrumb-current-color);
@@ -141,6 +206,26 @@
   --card-background-color: var(--card-background-color);
   --card-background-muted-color: var(--card-background-muted-color);
   --card-border-color: var(--card-border-color);
+  --card-style-default-background: var(--card-style-default-background);
+  --card-style-default-text-color: var(--card-style-default-text-color);
+  --card-style-default-muted-text-color: var(--card-style-default-muted-text-color);
+  --card-style-default-border-color: var(--card-style-default-border-color);
+  --card-style-shaded-background: var(--card-style-shaded-background);
+  --card-style-shaded-text-color: var(--card-style-shaded-text-color);
+  --card-style-shaded-muted-text-color: var(--card-style-shaded-muted-text-color);
+  --card-style-shaded-border-color: var(--card-style-shaded-border-color);
+  --card-style-brand-background: var(--card-style-brand-background);
+  --card-style-brand-text-color: var(--card-style-brand-text-color);
+  --card-style-brand-muted-text-color: var(--card-style-brand-muted-text-color);
+  --card-style-brand-border-color: var(--card-style-brand-border-color);
+  --card-style-brand-subtle-background: var(--card-style-brand-subtle-background);
+  --card-style-brand-subtle-text-color: var(--card-style-brand-subtle-text-color);
+  --card-style-brand-subtle-muted-text-color: var(--card-style-brand-subtle-muted-text-color);
+  --card-style-brand-subtle-border-color: var(--card-style-brand-subtle-border-color);
+  --card-style-gradient-background: var(--card-style-gradient-background);
+  --card-style-gradient-text-color: var(--card-style-gradient-text-color);
+  --card-style-gradient-muted-text-color: var(--card-style-gradient-muted-text-color);
+  --card-style-gradient-border-color: var(--card-style-gradient-border-color);
   --card-padding-sm: var(--card-padding-sm);
   --card-padding-md: var(--card-padding-md);
   --card-padding-lg: var(--card-padding-lg);
@@ -260,6 +345,16 @@
   --list-marker-color: var(--list-marker-color);
   --list-marker-min-width: var(--list-marker-min-width);
   --list-marker-gap: var(--list-marker-gap);
+  --collection-editor-background-color: var(--collection-editor-background-color);
+  --collection-editor-border-color: var(--collection-editor-border-color);
+  --collection-editor-radius: var(--collection-editor-radius);
+  --collection-editor-row-background-color: var(--collection-editor-row-background-color);
+  --collection-editor-row-hover-background-color: var(--collection-editor-row-hover-background-color);
+  --collection-editor-row-padding: var(--collection-editor-row-padding);
+  --collection-editor-title-color: var(--collection-editor-title-color);
+  --collection-editor-description-color: var(--collection-editor-description-color);
+  --collection-editor-handle-color: var(--collection-editor-handle-color);
+  --collection-editor-drop-indicator-color: var(--collection-editor-drop-indicator-color);
   --sidebar-item-hover-text-color: var(--sidebar-item-hover-text-color);
   --sidebar-item-active-background-color: var(--sidebar-item-active-background-color);
   --sidebar-item-active-text-color: var(--sidebar-item-active-text-color);
@@ -401,6 +496,10 @@
   --button-danger-hover-background-color: var(--button-danger-hover-background-color);
   --button-danger-text-color: var(--button-danger-text-color);
   --button-danger-border-color: var(--button-danger-border-color);
+  --button-icon-primary-color: var(--button-icon-primary-color);
+  --button-icon-success-color: var(--button-icon-success-color);
+  --button-icon-warning-color: var(--button-icon-warning-color);
+  --button-icon-danger-color: var(--button-icon-danger-color);
   --fp-button-background: var(--fp-button-background);
   --fp-button-hover-background: var(--fp-button-hover-background);
   --fp-button-text: var(--fp-button-text);
@@ -414,8 +513,6 @@
   --button-shadow-active: var(--button-shadow-active);
   --hit-target-min: var(--hit-target-min);
   --hit-target-inline-min: var(--hit-target-inline-min);
-  --button-padding-x-xs: var(--button-padding-x-xs);
-  --button-padding-y-xs: var(--button-padding-y-xs);
   --button-padding-x-sm: var(--button-padding-x-sm);
   --button-padding-y-sm: var(--button-padding-y-sm);
   --button-padding-x-md: var(--button-padding-x-md);
@@ -426,7 +523,9 @@
   --button-icon-only-padding-md: var(--button-icon-only-padding-md);
   --button-icon-only-padding-lg: var(--button-icon-only-padding-lg);
   --alert-border-radius: var(--alert-border-radius);
-  --alert-padding: var(--alert-padding);
+  --alert-padding-sm: var(--alert-padding-sm);
+  --alert-padding-md: var(--alert-padding-md);
+  --alert-padding-lg: var(--alert-padding-lg);
   --alert-title-color: var(--alert-title-color);
   --alert-description-color: var(--alert-description-color);
   --alert-dismiss-button-radius: var(--alert-dismiss-button-radius);
@@ -450,7 +549,9 @@
   --alert-danger-text-color: var(--alert-danger-text-color);
   --alert-danger-icon-color: var(--alert-danger-icon-color);
   --toast-border-radius: var(--toast-border-radius);
-  --toast-padding: var(--toast-padding);
+  --toast-padding-sm: var(--toast-padding-sm);
+  --toast-padding-md: var(--toast-padding-md);
+  --toast-padding-lg: var(--toast-padding-lg);
   --toast-shadow: var(--toast-shadow);
   --toast-dismiss-text-color: var(--toast-dismiss-text-color);
   --toast-dismiss-hover-text-color: var(--toast-dismiss-hover-text-color);
@@ -494,6 +595,8 @@
   --color-swatch-selected-ring-color: var(--color-swatch-selected-ring-color);
   --color-swatch-ring-offset-color: var(--color-swatch-ring-offset-color);
   --color-swatch-shadow: var(--color-swatch-shadow);
+  --color-swatch-check-on-dark: var(--color-swatch-check-on-dark);
+  --color-swatch-check-on-light: var(--color-swatch-check-on-light);
   --font-swatch-radius: var(--font-swatch-radius);
   --font-swatch-border-color: var(--font-swatch-border-color);
   --font-swatch-selected-ring-color: var(--font-swatch-selected-ring-color);
@@ -535,15 +638,24 @@
   --search-result-divider-color: var(--search-result-divider-color);
   --color-ring: var(--color-ring);
   --icon-stroke-width: var(--icon-stroke-width);
+  --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+  --form-control-radius: var(--form-control-radius);
+  --badge-radius: var(--badge-radius);
+  --card-radius: var(--card-radius);
+  --menu-radius: var(--menu-radius);
+  --modal-radius: var(--modal-radius);
   --stack-gap-sm: var(--stack-gap-sm);
   --stack-gap-md: var(--stack-gap-md);
   --stack-gap-lg: var(--stack-gap-lg);
-  --form-control-padding: var(--form-control-padding);
-  --table-padding: var(--table-padding);
+  --form-control-padding-x: var(--form-control-padding-x);
+  --form-control-padding-y: var(--form-control-padding-y);
+  --table-padding-x: var(--table-padding-x);
+  --table-padding-y: var(--table-padding-y);
   --table-background-color: var(--table-background-color);
   --table-border-color: var(--table-border-color);
   --table-header-background-color: var(--table-header-background-color);
@@ -551,12 +663,15 @@
   --table-header-text-color: var(--table-header-text-color);
   --table-row-divider-color: var(--table-row-divider-color);
   --table-row-hover-background-color: var(--table-row-hover-background-color);
+  --table-row-selected-background-color: var(--table-row-selected-background-color);
   --table-cell-text-color: var(--table-cell-text-color);
   --table-cell-muted-text-color: var(--table-cell-muted-text-color);
   --table-empty-state-text-color: var(--table-empty-state-text-color);
   --table-sort-link-hover-color: var(--table-sort-link-hover-color);
   --chip-remove-hover-background-color: var(--chip-remove-hover-background-color);
   --chip-border-radius: var(--chip-border-radius);
+  --sidebar-item-radius: var(--sidebar-item-radius);
+  --dropdown-item-radius: var(--dropdown-item-radius);
   --chip-group-gap: var(--chip-group-gap);
   --chip-padding-x-sm: var(--chip-padding-x-sm);
   --chip-padding-y-sm: var(--chip-padding-y-sm);
@@ -581,9 +696,33 @@
   --text-3xl: var(--text-3xl);
   --text-4xl: var(--text-4xl);
   --text-5xl: var(--text-5xl);
+  --text-6xl: var(--text-6xl);
+  --text-6xl--line-height: var(--text-6xl--line-height);
+  --text-7xl: var(--text-7xl);
+  --text-7xl--line-height: var(--text-7xl--line-height);
+  --text-8xl: var(--text-8xl);
+  --text-8xl--line-height: var(--text-8xl--line-height);
   --leading-tight: var(--leading-tight);
   --leading-snug: var(--leading-snug);
   --leading-normal: var(--leading-normal);
+  --display-size: var(--display-size);
+  --display-size-min: var(--display-size-min);
+  --display-size-max: var(--display-size-max);
+  --display-tracking: var(--display-tracking);
+  --display-leading: var(--display-leading);
+  --display-weight: var(--display-weight);
+  --hero-title-md-size: var(--hero-title-md-size);
+  --hero-title-md-size-min: var(--hero-title-md-size-min);
+  --hero-title-md-size-max: var(--hero-title-md-size-max);
+  --hero-title-lg-size: var(--hero-title-lg-size);
+  --hero-title-lg-size-min: var(--hero-title-lg-size-min);
+  --hero-title-lg-size-max: var(--hero-title-lg-size-max);
+  --hero-title-xl-size: var(--hero-title-xl-size);
+  --hero-title-xl-size-min: var(--hero-title-xl-size-min);
+  --hero-title-xl-size-max: var(--hero-title-xl-size-max);
+  --hero-title-xxl-size: var(--hero-title-xxl-size);
+  --hero-title-xxl-size-min: var(--hero-title-xxl-size-min);
+  --hero-title-xxl-size-max: var(--hero-title-xxl-size-max);
   --page-title-h1-size: var(--page-title-h1-size);
   --page-title-h2-size: var(--page-title-h2-size);
   --page-title-h3-size: var(--page-title-h3-size);
@@ -615,9 +754,137 @@
   --easing-standard: var(--easing-standard);
   --easing-enter: var(--easing-enter);
   --easing-exit: var(--easing-exit);
+  --easing-spring: var(--easing-spring);
+  --easing-spring-snappy: var(--easing-spring-snappy);
+  --motion-duration-fast: var(--motion-duration-fast);
+  --motion-duration-base: var(--motion-duration-base);
+  --motion-duration-slow: var(--motion-duration-slow);
+  --motion-duration-slower: var(--motion-duration-slower);
+  --motion-delay-sm: var(--motion-delay-sm);
+  --motion-delay-md: var(--motion-delay-md);
+  --motion-delay-lg: var(--motion-delay-lg);
+  --motion-stagger-sm: var(--motion-stagger-sm);
+  --motion-stagger-md: var(--motion-stagger-md);
+  --motion-stagger-lg: var(--motion-stagger-lg);
+  --motion-ease-out: var(--motion-ease-out);
+  --motion-ease-in-out: var(--motion-ease-in-out);
+  --motion-ease-spring: var(--motion-ease-spring);
+  --motion-distance-sm: var(--motion-distance-sm);
+  --motion-distance-md: var(--motion-distance-md);
+  --motion-distance-lg: var(--motion-distance-lg);
+  --motion-scale: var(--motion-scale);
+  --motion-scale-strong: var(--motion-scale-strong);
+  --motion-zoom: var(--motion-zoom);
+  --motion-zoom-strong: var(--motion-zoom-strong);
+  --reveal-stagger: var(--reveal-stagger);
   --transition-slow: var(--transition-slow);
   --transition-base: var(--transition-base);
   --transition-fast: var(--transition-fast);
+  --pagination-current-background-color: var(--pagination-current-background-color);
+  --pagination-current-text-color: var(--pagination-current-text-color);
+  --space-1: var(--space-1);
+  --space-2: var(--space-2);
+  --space-3: var(--space-3);
+  --space-4: var(--space-4);
+  --space-5: var(--space-5);
+  --space-6: var(--space-6);
+  --density: var(--density);
+  --dropdown-padding: var(--dropdown-padding);
+  --dropdown-item-padding-x: var(--dropdown-item-padding-x);
+  --dropdown-item-padding-y: var(--dropdown-item-padding-y);
+  --dropdown-item-gap: var(--dropdown-item-gap);
+  --dropdown-divider-margin: var(--dropdown-divider-margin);
+  --select-menu-padding: var(--select-menu-padding);
+  --select-option-padding-x: var(--select-option-padding-x);
+  --select-option-padding-y: var(--select-option-padding-y);
+  --select-search-padding: var(--select-search-padding);
+  --combobox-menu-padding: var(--combobox-menu-padding);
+  --combobox-item-padding-x: var(--combobox-item-padding-x);
+  --combobox-item-padding-y: var(--combobox-item-padding-y);
+  --command-palette-padding: var(--command-palette-padding);
+  --command-palette-item-padding-x: var(--command-palette-item-padding-x);
+  --command-palette-item-padding-y: var(--command-palette-item-padding-y);
+  --command-palette-item-gap: var(--command-palette-item-gap);
+  --command-palette-field-padding-x: var(--command-palette-field-padding-x);
+  --command-palette-field-padding-y: var(--command-palette-field-padding-y);
+  --command-palette-label-padding-y: var(--command-palette-label-padding-y);
+  --command-palette-empty-padding-y: var(--command-palette-empty-padding-y);
+  --search-menu-padding: var(--search-menu-padding);
+  --search-result-padding-x: var(--search-result-padding-x);
+  --search-result-padding-y: var(--search-result-padding-y);
+  --list-item-padding-x: var(--list-item-padding-x);
+  --list-item-padding-y: var(--list-item-padding-y);
+  --sidebar-item-padding-x: var(--sidebar-item-padding-x);
+  --sidebar-item-padding-y: var(--sidebar-item-padding-y);
+  --sidebar-item-gap: var(--sidebar-item-gap);
+  --sidebar-item-inset: var(--sidebar-item-inset);
+  --sidebar-item-padding-collapsed: var(--sidebar-item-padding-collapsed);
+  --sidebar-section-padding-x: var(--sidebar-section-padding-x);
+  --sidebar-padding: var(--sidebar-padding);
+  --top-nav-padding-inline: var(--top-nav-padding-inline);
+  --top-nav-mobile-padding: var(--top-nav-mobile-padding);
+  --overlay-padding: var(--overlay-padding);
+  --overlay-padding-wide: var(--overlay-padding-wide);
+  --pill-padding: var(--pill-padding);
+  --tabs-stacked-padding: var(--tabs-stacked-padding);
+  --modal-padding: var(--modal-padding);
+  --modal-padding-wide: var(--modal-padding-wide);
+  --drawer-padding: var(--drawer-padding);
+  --drawer-padding-wide: var(--drawer-padding-wide);
+  --badge-padding-x-xs: var(--badge-padding-x-xs);
+  --badge-padding-y-xs: var(--badge-padding-y-xs);
+  --badge-padding-x-sm: var(--badge-padding-x-sm);
+  --badge-padding-y-sm: var(--badge-padding-y-sm);
+  --badge-padding-x-md: var(--badge-padding-x-md);
+  --badge-padding-y-md: var(--badge-padding-y-md);
+  --badge-padding-x-lg: var(--badge-padding-x-lg);
+  --badge-padding-y-lg: var(--badge-padding-y-lg);
+  --empty-state-padding-y-sm: var(--empty-state-padding-y-sm);
+  --empty-state-padding-x-sm: var(--empty-state-padding-x-sm);
+  --empty-state-padding-y-md: var(--empty-state-padding-y-md);
+  --empty-state-padding-x-md: var(--empty-state-padding-x-md);
+  --empty-state-padding-y-lg: var(--empty-state-padding-y-lg);
+  --empty-state-padding-x-lg: var(--empty-state-padding-x-lg);
+  --empty-state-gap-sm: var(--empty-state-gap-sm);
+  --empty-state-gap-md: var(--empty-state-gap-md);
+  --empty-state-gap-lg: var(--empty-state-gap-lg);
+  --empty-state-title-gap-sm: var(--empty-state-title-gap-sm);
+  --empty-state-title-gap-md: var(--empty-state-title-gap-md);
+  --empty-state-title-gap-lg: var(--empty-state-title-gap-lg);
+  --empty-state-block-gap-sm: var(--empty-state-block-gap-sm);
+  --empty-state-block-gap-md: var(--empty-state-block-gap-md);
+  --empty-state-block-gap-lg: var(--empty-state-block-gap-lg);
+  --empty-state-measure-sm: var(--empty-state-measure-sm);
+  --empty-state-measure-md: var(--empty-state-measure-md);
+  --empty-state-measure-lg: var(--empty-state-measure-lg);
+  --empty-state-measure-full: var(--empty-state-measure-full);
+  --collage-rotate: var(--collage-rotate);
+  --collage-offset-x: var(--collage-offset-x);
+  --collage-offset-y: var(--collage-offset-y);
+  --collage-lift: var(--collage-lift);
+  --collage-stagger: var(--collage-stagger);
+  --collage-loose: var(--collage-loose);
+  --collage-gap: var(--collage-gap);
+  --collage-pad: var(--collage-pad);
+  --collage-bleed: var(--collage-bleed);
+  --collage-margin: var(--collage-margin);
+  --collage-overlap: var(--collage-overlap);
+  --collage-card-ratio: var(--collage-card-ratio);
+  --collage-card-sway: var(--collage-card-sway);
+  --collage-item-size-sm: var(--collage-item-size-sm);
+  --collage-item-size-md: var(--collage-item-size-md);
+  --collage-duration: var(--collage-duration);
+  --collage-easing: var(--collage-easing);
+  --collage-rise: var(--collage-rise);
+  --collage-deal: var(--collage-deal);
+  --collage-deal-duration: var(--collage-deal-duration);
+  --collage-drift: var(--collage-drift);
+  --collage-drift-duration: var(--collage-drift-duration);
+  --collage-drift-easing: var(--collage-drift-easing);
+  --collage-drift-phase: var(--collage-drift-phase);
+  --collage-focus-lift: var(--collage-focus-lift);
+  --collage-focus-scale: var(--collage-focus-scale);
+  --collage-focus-dim: var(--collage-focus-dim);
 }
 
 input.flat-pack-input[type="search"]::-webkit-search-cancel-button,
@@ -636,8 +903,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   height: 0;
 }
 
-/* Default palette (rounded / charcoal) — full semantic + component wiring */
-:root {
+/* Default palette (rounded / charcoal) — full semantic + component wiring.
+ * [data-theme] repeats the wiring so a named theme on a descendant re-resolves aliases.
+ */
+:root, [data-theme] {
   color-scheme: light;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -646,18 +915,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
+  /* Fallback when `oklch(from …)` is unsupported. Same charcoal look via brand knobs. */
   --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --color-primary-text: #fff;
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
   --color-default-text: var(--surface-content-color);
   --color-default-border: var(--surface-border-color);
-  --color-secondary: #f5f5f5;
-  --color-secondary-hover: #ebebeb;
-  --color-secondary-text: #333;
+  --color-secondary: color-mix(in oklab, var(--surface-muted-background-color) 18%, var(--surface-background-color));
+  --color-secondary-hover: color-mix(in oklab, var(--surface-muted-background-color) 70%, var(--surface-background-color));
+  --color-secondary-text: var(--surface-content-color);
   --color-ghost: transparent;
-  --color-ghost-hover: #f2f2f2;
-  --color-ghost-text: #333;
+  --color-ghost-hover: color-mix(in oklab, var(--surface-muted-background-color) 35%, var(--surface-background-color));
+  --color-ghost-text: var(--surface-content-color);
   --color-success-background-color: oklch(0.72 0.17 152);
   --color-success-hover-background-color: oklch(0.66 0.17 152);
   --color-success-text: #fff;
@@ -679,21 +949,33 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-content-color: #333;
   --surface-muted-background-color: #e5e5e5;
   --surface-subtle-background-color: var(--surface-muted-background-color);
+  --surface-hover-background-color: #f0f0f0;
+  --surface-active-background-color: #e4e4e4;
+  --surface-active-text-color: var(--surface-content-color);
+  --surface-active-icon-color: var(--surface-active-text-color);
+  --surface-active-border-color: transparent;
   --surface-muted-content-color: #666;
   --surface-border-color: #d1d5db;
   --surface-border-hover-color: #d1d5db;
+  --overlay-backdrop-color: rgb(0 0 0 / 0.5);
+  --overlay-scrim-color: rgb(31 41 55 / 0.68);
+  --overlay-inset-sm: 0.5rem;
+  --overlay-inset-md: 1rem;
+  --overlay-inset-lg: 1.5rem;
+  --media-radius: var(--card-radius);
+  --media-outline-color: color-mix(in oklch, var(--surface-content-color) 12%, transparent);
   --checkbox-size: 1.25rem;
-  --checkbox-radius: 0.125rem;
+  --checkbox-radius: var(--radius-xs);
   --checkbox-label-gap: 0.75rem;
   --collapse-background-color: var(--surface-background-color);
   --collapse-border-color: var(--surface-border-color);
-  --collapse-border-radius: var(--radius-md);
+  --collapse-border-radius: var(--card-radius);
   --collapse-trigger-background-color: var(--surface-background-color);
   --collapse-trigger-hover-background-color: var(--surface-muted-background-color);
   --collapse-trigger-text-color: var(--surface-content-color);
-  --collapse-trigger-padding: 1rem;
+  --collapse-trigger-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collapse-content-background-color: var(--surface-background-color);
-  --collapse-content-padding: 1rem;
+  --collapse-content-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --collapse-focus-ring-color: var(--color-ring);
   --collapse-transition-duration: var(--duration-slow);
   --collapse-icon-color: currentColor;
@@ -702,8 +984,40 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --bottom-nav-item-active-color: #ffffff;
   --bottom-nav-item-color: #d1d5db;
   --bottom-nav-item-hover-color: #f9fafb;
-  --bottom-nav-item-padding-x: 0.5rem;
-  --bottom-nav-item-padding-y: 0.5rem;
+  --bottom-nav-item-padding-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --bottom-nav-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --fab-background-color: var(--color-primary);
+  --fab-hover-background-color: var(--color-primary-hover);
+  --fab-text-color: var(--color-primary-text);
+  --fab-backdrop-color: var(--overlay-backdrop-color);
+  --fab-action-background-color: var(--surface-background-color);
+  --fab-action-hover-background-color: var(--surface-muted-background-color);
+  --fab-action-text-color: var(--surface-content-color);
+  --fab-label-background-color: var(--surface-background-color);
+  --fab-label-text-color: var(--surface-content-color);
+  --fab-label-shadow: var(--shadow-sm);
+  --fab-shadow: var(--shadow-lg);
+  --fab-shadow-hover: var(--shadow-button);
+  --fab-shadow-active: var(--shadow-button-active);
+  --fab-action-shadow: var(--shadow-md);
+  --fab-focus-ring-color: var(--color-ring);
+  --fab-focus-ring-offset-color: var(--surface-background-color);
+  --fab-size: 3.5rem;
+  --fab-size-sm: 2.5rem;
+  --fab-size-lg: 4rem;
+  --fab-action-size: 2.5rem;
+  --fab-action-size-sm: 1.75rem;
+  --fab-action-size-lg: 3rem;
+  --fab-inset: 1rem;
+  --fab-action-gap: 0.75rem;
+  --fab-action-gap-sm: 0.5rem;
+  --fab-z-index: 45;
+  --inline-edit-cue-color: color-mix(in oklab, var(--surface-content-color) 28%, transparent);
+  --inline-edit-focus-color: var(--color-primary);
+  --inline-edit-error-color: var(--color-error);
+  --inline-edit-placeholder-color: var(--surface-muted-content-color);
+  --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 42%, var(--surface-muted-content-color));
+  --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 7%, transparent);
   --quote-border-color: var(--surface-border-color);
   --quote-border-width: 4px;
   --quote-padding-left: 1rem;
@@ -724,13 +1038,17 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --timeline-line-min-height: 2rem;
   --accordion-background-color: var(--surface-background-color);
   --accordion-border-color: var(--surface-border-color);
-  --accordion-border-radius: var(--radius-md);
+  --accordion-border-radius: var(--card-radius);
   --accordion-item-border-color: var(--surface-border-color);
   --accordion-trigger-text-color: var(--surface-content-color);
   --accordion-trigger-hover-background-color: var(--surface-muted-background-color);
-  --accordion-trigger-padding: 1rem;
+  --accordion-trigger-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --accordion-trigger-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --accordion-trigger-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --accordion-content-background-color: var(--surface-background-color);
-  --accordion-content-padding: 1rem;
+  --accordion-content-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --accordion-content-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --accordion-content-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --accordion-focus-ring-color: var(--color-ring);
   --accordion-transition-duration: var(--duration-slow);
   --breadcrumb-current-color: var(--surface-content-color);
@@ -757,22 +1075,96 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --code-block-tab-hover-color: var(--surface-content-color);
   --code-block-tab-active-background-color: var(--surface-border-color);
   --code-block-tab-active-color: var(--surface-muted-content-color);
-  --tabs-pill-corner-radius: 9999px;
-  --tabs-pill-active-background-color: var(--color-primary);
-  --tabs-pill-active-border-color: var(--color-primary);
-  --tabs-pill-active-text-color: var(--color-primary-text);
-  --tabs-stacked-pill-list-background-color: var(--surface-muted-background-color);
+  --tabs-pill-active-background-color: var(--surface-active-background-color);
+  --tabs-pill-active-border-color: var(--surface-active-border-color);
+  --tabs-pill-active-text-color: var(--surface-active-text-color);
+  --tabs-stacked-pill-list-background-color: var(--surface-hover-background-color);
   --tabs-pill-list-border-color: var(--surface-border-color);
-  --tabs-pill-active-shadow: var(--shadow-md);
+  --tabs-pill-active-shadow: none;
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
-  --tabs-pill-inactive-hover-background-color: var(--surface-muted-background-color);
+  --tabs-pill-inactive-hover-background-color: var(--surface-hover-background-color);
   --tabs-pill-inactive-hover-text-color: var(--surface-content-color);
   --card-background-color: var(--surface-background-color);
   --card-background-muted-color: var(--surface-muted-background-color);
   --card-border-color: var(--surface-border-color);
-  --card-padding-sm: 0.75rem;
-  --card-padding-md: 1rem;
-  --card-padding-lg: 1.25rem;
+  --card-style-default-background: var(--card-background-color);
+  --card-style-default-text-color: var(--surface-content-color);
+  --card-style-default-muted-text-color: var(--surface-muted-content-color);
+  --card-style-default-border-color: var(--card-border-color);
+  --card-style-shaded-background: var(--card-background-muted-color);
+  --card-style-shaded-text-color: var(--surface-content-color);
+  --card-style-shaded-muted-text-color: var(--surface-muted-content-color);
+  --card-style-shaded-border-color: var(--surface-border-color);
+  --card-style-brand-background: var(--color-primary);
+  --card-style-brand-text-color: var(--color-primary-text);
+  --card-style-brand-muted-text-color: color-mix(in oklab, var(--color-primary-text) 72%, transparent);
+  --card-style-brand-border-color: color-mix(in oklab, var(--color-primary-text) 28%, transparent);
+  --card-style-brand-subtle-background: color-mix(in oklab, var(--color-primary) 14%, var(--surface-background-color));
+  --card-style-brand-subtle-text-color: var(--surface-content-color);
+  --card-style-brand-subtle-muted-text-color: var(--surface-muted-content-color);
+  --card-style-brand-subtle-border-color: color-mix(in oklab, var(--color-primary) 34%, var(--surface-border-color));
+  --card-style-gradient-background: linear-gradient(145deg, var(--color-primary) 0%, color-mix(in oklab, var(--color-primary) 48%, black) 100%);
+  --card-style-gradient-text-color: var(--color-primary-text);
+  --card-style-gradient-muted-text-color: color-mix(in oklab, var(--color-primary-text) 72%, transparent);
+  --card-style-gradient-border-color: color-mix(in oklab, var(--color-primary-text) 28%, transparent);
+  --card-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --card-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --card-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --empty-state-padding-y-sm: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  --empty-state-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --empty-state-padding-y-md: round(nearest, calc((var(--space-6) + var(--space-4)) * var(--density)), 1px);
+  --empty-state-padding-x-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --empty-state-padding-y-lg: round(nearest, calc(var(--space-6) * 2 * var(--density)), 1px);
+  --empty-state-padding-x-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --empty-state-gap-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --empty-state-gap-md: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --empty-state-gap-lg: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --empty-state-title-gap-sm: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --empty-state-title-gap-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --empty-state-title-gap-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --empty-state-block-gap-sm: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --empty-state-block-gap-md: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --empty-state-block-gap-lg: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  --empty-state-measure-sm: 20rem;
+  --empty-state-measure-md: 28rem;
+  --empty-state-measure-lg: 36rem;
+  --empty-state-measure-full: none;
+  /* Collage scatter. Themes override these. Ranges scale a -1..1 unit on each item.
+   * Loose multiplies that unit by --collage-loose. Lift and the offsets follow --space-*.
+   */
+  --collage-rotate: 5deg;
+  --collage-offset-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-offset-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --collage-lift: calc(var(--collage-offset-y) * -1);
+  --collage-stagger: var(--reveal-stagger);
+  --collage-loose: 2;
+  --collage-gap: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --collage-pad: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  /* Extra inset, per scatter unit, so a rotated corner stays inside the border box. */
+  --collage-bleed: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  /* Brick frame. 2rem is 32px. Overlap is the vertical corner cross. Ratio is 260/280. */
+  --collage-margin: round(nearest, calc(var(--space-6) * var(--density)), 1px);
+  /* Negative on purpose. round() inside another calc() does not resolve, so this stays a plain length. */
+  --collage-overlap: calc(var(--space-5) * var(--density) * -1);
+  --collage-card-ratio: 0.928;
+  --collage-card-sway: 0.1;
+  /* Phone row width. Height follows the ratio, inside a 33dvh frame. */
+  --collage-item-size-sm: calc(33dvh * 0.7 * var(--collage-card-ratio));
+  /* Tablet brick cap. Three across, then the track shrinks if the column is narrower. */
+  --collage-item-size-md: 11rem;
+  /* Motion. Defaults follow the shared motion tokens. Override a collage token to retune one collage. */
+  --collage-duration: var(--motion-duration-slow);
+  --collage-easing: var(--motion-ease-out);
+  --collage-rise: var(--motion-distance-sm);
+  --collage-deal: 100%;
+  --collage-deal-duration: 720ms;
+  --collage-drift: 1deg;
+  --collage-drift-duration: 8s;
+  --collage-drift-easing: ease-in-out;
+  --collage-drift-phase: -1.15s;
+  --collage-focus-lift: calc(var(--collage-lift) * 2);
+  --collage-focus-scale: 0.97;
+  --collage-focus-dim: 0.62;
   --card-hover-subtle-background-color: var(--surface-muted-background-color);
   --card-hover-strong-border-color: var(--color-primary);
   --card-hover-strong-shadow: var(--shadow-md);
@@ -803,7 +1195,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --hero-overlay-on-light-button-secondary-border-color: rgb(0 0 0 / 0.35);
   --hero-overlay-min-height: 560px;
   --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
-  --carousel-chevron-background-color: rgb(31 41 55 / 0.68);
+  --carousel-chevron-background-color: var(--overlay-scrim-color);
   --carousel-viewport-background-color: var(--surface-muted-background-color);
   --carousel-viewport-border-color: var(--surface-border-color);
   --carousel-control-background-color: rgb(0 0 0 / 0.6);
@@ -822,7 +1214,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --carousel-caption-below-text-color: var(--surface-muted-content-color);
   --carousel-media-background-color: oklch(0 0 0);
   --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
-  --modal-backdrop-color: rgb(0 0 0 / 0.5);
+  --modal-backdrop-color: var(--overlay-backdrop-color);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);
   --modal-title-color: var(--surface-content-color);
@@ -854,7 +1246,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --progress-danger-fill-color: var(--color-danger-background-color);
   --range-track-color: var(--surface-muted-background-color);
   --range-fill-color: var(--color-primary);
-  --range-thumb-color: var(--surface-background-color);
+  --range-thumb-color: var(--color-primary);
   --range-thumb-border-color: var(--surface-background-color);
   --range-thumb-shadow: var(--shadow-md);
   --range-thumb-size: 1.25rem;
@@ -863,14 +1255,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
   --popover-shadow: var(--shadow-lg);
-  --popover-padding: 1rem;
-  --popover-radius: var(--radius-md);
+  --popover-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --tooltip-background-color: var(--surface-content-color);
   --tooltip-border-color: var(--surface-border-color);
   --tooltip-text-color: var(--surface-background-color);
   --tooltip-shadow: var(--shadow-lg);
-  --tooltip-padding-x: 0.75rem;
-  --tooltip-padding-y: 0.5rem;
+  --tooltip-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --tooltip-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
@@ -883,16 +1274,26 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
   --sidebar-item-icon-color: var(--surface-muted-content-color);
-  --sidebar-item-hover-background-color: var(--surface-muted-background-color);
-  --list-item-hover-background-color: var(--surface-muted-background-color);
-  --list-item-active-background-color: var(--surface-muted-background-color);
+  --sidebar-item-hover-background-color: var(--surface-hover-background-color);
+  --list-item-hover-background-color: var(--surface-hover-background-color);
+  --list-item-active-background-color: var(--surface-active-background-color);
   --list-marker-color: var(--surface-muted-content-color);
   --list-marker-min-width: 1.5rem;
   --list-marker-gap: 0.5rem;
+  --collection-editor-background-color: var(--surface-background-color);
+  --collection-editor-border-color: var(--surface-border-color);
+  --collection-editor-radius: var(--card-radius);
+  --collection-editor-row-background-color: transparent;
+  --collection-editor-row-hover-background-color: var(--list-item-hover-background-color);
+  --collection-editor-row-padding: 0.75rem;
+  --collection-editor-title-color: var(--surface-content-color);
+  --collection-editor-description-color: var(--surface-muted-content-color);
+  --collection-editor-handle-color: var(--surface-muted-content-color);
+  --collection-editor-drop-indicator-color: var(--color-primary);
   --sidebar-item-hover-text-color: var(--surface-content-color);
-  --sidebar-item-active-background-color: #333;
-  --sidebar-item-active-text-color: var(--color-primary-text);
-  --sidebar-item-active-icon-color: var(--color-primary-text);
+  --sidebar-item-active-background-color: var(--surface-active-background-color);
+  --sidebar-item-active-text-color: var(--surface-active-text-color);
+  --sidebar-item-active-icon-color: var(--surface-active-icon-color);
   --sidebar-group-item-indent: 1rem;
   --sidebar-footer-text-color: var(--surface-muted-content-color);
   --sidebar-header-background-color: var(--sidebar-background-color);
@@ -931,7 +1332,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-header-border-color: var(--surface-border-color);
   --chat-composer-background-color: var(--surface-background-color);
   --chat-composer-border-color: var(--surface-border-color);
-  --chat-composer-radius: var(--radius-md);
   --chat-input-background-color: var(--surface-background-color);
   --chat-input-border-color: var(--surface-border-color);
   --chat-input-text-color: var(--surface-content-color);
@@ -941,8 +1341,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
-  --chat-message-outgoing-background-color: var(--color-primary);
-  --chat-message-outgoing-text-color: var(--color-primary-text);
+  --chat-message-outgoing-background-color: var(--surface-hover-background-color);
+  --chat-message-outgoing-text-color: var(--surface-content-color);
   --chat-message-system-text-color: var(--surface-muted-content-color);
   --chat-message-incoming-meta-color: var(--surface-muted-content-color);
   --chat-message-outgoing-meta-color: var(--surface-muted-content-color);
@@ -992,7 +1392,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-submit-background-color: var(--color-primary);
   --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
   --comments-composer-submit-text-color: var(--color-primary-text);
-  --comments-inline-input-radius: 9999px;
+  --comments-inline-input-radius: var(--form-control-radius);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
   --comments-thread-count-color: var(--surface-muted-content-color);
@@ -1030,11 +1430,14 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-danger-hover-background-color: var(--color-danger-hover-background-color);
   --button-danger-text-color: var(--color-danger-text-color);
   --button-danger-border-color: var(--color-danger-border-color);
+  --button-icon-primary-color: var(--color-primary);
+  --button-icon-success-color: var(--color-success-background-color);
+  --button-icon-warning-color: var(--color-warning);
+  --button-icon-danger-color: var(--color-danger-background-color);
   --fp-button-background: var(--button-default-background-color);
   --fp-button-hover-background: var(--button-default-hover-background-color);
   --fp-button-text: var(--button-default-text-color);
   --fp-button-border: var(--button-default-border-color);
-  --button-border-radius: var(--radius-md);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-background-color);
   --button-disabled-opacity: 0.5;
@@ -1043,19 +1446,18 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-shadow-active: var(--shadow-button-active);
   --hit-target-min: 2.75rem;
   --hit-target-inline-min: 1.5rem;
-  --button-padding-x-xs: 0.5rem;
-  --button-padding-y-xs: 0.25rem;
-  --button-padding-x-sm: 0.75rem;
-  --button-padding-y-sm: 0.375rem;
-  --button-padding-x-md: 1rem;
-  --button-padding-y-md: 0.5rem;
-  --button-padding-x-lg: 1.5rem;
-  --button-padding-y-lg: 0.75rem;
-  --button-icon-only-padding-sm: 0.375rem;
-  --button-icon-only-padding-md: 0.5rem;
-  --button-icon-only-padding-lg: 0.75rem;
-  --alert-border-radius: var(--radius-md);
-  --alert-padding: 1rem;
+  --button-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-padding-x-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --button-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-padding-x-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --button-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --alert-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --alert-title-color: currentColor;
   --alert-description-color: currentColor;
   --alert-dismiss-button-radius: var(--radius-sm);
@@ -1079,8 +1481,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --alert-danger-border-color: color-mix(in oklab, var(--color-danger-background-color) 42%, var(--surface-border-color));
   --alert-danger-text-color: var(--surface-content-color);
   --alert-danger-icon-color: color-mix(in oklab, var(--color-danger-background-color) 78%, black);
-  --toast-border-radius: var(--radius-md);
-  --toast-padding: 1rem;
+  --toast-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --toast-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --toast-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
   --toast-shadow: var(--shadow-lg);
   --toast-dismiss-text-color: var(--surface-muted-content-color);
   --toast-dismiss-hover-text-color: var(--surface-content-color);
@@ -1124,6 +1527,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-swatch-selected-ring-color: var(--color-ring);
   --color-swatch-ring-offset-color: var(--surface-background-color);
   --color-swatch-shadow: var(--shadow-sm);
+  --color-swatch-check-on-dark: oklch(1 0 0);
+  --color-swatch-check-on-light: oklch(0.22 0 0);
   --font-swatch-radius: 9999px;
   --font-swatch-border-color: var(--surface-border-color);
   --font-swatch-selected-ring-color: var(--color-ring);
@@ -1137,11 +1542,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);
   --top-nav-item-icon-color: var(--surface-muted-content-color);
-  --top-nav-item-hover-background-color: var(--surface-muted-background-color);
+  --top-nav-item-hover-background-color: var(--surface-hover-background-color);
   --top-nav-item-hover-text-color: var(--surface-content-color);
-  --top-nav-item-active-background-color: #333;
-  --top-nav-item-active-text-color: var(--color-primary-text);
-  --top-nav-item-active-icon-color: var(--color-primary-text);
+  --top-nav-item-active-background-color: var(--surface-active-background-color);
+  --top-nav-item-active-text-color: var(--surface-active-text-color);
+  --top-nav-item-active-icon-color: var(--surface-active-icon-color);
   --top-nav-height: 72px;
   --top-nav-backdrop-blur: 16px;
   --search-icon-color: var(--surface-muted-content-color);
@@ -1150,9 +1555,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
   --search-input-focus-ring-color: var(--color-primary);
-  --search-padding-y-sm: 0.375rem;
-  --search-padding-y-md: 0.5rem;
-  --search-padding-y-lg: 0.75rem;
+  --search-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --search-padding-inline-sm: 2rem;
   --search-padding-inline-md: 2.5rem;
   --search-padding-inline-lg: 3rem;
@@ -1163,32 +1568,36 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-result-description-color: var(--surface-muted-content-color);
   --search-result-hover-background-color: var(--surface-muted-background-color);
   --search-result-divider-color: var(--surface-border-color);
-  --color-ring: #333;
+  --color-ring: var(--color-primary);
   --stack-gap-sm: 0.5rem;
   --stack-gap-md: 1rem;
   --stack-gap-lg: 1.5rem;
-  --form-control-padding: 0.875rem;
-  --table-padding: 0.875rem;
+  --form-control-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --form-control-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --table-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --table-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --table-background-color: var(--surface-background-color);
   --table-border-color: var(--surface-border-color);
   --table-header-background-color: var(--surface-background-color);
   --table-header-border-color: var(--surface-border-color);
   --table-header-text-color: var(--surface-muted-content-color);
   --table-row-divider-color: var(--surface-border-color);
-  --table-row-hover-background-color: var(--surface-muted-background-color);
+  --table-row-hover-background-color: var(--surface-hover-background-color);
+  --table-row-selected-background-color: var(--surface-active-background-color);
+  --pagination-current-background-color: var(--surface-active-background-color);
+  --pagination-current-text-color: var(--surface-active-text-color);
   --table-cell-text-color: var(--surface-content-color);
   --table-cell-muted-text-color: var(--surface-muted-content-color);
   --table-empty-state-text-color: var(--surface-muted-content-color);
   --table-sort-link-hover-color: var(--surface-content-color);
-  --chip-remove-hover-background-color: rgb(0 0 0 / 0.1);
-  --chip-border-radius: 0.5rem;
+  --chip-remove-hover-background-color: color-mix(in oklab, var(--surface-content-color) 10%, transparent);
   --chip-group-gap: 0.5rem;
-  --chip-padding-x-sm: 0.5rem;
-  --chip-padding-y-sm: 0.125rem;
-  --chip-padding-x-md: 0.75rem;
-  --chip-padding-y-md: 0.25rem;
-  --chip-padding-x-lg: 1rem;
-  --chip-padding-y-lg: 0.375rem;
+  --chip-padding-x-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-x-md: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --chip-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --chip-padding-x-lg: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --chip-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --picker-badge-background-color: rgb(0 0 0 / 0.55);
   --picker-badge-text-color: oklch(1.0 0 0);
   --picker-selection-idle-background-color: rgb(0 0 0 / 0.3);
@@ -1206,9 +1615,35 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --text-3xl: 1.875rem;
   --text-4xl: 2.25rem;
   --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 1;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 1;
+  --text-8xl: 6rem;
+  --text-8xl--line-height: 1;
   --leading-tight: 1.25;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
+  /* ~48px on a phone, ~80px at 1280, ~88px from 1440. Override min/max without rewriting the clamp. */
+  --display-size-min: var(--text-5xl);
+  --display-size-max: 5.5rem;
+  --display-size: clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max));
+  --display-tracking: -0.03em;
+  --display-leading: 1.05;
+  --display-weight: 600;
+  /* Cover titles. xl aliases --display-size (48px → 88px) so today's display output is unchanged. */
+  --hero-title-md-size-min: var(--text-4xl);
+  --hero-title-md-size-max: var(--text-6xl);
+  --hero-title-md-size: clamp(var(--hero-title-md-size-min), 1rem + 3.5vw, var(--hero-title-md-size-max));
+  --hero-title-lg-size-min: var(--text-5xl);
+  --hero-title-lg-size-max: var(--text-7xl);
+  --hero-title-lg-size: clamp(var(--hero-title-lg-size-min), 1rem + 4.5vw, var(--hero-title-lg-size-max));
+  --hero-title-xl-size-min: var(--display-size-min);
+  --hero-title-xl-size-max: var(--display-size-max);
+  --hero-title-xl-size: var(--display-size);
+  --hero-title-xxl-size-min: var(--text-5xl);
+  --hero-title-xxl-size-max: var(--text-8xl);
+  --hero-title-xxl-size: clamp(var(--hero-title-xxl-size-min), 1rem + 5.5vw, var(--hero-title-xxl-size-max));
   --page-title-h1-size: var(--text-4xl);
   --page-title-h2-size: var(--text-3xl);
   --page-title-h3-size: var(--text-2xl);
@@ -1235,20 +1670,100 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-backdrop-blur: 4px;
   --drawer-backdrop-blur: var(--modal-backdrop-blur);
   --icon-stroke-width: 1.5;
-  --radius-sm: 0.75rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
-  /* Concrete values live here. @theme inline only registers names for Tailwind. */
+  /* Shape steps live on the bare :root scale below. @theme inline only registers names. */
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
   --easing-exit: cubic-bezier(0.3, 0, 1, 1);
+  /* List / layout only — overlays stay on enter/exit with no bounce. */
+  --easing-spring: cubic-bezier(0.34, 1.25, 0.64, 1);
+  --easing-spring-snappy: cubic-bezier(0.22, 1.35, 0.36, 1);
+  /* Reveals, type, and media. Themes tune these. Component motion inherits them. */
+  --motion-duration-fast: var(--duration-fast);
+  --motion-duration-base: var(--duration-base);
+  --motion-duration-slow: var(--duration-slow);
+  --motion-duration-slower: 600ms;
+  --motion-delay-sm: 120ms;
+  --motion-delay-md: 250ms;
+  --motion-delay-lg: 450ms;
+  --motion-stagger-sm: 40ms;
+  --motion-stagger-md: 80ms;
+  --motion-stagger-lg: 120ms;
+  --motion-ease-out: var(--easing-enter);
+  --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-spring: var(--easing-spring);
+  --motion-distance-sm: 4px;
+  --motion-distance-md: 1rem;
+  --motion-distance-lg: 3rem;
+  --motion-scale: 0.95;
+  --motion-scale-strong: 0.85;
+  --motion-zoom: 1.05;
+  --motion-zoom-strong: 1.2;
+  --reveal-stagger: 40ms;
   --transition-fast: var(--duration-fast);
   --transition-base: var(--duration-base);
   --transition-slow: var(--duration-slow);
+  --dropdown-item-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --dropdown-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --dropdown-item-gap: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --dropdown-divider-margin: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --select-option-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --select-option-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --select-search-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --combobox-item-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --combobox-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-item-padding-x: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --command-palette-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-item-gap: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --command-palette-field-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --command-palette-field-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --command-palette-label-padding-y: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --command-palette-empty-padding-y: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --search-result-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --list-item-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --list-item-padding-y: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --sidebar-item-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --sidebar-item-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --sidebar-item-gap: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --sidebar-item-inset: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --sidebar-item-padding-collapsed: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --sidebar-section-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --sidebar-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --top-nav-padding-inline: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --top-nav-mobile-padding: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --overlay-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --overlay-padding-wide: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --pill-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --tabs-stacked-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --modal-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --modal-padding-wide: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --drawer-padding: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --drawer-padding-wide: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --badge-padding-x-xs: 0.5rem;
+  --badge-padding-y-xs: 0.25rem;
+  --badge-padding-x-sm: 0.75rem;
+  --badge-padding-y-sm: 0.25rem;
+  --badge-padding-x-md: 0.75rem;
+  --badge-padding-y-md: 0.25rem;
+  --badge-padding-x-lg: 1rem;
+  --badge-padding-y-lg: 0.5rem;
+}
+
+/* Hover follows --color-primary itself so a host that sets an exact hex (not
+ * --brand-*) still gets a darker shade. Relative color syntax is the match for
+ * `l - 0.10`; color-mix() cannot keep that delta across lightness values.
+ * Tailwind never sees this value — @theme inline only self-maps the name, and
+ * this file is a stylesheet, not a Tailwind entry. Named themes that set
+ * --color-primary-hover (dark, ocean) still win: they are equally specific and
+ * come later.
+ */
+@supports (color: oklch(from red calc(l - 0.1) c h)) {
+  :root, [data-theme] {
+    --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
+  }
 }
 
 /* ApexCharts tooltips can be rendered outside chart containers and keep
@@ -1270,17 +1785,62 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   color: var(--surface-content-color) !important;
 }
 
-/* Dark theme — overrides only (inherits component aliases from :root) */
+
+/* Spacing scale. Concrete lengths on bare :root only, after the palette block.
+ * A nested data-theme inherits these computed values. Component formulas on
+ * :root, [data-theme] re-resolve against them. Remapped shells stay off that
+ * shared selector so a dark region inside rounded keeps the generous inset.
+ *
+ * Shape scale sits here too. Moderate corners are the default. Component radii
+ * that [data-theme="rounded"] changes are declared here, not on [data-theme],
+ * for the same reason as the menu shells.
+ */
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --density: 1;
+  --dropdown-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --select-menu-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --combobox-menu-padding: round(nearest, calc(var(--space-1) * var(--density)), 1px);
+  --search-menu-padding: 0px;
+  --search-result-padding-y: round(nearest, calc(var(--space-4) * var(--density)), 1px);
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
+  --button-border-radius: var(--radius-md);
+  --form-control-radius: var(--radius-md);
+  --chip-border-radius: var(--radius-md);
+  --sidebar-item-radius: var(--radius-lg);
+  --dropdown-item-radius: var(--radius-sm);
+  --badge-radius: var(--radius-md);
+  --tabs-pill-corner-radius: var(--radius-md);
+  --card-radius: var(--radius-lg);
+  --menu-radius: var(--radius-lg);
+  --popover-radius: var(--menu-radius);
+  --modal-radius: var(--radius-lg);
+  --alert-border-radius: var(--radius-lg);
+  --toast-border-radius: var(--radius-lg);
+  --chat-composer-radius: var(--radius-lg);
+}
+
+/* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
+ * Dark inherits --space-*, --density, and the shape scale. It does not restate them.
+ * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
+ * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
+ * Modal blur stays a dark-only exception (3px vs 4px light).
+ */
 [data-theme="dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.62 0.22 250);
   --color-primary-hover: oklch(0.72 0.15 250);
   --color-primary-text: oklch(0.15 0.01 250);
-  --color-secondary: oklch(0.20 0.02 250);
-  --color-secondary-hover: oklch(0.25 0.03 250);
-  --color-secondary-text: oklch(0.90 0.01 250);
-  --color-ghost-hover: oklch(0.22 0.02 250);
-  --color-ghost-text: oklch(0.85 0.01 250);
   --color-success-background-color: oklch(67% .194 149.214);
   --color-success-hover-background-color: oklch(72% .194 149.214);
   --color-success-text: oklch(0.15 0.01 250);
@@ -1291,22 +1851,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-page-background-color: oklch(0.15 0.01 250);
   --surface-content-color: oklch(0.95 0.01 250);
   --surface-muted-background-color: oklch(0.22 0.02 250);
+  --surface-hover-background-color: oklch(0.22 0.02 250);
+  --surface-active-background-color: oklch(0.28 0.02 250);
   --surface-muted-content-color: oklch(0.65 0.01 250);
   --surface-border-color: oklch(0.30 0.02 250);
   --surface-border-hover-color: oklch(0.40 0.03 250);
-  --carousel-chevron-background-color: rgb(15 20 36 / 0.72);
+  --card-style-gradient-background: linear-gradient(145deg, color-mix(in oklab, var(--color-primary) 78%, white) 0%, var(--color-primary) 100%);
+  --overlay-backdrop-color: rgb(0 0 0 / 0.65);
+  --overlay-scrim-color: rgb(15 20 36 / 0.72);
   --bottom-nav-background-color: oklch(0.11 0.01 250);
   --bottom-nav-border-color: oklch(0.29 0.02 250);
   --bottom-nav-item-active-color: var(--color-primary-hover);
   --bottom-nav-item-color: oklch(0.76 0.01 250);
   --bottom-nav-item-hover-color: oklch(0.96 0.01 250);
-  --switch-track-background-color: color-mix(in oklab, oklch(0.38 0.05 249.96) 92%, black);
-  --comments-inline-input-radius: 9999px;
-  --modal-backdrop-color: rgb(0 0 0 / 0.65);
-  --list-item-hover-background-color: oklch(0.26 0.02 250);
-  --list-item-active-background-color: oklch(0.30 0.03 250);
-  --color-ring: oklch(0.62 0.22 250);
-  --chip-remove-hover-background-color: rgb(255 255 255 / 0.16);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.06);
   --shadow-md: 0 10px 24px -8px rgb(0 0 0 / 0.65), 0 0 0 1px rgb(255 255 255 / 0.08);
   --shadow-lg: 0 22px 40px -12px rgb(0 0 0 / 0.72), 0 0 0 1px rgb(255 255 255 / 0.1);
@@ -1316,6 +1873,14 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-background-color: oklch(0.17 0.01 250);
   --sidebar-float-background-color: oklch(0.22 0.02 250);
   --top-nav-background-color: oklch(0.18 0.01 250);
+  --inline-edit-cue-color: color-mix(in oklab, var(--surface-content-color) 38%, transparent);
+  --inline-edit-focus-color: var(--color-primary);
+  --inline-edit-error-color: var(--color-error);
+  --inline-edit-placeholder-color: var(--surface-muted-content-color);
+  --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 48%, var(--surface-muted-content-color));
+  --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 9%, transparent);
+  /* Hover and muted share one lightness, so the sent bubble would match incoming. */
+  --chat-message-outgoing-background-color: oklch(0.32 0.015 250);
 }
 
 /* Ocean theme — overrides only */
@@ -1334,25 +1899,56 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-muted-content-color: oklch(0.45 0.02 220);
   --surface-border-color: oklch(0.87 0.02 220);
   --surface-border-hover-color: oklch(0.80 0.03 220);
-  --carousel-chevron-background-color: rgb(14 79 128 / 0.72);
+  --overlay-scrim-color: rgb(14 79 128 / 0.72);
   --bottom-nav-background-color: oklch(0.30 0.07 235);
   --bottom-nav-border-color: oklch(0.43 0.08 230);
   --bottom-nav-item-active-color: oklch(0.95 0.03 220);
   --bottom-nav-item-color: oklch(0.81 0.04 220);
   --bottom-nav-item-hover-color: oklch(0.99 0.01 220);
-  --modal-backdrop-color: rgb(3 24 47 / 0.45);
-  --list-item-hover-background-color: oklch(0.92 0.03 220);
-  --list-item-active-background-color: oklch(0.88 0.04 220);
+  --overlay-backdrop-color: rgb(3 24 47 / 0.45);
+  --surface-hover-background-color: oklch(0.92 0.03 220);
+  --surface-active-background-color: oklch(0.88 0.04 220);
+  /* Hover sits on the muted fill. A slightly deeper neutral keeps the sent bubble apart. */
+  --chat-message-outgoing-background-color: oklch(0.90 0.025 220);
   --sidebar-group-item-indent: 0.875rem;
   --avatar-status-ring-color: var(--surface-background-color);
-  --color-ring: oklch(0.52 0.15 220);
   --modal-backdrop-blur: 5px;
   --sidebar-background-color: oklch(0.96 0.02 220);
   --top-nav-background-color: oklch(0.97 0.01 220);
 }
 
-/* Rounded theme — no-op alias of :root. Hosts may keep data-theme="rounded". */
+/* Rounded shifts spacing steps 2–6 and the shape of controls and shells.
+ * Colour and shadow stay on the default palette. --space-1 stays 4px.
+ * --density stays 1. The global --radius-* steps stay moderate; this block
+ * only remaps component radii. Do not self-map a token here.
+ */
 [data-theme="rounded"] {
+  --space-1: 0.25rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.25rem;
+  --space-5: 1.75rem;
+  --space-6: 2.5rem;
+  --density: 1;
+  --dropdown-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --select-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --combobox-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
+  --search-result-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-border-radius: var(--radius-full);
+  --form-control-radius: var(--radius-full);
+  --chip-border-radius: var(--radius-md);
+  --sidebar-item-radius: var(--radius-md);
+  --dropdown-item-radius: var(--radius-md);
+  --badge-radius: var(--radius-full);
+  --tabs-pill-corner-radius: var(--radius-full);
+  --chat-composer-radius: var(--radius-full);
+  --card-radius: var(--radius-xl);
+  --menu-radius: var(--radius-xl);
+  --popover-radius: var(--radius-xl);
+  --modal-radius: var(--radius-xl);
+  --alert-border-radius: var(--radius-xl);
+  --toast-border-radius: var(--radius-xl);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1362,6 +1958,17 @@ input.flat-pack-input[type="search"]::-ms-reveal {
     --duration-base: 0ms;
     --duration-slow: 0ms;
     --skeleton-shimmer-duration: 0ms;
+    --motion-duration-fast: 0ms;
+    --motion-duration-base: 0ms;
+    --motion-duration-slow: 0ms;
+    --motion-duration-slower: 0ms;
+    --motion-delay-sm: 0ms;
+    --motion-delay-md: 0ms;
+    --motion-delay-lg: 0ms;
+    --motion-stagger-sm: 0ms;
+    --motion-stagger-md: 0ms;
+    --motion-stagger-lg: 0ms;
+    --reveal-stagger: 0ms;
   }
 }
 

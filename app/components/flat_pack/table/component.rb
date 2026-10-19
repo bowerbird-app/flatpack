@@ -14,13 +14,31 @@ module FlatPack
       #
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "min-w-[30rem]" "min-w-[40rem]" "min-w-[48rem]"
+      # "min-w-[30rem]" "min-w-[40rem]" "min-w-[48rem]" "sr-only"
       MIN_WIDTHS = {
         none: nil,
         sm: "min-w-[30rem]",
         md: "min-w-[40rem]",
         lg: "min-w-[48rem]"
       }.freeze
+
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "overflow-x-auto" "rounded-[var(--card-radius)]" "border" "border-[var(--table-border-color)]"
+      STYLES = {
+        default: "overflow-x-auto rounded-[var(--card-radius)] border border-[var(--table-border-color)]",
+        plain: "overflow-x-auto"
+      }.freeze
+
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "hover:bg-[var(--table-row-hover-background-color)]" "has-[:checked]:bg-[var(--table-row-selected-background-color)]" "has-[:checked]:hover:bg-[var(--table-row-selected-background-color)]" "transition-colors" "duration-fast"
+      ROW_HOVER = "hover:bg-[var(--table-row-hover-background-color)] has-[:checked]:bg-[var(--table-row-selected-background-color)] has-[:checked]:hover:bg-[var(--table-row-selected-background-color)] transition-colors duration-fast"
+
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "table-fixed"
+      FIXED_LAYOUT = "table-fixed"
 
       def initialize(
         data: [],
@@ -33,6 +51,9 @@ module FlatPack
         tbody_data: nil,
         draggable_rows: false,
         min_width: :md,
+        headers: true,
+        style: :default,
+        dividers: true,
         reorder: nil,
         reorder_url: nil,
         reorder_resource: nil,
@@ -45,6 +66,9 @@ module FlatPack
         super(**system_arguments)
         @data = data
         @min_width = normalize_min_width(min_width)
+        @show_headers = normalize_headers(headers)
+        @style = normalize_style(style)
+        @dividers = normalize_dividers(dividers)
         @stimulus = stimulus
         @turbo_frame = turbo_frame
         @sort = sort
@@ -63,19 +87,44 @@ module FlatPack
         @row_id = reorder_options[:row_id] || row_id || ->(row) { row.respond_to?(:id) ? row.id : nil }
       end
 
-      def column(title:, html: nil, sortable: false, sort_key: nil, &block)
+      def column(
+        title:,
+        html: nil,
+        sortable: false,
+        sort_key: nil,
+        width: nil,
+        min_width: nil,
+        max_width: nil,
+        align: :start,
+        wrap: :wrap,
+        hide_below: nil,
+        &block
+      )
         if block && html.nil?
           html = block
         end
 
-        set_slot(:columns, nil, title: title, html: html, sortable: sortable, sort_key: sort_key)
+        set_slot(
+          :columns,
+          nil,
+          title: title,
+          html: html,
+          sortable: sortable,
+          sort_key: sort_key,
+          width: width,
+          min_width: min_width,
+          max_width: max_width,
+          align: align,
+          wrap: wrap,
+          hide_below: hide_below
+        )
         self
       end
 
       def call
         content = tag.div(**container_attributes) do
           tag.table(**table_attributes) do
-            safe_join([render_header, render_body])
+            safe_join([render_colgroup, render_header, render_body].compact)
           end
         end
 
@@ -90,9 +139,7 @@ module FlatPack
       private
 
       def container_attributes
-        attrs = merge_attributes(
-          class: "overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--table-border-color)]"
-        )
+        attrs = merge_attributes(class: STYLES.fetch(@style))
 
         attrs[:data] ||= {}
         attrs[:data][:controller] = controller_names if controller_names.present?
@@ -113,10 +160,27 @@ module FlatPack
           class: classes(
             "w-full",
             @min_width,
+            (FIXED_LAYOUT if fixed_layout?),
             "border-collapse",
             "bg-[var(--table-background-color)]"
           )
         }
+      end
+
+      # A CSS length uses fixed layout so the column stays that wide.
+      # :fit cannot share that algorithm: fixed layout ignores cell content
+      # and clips a 1% column. Automatic layout plus a max-width cap on the
+      # length cells keeps both the shrink and the length.
+      def fixed_layout?
+        columns.any?(&:fixed_width?) && columns.none?(&:fit_width?)
+      end
+
+      def render_colgroup
+        return unless columns.any?(&:colgroup_needed?)
+
+        tag.colgroup do
+          safe_join(columns.map(&:render_col))
+        end
       end
 
       def normalize_min_width(min_width)
@@ -132,10 +196,29 @@ module FlatPack
         MIN_WIDTHS[key]
       end
 
+      def normalize_headers(headers)
+        return headers if headers == true || headers == false
+
+        raise ArgumentError, "headers must be true or false"
+      end
+
+      def normalize_style(style)
+        key = style.to_sym
+        return key if STYLES.key?(key)
+
+        raise ArgumentError, "style must be one of #{STYLES.keys.join(", ")}"
+      end
+
+      def normalize_dividers(dividers)
+        return dividers if dividers == true || dividers == false
+
+        raise ArgumentError, "dividers must be true or false"
+      end
+
       def render_header
         return unless columns.any?
 
-        tag.thead class: "bg-[var(--table-header-background-color)] border-b border-[var(--table-header-border-color)]" do
+        tag.thead(**header_attributes) do
           tag.tr do
             safe_join(columns.map { |column|
               column.render_header(
@@ -147,6 +230,19 @@ module FlatPack
               )
             })
           end
+        end
+      end
+
+      def header_attributes
+        if @show_headers
+          {
+            class: [
+              "bg-[var(--table-header-background-color)]",
+              ("border-b border-[var(--table-header-border-color)]" if @dividers)
+            ].compact.join(" ")
+          }
+        else
+          {class: "sr-only"}
         end
       end
 
@@ -163,10 +259,11 @@ module FlatPack
       def tbody_attributes
         attrs = {
           class: classes(
-            "divide-y divide-[var(--table-row-divider-color)]",
+            ("divide-y divide-[var(--table-row-divider-color)]" if @dividers),
             @tbody_class
-          )
+          ).presence
         }
+        attrs.delete(:class) if attrs[:class].blank?
 
         attrs[:data] = @tbody_data if @tbody_data.present?
         attrs
@@ -179,9 +276,8 @@ module FlatPack
       end
 
       def row_attributes(row)
-        attrs = {
-          class: "hover:bg-[var(--table-row-hover-background-color)] transition-colors duration-fast"
-        }
+        attrs = {}
+        attrs[:class] = ROW_HOVER if @style == :default
 
         return attrs unless @draggable_rows
 
@@ -228,17 +324,17 @@ module FlatPack
       def render_empty_state
         tag.tr do
           tag.td colspan: column_count, class: "#{body_cell_classes} text-center text-[var(--table-empty-state-text-color)]" do
-            "No data available"
+            fp_t("table.empty")
           end
         end
       end
 
       def header_cell_classes
-        "px-[var(--table-padding)] py-[var(--table-padding)] text-left text-xs font-medium text-[var(--table-header-text-color)]"
+        "px-[var(--table-padding-x)] py-[var(--table-padding-y)] text-start text-xs font-medium text-[var(--table-header-text-color)]"
       end
 
       def body_cell_classes
-        "px-[var(--table-padding)] py-[var(--table-padding)] text-sm text-[var(--table-cell-text-color)]"
+        "px-[var(--table-padding-x)] py-[var(--table-padding-y)] text-sm text-[var(--table-cell-text-color)]"
       end
 
       def column_count

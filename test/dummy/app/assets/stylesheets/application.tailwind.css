@@ -11,17 +11,19 @@
 }
 
 /* Unlayered so this beats Tailwind @layer theme --font-sans (ui-sans-serif)
- * and --radius-* (0.25 / 0.375 / 0.5 / 0.75rem). Putting these in @theme
- * does not replace Tailwind's defaults. var(--radius-md, 1rem) fallbacks
+ * and --radius-* (0.125 / 0.25 / 0.375 / 0.5 / 0.75rem). Putting these in @theme
+ * does not replace Tailwind's defaults. var(--radius-md, 0.5rem) fallbacks
  * in kit CSS only apply when the token is unset.
  */
 :root {
 	--font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 	--font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-	--radius-sm: 0.75rem;
-	--radius-md: 1rem;
-	--radius-lg: 1.5rem;
-	--radius-xl: 2rem;
+	--radius-xs: 0.125rem;
+	--radius-sm: 0.25rem;
+	--radius-md: 0.5rem;
+	--radius-lg: 0.75rem;
+	--radius-xl: 1.25rem;
+	--radius-full: 9999px;
 }
 
 @layer base {
@@ -163,7 +165,9 @@
 [data-theme="dark"],
 [data-theme="ocean"],
 [data-theme="rounded"],
-[data-theme="sunrise"] {
+[data-theme="sunrise"],
+[data-theme="featured-in"],
+[data-theme="featured-in-dark"] {
 	--sidebar-header-border-color: transparent;
 }
 
@@ -179,8 +183,31 @@
 	--surface-content-color: oklch(0.32 0.04 35);
 }
 
-/* Host-registered button colourway. Does not change --color-primary. */
-.fp-button[data-fp-style="partner"] {
+/* Semantic-only brand pair: hover, ghost, and list chrome must follow these. */
+[data-theme="featured-in"] {
+	--color-primary: #c41e6a;
+	--color-primary-text: #fff;
+	--surface-page-background-color: oklch(0.98 0.01 350);
+	--surface-background-color: oklch(0.99 0.005 350);
+	--surface-muted-background-color: oklch(0.94 0.02 350);
+	--surface-border-color: oklch(0.86 0.03 350);
+	--surface-content-color: oklch(0.22 0.04 350);
+	--surface-muted-content-color: oklch(0.45 0.03 350);
+}
+
+[data-theme="featured-in-dark"] {
+	color-scheme: dark;
+	--color-primary: oklch(0.72 0.18 350);
+	--color-primary-text: oklch(0.18 0.04 350);
+	--surface-page-background-color: oklch(0.16 0.02 350);
+	--surface-background-color: oklch(0.18 0.02 350);
+	--surface-muted-background-color: oklch(0.24 0.03 350);
+	--surface-border-color: oklch(0.32 0.03 350);
+	--surface-content-color: oklch(0.94 0.01 350);
+	--surface-muted-content-color: oklch(0.72 0.02 350);
+}
+
+[data-fp-style="partner"] {
 	--fp-button-background: #635bff;
 	--fp-button-hover-background: #0a2540;
 	--fp-button-text: #ffffff;

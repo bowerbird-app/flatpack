@@ -1,0 +1,53 @@
+<% object = row_form.object %>
+<% image = object.respond_to?(:image) ? object.image : nil %>
+<% title = local_assigns.key?(:title) ? local_assigns[:title] : image&.name %>
+<% thumbnail_url = local_assigns.key?(:thumbnail_url) ? local_assigns[:thumbnail_url] : (image ? CollectionEditorDemo.thumbnail_data_uri(image) : nil) %>
+<% image_error = object.errors.full_messages_for(:image).to_sentence.presence || object.errors.full_messages_for(:image_id).to_sentence.presence %>
+<% caption_error = object.errors.full_messages_for(:caption).to_sentence.presence %>
+<% credit_error = object.errors.full_messages_for(:credit).to_sentence.presence %>
+<% row.with_image(
+  form: row_form,
+  association_name: :image_id,
+  title: title,
+  thumbnail_url: thumbnail_url,
+  label: "Image",
+  search_url: demo_collection_editor_images_path,
+  create_url: demo_collection_editor_images_path,
+  update_url: "#{demo_collection_editor_images_path}/:id",
+  create_label: "Create",
+  empty_text: "No images",
+  error: image_error
+) do %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: "name",
+    label: "Name",
+    form: "collection-editor-unattached",
+    data: {create_field: "name", fill_from_query: "true"}
+  ) %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: "alt_text",
+    label: "Alt text",
+    form: "collection-editor-unattached",
+    data: {create_field: "alt_text"}
+  ) %>
+<% end %>
+<% row.with_field do %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: row_form.field_name(:caption),
+    id: row_form.field_id(:caption),
+    label: "Caption",
+    value: object.caption,
+    error: caption_error,
+    chrome: :cell
+  ) %>
+<% end %>
+<% row.with_field do %>
+  <%= render FlatPack::TextInput::Component.new(
+    name: row_form.field_name(:credit),
+    id: row_form.field_id(:credit),
+    label: "Credit",
+    value: object.credit,
+    error: credit_error,
+    chrome: :cell
+  ) %>
+<% end %>

@@ -13,20 +13,1026 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.197] - 2026-09-23
+## [0.1.253] - 2026-10-19
 
 ### Added
-- `FlatPack::SidebarLayout::Component` accepts `floating:` (`false` by default). On desktop the rail insets by `--sidebar-float-inset` on the top, bottom, and outer edge, and paints `--sidebar-float-background-color` with a full border and `--sidebar-float-shadow`. The rounded palette rounds it with `--sidebar-float-radius`. Other named themes stay square. Below the `md` breakpoint the drawer stays flush.
+- `FlatPack::SidebarLayout::Component` accepts an optional `floating:` argument (`false` by default). On desktop the rail insets by `--sidebar-float-inset` on the top, bottom, and outer edge, and paints `--sidebar-float-background-color` with a full border and `--sidebar-float-shadow`. The rounded palette rounds it with `--sidebar-float-radius`. Other named themes stay square. Below the `md` breakpoint the drawer stays flush.
 - Dummy chrome reads `?floating=1` to show the detached rail.
+- Bumped the gem version to `0.1.253`.
+
+### Upgrade notes
+- New optional `floating:` argument on `SidebarLayout`, and new `--sidebar-float-*` tokens. No host change required.
+- Reload kit CSS/JS. Redeploy so `meta.gem_version` shows `0.1.253`.
+
+## [0.1.252] - 2026-10-17
+
+### Added
+- Reveal timing. `delay:` is `:sm`, `:md`, or `:lg` (`--motion-delay-sm` 120ms, `--motion-delay-md` 250ms, `--motion-delay-lg` 450ms). `duration:` is `:fast`, `:base`, `:slow`, or `:slower` (`--motion-duration-slower` is 600ms). `stagger:` stays `true` for `--reveal-stagger`, and also accepts `:sm`, `:md`, or `:lg` (`--motion-stagger-sm` 40ms, `--motion-stagger-md` 80ms, `--motion-stagger-lg` 120ms).
+- Each step writes `--reveal-delay`, `--reveal-duration`, or `--reveal-stagger` on that element. Omit a step and the theme token applies.
+- A non-negative Integer of milliseconds is the escape hatch for any of the three.
+- Demo: the Sequence section on `/demo/motion`.
+- Bumped the gem version to `0.1.252`.
+
+### Upgrade notes
+- New optional arguments. `stagger: true` and `stagger: false` still mean the same thing.
+- Named steps are the API. A millisecond Integer still works when a step is the wrong size.
+- `FlatPack::Number::Component` `duration:` is still `:fast`, `:base`, or `:slow`. `:slower` is a reveal step.
+- Under `prefers-reduced-motion: reduce`, the new delay, duration, and stagger tokens are `0ms`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.252`.
+
+## [0.1.251] - 2026-10-16
+
+### Added
+- Motion tokens: `--motion-duration-fast`, `--motion-duration-base`, `--motion-duration-slow`, `--motion-ease-out`, `--motion-ease-in-out`, `--motion-ease-spring`, `--motion-distance-sm`, `--motion-distance-md`, `--motion-distance-lg`, and `--reveal-stagger`. A theme tunes reveals, the kit enter, and the collage entrance in one place.
+- `reveal:` on any component root that calls `merge_attributes`. Every variant starts hidden. `:fade` is opacity. `:rise`, `:blur`, and `:scale` then move, sharpen, or grow. `:wipe` and `:zoom` are the media pair. `intensity: :strong` uses the strong motion tokens. `stagger: true` indexes the children. `parallax: true` is a gentle scroll shift, only with `:wipe` or `:zoom`.
+- `FlatPack::Reveal::Component` is the wrapper. `:words` and `:lines` split the copy on the server. Each piece slides up out of a mask. The plain sentence stays in a visually hidden span. The pieces are `aria-hidden`.
+- `FlatPack::Text::Stream::Component` types a line once it is in view, with a caret. The full string stays in the DOM for screen readers. The typing is decorative. Put it inside a chat message. There is no `stream:` flag.
+- One Stimulus controller, `flat-pack--reveal`, reveals once. `flat-pack--text-stream` types once. Both share the reduced-motion helper. `prefers-reduced-motion: reduce` shows the finished look. With no JavaScript the content stays visible.
+- `FlatPack::Number::Component` counts, rolls, or fades a number the first time it enters the view. The finished formatted value is in the page, so a screen reader and a browser without JavaScript get the final number. `value:` is the amount. `format:` is `:number`, `:currency`, `:percent`, or `:compact`. `animate:` is `:count` (default), `:roll`, `:fade`, or `:none`. `duration:` is `:fast`, `:base`, or `:slow`. A later value change animates from the number on screen to the new one. Tabular figures keep the width steady.
+- `observeOnce` in `reduced_motion.js` is the shared in-view trigger for reveals and numbers.
+- Demo: `/demo/motion`.
+- Bumped the gem version to `0.1.251`.
 
 ### Changed
+- `.fp-content-enter` and `.fp-empty-state` use `--motion-duration-slow`, `--motion-ease-out`, and `--motion-distance-sm`.
+- `--collage-duration`, `--collage-easing`, `--collage-rise`, and `--collage-stagger` inherit those tokens. A collage token set on its own still wins.
+- `flat-pack--svg-motion` named durations `:fast`, `:base`, and `:slow` follow `--motion-duration-*`. Easing `enter` follows `--motion-ease-out`. `standard` and `exit` stay on `--easing-standard` and `--easing-exit`. A millisecond duration is unchanged.
+- Under `prefers-reduced-motion: reduce`, the motion durations and `--reveal-stagger` are `0ms`.
+
+### Upgrade notes
+- New tokens and three components. Nothing was renamed.
+- `reveal: :words` and `reveal: :lines` belong on `FlatPack::Reveal::Component`. On any other component they raise `ArgumentError`.
+- `parallax: true` raises unless the reveal is `:wipe` or `:zoom`.
+- Overriding `--motion-duration-slow` or `--motion-ease-out` also retunes `.fp-content-enter`, the collage entrance, and svg-motion tracks that use a named duration or easing `enter`. Set the `--collage-*` token when one collage should differ. Easing `standard` and `exit` stay on `--easing-standard` and `--easing-exit`.
+- Do not add `stream:` to `FlatPack::Chat::Message::Component`. Render `FlatPack::Text::Stream::Component` in the message.
+- `FlatPack::Number::Component` is new. Billing prices stay on `price_text` and `amount`. A counter takes a numeric `value:`.
+- Percent is a ratio. `0.18` formats as 18%.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.251`.
+
+## [0.1.250] - 2026-10-16
+
+### Changed
+- Radius is a theme dimension, on the same bare `:root` as `--space-*`.
+- The moderate shape scale is `--radius-xs` (`0.125rem`), `--radius-sm` (`0.25rem`), `--radius-md` (`0.5rem`), `--radius-lg` (`0.75rem`), `--radius-xl` (`1.25rem`), and `--radius-full` (`9999px`).
+- Component radii alias a step: `--button-border-radius`, `--form-control-radius`, `--chip-border-radius`, `--badge-radius`, `--tabs-pill-corner-radius`, `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius`, `--alert-border-radius`, `--toast-border-radius`, and `--chat-composer-radius`.
+- `[data-theme="rounded"]` makes buttons, inputs, badges, tabs, and the chat composer pills, and steps cards, menus, popovers, modals, alerts, and toasts up to `--radius-xl`. Chips stay `--radius-md`. `--sidebar-item-radius` and `--dropdown-item-radius` are `--radius-md` there too, so nav rows and menu highlights stay a soft corner. Dark and ocean keep the moderate shape.
+- Circles stay fixed: avatar circle, status dots, typing dots, stepper and timeline markers, switch, radio, spinners, carousel dots, and the FAB.
+- Bumped the gem version to `0.1.250`.
+
+### Upgrade notes
+- The old default (`--radius-md: 1rem`, `--radius-sm: 0.75rem`, `--radius-lg: 1.5rem`, `--radius-xl: 2rem`) is gone. There is no alias.
+- Hosts that re-set kit radii on unlayered `:root` should copy the new six steps. Tailwind's layered `--radius-md: 0.375rem` still loses to that unlayered block.
+- Rebuild host Tailwind so these classes are generated: `rounded-[var(--form-control-radius)]`, `rounded-[var(--badge-radius)]`, `rounded-[var(--card-radius)]`, `rounded-[var(--menu-radius)]`, `rounded-[var(--modal-radius)]`, `rounded-[var(--chat-composer-radius)]`, `rounded-[var(--button-border-radius)]`, `rounded-[var(--chip-border-radius)]`, `rounded-[var(--sidebar-item-radius)]`, `rounded-[var(--dropdown-item-radius)]`, `rounded-[var(--media-radius)]`, `rounded-[var(--radius-full)]`, `rounded-[var(--radius-xs)]`, `rounded-l-[var(--button-border-radius)]`, `rounded-r-[var(--button-border-radius)]`, `rounded-r-[var(--modal-radius)]`, `rounded-l-[var(--modal-radius)]`, `rounded-t-[var(--modal-radius)]`, and `[border-radius:var(--tabs-pill-corner-radius)]`.
+- Set `data-theme="rounded"` for pill buttons and inputs. Chips, sidebar rows, and menu item highlights stay 8px (`--radius-md`). Without the theme, controls use the 8px step and sidebar rows use 12px.
+- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.250`.
+
+## [0.1.249] - 2026-10-16
+
+### Added
+- `FlatPack::AnimatedCharacter::Component` draws a character from a Ruby hash and plays named states with the Web Animations API.
+- A definition lists nested parts (`circle`, `ellipse`, `rect`, `path`, `line`, `polyline`) and tracks for `translateX`, `translateY`, `scaleX`, `scaleY`, `rotate`, `opacity`, and `strokeDashoffset`.
+- `FlatPack::AnimatedCharacter.bot` and `FlatPack::AnimatedCharacter.pip` are ready-made characters. Bot states are `idle`, `blink`, `happy`, and `thinking`. Blink scales the eye group on Y.
+- `FlatPack::Shared::IconComponent` takes `animate:` (`:wiggle`, `:pop`, `:draw`, `:spin`, `:nudge`) and `trigger:` (`:hover`, `:click`, `:mount`).
+- The Stimulus controller `flat-pack--svg-motion` exposes `setState`, `play`, `stop`, `reset`, `pause`, and `resume`. `prefers-reduced-motion: reduce` keeps the first frame.
+- Demo: `/demo/animated_character`.
+- Bumped the gem version to `0.1.249`.
+
+### Upgrade notes
+- New component, and two optional keyword arguments on `IconComponent`. Nothing was renamed.
+- `definition` is a Hash. A raw SVG string, an unknown shape, or an attribute outside the allowlist raises `ArgumentError`.
+- `state` must be a key in that definition. `size` is `:sm`, `:md`, `:lg`, or `:xl`.
+- `animate` must be `:wiggle`, `:pop`, `:draw`, `:spin`, or `:nudge`. `trigger` must be `:hover`, `:click`, or `:mount`.
+- Pass `label:` when the character should have an accessible name. Without it, the SVG is `aria-hidden`.
+- Durations `:fast`, `:base`, and `:slow` follow `--duration-fast`, `--duration-base`, and `--duration-slow`. Easing `standard`, `enter`, and `exit` follow the matching `--easing-*` tokens.
+- Reload kit CSS and JavaScript. There is no path morphing in this version.
+- Redeploy so `meta.gem_version` shows `0.1.249`.
+
+## [0.1.248] - 2026-10-16
+
+### Changed
+- `FlatPack::Collage::Component` takes `entrance:`, `idle:`, and `hover:` instead of `motion:`.
+- `entrance:` is `:rise` (default, the staggered fade-up), `:deal` (flat, near the centre, then into place, then the tilt settles), or `:none`.
+- `idle:` is `:none` (default) or `:drift` (a slow sway of about ±1deg, each item on its own beat).
+- `hover:` is `:lift` (default), `:focus` (straighten, raise, and bring forward while siblings ease back), or `:none`. Pointer hover runs under `(hover: hover)`. Keyboard focus uses `:focus-visible` and `:focus-within`.
+- Below `md`, only the entrance runs. `prefers-reduced-motion: reduce` skips the entrance, the sway, and the hover.
+- Motion durations, distances, and easings are `--collage-*` tokens: `--collage-duration`, `--collage-easing`, `--collage-rise`, `--collage-deal`, `--collage-deal-duration`, `--collage-drift`, `--collage-drift-duration`, `--collage-drift-easing`, `--collage-drift-phase`, `--collage-focus-lift`, `--collage-focus-scale`, and `--collage-focus-dim`.
+- Demo: `/demo/collage` has a section for each option.
+- Bumped the gem version to `0.1.248`.
+
+### Upgrade notes
+- `motion:` is gone. Pass `entrance:`, `idle:`, and `hover:`. There is no alias.
+- The old default (`motion: true`) is `entrance: :rise`, `idle: :none`, `hover: :lift`.
+- The old `motion: false` is `entrance: :none, hover: :none`.
+- `:drift` and both hover styles are off below `md`. Pass `entrance: :none` when a phone should not animate.
+- Tune the motion with the new `--collage-*` tokens. `--collage-duration` follows `--duration-slow`, and `--collage-easing` follows `--easing-enter`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.248`.
+
+## [0.1.247] - 2026-10-16
+
+### Added
+- `FlatPack::Collage::Component` scatters any host content. `columns:` is an even grid, 1–6 (default 3). `rows:` is a brick, such as `[5, 4]`: five across, then four centered between them. `scatter:` is `:subtle` (default), `:loose`, or `:none`.
+- `collage.item(rotate:, offset:, z:)` takes any markup. Omit `rotate` and `offset` and the tilt comes from the item index, so a re-render stays put. Pass either one to pin that card.
+- Below `md`, the collage is one overlapping row, `33dvh` tall. `mobile_items:` (default `4`) is how many items stay in that row. Later items stay in source order and are not displayed. The outer cards may cross the side edges. `--collage-item-size-sm` is the card width.
+- From `md` up to `lg`, a brick is rows of three, capped by `--collage-item-size-md` (`11rem`). The second row shifts sideways. From `lg` up, `rows: [5, 4]` is five across and four centered between them.
+- `stack_below:` (`:sm`, `:md`, `:lg`, `:xl`) is opt-in. Omit it. Pass it when that width should be one column with the tilt off. DOM order is the reading order. Nothing is absolutely positioned.
+- `--collage-rotate` is `5deg`. `--collage-offset-x`, `--collage-offset-y`, `--collage-lift`, and `--collage-stagger` are the other ranges. `--collage-loose` scales the subtle unit. A brick insets by `--collage-margin` (about 32px), overlaps rows by `--collage-overlap`, and sizes each slot with `--collage-card-ratio` and `--collage-card-sway`. An even grid still pads with `--collage-pad` plus the offset and `--collage-bleed`. Below `stack_below` the overlap, the tilt, and the extra inset drop off. The kit does not style the item.
+- `motion: true` (default) staggers `.fp-content-enter` and lifts on hover with `--duration-slow` / `--easing-enter`. `motion: false` and `prefers-reduced-motion: reduce` skip both.
+- Demo: `/demo/collage`.
+- Bumped the gem version to `0.1.247`.
+
+### Upgrade notes
+- New component. There is no alias to retire.
+- `stack_below` defaults to omitted. A phone shows the short row, not a list. Pass `stack_below: :md` when that width should stack.
+- Tune a theme with the `--collage-*` tokens. Do not restyle `.fp-collage__item` to change the lean.
+- `scatter: :none` is the square grid. A theme that sets `--collage-rotate: 0deg` and zero offsets flattens every collage, including `:loose`.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.247`.
+
+## [0.1.246] - 2026-10-15
+
+### Added
+- `FlatPack::EmptyState::Component` takes `icon_variant:` (`:outline`, `:solid`, `:mini`, `:micro`) for any kit icon.
+- One visual above the title. `icon:` is the default. `media` fills it with one `FlatPack::Media::Component` (`src`, `alt`, `width`, `height`) and keeps that aspect ratio. `visual` is freeform host markup and spans the empty state, so a large composition fits. A block or an image replaces the icon.
+- `width:` `:sm`, `:md`, `:lg`, or `:full` caps the text block with `--empty-state-measure-*`. Default `:md` is `28rem`. `:full` is `max-width: none`.
+- `title_size:` `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit it and the heading follows `size`.
+- `description_size:` `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit it and the sentence follows `size`.
+- `icon_size:` `:sm`, `:md`, `:lg`, or `:xl` on the kit icon. Omit it and `size` maps `:sm` → `:md`, `:md` → `:lg`, `:lg` → `:xl`. Requires `icon`.
+- `layout:` `:wrap` (default) or `:stack`. Actions are one `item` each and render in `FlatPack::Collection::Component`.
+- `--empty-state-padding-*`, `--empty-state-gap-*`, `--empty-state-title-gap-*`, and `--empty-state-block-gap-*` are `round(nearest, calc(var(--space-N) * var(--density)), 1px)`.
+- Demo: `/demo/empty_state`.
+- Bumped the gem version to `0.1.246`.
+
+### Changed
+- The root is still a block-level flex column with no width of its own, so it fills its container. `width:` caps the words (and a media image), not the root. A `visual` block is not capped.
+- Padding and the gaps no longer use `py-*` / `px-*` / `mb-*` utilities. On the compact scale the medium padding is still `3rem` by `1rem`. Rounded's larger `--space-*` steps loosen it.
+- `slot` and the deprecated `actions` alias are gone. Pass `item` once per button.
+- The default description is one step larger. `size: :sm` is `--text-sm`, `:md` is `--text-base`, `:lg` is `--text-lg`. `size:` still sets padding, gaps, the icon, the title, and the description together.
+
+### Upgrade notes
+- Replace `empty.slot` and `empty.actions` with `empty.item` for each button. `layout: :stack` piles them. The default `:wrap` is the old wrapping row.
+- `icon_variant` must be `:outline`, `:solid`, `:mini`, or `:micro`, and it requires `icon`. Anything else raises `ArgumentError`.
+- Pass `visual` or `media`, not both. There is no `graphic` slot. `media` uses Media's `width` and `height` integers and does not take a block. EmptyState `width:` is `:sm`, `:md`, `:lg`, or `:full`.
+- `title_size` is not Hero's scale. `:xxl` is `--text-2xl`. `:display` is the cover heading.
+- `description_size` is not `title_size`. `:md` is `--text-base`. `:base` raises. Pass `description_size: :sm` to keep the old medium sentence (`--text-sm`).
+- `icon_size` requires `icon` and uses `:sm`, `:md`, `:lg`, or `:xl`. A media image stays on `width:`.
+- The text block defaults to `--empty-state-measure-md` (`28rem`), which was the old description cap. Pass `width: :full` for an uncapped sentence.
+- Hosts that want the old compact padding on a rounded page should not restate these tokens on `[data-theme="rounded"]`. Override `--empty-state-padding-*` only when this panel should diverge.
+- Rebuild host Tailwind so these literals are generated: `py-[var(--empty-state-padding-y-sm)]`, `px-[var(--empty-state-padding-x-sm)]`, `py-[var(--empty-state-padding-y-md)]`, `px-[var(--empty-state-padding-x-md)]`, `py-[var(--empty-state-padding-y-lg)]`, `px-[var(--empty-state-padding-x-lg)]`, `mb-[var(--empty-state-gap-sm)]`, `mb-[var(--empty-state-gap-md)]`, `mb-[var(--empty-state-gap-lg)]`, `mb-[var(--empty-state-title-gap-sm)]`, `mb-[var(--empty-state-title-gap-md)]`, `mb-[var(--empty-state-title-gap-lg)]`, `mb-[var(--empty-state-block-gap-sm)]`, `mb-[var(--empty-state-block-gap-md)]`, `mb-[var(--empty-state-block-gap-lg)]`, `max-w-[var(--empty-state-measure-sm)]`, `max-w-[var(--empty-state-measure-md)]`, `max-w-[var(--empty-state-measure-lg)]`, `max-w-[var(--empty-state-measure-full)]`, `text-[length:var(--text-xs)]`, `text-[length:var(--text-sm)]`, `text-[length:var(--text-base)]`, `text-[length:var(--text-lg)]`, `text-[length:var(--text-xl)]`, and `text-[length:var(--text-2xl)]`.
+- Reload kit CSS for the new tokens.
+- Redeploy so `meta.gem_version` shows `0.1.246`.
+
+## [0.1.245] - 2026-10-15
+
+### Changed
+- Outgoing chat bubbles use a light neutral surface instead of the primary fill. `--chat-message-outgoing-background-color` is `var(--surface-hover-background-color)` (`#f0f0f0` on the default palette). `--chat-message-outgoing-text-color` is `var(--surface-content-color)`.
+- Incoming stays `--surface-muted-background-color` (`#e5e5e5`) with the same foreground. Body text is about 11:1 on the sent bubble and about 10:1 on the received bubble.
+- Dark sets `--chat-message-outgoing-background-color` to `oklch(0.32 0.015 250)`. Dark hover and muted are the same lightness, so the hover alias would match incoming. Text stays the surface foreground (about 11:1). Incoming text on the muted surface is about 15:1.
+- Ocean sets `--chat-message-outgoing-background-color` to `oklch(0.90 0.025 220)`. Ocean hover sits on the muted fill, so the sent bubble uses a slightly deeper neutral. Text stays the surface foreground (about 13:1).
+- Timestamps, read receipts, and attachment icons stay on `--surface-muted-content-color`. They sit under the bubble or on the attachment card. Links inside a bubble inherit the bubble text colour.
+- Bumped the gem version to `0.1.245`.
+
+### Upgrade notes
+- There is no compatibility alias and no class that restores the primary bubble. To keep a brand fill, set `--chat-message-outgoing-background-color` and `--chat-message-outgoing-text-color` after Flatpack CSS.
+- Drop a host rule that forced outgoing text to white so it would read on the primary fill. White ink fails on the neutral bubble.
+- A theme whose hover and muted surfaces match should set `--chat-message-outgoing-background-color`, or the sent and received bubbles match. Dark and ocean already do this.
+- Reload kit CSS. There are no new Tailwind class literals.
+- Redeploy so `meta.gem_version` shows `0.1.245`.
+
+## [0.1.244] - 2026-10-15
+
+### Added
+- `--space-1` through `--space-6` and `--density` on bare `:root`. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)`.
+- `[data-theme="rounded"]` shifts steps 2–6 (`0.75rem`, `1rem`, `1.25rem`, `1.75rem`, `2.5rem`) and remaps menu shells plus the search result block axis. `--space-1` stays `0.25rem`. `--density` stays `1`.
+- Family padding tokens for menus, fields, badges, overlays, sidebar, list, modal, and drawer. Badges and search icon gutters stay fixed lengths.
+- Bumped the gem version to `0.1.244`.
+
+### Changed
+- Buttons, fields, chips, pills, tabs, cards, lists, tables, sidebar, top nav, modal, drawer, popover, tooltip, alert, toast, accordion, collapse, and bottom nav read those tokens. Alert, toast, and accordion no longer write a size onto the token with an inline style.
+- Card header and footer follow the card padding step.
+- `--form-control-padding` is `--form-control-padding-x` and `--form-control-padding-y`. `--table-padding` is `--table-padding-x` and `--table-padding-y`. `--alert-padding` and `--toast-padding` are `-sm`, `-md`, and `-lg`. Accordion trigger and content padding are sized the same way.
+- Removed unused `--button-padding-x-xs` and `--button-padding-y-xs`.
+- The dummy app sets `data-theme="rounded"` on its HTML layouts.
+- Dark and ocean inherit the compact scale. A dark region nested inside rounded keeps the generous steps.
+
+### Upgrade notes
+- There are no compatibility aliases. Hosts that set `--form-control-padding`, `--table-padding`, `--alert-padding`, `--toast-padding`, `--button-padding-x-xs`, or `--button-padding-y-xs` must switch to the new names.
+- Set `<html data-theme="rounded">` for the generous scale. Omit it, or use `dark` / `ocean`, and padding stays on the compact scale.
+- Do not restate `--space-*`, `--density`, or the remapped menu shells on a generic `[data-theme]` rule. Do not self-map a token on `rounded`.
+- Rebuild host Tailwind so the new `px-[var(--…)]` / `py-[var(--…)]` / `p-[var(--…)]` / `sm:p-[var(--…)]` literals are generated. Reload kit CSS for the token values.
+- Select options use the menu item steps. At the compact scale that is `12px` by `8px`, down from the old field padding.
+- Redeploy so `meta.gem_version` shows `0.1.244`.
+- Do not tag this PR.
+
+## [0.1.243] - 2026-10-15
+
+### Added
+- `FlatPack::Button::Component`, `FlatPack::Button::Dropdown::Component`, and `FlatPack::Button::DropdownItem::Component` accept `icon_variant:` (`:outline`, `:solid`, `:mini`, `:micro`) and `icon_style:` (`nil`, `:primary`, `:success`, `:warning`, `:danger`).
+- `icon_variant` is passed to `FlatPack::Shared::IconComponent` `variant:`. Omit it to keep `config.default_icon_variant`.
+- `icon_style: nil` inherits the button text through `currentColor`. The other values use `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`.
+- Those tokens alias `--color-primary`, `--color-success-background-color`, `--color-warning`, and `--color-danger-background-color`. The glyph mixes the token toward `--fp-button-text` so it stays readable on every button style. When `icon_style` matches `style`, the glyph uses the button text colour.
+- The dropdown chevron stays the trigger text colour and the default icon weight.
+- Demo: `/demo/buttons#icon-colour`.
+- Bumped the gem version to `0.1.243`.
+
+### Upgrade notes
+- Additive params. Existing buttons keep the configured icon weight and the button text colour.
+- `icon_variant` must be `:outline`, `:solid`, `:mini`, or `:micro`. `icon_style` must be `nil`, `:primary`, `:success`, `:warning`, or `:danger`. Anything else raises `ArgumentError`.
+- There is no `icon_class`. Hosts recolour icons by overriding `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`.
+- A disabled button still uses `--button-disabled-opacity`, which mutes the icon with the label.
+- Rebuild host Tailwind so these literals are generated: `fp-button-icon`, `text-[color-mix(in_oklab,var(--button-icon-primary-color)_55%,var(--fp-button-text))]`, `text-[color-mix(in_oklab,var(--button-icon-success-color)_55%,var(--fp-button-text))]`, `text-[color-mix(in_oklab,var(--button-icon-warning-color)_55%,var(--fp-button-text))]`, and `text-[color-mix(in_oklab,var(--button-icon-danger-color)_55%,var(--fp-button-text))]`.
+- Reload kit CSS for the same-style icon rule.
+- Redeploy so `meta.gem_version` shows `0.1.243`.
+- Do not tag this PR.
+
+## [0.1.242] - 2026-10-15
+
+### Added
+- `--surface-hover-background-color`, `--surface-active-background-color`, `--surface-active-text-color`, `--surface-active-icon-color`, and `--surface-active-border-color`. Light hover is `#f0f0f0` and active is `#e4e4e4`. Dark hover is `oklch(0.22 0.02 250)` and active is `oklch(0.28 0.02 250)`. Ocean hover is `oklch(0.92 0.03 220)` and active is `oklch(0.88 0.04 220)`.
+- `--table-row-selected-background-color` and `--pagination-current-background-color` / `--pagination-current-text-color`, both aliased to the active surface.
+
+### Changed
+- Sidebar, top nav, list, pill, table hover, and pill inactive hover follow the hover or active surface. A checked table row uses the selected token and keeps it on hover. Ocean no longer copies `--list-item-*`; it sets the surface pair.
+- Pill and stacked tabs omit `style:` for the neutral active fill. `style: :primary` (and every other named style) adds `.fp-pill-button-slots` so the active pill uses that button colour. The stacked track uses the hover token.
+- `current: true` on any Button, including `style: :primary`, uses the active surface and keeps it on hover.
+- Segmented buttons and chart filter buttons do the same when `style:` is omitted. A named `style:` still paints that button colour.
+- Inline radios, button chips, single-select options, rich text toolbar and bubble toggles, tree rows, and font-swatch rows use the active surface. Tree bars, underline tabs, and the sliding underline stay `--color-primary`.
+- The neutral active pill is flat. `--tabs-pill-active-shadow` is `none`. Named pill styles, including `:primary`, keep `--shadow-md` through `.fp-pill-button-slots`.
+- Bumped the gem version to `0.1.242`.
+
+### Upgrade notes
+- Selected chrome is one place: set `--surface-hover-background-color` and `--surface-active-*` after Flatpack CSS. Do not recolor each component. Set `--sidebar-item-active-*` (or another component token) only when that one control should diverge.
+- Pill, stacked tab, and segmented `style:` now defaults to omitted. The active control is the neutral surface. Pass `style: :primary` to keep the brand fill. Underline tabs are unchanged.
+- `current: true` is no longer the button's hover fill. A primary button with `current: true` is the neutral active surface, not a darker primary.
+- Chart filter `selected: true` without `style:` is the same neutral surface, not primary.
+- The current pagination page is `--pagination-current-*`, not `bg-primary`. A checked table row is `--table-row-selected-background-color`.
+- A selected button chip fills with the active surface. It no longer draws `ring-[var(--color-ring)]`.
+- The omitted pill shadow is `none`. Pass a named `style:`, including `:primary`, to keep `--shadow-md` on the active pill.
+- Rebuild host Tailwind so the new literals are generated, including `bg-[var(--surface-active-background-color)]`, `text-[var(--surface-active-text-color)]`, `border-[var(--surface-active-border-color)]`, `hover:bg-[var(--surface-hover-background-color)]`, `bg-[var(--pagination-current-background-color)]`, `text-[var(--pagination-current-text-color)]`, `has-[:checked]:bg-[var(--table-row-selected-background-color)]`, and `has-[:checked]:hover:bg-[var(--table-row-selected-background-color)]`. Reload kit CSS for the token values.
+
+## [0.1.241] - 2026-10-15
+
+### Added
+- `FlatPack::Lightbox::Component` is the overlay: a native `<dialog>` with backdrop, close, Escape, a focus trap, and focus returned to the trigger.
+- Items take `src`, optional `alt` and `caption`, and `type` `:image` or `:video`. `group` names the gallery. `loop` and `show_count` are booleans.
+- Triggers are separate. `FlatPack::Lightbox::Trigger`, `flat_pack_lightbox_trigger`, or `FlatPack::Lightbox.trigger_data(group:, index:)` open that group on an index. Thumbnails can sit in Masonry or anywhere else.
+- Several items reuse `FlatPack::Carousel` inside the dialog for next, previous, arrows, swipe, and the count. One item hides the arrows and the count.
+- Demo: `/demo/lightbox`.
+- Lightbox `thumbs:` (default `false`) shows a thumbnail strip when there is more than one item. It passes through to Carousel `show_thumbs`. An item `thumb_src` falls back to `src`.
+
+### Changed
+- Carousel `lightbox: true` renders this same lightbox. The old overlay markup is gone.
+- The lightbox dialog fills the viewport and stays transparent. Each image or video is `object-fit: contain` and keeps its shape, with no frame behind it. Close, arrows, and the count float on the backdrop. The caption sits below the media.
+- With `thumbs: true`, the thumbnail strip floats along the bottom of that backdrop. It highlights the current item, scrolls horizontally, and a click jumps to that item. One item hides it. There is no thumb styling prop.
+- Image slides still default `lightbox` to `true`. Video slides open the lightbox when `lightbox: true`. HTML slides and `:logo_slider` do not.
+- Carousel accepts `show_counter` (default `true`), `fit` (`:cover` or `:contain`), and `stage` (Lightbox sets this; hosts leave it off).
+- Bumped the gem version to `0.1.241`.
+
+### Upgrade notes
+- There is one lightbox. Carousel no longer renders `[data-flat-pack--carousel-target="lightbox"]`. Open and close go through `dialog[data-controller="flat-pack--lightbox"]`.
+- `flat-pack:lightbox:open` detail is `{ group, index, trigger }`. `flat-pack:lightbox:close` and `flat-pack:lightbox:close-request` carry `{ group }`.
+- A video slide with `lightbox: true` now opens. It used to ignore that flag. HTML still cannot.
+- Lightbox takes no `class`, `style`, or colour prop, and no boxed-panel option. The dialog fills the viewport and stays transparent. Hosts colour the backdrop with `--modal-backdrop-color` and `--modal-backdrop-blur`. Controls and the count use `--carousel-control-*` and `--carousel-counter-*`. Captions use `--carousel-caption-overlay-text-color`. `--carousel-lightbox-image-background-color` still fills a carousel `fit: :contain` frame outside the lightbox.
+- `group` must start with a letter. `index` must be zero or greater. `loop` and `show_count` must be `true` or `false`.
+- Rebuild host Tailwind so the dialog and trigger literals are generated, including `h-dvh`, `backdrop:bg-[var(--modal-backdrop-color)]`, `backdrop:backdrop-blur-[var(--modal-backdrop-blur)]`, `absolute`, `inset-0`, `flex-1`, `rounded-none`, `bg-transparent`, `object-contain`, `text-[var(--carousel-caption-overlay-text-color)]`, `overflow-x-auto`, `flex-nowrap`, `pb-20`, and `[justify-content:safe_center]`.
+- `thumbs` must be `true` or `false`.
+- Reload kit CSS. The overscroll rule now targets `[data-controller~="flat-pack--lightbox"]`.
+- Redeploy so `meta.gem_version` shows `0.1.241`.
+- Do not tag this PR.
+
+## [0.1.240] - 2026-10-14
+
+### Added
+- `FlatPack::Button::Component` accepts `align:` (`:center` default, `:start`), `lines:` (`1` default, or `2`), `current:` (`true` / `false`), and `title:` for the full label.
+- `:start` left-aligns the label and gives it `flex-1 min-w-0`. `lines` clamps the label with an ellipsis. `2` top-aligns the row.
+- `with_trailing` renders a fixed-width slot (`shrink-0`) at the end of the button. A count badge or an icon. It is top-aligned when the label wraps. Icon-only buttons reject it.
+- `current: true` adds `.fp-button-current` (the hover fill at rest). On a link it also sets `aria-current="page"`. The focus ring stays.
+- Leading icons stay `aria-hidden`.
+- `FlatPack::Collection::Component` renders `<ul><li>` for each `with_item`. `as: :nav` wraps that list in `<nav aria-label>` and requires `label:`.
+- `layout:` is `:stack` (default), `:grid` (auto-fill, equal height, `min_item_width:` default `"14rem"`), or `:wrap` (inline flex-wrap). `gap:` is `:sm`, `:md`, or `:lg`.
+- Demos: `/demo/collection` (press-kit menu and badge/chip wrap) and `/demo/buttons` (align, lines, trailing, current).
+
+### Changed
+- Button labels clamp to one line. Pass `lines: 2` for two.
+- Bumped the gem version to `0.1.240`.
+
+### Upgrade notes
+- Additive params. `align` defaults to `:center`. `lines` defaults to `1`, so a width-constrained label now ellipsizes instead of wrapping. Pass `lines: 2` for two lines and `title:` for the full string.
+- `current` must be `true` or `false`. It sets `aria-current="page"` only when the button has `href:`.
+- `align` must be `:center` or `:start`. Do not pass Hero `:left` or Grid `:stretch`.
+- `with_trailing` is the trailing slot. Icon-only buttons raise if you set it.
+- Collection `as` is `:list` or `:nav`. `as: :nav` requires `label:`. `label:` on a plain list raises.
+- Collection `layout` is `:grid`, `:wrap`, or `:stack`. `min_item_width` is a CSS length and only works with `:grid`. There is no colour prop and no item class.
+- Rebuild host Tailwind so these literals are generated: `justify-start`, `items-start`, `flex-1`, `min-w-0`, `text-start`, `truncate`, `line-clamp-2`, `shrink-0`, `self-start`, `grid-cols-[repeat(auto-fill,minmax(var(--fp-collection-min-item-width),1fr))]`, `[&>*]:w-full`, `[&>*]:flex-1`, `[&>*]:min-w-0`, `[&>*]:self-stretch`.
+- Reload kit CSS for `.fp-button.fp-button-current`.
+- Redeploy so `meta.gem_version` shows `0.1.240`.
+- Do not tag this PR.
+
+## [0.1.239] - 2026-10-14
+
+### Added
+- `FlatPack::List::Component` accepts `layout: :key_value`. The list renders a `<dl>`. Each `FlatPack::List::Item` takes `key:` and renders a `<div>` with a `<dt>` and a `<dd>`. Icons and keys share columns. Values wrap. Demo: `/demo/list#key-value`.
+- `key_width:` is `:fit` (the widest key) or a CSS length such as `"10rem"`.
+- `stack_below:` is `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value.
+- `icon:` still renders inside the key, `aria-hidden`, through `FlatPack::Shared::IconComponent`. `trailing:` still sits at the end of the row.
+
+### Changed
+- Bumped the gem version to `0.1.239`.
+
+### Upgrade notes
+- Additive. `layout` defaults to `:items`. Existing lists render the same `<ul>` or `<ol>`.
+- Pass `layout: :key_value` and give every item a `key:`. Render items inside the list block.
+- `ordered: true`, `orderable: true`, and `selectable: true` raise `ArgumentError` on a key/value list. `href:` and `leading:` raise on those items. `key:` outside `:key_value` raises.
+- `key_width` must be `:fit` or a CSS length. `stack_below` must be `:sm`, `:md`, `:lg`, or omitted.
+- Rebuild host Tailwind so the grid classes in `FlatPack::List::KeyValueLayout` are generated, including `grid-cols-subgrid` and the full track literals `grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`, `sm:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`, `md:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`, and `lg:grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]`. Reload kit CSS for the description-list margin reset and divider.
+- Redeploy so `meta.gem_version` shows `0.1.239`.
+
+## [0.1.238] - 2026-10-14
+
+### Added
+- `FlatPack::Table::Column` accepts `width:` (`:fit`, `:fill`, or a CSS length such as `"12rem"`), `min_width:`, `max_width:`, `align:` (`:start`, `:center`, `:end`), `wrap:` (`:wrap`, `:nowrap`, `:truncate`), and `hide_below:` (`:sm`, `:md`, `:lg`, `:xl`).
+- Widths render on `<colgroup>` / `<col>`. A CSS length uses `table-layout: fixed` unless a sibling column is `:fit` (fixed layout clips shrink-to-content columns). The length is still a `max-width` cap on the header and cells. Table `min_width:` still sets the horizontal scroll floor.
+- `wrap: :truncate` clips the header and cells and puts the full text in `title`.
+- `hide_below:` hides that header and its cells below the breakpoint. The column stays in the markup, so colspan still counts it.
+- `FlatPack::Table::Component` accepts `style:` (`:default`, `:plain`) and `dividers:` (`true` / `false`). `:plain` drops the outer border, radius, and row hover.
+- Demos: `/demo/tables/basic#table-column-widths`, `#table-align-wrap`, `#table-hide-below`, `#table-plain-rows`, `#table-no-dividers`. The plain demo is an icon column (`width: :fit`), a fixed key, and a fill value, with `headers: false` and `style: :plain`.
+
+### Changed
+- Bumped the gem version to `0.1.238`.
+- Header and cell alignment uses logical `text-start` / `text-center` / `text-end`. Default align is `:start`.
+- The draggable demo sizes the grip with `width: :fit`. Sortable id and views columns use the same column options.
+
+### Upgrade notes
+- Additive. Existing tables keep the bordered frame, row lines, and row hover.
+- `style` must be `:default` or `:plain`. `dividers` must be `true` or `false`.
+- Column `width:` is `:fit`, `:fill`, or a length such as `"12rem"`. Column `min_width:` and `max_width:` are lengths. They are not the table scroll floor and they are not a class or a raw style string.
+- A length `width:` sets `table-layout: fixed` when no column is `:fit`. Beside `:fit`, the table stays on automatic layout and the length cells get `max-width` of that length. Pass `min_width: :none` on the table when the scroll floor should stay off.
+- `align:` is `:start`, `:center`, or `:end`. In left-to-right text, `:start` matches the old `text-left`.
+- `wrap: :truncate` ellipsizes inside a length `width:`. On a `:fill` column the cell is capped with `max-width: 0` so the ellipsis uses the leftover space instead of widening the table.
+- `hide_below:` does not remove the column from `column_count` or colspan.
+- There is no compatibility shim. These options are new.
+- Rebuild host Tailwind so `text-start`, `text-center`, `text-end`, `whitespace-nowrap`, `truncate`, `min-w-0`, `max-w-full`, `shrink-0`, `table-fixed`, `max-sm:hidden`, `max-md:hidden`, `max-lg:hidden`, `max-xl:hidden`, and the `max-*: [visibility:collapse]` column classes are generated.
+- Redeploy so `meta.gem_version` shows `0.1.238`.
+- Main was `0.1.237` after #276. Recheck main at merge time and bump again if it has moved. Do not tag this PR.
+
+## [0.1.237] - 2026-10-14
+
+### Added
+- `FlatPack::Card::Component` `style:` is the colour fill: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. `shadow:` is `:none`, `:sm`, or `:md`. `border:` is `:none`, `:default` (1px), or `:strong` (2px). `hover:` stays `:none`, `:subtle`, or `:strong`, and defaults to `:none`. Hover paints outside the component layer so a style fill or shadow does not cover it. Demo: `/demo/cards/tones`.
+- `FlatPack::Card::Stat::Component` takes the same `style:`.
+
+### Changed
+- Removed card `style:` values `:flat`, `:elevated`, `:outlined`, `:interactive`, and `:list`.
+- Removed the card `theme:` hash.
+- Bumped the gem version to `0.1.237`.
+
+### Upgrade notes
+- Replace `style: :flat` with `style: :shaded` and `border: :none`.
+- Replace `style: :elevated` with `shadow: :md`. Dark themes already draw `--shadow-md` larger than the light token.
+- Replace `style: :outlined` with `border: :strong`.
+- Replace `style: :interactive` with `hover: :strong`. Hover no longer follows the old style.
+- `:list` only set the hover default to `:subtle`. The horizontal list demo already passed `padding: :sm`. Use `hover: :subtle` and `padding:`.
+- Replace `theme:` with `style:`. The card does not take raw colours, and it does not recolour nested buttons or badges.
+- Host themes set `--card-style-{default|shaded|brand|brand-subtle|gradient}-{background|text-color|muted-text-color|border-color}`. `background` is a CSS `background` so the gradient token can be a gradient. Dark mode overrides `--card-style-gradient-background`.
+- Rebuild host Tailwind so the style classes are generated, including `[background:var(--card-style-brand-background)]`, `shadow-[var(--shadow-sm)]`, and `shadow-[var(--shadow-md)]`.
+- Reload `flat_pack/variables` and `flat_pack/application`.
+- Redeploy so `meta.gem_version` shows `0.1.237`.
+
+## [0.1.236] - 2026-10-14
+
+### Added
+- `FlatPack::Table::Component` accepts `headers: false` (default `true`). The header row stays in the DOM and is visually hidden with `sr-only`. Column `title:` stays required. Demo: `/demo/tables/basic#table-without-headers`.
+- `FlatPack::Select::Component` option hashes accept `icon:` (a Heroicon name). The custom menu, the closed control, multiselect chips, nested parent and child rows, and remote search results show it before the label. Icons are decorative. Demo: `/demo/forms/select#select-with-icons`.
+
+### Changed
+- Bumped the gem version to `0.1.236`.
+- A searchable select inside a collection editor cell can open its menu past the card edge.
+
+### Upgrade notes
+- Additive. Existing tables keep visible headers. Existing selects without `icon:` look the same.
+- `headers` must be `true` or `false`. `title:` is still required when headers are hidden.
+- `icon:` is a Heroicon name such as `"camera"`. The icon uses `FlatPack::Shared::IconComponent` size `:sm`, matching the `text-sm` select. A native `<select>` cannot draw icons.
+- Remote select JSON may include `"icon"` on each item. Local options use the same key, including `children`.
+- Rebuild host Tailwind so `sr-only` is generated if it is not already. Reload kit CSS so a collection editor card can show an open select menu, and reload kit JavaScript so select icons update after a search.
+- Redeploy so `meta.gem_version` shows `0.1.236`.
+
+## [0.1.235] - 2026-10-14
+
+### Added
+- `FlatPack::Media::Component` renders one image: `src`, required `alt`, `width`, `height`, `loading="lazy"`, `decoding="async"`, and `aspect-ratio` from those dimensions. Corners use `--media-radius` (default `--radius-md`). The hairline uses `--media-outline-color`. `with_item(placement:, inset:)` passes through to Overlay for a badge or button. Demo: `/demo/masonry`.
+
+### Changed
+- `FlatPack::Masonry::Component` is layout only. Cells are `with_item`. `FlatPack::Masonry::Image` and `with_image` are gone.
+- Bumped the gem version to `0.1.235`.
+
+### Upgrade notes
+- Replace `masonry.with_image(...)` with `masonry.with_item` and `FlatPack::Media::Component`.
+- Wrap a link in the host when the tile should navigate. Put the filename in that same cell, under the media. Do not put a button inside the link.
+- `--media-radius` and `--media-outline-color` are the image tokens. There is no colour, radius, or theme prop.
+- Rebuild host Tailwind so `rounded-[var(--media-radius)]`, `outline-[var(--media-outline-color)]`, and `group/media` are generated.
+- Redeploy so `meta.gem_version` shows `0.1.235`.
+
+## [0.1.234] - 2026-10-14
+
+### Added
+- `FlatPack::CopyButton::Component` copies `text:` or the value of `target:`. It uses Button sizes and styles. The Copied state keeps that style and only changes the label and icon. Error uses danger tokens. Demo: `/demo/buttons/copy`.
+- `flat-pack--clipboard` writes with `navigator.clipboard.writeText`, then a hidden textarea and `document.execCommand("copy")`. It announces through a live region, and dispatches `flat-pack:clipboard:copied` and `flat-pack:clipboard:error`.
+- Locale keys `flatpack.clipboard.copy`, `flatpack.clipboard.copied_label`, and `flatpack.clipboard.error_label`.
+
+### Fixed
+- `flat_pack/copy.js` includes the English fallback for `collection_editor.already_joined`.
+- Copy button icons are centered with CSS grid. Kit `application.css` still does not use `justify-content: center`.
+
+### Changed
+- Bumped the gem version to `0.1.234`.
+- Text Input and Text Area `quick_copy: true` copy through `flat-pack--clipboard`. The trailing icon, readonly field, and toast stay. After a click the icon swaps to a check or an error icon. The check keeps the field’s icon colour.
+- Section Title `anchor_link: true` copies through the same controller. Hover, the link icon, the tooltip, and the hash update stay. The anchor announces the copy instead of staying silent. The check keeps the link colour.
+
+### Upgrade notes
+- Additive for Button, Text Input, Text Area, and Section Title callers. `quick_copy:` and `anchor_link:` keep the same arguments.
+- Copy Button `text:` is the clipboard string. The visible label is `label`.
+- Add `flatpack.clipboard.copy` (“Copy”), `flatpack.clipboard.copied_label` (“Copied”), and `flatpack.clipboard.error_label` (“Couldn’t copy”) to host locale files that translate `flatpack.*`.
+- Pin `flat_pack/clipboard`, or rerun `rails generate flat_pack:install`. The engine importmap pins it too.
+- Reload kit CSS and JavaScript. No new Tailwind utilities.
+- With `prefers-reduced-motion: reduce`, Copied and error stay for at most 600ms and the icon swap does not fade. `timeout: 0` still holds the state.
+- `writeClipboardText` and `readClipboardSource` in `flat_pack/clipboard.js` are the extension point for a later share button. This release does not call the Web Share API.
+- Redeploy so `meta.gem_version` shows `0.1.234`.
+
+## [0.1.233] - 2026-10-13
+
+### Added
+- `FlatPack::VideoPreview::Component` shows a thumbnail and a centred play button in a fixed aspect-ratio frame (default `16/9`, same ratio strings as Card media, rounded like Card media). The host supplies the player in `with_player`. That markup stays in a `<template>` until someone clicks, or presses Enter or Space. Flatpack does not know about providers, build embed URLs, or accept a raw embed string. `with_item` passes `placement` and `inset` through to Overlay. Demo: `/demo/video_preview`.
+
+### Changed
+- Bumped the gem version to `0.1.233`.
+
+### Upgrade notes
+- Additive. Card, Carousel, and Overlay stay as they are.
+- `label:` is required. It is the play button's accessible name. Translate it in the host. There is no `flatpack.video_preview` string and no colour or theme prop.
+- The host writes the iframe or video tag, including any autoplay flag, and decides which players are allowed.
+- Activation runs once, dispatches `flat-pack:video-preview:play`, and moves focus into the player.
+- With `prefers-reduced-motion: reduce`, the swap is instant and the play button does not shift on press.
+- Rebuild host Tailwind so the frame utilities are generated: `aspect-[16/9]`, `aspect-[4/3]`, `aspect-square`, `rounded-[var(--radius-lg)]`, and the play-button classes in `FlatPack::VideoPreview::Component`.
+- Reload Flatpack CSS so `.fp-video-preview__player` fills the inserted player, and reload Flatpack JavaScript so `flat-pack--video-preview` is available.
+- Redeploy so `meta.gem_version` shows `0.1.233`.
+
+## [0.1.232] - 2026-10-13
+
+### Added
+- `FlatPack::SectionTitle::Component` accepts `with_trailing`. The slot renders in the title row after the heading and before the copy-link icon. It sits outside the heading and outside the anchor, so the heading name and the copy-link label stay the title. Pass a badge, a count, or anything else. Demo: `/demo/section_title`.
+
+### Changed
+- Bumped the gem version to `0.1.232`.
+- The title row can wrap. The heading can shrink and break long words. Trailing content and the copy-link icon keep their size.
+
+### Upgrade notes
+- Additive. Calls that only pass `title:` render the same heading, subtitle, and copy link.
+- `title:` stays a string. Inline edit titles are unchanged.
+- There is no count or badge param. Use `with_trailing`.
+- Rebuild host Tailwind so these utilities are generated: `flex-wrap`, `flex-1`, `max-w-max`, `min-w-0`, `break-words`, and `shrink-0`.
+- Redeploy so `meta.gem_version` shows `0.1.232`.
+
+## [0.1.231] - 2026-10-13
+
+### Added
+- `FlatPack::Overlay::Component` places content on media. `with_media` is the element underneath. `with_item` can be used more than once for a badge, icon, button, or anything else.
+- Each item takes `placement:` on a nine-cell grid (`:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`, default `:top_left`) and `inset:` `:sm` / `:md` / `:lg` (default `:md`). The gaps are `--overlay-inset-sm` (`0.5rem`), `--overlay-inset-md` (`1rem`), and `--overlay-inset-lg` (`1.5rem`). Demo: `/demo/overlay`.
+
+### Changed
+- Bumped the gem version to `0.1.231`.
+
+### Upgrade notes
+- Additive. Hero, Carousel, FAB, Avatar, and Card media stay as they are.
+- Overlay does not theme, recolour, or shadow its items. Pass those components in the item slot so they keep their own look.
+- `placement` on an overlay item is the nine-cell grid. Tooltip, popover, and dropdown `placement` values are unchanged. FAB corners stay `position`.
+- Rebuild host Tailwind so the positioning utilities are generated: `inline-flex`, `contents`, `top-[var(--overlay-inset-sm)]` (and the `md` / `lg` and `right` / `bottom` / `left` matches), plus `top-1/2`, `left-1/2`, and the translate classes.
+- To change the gap, set `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg` on `:root` or a named `[data-theme]` block. `:center` ignores them. Edge-centers use the token on the edge axis only.
+- Redeploy so `meta.gem_version` shows `0.1.231`.
+
+## [0.1.230] - 2026-10-13
+
+### Added
+- Inline edit shows a small muted label just above the field while you edit (“Editing”), while the save is in flight (“Saving…” plus a small spinner), and after a successful save (“Saved” plus a green check, for about 1.5 seconds, then it fades). When save or validation fails, the same label shows the message the live region speaks, in the error color. The label is absolutely positioned, so the field does not shift. It is `aria-hidden`. Copy uses the existing `flatpack.inline_edit.saved` string (“Saved”).
+
+### Changed
+- Bumped the gem version to `0.1.230`.
+- `flatpack.inline_edit.saving` is now “Saving…”.
+- The spinner and check that sat beside the field are gone. Save feedback lives only in the floating label.
+
+### Upgrade notes
+- Additive. Add `flatpack.inline_edit.editing` to host locale files. English default is “Editing”. `flatpack.inline_edit.saved` is unchanged (“Saved”).
+- If a host translated `flatpack.inline_edit.saving`, update that string if it should match the visible “Saving…” label. The English default changed from “Saving” to “Saving…”.
+- Drop any host CSS aimed at `.fp-inline-edit__status`, `.fp-inline-edit__spinner`, or `.fp-inline-edit__tick`. Those elements are no longer rendered.
+- Rebuild host CSS so `flat_pack/inline_edit.css` includes the state label. No Tailwind utilities were added.
+- Redeploy so `meta.gem_version` shows `0.1.230`.
+- With `prefers-reduced-motion: reduce`, the saved label skips the 1.5s hold and stays only briefly, with no fade.
+
+## [0.1.229] - 2026-10-13
+
+### Fixed
+- Table and grid sortable controllers attach drag listeners when a row or item appears after `connect()`. `rowTargetConnected` and `itemTargetConnected` store one handler set and add it. `rowTargetDisconnected` and `itemTargetDisconnected` remove that set. Reconnecting the controller does not add a second set.
+
+### Changed
+- Bumped the gem version to `0.1.229`.
+- Synchronized `Gemfile.lock` and the Rails 7 dummy lockfile with `0.1.229`.
+
+### Upgrade notes
+- Reload Flatpack JavaScript. Ruby callers stay the same.
+- A sortable row or grid item added after the controller connects is draggable.
+
+## [0.1.228] - 2026-10-12
+
+### Added
+- `FlatPack::Fieldset::Component` names a cluster of form controls. `title:` is the legend. Optional `description:`, `error:`, and `disabled:` cover the hint, the group message, and a native disabled group. The block is the fields. Demo: `/demo/forms/fieldset`.
+
+### Changed
+- Bumped the gem version to `0.1.228`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.228`.
+
+### Upgrade notes
+- Additive. Keep calling the same input components. Wrap a cluster in `FlatPack::Fieldset::Component` when that cluster needs a name.
+- Rebuild host Tailwind so the fieldset utilities (`float-left`, `clear-both`, `min-w-0`, `border-0`) are generated if the host scans component files.
+- Redeploy so `meta.gem_version` shows `0.1.228`.
+
+## [0.1.227] - 2026-10-10
+
+### Added
+- `FlatPack::InlineEdit::Component` turns a heading or paragraph into an in-place editor. The same element becomes `contenteditable`. Type, size, weight, and wrapping stay put. No bordered field.
+- `mode:` `:text` (default, Enter saves), `:plain` (Enter is a newline, Cmd/Ctrl+Enter saves), `:rich` (ContentEditor bubble toolbar, no Edit/Save/Cancel bar).
+- `tag:` `:span`, `:h1`–`:h6`, `:p`, `:div`. A content block edits the first `data-inline-edit-target`, heading, or `p` inside.
+- `name:` / `value:` keep a hidden input for a normal form when `update_url:` is omitted. `update_url:` + `method:` (default `:patch`) save with CSRF and `Accept: turbo-stream`.
+- `label:`, `placeholder:`, `maxlength:`, `required:`, `save_on_blur:` (default true), `cue:` `:highlight` (default Notion-style wash) / `:tint` (same paint) / `:underline` / `:none`.
+- Tokens `--inline-edit-hover-bg`, `--inline-edit-focus-color`, `--inline-edit-cue-color`, `--inline-edit-error-color`, `--inline-edit-placeholder-color`, `--inline-edit-placeholder-hover-color` (light and dark). Hover wash is a ~7% (dark ~9%) `color-mix` tint with box-shadow spread, not padding. Keyboard Tab before edit uses the same wash (`:focus-visible`). Editing drops the wash and ring — caret only. Placeholder copy darkens on hover and keyboard focus.
+- ContentEditor’s balloon toolbar now lives in `FlatPack::Shared::ExecCommandBalloon` and `exec_command_bubble.js`. ContentEditor still renders the Edit/Save/Cancel bar and the same bubble.
+
+### Changed
+- Bumped the gem version to `0.1.227`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.227`.
+
+### Upgrade notes
+- New opt-in component. Existing ContentEditor, PageTitle, and Hero calls are unchanged.
+- Reload kit CSS and JavaScript. Rebuild host Tailwind if you scan Flatpack sources.
+- Redeploy so `meta.gem_version` shows `0.1.227`.
+- For `:rich`, sanitize stored HTML with `FlatPack::RichTextSanitizer`. `update_url:` uses `AttributeSanitizer`.
+
+## [0.1.226] - 2026-10-10
+
+### Added
+- `FlatPack::HeroTitle::Component` renders a standalone cover headline. Args: `text:` (or a content block), `size:` (`:md`, `:lg`, `:xl`, `:xxl`; default `:xl`), `level:` (`:h1`–`:h6`, default `:h1`), optional `align:` (`:left`, `:center`), and `system_arguments`. Ink is `--surface-content-color`; a caller `text-*` class still wins (Hero overlay ink).
+- Size tokens `--hero-title-md-size`, `--hero-title-lg-size`, `--hero-title-xl-size`, `--hero-title-xxl-size` with matching `-min` / `-max`. Each size is a fluid clamp. `:xl` aliases `--display-size` (`clamp` from `--text-5xl` / 48px to `5.5rem` / 88px, preferred `1rem + 5vw`) so today's display output is unchanged. Weight, tracking, and leading reuse `--display-weight` (600), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.05`). Unlayered `.fp-hero-title` / `.fp-hero-title--*` sit beside `.fp-display`.
+- Hero accepts opt-in `title_size:` (`:md`, `:lg`, `:xl`, `:xxl`) to pick a Hero Title step.
+- Dummy demo at `/demo/hero_title` (sizes, wrapping, inside Hero, dark).
+- Bumped the gem version to `0.1.226`.
+
+### Changed
+- Hero `size: :display` renders the headline through Hero Title at `:xl`. Default Hero headlines stay on `--text-4xl` / `--hero-headline-size`.
+- PageTitle `size: :display` renders the heading through Hero Title at `:xl`. Default PageTitle stays `font-bold` with `--page-title-h*-size`.
+
+### Upgrade notes
+- Existing Hero and PageTitle calls are unchanged. `size: :default` and `size: :display` look the same as `0.1.224`.
+- New component. Use `FlatPack::HeroTitle::Component` for a cover line without Hero or PageTitle chrome. Hero `size: :display` already does this. Pass `title_size:` on Hero to pick another step.
+- Reload kit CSS for `--hero-title-*` and `.fp-hero-title`. Themes override `--hero-title-<size>-size-min` / `-max` (or the clamp) on a named `data-theme` block. `:xl` follows `--display-size`; override `--display-size-max` to raise or lower that step.
+- Redeploy so `meta.gem_version` shows `0.1.226`.
+
+## [0.1.225] - 2026-10-10
+
+### Added
+- `FlatPack::RangeInput::Component` accepts an opt-in size-slider presentation. `variant: :size` / `:text_size` put a small and large `A` (theme font) at the track ends. `variant: :zoom` defaults to `magnifying-glass-minus` / `magnifying-glass-plus`. `start_icon:` / `end_icon:` take any kit icon name. End glyphs and icons are decorative (`aria-hidden`); the input keeps its accessible label.
+- Size, text-size, and zoom sliders snap to `step:` and show one tick under the track per step. Pass `ticks: true` on a default RangeInput for the same notches, or `ticks: false` to hide them. Arrow keys move one step (native range). Ticks render when the step count is 2–24.
+- Optional live preview: `preview_target:` (CSS selector or element id) and `with_preview` write `--fp-range-value` (current number), `--fp-range-scale` (0–1), and `--fp-range-max` on the target as you drag. The sample renders **below** the track with no fill or border. Size and text-size sliders show decorative `sample:` letters there (`"Aa"` by default). `with_preview` replaces the built-in letters. Stimulus does this work only when a preview is present. Default RangeInput markup and behaviour are unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.225`.
+- Synchronized the Rails 7 dummy lockfile with `0.1.225` so frozen CI installs resolve the path gem.
+
+### Upgrade notes
+- Existing RangeInput calls are unchanged. Pass `variant: :size`, `variant: :zoom`, or `start_icon:` / `end_icon:` for the size-slider layout.
+- For live preview, pass `with_preview` (renders below the track) and/or `preview_target:`. Size and text-size sliders already show `sample:` (`"Aa"` by default) below the track; pass `sample: "Embiggen"` to change it or `sample: ""` to hide it. Size custom slot markup with `.fp-range-input-sample`, or `font-size: calc(var(--fp-range-value) * 1px)`. Set the same custom properties on an external target for first paint.
+- Thumb fill still aliases `--color-primary`. Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.225`.
+
+## [0.1.224] - 2026-10-10
+
+### Changed
+- Display cover size now tops out at `--display-size-max` (`5.5rem` / 88px) on wide desktops, with `--display-size-min` (`--text-5xl` / 48px) on small viewports. Preferred size is `1rem + 5vw` (~80px at 1280). `--display-leading` is `1.05`. `--display-tracking` stays `-0.03em`.
+- `--display-weight` is `600` (semibold). Content `h1` and Hero headlines already use 600; PageTitle `size: :display` now matches. Default PageTitle stays `font-bold`.
+- Type scale token `--text-8xl` (6rem / 96px) with `--text-8xl--line-height` of `1`, mapped in `@theme inline` so `text-8xl` works after a Tailwind rebuild. Themes can set `--display-size-max: var(--text-8xl)` for a 96px ceiling.
+- Bumped the gem version to `0.1.224`.
+
+### Upgrade notes
+- Existing default PageTitle and Hero calls are unchanged. Only `size: :display` and `--display-*` defaults change.
+- Cover titles are larger on desktop (~88px from 1440) and still ~48px on a phone. Reload kit CSS. Rebuild host Tailwind for `text-8xl`.
+- Themes that overrode `--display-size` keep that override. To keep the fluid clamp and change the ceiling, set `--display-size-max` (or `--display-size-min`) instead.
+- Redeploy so `meta.gem_version` shows `0.1.224`.
+
+## [0.1.223] - 2026-10-09
+
+### Added
+- Type scale tokens `--text-6xl` (3.75rem / 60px) and `--text-7xl` (4.5rem / 72px), with `--text-6xl--line-height` / `--text-7xl--line-height` of `1`, mapped in `@theme inline` so `text-6xl` / `text-7xl` utilities work after a Tailwind rebuild.
+- Theme-tunable display tokens `--display-size` (fluid clamp from `--text-5xl` / 48px to `--text-7xl` / 72px), `--display-tracking` (`-0.03em`), and `--display-leading` (`1.1`). Kit CSS ships unlayered `.fp-display` so Tailwind preflight cannot collapse heading size.
+- `FlatPack::PageTitle::Component` and `FlatPack::Hero::Component` accept opt-in `size: :display` for cover titles. Default output is unchanged. Display headlines set the display tokens inline.
+
+### Changed
+- Bumped the gem version to `0.1.223`.
+
+### Upgrade notes
+- Existing PageTitle and Hero calls are unchanged. Pass `size: :display` for cover type.
+- Rebuild host Tailwind so `text-6xl` / `text-7xl` generate. Reload kit CSS for `--display-*` and `.fp-display`.
+- Themes override `--display-size` (and tracking / leading) on a named `data-theme` block. Product chrome stays on `--text-5xl` and below unless a component opts in.
+- Redeploy so `meta.gem_version` shows `0.1.223`.
+
+## [0.1.222] - 2026-10-09
+
+### Added
+- FAB `size: :sm` is a 40px main control with matching speed-dial glyphs, label pills, and icons. `:md` (56px) and `:lg` (64px) are unchanged.
+- Speed-dial `with_action(..., style: :danger)` paints the round glyph (rest, hover, and focus) with `--button-danger-*`, the same tokens TrashButton uses. Omit `style:` for today’s surface glyph.
+
+### Changed
+- Bumped the gem version to `0.1.222`.
+
+### Upgrade notes
+- Existing FAB calls are unchanged. Pass `size: :sm` for the smaller control. Pass `style: :danger` on a speed-dial action for Trash and other destructive items.
+- `contained: true` already shipped in `0.1.221`. It pins the FAB inside the nearest positioned ancestor (`position: absolute`), opens the stack inside that box, and does not lift for a page Bottom Nav. Top corners open downward. Rebuild host CSS if you `@import` kit sources.
+- Redeploy so `meta.gem_version` shows `0.1.222`.
+
+## [0.1.221] - 2026-10-09
+
+### Added
+- `FlatPack::Fab::Component` is a floating action button. Rest is a large round primary control (`:md` 56px, `:lg` 64px) pinned to a corner (`position: :bottom_right` default, also `:bottom_left`, `:top_right`, `:top_left`). No actions: a link (`href:`) or a button (`data:` for Turbo/Stimulus). `with_action(icon:, label:, href:, **attrs)` opens a stacked speed-dial (`layout: :stack`). Actions are smaller round buttons with a label pill, staggered ~30ms, and the plus rotates 45°. Close via the main button, Escape, backdrop/outside click, or choosing an action. `backdrop:` defaults to true. `hide_on_scroll:` hides on scroll down. Safe-area insets and auto offset above Bottom Nav (`--fp-fab-nav-offset`). z-index 45, below Modal/Drawer/Toasts. An `:arc` layout is reserved for a later release.
+
+### Changed
+- Bumped the gem version to `0.1.221`.
+
+### Upgrade notes
+- New component. Existing Button, Modal, and Bottom Nav calls are unchanged.
+- Rebuild host Tailwind so `rounded-full` and the FAB utilities generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.221`.
+- `layout: :arc` raises until that layout ships. Use `:stack`.
+- When a Bottom Nav is on the same screen, the FAB measures `.fp-bottom-nav` and sits above it. Hosts can also set `--fp-fab-nav-offset` or pass `offset:`.
+
+## [0.1.220] - 2026-10-09
+
+### Added
+- `FlatPack::RadioGroup::Component` accepts `variant: :swatches` for a fixed colour palette. Each option is a filled circle with a visually hidden radio, a selected offset ring (ColorSwatch tokens), a check that flips ink on light vs dark fills, and a name tooltip. Pass `options: [{ label:, value:, color: }]` — `color:` defaults to `value` when that is a CSS colour. `size:` maps to ColorSwatch `:sm` / `:md` / `:lg`. `show_tooltip:` defaults to true. Existing `:default`, `:inline`, and `:cards` markup is unchanged. ColorSwatch stays the native `<input type="color">` picker.
+
+### Changed
+- Bumped the gem version to `0.1.220`.
+
+### Upgrade notes
+- Existing RadioGroup and ColorSwatch calls are unchanged. Pass `variant: :swatches` only when the person picks one colour from a host-supplied palette.
+- Hash options may add `color:`. A hex (or other safe CSS colour) `value` is enough; otherwise `color:` is required.
+- Rebuild host Tailwind so swatch size, ring, and `sr-only` utilities generate. Reload kit CSS if you ship ColorSwatch tokens already.
+- Redeploy so `meta.gem_version` shows `0.1.220`.
+
+## [0.1.219] - 2026-10-09
+
+### Added
+- `FlatPack::TrashButton::Component` is an opt-in two-step delete control. At rest it is a default Button with a trash icon (icon-only unless `text:` is passed). Hover and keyboard focus use the theme danger button tokens, scoped to this component. Click swaps it for a danger Confirm button in the same position plus a default Cancel (X) that slides in on `expand: :right` or `:left`. Confirm submits `url:` with `method: :delete` by default (Turbo `button_to` form) and dispatches `flat-pack:trash-button:confirm`. Confirm ignores clicks for 300ms after it appears. Cancel, Escape, or a click outside restores rest. `timeout:` (default 4000ms, `0` or `false` to disable) auto-reverts. Stimulus controller: `flat-pack--trash-button`.
+
+### Changed
+- Bumped the gem version to `0.1.219`.
+
+### Fixed
+- Rest, Confirm, and Cancel share one height for each `size:` (`:sm` / `:md` / `:lg`). Cancel is the icon-only square. Labelled rest and Confirm use that same height so arming does not jump. The swap is opacity and a Cancel slide, not `scale()`, so the chrome does not shrink. Scoped to `.fp-trash-button`; other Buttons are unchanged.
+
+### Upgrade notes
+- New component. Existing Button calls, markup, and styles are unchanged.
+- Pass `url:` only when Confirm should submit a form. JS-only callers listen for `flat-pack:trash-button:confirm` and may `preventDefault` to skip the submit.
+- Rebuild host Tailwind so `sr-only` and `contents` generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.219`.
+
+## [0.1.218] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `origin: :trigger` so the dialog can grow out of the control that opened it and shrink back on close. Default `origin: :center` keeps today’s fade and scale, including markup. Motion lives in `trigger_origin.js` for later Drawer reuse. Picker, Modal Filter, Drawer, and other hosts are unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.218`.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. Pass `origin: :trigger` only when the dialog should grow from the opening control.
+- `:trigger` falls back to today’s motion when no trigger is known, the trigger is gone or off-screen, motion is reduced, or the viewport is under `640px`.
+- With `navigable: true`, only the first open and the final close use the trigger motion.
+- Reload kit JavaScript. Redeploy so `meta.gem_version` shows `0.1.218`.
+
+## [0.1.217] - 2026-10-09
+
+### Added
+- Tabs and Button::Pill accept `indicator: :slide`. Default stays today’s instant active swap. `:slide` renders one marker per list (underline bar or pill fill) that follows the active item on `--duration-base` / `--easing-standard`. Items keep the text colour change. A shared Stimulus controller (`flat-pack--slide-indicator`) measures the active item, tracks resize and font load, and snaps under `prefers-reduced-motion`. Pill links slide first, then visit (`Turbo.visit` when present). Modifier-clicks, middle-click, and `target: :_blank` are not intercepted.
+
+### Changed
+- Bumped the gem version to `0.1.217`.
+
+### Upgrade notes
+- Existing Tabs and Pill calls are unchanged. Omit `indicator:` for today’s markup and behaviour.
+- Pass `indicator: :slide` to opt in. Unknown names raise `ArgumentError`.
+- Reload kit CSS and JavaScript so `.fp-slide-indicator` and `flat-pack--slide-indicator` load. Bundled esbuild hosts add `SlideIndicatorController` from `docs/installation.md`.
+- Redeploy so `meta.gem_version` shows `0.1.217`.
+
+## [0.1.216] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `navigable: true` with `src:` for opt-in multi-screen flows. The body is a Turbo Frame (`{id}-screen`) loaded lazily on open. Screens wrap in `flat_pack_modal_screen` / `FlatPack::Modal::Screen` and can supply title, header actions, and footer slots. `data-fp-nav="push|back|close|replace|reset"` drives navigation with no host JavaScript. History is in-memory (no `pushState`). Back re-fetches the previous URL. Closing clears history. Loading uses the kit spinner/skeleton; failed frame requests show an error with retry. Logic lives in `flat-pack--navigable` so Drawer can reuse it later.
+
+### Changed
+- Bumped the gem version to `0.1.216`.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. `navigable:` defaults to `false`. Picker, ModalFilter, Command palette, Drawer, and other consumers keep today’s markup.
+- Pass `navigable: true` and `src:` only for multi-screen dialogs. Do not pass `header` or `body` slots with `navigable: true`.
+- Rebuild host Tailwind so `sr-only`, `min-h-48`, and overlay utilities generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.216`.
+
+## [0.1.215] - 2026-10-09
+
+### Fixed
+- RangeInput’s slider thumb uses `--color-primary` so the handle is visible in the default light theme. The ring stays `--surface-background-color` (plus the existing thumb shadow) so it still reads on the primary fill and the grey track, in light and dark, WebKit and Firefox.
+
+### Changed
+- Bumped the gem version to `0.1.215`.
+
+### Upgrade notes
+- `--range-thumb-color` now aliases `--color-primary` instead of `--surface-background-color`. `--range-thumb-border-color` is still `--surface-background-color`. Token names are unchanged, so a host override of either name still wins.
+- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.215`.
+
+## [0.1.214] - 2026-10-09
+
+### Added
+- `FlatPack::Masonry::Component` stacks mixed-ratio items without empty holes. `columns:` takes an integer or a breakpoint hash. `gap:` uses the same `:sm` / `:md` / `:lg` scale as Grid. `order: :columns` (default) is CSS multi-column layout with no JavaScript. `order: :rows` keeps left-to-right reading order: native CSS masonry where the browser has it, otherwise a Stimulus controller (`flat-pack--masonry`) measures heights and sets grid-row spans. `with_item` takes arbitrary content. `with_image` takes `src`, `alt`, `width`, `height`, and optional `href` / `caption`. Images set `aspect-ratio` from width/height, plus `loading="lazy"` and `decoding="async"`.
+
+### Changed
+- Bumped the gem version to `0.1.214`.
+
+### Upgrade notes
+- New component. Existing Grid calls are unchanged. Use Masonry when portraits and landscapes should keep their shape.
+- Rebuild host Tailwind so `columns-*`, `grid-cols-*`, and the gap classes generate. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.214`.
+- In `order: :columns`, assistive tech follows DOM order while the visual stack goes down each column. Prefer `order: :rows` when those should match.
+
+## [0.1.213] - 2026-10-09
+
+### Added
+- `FlatPack::Modal::Component` accepts `scroll: :body | :page` (default `:body`, today’s capped card with an internal body scroller) and `sticky_footer:` (default `false`). `scroll: :page` sizes the dialog to its content and scrolls the overlay. Short page-scroll dialogs still sit like today. `sticky_footer: true` requires `:page` and pins the action row to the bottom of the viewport.
+
+### Changed
+- Bumped the gem version to `0.1.213`.
+- Modal enter/exit motion writes the Tailwind v4 `scale` property, matching Command palette.
+
+### Fixed
+- Opening a modal no longer leaves the dialog at `scale-95`. Tailwind 4’s `scale-95` uses the CSS `scale` property; the controller was writing `transform: scale(1)`.
+- Dialog height cap and overlay min-height use `dvh` with a `vh` fallback, so iOS Safari toolbars do not hide the footer.
+- `.fp-overlay-pad` is unlayered, same as `.fp-top-nav`, so host Tailwind preflight cannot zero overlay insets when Flatpack CSS is linked first. Drawer, Command palette, and carousel lightbox share that class.
+
+### Upgrade notes
+- Existing Modal calls are unchanged. Pass `scroll: :page` only when the overlay should scroll. Pass `sticky_footer: true` only with `:page`.
+- Rebuild host Tailwind so `sm:my-auto` is generated if you use page scroll. Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.213`.
+
+## [0.1.212] - 2026-10-09
+
+### Added
+- `FlatPack::RadioGroup::Component` accepts `variant: :default | :inline | :cards`. Default stays the vertical radio list. `:inline` is a wrapping row of compact options that reuse Button chrome (secondary when unselected, primary when selected, same radius/padding/type). `:cards` is a responsive grid of larger selectable cards with a centred plain `icon:`, a title, and optional `description:`. Both keep real radio inputs (same name, required/disabled/error/help_text, aria, native arrow keys). The visible radio dot is hidden. Help and error copy under inline and cards sits further from the options (`mt-4`); the default list is unchanged.
+
+### Changed
+- Bumped the gem version to `0.1.212`.
+
+### Upgrade notes
+- Existing RadioGroup calls are unchanged. Pass `variant: :inline` or `variant: :cards` only when you want the visual layouts. String, `[label, value]`, and `{ label:, value:, disabled: }` options still work. Hash options may add `icon:` (kit IconComponent name) and `description:` (shown on `:cards`). Inline options follow Button secondary/primary tokens, so host button themes apply without extra CSS.
+- An unknown `variant:` raises `ArgumentError`.
+- Rebuild host Tailwind so the new pill/card utilities are generated. Redeploy so `meta.gem_version` shows `0.1.212`.
+
+## [0.1.211] - 2026-10-08
+
+### Added
+- A collection editor row can join a library image. The identity cell is a thumbnail. An empty cell opens a library modal and stores the chosen image id on the row. Choosing an image that is already joined focuses that row. Caption and the other cells stay on the join. With `update_url`, the thumbnail edits the library record. `+ New` creates a library image, then joins it.
+- `column_widths` sets one CSS grid track per content cell. Omit it and the first content column stays `minmax(0, 1.4fr)` and each later column stays `minmax(8rem, 1fr)`. The gallery demo sizes the image column with `max-content`.
+
+### Changed
+- Bumped the gem version to `0.1.211`.
+
+### Upgrade notes
+- Call `with_image` with `search_url` for the library and `thumbnail_url` for the current join. Include `:id` in `update_url` when the thumbnail should edit the library record. Search items accept `thumbnail_url`.
+- Pass `column_widths` with one grid track per header when a content column should differ from the default. Omit it and the columns stay as they are. A bad track, or a list that does not match `headers`, raises `ArgumentError`.
+- Reload kit CSS and JavaScript. Redeploy so `meta.gem_version` shows `0.1.211`.
+
+## [0.1.210] - 2026-10-08
+
+### Added
+- `FlatPack::SectionTitle::Component` accepts `size:` (`:lg`, `:md`, `:sm`), `spacing:` (`:lg`, `:md`, `:sm`, `:none`), and `level:` (`:h1`–`:h6`). Defaults match today's look: `size: :lg` (`text-2xl` heading, `text-base` subtitle), `spacing: :lg` (`my-8`), `level: :h2`. Smaller sizes scale the subtitle and the copy-link icon.
+
+### Changed
+- Bumped the gem version to `0.1.210`.
+
+### Fixed
+- A blank `subtitle` (`""` or whitespace) no longer renders an empty `<p class="mt-1 …">`. Only a present subtitle gets a paragraph, so an empty optional field or blank translation does not add a gap.
+
+### Upgrade notes
+- Existing SectionTitle calls are unchanged. Pass `size:`, `spacing:`, and `level:` only when you want a smaller heading, tighter or no wrapper margin, or a different heading tag.
+- Caller `class: "mb-2"` still cannot override the default `my-8`. Use `spacing: :none` when the caller should own the margin.
+- Rebuild host Tailwind so `my-6`, `my-4`, and the smaller type sizes are generated. Redeploy so `meta.gem_version` shows `0.1.210`.
+
+## [0.1.209] - 2026-10-08
+
+### Changed
+- Below 40rem a collection editor row drops the table lines. The drag handle, the name, and remove sit on one line. Relationship fields sit underneath, lined up with the name, and use a normal bordered control. Focus and an invalid value ring that control. The chip's own remove control hides, so the row remove is the only one. A row with no person keeps its first field on that top line. The same handle still drags the whole row. Wide screens keep the table.
+- Bumped the gem version to `0.1.209`.
+
+### Upgrade notes
+- Reload kit CSS. Wide screens keep the table. Redeploy so `meta.gem_version` shows `0.1.209`.
+
+## [0.1.208] - 2026-10-08
+
+### Added
+- The collection editor chip name edits the selected record when `update_url` includes an `:id` token. The name is a button whose hit target fills the chip, so a click on the pill opens edit. Remove stays its own button. Edit loads the record with GET and saves it with PATCH through the same modal used for create. The person id stays on the row. Other chips with that id update too. Join fields such as role stay on the row until the parent form is saved.
+
+### Changed
+- Bumped the gem version to `0.1.208`.
+
+### Upgrade notes
+- Pass `update_url: "/people/:id"` and keep the entity fields marked `data-create-field`. GET returns `{ "item": { "id", "title", "description" }, "fields": { "name": "Alice Chen" } }`. PATCH accepts those same fields and returns `{ "ok": true, "item": { "id", "title", "description" } }`.
+- `edit_label` defaults to the kit string for Edit. `update_label` defaults to Save. The modal titles use `flatpack.collection_editor.new_record` and `flatpack.collection_editor.edit_record`.
+- Omit `update_url` and the chip name stays plain text.
+- Reload kit CSS and JavaScript.
+- Redeploy so `meta.gem_version` shows `0.1.208`.
+
+## [0.1.207] - 2026-10-08
+
+### Added
+- `--overlay-backdrop-color` (modal/drawer dim) and `--overlay-scrim-color` (on-media chrome such as carousel chevrons). Dark and ocean set these instead of the component tokens.
+
+### Changed
+- `--color-primary-hover` follows `--color-primary` with CSS relative colour syntax (`oklch(from var(--color-primary) calc(l - 0.1) c h)`). Browsers without that syntax keep the existing brand-knob fallback (`l - 0.10` on `--brand-*`). Setting `--brand-*` still recolors primary and hover. `--color-primary-text` stays `#fff` unless a theme overrides it.
+- Secondary, ghost, chip-remove hover, and modal/carousel overlay paints derive from semantic surface/content/overlay tokens on `:root, [data-theme]`. `[data-theme="dark"]` no longer restates those component colours. It still sets `--color-primary-hover` (a lift, not `l - 0.10`), hairline shadows, inverted bottom-nav / top-nav / sidebar fills, and `--modal-backdrop-blur: 3px`.
+- Bumped the gem version to `0.1.207`.
+
+### Upgrade notes
+- A named brand theme that sets an exact `--color-primary` no longer needs `--color-primary-hover` unless hover should diverge (for example dark themes that lighten on hover).
+- A brand dark theme can set `color-scheme: dark` plus `--surface-*` and `--color-primary*` and inherit ghost/secondary/list/chip/switch colours. Optional: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`.
+- Component token names are unchanged. Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.207`.
+
+## [0.1.206] - 2026-10-08
+
+### Added
+- Kit chrome copy lives under `flatpack.*`. The gem ships English only, in `config/locales/flatpack.en.yml`. Hosts add their own locale files (for example `config/locales/flatpack.fr.yml`) and own the language list.
+- Components read omitted string props from I18n. An explicit prop, including `nil`, still wins.
+- JavaScript copy uses `data-fp-copy` on `<html>` (`flat_pack_copy_data`) with English fallbacks in `flat_pack/copy.js`.
+- The Rails 8 dummy app demonstrates locale switching with `recording_studio_internationalization`, a host `flatpack.fr.yml` that covers every gem English key, and a language selector in the catalog top nav (left of the theme control). Catalog full-page HTML cache keys include the current locale.
+
+### Changed
+- Bumped the gem version to `0.1.206`.
+
+### Upgrade notes
+- Put `<%= tag.attributes(data: flat_pack_copy_data) %>` (and `lang="<%= I18n.locale %>"`) on the host `<html>` tag so Stimulus copy follows the current locale.
+- Pin `flat_pack/copy` if you rerun `rails generate flat_pack:install`.
+- Do not expect a French (or other) locale file from the gem. Copy `config/locales/flatpack.en.yml` into the host app as `flatpack.<locale>.yml` and translate it. `RecordingStudio_Internationalization` is optional and stays a host dependency.
+- Dummy-rails-7 does not use the internationalization gem.
+- Redeploy so `meta.gem_version` shows `0.1.206`.
+
+## [0.1.205] - 2026-10-08
+
+### Added
+- HTML carousel slides accept `thumb_src` or `thumb`. With `show_thumbs: true`, that URL is the thumbnail. A missing or rejected URL keeps the numbered placeholder.
+- `FlatPack::Carousel::Component` accepts `show_border` and `show_background`. Both default to `true`. Pass `false` to drop the viewport border, the viewport fill, or both. `:logo_slider` stays borderless and transparent.
+- Bumped the gem version to `0.1.205`.
+
+### Upgrade notes
+- No call-site changes are required. Image thumbs still prefer `thumb_src`, then `src`. Video thumbs still use `poster`.
+- An HTML slide that already passed `thumb` or `thumb_src` will now show that picture. Those keys were ignored before.
+- Existing carousels keep the viewport border and fill. Pass `show_border: false` or `show_background: false` to turn a piece off. `--carousel-viewport-border-color` and `--carousel-viewport-background-color` still paint the pieces that stay on.
+- This is a Ruby render change. Reload the app so the new carousel code is loaded.
+- Redeploy so `meta.gem_version` shows `0.1.205`.
+
+## [0.1.204] - 2026-10-08
+
+### Added
+- `FlatPack::CollectionEditor::Component` edits an ordered collection of related records inside a Rails form. A row shows the selected record as an info chip and leaves relationship fields to the host. Add clones a `fields_for` template and replaces the child-index token in identifier attributes. Remove sets `_destroy` on a saved row and drops an unsaved row. The entity picker searches, selects, or creates a record and writes its id onto the join. Enter selects the highlighted result, or the only result. Several matches stay in the menu and do not create a record. No matches shows "+ New" when create is configured. A failed search stays in the picker. Moves are announced in a polite status.
+- List orderable accepts `handle_selector`. Arrow keys on that handle move the row. A row with `data-orderable-unsaved="true"` does not PATCH. A saved row's `target_position` ignores unsaved rows. Rows marked `data-collection-editor-destroyed` stay out of the order.
+- Collection editor tokens alias surface, list, and primary colors. See `docs/components/collection-editor.md`.
+- Dummy `/demo/collection_editor` is a Project collaborators form. Person name and email stay on the person. Role and order stay on the join. Reorder posts `moving_recording_id` and `target_position` to `Ordering::ReorderService`. A second section, Text fields, shows three single-line text inputs per row with `chrome: :cell` and no person picker or dropdown.
+- Bumped the gem version to `0.1.204`.
+
+### Changed
+- The collection editor heading sits outside the bordered list. The list frame is `.flat-pack-collection-editor-card`.
+- Collection editor rows are a grid of cells. Each `with_field` block is its own column. Text input, Select, and the other controls that share `FormField::ControlStyles` accept `chrome: :cell` and drop their own border, radius, and background. Focus and errors draw an inset ring on the cell. The person search uses the same cell treatment. Create fields stay bordered.
+- Collection editor remove is a ghost button with a trash icon. It was a danger button with an X.
+- A single-line collection editor cell is one line. Vertical field padding no longer stacks on the 44px remove control, so the value lines up with the trash icon.
+- The collection editor add control is a full-width ghost row at the bottom of the table. The default label is `Row`, and the plus icon stays, so it reads "+ Row".
+- Select's field wrapper includes `flat-pack-input-wrapper` as well as `flat-pack-select-wrapper`, so a role select fills its collection editor cell.
+- A selected collection editor record is an info chip showing the name. The chip remove control drops the row. Search results open in a menu. "+ New" is at the bottom of that menu when the query has no matches, and it opens the create form in a modal. The search cell stays one line. Cancel, Escape, and the backdrop leave the row unselected. Validation errors stay in the modal.
+
+### Fixed
+- `FlatPack::Chip::Component` renders a custom `remove_button`. That control replaces the default remove button.
+- A modal click on the dimmed area reaches the backdrop. The dialog wrapper no longer sits on top of that click.
+
+### Upgrade notes
+- The collection editor border, background, and padding now live on `.flat-pack-collection-editor-card`. The heading is outside that card. The add control is the last row inside it. Host CSS that painted the border on `.flat-pack-collection-editor` should move to the card class. `add_label` defaults to `Row`. Select's wrapper now includes `flat-pack-input-wrapper` alongside `flat-pack-select-wrapper`. The entity summary is an info chip. `edit_url_template`, `edit_label`, and `change_label` are accepted and no longer rendered. Create starts from "+ New" in the search menu and opens a modal titled `New {label}`. `create_label` is that modal's submit button. Host CSS that targeted `.flat-pack-collection-editor-create-fields` inside the cell should target the modal body.
+- Card padding and the gap between cells are gone. Cells draw the lines with `--collection-editor-border-color`. `--collection-editor-row-padding` pads the empty state. Pass one header per content cell (the entity, then each field). The section sets `--collection-editor-columns` from that count. It is not a theme token. `chrome:` defaults to `:field`, so a normal form keeps its bordered controls. Pass `chrome: :cell` on a control inside a collection editor cell. Host CSS that targeted a single `.flat-pack-collection-editor-fields` wrapper should expect one cell per field. Inside the editor, those controls keep horizontal `--form-control-padding` and use no vertical padding. A row of single-line fields is the height of the remove button.
+- `orderable:` on List still drags the whole row when `handle_selector` is omitted.
+- Importmap apps load `collection_editor_controller.js` from the existing controllers pin.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `CollectionEditorController` and `application.register("flat-pack--collection-editor", CollectionEditorController)`.
+- New nested child indexes must be integers. Rails 8 `permit` drops any other nested-attribute key. The template placeholder `NEW_RECORD` is replaced in `name`, `id`, `for`, `data-id`, `data-results-id`, `data-create-modal-id`, and the aria attributes that point at those ids. Text in the row is left as written.
+- FlatPack does not store order. A host that already uses Recording Studio Orderable keeps that API. Pass its URL and parameter names to the collection editor.
+- Reload kit CSS and JavaScript. Modal backdrop clicks pass through the dialog wrapper.
+- Redeploy so `meta.gem_version` shows `0.1.204`.
+
+## [0.1.203] - 2026-10-07
+
+### Changed
+- Focus rings (`--color-ring`) and active sidebar / top-nav fills now follow `--color-primary`. Matching text and icons stay on `--color-primary-text`.
+- Default palette wiring is declared on `:root, [data-theme]` so a named theme on `<body>` (or another descendant) re-resolves derived tokens.
+- Dark and ocean no longer freeze `--color-ring`; they follow `--color-primary` (same colour they already set).
+- The bottom nav bar stays a surface (`#2f2f2f` by default), not a brand fill.
+- Bumped the gem version to `0.1.203`.
+
+### Upgrade notes
+- Reload kit CSS.
+- Hosts that overrode `--color-ring`, `--sidebar-item-active-background-color`, or `--top-nav-item-active-background-color` to match charcoal can drop those overrides. Keep them only if those chrome pieces should stay independent of primary.
+- `data-theme` on `<body>` now re-resolves component aliases. Prefer `<html>` when you can; either placement works.
+- Dark and ocean ring / active nav colours now track `--color-primary`. Override those tokens only if they should diverge.
+- Redeploy so `meta.gem_version` shows `0.1.203`.
+
+## [0.1.202] - 2026-10-07
+
+### Changed
+- `FlatPack::SegmentedButtons::Component` accepts `style:` and defaults to `:primary`. The selected button uses that Button style. Unselected buttons stay `:secondary`.
+- Unknown style names raise the same `ArgumentError` as `Button`. Passing `style:` on a segment raises `ArgumentError`.
+- Bumped the gem version to `0.1.202`.
+
+### Upgrade notes
+- `style:` defaults to `:primary`. Unselected segments stay `:secondary`.
+- Reload is not required for the Ruby API.
+- A host that toggles selection in JavaScript must set `data-fp-style`, not swap colour classes.
+
+## [0.1.201] - 2026-10-07
+
+### Changed
+- `style:` on pill tabs, stacked tabs, and `Button::Pill` defaults to `:primary`. Omitted calls stay on the pill tokens.
+- Active pill colour for other built-in styles comes from the button slots.
+- Bumped the gem version to `0.1.201`.
+
+### Upgrade notes
+- Hosts that set `--fp-button-*` only on `.fp-button[data-fp-style="name"]` should use `[data-fp-style="name"]` if that colourway should also paint pills. Built-in styles need no host CSS change.
+- `style:` on Tabs is no longer an HTML style attribute. Pass a button style name. A CSS string in that keyword raises `ArgumentError`.
+- Host overrides of `--tabs-pill-active-*` still win for the default primary pills.
+- Reload kit CSS.
+
+## [0.1.200] - 2026-10-07
+
+### Added
+- A form can show unsaved changes on its save button. Add `flat-pack--unsaved-changes` to the form and mark each save button with the `submit` target. The button keeps `data-fp-style="default"` while the fields match the saved baseline, and switches to `data-fp-style="primary"` when they differ. Restoring every field, or resetting the form, returns the button to default.
+- TipTap writes its hidden field and then dispatches `input` after the editor is ready. A combobox choice dispatches `change` on the hidden field. Form listeners can see those edits.
+- Bumped the gem version to `0.1.200`.
+
+### Upgrade notes
+- Importmap apps load `unsaved_changes_controller.js` from the existing controllers pin. No new register call.
+- Bundled apps that copy the esbuild list in `docs/installation.md` add `UnsavedChangesController` and `application.register("flat-pack--unsaved-changes", UnsavedChangesController)`.
+- No existing button changes on its own. A form opts in by adding the controller.
+- Forms that already use `flat-pack--auto-submit` now submit when a rich text field changes or a combobox choice is made. They did not before.
+
+## [0.1.199] - 2026-10-07
+
+### Changed
+- Orderable list drag now presses the row (`scale: 0.98`), lifts it with `--shadow-lg` (`scale: 1.02`), and shows a visible landing slot filled with `--list-item-hover-background-color`. Sibling text eases to `--surface-muted-content-color`. Drop settle clears drag styles on `transitionend`.
+- Bumped the gem version to `0.1.199`.
+
+### Upgrade notes
+- No host call-site changes. `orderable:` still pointer-drags and saves the same payload.
+- Reload kit CSS and JavaScript so the landing slot, press, and lift apply. The placeholder is no longer `visibility: hidden`.
+- Under `prefers-reduced-motion: reduce`, the slot stays and the lift scale does not run.
+- Redeploy so `meta.gem_version` shows `0.1.199`.
+
+## [0.1.198] - 2026-10-02
+
+### Changed
+- Orderable list drag no longer paints a radial spotlight / circle-of-light under the pointer. Soft elevation shadow, pointer drag, FLIP springs, and reduced-motion settle are unchanged. Removed `--fp-list-drag-x` / `--fp-list-drag-y`.
+- Bumped the gem version to `0.1.198`.
+
+### Upgrade notes
+- No host call-site changes. Rebuild host CSS (or reload kit CSS) so the spotlight `::after` rule is gone.
+- Redeploy so `meta.gem_version` shows `0.1.198`.
+
+## [0.1.197] - 2026-10-02
+
+### Added
+- List orderable spring tokens `--easing-spring` and `--easing-spring-snappy` for list/layout reorder only. Overlay enter/exit stay bounce-free.
+- Orderable list drag chrome: soft elevation shadow and radial spotlight via `--fp-list-drag-x` / `--fp-list-drag-y`.
+
+### Changed
+- List `orderable:` uses pointer-driven reorder with FLIP sibling springs and a snappy drop settle instead of HTML5 drag-and-drop (`opacity-70` ghost + primary ring). Ruby API, save payload, and `list:reordered` / `list:saved` / `list:error` detail shapes are unchanged.
+- Orderable lists add `.flat-pack-list--orderable`. Under `prefers-reduced-motion: reduce`, drag still works and DOM order still updates; springs snap.
+- List spacing uses `flex flex-col` + `gap-3` / `gap-1` instead of `space-y-*`, so rows keep `margin-bottom: 0` (no Tailwind `margin-block-end` from `space-y`). Orderable + divided lists omit gap so the divider spacing stays even.
+- `List::Item` vertical padding is `py-4` (was `py-3`).
 - Bumped the gem version to `0.1.197`.
 
 ### Upgrade notes
-- No host change required. Omit `floating:` to keep the flush rail.
-- Pass `floating: true` to detach the desktop sidebar. Tune `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--sidebar-float-radius`. Radius follows the rounded palette. A named theme other than `rounded` stays square.
-- Dark theme sets `--sidebar-float-background-color` to a lifted surface. Do not assign these tokens on `[data-theme="rounded"]`.
+- No host call-site changes. Keep passing `orderable:` / `orderable_url:` / method / param names as before.
+- List roots now use `flex flex-col gap-*` instead of `space-y-*`. Rebuild host Tailwind so `gap-1` / `gap-3` / `py-4` utilities exist if you rely on class scanning.
+- `List::Item` rows are taller (`py-4`). Chat inbox rows that inherit `List::Item` pick this up too.
+- Rebuild host Tailwind (or reload kit CSS) so spring tokens and orderable drag classes apply. Do not use `--easing-spring*` on overlays.
 - Redeploy so `meta.gem_version` shows `0.1.197`.
+
+## [0.1.196] - 2026-09-23
 
 ### Added
 - Bare `size:` (`:sm` / `:md` / `:lg`, default `:md`) on Checkbox, RadioGroup, SegmentedButtons, Button::Pill, Tabs, Skeleton, EmptyState, Toast, Alert, and Accordion. Invalid sizes raise `ArgumentError`.

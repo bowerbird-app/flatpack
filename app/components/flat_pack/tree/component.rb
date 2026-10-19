@@ -214,8 +214,8 @@ module FlatPack
         classes(
           "group relative flex items-center gap-1.5 overflow-hidden rounded-[var(--radius-sm)] px-2 text-left transition-colors outline-none",
           row_padding_classes,
-          "hover:bg-[var(--surface-subtle-background-color)] focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-inset",
-          ("bg-[var(--surface-subtle-background-color)]" if tree_node.active),
+          "hover:bg-[var(--surface-hover-background-color)] focus-visible:ring-2 focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-inset",
+          ("bg-[var(--surface-active-background-color)]" if tree_node.active),
           tree_node.system_arguments[:class]
         )
       end

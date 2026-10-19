@@ -67,7 +67,7 @@ module FlatPack
 
       def render_tab_list
         content_tag(:div, class: tab_list_wrapper_classes) do
-          content_tag(:div, role: "tablist", aria: {label: "Code snippets"}, class: tab_list_classes) do
+          content_tag(:div, role: "tablist", aria: {label: fp_t("code_block.snippets")}, class: tab_list_classes) do
             safe_join(@snippets.map.with_index { |snippet, index| render_tab_button(snippet, index) })
           end
         end
@@ -169,7 +169,7 @@ module FlatPack
       end
 
       def tab_classes(is_active)
-        base = "px-3 py-1.5 text-sm font-medium rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2"
+        base = "px-3 py-1.5 text-sm font-medium rounded-[var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2"
 
         if is_active
           "#{base} bg-[var(--code-block-tab-active-background-color)] text-[var(--code-block-tab-active-color)]"
@@ -216,15 +216,15 @@ module FlatPack
       end
 
       def snippet_fallback_label(language)
-        return "Snippet" if language.blank?
+        return fp_t("code_block.snippet") if language.blank?
 
         language.to_s.upcase
       end
 
       def default_title
-        return "Code Examples" if multiple_snippets?
+        return fp_t("code_block.examples") if multiple_snippets?
 
-        "Code Example"
+        fp_t("code_block.example")
       end
     end
   end

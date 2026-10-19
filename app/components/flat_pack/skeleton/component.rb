@@ -8,8 +8,8 @@ module FlatPack
         text: "w-full rounded",
         title: "w-3/4 rounded",
         avatar: "rounded-full",
-        button: "rounded-[var(--radius-md)]",
-        rectangle: "w-full rounded-[var(--radius-lg)]"
+        button: "rounded-[var(--button-border-radius)]",
+        rectangle: "w-full rounded-[var(--card-radius)]"
       }.freeze
 
       # Density on top of variant. md matches the previous hard-coded heights.
@@ -67,7 +67,7 @@ module FlatPack
       def skeleton_attributes
         attrs = {
           class: skeleton_classes,
-          aria: {busy: true, label: "Loading…"},
+          aria: {busy: true, label: fp_t("skeleton.loading")},
           role: "status"
         }
 

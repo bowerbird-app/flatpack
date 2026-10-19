@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 module ApplicationHelper
+  def flat_pack_html_attributes(**extra)
+    locale_attrs = if respond_to?(:recording_studio_locale_attributes)
+      recording_studio_locale_attributes
+    else
+      {lang: I18n.locale.to_s}
+    end
+
+    extra_data = extra.delete(:data) || {}
+    extra_data = extra_data.merge(flat_pack_copy_data)
+    locale_attrs.merge(extra).merge(data: extra_data)
+  end
+
   def render_chat_demo_message(item, reveal_actions: true)
     direction = item.outgoing? ? :outgoing : :incoming
 

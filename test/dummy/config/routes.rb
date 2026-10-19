@@ -55,6 +55,10 @@ Rails.application.routes.draw do
 
     recording_studio_admin_for :admin, at: "/admin", root_section: :root
 
+    if defined?(RecordingStudioInternationalization)
+      mount RecordingStudioInternationalization::Engine, at: "/recording_studio_internationalization"
+    end
+
     get "studio", to: "studio#index", as: :studio
     get "studio/recording_tree", to: "recording_trees#index", as: :studio_recording_tree
   else
@@ -76,16 +80,22 @@ Rails.application.routes.draw do
   get "pages/hero/angled_image", to: "pages#hero_angled_image"
   get "pages/hero/image_tiles", to: "pages#hero_image_tiles"
   get "pages/hero/offset_image", to: "pages#hero_offset_image"
+  get "pages/hero/display", to: "pages#hero_display"
   get "demo", to: "pages#demo"
   get "themes", to: "themes#index"
   get "themes/demos/:theme", to: "themes#demo", as: :theme_demo,
     constraints: {theme: /system|light|dark|ocean|rounded/}
+  get "demo/brand_theme", to: "pages#brand_theme"
+  get "demo/brand_theme/:tone", to: "pages#brand_theme", constraints: {tone: /dark/}, as: :brand_theme_dark
   get "demo/buttons", to: "pages#buttons"
   get "demo/links", to: "pages#links"
   get "demo/buttons/pills", to: "pages#buttons_pills"
   get "demo/buttons/segmented", to: "pages#buttons_segmented"
   get "demo/buttons/groups", to: "pages#buttons_groups"
   get "demo/buttons/dropdowns", to: "pages#buttons_dropdowns"
+  get "demo/buttons/trash", to: "pages#buttons_trash"
+  get "demo/buttons/copy", to: "pages#buttons_copy"
+  match "demo/buttons/trash/:id", to: "pages#buttons_trash_destroy", via: [:post, :delete], as: :demo_buttons_trash_item
   get "demo/billing", to: "pages#billing"
   get "demo/billing/plan_summary", to: "pages#billing_plan_summary"
   get "demo/billing/plan_picker", to: "pages#billing_plan_picker"
@@ -109,6 +119,7 @@ Rails.application.routes.draw do
   get "demo/forms/time_input", to: "pages#forms_time_input"
   get "demo/forms/file_input", to: "pages#forms_file_input"
   get "demo/forms/checkbox", to: "pages#forms_checkbox"
+  get "demo/forms/fieldset", to: "pages#forms_fieldset"
   get "demo/forms/radio_group", to: "pages#forms_radio_group"
   get "demo/forms/select", to: "pages#forms_select"
   get "demo/forms/select/options", to: "pages#forms_select_options"
@@ -116,6 +127,8 @@ Rails.application.routes.draw do
   get "demo/forms/nested_multiselect", to: "pages#forms_nested_multiselect"
   get "demo/forms/switch", to: "pages#forms_switch"
   get "demo/forms/combined", to: "pages#forms_combined"
+  get "demo/forms/unsaved_changes", to: "pages#forms_unsaved_changes"
+  post "demo/forms/unsaved_changes", to: "pages#forms_unsaved_changes_save"
   get "demo/tables/basic", to: "pages#tables_basic"
   get "demo/tables/empty", to: "pages#tables_empty"
   get "demo/tables/sortable", to: "pages#tables_sortable"
@@ -137,6 +150,7 @@ Rails.application.routes.draw do
   get "demo/cards/styles", to: "pages#cards_styles"
   get "demo/cards/media", to: "pages#cards_media"
   get "demo/cards/composed", to: "pages#cards_composed"
+  get "demo/cards/tones", to: "pages#cards_tones"
   get "demo/breadcrumbs", to: "pages#breadcrumbs"
   get "demo/navbar", to: "pages#navbar"
   get "demo/search", to: "pages#search"
@@ -161,6 +175,10 @@ Rails.application.routes.draw do
 
   # New component demos
   get "demo/modals", to: "pages#modals"
+  get "demo/modals/gallery_editor", to: "gallery_editor#gallery", as: :demo_gallery_editor
+  get "demo/modals/gallery_editor/missing", to: "gallery_editor#missing", as: :demo_gallery_editor_missing
+  get "demo/modals/gallery_editor/:id/photographer", to: "gallery_editor#photographer", as: :demo_gallery_editor_photographer
+  get "demo/modals/gallery_editor/:id", to: "gallery_editor#edit", as: :demo_gallery_editor_image
   get "demo/drawer", to: "pages#drawer"
   get "demo/command_palette", to: "pages#command_palette"
   get "demo/kbd", to: "pages#kbd"
@@ -174,13 +192,25 @@ Rails.application.routes.draw do
   get "demo/tabs/stacked_pills", to: "pages#tabs_stacked_pills"
   get "demo/toasts", to: "pages#toasts"
   get "demo/page_header", to: "pages#page_header"
+  get "demo/page_title/display", to: "pages#page_title_display"
+  get "demo/hero_title", to: "pages#hero_title"
+  get "demo/type_scale", to: "pages#type_scale"
+  get "demo/section_title", to: "pages#section_title"
   get "demo/page_nav", to: "pages#page_nav"
   get "demo/text/content", to: "pages#text_content"
   get "demo/text/quote", to: "pages#text_quote"
   get "demo/empty_state", to: "pages#empty_state"
+  get "demo/collection", to: "pages#collection"
   get "demo/grid", to: "pages#grid"
   get "demo/grid/two_columns", to: "pages#grid_two_columns"
   get "demo/grid/movable_cards", to: "pages#grid_movable_cards"
+  get "demo/masonry", to: "pages#masonry"
+  get "demo/collage", to: "pages#collage"
+  get "demo/animated_character", to: "pages#animated_character"
+  get "demo/motion", to: "pages#motion"
+  get "demo/overlay", to: "pages#overlay"
+  get "demo/video_preview", to: "pages#video_preview"
+  get "demo/fab", to: "pages#fab"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/charts/types", to: "pages#charts_types"
@@ -214,8 +244,28 @@ Rails.application.routes.draw do
   get "demo/chat/composer", to: "pages#chat_composer"
 
   get "demo/carousel", to: "pages#carousel"
+  get "demo/lightbox", to: "pages#lightbox"
 
   namespace :demo do
+    get "inline_edit", to: "inline_edits#show", as: :inline_edit
+    patch "inline_edit", to: "inline_edits#update"
+    patch "inline_edit/fail", to: "inline_edits#fail", as: :inline_edit_fail
+
+    get "collection_editor", to: "collection_editors#show", as: :collection_editor
+    get "collection_editor/people", to: "collection_editors#search_people", as: :collection_editor_people
+    post "collection_editor/people", to: "collection_editors#create_person"
+    get "collection_editor/people/:id/edit", to: "collection_editors#edit_person", as: :edit_collection_editor_person
+    get "collection_editor/people/:id", to: "collection_editors#show_person"
+    patch "collection_editor/people/:id", to: "collection_editors#update_person", as: :collection_editor_person
+    get "collection_editor/images", to: "collection_editors#search_images", as: :collection_editor_images
+    post "collection_editor/images", to: "collection_editors#create_image"
+    get "collection_editor/images/:id", to: "collection_editors#show_image"
+    patch "collection_editor/images/:id", to: "collection_editors#update_image", as: :collection_editor_image
+    patch "collection_editor/:id/reorder", to: "collection_editors#reorder", as: :reorder_collection_editor
+    patch "collection_editor/:id/reorder_gallery", to: "collection_editors#reorder_gallery", as: :reorder_collection_editor_gallery
+    patch "collection_editor/:id/gallery", to: "collection_editors#update_gallery", as: :collection_editor_gallery
+    patch "collection_editor/:id", to: "collection_editors#update", as: :collection_editor_project
+
     resources :comments, only: [:create] do
       post :replies, on: :member
     end
@@ -255,6 +305,7 @@ Rails.application.routes.draw do
   # Mobile demos
   get "mobile", to: "mobile#index"
   get "mobile/bottom_nav", to: "mobile#bottom_nav"
+  get "mobile/fab", to: "mobile#fab"
 
   resources :articles, path: "demo/articles", except: [:destroy]
   post "demo/articles/upload_image", to: "article_images#create", as: :article_upload_image

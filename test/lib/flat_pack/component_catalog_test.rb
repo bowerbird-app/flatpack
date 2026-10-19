@@ -16,10 +16,15 @@ module FlatPack
       names = listed_names
 
       assert_includes names, "Button::Component"
+      assert_includes names, "Fieldset::Component"
+      assert_includes names, "TrashButton::Component"
       assert_includes names, "Content::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
+      assert_includes names, "Modal::Screen"
+      assert_includes names, "Fab::Component"
+      assert_includes names, "Fab::Action"
     end
 
     test "list excludes internals, shared helpers, and non-components" do
@@ -84,6 +89,12 @@ module FlatPack
       assert_equal "md", size.fetch(:default)
       assert_equal false, icon_only.fetch(:default)
       assert_nil text.fetch(:default)
+      icon_variant = parameter_named(payload, "icon_variant")
+      icon_style = parameter_named(payload, "icon_style")
+      assert_equal %w[outline solid mini micro], icon_variant.fetch(:enum)
+      assert_nil icon_variant.fetch(:default)
+      assert_equal %w[primary success warning danger], icon_style.fetch(:enum)
+      assert_nil icon_style.fetch(:default)
       assert text.key?(:default)
       refute system_arguments.key?(:default)
     end
@@ -99,12 +110,133 @@ module FlatPack
       assert_equal "center", align.fetch(:default)
     end
 
+    test "show TrashButton binds EXPANDS to expand and METHODS to method" do
+      payload = FlatPack::ComponentCatalog.show("TrashButton::Component")
+      expand = parameter_named(payload, "expand")
+      method = parameter_named(payload, "method")
+      size = parameter_named(payload, "size")
+
+      assert_equal %w[right left], expand.fetch(:enum)
+      assert_equal "right", expand.fetch(:default)
+      assert_equal %w[delete post put patch get], method.fetch(:enum)
+      assert_equal "delete", method.fetch(:default)
+      assert_equal %w[sm md lg], size.fetch(:enum)
+      assert_equal "md", size.fetch(:default)
+      examples = payload.fetch(:examples)
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::TrashButton::Component"
+    end
+
+    test "show List binds LAYOUTS and STACK_BELOWS" do
+      payload = FlatPack::ComponentCatalog.show("List::Component")
+      layout = parameter_named(payload, "layout")
+      key_width = parameter_named(payload, "key_width")
+      stack_below = parameter_named(payload, "stack_below")
+
+      assert_equal %w[items key_value], layout.fetch(:enum)
+      assert_equal "items", layout.fetch(:default)
+      assert_equal "fit", key_width.fetch(:default)
+      refute key_width.key?(:enum)
+      assert_equal %w[sm md lg], stack_below.fetch(:enum)
+      assert_nil stack_below.fetch(:default)
+
+      item = FlatPack::ComponentCatalog.show("List::Item")
+      key = parameter_named(item, "key")
+
+      assert_nil key.fetch(:default)
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::List::Component"
+    end
+
+    test "show Fab binds SIZES POSITIONS LAYOUTS and Action STYLES" do
+      payload = FlatPack::ComponentCatalog.show("Fab::Component")
+      size = parameter_named(payload, "size")
+      position = parameter_named(payload, "position")
+      layout = parameter_named(payload, "layout")
+
+      assert_equal %w[sm md lg], size.fetch(:enum)
+      assert_equal "md", size.fetch(:default)
+      assert_equal %w[bottom_right bottom_left top_right top_left], position.fetch(:enum)
+      assert_equal "bottom_right", position.fetch(:default)
+      assert_equal %w[stack], layout.fetch(:enum)
+      assert_equal "stack", layout.fetch(:default)
+
+      action = FlatPack::ComponentCatalog.show("Fab::Action")
+      style = parameter_named(action, "style")
+
+      assert_equal %w[default danger], style.fetch(:enum)
+      assert_equal "default", style.fetch(:default)
+    end
+
+    test "show Overlay item binds PLACEMENTS to placement and INSETS to inset" do
+      payload = FlatPack::ComponentCatalog.show("Overlay::Component")
+      slots = payload.fetch(:slots).map { |slot| slot[:name] }
+
+      assert_includes slots, "media"
+      assert_includes slots, "items"
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::Overlay::Component"
+
+      item = FlatPack::ComponentCatalog.show("Overlay::Item")
+      placement = parameter_named(item, "placement")
+      inset = parameter_named(item, "inset")
+
+      assert_equal %w[top_left top_center top_right middle_left center middle_right bottom_left bottom_center bottom_right], placement.fetch(:enum)
+      assert_equal "top_left", placement.fetch(:default)
+      assert_equal %w[sm md lg], inset.fetch(:enum)
+      assert_equal "md", inset.fetch(:default)
+    end
+
+    test "show Media requires the image and lists overlay items" do
+      payload = FlatPack::ComponentCatalog.show("Media::Component")
+      src = parameter_named(payload, "src")
+      alt = parameter_named(payload, "alt")
+
+      assert src.fetch(:required)
+      assert alt.fetch(:required)
+      assert parameter_named(payload, "width").fetch(:required)
+      assert parameter_named(payload, "height").fetch(:required)
+      assert_includes payload.fetch(:slots), {name: "items", collection: true}
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::Media::Component"
+      refute FlatPack::ComponentCatalog.show("Masonry::Image")
+    end
+
+    test "show Masonry binds ORDERS to order and GAPS to gap" do
+      payload = FlatPack::ComponentCatalog.show("Masonry::Component")
+      order = parameter_named(payload, "order")
+      gap = parameter_named(payload, "gap")
+
+      assert_equal %w[columns rows], order.fetch(:enum)
+      assert_equal "columns", order.fetch(:default)
+      assert_equal %w[sm md lg], gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      examples = payload.fetch(:examples)
+      assert_operator examples.size, :>=, 1
+      assert_includes examples.first.fetch(:erb), "FlatPack::Masonry::Component"
+    end
+
     test "show Hero binds ALIGNS to align with a center default" do
       payload = FlatPack::ComponentCatalog.show("Hero::Component")
       align = parameter_named(payload, "align")
 
       assert_equal FlatPack::Hero::Component::ALIGNS.keys.map(&:to_s), align.fetch(:enum)
       assert_equal "center", align.fetch(:default)
+    end
+
+    test "show HeroTitle binds SIZES to size with an xl default" do
+      payload = FlatPack::ComponentCatalog.show("HeroTitle::Component")
+      size = parameter_named(payload, "size")
+      level = parameter_named(payload, "level")
+
+      assert_equal %w[md lg xl xxl], size.fetch(:enum)
+      assert_equal "xl", size.fetch(:default)
+      assert_equal %w[h1 h2 h3 h4 h5 h6], level.fetch(:enum)
+      assert_equal "h1", level.fetch(:default)
+    end
+
+    test "show Hero binds TITLE_SIZES to title_size" do
+      payload = FlatPack::ComponentCatalog.show("Hero::Component")
+      title_size = parameter_named(payload, "title_size")
+
+      assert_equal %w[md lg xl xxl], title_size.fetch(:enum)
     end
 
     test "show Hero binds ONS to on with a dark default" do
@@ -142,7 +274,9 @@ module FlatPack
       variant = parameter_named(payload, "variant")
 
       assert_equal FlatPack::Tabs::Component::VARIANTS.keys.map(&:to_s), variant.fetch(:enum)
-      refute payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) == "style" }
+
+      style = parameter_named(payload, "style")
+      assert_equal %w[default primary secondary ghost success warning danger], style.fetch(:enum)
     end
 
     test "show Avatar binds SHAPES to shape" do
@@ -189,11 +323,11 @@ module FlatPack
       refute(slots.any? { |slot| slot.fetch(:name).end_with?("_slot") })
     end
 
-    test "show Button and Avatar advertise an empty slots array" do
+    test "show Button advertises the trailing slot and Avatar has none" do
       button = FlatPack::ComponentCatalog.show("Button::Component")
       avatar = FlatPack::ComponentCatalog.show("Avatar::Component")
 
-      assert_equal [], button.fetch(:slots)
+      assert_equal [{name: "trailing", collection: false}], button.fetch(:slots)
       assert_equal [], avatar.fetch(:slots)
     end
 
@@ -266,6 +400,36 @@ module FlatPack
 
         assert_includes fresh.first.fetch(:erb), "Fresh"
       end
+    end
+
+    test "show Reveal binds REVEALS to reveal and documents the component" do
+      payload = FlatPack::ComponentCatalog.show("Reveal::Component")
+
+      assert_equal "Reveal::Component", payload.fetch(:name)
+      reveal = parameter_named(payload, "reveal")
+      assert_equal FlatPack::Reveal::Component::REVEALS.map(&:to_s), reveal.fetch(:enum)
+      assert_equal %w[sm md lg], parameter_named(payload, "delay").fetch(:enum)
+      assert_equal %w[fast base slow slower], parameter_named(payload, "duration").fetch(:enum)
+      assert_equal %w[fast base slow], parameter_named(FlatPack::ComponentCatalog.show("Number::Component"), "duration").fetch(:enum)
+      refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
+    test "show Number documents the finished value" do
+      payload = FlatPack::ComponentCatalog.show("Number::Component")
+
+      assert_equal "Number::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "finished value"
+      assert_equal %w[number currency percent compact], parameter_named(payload, "format").fetch(:enum)
+      assert_equal %w[count roll fade none], parameter_named(payload, "animate").fetch(:enum)
+      refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
+    test "show Text Stream documents the typed line" do
+      payload = FlatPack::ComponentCatalog.show("Text::Stream::Component")
+
+      assert_equal "Text::Stream::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "caret"
+      refute_includes payload.fetch(:description), "No dedicated documentation"
     end
 
     test "show returns nil for unknown names and accepts URL aliases" do

@@ -4,12 +4,19 @@ module FlatPack
   module SegmentedButtons
     class Component < FlatPack::BaseComponent
       SIZES = FlatPack::Button::Component::SIZES
+      STYLES = FlatPack::Button::StyleRegistry::BUILT_IN
+      UNSELECTED_STYLE = :secondary
 
       renders_many :buttons, lambda { |text:, selected: false, size: nil, **args|
-        style = selected ? :primary : :secondary
+        if args.key?(:style)
+          raise ArgumentError, "Pass style: to SegmentedButtons, not to a segment."
+        end
+
+        style = selected ? (@style || UNSELECTED_STYLE) : UNSELECTED_STYLE
         FlatPack::Button::Component.new(
           text: text,
           style: style,
+          current: selected && @style.nil?,
           size: size.nil? ? @size : size,
           **args
         )
@@ -17,10 +24,12 @@ module FlatPack
 
       undef_method :with_button, :with_button_content
 
-      def initialize(size: :md, **system_arguments)
+      def initialize(size: :md, style: nil, **system_arguments)
         super(**system_arguments)
         @size = size.to_sym
+        @style = style&.to_sym
         validate_size!
+        validate_style!
       end
 
       def button(*args, **kwargs, &block)
@@ -44,11 +53,11 @@ module FlatPack
       def group_classes
         classes(
           "inline-flex",
-          "rounded-[var(--radius-md)]",
+          "rounded-[var(--button-border-radius)]",
           "shadow-sm",
           "[&>*]:rounded-none",
-          "[&>*:first-child]:rounded-l-[var(--radius-md)]",
-          "[&>*:last-child]:rounded-r-[var(--radius-md)]",
+          "[&>*:first-child]:rounded-l-[var(--button-border-radius)]",
+          "[&>*:last-child]:rounded-r-[var(--button-border-radius)]",
           "[&>*]:border-r-0",
           "[&>*:last-child]:border-r",
           "[&>*]:shadow-none"
@@ -59,6 +68,13 @@ module FlatPack
         return if SIZES.key?(@size)
 
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
+      def validate_style!
+        return if @style.nil?
+        return if FlatPack::Button::StyleRegistry.known?(@style)
+
+        raise ArgumentError, FlatPack::Button::StyleRegistry.invalid_style_message(@style)
       end
     end
   end

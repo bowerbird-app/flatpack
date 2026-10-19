@@ -2,7 +2,10 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "valueDisplay"]
+  static targets = ["input", "valueDisplay", "preview"]
+  static values = {
+    previewSelector: String
+  }
 
   connect() {
     this.update()
@@ -23,6 +26,7 @@ export default class extends Controller {
     this.inputTarget.setAttribute("aria-valuenow", value)
 
     this.updateFill()
+    this.updatePreview(value)
 
     // Dispatch custom event for external listeners
     this.element.dispatchEvent(
@@ -43,5 +47,48 @@ export default class extends Controller {
     const clamped = Math.min(100, Math.max(0, percent))
 
     input.style.setProperty("--range-progress", `${clamped}%`)
+  }
+
+  updatePreview(value) {
+    if (!this.hasPreviewTarget && !this.previewSelectorPresent()) {
+      return
+    }
+
+    const numeric = Number.parseFloat(value)
+    const min = Number(this.inputTarget.min)
+    const max = Number(this.inputTarget.max)
+    const span = max - min
+    const scale = span <= 0 ? 0 : Math.min(1, Math.max(0, (numeric - min) / span))
+
+    this.previewElements().forEach((element) => {
+      element.style.setProperty("--fp-range-value", String(numeric))
+      element.style.setProperty("--fp-range-scale", String(scale))
+    })
+  }
+
+  previewSelectorPresent() {
+    return this.hasPreviewSelectorValue && Boolean(this.previewSelectorValue)
+  }
+
+  previewElements() {
+    const elements = []
+
+    if (this.hasPreviewTarget) {
+      this.previewTargets.forEach((element) => elements.push(element))
+    }
+
+    if (!this.previewSelectorPresent() || typeof document === "undefined") {
+      return elements
+    }
+
+    try {
+      document.querySelectorAll(this.previewSelectorValue).forEach((element) => {
+        elements.push(element)
+      })
+    } catch (_error) {
+      // Ignore invalid selectors from hosts.
+    }
+
+    return elements
   }
 }

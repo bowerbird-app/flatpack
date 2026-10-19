@@ -13,61 +13,78 @@
       When each pill points to a hash on the current page, the selected state stays in sync while the browser handles the scroll.
     </p>
 
-    <%= render FlatPack::Button::Pill::Component.new(
-      class: "mb-4",
-      data: {
-        controller: "pill-buttons-demo",
-        "pill-buttons-demo-active-classes-value": FlatPack::Button::Pill::Component::ITEM_ACTIVE_CLASSES,
-        "pill-buttons-demo-inactive-classes-value": FlatPack::Button::Pill::Component::ITEM_INACTIVE_CLASSES
-      },
-      items: [
-        {
-          text: "Account",
-          href: "#pill-anchor-account",
-          active: true,
-          id: "pill-anchor-account-link",
+    <div class="grid gap-8 md:grid-cols-2 mb-4">
+      <div>
+        <h4 class="text-base font-semibold mb-2">Primary</h4>
+        <p class="text-(--surface-muted-content-color) mb-4">The selected pill uses the primary colour.</p>
+        <%= render FlatPack::Button::Pill::Component.new(
           data: {
-            "pill-buttons-demo-target": "pill",
-            action: "pill-buttons-demo#activate"
-          }
-        },
-        {
-          text: "Billing",
-          href: "#pill-anchor-billing",
-          id: "pill-anchor-billing-link",
-          data: {
-            "pill-buttons-demo-target": "pill",
-            action: "pill-buttons-demo#activate"
-          }
-        },
-        {
-          text: "Team Members",
-          href: "#pill-anchor-members",
-          id: "pill-anchor-members-link",
-          data: {
-            "pill-buttons-demo-target": "pill",
-            action: "pill-buttons-demo#activate"
-          }
-        }
-      ]
-    ) %>
+            controller: "pill-buttons-demo",
+            "pill-buttons-demo-active-classes-value": FlatPack::Button::Pill::Component::ITEM_ACTIVE_CLASSES,
+            "pill-buttons-demo-inactive-classes-value": FlatPack::Button::Pill::Component::ITEM_INACTIVE_CLASSES
+          },
+          items: [
+            {
+              text: "Account",
+              href: "#pill-anchor-account",
+              active: true,
+              id: "pill-anchor-account-link",
+              data: {
+                "pill-buttons-demo-target": "pill",
+                action: "pill-buttons-demo#activate"
+              }
+            },
+            {
+              text: "Billing",
+              href: "#pill-anchor-billing",
+              id: "pill-anchor-billing-link",
+              data: {
+                "pill-buttons-demo-target": "pill",
+                action: "pill-buttons-demo#activate"
+              }
+            },
+            {
+              text: "Team Members",
+              href: "#pill-anchor-members",
+              id: "pill-anchor-members-link",
+              data: {
+                "pill-buttons-demo-target": "pill",
+                action: "pill-buttons-demo#activate"
+              }
+            }
+          ]
+        ) %>
+      </div>
+      <div>
+        <h4 class="text-base font-semibold mb-2">Default</h4>
+        <p class="text-(--surface-muted-content-color) mb-4">The selected pill matches a default button.</p>
+        <%= render FlatPack::Button::Pill::Component.new(
+          style: :default,
+          items: [
+            {text: "Account", href: "#pill-anchor-account", active: true},
+            {text: "Billing", href: "#pill-anchor-billing"},
+            {text: "Team Members", href: "#pill-anchor-members"}
+          ]
+        ) %>
+      </div>
+    </div>
 
     <div class="space-y-4 mb-4">
-      <%= render FlatPack::Card::Component.new(id: "pill-anchor-account", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-account", style: :shaded, border: :none, padding: :lg, class: "scroll-mt-24") do %>
         <h4 class="text-lg font-semibold mb-2">Account Preferences</h4>
         <p class="text-(--surface-content-color)">
           Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.
         </p>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(id: "pill-anchor-billing", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-billing", style: :shaded, border: :none, padding: :lg, class: "scroll-mt-24") do %>
         <h4 class="text-lg font-semibold mb-2">Billing Settings</h4>
         <p class="text-(--surface-content-color)">
           Same-page anchors work well for settings pages where the active pill should follow the section without forcing a full-page navigation.
         </p>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(id: "pill-anchor-members", style: :flat, padding: :lg, class: "scroll-mt-24") do %>
+      <%= render FlatPack::Card::Component.new(id: "pill-anchor-members", style: :shaded, border: :none, padding: :lg, class: "scroll-mt-24") do %>
         <h4 class="text-lg font-semibold mb-2">Team Members</h4>
         <p class="text-(--surface-content-color)">
           Reuse the same active and inactive pill classes so the visual treatment stays aligned with the tabs pills variant.
@@ -108,8 +125,74 @@
               ]
             ) %&gt;
           CODE
+        },
+        {
+          label: "Default",
+          language: "erb",
+          code: CGI.unescapeHTML(<<~'CODE')
+            &lt;%= render FlatPack::Button::Pill::Component.new(
+              style: :default,
+              items: [
+                {text: "Account", href: "#pill-anchor-account", active: true},
+                {text: "Billing", href: "#pill-anchor-billing"},
+                {text: "Team Members", href: "#pill-anchor-members"}
+              ]
+            ) %&gt;
+          CODE
         }
       ]
+    ) %>
+  </div>
+
+  <% slide_pill = %w[account billing members].include?(params[:slide].to_s) ? params[:slide].to_s : "account" %>
+  <div class="mt-8" id="sliding-pills">
+    <h3 class="text-lg font-semibold text-(--surface-content-color) mb-2">Sliding pills</h3>
+    <p class="text-(--surface-muted-content-color) mb-4">
+      The fill slides, then the link goes. Modifier-click still opens immediately.
+    </p>
+
+    <%= render FlatPack::Button::Pill::Component.new(
+      indicator: :slide,
+      class: "mb-4",
+      items: [
+        {
+          text: "Account",
+          href: demo_buttons_pills_path(slide: "account", anchor: "sliding-pills"),
+          active: slide_pill == "account",
+          id: "slide-pill-account"
+        },
+        {
+          text: "Billing",
+          href: demo_buttons_pills_path(slide: "billing", anchor: "sliding-pills"),
+          active: slide_pill == "billing",
+          id: "slide-pill-billing"
+        },
+        {
+          text: "Team",
+          href: demo_buttons_pills_path(slide: "members", anchor: "sliding-pills"),
+          active: slide_pill == "members",
+          id: "slide-pill-members"
+        }
+      ]
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(style: :shaded, border: :none, padding: :lg, class: "mb-4") do %>
+      <h4 class="text-lg font-semibold mb-2"><%= slide_pill.capitalize %></h4>
+      <p class="text-(--surface-content-color)">
+        Active pill is <code>aria-current="page"</code> after the visit. Pass <code>indicator: :slide</code>.
+      </p>
+    <% end %>
+
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Pill::Component.new(
+          indicator: :slide,
+          items: [
+            {text: "Account", href: account_path, active: true},
+            {text: "Billing", href: billing_path}
+          ]
+        ) %&gt;
+      CODE
     ) %>
   </div>
 
@@ -128,7 +211,7 @@
       ]
     ) %>
 
-    <%= render FlatPack::Card::Component.new(style: :flat, padding: :lg, class: "mb-4") do %>
+    <%= render FlatPack::Card::Component.new(style: :shaded, border: :none, padding: :lg, class: "mb-4") do %>
       <h4 class="text-lg font-semibold mb-2">Account Preferences</h4>
       <p class="text-(--surface-content-color) mb-2">
         Pills are useful when you want segmented-control styling while keeping tab semantics and keyboard support.

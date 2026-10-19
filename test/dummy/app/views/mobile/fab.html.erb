@@ -1,0 +1,21 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Add",
+  subtitle: "The round button sits above the tabs."
+) %>
+
+<div class="mt-6 space-y-4">
+  <%= render FlatPack::Card::Component.new do %>
+    <p class="text-sm text-[var(--surface-content-color)]">Tap the plus to add a note, photo, or invite.</p>
+  <% end %>
+  <% 6.times do |i| %>
+    <%= render FlatPack::Card::Component.new do %>
+      <p class="text-sm text-[var(--surface-content-color)]">Note <%= i + 1 %></p>
+    <% end %>
+  <% end %>
+</div>
+
+<%= render FlatPack::Fab::Component.new(position: :bottom_right) do |fab| %>
+  <% fab.with_action(icon: :pencil, label: "Note", href: "#note") %>
+  <% fab.with_action(icon: :camera, label: "Photo", href: "#photo") %>
+  <% fab.with_action(icon: :user_plus, label: "Invite", href: "#invite") %>
+<% end %>

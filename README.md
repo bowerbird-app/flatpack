@@ -14,6 +14,7 @@ A modern Rails UI Component Library built with ViewComponent, Tailwind CSS, and 
 - 🔧 **Customizable** - Theme via CSS variables
 - 🧩 **Composable** - Build complex UIs from simple components
 - 📝 **Rich Text** - Built-in TipTap editor via `rich_text: true` on `TextArea`
+- 🌐 **English kit copy** - Defaults under `flatpack.*`; hosts provide other languages
 
 ## Installation
 
@@ -62,6 +63,8 @@ rails generate flat_pack:layout --type=sidebar --side=right --layout_name=admin
 
 See the [Installation Guide](docs/installation.md) for detailed setup instructions.
 
+Kit chrome defaults are English under `flatpack.*`. Hosts add other languages in their own locale files. See [Kit copy and host languages](docs/i18n.md).
+
 If you want to deploy the dummy Rails app in `test/dummy`, use the [DigitalOcean deployment guide](docs/deployment_digitalocean.md). That guide is for the demo app only, not a requirement for FlatPack host applications.
 
 ## AI Entry Points
@@ -89,7 +92,7 @@ Styles: `:primary`, `:secondary`, `:ghost`
 ### Card Component
 
 ```erb
-<%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+<%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
   <% card.header do %>
     <h3>Card Title</h3>
   <% end %>
@@ -104,7 +107,7 @@ Styles: `:primary`, `:secondary`, `:ghost`
 <% end %>
 ```
 
-Styles: `:default`, `:elevated`, `:outlined`, `:flat`, `:interactive`
+Styles: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Shadow: `:none`, `:sm`, `:md`. Border: `:none`, `:default`, `:strong`. Hover: `:none`, `:subtle`, `:strong`.
 
 ### Breadcrumb Component
 
@@ -151,13 +154,15 @@ Separators: `:chevron`, `:slash`, `:arrow`, `:dot`, `:custom`
 ) %>
 ```
 
+Pass `show_border: false` and `show_background: false` when the viewport border and fill should stay off. Both default to on. `:logo_slider` stays clear either way.
+
 `slides` hash options:
 
 | Key | Applies To | Accepts | Default |
 |---|---|---|---|
 | `type` | image, video, html | `:image`, `:video`, `:html` | inferred |
 | `src` | image, video | String URL | required |
-| `thumb_src` / `thumb` | image | String URL | `nil` |
+| `thumb_src` / `thumb` | image, html | String URL | `nil` |
 | `alt` | image | String | `"Slide n"` |
 | `caption` | image, video, html | String | `""` |
 | `lightbox` | image, video, html | `true`, `false` | image: `true`, others: `false` |
@@ -267,12 +272,14 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 ### Layout & Structure
 - **Card** - Flexible content containers with header, body, footer, and media slots
 - **Grid** - Responsive CSS grid layout with configurable columns and gaps
+- **Masonry** - Mixed-ratio photos and tiles stacked without empty holes
+- **Collage** - A tilted grid, or a brick such as five over four. On a phone, a short overlapping row. Cards can rise, deal, or drift
 - **Overflow Row** - One-row layout that scrolls sideways when same-size items do not fit
 - **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content
 - **Hero** - Full-width landing-page hero with seven layout variants
 - **PageHeader** - Page-level header with title, subtitle, and action slots
 - **PageTitle** - Lightweight semantic heading block with optional subtitle
-- **SectionTitle** - In-page section heading with optional description
+- **SectionTitle** - In-page section heading with optional description, size, and spacing
 
 ### Navigation
 - **Breadcrumb** - Navigation trail showing current location in site hierarchy
@@ -298,6 +305,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Avatar** - User avatar with image, initials, and size variants
 - **AvatarGroup** - Stacked avatar group for compact multi-user display
 - **Skeleton** - Loading placeholder animations for content regions
+- **Animated character** - A hash-drawn mascot with named moods, plus icon wiggle, pop, draw, spin, and nudge
 
 ### Interactive
 - **Button** - Buttons and links with multiple styles and loading states
@@ -321,7 +329,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Toast** - Single dismissible toast notification
 - **Toasts** - Toast region manager for stacked toast display
 - **Notification** - Notification bell with unread badge and recent activity popover
-- **EmptyState** - Full-bleed empty state with icon, title, and action
+- **EmptyState** - Empty screen with an icon, image, or your own markup, a measured text block, and a row or stack of actions
 
 ### Content
 - **CodeBlock** - Syntax-highlighted code block
@@ -351,7 +359,8 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **TimeInput** - Time-only picker input
 - **FileInput** - File upload input
 - **Checkbox** - Single checkbox or checkbox groups
-- **RadioGroup** - Radio button groups
+- **RadioGroup** - Radio button groups, including optional inline pills and selectable cards
+- **Fieldset** - Legend and fieldset for a named cluster of controls
 - **Select** - Dropdown select menus with optional searchable single and multiselect modes
 - **Switch** - Toggle switch for boolean states
 

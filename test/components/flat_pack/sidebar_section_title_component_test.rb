@@ -16,17 +16,17 @@ module FlatPack
         def test_renders_with_expanded_padding_by_default
           render_inline(Component.new(title: "Getting Started"))
 
-          assert_selector "div.px-4"
+          assert_includes page.native.to_html, "px-[var(--sidebar-section-padding-x)]"
           assert_selector "div.pt-2"
           assert_selector "div.pb-1"
-          assert_selector "div.mx-2"
+          assert_includes page.native.to_html, "mx-[var(--sidebar-item-inset)]"
         end
 
         def test_renders_with_compact_padding_when_collapsed
           render_inline(Component.new(title: "Getting Started", collapsed: true))
 
-          assert_selector "div.px-1"
-          refute_selector "div.px-4"
+          assert_includes page.native.to_html, "px-[var(--sidebar-item-padding-collapsed)]"
+          refute_includes page.native.to_html, "px-[var(--sidebar-section-padding-x)]"
         end
 
         def test_label_has_truncate_class

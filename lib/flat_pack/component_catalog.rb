@@ -20,7 +20,9 @@ module FlatPack
     ].freeze
 
     EXTRA_RELATIVE_PATHS = [
-      "chat/message.rb"
+      "chat/message.rb",
+      "modal/screen.rb",
+      "fab/action.rb"
     ].freeze
 
     PUBLICITY_RULES = [
@@ -37,6 +39,8 @@ module FlatPack
       {constant: :STYLES, kwargs: %i[style]},
       {constant: :VARIANTS, kwargs: %i[variant style]},
       {constant: :SIZES, kwargs: %i[size]},
+      {constant: :TITLE_SIZES, kwargs: %i[title_size]},
+      {constant: :LEVELS, kwargs: %i[level]},
       {constant: :TYPES, kwargs: %i[type]},
       {constant: :ALIGNMENTS, kwargs: %i[alignment]},
       {constant: :DIRECTIONS, kwargs: %i[direction]},
@@ -47,17 +51,34 @@ module FlatPack
       {constant: :MODES, kwargs: %i[mode]},
       {constant: :STATUSES, kwargs: %i[status]},
       {constant: :GAPS, kwargs: %i[gap]},
+      {constant: :ORDERS, kwargs: %i[order]},
       {constant: :COLS, kwargs: %i[cols]},
       {constant: :ALIGNS, kwargs: %i[align]},
       {constant: :ONS, kwargs: %i[on]},
       {constant: :SEPARATORS, kwargs: %i[separator]},
       {constant: :PADDINGS, kwargs: %i[padding]},
+      {constant: :INSETS, kwargs: %i[inset]},
       {constant: :HOVERS, kwargs: %i[hover]},
       {constant: :TREND_DIRECTIONS, kwargs: %i[trend_direction]},
       {constant: :OVERLAPS, kwargs: %i[overlap]},
       {constant: :LOADING_VARIANTS, kwargs: %i[loading_variant]},
       {constant: :INSERT_MODES, kwargs: %i[insert_mode]},
-      {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]}
+      {constant: :AVATAR_MODES, kwargs: %i[avatar_mode]},
+      {constant: :ORIGINS, kwargs: %i[origin]},
+      {constant: :EXPANDS, kwargs: %i[expand]},
+      {constant: :METHODS, kwargs: %i[method]},
+      {constant: :POSITIONS, kwargs: %i[position]},
+      {constant: :LAYOUTS, kwargs: %i[layout]},
+      {constant: :STACK_BELOWS, kwargs: %i[stack_below]},
+      {constant: :LINES, kwargs: %i[lines]},
+      {constant: :AS, kwargs: %i[as]},
+      {constant: :ICON_VARIANTS, kwargs: %i[icon_variant]},
+      {constant: :ICON_STYLES, kwargs: %i[icon_style]},
+      {constant: :REVEALS, kwargs: %i[reveal]},
+      {constant: :DELAYS, kwargs: %i[delay]},
+      {constant: :FORMATS, kwargs: %i[format]},
+      {constant: :ANIMATIONS, kwargs: %i[animate]},
+      {constant: :DURATIONS, kwargs: %i[duration]}
     ].freeze
 
     DOC_KEYS = {
@@ -78,7 +99,8 @@ module FlatPack
       "text_area" => "inputs",
       "text_input" => "inputs",
       "url_input" => "inputs",
-      "comments" => "comments-thread"
+      "comments" => "comments-thread",
+      "text" => "text-stream"
     }.freeze
 
     TYPE_RULES = [

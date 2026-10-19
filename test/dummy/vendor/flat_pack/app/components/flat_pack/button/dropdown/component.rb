@@ -12,6 +12,9 @@ module FlatPack
         undef_method :with_menu_item, :with_menu_divider
         undef_method :with_menu_item_content, :with_menu_divider_content
 
+        ICON_VARIANTS = IconOptions::VARIANTS
+        ICON_STYLES = IconOptions::STYLES
+
         PLACEMENTS = {
           bottom_right: "top-full right-0 mt-2",
           bottom_left: "top-full left-0 mt-2",
@@ -24,6 +27,8 @@ module FlatPack
           style: :default,
           size: :md,
           icon: nil,
+          icon_variant: nil,
+          icon_style: nil,
           show_chevron: true,
           disabled: false,
           placement: :bottom_right,
@@ -36,6 +41,8 @@ module FlatPack
           @style = style.to_sym
           @size = size.to_sym
           @icon = icon
+          @icon_variant = IconOptions.normalize_variant!(icon_variant)
+          @icon_style = IconOptions.normalize_style!(icon_style)
           @show_chevron = show_chevron
           @disabled = disabled
           @placement = placement.to_sym
@@ -113,7 +120,16 @@ module FlatPack
 
         def button_content
           content = []
-          content << render(FlatPack::Shared::IconComponent.new(name: @icon, size: @size)) if @icon
+          if @icon
+            content << render(FlatPack::Shared::IconComponent.new(
+              **IconOptions.component_arguments(
+                name: @icon,
+                size: @size,
+                icon_variant: @icon_variant,
+                icon_style: @icon_style
+              )
+            ))
+          end
           content << content_tag(:span, @text) if @text.present?
           content << chevron_icon if @show_chevron
           safe_join(content)
@@ -145,10 +161,10 @@ module FlatPack
             "fixed z-50",
             "min-w-[12rem]",
             "overflow-auto",
-            "rounded-[var(--radius-md)]",
+            "rounded-[var(--menu-radius)]",
             "border border-[var(--surface-border-color)]",
             "bg-[var(--surface-background-color)]",
-            "p-1",
+            "p-[var(--dropdown-padding)]",
             "shadow-lg",
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
             "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]"

@@ -38,11 +38,11 @@ module FlatPack
             "inline-flex",
             "items-center",
             "justify-center",
-            "px-2",
-            "py-0.5",
+            "px-[var(--badge-padding-x-xs)]",
+            "py-[var(--badge-padding-y-xs)]",
             "text-xs",
             "font-medium",
-            "rounded-full",
+            "rounded-[var(--badge-radius)]",
             style_classes
           )
         end

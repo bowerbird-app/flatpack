@@ -6,7 +6,7 @@ module FlatPack
       class Component < ViewComponent::Base
         # Tailwind CSS scanning requires these classes to be present as string literals.
         # DO NOT REMOVE - These duplicates ensure CSS generation:
-        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "mt-2" "text-[var(--color-success-background-color)]" "text-[var(--color-danger-background-color)]" "text-center" "fp-tabular-nums"
+        # "text-4xl" "font-bold" "mb-2" "text-sm" "text-[var(--surface-muted-content-color)]" "text-[var(--surface-content-color)]" "mt-2" "text-[var(--color-success-background-color)]" "text-[var(--color-danger-background-color)]" "text-center" "fp-tabular-nums" "fp-card" "rounded-[var(--card-radius)]" "p-[var(--card-padding-md)]"
         TREND_DIRECTIONS = {
           up: {
             icon: "↑",
@@ -18,19 +18,28 @@ module FlatPack
           }
         }.freeze
 
-        def initialize(value:, label:, trend:, trend_direction:, value_class: nil, **system_arguments)
+        def initialize(value:, label:, trend:, trend_direction:, value_class: nil, style: :default, **system_arguments)
+          if system_arguments.key?(:theme)
+            raise ArgumentError, "unknown keyword: :theme"
+          end
+          if system_arguments.key?(:tone)
+            raise ArgumentError, "unknown keyword: :tone"
+          end
+
           @value = value
           @label = label
           @trend = trend
           @trend_direction = trend_direction.to_sym
           @value_class = value_class
+          @style = style&.to_sym
           @system_arguments = system_arguments
 
           validate_trend_direction!
+          validate_style!
         end
 
         def call
-          content_tag(:div, class: container_classes, **@system_arguments) do
+          content_tag(:div, **container_attributes) do
             safe_join([
               content_tag(:div, @value, class: value_classes),
               content_tag(:div, @label, class: "text-sm text-[var(--surface-muted-content-color)]"),
@@ -43,8 +52,26 @@ module FlatPack
 
         private
 
+        def container_attributes
+          arguments = @system_arguments.dup
+          extra_class = arguments.delete(:class)
+          extra_data = arguments.delete(:data) || {}
+
+          {
+            class: [container_classes, extra_class].compact.join(" "),
+            data: extra_data.merge(style: @style.to_s)
+          }.merge(arguments)
+        end
+
         def container_classes
-          "text-center"
+          [
+            "fp-card",
+            "rounded-[var(--card-radius)]",
+            "p-[var(--card-padding-md)]",
+            "text-center",
+            "text-[var(--surface-content-color)]",
+            Style.classes_for(@style)
+          ].join(" ")
         end
 
         def value_classes
@@ -68,6 +95,12 @@ module FlatPack
 
           raise ArgumentError,
             "Invalid trend_direction: #{@trend_direction}. Must be one of: #{TREND_DIRECTIONS.keys.join(", ")}"
+        end
+
+        def validate_style!
+          return if Style::CLASSES.key?(@style)
+
+          raise ArgumentError, "Invalid style: #{@style.inspect}. Must be one of: #{Style::NAMES.join(", ")}"
         end
       end
     end

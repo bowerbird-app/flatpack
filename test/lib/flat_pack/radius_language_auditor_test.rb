@@ -34,13 +34,13 @@ module FlatPack
         FileUtils.mkdir_p(File.join(dir, "app/assets/stylesheets"))
         File.write(
           File.join(dir, "app/assets/stylesheets/example.css"),
-          "div { border-radius: var(--radius-sm, 0.25rem); } .x { @apply rounded-4xl; }"
+          "div { border-radius: var(--radius-sm, 0.75rem); } .x { @apply rounded-4xl; }"
         )
 
         result = RadiusLanguageAuditor.new(engine_root: dir).call
 
         refute_predicate result, :success?
-        assert_equal ["rounded-4xl", "var(--radius-sm, 0.25rem)"].sort, result.violations.first.utilities.sort
+        assert_equal ["rounded-4xl", "var(--radius-sm, 0.75rem)"].sort, result.violations.first.utilities.sort
       end
     end
 

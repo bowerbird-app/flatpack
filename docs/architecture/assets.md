@@ -63,7 +63,7 @@ Load FlatPack stylesheets in your application layout:
 
 Propshaft resolves the correct digested path for each file. Using `stylesheet_link_tag` (not `@import`) is required because Propshaft fingerprints asset filenames — a bare CSS `@import "flat_pack/variables.css"` in a statically-served stylesheet would request an un-digested URL that Propshaft does not serve.
 
-Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii and the kit face on unlayered `:root` in the host stylesheet so rich-text chrome and kit surfaces keep the kit scale. Rich-text `TextArea` also applies the shared `border` and `--form-control-padding` utilities (not only kit CSS) so preflight cannot zero the editor outline or inset. See [Theming](../theming.md).
+Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii and the kit face on unlayered `:root` in the host stylesheet so rich-text chrome and kit surfaces keep the kit scale. Rich-text `TextArea` also applies the shared `border` and `--form-control-padding-x` / `--form-control-padding-y` utilities (not only kit CSS) so preflight cannot zero the editor outline or inset. See [Theming](../theming.md).
 
 ## JavaScript
 
@@ -96,6 +96,8 @@ pin_all_from File.expand_path("../app/javascript/flat_pack/tiptap", __dir__),
    preload: false
 
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
+pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
+pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

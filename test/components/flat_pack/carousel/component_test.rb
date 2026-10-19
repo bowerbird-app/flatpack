@@ -68,7 +68,7 @@ module FlatPack
         render_inline(Component.new(slides: sample_slides))
 
         assert_selector "section[data-controller='flat-pack--carousel']"
-        assert_selector "div[data-flat-pack--carousel-target='slide']", count: 3, visible: :all
+        assert_selector "section.flat-pack-carousel > .flat-pack-carousel__viewport [data-flat-pack--carousel-target='slide']", count: 3, visible: :all
         assert_selector "button[data-flat-pack--carousel-target='indicator']", count: 3
         assert_selector "div[data-flat-pack--carousel-target='counter']"
         indicator = page.find("button[data-flat-pack--carousel-target='indicator']", match: :first)
@@ -88,7 +88,7 @@ module FlatPack
         assert_includes counter[:class], "justify-self-end"
         assert_includes counter[:class], "bg-[var(--carousel-counter-background-color)]"
         assert_includes counter[:class], "text-[var(--carousel-counter-text-color)]"
-        assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-full"
+        assert_includes indicators.find(:xpath, "ancestor::div[1]")[:class], "rounded-[var(--radius-full)]"
       end
 
       def test_renders_circular_flex_chevron_controls_with_tinted_round_background
@@ -123,17 +123,20 @@ module FlatPack
         assert_includes viewport[:class], "group"
       end
 
-      def test_enables_lightbox_by_default_for_images_and_disables_for_non_image_slides
+      def test_enables_lightbox_for_images_and_for_videos_when_asked
         render_inline(Component.new(slides: lightbox_slides))
 
-        slides = page.all("div[data-flat-pack--carousel-target='slide']", visible: :all)
+        slides = page.all("section.flat-pack-carousel > .flat-pack-carousel__viewport [data-flat-pack--carousel-target='slide']", visible: :all)
 
         assert_equal "true", slides[0]["data-lightbox-enabled"]
         assert_equal "https://images.example.com/one.jpg", slides[0]["data-lightbox-src"]
+        assert_equal "0", slides[0]["data-lightbox-index"]
         assert_equal "false", slides[1]["data-lightbox-enabled"]
         assert_nil slides[1]["data-lightbox-src"]
-        assert_equal "false", slides[2]["data-lightbox-enabled"]
-        assert_nil slides[2]["data-lightbox-src"]
+        assert_nil slides[1]["data-lightbox-index"]
+        assert_equal "true", slides[2]["data-lightbox-enabled"]
+        assert_equal "https://videos.example.com/two.mp4", slides[2]["data-lightbox-src"]
+        assert_equal "1", slides[2]["data-lightbox-index"]
       end
 
       def test_renders_lightbox_toggle_button_with_expand_icon
@@ -149,35 +152,33 @@ module FlatPack
         assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
       end
 
-      def test_renders_lightbox_image_with_intrinsic_sizing_capped_to_90_percent_viewport_bounds
+      def test_renders_shared_lightbox_dialog_for_enabled_image_and_video_slides
         render_inline(Component.new(slides: lightbox_slides))
 
-        lightbox_image = page.find("img[data-flat-pack--carousel-target='lightboxImage']", visible: :all)
-        figure = lightbox_image.find(:xpath, "./ancestor::figure[1]", visible: :all)
-        image_classes = lightbox_image[:class].split
-        figure_classes = figure[:class].split
+        root = page.find("section.flat-pack-carousel")
+        dialog = page.find("dialog[data-controller='flat-pack--lightbox']", visible: :all)
+        refute root.has_css?("dialog", visible: :all)
+        assert_equal root["data-flat-pack-lightbox-group"], dialog["data-flat-pack--lightbox-group-value"]
+        assert page.has_css?("dialog[data-controller='flat-pack--lightbox'][hidden]", visible: :all)
+        assert_includes dialog[:class], "backdrop:bg-[var(--modal-backdrop-color)]"
 
-        assert_includes image_classes, "w-auto"
-        assert_includes image_classes, "h-auto"
-        assert_includes image_classes, "max-w-[90vw]"
-        assert_includes image_classes, "max-h-[90vh]"
-        assert_includes image_classes, "bg-[var(--carousel-lightbox-image-background-color)]"
-        refute_includes image_classes, "w-full"
-        assert_includes figure_classes, "inline-flex"
-        assert_includes figure_classes, "max-w-full"
-        refute_includes figure_classes, "w-full"
-        refute_includes figure_classes, "max-w-6xl"
-      end
-
-      def test_lightbox_overlay_uses_overlay_pad
-        render_inline(Component.new(slides: lightbox_slides))
-
-        lightbox = page.find("[data-flat-pack--carousel-target='lightbox']", visible: :all)
-        classes = lightbox[:class].split
-
-        assert_includes classes, "fp-overlay-pad"
-        refute_includes classes, "p-4"
-        refute_includes classes, "sm:p-6"
+        stage = dialog.find("[data-flat-pack-lightbox-stage='true']", visible: :all)
+        image = stage.find("img[src='https://images.example.com/one.jpg']", visible: :all)
+        assert_includes image[:class], "object-contain"
+        assert_includes image[:class], "bg-transparent"
+        refute_includes image[:class], "lightbox-image-background-color"
+        assert_includes image[:class], "w-full"
+        video = stage.find("video", visible: :all)
+        assert_includes video[:class], "bg-transparent"
+        assert_includes video[:class], "object-contain"
+        assert stage.has_css?("video source[src='https://videos.example.com/two.mp4']", visible: :all)
+        refute_includes stage.native.to_html, "https://images.example.com/two.jpg"
+        assert_includes dialog.native.to_html, "fp-overlay-pad"
+        refute_includes dialog.native.to_html, "place-items-center"
+        refute_includes dialog.native.to_html, "max-w-[90vw]"
+        viewport = stage.find("[data-flat-pack--carousel-target='viewport']", visible: :all)
+        assert_includes viewport[:class], "rounded-none"
+        assert_includes viewport[:class], "bg-transparent"
       end
 
       def test_hides_controls_and_counter_for_single_slide_but_keeps_lightbox_toggle
@@ -345,17 +346,227 @@ module FlatPack
         refute_includes viewport[:style], "touch-action: pan-y"
       end
 
+      def test_viewport_keeps_border_and_background_by_default
+        render_inline(Component.new(slides: sample_slides))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        assert_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        refute_includes viewport[:class], "border-0"
+        refute_includes viewport[:class], "bg-transparent"
+      end
+
+      def test_hides_viewport_border_when_show_border_is_false
+        render_inline(Component.new(slides: sample_slides, show_border: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        assert_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        refute_includes viewport[:class], "bg-transparent"
+      end
+
+      def test_hides_viewport_background_when_show_background_is_false
+        render_inline(Component.new(slides: sample_slides, show_background: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "bg-transparent"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+        assert_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "border-0"
+      end
+
+      def test_hides_viewport_border_and_background_together
+        render_inline(Component.new(slides: sample_slides, show_border: false, show_background: false))
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+      end
+
+      def test_logo_slider_stays_borderless_and_transparent
+        render_inline(
+          Component.new(
+            slides: [{type: :image, src: "https://images.example.com/a.svg", alt: "A"}],
+            variant: :logo_slider,
+            show_border: true,
+            show_background: true
+          )
+        )
+
+        viewport = page.find("div[data-flat-pack--carousel-target='viewport']")
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        assert_includes viewport[:style], "background: transparent"
+        refute_includes viewport[:class], "border-[var(--carousel-viewport-border-color)]"
+        refute_includes viewport[:class], "bg-[var(--carousel-viewport-background-color)]"
+      end
+
       def test_renders_thumbs_when_enabled
         render_inline(Component.new(slides: sample_slides, show_thumbs: true))
 
-        assert_selector "button[data-flat-pack--carousel-target='thumb']", count: 3
+        thumbs = page.all("button[data-flat-pack--carousel-target='thumb']")
+        assert_equal 3, thumbs.length
+        assert_includes rendered_content, "flex-wrap"
+        assert_no_selector "[data-flat-pack--carousel-target='thumbStrip']", visible: :all
 
-        thumb = page.find("button[data-flat-pack--carousel-target='thumb']", match: :first)
+        image_thumb = thumbs[0].find("img")
+        assert_equal "https://images.example.com/one.jpg", image_thumb[:src]
+        assert_equal "Thumbnail 1", image_thumb[:alt]
 
-        assert_includes thumb[:class], "cursor-pointer"
-        assert_includes thumb[:class], "hover:opacity-100"
-        assert_includes thumb[:class], "hover:ring-2"
-        assert_includes thumb[:class], "hover:ring-primary"
+        video_thumb = thumbs[1].find("img")
+        assert_equal "https://images.example.com/poster.jpg", video_thumb[:src]
+        assert_equal "Video thumbnail 2", video_thumb[:alt]
+
+        assert_equal "3", thumbs[2].text.strip
+        assert_includes thumbs[0][:class], "cursor-pointer"
+        assert_includes thumbs[0][:class], "hover:opacity-100"
+        assert_includes thumbs[0][:class], "hover:ring-2"
+        assert_includes thumbs[0][:class], "hover:ring-primary"
+      end
+
+      def test_image_thumb_prefers_thumb_src_over_slide_src
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :image,
+                src: "https://images.example.com/full.jpg",
+                thumb_src: "https://images.example.com/small.jpg",
+                alt: "Full"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "https://images.example.com/small.jpg", thumb[:src]
+      end
+
+      def test_html_slide_uses_thumb_src_for_thumbnail
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: "<p>Release notes</p>",
+                thumb_src: "https://images.example.com/card.jpg",
+                caption: "Notes"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb']")
+        image = thumb.find("img")
+
+        assert_equal "https://images.example.com/card.jpg", image[:src]
+        assert_equal "Thumbnail 1", image[:alt]
+        assert_includes rendered_content, "<p>Release notes</p>"
+      end
+
+      def test_html_slide_accepts_thumb_alias
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: "<p>Workshop</p>",
+                thumb: "https://images.example.com/alias.jpg"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "https://images.example.com/alias.jpg", thumb[:src]
+      end
+
+      def test_html_slide_without_thumb_shows_slide_number
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :html, html: "<p>No picture</p>"}
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb']")
+
+        assert_equal "1", thumb.text.strip
+        assert_no_selector "button[data-flat-pack--carousel-target='thumb'] img"
+      end
+
+      def test_html_slide_drops_unsafe_thumb_url
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :html,
+                html: "<p>Notes</p>",
+                thumb_src: "javascript:alert(1)"
+              },
+              {
+                type: :html,
+                html: "<p>Also notes</p>",
+                thumb: "data:text/html,hi"
+              },
+              {
+                type: :html,
+                html: "<p>Blank</p>",
+                thumb_src: "  "
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumbs = page.all("button[data-flat-pack--carousel-target='thumb']")
+
+        assert_equal %w[1 2 3], thumbs.map { |thumb| thumb.text.strip }
+        assert_no_selector "button[data-flat-pack--carousel-target='thumb'] img"
+        refute_includes rendered_content, "javascript:"
+        refute_includes rendered_content, "data:text/html"
+      end
+
+      def test_html_slide_accepts_relative_thumb_path
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :html, html: "<p>Local</p>", thumb_src: "/images/card.jpg"}
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "/images/card.jpg", thumb[:src]
+      end
+
+      def test_video_thumb_keeps_poster_when_thumb_src_is_passed
+        render_inline(
+          Component.new(
+            slides: [
+              {
+                type: :video,
+                src: "https://videos.example.com/two.mp4",
+                poster: "https://images.example.com/poster.jpg",
+                thumb_src: "https://images.example.com/other.jpg"
+              }
+            ],
+            show_thumbs: true
+          )
+        )
+
+        thumb = page.find("button[data-flat-pack--carousel-target='thumb'] img")
+        assert_equal "https://images.example.com/poster.jpg", thumb[:src]
+        assert_equal "Video thumbnail 1", thumb[:alt]
       end
 
       def test_thumbs_force_root_overflow_visible_to_preserve_active_ring
@@ -411,7 +622,7 @@ module FlatPack
           )
         )
 
-        assert_selector "div[data-flat-pack--carousel-target='slide']", count: 1, visible: :all
+        assert_selector "section.flat-pack-carousel > .flat-pack-carousel__viewport [data-flat-pack--carousel-target='slide']", count: 1, visible: :all
       end
 
       def test_preserves_chart_data_attributes_in_html_slides
@@ -462,6 +673,22 @@ module FlatPack
         assert_raises(ArgumentError) do
           Component.new(slides: sample_slides, variant: :logo_slider, transition: :fade)
         end
+
+        assert_raises(ArgumentError) do
+          Component.new(slides: sample_slides, fit: :stretch)
+        end
+      end
+
+      def test_show_counter_false_omits_the_count_and_contain_keeps_the_frame
+        render_inline(Component.new(slides: sample_slides, show_counter: false, fit: :contain))
+
+        assert_no_selector "[data-flat-pack--carousel-target='counter']", visible: :all
+        image = page.find("section.flat-pack-carousel > .flat-pack-carousel__viewport img[alt='Slide one']", visible: :all)
+        assert_includes image[:class], "object-contain"
+        assert_includes image[:class], "bg-[var(--carousel-lightbox-image-background-color)]"
+        viewport = page.find("section.flat-pack-carousel > .flat-pack-carousel__viewport")
+        assert_includes viewport[:style], "aspect-ratio"
+        refute_includes viewport[:class], "rounded-none"
       end
 
       def test_requires_at_least_one_valid_slide

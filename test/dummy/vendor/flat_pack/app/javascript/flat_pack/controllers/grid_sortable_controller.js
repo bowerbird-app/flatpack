@@ -18,6 +18,7 @@ export default class extends Controller {
     this.needsSave = false
     this.conflictRetryPending = false
     this.lastStableOrder = this.currentOrder()
+    this.ensureDragHandlers()
     this.setupDraggableItems()
   }
 
@@ -25,22 +26,53 @@ export default class extends Controller {
     this.removeDragListeners()
   }
 
+  ensureDragHandlers() {
+    if (this.dragHandlers) return
+
+    this.dragHandlers = {
+      dragstart: this.handleDragStart.bind(this),
+      dragend: this.handleDragEnd.bind(this),
+      dragover: this.handleDragOver.bind(this),
+      drop: this.handleDrop.bind(this),
+      dragenter: this.handleDragEnter.bind(this),
+      dragleave: this.handleDragLeave.bind(this)
+    }
+  }
+
   setupDraggableItems() {
-    this.itemTargets.forEach((item) => {
-      item.setAttribute("draggable", "true")
-      item.addEventListener("dragstart", this.handleDragStart.bind(this))
-      item.addEventListener("dragend", this.handleDragEnd.bind(this))
-      item.addEventListener("dragover", this.handleDragOver.bind(this))
-      item.addEventListener("drop", this.handleDrop.bind(this))
-      item.addEventListener("dragenter", this.handleDragEnter.bind(this))
-      item.addEventListener("dragleave", this.handleDragLeave.bind(this))
+    this.ensureDragHandlers()
+    this.itemTargets.forEach((item) => this.addDragListeners(item))
+  }
+
+  itemTargetConnected(item) {
+    this.ensureDragHandlers()
+    this.addDragListeners(item)
+  }
+
+  itemTargetDisconnected(item) {
+    this.removeDragListenersFrom(item)
+  }
+
+  addDragListeners(item) {
+    item.setAttribute("draggable", "true")
+    Object.entries(this.dragHandlers).forEach(([eventName, handler]) => {
+      item.removeEventListener(eventName, handler)
+      item.addEventListener(eventName, handler)
     })
   }
 
+  removeDragListenersFrom(item) {
+    if (this.dragHandlers) {
+      Object.entries(this.dragHandlers).forEach(([eventName, handler]) => {
+        item.removeEventListener(eventName, handler)
+      })
+    }
+
+    item.removeAttribute("draggable")
+  }
+
   removeDragListeners() {
-    this.itemTargets.forEach((item) => {
-      item.removeAttribute("draggable")
-    })
+    this.itemTargets.forEach((item) => this.removeDragListenersFrom(item))
   }
 
   handleDragStart(event) {

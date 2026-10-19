@@ -18,6 +18,7 @@ module FlatPack
 
           assert_selector "a[aria-current='page']"
           assert_includes page.native.to_html, "sidebar-item-active-background-color"
+          assert_includes page.native.to_html, "rounded-[var(--sidebar-item-radius)]"
         end
 
         def test_renders_collapsed_mode_accessibility

@@ -20,6 +20,37 @@
  *   custom   — Array of tool names supplied via rich_text_options[:toolbar]
  */
 
+import { flatPackCopy } from "flat_pack/copy"
+
+const TOOL_COPY_KEYS = {
+  bold: "rich_text.bold",
+  italic: "rich_text.italic",
+  underline: "rich_text.underline",
+  strike: "rich_text.strikethrough",
+  code: "rich_text.inline_code",
+  highlight: "rich_text.highlight",
+  h1: "rich_text.heading_1",
+  h2: "rich_text.heading_2",
+  h3: "rich_text.heading_3",
+  bulletList: "rich_text.bullet_list",
+  orderedList: "rich_text.numbered_list",
+  taskList: "rich_text.task_list",
+  blockquote: "rich_text.blockquote",
+  alignLeft: "rich_text.align_left",
+  alignCenter: "rich_text.align_center",
+  alignRight: "rich_text.align_right",
+  link: "rich_text.insert_link",
+  image: "rich_text.insert_image",
+  table: "rich_text.insert_table",
+  undo: "rich_text.undo",
+  redo: "rich_text.redo"
+}
+
+function toolCopyLabel(def) {
+  const key = TOOL_COPY_KEYS[def.name]
+  return key ? flatPackCopy(key) : def.label
+}
+
 // ── Inline link/image popovers (replaces window.prompt) ─────────────────────
 
 function closeLinkPopover() {
@@ -38,25 +69,25 @@ function showLinkPopover(editor, anchorEl) {
   const popover = document.createElement("div")
   popover.className = "flat-pack-rt-link-popover"
   popover.setAttribute("role", "dialog")
-  popover.setAttribute("aria-label", "Insert link")
+  popover.setAttribute("aria-label", flatPackCopy("rich_text.insert_link"))
 
   const input = Object.assign(document.createElement("input"), {
     type: "url",
     className: "flat-pack-rt-link-input",
-    placeholder: "https://",
+    placeholder: flatPackCopy("rich_text.link_placeholder"),
     value: prev,
   })
 
   const applyBtn = Object.assign(document.createElement("button"), {
     type: "button",
     className: "flat-pack-rt-link-apply-btn",
-    textContent: "Apply",
+    textContent: flatPackCopy("rich_text.apply"),
   })
 
   const removeBtn = Object.assign(document.createElement("button"), {
     type: "button",
     className: "flat-pack-rt-link-remove-btn",
-    textContent: "Remove",
+    textContent: flatPackCopy("rich_text.remove"),
   })
 
   popover.appendChild(input)
@@ -117,7 +148,7 @@ function showImagePopover(editor, anchorEl, opts) {
   const popover = document.createElement("div")
   popover.className = "flat-pack-rt-link-popover"
   popover.setAttribute("role", "dialog")
-  popover.setAttribute("aria-label", "Insert image")
+  popover.setAttribute("aria-label", flatPackCopy("rich_text.insert_image"))
 
   // When upload is available, stack sections vertically
   if (uploadUrl) {
@@ -133,13 +164,13 @@ function showImagePopover(editor, anchorEl, opts) {
   const input = Object.assign(document.createElement("input"), {
     type: "url",
     className: "flat-pack-rt-link-input",
-    placeholder: "Image URL (https://...)",
+    placeholder: flatPackCopy("rich_text.image_placeholder"),
   })
 
   const applyBtn = Object.assign(document.createElement("button"), {
     type: "button",
     className: "flat-pack-rt-link-apply-btn",
-    textContent: "Insert",
+    textContent: flatPackCopy("rich_text.insert"),
   })
 
   urlRow.appendChild(input)
@@ -149,7 +180,7 @@ function showImagePopover(editor, anchorEl, opts) {
   // ── File upload section (only shown when upload URL is configured) ────────
   if (uploadUrl) {
     const divider = document.createElement("div")
-    divider.textContent = "— or upload a file —"
+    divider.textContent = flatPackCopy("rich_text.or_upload")
     divider.style.cssText = "text-align:center;font-size:11px;color:var(--surface-muted-content-color);padding:6px 0 4px;"
     popover.appendChild(divider)
 
@@ -157,12 +188,12 @@ function showImagePopover(editor, anchorEl, opts) {
       type: "file",
       accept: "image/*",
     })
-    fileInput.setAttribute("aria-label", "Upload image file")
+    fileInput.setAttribute("aria-label", flatPackCopy("rich_text.upload_image_file"))
     fileInput.style.cssText = "display:none;"
 
     const uploadBtn = document.createElement("button")
     uploadBtn.type = "button"
-    uploadBtn.textContent = "Upload from computer"
+    uploadBtn.textContent = flatPackCopy("rich_text.upload_from_computer")
     uploadBtn.style.cssText = "background:transparent;border:none;padding:0;font-size:12px;color:var(--surface-content-color);cursor:pointer;text-decoration:underline;width:100%;text-align:left;"
     uploadBtn.addEventListener("click", () => fileInput.click())
 
@@ -173,7 +204,7 @@ function showImagePopover(editor, anchorEl, opts) {
       const file = fileInput.files?.[0]
       if (!file) return
 
-      statusEl.textContent = "Uploading…"
+      statusEl.textContent = flatPackCopy("rich_text.uploading")
       statusEl.style.display = "block"
 
       const csrfToken = document.querySelector("meta[name=csrf-token]")?.content
@@ -189,7 +220,7 @@ function showImagePopover(editor, anchorEl, opts) {
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}))
-          statusEl.textContent = err.error || "Upload failed"
+          statusEl.textContent = err.error || flatPackCopy("rich_text.upload_failed")
           return
         }
 
@@ -199,7 +230,7 @@ function showImagePopover(editor, anchorEl, opts) {
           closeLinkPopover()
         }
       } catch {
-        statusEl.textContent = "Upload failed — check your connection"
+        statusEl.textContent = flatPackCopy("rich_text.upload_failed_connection")
       }
     })
 
@@ -546,7 +577,7 @@ export function buildToolbar(toolbarEl, editor, opts, extraTools = []) {
 
     const btn = toolButton({
       name:       def.name,
-      label:      def.label,
+      label:      toolCopyLabel(def),
       icon:       def.icon,
       // btnEl is passed from toolButton's click handler so actions can anchor popovers
       // opts is forwarded so image/link actions can read upload config

@@ -4,6 +4,9 @@ module FlatPack
   module Button
     module DropdownItem
       class Component < FlatPack::BaseComponent
+        ICON_VARIANTS = IconOptions::VARIANTS
+        ICON_STYLES = IconOptions::STYLES
+
         BADGE_STYLES = {
           default: "border border-[var(--badge-default-border-color)] bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)]",
           primary: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
@@ -17,6 +20,8 @@ module FlatPack
         def initialize(
           text:,
           icon: nil,
+          icon_variant: nil,
+          icon_style: nil,
           badge: nil,
           badge_style: :primary,
           href: nil,
@@ -27,6 +32,8 @@ module FlatPack
           super(**system_arguments)
           @text = text
           @icon = icon
+          @icon_variant = IconOptions.normalize_variant!(icon_variant)
+          @icon_style = IconOptions.normalize_style!(icon_style)
           @badge = badge
           @badge_style = badge_style.to_sym
           @href = href
@@ -66,7 +73,16 @@ module FlatPack
 
         def item_content
           content = []
-          content << render(FlatPack::Shared::IconComponent.new(name: @icon, size: :sm)) if @icon
+          if @icon
+            content << render(FlatPack::Shared::IconComponent.new(
+              **IconOptions.component_arguments(
+                name: @icon,
+                size: :sm,
+                icon_variant: @icon_variant,
+                icon_style: @icon_style
+              )
+            ))
+          end
           content << content_tag(:span, @text, class: "flex-1")
           if @badge
             content << content_tag(:span, @badge, class: badge_classes)
@@ -86,12 +102,12 @@ module FlatPack
 
         def item_classes
           base_classes = [
-            "flex items-center gap-2",
+            "flex items-center gap-[var(--dropdown-item-gap)]",
             "w-full",
-            "px-2 py-1.5",
+            "px-[var(--dropdown-item-padding-x)] py-[var(--dropdown-item-padding-y)]",
             "text-sm",
             "text-left",
-            "rounded-[var(--radius-sm)]",
+            "rounded-[var(--dropdown-item-radius)]",
             "transition-colors duration-base",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
           ]
@@ -112,7 +128,7 @@ module FlatPack
 
         def badge_classes
           classes(
-            "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-full",
+            "inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 text-xs font-medium rounded-[var(--badge-radius)]",
             BADGE_STYLES.fetch(@badge_style)
           )
         end

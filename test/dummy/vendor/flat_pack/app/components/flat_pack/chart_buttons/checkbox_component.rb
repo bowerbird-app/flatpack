@@ -13,7 +13,7 @@ module FlatPack
         auto_submit: true,
         form_data: {},
         checkbox_data: {},
-        submit_label: "Apply",
+        submit_label: FlatPack::Copy::OMITTED,
         turbo_frame: nil,
         size: :sm,
         **system_arguments
@@ -29,7 +29,7 @@ module FlatPack
         @turbo_frame = turbo_frame
         @form_data = merge_form_data(form_data)
         @checkbox_data = merge_checkbox_data(checkbox_data)
-        @submit_label = submit_label
+        @submit_label = fp_text(submit_label, "chart_buttons.apply")
         @size = size
       end
 

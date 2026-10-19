@@ -6,9 +6,9 @@ module FlatPack
   class TypeTokensTest < ActiveSupport::TestCase
     test "font and type scale tokens are concrete on :root so browsers can resolve them" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
-      refute_nil root_block, "expected a :root block in variables.css"
+      refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--font-sans:\s*system-ui/, root_block)
       assert_match(/--font-mono:\s*ui-monospace/, root_block)
       assert_match(/--text-xs:\s*0\.75rem/, root_block)
@@ -20,6 +20,18 @@ module FlatPack
       assert_match(/--text-3xl:\s*1\.875rem/, root_block)
       assert_match(/--text-4xl:\s*2\.25rem/, root_block)
       assert_match(/--text-5xl:\s*3rem/, root_block)
+      assert_match(/--text-6xl:\s*3\.75rem/, root_block)
+      assert_match(/--text-6xl--line-height:\s*1/, root_block)
+      assert_match(/--text-7xl:\s*4\.5rem/, root_block)
+      assert_match(/--text-7xl--line-height:\s*1/, root_block)
+      assert_match(/--text-8xl:\s*6rem/, root_block)
+      assert_match(/--text-8xl--line-height:\s*1/, root_block)
+      assert_match(/--display-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--display-size-max:\s*5\.5rem/, root_block)
+      assert_match(/--display-size:\s*clamp\(var\(--display-size-min\), 1rem \+ 5vw, var\(--display-size-max\)\)/, root_block)
+      assert_match(/--display-tracking:\s*-0\.03em/, root_block)
+      assert_match(/--display-leading:\s*1\.05/, root_block)
+      assert_match(/--display-weight:\s*600/, root_block)
       assert_match(/--page-title-h1-size:\s*var\(--text-4xl\)/, root_block)
       assert_match(/--page-title-h6-size:\s*var\(--text-base\)/, root_block)
       assert_match(/--content-p-size:\s*var\(--text-lg\)/, root_block)
@@ -33,11 +45,21 @@ module FlatPack
       assert_match(/--content-h6-size:\s*var\(--text-lg\)/, root_block)
       assert_match(/--hero-headline-size:\s*var\(--text-5xl\)/, root_block)
       assert_match(/--hero-description-size:\s*var\(--text-xl\)/, root_block)
+      assert_match(/--hero-title-md-size-min:\s*var\(--text-4xl\)/, root_block)
+      assert_match(/--hero-title-md-size-max:\s*var\(--text-6xl\)/, root_block)
+      assert_match(/--hero-title-md-size:\s*clamp\(var\(--hero-title-md-size-min\), 1rem \+ 3\.5vw, var\(--hero-title-md-size-max\)\)/, root_block)
+      assert_match(/--hero-title-lg-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--hero-title-lg-size-max:\s*var\(--text-7xl\)/, root_block)
+      assert_match(/--hero-title-lg-size:\s*clamp\(var\(--hero-title-lg-size-min\), 1rem \+ 4\.5vw, var\(--hero-title-lg-size-max\)\)/, root_block)
+      assert_match(/--hero-title-xl-size:\s*var\(--display-size\)/, root_block)
+      assert_match(/--hero-title-xxl-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--hero-title-xxl-size-max:\s*var\(--text-8xl\)/, root_block)
+      assert_match(/--hero-title-xxl-size:\s*clamp\(var\(--hero-title-xxl-size-min\), 1rem \+ 5\.5vw, var\(--hero-title-xxl-size-max\)\)/, root_block)
     end
 
     test "root applies the kit face and antialiased smoothing" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
-      root_block = css[/^:root \{.*?^\}/m]
+      root_block = css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
       assert_match(/font-family:\s*var\(--font-sans\)/, root_block)
       assert_includes root_block, "-webkit-font-smoothing: antialiased"
@@ -51,6 +73,18 @@ module FlatPack
       assert_includes css, "font-variant-numeric: tabular-nums"
       assert_includes css, ".fp-text-balance"
       assert_includes css, "text-wrap: balance"
+      assert_includes css, ".fp-hero-title"
+      assert_includes css, ".fp-hero-title--md"
+      assert_includes css, ".fp-hero-title--xl"
+      assert_includes css, ".fp-hero-title--xxl"
+      assert_includes css, "font-size: var(--hero-title-xl-size)"
+      assert_includes css, ".fp-display"
+      assert_includes css, "font-size: var(--display-size)"
+      assert_includes css, "font-weight: var(--display-weight)"
+      assert_includes css, "letter-spacing: var(--display-tracking)"
+      assert_includes css, "line-height: var(--display-leading)"
+      assert_includes css, ".fp-display-subtitle"
+      assert_includes css, "/* Cover type. Unlayered so Tailwind preflight cannot collapse"
       assert_includes css, ".fp-text-pretty"
       assert_includes css, "text-wrap: pretty"
       assert_includes css, ".fp-content"

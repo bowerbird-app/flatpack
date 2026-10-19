@@ -6,16 +6,16 @@ module FlatPack
       def initialize(
         id:,
         items:,
-        placeholder: "Search commands",
-        empty_text: "No matching commands",
+        placeholder: FlatPack::Copy::OMITTED,
+        empty_text: FlatPack::Copy::OMITTED,
         shortcut: true,
         **system_arguments
       )
         super(**system_arguments)
         @palette_id = id
         @items = Array(items)
-        @placeholder = placeholder
-        @empty_text = empty_text
+        @placeholder = fp_text(placeholder, "command_palette.placeholder")
+        @empty_text = fp_text(empty_text, "command_palette.empty")
         @shortcut = shortcut
         validate_id!
         validate_items!
@@ -33,7 +33,7 @@ module FlatPack
       private
 
       def grouped_items
-        @items.group_by { |item| item[:group].presence || "Commands" }
+        @items.group_by { |item| item[:group].presence || fp_t("command_palette.group") }
       end
 
       def root_attributes
@@ -74,7 +74,7 @@ module FlatPack
       def dialog_attributes
         {
           role: "dialog",
-          aria: {modal: "true", label: "Command palette"},
+          aria: {modal: "true", label: fp_t("command_palette.label")},
           class: dialog_classes,
           data: {"flat-pack--command-palette-target": "dialog"}
         }
@@ -83,7 +83,7 @@ module FlatPack
       def dialog_classes
         [
           "relative mx-auto mt-[12vh] w-full max-w-lg",
-          "overflow-hidden rounded-[var(--radius-lg)]",
+          "overflow-hidden rounded-[var(--modal-radius)]",
           "border border-[var(--modal-border-color)]",
           "bg-[var(--modal-surface-color)] shadow-lg",
           "opacity-0 scale-95 motion-reduce:scale-100",
@@ -92,7 +92,7 @@ module FlatPack
       end
 
       def render_search_row
-        content_tag(:div, class: "flex items-center gap-2 border-b border-[var(--surface-border-color)] px-4 py-3") do
+        content_tag(:div, class: "flex items-center gap-2 border-b border-[var(--surface-border-color)] px-[var(--command-palette-field-padding-x)] py-[var(--command-palette-field-padding-y)]") do
           safe_join([
             content_tag(:span, class: "text-[var(--surface-muted-content-color)]", "aria-hidden": "true") do
               render FlatPack::Shared::IconComponent.new(name: "magnifying-glass", size: :sm)
@@ -117,15 +117,15 @@ module FlatPack
       end
 
       def render_results
-        content_tag(:div, class: "max-h-80 overflow-y-auto py-2", data: {"flat-pack--command-palette-target": "results"}) do
+        content_tag(:div, class: "max-h-80 overflow-y-auto py-[var(--command-palette-padding)]", data: {"flat-pack--command-palette-target": "results"}) do
           safe_join(grouped_items.map { |group, items| render_group(group, items) } + [render_empty_row])
         end
       end
 
       def render_group(group, items)
-        content_tag(:div, class: "px-2", data: {"flat-pack--command-palette-target": "group"}) do
+        content_tag(:div, class: "px-[var(--command-palette-padding)]", data: {"flat-pack--command-palette-target": "group"}) do
           safe_join([
-            content_tag(:p, group, class: "px-2 py-1 text-xs font-medium text-[var(--surface-muted-content-color)]"),
+            content_tag(:p, group, class: "px-[var(--command-palette-padding)] py-[var(--command-palette-label-padding-y)] text-xs font-medium text-[var(--surface-muted-content-color)]"),
             content_tag(:ul, role: "listbox") do
               safe_join(items.map { |item| render_item(item) })
             end
@@ -169,7 +169,7 @@ module FlatPack
       # "hover:bg-[var(--list-item-hover-background-color)]" "aria-selected:bg-[var(--list-item-active-background-color)]"
       def item_classes
         [
-          "flex items-center gap-3 rounded-[var(--radius-md)] px-2 py-2 text-sm",
+          "flex items-center gap-[var(--command-palette-item-gap)] rounded-[var(--dropdown-item-radius)] px-[var(--command-palette-item-padding-x)] py-[var(--command-palette-item-padding-y)] text-sm",
           "text-[var(--surface-content-color)]",
           "hover:bg-[var(--list-item-hover-background-color)]",
           "aria-selected:bg-[var(--list-item-active-background-color)]"
@@ -187,7 +187,7 @@ module FlatPack
       def render_empty_row
         content_tag(:p,
           @empty_text,
-          class: "hidden px-4 py-6 text-sm text-[var(--surface-muted-content-color)]",
+          class: "hidden px-[var(--command-palette-field-padding-x)] py-[var(--command-palette-empty-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
           data: {"flat-pack--command-palette-target": "empty"})
       end
 

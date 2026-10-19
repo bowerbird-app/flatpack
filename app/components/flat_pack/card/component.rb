@@ -16,7 +16,7 @@ module FlatPack
       def header(**args, &block)
         return header_slot if args.empty? && !block
 
-        set_slot(:header_slot, nil, **args, &block)
+        set_slot(:header_slot, nil, **header_slot_arguments(args), &block)
       end
 
       def body(**args, &block)
@@ -28,7 +28,7 @@ module FlatPack
       def footer(**args, &block)
         return footer_slot if args.empty? && !block
 
-        set_slot(:footer_slot, nil, **args, &block)
+        set_slot(:footer_slot, nil, **footer_slot_arguments(args), &block)
       end
 
       def media(**args, &block)
@@ -56,29 +56,23 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--card-background-color)]" "border" "border-[var(--card-border-color)]" "shadow-md" "dark:shadow-lg" "border-2" "bg-[var(--card-background-muted-color)]"
-      STYLES = {
-        default: "bg-[var(--card-background-color)] border border-[var(--card-border-color)]",
-        elevated: "bg-[var(--card-background-color)] border border-[var(--card-border-color)] shadow-md dark:shadow-lg",
-        outlined: "bg-[var(--card-background-color)] border-2 border-[var(--card-border-color)]",
-        flat: "bg-[var(--card-background-muted-color)]",
-        interactive: "bg-[var(--card-background-color)] border border-[var(--card-border-color)]",
-        list: "bg-[var(--card-background-color)] border border-[var(--card-border-color)]"
+      # "border" "border-[var(--card-border-color)]" "border-2" "shadow-[var(--shadow-sm)]" "shadow-[var(--shadow-md)]"
+      SHADOWS = {
+        none: "",
+        sm: "shadow-[var(--shadow-sm)]",
+        md: "shadow-[var(--shadow-md)]"
+      }.freeze
+
+      BORDERS = {
+        none: "",
+        default: "border border-[var(--card-border-color)]",
+        strong: "border-2 border-[var(--card-border-color)]"
       }.freeze
 
       HOVERS = {
         none: "",
         subtle: "fp-card-hover-subtle",
         strong: "fp-card-hover-strong"
-      }.freeze
-
-      STYLE_DEFAULT_HOVERS = {
-        default: :none,
-        elevated: :none,
-        outlined: :none,
-        flat: :none,
-        interactive: :strong,
-        list: :subtle
       }.freeze
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -91,45 +85,24 @@ module FlatPack
         lg: "p-[var(--card-padding-lg)]"
       }.freeze
 
-      THEME_VARIABLES = {
-        background: "--card-background-color",
-        background_muted: "--card-background-muted-color",
-        text: "--surface-content-color",
-        muted_text: "--surface-muted-content-color",
-        primary: "--color-primary",
-        primary_hover: "--color-primary-hover",
-        primary_text: "--color-primary-text"
-      }.freeze
-
-      BUTTON_THEME_VARIABLES = {
-        primary: ["--button-primary-background-color", "--button-primary-border-color"],
-        primary_hover: ["--button-primary-hover-background-color"],
-        primary_text: ["--button-primary-text-color"],
-        default_button: ["--button-default-background-color"],
-        default_button_hover: ["--button-default-hover-background-color"],
-        default_button_text: ["--button-default-text-color"],
-        default_button_border: ["--button-default-border-color"],
-        secondary_button: ["--button-secondary-background-color"],
-        secondary_button_hover: ["--button-secondary-hover-background-color"],
-        secondary_button_text: ["--button-secondary-text-color"],
-        secondary_button_border: ["--button-secondary-border-color"]
-      }.freeze
-
       def initialize(
         style: :default,
-        hover: nil,
+        shadow: :none,
+        border: :default,
+        hover: :none,
         clickable: false,
         href: nil,
         padding: :md,
-        theme: nil,
         **system_arguments
       )
+        reject_removed_theme!(system_arguments)
         super(**system_arguments)
         @style = style.to_sym
-        @hover = hover&.to_sym
+        @shadow = shadow.to_sym
+        @border = border.to_sym
+        @hover = (hover || :none).to_sym
         @clickable = clickable
         @padding = padding.to_sym
-        @theme = normalize_theme(theme)
 
         # Sanitize URL for security and validate
         if href
@@ -140,9 +113,10 @@ module FlatPack
         end
 
         validate_style!
+        validate_shadow!
+        validate_border!
         validate_hover!
         validate_padding!
-        validate_theme!
       end
 
       def call
@@ -171,31 +145,34 @@ module FlatPack
 
       def container_attributes
         attributes = merge_attributes(
-          class: card_classes
+          class: card_classes,
+          data: {style: @style.to_s}
         )
 
         attributes.delete("style")
-        attributes[:style] = combined_style if combined_style.present?
+        attributes[:style] = caller_style if caller_style.present?
         attributes
       end
 
       def card_classes
         classes(
-          "rounded-[var(--radius-lg)]",
+          "fp-card",
+          "rounded-[var(--card-radius)]",
           overflow_class,
           "h-full",
           "flex",
           "flex-col",
           "text-[var(--surface-content-color)]",
           style_classes,
+          shadow_classes,
+          border_classes,
           hover_classes,
           container_padding_classes
         )
       end
 
-      def combined_style
-        existing_style = html_attributes[:style] || html_attributes["style"]
-        [existing_style, theme_style].compact.join("; ").presence
+      def caller_style
+        html_attributes[:style] || html_attributes["style"]
       end
 
       def overflow_class
@@ -216,8 +193,24 @@ module FlatPack
         {padding: @padding}
       end
 
+      def header_slot_arguments(args)
+        {padding: @padding}.merge(args)
+      end
+
+      def footer_slot_arguments(args)
+        {padding: @padding}.merge(args)
+      end
+
       def style_classes
-        STYLES.fetch(@style)
+        Style.classes_for(@style)
+      end
+
+      def shadow_classes
+        SHADOWS.fetch(@shadow)
+      end
+
+      def border_classes
+        BORDERS.fetch(@border)
       end
 
       def padding_classes
@@ -225,44 +218,25 @@ module FlatPack
       end
 
       def hover_classes
-        HOVERS.fetch(resolved_hover)
-      end
-
-      def resolved_hover
-        @hover || STYLE_DEFAULT_HOVERS.fetch(@style)
-      end
-
-      def theme_style
-        return if @theme.empty?
-
-        direct_variables = @theme.filter_map do |key, value|
-          next unless THEME_VARIABLES.key?(key)
-
-          "#{THEME_VARIABLES.fetch(key)}: #{value}"
-        end
-
-        button_variables = @theme.flat_map do |key, value|
-          Array(BUTTON_THEME_VARIABLES[key]).map do |variable|
-            "#{variable}: #{value}"
-          end
-        end
-
-        [*direct_variables, *button_variables].join("; ")
-      end
-
-      def normalize_theme(theme)
-        return {} if theme.nil?
-
-        theme.to_h.each_with_object({}) do |(key, value), normalized|
-          normalized[key.to_sym] = value
-        end
-      rescue NoMethodError
-        raise ArgumentError, "Theme must be a hash of color overrides."
+        HOVERS.fetch(@hover)
       end
 
       def validate_style!
-        return if STYLES.key?(@style)
-        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{STYLES.keys.join(", ")}"
+        return if Style::CLASSES.key?(@style)
+
+        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{Style::NAMES.join(", ")}"
+      end
+
+      def validate_shadow!
+        return if SHADOWS.key?(@shadow)
+
+        raise ArgumentError, "Invalid shadow: #{@shadow}. Must be one of: #{SHADOWS.keys.join(", ")}"
+      end
+
+      def validate_border!
+        return if BORDERS.key?(@border)
+
+        raise ArgumentError, "Invalid border: #{@border}. Must be one of: #{BORDERS.keys.join(", ")}"
       end
 
       def validate_padding!
@@ -271,26 +245,18 @@ module FlatPack
       end
 
       def validate_hover!
-        return if @hover.nil? || HOVERS.key?(@hover)
+        return if HOVERS.key?(@hover)
+
         raise ArgumentError, "Invalid hover: #{@hover}. Must be one of: #{HOVERS.keys.join(", ")}"
       end
 
-      def validate_theme!
-        valid_theme_keys = THEME_VARIABLES.keys | BUTTON_THEME_VARIABLES.keys
-        invalid_keys = @theme.keys - valid_theme_keys
-        return if invalid_keys.empty? && valid_theme_colors?
-
-        unless invalid_keys.empty?
-          raise ArgumentError, "Invalid theme keys: #{invalid_keys.join(", ")}. Must be one of: #{valid_theme_keys.join(", ")}"
+      def reject_removed_theme!(system_arguments)
+        if system_arguments.key?(:theme)
+          raise ArgumentError, "unknown keyword: :theme"
         end
+        return unless system_arguments.key?(:tone)
 
-        raise ArgumentError, "Theme values must be safe CSS color values."
-      end
-
-      def valid_theme_colors?
-        @theme.all? do |_key, value|
-          FlatPack::AttributeSanitizer.sanitize_css_color(value).present?
-        end
+        raise ArgumentError, "unknown keyword: :tone"
       end
 
       def validate_href!(original_href)

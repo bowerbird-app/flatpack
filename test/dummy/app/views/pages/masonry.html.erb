@@ -1,0 +1,145 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Masonry",
+  subtitle: "Photos keep their shape. A badge sits on the picture. The name sits under it."
+) %>
+
+<%= render "pages/component_method_variables_table", components: [:masonry, :media] %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  masonry_photos = [
+    {src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 1120, height: 1400, filename: "harbour.jpg"},
+    {src: "/masonry/cliff.svg", alt: "Sea cliff in late light", width: 600, height: 400, filename: "cliff.jpg"},
+    {src: "/masonry/studio.svg", alt: "Studio window", width: 500, height: 500, filename: "studio.jpg"},
+    {src: "/masonry/orchard.svg", alt: "Orchard path", width: 450, height: 600, filename: "orchard.jpg"},
+    {src: "/masonry/jetty.svg", alt: "Jetty at blue hour", width: 640, height: 360, filename: "jetty.jpg"},
+    {src: "/masonry/kiln.svg", alt: "Kiln yard", width: 500, height: 300, filename: "kiln.jpg"},
+    {src: "/masonry/lantern.svg", alt: "Lantern on a porch", width: 360, height: 540, filename: "lantern.jpg"},
+    {src: "/masonry/quay.svg", alt: "Quay stones", width: 520, height: 520, filename: "quay.jpg"},
+    {src: "/masonry/meadow.svg", alt: "Meadow edge", width: 600, height: 450, filename: "meadow.jpg"},
+    {src: "/masonry/well.svg", alt: "Stone well", width: 400, height: 520, filename: "well.jpg"},
+    {src: "/masonry/loft.svg", alt: "Loft beams", width: 480, height: 320, filename: "loft.jpg"},
+    {src: "/masonry/tide.svg", alt: "Tide line", width: 360, height: 480, filename: "tide.jpg"}
+  ].map do |photo|
+    divisor = photo[:width].gcd(photo[:height])
+    ratio = "#{photo[:width] / divisor}:#{photo[:height] / divisor}"
+    photo.merge(badge: "JPG · #{photo[:width]}×#{photo[:height]} · #{ratio}")
+  end
+  hover_item_class = "opacity-100 focus-within:opacity-100 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/media:opacity-100 motion-safe:transition-opacity motion-safe:duration-[var(--duration-fast)] motion-safe:ease-[var(--easing-standard)] motion-reduce:transition-none"
+%>
+
+<section class="mb-12" id="gallery">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "The wall",
+    anchor_link: true,
+    subtitle: "Each tile is a link. Eyes go down a column, then the next."
+  ) %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4 max-w-2xl">
+    Screen readers follow the order you wrote. On screen the stack runs down each column.
+  </p>
+  <div id="masonry-gallery">
+    <%= render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
+      <% masonry_photos.each do |photo| %>
+        <% masonry.with_item do %>
+          <%= render "pages/masonry_tile", photo: photo %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A tile (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Masonry::Component.new(columns: {base: 2, md: 3, lg: 4}) do |masonry| #{erb_tag_close}
+        #{erb_output_open} masonry.with_item do #{erb_tag_close}
+          #{erb_output_open} link_to "/masonry/harbour.svg" do #{erb_tag_close}
+            #{erb_output_open} render FlatPack::Media::Component.new(src: "/masonry/harbour.svg", alt: "Harbour at dusk", width: 1120, height: 1400) do |media| #{erb_tag_close}
+              #{erb_output_open} media.with_item(placement: :bottom_left, inset: :sm) do #{erb_tag_close}
+                #{erb_output_open} render FlatPack::Badge::Component.new(text: "JPG · 1120×1400 · 4:5", size: :xs) #{erb_tag_close}
+              #{erb_output_open} end #{erb_tag_close}
+            #{erb_output_open} end #{erb_tag_close}
+            <span>harbour.jpg</span>
+          #{erb_output_open} end #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="across-the-row">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Across the row",
+    anchor_link: true,
+    subtitle: "Same tiles, left to right. JavaScript measures. Without it the pack still holds."
+  ) %>
+  <div id="masonry-rows">
+    <%= render FlatPack::Masonry::Component.new(order: :rows, columns: {base: 2, md: 3, lg: 4}, gap: :md) do |masonry| %>
+      <% masonry_photos.first(6).each do |photo| %>
+        <% masonry.with_item do %>
+          <%= render "pages/masonry_tile", photo: photo %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="hover-button">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A button on the photo",
+    anchor_link: true,
+    subtitle: "Point at the kiln. Save shows up. It is not inside a link."
+  ) %>
+  <div id="masonry-hover" class="max-w-sm">
+    <%= render FlatPack::Media::Component.new(
+      src: "/masonry/kiln.svg",
+      alt: "Kiln yard",
+      width: 500,
+      height: 300
+    ) do |media| %>
+      <% media.with_item(placement: :top_right, inset: :sm, class: hover_item_class) do %>
+        <%= render FlatPack::Button::Component.new(text: "Save", style: :primary, size: :sm) %>
+      <% end %>
+    <% end %>
+    <span class="mt-2 block text-sm text-[var(--surface-muted-content-color)]">kiln.jpg</span>
+  </div>
+</section>
+
+<section class="mb-12" id="mixed-content">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A note in the wall",
+    anchor_link: true,
+    subtitle: "A cell can be anything. This one is a card."
+  ) %>
+  <div id="masonry-mixed">
+    <%= render FlatPack::Masonry::Component.new(columns: {base: 1, md: 2}, gap: :md) do |masonry| %>
+      <% masonry.with_item do %>
+        <%= render "pages/masonry_tile", photo: masonry_photos.first %>
+      <% end %>
+      <% masonry.with_item do %>
+        <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+          <% card.body do %>
+            <h3 class="font-semibold mb-2">Jetty notes</h3>
+            <p class="text-sm text-[var(--surface-muted-content-color)]">
+              Tall and wide tiles share one gutter. The note keeps its own height.
+            </p>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% masonry.with_item do %>
+        <%= render "pages/masonry_tile", photo: masonry_photos[1] %>
+      <% end %>
+      <% masonry.with_item do %>
+        <%= render "pages/masonry_tile", photo: masonry_photos[2] %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Grid", href: "/demo/grid"},
+  {text: "Overlay", href: "/demo/overlay"},
+  {text: "Video preview", href: "/demo/video_preview"}
+] %>

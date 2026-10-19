@@ -3,10 +3,10 @@
 module FlatPack
   module SkipLink
     class Component < FlatPack::BaseComponent
-      def initialize(href: "#main", text: "Skip to content", **system_arguments)
+      def initialize(href: "#main", text: FlatPack::Copy::OMITTED, **system_arguments)
         super(**system_arguments)
         @href = FlatPack::AttributeSanitizer.sanitize_url(href)
-        @text = text.to_s
+        @text = fp_text(text, "skip_link.text").to_s
         validate_href!
         validate_text!
       end

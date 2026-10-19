@@ -2,10 +2,21 @@
 
 module FlatPack
   class BaseComponent < ViewComponent::Base
+    MOTION_KEYS = %i[reveal stagger parallax intensity delay duration].freeze
+
     # System arguments pattern for consistent API across components
     # Handles: class, data, aria, id, and other HTML attributes
     def initialize(**system_arguments)
+      @motion_attributes = extract_motion_attributes!(system_arguments)
       @system_arguments = sanitize_args(system_arguments)
+    end
+
+    def fp_t(key, **options)
+      FlatPack::Copy.t(key, **options)
+    end
+
+    def fp_text(given, key, **options)
+      FlatPack::Copy.text(given, key, **options)
     end
 
     private
@@ -84,12 +95,29 @@ module FlatPack
       @system_arguments.except(:class, :data, :aria)
     end
 
-    # Merge all attributes for rendering
+    # Merge all attributes for rendering.
+    # A reveal: system argument is applied once, on the first call.
     def merge_attributes(**additional_attrs)
+      motion = take_motion_attributes
+      extra_class = additional_attrs.delete(:class)
+      extra_data = additional_attrs.delete(:data) || {}
+      extra_aria = additional_attrs.delete(:aria) || {}
+
+      if motion
+        extra_class = [extra_class, motion[:class]].compact.join(" ")
+        extra_data = merge_data_attributes(extra_data, motion[:data])
+      end
+
+      merged_data = if motion
+        merge_data_attributes(data_attributes, extra_data)
+      else
+        data_attributes.merge(extra_data)
+      end
+
       {
-        class: classes(additional_attrs.delete(:class)),
-        data: data_attributes.merge(additional_attrs.delete(:data) || {}),
-        aria: aria_attributes.merge(additional_attrs.delete(:aria) || {})
+        class: classes(extra_class),
+        data: merged_data,
+        aria: aria_attributes.merge(extra_aria)
       }.merge(html_attributes).merge(additional_attrs).compact
     end
 
@@ -177,6 +205,47 @@ module FlatPack
 
       merged[:describedby] = tokens.join(" ") if tokens.any?
       merged
+    end
+
+    def extract_motion_attributes!(system_arguments)
+      return nil unless MOTION_KEYS.any? { |key| system_arguments.key?(key) }
+
+      motion = FlatPack::Motion.attributes(
+        reveal: system_arguments.delete(:reveal),
+        stagger: motion_flag(system_arguments, :stagger, false),
+        parallax: motion_flag(system_arguments, :parallax, false),
+        intensity: system_arguments.delete(:intensity),
+        delay: system_arguments.delete(:delay),
+        duration: system_arguments.delete(:duration)
+      )
+      apply_motion_style!(system_arguments, motion)
+    end
+
+    def apply_motion_style!(arguments, motion)
+      style = motion.delete(:style)
+      return motion if style.nil?
+
+      if arguments.key?("style")
+        arguments["style"] = join_styles(arguments["style"], style)
+      else
+        arguments[:style] = join_styles(arguments[:style], style)
+      end
+      motion
+    end
+
+    def motion_flag(arguments, key, default)
+      value = arguments.delete(key)
+      value.nil? ? default : value
+    end
+
+    def join_styles(current, extra)
+      [current.presence, extra].compact.map(&:to_s).join("; ")
+    end
+
+    def take_motion_attributes
+      motion = @motion_attributes
+      @motion_attributes = nil
+      motion
     end
 
     def merge_space_tokens(left_value, right_value)

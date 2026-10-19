@@ -133,6 +133,7 @@ function loadController() {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key, vars = {}) { const t = ({ "select.remove": "Remove %{label}" })[key] || key; return String(t).replace(/%\\{(\\w+)\\}/g, (_, n) => vars[n] == null ? "" : String(vars[n])) }')
     .replace(
       'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
       `function playOverlayEnter(element) { element.classList.remove("hidden") }
@@ -382,6 +383,61 @@ test('open unhides the dropdown and close hides it after overlay exit', () => {
   assert.equal(controller.dropdownTarget.classList.contains('hidden'), true)
   assert.equal(controller.triggerTarget.attributes['aria-expanded'], 'false')
   assert.equal(controller.isOpen, false)
+})
+
+test('remote results keep an optional icon and the menu markup', () => {
+  const controller = buildController({ nested: false })
+  const items = controller.normalizeRemoteItems({
+    items: [
+      { label: 'Alice Johnson', value: 'alice-johnson', icon: 'user' },
+      { label: 'Broken', value: 'broken', icon: '<script>' }
+    ]
+  })
+
+  assert.equal(items[0].icon, 'user')
+  assert.equal(items[1].icon, '')
+
+  const markup = controller.optionMarkup(items[0])
+  assert.match(markup, /data-icon="user"/)
+  assert.match(markup, /data-flat-pack--icon-name-value="user"/)
+  assert.match(markup, /aria-hidden="true"/)
+  assert.match(markup, />Alice Johnson</)
+  assert.match(markup, /class="[^"]*flex items-center gap-\[var\(--dropdown-item-gap\)\]/)
+})
+
+test('a selected value icon renders in the closed control', () => {
+  const controller = buildController({ nested: false })
+  const label = new FakeElement('span')
+  label.textContent = 'Choose'
+  const iconSlot = new FakeElement('span')
+  iconSlot.classList.add('hidden')
+  let markup = ''
+  Object.defineProperty(iconSlot, 'innerHTML', {
+    configurable: true,
+    get() {
+      return markup
+    },
+    set(value) {
+      markup = String(value)
+      this.children = []
+    }
+  })
+  controller.multipleValue = false
+  controller.valueLabelTarget = label
+  controller.valueIconTarget = iconSlot
+  controller.hasValueLabelTarget = true
+  controller.hasValueIconTarget = true
+  controller.defaultTriggerText = 'Choose'
+
+  const rails = option(controller, 'rails')
+  rails.dataset.icon = 'cube'
+  controller.selectOption({ currentTarget: rails })
+
+  assert.equal(label.textContent, 'Rails')
+  assert.equal(iconSlot.classList.contains('hidden'), false)
+  assert.match(markup, /data-flat-pack--icon-name-value="cube"/)
+  assert.match(markup, /aria-hidden="true"/)
+  assert.match(markup, /class="block shrink-0 w-4 h-4/)
 })
 
 test('close is a no-op when the dropdown is already closed', () => {

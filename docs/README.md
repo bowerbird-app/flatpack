@@ -21,6 +21,7 @@ bin/rake flat_pack:verify_install
 - [Installation Guide](installation.md)
 - [DigitalOcean Deployment for the Dummy App](deployment_digitalocean.md)
 - [Recording Studio on the Dummy App](recording_studio_dummy.md)
+- [Kit copy and host languages](i18n.md)
 - [AI Entry Point](ai/README.md)
 - [AI Install Contract](ai/install_contract.json)
 - [Quick Start](#quick-start)
@@ -43,6 +44,9 @@ bin/rake flat_pack:verify_install
 
 The component index is the complete human-readable inventory. The manifest is the canonical machine-readable inventory, including primary classes, related classes, and documentation paths.
 
+### Behaviours
+- [Unsaved changes](behaviours/unsaved-changes.md)
+
 ### Architecture
 - [Engine Architecture](architecture/engine.md)
 - [Asset Pipeline](architecture/assets.md)
@@ -62,7 +66,7 @@ After installation, use FlatPack components in your views:
 ) %>
 
 <%# Card Component %>
-<%= render FlatPack::Card::Component.new(style: :elevated) do |card| %>
+<%= render FlatPack::Card::Component.new(shadow: :md) do |card| %>
   <% card.header do %>
     <h3>Card Title</h3>
   <% end %>

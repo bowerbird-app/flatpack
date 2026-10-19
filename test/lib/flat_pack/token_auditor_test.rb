@@ -12,6 +12,25 @@ module FlatPack
 
     test "runtime fill percent is not a theme token" do
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--range-progress"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--collection-editor-columns"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-gap"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-masonry-row"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collage-tilt"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collage-angle"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--reveal-index"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--reveal-delay"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--reveal-duration"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-number-duration"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collage-place-x"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collage-from-x"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-trash-button-size"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-offset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-nav-offset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collection-min-item-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-list-key-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-value"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-scale"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-max"
     end
 
     test "brand primitives and transition aliases are defined" do
@@ -31,13 +50,15 @@ module FlatPack
       assert_includes css, "overrides only"
     end
 
-    test "rounded theme block does not copy the default palette" do
+    test "rounded theme block shifts spacing and does not copy the palette" do
       css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
       rounded_block = css[/\[data-theme="rounded"\]\s*\{(.*?)\}/m, 1]
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
-      assert_empty rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
+      assert_includes rounded_block, "--space-2: 0.75rem"
+      assert_includes rounded_block, "--density: 1"
+      refute_empty rounded_block.scan(/^\s*--[a-z0-9-]+\s*:/)
     end
   end
 end

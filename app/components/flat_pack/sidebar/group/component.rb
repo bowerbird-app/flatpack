@@ -129,18 +129,18 @@ module FlatPack
           classes(
             "flex",
             "items-center",
-            "gap-3",
-            "px-4",
-            "py-2.5",
+            "gap-[var(--sidebar-item-gap)]",
+            "px-[var(--sidebar-item-padding-x)]",
+            "py-[var(--sidebar-item-padding-y)]",
             "text-sm",
             "font-medium",
             "text-[var(--sidebar-item-text-color)]",
             "hover:bg-[var(--sidebar-item-hover-background-color)]",
             "hover:text-[var(--sidebar-item-hover-text-color)]",
             "transition-colors",
-            "rounded-[var(--radius-lg)]",
-            "mx-2",
-            "w-[calc(100%-1rem)]"
+            "rounded-[var(--sidebar-item-radius)]",
+            "mx-[var(--sidebar-item-inset)]",
+            "w-[calc(100%-(var(--sidebar-item-inset)*2))]"
           )
         end
 

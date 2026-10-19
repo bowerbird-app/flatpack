@@ -19,6 +19,14 @@ components:
     primary_class: FlatPack::Alert::Component
     status: documented
 
+  - key: animated_character
+    title: Animated Character
+    doc: docs/components/animated-character.md
+    primary_class: FlatPack::AnimatedCharacter::Component
+    related_classes:
+      - FlatPack::Shared::IconComponent
+    status: documented
+
   - key: avatar
     title: Avatar
     doc: docs/components/avatar.md
@@ -116,6 +124,18 @@ components:
     title: Button Group
     doc: docs/components/button-group.md
     primary_class: FlatPack::ButtonGroup::Component
+    status: documented
+
+  - key: copy_button
+    title: Copy Button
+    doc: docs/components/copy-button.md
+    primary_class: FlatPack::CopyButton::Component
+    status: documented
+
+  - key: trash_button
+    title: Trash Button
+    doc: docs/components/trash-button.md
+    primary_class: FlatPack::TrashButton::Component
     status: documented
 
   - key: card
@@ -231,6 +251,32 @@ components:
     primary_class: FlatPack::Collapse::Component
     status: documented
 
+  - key: collage
+    title: Collage
+    doc: docs/components/collage.md
+    primary_class: FlatPack::Collage::Component
+    related_classes:
+      - FlatPack::Collage::Item
+      - FlatPack::Card::Component
+      - FlatPack::EmptyState::Component
+    status: documented
+
+  - key: collection
+    title: Collection
+    doc: docs/components/collection.md
+    primary_class: FlatPack::Collection::Component
+    related_classes:
+      - FlatPack::Button::Component
+      - FlatPack::Badge::Component
+      - FlatPack::Chip::Component
+    status: documented
+
+  - key: collection_editor
+    title: Collection Editor
+    doc: docs/components/collection-editor.md
+    primary_class: FlatPack::CollectionEditor::Component
+    status: documented
+
   - key: combobox
     title: Combobox
     doc: docs/components/combobox.md
@@ -289,6 +335,18 @@ components:
     title: Empty State
     doc: docs/components/empty-state.md
     primary_class: FlatPack::EmptyState::Component
+    related_classes:
+      - FlatPack::Collection::Component
+      - FlatPack::Media::Component
+      - FlatPack::Shared::IconComponent
+    status: documented
+
+  - key: fab
+    title: FAB
+    doc: docs/components/fab.md
+    primary_class: FlatPack::Fab::Component
+    related_classes:
+      - FlatPack::Fab::Action
     status: documented
 
   - key: email_button
@@ -315,6 +373,12 @@ components:
     primary_class: FlatPack::EmailTemplateExample::Component
     status: documented
 
+  - key: fieldset
+    title: Fieldset
+    doc: docs/components/fieldset.md
+    primary_class: FlatPack::Fieldset::Component
+    status: documented
+
   - key: grid
     title: Grid
     doc: docs/components/grid.md
@@ -325,6 +389,12 @@ components:
     title: Hero
     doc: docs/components/hero.md
     primary_class: FlatPack::Hero::Component
+    status: documented
+
+  - key: hero_title
+    title: Hero Title
+    doc: docs/components/hero-title.md
+    primary_class: FlatPack::HeroTitle::Component
     status: documented
 
   - key: inputs
@@ -349,6 +419,12 @@ components:
       - FlatPack::Select::Component
       - FlatPack::Combobox::Component
       - FlatPack::Switch::Component
+    status: documented
+
+  - key: inline_edit
+    title: Inline Edit
+    doc: docs/components/inline-edit.md
+    primary_class: FlatPack::InlineEdit::Component
     status: documented
 
   - key: kbd
@@ -387,16 +463,46 @@ components:
     primary_class: FlatPack::Link::Component
     status: documented
 
+  - key: lightbox
+    title: Lightbox
+    doc: docs/components/lightbox.md
+    primary_class: FlatPack::Lightbox::Component
+    related_classes:
+      - FlatPack::Lightbox::Trigger
+      - FlatPack::Carousel::Component
+    status: documented
+
   - key: list
     title: List
     doc: docs/components/list.md
     primary_class: FlatPack::List::Component
     status: documented
 
+  - key: media
+    title: Media
+    doc: docs/components/media.md
+    primary_class: FlatPack::Media::Component
+    related_classes:
+      - FlatPack::Overlay::Component
+      - FlatPack::Overlay::Item
+    status: documented
+
+  - key: masonry
+    title: Masonry
+    doc: docs/components/masonry.md
+    primary_class: FlatPack::Masonry::Component
+    related_classes:
+      - FlatPack::Masonry::Item
+      - FlatPack::Grid::Component
+      - FlatPack::Media::Component
+    status: documented
+
   - key: modal
     title: Modal
     doc: docs/components/modal.md
     primary_class: FlatPack::Modal::Component
+    related_classes:
+      - FlatPack::Modal::Screen
     status: documented
 
   - key: modal_filter
@@ -409,6 +515,14 @@ components:
     title: Notification
     doc: docs/components/notification.md
     primary_class: FlatPack::Notification::Component
+    status: documented
+
+  - key: overlay
+    title: Overlay
+    doc: docs/components/overlay.md
+    primary_class: FlatPack::Overlay::Component
+    related_classes:
+      - FlatPack::Overlay::Item
     status: documented
 
   - key: page_header
@@ -471,6 +585,14 @@ components:
     title: Range Input
     doc: docs/components/range-input.md
     primary_class: FlatPack::RangeInput::Component
+    status: documented
+
+  - key: reveal
+    title: Reveal
+    doc: docs/components/reveal.md
+    primary_class: FlatPack::Reveal::Component
+    related_classes:
+      - FlatPack::Text::Stream::Component
     status: documented
 
   - key: search
@@ -569,10 +691,28 @@ components:
     primary_class: FlatPack::Tree::Component
     status: documented
 
+  - key: video_preview
+    title: Video preview
+    doc: docs/components/video-preview.md
+    primary_class: FlatPack::VideoPreview::Component
+    related_classes:
+      - FlatPack::Overlay::Component
+      - FlatPack::Overlay::Item
+    status: documented
+
   - key: tabs
     title: Tabs
     doc: docs/components/tabs.md
     primary_class: FlatPack::Tabs::Component
+    status: documented
+
+  - key: text_stream
+    title: Text Stream
+    doc: docs/components/text-stream.md
+    primary_class: FlatPack::Text::Stream::Component
+    related_classes:
+      - FlatPack::Chat::Message::Component
+      - FlatPack::Reveal::Component
     status: documented
 
   - key: timeline

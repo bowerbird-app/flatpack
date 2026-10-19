@@ -4,7 +4,7 @@
 Lay out block content in responsive CSS grid columns with configurable gaps and alignment.
 
 ## When to use
-Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and column behavior.
+Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and a shared row height. Use `Masonry` when portraits and landscapes should keep their own shape and stack without empty holes.
 
 ## Class
 - Primary: `FlatPack::Grid::Component`
@@ -34,13 +34,13 @@ Default block content; each child element participates as a grid item.
 
 ```erb
 <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md, align: :stretch) do %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 1" } %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 2" } %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) { "Item 3" } %>
+  <%= render FlatPack::Card::Component.new(border: :strong) { "Item 1" } %>
+  <%= render FlatPack::Card::Component.new(border: :strong) { "Item 2" } %>
+  <%= render FlatPack::Card::Component.new(border: :strong) { "Item 3" } %>
 <% end %>
 ```
 
-Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`.
+Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`. An item added after the controller connects is draggable too.
 
 ## Accessibility
 Grid is structural layout only. Accessibility is determined by the semantics of content rendered inside each grid item.

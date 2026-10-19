@@ -1,0 +1,140 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Collection",
+  subtitle: "A list of buttons, badges, or chips. Grid, wrap, or stack."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :collection %>
+
+<section id="press-kit-menu" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Press kit",
+    anchor_link: true,
+    subtitle: "Logos is the page you are on. Counts sit at the end."
+  ) %>
+  <% press_kit = [
+    {text: "Logos and lockups for print, screen, and social", icon: "swatch", count: "12", href: "#logos", current: true},
+    {text: "Product photos from the Northlight shoot", icon: "photo", count: "48", href: "#photos"},
+    {text: "Founder portraits and crew photos for press", icon: "user-group", count: "9", href: "#team"},
+    {text: "Facts, quotes, and a short company story you can paste into a feature", icon: "document-text", count: "4", href: "#boilerplate"},
+    {text: "Lines from the founder, ready to paste", icon: "megaphone", count: "7", href: "#quotes"},
+    {text: "Guidelines, fonts, and a zip of the kit", icon: "folder", count: "3", href: "#files"}
+  ] %>
+  <%= render FlatPack::Collection::Component.new(
+    as: :nav,
+    label: "Press kit",
+    layout: :grid,
+    gap: :md
+  ) do |collection| %>
+    <% press_kit.each do |item| %>
+      <% collection.with_item do %>
+        <%= render FlatPack::Button::Component.new(
+          text: item[:text],
+          title: item[:text],
+          href: item[:href],
+          icon: item[:icon],
+          align: :start,
+          lines: 2,
+          current: item.fetch(:current, false),
+          style: :secondary
+        ) do |button| %>
+          <% button.with_trailing do %>
+            <%= render FlatPack::Badge::Component.new(text: item[:count], size: :sm) %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Collection::Component.new(as: :nav, label: "Press kit", layout: :grid) do |collection| %&gt;
+        &lt;% collection.with_item do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            text: "Logos and lockups for print, screen, and social",
+            title: "Logos and lockups for print, screen, and social",
+            href: "/press/logos",
+            icon: "swatch",
+            align: :start,
+            lines: 2,
+            current: true,
+            style: :secondary
+          ) do |button| %&gt;
+            &lt;% button.with_trailing do %&gt;
+              &lt;%= render FlatPack::Badge::Component.new(text: "12", size: :sm) %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
+<section id="collection-wrap" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Badges and chips",
+    anchor_link: true,
+    subtitle: "They wrap onto the next line."
+  ) %>
+  <%= render FlatPack::Collection::Component.new(layout: :wrap, gap: :sm, id: "collection-wrap-list") do |collection| %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Badge::Component.new(text: "Print", size: :sm) %>
+    <% end %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Badge::Component.new(text: "Web", size: :sm, style: :info) %>
+    <% end %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Badge::Component.new(text: "Social", size: :sm, style: :primary) %>
+    <% end %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Chip::Component.new(text: "Northlight") %>
+    <% end %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Chip::Component.new(text: "Press", style: :primary) %>
+    <% end %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Chip::Component.new(text: "2026") %>
+    <% end %>
+    <% collection.with_item do %>
+      <%= render FlatPack::Chip::Component.new(text: "Lockups", href: "#logos", type: :link) %>
+    <% end %>
+  <% end %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Collection::Component.new(layout: :wrap, gap: :sm) do |collection| %&gt;
+        &lt;% collection.with_item do %&gt;
+          &lt;%= render FlatPack::Badge::Component.new(text: "Print", size: :sm) %&gt;
+        &lt;% end %&gt;
+        &lt;% collection.with_item do %&gt;
+          &lt;%= render FlatPack::Chip::Component.new(text: "Northlight") %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
+<section id="collection-stack" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Stack",
+    anchor_link: true,
+    subtitle: "One under the next."
+  ) %>
+  <div class="max-w-md">
+    <%= render FlatPack::Collection::Component.new(layout: :stack, gap: :sm) do |collection| %>
+      <% collection.with_item do %>
+        <%= render FlatPack::Button::Component.new(text: "Download the kit", href: "#files", icon: "arrow-down-tray", align: :start, style: :primary) %>
+      <% end %>
+      <% collection.with_item do %>
+        <%= render FlatPack::Button::Component.new(text: "Email the press desk", href: "mailto:press@example.com", icon: "envelope", align: :start, style: :secondary) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<%= render "shared/related_demos",
+  subtitle: "The pieces inside a collection.",
+  links: [
+    {text: "Buttons", href: demo_buttons_path},
+    {text: "Badges", href: demo_badges_path},
+    {text: "Chips", href: demo_chips_path}
+  ] %>

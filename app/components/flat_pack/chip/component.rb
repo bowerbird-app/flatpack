@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "border-[var(--color-primary)]" "bg-[var(--color-success-background-color)]" "text-[var(--color-success-text)]" "border-[var(--color-success-border)]" "bg-[var(--color-warning-background-color)]" "text-[var(--color-warning-text)]" "border-[var(--color-warning-border)]" "bg-[var(--color-danger-background-color)]" "text-[var(--color-danger-text-color)]" "border-[var(--color-danger-border-color)]" "bg-[var(--color-secondary)]" "text-[var(--color-secondary-text)]" "border-[var(--color-info-border)]"
+      # "bg-[var(--surface-muted-background-color)]" "text-[var(--surface-content-color)]" "border-[var(--surface-border-color)]" "bg-[var(--color-primary)]" "text-[var(--color-primary-text)]" "border-[var(--color-primary)]" "bg-[var(--color-success-background-color)]" "text-[var(--color-success-text)]" "border-[var(--color-success-border)]" "bg-[var(--color-warning-background-color)]" "text-[var(--color-warning-text)]" "border-[var(--color-warning-border)]" "bg-[var(--color-danger-background-color)]" "text-[var(--color-danger-text-color)]" "border-[var(--color-danger-border-color)]" "bg-[var(--color-secondary)]" "text-[var(--color-secondary-text)]" "border-[var(--color-info-border)]" "bg-[var(--surface-active-background-color)]" "text-[var(--surface-active-text-color)]" "border-[var(--surface-active-border-color)]"
       STYLES = {
         default: "bg-[var(--surface-muted-background-color)] text-[var(--surface-content-color)] border-[var(--surface-border-color)]",
         primary: "bg-[var(--color-primary)] text-[var(--color-primary-text)] border-[var(--color-primary)]",
@@ -17,11 +17,11 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-xs" "px-[var(--chip-padding-x-sm)]" "py-[var(--button-padding-y-sm)]" "text-sm" "px-[var(--chip-padding-x-md)]" "py-[var(--button-padding-y-md)]" "text-base" "px-[var(--chip-padding-x-lg)]" "py-[var(--button-padding-y-lg)]"
+      # "text-xs" "px-[var(--chip-padding-x-sm)]" "py-[var(--chip-padding-y-sm)]" "text-sm" "px-[var(--chip-padding-x-md)]" "py-[var(--chip-padding-y-md)]" "text-base" "px-[var(--chip-padding-x-lg)]" "py-[var(--chip-padding-y-lg)]"
       SIZES = {
-        sm: "text-xs px-[var(--chip-padding-x-sm)] py-[var(--button-padding-y-sm)]",
-        md: "text-sm px-[var(--chip-padding-x-md)] py-[var(--button-padding-y-md)]",
-        lg: "text-base px-[var(--chip-padding-x-lg)] py-[var(--button-padding-y-lg)]"
+        sm: "text-xs px-[var(--chip-padding-x-sm)] py-[var(--chip-padding-y-sm)]",
+        md: "text-sm px-[var(--chip-padding-x-md)] py-[var(--chip-padding-y-md)]",
+        lg: "text-base px-[var(--chip-padding-x-lg)] py-[var(--chip-padding-y-lg)]"
       }.freeze
 
       TYPES = %i[static button link].freeze
@@ -120,13 +120,15 @@ module FlatPack
 
       def render_remove_button_content
         return unless @removable
-        return if remove_button.present?
+
+        custom = remove_button
+        return custom if custom.present?
 
         content_tag(:button,
           type: "button",
-          class: "ml-1 inline-flex items-center justify-center rounded-full fp-hit-target-inline hover:bg-[var(--chip-remove-hover-background-color)]",
-          "aria-label": "Remove",
-          data: {action: "click->flat-pack--chip#remove"}) do
+          class: "ml-1 inline-flex items-center justify-center rounded-[var(--chip-border-radius)] fp-hit-target-inline hover:bg-[var(--chip-remove-hover-background-color)]",
+          "aria-label": fp_t("chip.remove"),
+          data: {action: "click->flat-pack--chip#remove", fp_chip_remove: true}) do
           # X icon (close)
           content_tag(:svg, xmlns: "http://www.w3.org/2000/svg", class: "h-3 w-3", viewBox: "0 0 20 20", fill: "currentColor") do
             content_tag(:path, nil, "fill-rule": "evenodd", d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z", "clip-rule": "evenodd")
@@ -149,6 +151,8 @@ module FlatPack
             attrs[:data][:"flat-pack--chip-remove-method-value"] = @remove_method.to_s
             attrs[:data][:"flat-pack--chip-remove-params-value"] = @remove_params.to_json if @remove_params.present?
           end
+
+          attrs[:data][:fp_chip_paint] = STYLES.fetch(@style) if @type == :button
         end
 
         # Add button-specific attributes
@@ -187,7 +191,7 @@ module FlatPack
 
       def selected_classes
         return unless @selected && @type == :button
-        "ring-2 ring-inset ring-[var(--color-ring)]"
+        "bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] border-[var(--surface-active-border-color)]"
       end
 
       def focus_classes

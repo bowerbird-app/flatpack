@@ -1,20 +1,21 @@
 <%= render FlatPack::PageTitle::Component.new(
-  title: "Empty State Component",
-  subtitle: "An empty screen is an invitation to act, not a picture of an empty box."
+  title: "Empty State",
+  subtitle: "A blank screen can still point at the next step."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :empty_state %>
 
-<!-- Canonical: title, what to do, action -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Start from an action", anchor_link: true, subtitle: "Title, a short next step, and a button. The icon is optional.") %>
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
+<section class="mb-12" id="action">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Start from an action", anchor_link: true, subtitle: "Title, one sentence, and a button. The icon is optional.") %>
+  <div id="action-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
     <%= render FlatPack::EmptyState::Component.new(
       title: "No projects yet",
       description: "Create a project to group work in one place."
     ) do |empty| %>
-      <% empty.slot do %>
+      <% empty.item do %>
         <%= render FlatPack::Button::Component.new(text: "Create project", style: :primary) %>
+      <% end %>
+      <% empty.item do %>
         <%= render FlatPack::Button::Component.new(text: "Import a project", style: :secondary) %>
       <% end %>
     <% end %>
@@ -24,9 +25,10 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       &lt;%= render FlatPack::EmptyState::Component.new(
         title: "No projects yet",
-        description: "Create a project to group work in one place."
+        description: "Create a project to group work in one place.",
+        layout: :wrap
       ) do |empty| %&gt;
-        &lt;% empty.slot do %&gt;
+        &lt;% empty.item do %&gt;
           &lt;%= render FlatPack::Button::Component.new(text: "Create project", style: :primary) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
@@ -35,9 +37,8 @@
   ) %>
 </section>
 
-<!-- Empty then content -->
-<section class="mb-12" data-controller="empty-state-demo">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty then content", anchor_link: true, subtitle: "When the first item arrives, fade the empty panel out and the content in. Hosts add fp-content-enter to the replacement.") %>
+<section class="mb-12" id="swap" data-controller="empty-state-demo">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty then content", anchor_link: true, subtitle: "When the first item arrives, fade the empty panel out and the content in.") %>
   <div class="flex flex-wrap gap-3 mb-4">
     <%= render FlatPack::Button::Component.new(
       text: "Show empty",
@@ -50,13 +51,13 @@
       data: {action: "click->empty-state-demo#showContent"}
     ) %>
   </div>
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-8 min-h-[16rem]">
+  <div id="swap-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)] min-h-[16rem]">
     <div data-empty-state-demo-target="empty">
       <%= render FlatPack::EmptyState::Component.new(
         title: "No messages yet",
         description: "Start a conversation. New threads show up here."
       ) do |empty| %>
-        <% empty.slot do %>
+        <% empty.item do %>
           <%= render FlatPack::Button::Component.new(
             text: "Write a message",
             style: :primary,
@@ -65,7 +66,7 @@
         <% end %>
       <% end %>
     </div>
-    <div class="fp-content-enter space-y-3" data-empty-state-demo-target="content" hidden>
+    <div class="fp-content-enter space-y-3 p-6" data-empty-state-demo-target="content" hidden>
       <%= render FlatPack::List::Component.new do %>
         <%= render FlatPack::List::Item.new do %>
           <span class="font-medium">Jordan</span>
@@ -80,54 +81,253 @@
   </div>
 </section>
 
-<!-- Optional quiet icon -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Optional icon", anchor_link: true, subtitle: "A small kit icon can label the context. It is not the empty state.") %>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
+<section class="mb-12" id="icon">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Any icon", anchor_link: true, subtitle: "Pass a kit icon name, a weight, and icon_size when the preset glyph is the wrong scale.") %>
+  <div id="icon-preview" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
       <%= render FlatPack::EmptyState::Component.new(
         title: "Inbox is clear",
-        description: "New messages land here. Write one when you are ready.",
-        icon: :inbox
+        description: "New messages land here.",
+        icon: :inbox,
+        icon_variant: :outline
       ) do |empty| %>
-        <% empty.slot do %>
+        <% empty.item do %>
           <%= render FlatPack::Button::Component.new(text: "Write a message", style: :primary) %>
         <% end %>
       <% end %>
     </div>
-
-    <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
+    <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
       <%= render FlatPack::EmptyState::Component.new(
         title: "No matches",
-        description: "Try a different name or clear the filters.",
-        icon: :search
+        description: "Try a different name, or clear the filters.",
+        icon: :sparkles,
+        icon_variant: :solid,
+        icon_size: :xl
       ) do |empty| %>
-        <% empty.slot do %>
+        <% empty.item do %>
           <%= render FlatPack::Button::Component.new(text: "Clear filters", style: :secondary) %>
         <% end %>
       <% end %>
     </div>
   </div>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::EmptyState::Component.new(
-        title: "No matches",
-        description: "Try a different name or clear the filters.",
-        icon: :search
-      ) do |empty| %&gt;
-        &lt;% empty.slot do %&gt;
-          &lt;%= render FlatPack::Button::Component.new(text: "Clear filters", style: :secondary) %&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
-    CODE
-    class: "mt-4"
-  ) %>
 </section>
 
-<!-- Empty State in Tables -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Empty table", anchor_link: true, subtitle: "Tables keep a single line of copy in the body. Use EmptyState above the table when the next step needs a button.") %>
+<section class="mb-12" id="visual">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Icon, image, or your own markup", anchor_link: true, subtitle: "One visual. icon: is the default. media is a picture. A visual block is any markup, and it replaces the icon.") %>
+  <div id="visual-preview" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div id="visual-icon-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Icon</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "Inbox is clear",
+        description: "New messages land here.",
+        icon: :inbox
+      ) do |empty| %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Write a message", style: :primary) %>
+        <% end %>
+      <% end %>
+    </div>
+    <div id="visual-image-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Image</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "No photos yet",
+        description: "Add a cover so this place has a face.",
+        width: :sm
+      ) do |empty| %>
+        <% empty.media(src: "/images/hero-stool.jpg", alt: "A wooden stool in a bright room", width: 1280, height: 850) %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Add a photo", style: :primary) %>
+        <% end %>
+      <% end %>
+    </div>
+    <div id="visual-block-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Your markup</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "No press kit yet",
+        description: "A block replaces the icon.",
+        icon: :inbox,
+        width: :sm
+      ) do |empty| %>
+        <% empty.visual do %>
+          <div class="relative mx-auto h-28 w-full max-w-xs" aria-hidden="true">
+            <div class="absolute left-4 top-3 w-28 -rotate-6 rounded-[var(--radius-lg)] bg-[var(--color-warning-background-color)] p-3 text-[var(--color-warning-text)] shadow-[var(--shadow-md)]">
+              <p class="text-sm font-semibold">Notes</p>
+            </div>
+            <div class="absolute right-4 top-4 w-28 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-3 shadow-[var(--shadow-lg)]">
+              <p class="text-sm font-semibold text-[var(--surface-content-color)]">Kit</p>
+            </div>
+          </div>
+        <% end %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Create press kit", style: :primary) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12" id="image">
+  <%= render FlatPack::SectionTitle::Component.new(title: "A picture", anchor_link: true, subtitle: "Media keeps the picture's own shape. It sits in the same measure as the words.") %>
+  <div id="image-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "No photos yet",
+      description: "Add a cover so this place has a face.",
+      width: :md
+    ) do |empty| %>
+      <% empty.media(src: "/images/hero-stool.jpg", alt: "A wooden stool in a bright room", width: 1280, height: 850) %>
+      <% empty.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Add a photo", style: :primary) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="width">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Narrow words", anchor_link: true, subtitle: "The panel fills the row. width: keeps the sentence centred and narrow.") %>
+  <div id="width-preview" class="grid grid-cols-1 gap-6">
+    <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Small measure</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "Nothing to review",
+        description: "This line stays narrow and centred even when the panel runs edge to edge.",
+        width: :sm,
+        icon: :inbox
+      ) do |empty| %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Start a review", style: :primary) %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Full measure</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "Nothing to review",
+        description: "Full lets the sentence use the width of the panel.",
+        width: :full,
+        icon: :inbox
+      ) do |empty| %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Start a review", style: :primary) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12" id="actions">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Row or stack", anchor_link: true, subtitle: "layout: :wrap keeps a wrapping row. layout: :stack piles the buttons.") %>
+  <div id="actions-preview" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Inline</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "No files yet",
+        description: "Upload a CSV or connect a source.",
+        layout: :wrap
+      ) do |empty| %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Upload CSV", style: :primary) %>
+        <% end %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Connect a source", style: :secondary) %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+      <p class="px-4 pt-3 text-sm text-[var(--surface-muted-content-color)]">Stacked</p>
+      <%= render FlatPack::EmptyState::Component.new(
+        title: "No files yet",
+        description: "Upload a CSV or connect a source.",
+        layout: :stack
+      ) do |empty| %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Upload CSV", style: :primary) %>
+        <% end %>
+        <% empty.item do %>
+          <%= render FlatPack::Button::Component.new(text: "Connect a source", style: :secondary) %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="mb-12" id="hero">
+  <%= render FlatPack::SectionTitle::Component.new(title: "A large opening", anchor_link: true, subtitle: "The visual block spans the panel. The title can step up to display size. The words stay in a measure.") %>
+  <div id="hero-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)] overflow-hidden">
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "Your story starts with a press kit",
+      description: "Create your first press kit to share news, assets, and stories with journalists.",
+      title_size: :display,
+      width: :lg
+    ) do |empty| %>
+      <% empty.visual do %>
+        <div class="relative mx-auto h-72 w-full max-w-4xl sm:h-80" aria-hidden="true">
+          <div class="absolute left-[6%] top-10 w-40 -rotate-6 rounded-[var(--radius-lg)] bg-[var(--color-warning-background-color)] p-4 text-[var(--color-warning-text)] shadow-[var(--shadow-md)] sm:w-44">
+            <div class="mb-8 h-12 w-12 rounded-full bg-[var(--color-warning-text)]"></div>
+            <p class="text-sm font-semibold">New kettle</p>
+          </div>
+          <div class="absolute left-[30%] top-3 w-36 rotate-2 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-4 shadow-[var(--shadow-lg)] sm:w-40">
+            <div class="mx-auto mb-4 h-14 w-16 rounded-[var(--radius-sm)] bg-[var(--color-primary)]"></div>
+            <p class="text-sm font-semibold text-[var(--surface-content-color)]">Riverside</p>
+          </div>
+          <div class="absolute right-[28%] top-14 hidden w-40 -rotate-2 rounded-[var(--radius-lg)] bg-[var(--color-danger-background-color)] p-4 text-[var(--color-danger-text-color)] shadow-[var(--shadow-md)] sm:block">
+            <div class="mb-6 h-8 w-12 rounded-full bg-[var(--color-danger-text-color)]"></div>
+            <p class="text-sm font-semibold">Ember Coffee</p>
+          </div>
+          <div class="absolute right-[4%] top-4 w-36 rotate-3 rounded-[var(--radius-lg)] bg-[var(--surface-content-color)] p-4 text-[var(--surface-background-color)] shadow-[var(--shadow-lg)]">
+            <div class="mb-6 ml-auto h-12 w-12 rounded-full bg-[var(--color-warning-background-color)]"></div>
+            <p class="text-sm font-semibold">New LP</p>
+          </div>
+          <div class="absolute bottom-2 left-[16%] w-36 rotate-2 rounded-[var(--radius-lg)] bg-[var(--color-success-background-color)] p-4 text-[var(--color-success-text)] shadow-[var(--shadow-md)]">
+            <p class="text-sm font-semibold">Olympic gold</p>
+          </div>
+        </div>
+      <% end %>
+      <% empty.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Create press kit", style: :primary) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="sizes">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "size: sets padding, gaps, the icon, the title, and the sentence together.") %>
+  <div id="sizes-preview" class="space-y-6">
+    <% %i[sm md lg].each do |size| %>
+      <div id="size-<%= size %>-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+        <p class="text-sm text-[var(--surface-muted-content-color)] px-4 pt-3"><%= {sm: "Small", md: "Medium", lg: "Large"}.fetch(size) %></p>
+        <%= render FlatPack::EmptyState::Component.new(
+          title: "No items yet",
+          description: "Add something to get started.",
+          icon: :inbox,
+          size: size
+        ) do |empty| %>
+          <% empty.item do %>
+            <%= render FlatPack::Button::Component.new(text: "Add item", style: :primary, size: size) %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="description-size">
+  <%= render FlatPack::SectionTitle::Component.new(title: "A larger sentence", anchor_link: true, subtitle: "description_size: changes the sentence. Padding, the title, and the icon stay on the preset.") %>
+  <div id="description-size-preview" class="border border-[var(--surface-border-color)] rounded-[var(--radius-lg)]">
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "No projects yet",
+      description: "Create a project to group work in one place.",
+      icon: :inbox,
+      description_size: :xl
+    ) do |empty| %>
+      <% empty.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Create project", style: :primary) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="table">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Empty table", anchor_link: true, subtitle: "Tables keep a single line in the body. Put Empty State above the table when the next step needs a button.") %>
   <%= render FlatPack::Table::Component.new(data: []) do |table| %>
     <% table.column(title: "Name", html: ->(row) { row.name }) %>
     <% table.column(title: "Email", html: ->(row) { row.email }) %>
@@ -135,62 +335,22 @@
   <% end %>
 </section>
 
-<!-- Empty State in Cards -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Inside a card", anchor_link: true, subtitle: "Same pattern in a card body: what is missing, then the action.") %>
-  <%= render FlatPack::Card::Component.new(style: :outlined) do |card| %>
+<section class="mb-12" id="card">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Inside a card", anchor_link: true, subtitle: "Same pattern in a card body.") %>
+  <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
     <% card.header do %>
       <h3 class="text-lg font-semibold">Recent activity</h3>
     <% end %>
     <% card.body do %>
       <%= render FlatPack::EmptyState::Component.new(
         title: "Nothing here yet",
-        description: "Activity shows up after the first event."
+        description: "Activity shows up after the first event.",
+        width: :full
       ) do |empty| %>
-        <% empty.slot do %>
+        <% empty.item do %>
           <%= render FlatPack::Button::Component.new(text: "Record an event", style: :primary, size: :sm) %>
         <% end %>
       <% end %>
     <% end %>
   <% end %>
-</section>
-
-<!-- Custom graphic still available, not the default -->
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Custom graphic", anchor_link: true, subtitle: "The graphic slot is there when a host needs a brand mark. Keep it small and still lead with the action.") %>
-  <div class="border border-[var(--surface-border-color)] rounded-lg p-8">
-    <%= render FlatPack::EmptyState::Component.new(
-      title: "No files yet",
-      description: "Upload a CSV or connect a source to fill this list."
-    ) do |empty| %>
-      <% empty.graphic do %>
-        <%= render FlatPack::Shared::IconComponent.new(name: :arrow_up_tray, size: :lg, class: "text-[var(--surface-muted-content-color)]") %>
-      <% end %>
-      <% empty.slot do %>
-        <%= render FlatPack::Button::Component.new(text: "Upload CSV", style: :primary) %>
-        <%= render FlatPack::Button::Component.new(text: "Connect a source", style: :secondary) %>
-      <% end %>
-    <% end %>
-  </div>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Density for padding, title, and description. md is the current look.") %>
-  <div class="space-y-6">
-    <% [:sm, :md, :lg].each do |size| %>
-      <div class="border border-[var(--surface-border-color)] rounded-lg">
-        <p class="text-sm text-[var(--surface-muted-content-color)] px-4 pt-3"><%= size == :md ? "Medium (default)" : size.to_s.capitalize %></p>
-        <%= render FlatPack::EmptyState::Component.new(
-          title: "No items yet",
-          description: "Add something to get started.",
-          icon: :inbox,
-          size: size
-        ) do |empty| %>
-          <% empty.slot do %>
-            <%= render FlatPack::Button::Component.new(text: "Add item", style: :primary, size: size) %>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
 </section>

@@ -16,8 +16,9 @@ module FlatPack
     SIDE_ALTERNATION = SIDES.map { |side| Regexp.escape(side) }.join("|")
 
     CSS_FALLBACKS = {
-      "var(--radius-md, 0.375rem)" => "var(--radius-md, 1rem)",
-      "var(--radius-sm, 0.25rem)" => "var(--radius-sm, 0.75rem)"
+      "var(--radius-md, 0.375rem)" => "var(--radius-md, 0.5rem)",
+      "var(--radius-md, 1rem)" => "var(--radius-md, 0.5rem)",
+      "var(--radius-sm, 0.75rem)" => "var(--radius-sm, 0.25rem)"
     }.freeze
 
     module_function

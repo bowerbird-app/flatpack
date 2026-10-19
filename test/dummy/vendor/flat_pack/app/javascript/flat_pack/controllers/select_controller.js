@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
+import { flatPackCopy } from "flat_pack/copy"
 
 export default class extends Controller {
-  static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox"]
+  static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox", "valueLabel", "valueIcon"]
   static values = {
     searchable: Boolean,
     searchMode: { type: String, default: "local" },
@@ -17,10 +18,12 @@ export default class extends Controller {
 
   connect() {
     this.selectedValues = new Set(this.initialSelectedValues())
+    this.optionIcons = new Map()
     this.optionLabels = this.collectOptionLabels()
     this.nestedOptions = this.normalizedNestedOptions()
     this.normalizeNestedSelectedValues()
-    this.defaultTriggerText = this.triggerTarget.querySelector("span")?.textContent || ""
+    const label = this.hasValueLabelTarget ? this.valueLabelTarget : this.triggerTarget.querySelector("span")
+    this.defaultTriggerText = label?.textContent || ""
     this.debounceTimer = null
     this.abortController = null
     this.syncSelectedState()
@@ -108,6 +111,10 @@ export default class extends Controller {
 
     if (value && label) {
       this.optionLabels.set(value, label)
+    }
+
+    if (value && option.dataset.icon) {
+      this.optionIcons.set(value, option.dataset.icon)
     }
 
     if (this.multipleValue) {
@@ -271,6 +278,7 @@ export default class extends Controller {
 
   collectOptionLabels() {
     const labels = new Map()
+    this.optionIcons = new Map()
 
     if (this.hasOptionsListTarget) {
       this.optionsListTarget.querySelectorAll("[role='option']").forEach((option) => {
@@ -279,6 +287,10 @@ export default class extends Controller {
 
         if (value && label) {
           labels.set(value, label)
+        }
+
+        if (value && option.dataset.icon) {
+          this.optionIcons.set(value, option.dataset.icon)
         }
       })
     }
@@ -342,15 +354,15 @@ export default class extends Controller {
 
       if (isSelected) {
         if (this.multipleValue) {
-          option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-          option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+          option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+          option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
         } else {
-          option.classList.add("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-          option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+          option.classList.add("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+          option.classList.remove("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
         }
       } else {
-        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-        option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+        option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
       }
     })
   }
@@ -375,18 +387,18 @@ export default class extends Controller {
 
       if (checked) {
         if (this.multipleValue) {
-          option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]", "bg-[var(--surface-muted-background-color)]")
-          option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+          option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]", "bg-[var(--surface-hover-background-color)]")
+          option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
         } else {
-          option.classList.add("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
-          option.classList.remove("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-muted-background-color)]")
+          option.classList.add("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
+          option.classList.remove("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]", "bg-[var(--surface-hover-background-color)]")
         }
       } else if (indeterminate) {
-        option.classList.add("bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
-        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]")
+        option.classList.add("bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]")
       } else {
-        option.classList.remove("bg-[var(--color-primary)]", "text-[var(--color-primary-text)]", "bg-[var(--surface-muted-background-color)]")
-        option.classList.add("hover:bg-[var(--surface-muted-background-color)]", "text-[var(--surface-content-color)]")
+        option.classList.remove("bg-[var(--surface-active-background-color)]", "text-[var(--surface-active-text-color)]", "bg-[var(--surface-hover-background-color)]")
+        option.classList.add("hover:bg-[var(--surface-hover-background-color)]", "text-[var(--surface-content-color)]")
       }
     })
   }
@@ -434,24 +446,62 @@ export default class extends Controller {
     }
 
     const [firstValue] = Array.from(this.selectedValues)
-    const selectedOption = this.optionsListTarget.querySelector(`[data-value='${CSS.escape(firstValue || "") }']`)
-    const triggerSpan = this.triggerTarget.querySelector("span")
+    const labelTarget = this.hasValueLabelTarget ? this.valueLabelTarget : this.triggerTarget.querySelector("span")
 
-    if (!triggerSpan) {
+    if (!labelTarget) {
       return
     }
 
     if (!firstValue) {
-      triggerSpan.textContent = this.defaultTriggerText
+      labelTarget.textContent = this.defaultTriggerText
+      this.renderTriggerIcon("")
       return
     }
 
-    if (!selectedOption) {
-      triggerSpan.textContent = this.optionLabels.get(firstValue) || this.defaultTriggerText
+    const selectedOption = this.hasOptionsListTarget
+      ? this.optionsListTarget.querySelector(`[data-value='${CSS.escape(firstValue)}']`)
+      : null
+    const label = selectedOption?.dataset?.label || this.optionLabels.get(firstValue) || this.defaultTriggerText
+    const icon = selectedOption?.dataset?.icon || this.optionIcons.get(firstValue) || ""
+
+    labelTarget.textContent = label
+    this.renderTriggerIcon(icon)
+  }
+
+  renderTriggerIcon(name) {
+    if (!this.hasValueIconTarget) {
       return
     }
 
-    triggerSpan.textContent = selectedOption.dataset.label
+    const icon = this.normalizeIcon(name)
+    if (!icon) {
+      this.valueIconTarget.classList.add("hidden")
+      this.valueIconTarget.replaceChildren()
+      return
+    }
+
+    this.valueIconTarget.classList.remove("hidden")
+    const existing = this.valueIconTarget.querySelector("[data-flat-pack--icon-name-value]")
+    if (existing) {
+      existing.setAttribute("data-flat-pack--icon-name-value", icon)
+      return
+    }
+
+    this.valueIconTarget.innerHTML = this.iconMarkup(icon)
+  }
+
+  iconMarkup(name) {
+    const icon = this.normalizeIcon(name)
+    if (!icon) {
+      return ""
+    }
+
+    return `<svg class="block shrink-0 w-4 h-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="var(--icon-stroke-width, 1.5)" aria-hidden="true" data-controller="flat-pack--icon" data-flat-pack--icon-name-value="${this.escapeHtml(icon)}" data-flat-pack--icon-variant-value="outline"></svg>`
+  }
+
+  normalizeIcon(name) {
+    const icon = String(name || "").trim().toLowerCase()
+    return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(icon) ? icon : ""
   }
 
   updateChipVisibility() {
@@ -483,13 +533,15 @@ export default class extends Controller {
       return
     }
 
+    const icon = this.iconMarkup(this.optionIcons.get(value))
     const chip = document.createElement("span")
     chip.setAttribute("data-flat-pack--select-target", "chip")
     chip.dataset.value = value
     chip.innerHTML = `
       <span class="inline-flex items-center gap-1.5 rounded-(--chip-border-radius) font-medium border transition-colors duration-base bg-(--surface-muted-background-color) text-(--surface-content-color) border-(--surface-border-color) text-xs px-(--chip-padding-x-sm) py-(--button-padding-y-sm)">
+        ${icon}
         <span>${this.escapeHtml(label)}</span>
-        <span class="inline-flex items-center justify-center cursor-pointer rounded-full" role="button" tabindex="0" aria-label="Remove ${this.escapeHtml(label)}" data-action="click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown" data-value="${this.escapeHtml(value)}">
+        <span class="inline-flex items-center justify-center cursor-pointer rounded-(--chip-border-radius)" role="button" tabindex="0" aria-label="${this.escapeHtml(flatPackCopy("select.remove", {label}))}" data-action="click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown" data-value="${this.escapeHtml(value)}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
@@ -521,7 +573,7 @@ export default class extends Controller {
       const label = option.dataset.label.toLowerCase()
       
       if (label.includes(normalizedQuery)) {
-        option.style.display = "block"
+        option.style.display = "flex"
       } else {
         option.style.display = "none"
       }
@@ -623,7 +675,8 @@ export default class extends Controller {
         return {
           value,
           label,
-          disabled: item?.disabled === true
+          disabled: item?.disabled === true,
+          icon: this.normalizeIcon(item?.icon)
         }
       })
       .filter(Boolean)
@@ -636,7 +689,12 @@ export default class extends Controller {
 
     this.optionsListTarget.innerHTML = items.map((item) => this.optionMarkup(item)).join("")
     this.optionsListTarget.dataset.resultsCount = String(items.length)
-    items.forEach((item) => this.optionLabels.set(item.value, item.label))
+    items.forEach((item) => {
+      this.optionLabels.set(item.value, item.label)
+      if (item.icon) {
+        this.optionIcons.set(item.value, item.icon)
+      }
+    })
     this.updateSelectedState()
     this.updateTriggerDisplay()
   }
@@ -644,17 +702,19 @@ export default class extends Controller {
   optionMarkup(item) {
     const value = this.escapeHtml(item.value)
     const label = this.escapeHtml(item.label)
+    const icon = this.normalizeIcon(item.icon)
     const selected = this.selectedValues.has(item.value)
     const disabled = item.disabled === true
     const optionClasses = disabled
-      ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
+      ? "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base opacity-50 cursor-not-allowed text-[var(--surface-muted-content-color)]"
       : selected
       ? (this.multipleValue
-        ? "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
-        : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base bg-[var(--color-primary)] text-[var(--color-primary-text)] cursor-pointer")
-      : "px-[var(--form-control-padding)] py-[var(--form-control-padding)] text-sm rounded-[var(--radius-sm)] transition-colors duration-base hover:bg-[var(--surface-muted-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        ? "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+        : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base bg-[var(--surface-active-background-color)] text-[var(--surface-active-text-color)] cursor-pointer")
+      : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
+    const iconAttr = icon ? ` data-icon="${this.escapeHtml(icon)}"` : ""
 
-    return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}" data-disabled="${disabled}" aria-selected="${selected}">${label}</div>`
+    return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}"${iconAttr} data-disabled="${disabled}" aria-selected="${selected}">${this.iconMarkup(icon)}<span class="min-w-0 truncate">${label}</span></div>`
   }
 
   setSearchState(state) {
@@ -684,7 +744,7 @@ export default class extends Controller {
   showAllOptions() {
     const options = this.optionsListTarget.querySelectorAll("[role='option']")
     options.forEach(option => {
-      option.style.display = this.nestedValue ? "flex" : "block"
+      option.style.display = "flex"
     })
   }
 

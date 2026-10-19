@@ -1,0 +1,144 @@
+<% if @motion_clip == "sequence" %>
+  <div id="motion-clip" class="mx-auto flex min-h-dvh w-full max-w-5xl items-center px-6">
+    <%= render "pages/motion_sequence", frame: :stage %>
+  </div>
+<% elsif @motion_specimen.present? %>
+  <div id="motion-clip" class="mx-auto flex min-h-dvh w-full max-w-5xl items-center px-6">
+    <% if %w[stream count roll number-fade].include?(@motion_specimen) %>
+      <%= render "pages/motion_one", variant: @motion_specimen %>
+    <% else %>
+      <div class="grid w-full items-start gap-8 md:grid-cols-2">
+        <%= render "pages/motion_one", variant: @motion_specimen, caption: "Default" %>
+        <%= render "pages/motion_one", variant: @motion_specimen, intensity: :strong, caption: "Strong" %>
+      </div>
+    <% end %>
+  </div>
+<% elsif @motion_clip.present? %>
+  <div id="motion-clip" class="mx-auto w-full max-w-5xl px-6 py-8">
+    <div class="min-h-screen" aria-hidden="true"></div>
+    <%= render "pages/motion_#{@motion_clip}" %>
+    <div class="h-screen" aria-hidden="true"></div>
+  </div>
+<% else %>
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Motion",
+  subtitle: "One set of tokens. Scroll reveals, split type, media, a typed line, and a number."
+) %>
+
+<%= render "pages/component_method_variables_table", components: [:reveal, :text_stream, :number] %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-16" id="timed-hero">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sequence",
+    anchor_link: true,
+    subtitle: "Headline, then the line, then the buttons."
+  ) %>
+  <%= render "pages/motion_sequence" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A timed hero (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, duration: :slower, tag: :h2) do #{erb_tag_close}
+        Pack it once
+      #{erb_output_open} end #{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :fade, delay: :md, tag: :p) do #{erb_tag_close}
+        Walnut, oiled, ready Friday.
+      #{erb_output_open} end #{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, delay: :lg) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Button::Component.new(text: "Start packing", style: :primary) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+
+      #{erb_output_open} render FlatPack::Reveal::Component.new(reveal: :rise, stagger: :lg, class: "grid gap-4") do #{erb_tag_close}
+        <div>Oak</div>
+        <div>Walnut</div>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="tokens">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Tokens",
+    anchor_link: true,
+    subtitle: "Same rise. The fast card uses the fast duration."
+  ) %>
+  <%= render "pages/motion_tokens" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Fast and slow (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      <div style="--motion-duration-slow: var(--motion-duration-fast)">
+        #{erb_output_open} render FlatPack::Card::Component.new(reveal: :rise, shadow: :sm) do #{erb_tag_close}
+          Same rise
+        #{erb_output_open} end #{erb_tag_close}
+      </div>
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="gallery">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Gallery",
+    anchor_link: true,
+    subtitle: "Default beside strong. Each one starts hidden."
+  ) %>
+  <%= render "pages/motion_gallery" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "One labelled reveal (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Card::Component.new(reveal: :fade, style: :brand) do #{erb_tag_close}
+        Fade
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="numbers">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Numbers",
+    anchor_link: true,
+    subtitle: "Count, roll, or fade. The finished number is already in the page."
+  ) %>
+  <%= render "pages/motion_numbers" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A counted total (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Number::Component.new(value: 2480) #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Number::Component.new(value: 1280, format: :currency, currency: "USD", animate: :roll) #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Number::Component.new(value: 0.64, format: :percent, animate: :fade) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-16" id="stream">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Streaming text",
+    anchor_link: true,
+    subtitle: "The line types when you reach it. The caret is just paint."
+  ) %>
+  <%= render "pages/motion_stream" %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "A typed reply (ERB)",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Chat::Message::Component.new(direction: :incoming) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Text::Stream::Component.new(text: "The walnut stool ships Friday.") #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+<% end %>
