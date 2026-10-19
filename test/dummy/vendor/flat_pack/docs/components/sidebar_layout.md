@@ -27,6 +27,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `sidebar` | block slot | No | Sidebar column content (typically `FlatPack::Sidebar::Component`). |
 | `top_nav` | block slot | No | Optional top-nav area above main content. |
 | `main` | block slot | No | Main content area. If omitted, component block content is used. |
+| `background` | block slot | No | Decorative page photo (`img` or `picture`) behind the shell. Omit it and the shell matches a layout with no photo. |
 
 ## Variants
 
@@ -36,6 +37,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side: :right` | Grid columns render as `1fr auto`; sidebar enters from right on mobile. |
 | `storage_key: "..."` | Enables persisted desktop collapse state in localStorage. |
 | `floating: true` | Desktop rail sits inset from the top, bottom, and outer edge, with its own fill, border, and shadow. The rounded palette rounds the panel with `--sidebar-float-radius`. Other named themes stay square. Below `md` the drawer stays full height and square. |
+| `background` slot | Full-viewport photo behind the rail, the top nav, and main. Blur and tint come from `--layout-background-*`. |
 
 ## Example
 
@@ -68,6 +70,8 @@ The mobile drawer (below the `md` breakpoint) is `.fp-sidebar-drawer` with `data
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to sidebar on open and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`).
 
+The background layer is decorative. The layout marks it `aria-hidden="true"`. Pass `alt=""` on the image. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is unavailable, the photo is hidden and the tint becomes solid so text stays on the page colour.
+
 ## Collapsed (icon-only) mode
 
 Desktop collapse is one motion: the rail width eases `16rem` → `4rem` on `--duration-slow` / `--easing-standard` while labels fade on `--duration-fast` and shrink to zero width on `--duration-slow`. The icon's leading margin eases on that same curve, by a fixed length, so the closed active pill has the same space on both sides of the icon. Padding and gap ease with the width. The header collapse control keeps its own padding, so the hover fill wraps the chevron. Nothing restyles the row when the width transition ends, so the close does not shudder.
@@ -88,6 +92,20 @@ For static/non-interactive collapsed demos (without the layout controller) pass 
 Round corners are `--sidebar-float-radius` (`--radius-lg`). They apply on the rounded palette: no `data-theme`, or `data-theme="rounded"`. Any other `data-theme` (dark, ocean, a host theme) keeps square corners. Below the `md` breakpoint the attribute is present and unused: the drawer stays edge-to-edge, including its safe-area padding.
 
 Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail.
+
+## Background
+
+`layout.background` paints a decorative photo behind the whole shell, including the gaps around a floating rail and the flush main column. The host supplies an `<img>` or `<picture>` (responsive `srcset`, `loading: "lazy"`). The layout fixes that layer to the viewport, blurs it with `--layout-background-blur` (`40px`), and lays `--layout-background-tint-color` over it at `--layout-background-tint-opacity` (`0.55`, `0.78` on dark). The tint colour aliases `--surface-page-background-color`, so a host recolours it by setting the token. Do not point it at `--hero-overlay-*` or `--overlay-backdrop-color`.
+
+While the slot is set, the main column sets `--surface-page-background-color` to `transparent`, so a host page fill that uses that token shows the photo. The rail keeps its own fill. The mobile drawer and its dim are unchanged, and the photo stays behind them. Omit the slot and the markup matches a layout with no photo.
+
+```erb
+<% layout.background do %>
+  <%= image_tag "/images/hero-packaging.jpg", alt: "", loading: "lazy" %>
+<% end %>
+```
+
+Dummy chrome accepts `?background=1` (or `true`) on any page. `/demo/sidebar_layout?floating=1&background=1` is the floating photo. `?background=1` alone keeps the flush rail.
 
 ## Current item
 Clicking a sidebar link marks it current immediately (`aria-current="page"` plus the item active colour tokens) and clears the previous item. Modifier-clicks and `_blank` targets are left alone. Hosts that paint `active:` on the server still win after the next render. Dummy chrome also clears-then-sets on `turbo:load` so command-palette visits and a remounted cached shell stay in sync.

@@ -6,12 +6,21 @@
 <%= render "pages/component_method_variables_table", component: :sidebar_layout %>
 
 <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side] : "left" %>
+<% background_on = params[:background].in?(%w[1 true]) %>
+<% background_query = request.query_parameters.except("background") %>
+<% background_query = background_query.merge("background" => "1", "floating" => "1") unless background_on %>
 
-<div class="mb-8">
+<div class="mb-8 flex flex-wrap items-center gap-3">
   <%= link_to(
     "Sidebar: #{sidebar_side == "right" ? "Right" : "Left"}",
     demo_sidebar_layout_path(request.query_parameters.merge(side: sidebar_side == "right" ? "left" : "right")),
     class: "inline-flex text-sm px-3 py-1.5 rounded-lg bg-primary text-white hover:opacity-90 transition-opacity"
+  ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: background_on ? "Hide photo" : "Photo background",
+    href: demo_sidebar_layout_path(background_query),
+    style: :secondary,
+    size: :sm
   ) %>
 </div>
 
@@ -23,6 +32,7 @@
   ) %>
   <p class="text-sm text-(--surface-muted-content-color) mb-4">
     This page focuses only on the layout shell. The detailed sidebar component demos now live under the Sidebar menu group.
+    Photo background uses <code>?background=1</code>. Add <code>?floating=1</code> for the detached rail. The flush rail is <code>?background=1</code> alone.
   </p>
 
   <%= render FlatPack::CodeBlock::Component.new(

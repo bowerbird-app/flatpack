@@ -510,6 +510,76 @@
 
 }
 
+/* isolation holds z-index: -1 above the body paint and under the shell.
+ * Unlayered so a host page-background utility still sees the cleared token.
+ */
+[data-flat-pack-layout-background] {
+  isolation: isolate;
+}
+
+[data-flat-pack-layout-background] .fp-layout-main {
+  --surface-page-background-color: transparent;
+  background-color: transparent;
+}
+
+.fp-layout-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fp-layout-background-media {
+  position: absolute;
+  inset: -12%;
+  filter: blur(var(--layout-background-blur));
+  -webkit-filter: blur(var(--layout-background-blur));
+}
+
+.fp-layout-background-media img,
+.fp-layout-background-media picture,
+.fp-layout-background-media video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.fp-layout-background-media picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fp-layout-background-tint {
+  position: absolute;
+  inset: 0;
+  background-color: var(--layout-background-tint-color);
+  opacity: var(--layout-background-tint-opacity);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .fp-layout-background-media {
+    visibility: hidden;
+  }
+
+  .fp-layout-background-tint {
+    opacity: 1;
+  }
+}
+
+@supports not ((filter: blur(1px)) or (-webkit-filter: blur(1px))) {
+  .fp-layout-background-media {
+    visibility: hidden;
+  }
+
+  .fp-layout-background-tint {
+    opacity: 1;
+  }
+}
+
 /* Unlayered so a style fill or shadow utility cannot cover the hover.
  * Those utilities live in the host Tailwind layer, which beats @layer components.
  */

@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.254] - 2026-10-19
+
+### Added
+- `FlatPack::SidebarLayout::Component` accepts an optional `background` slot. The host renders an `<img>` or `<picture>` into it. The layout fixes that photo to the viewport behind the sidebar, the top nav, and main, blurs it with `--layout-background-blur`, and washes it with `--layout-background-tint-color` at `--layout-background-tint-opacity`. The main column clears `--surface-page-background-color` so the photo shows through. Omit the slot and the shell is unchanged.
+- Dark sets `--layout-background-tint-opacity` to `0.78`. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is missing, the photo hides and the tint is solid.
+- Dummy chrome reads `?background=1`. `/demo/sidebar_layout?floating=1&background=1` shows the floating photo.
+- Bumped the gem version to `0.1.254`.
+
+### Upgrade notes
+- New optional `background` slot on `SidebarLayout`, and new `--layout-background-blur`, `--layout-background-tint-color`, and `--layout-background-tint-opacity` tokens. No host change required.
+- Reload kit CSS/JS. Redeploy so `meta.gem_version` shows `0.1.254`.
+
 ## [0.1.253] - 2026-10-19
 
 ### Added

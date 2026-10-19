@@ -6,6 +6,7 @@ module FlatPack
       renders_one :sidebar_slot
       renders_one :top_nav_slot
       renders_one :main_slot
+      renders_one :background_slot
 
       def initialize(
         side: :left,
@@ -42,6 +43,12 @@ module FlatPack
         with_main_slot(**args, &block)
       end
 
+      def background(**args, &block)
+        return background_slot unless block
+
+        with_background_slot(**args, &block)
+      end
+
       def sidebar?
         sidebar_slot?
       end
@@ -54,9 +61,14 @@ module FlatPack
         main_slot?
       end
 
+      def background?
+        background_slot?
+      end
+
       def call
         content_tag(:div, **container_attributes) do
           safe_join([
+            render_background,
             render_sidebar_and_main,
             render_backdrop
           ].compact)
@@ -121,6 +133,20 @@ module FlatPack
         end
       end
 
+      def render_background
+        return unless background?
+
+        content_tag(
+          :div,
+          safe_join([
+            content_tag(:div, background.to_s, class: "fp-layout-background-media"),
+            content_tag(:div, "", class: "fp-layout-background-tint")
+          ]),
+          class: "fp-layout-background",
+          aria: {hidden: true}
+        )
+      end
+
       def render_backdrop
         content_tag(:div, "", **backdrop_attributes)
       end
@@ -137,7 +163,8 @@ module FlatPack
           controller: "flat-pack--sidebar-layout",
           "flat-pack--sidebar-layout-side-value": @side.to_s,
           "flat-pack--sidebar-layout-open-value": @open,
-          "flat-pack--sidebar-layout-storage-key-value": @storage_key
+          "flat-pack--sidebar-layout-storage-key-value": @storage_key,
+          "flat-pack-layout-background": ("true" if background?)
         }.compact
       end
 
@@ -193,7 +220,8 @@ module FlatPack
           "flex-col",
           "min-w-0",
           "min-h-0",
-          "overflow-hidden"
+          "overflow-hidden",
+          ("fp-layout-main" if background?)
         )
       end
 
