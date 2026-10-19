@@ -683,6 +683,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --button-icon-warning-color: var(--color-warning);
   --button-icon-danger-color: var(--color-danger-background-color);
   --button-border-radius: var(--radius-md);
+  --button-round-border-radius: var(--radius-full);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-background-color);
   --button-disabled-opacity: 0.5;
@@ -700,6 +701,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-round-size-sm: max(var(--hit-target-min), calc((var(--button-icon-only-padding-sm) * 2) + 1rem + 2px));
+  --button-round-size-md: max(var(--hit-target-min), calc((var(--button-icon-only-padding-md) * 2) + 1.25rem + 2px));
+  --button-round-size-lg: max(var(--hit-target-min), calc((var(--button-icon-only-padding-lg) * 2) + 1.5rem + 2px));
   --alert-border-radius: var(--radius-lg);
   --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);

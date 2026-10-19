@@ -508,6 +508,10 @@
   --fp-button-text: var(--fp-button-text);
   --fp-button-border: var(--fp-button-border);
   --button-border-radius: var(--button-border-radius);
+  --button-round-border-radius: var(--button-round-border-radius);
+  --button-round-size-sm: var(--button-round-size-sm);
+  --button-round-size-md: var(--button-round-size-md);
+  --button-round-size-lg: var(--button-round-size-lg);
   --button-focus-ring-color: var(--button-focus-ring-color);
   --button-focus-ring-offset-color: var(--button-focus-ring-offset-color);
   --button-disabled-opacity: var(--button-disabled-opacity);
@@ -1461,6 +1465,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-round-size-sm: max(var(--hit-target-min), calc((var(--button-icon-only-padding-sm) * 2) + 1rem + 2px));
+  --button-round-size-md: max(var(--hit-target-min), calc((var(--button-icon-only-padding-md) * 2) + 1.25rem + 2px));
+  --button-round-size-lg: max(var(--hit-target-min), calc((var(--button-icon-only-padding-lg) * 2) + 1.5rem + 2px));
   --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --alert-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
@@ -1821,6 +1828,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --radius-xl: 1.25rem;
   --radius-full: 9999px;
   --button-border-radius: var(--radius-md);
+  --button-round-border-radius: var(--radius-full);
   --form-control-radius: var(--radius-md);
   --chip-border-radius: var(--radius-md);
   --sidebar-item-radius: var(--radius-lg);

@@ -219,6 +219,7 @@ The shape scale lives on bare `:root`, same as `--space-*`. Component radii alia
 | Token | Default | `[data-theme="rounded"]` |
 |---|---|---|
 | `--button-border-radius` | `--radius-md` | `--radius-full` |
+| `--button-round-border-radius` | `--radius-full` | `--radius-full` (not remapped) |
 | `--form-control-radius` | `--radius-md` | `--radius-full` |
 | `--badge-radius`, `--tabs-pill-corner-radius` | `--radius-md` | `--radius-full` |
 | `--chip-border-radius` | `--radius-md` | `--radius-md` |
@@ -227,6 +228,8 @@ The shape scale lives on bare `:root`, same as `--space-*`. Component radii alia
 | `--chat-composer-radius` | `--radius-lg` | `--radius-full` |
 | `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius` | `--radius-lg` | `--radius-xl` |
 | `--alert-border-radius`, `--toast-border-radius` | `--radius-lg` | `--radius-xl` |
+
+`Button` `round: true` uses `--button-round-border-radius`, which stays `--radius-full` on the moderate scale and on rounded. An icon-only round button also sets its side from `--button-round-size-sm`, `--button-round-size-md`, or `--button-round-size-lg` (`max(--hit-target-min, padding + icon + border)`), declared with the other button padding formulas so density still applies.
 
 Inputs, select, textarea, and search fields use `--form-control-radius`. `--checkbox-radius` is `--radius-xs`. `--comments-inline-input-radius` follows `--form-control-radius`. `--media-radius`, accordion, collapse, and the collection editor follow `--card-radius`. Drawers use `--modal-radius`.
 

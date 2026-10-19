@@ -857,6 +857,15 @@
   .h-\[640px\] {
     height: 640px;
   }
+  .h-\[var\(--button-round-size-lg\)\] {
+    height: var(--button-round-size-lg);
+  }
+  .h-\[var\(--button-round-size-md\)\] {
+    height: var(--button-round-size-md);
+  }
+  .h-\[var\(--button-round-size-sm\)\] {
+    height: var(--button-round-size-sm);
+  }
   .h-\[var\(--checkbox-size\)\] {
     height: var(--checkbox-size);
   }
@@ -1090,6 +1099,15 @@
   }
   .w-\[min\(20rem\,calc\(100vw-2rem\)\)\] {
     width: min(20rem, calc(100vw - 2rem));
+  }
+  .w-\[var\(--button-round-size-lg\)\] {
+    width: var(--button-round-size-lg);
+  }
+  .w-\[var\(--button-round-size-md\)\] {
+    width: var(--button-round-size-md);
+  }
+  .w-\[var\(--button-round-size-sm\)\] {
+    width: var(--button-round-size-sm);
   }
   .w-\[var\(--checkbox-size\)\] {
     width: var(--checkbox-size);
@@ -1839,6 +1857,9 @@
   }
   .rounded-\[var\(--button-border-radius\)\] {
     border-radius: var(--button-border-radius);
+  }
+  .rounded-\[var\(--button-round-border-radius\)\] {
+    border-radius: var(--button-round-border-radius);
   }
   .rounded-\[var\(--card-radius\)\] {
     border-radius: var(--card-radius);

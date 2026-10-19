@@ -17,6 +17,14 @@ module FlatPack
         lg: "p-[var(--button-icon-only-padding-lg)]"
       }.freeze
 
+      ROUND_RADIUS_CLASS = "rounded-[var(--button-round-border-radius)]"
+
+      ROUND_ICON_ONLY_SIZES = {
+        sm: "h-[var(--button-round-size-sm)] w-[var(--button-round-size-sm)] shrink-0",
+        md: "h-[var(--button-round-size-md)] w-[var(--button-round-size-md)] shrink-0",
+        lg: "h-[var(--button-round-size-lg)] w-[var(--button-round-size-lg)] shrink-0"
+      }.freeze
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "inline-flex" "gap-2" "items-center" "items-start" "justify-center" "justify-start"
@@ -51,6 +59,7 @@ module FlatPack
         text: nil,
         style: :default,
         size: :md,
+        round: false,
         href: nil,
         method: nil,
         target: nil,
@@ -70,6 +79,7 @@ module FlatPack
         @text = text
         @style = style.to_sym
         @size = size.to_sym
+        @round = round
         @method = method
         @target = target
         @icon = icon
@@ -93,6 +103,7 @@ module FlatPack
 
         validate_style!
         validate_size!
+        validate_round!
         validate_content!
         validate_align!
         validate_lines!
@@ -252,7 +263,7 @@ module FlatPack
       def default_radius_class
         return if custom_radius_override?
 
-        "rounded-[var(--button-border-radius)]"
+        @round ? ROUND_RADIUS_CLASS : "rounded-[var(--button-border-radius)]"
       end
 
       def custom_radius_override?
@@ -266,7 +277,19 @@ module FlatPack
       def icon_only_classes
         return unless @icon_only
 
-        "#{ICON_ONLY_SIZES.fetch(@size)} fp-hit-target"
+        [ICON_ONLY_SIZES.fetch(@size), round_icon_only_size_class, "fp-hit-target"].compact.join(" ")
+      end
+
+      def round_icon_only_size_class
+        return unless @round
+
+        ROUND_ICON_ONLY_SIZES.fetch(@size)
+      end
+
+      def validate_round!
+        return if @round == true || @round == false
+
+        raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
       end
 
       def press_class
