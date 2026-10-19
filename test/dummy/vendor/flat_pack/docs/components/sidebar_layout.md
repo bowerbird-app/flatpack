@@ -153,9 +153,9 @@ Dummy chrome accepts `?height=content`. `/demo/sidebar_layout?floating=1&backgro
 
 `TopNav` `left` and `center` are each one card, sized to their contents. An empty section is hidden, so a host that only fills `left` and `right` does not get a blank center card. `right` is not one card. Each direct child is its own card, so a bell stays separate from the toolbar. A `Button` with `round: true` keeps `--button-round-border-radius`, so a square icon button stays a circle when the other cards are pills. Other children use `--top-nav-float-radius`. Named themes other than rounded still square every floating card, including a round button. There is no new slot. The existing `top_nav` slot and `TopNav`'s `left`, `center`, and `right` are the API.
 
-The pill cards keep `overflow: visible`, so a focus ring is not clipped. Inline padding grows with the corner, up to `0.75rem`, and stays `0.25rem` while `--top-nav-float-radius` equals `--sidebar-float-radius`. Any `data-theme` other than rounded keeps square corners.
+The pill cards keep `overflow: visible`, so a focus ring is not clipped. Inline padding grows with the corner, up to `0.75rem`, and stays `0.25rem` while `--top-nav-float-radius` equals `--sidebar-float-radius`. Below `768px` that padding drops to `0.25rem` and the row gap drops to `0.5rem`, so a toolbar and one trailing card share a line at `390px`. Text buttons in `left` and `center` use `0.625rem` of inline padding there. Icon buttons keep their hit target. Any `data-theme` other than rounded keeps square corners.
 
-The cards apply at every width, including `390px`. The row wraps, and the left card can shrink. `TopNav`'s mobile menu still collapses `center` and `right` below `mobile_breakpoint` unless the slot passes `always_display: true`. Pass that on `right` when the bell should stay on screen. The mobile drawer is unchanged: it stays edge-to-edge, uses the backdrop, and paints above the cards (`z-50` over `z-20`).
+The cards apply at every width, including `390px`. `left` and `center` use `flex: 1 1 0%` and `max-width: max-content`, so those cards shrink before the row wraps. The row still wraps when the trailing cards are wider than the band. `TopNav`'s mobile menu still collapses `center` and `right` below `mobile_breakpoint` unless the slot passes `always_display: true`. Pass that on `right` when the bell should stay on screen. The mobile drawer is unchanged: it stays edge-to-edge, uses the backdrop, and paints above the cards (`z-50` over `z-20`).
 
 The wrapper does not cover clicks in the gaps between cards. The `<header>` landmark stays. Tab order is still the top nav, then main.
 
@@ -165,7 +165,7 @@ Dummy chrome accepts `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&bac
 
 The shell stays `h-screen overflow-hidden`. Only the main pane scrolls, so the rail and the top nav stay put. That is the default, and hosts that do not opt in keep it.
 
-With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that pane run under the cards. The pane's `padding-top` and `scroll-padding-top` use `--top-nav-float-clearance`, so the first paint and a focused control are not hidden under the cards. `content_scroll: :below` puts the cards back in the flow, above the pane, still with the float gap and the card chrome.
+With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that pane run under the cards. The pane's `padding-top` and `scroll-padding-top` use `--top-nav-float-clearance`, so the first paint and a focused control are not hidden under the cards. When the cards are more than `8px` taller than that token, the layout sets `--top-nav-float-clearance` on the main column to the bottom of the band. A wrapped row, or a toolbar that has grown a second line, then clears the title. A one-row toolbar leaves the token alone. `content_scroll: :below` puts the cards back in the flow, above the pane, still with the float gap and the card chrome. That mode does not need the measurement.
 
 `content_scroll` does nothing while `floating_top_nav` is false. The full-width bar stays outside the pane.
 
