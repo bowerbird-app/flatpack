@@ -59,7 +59,7 @@ module FlatPack
 
           {
             class: [container_classes, extra_class].compact.join(" "),
-            data: extra_data.merge(style: @style.to_s)
+            data: extra_data.merge(style: @style.to_s, fp_card_padding: "md")
           }.merge(arguments)
         end
 

@@ -144,6 +144,12 @@ components:
     primary_class: FlatPack::Card::Component
     related_classes:
       - FlatPack::Card::Stat::Component
+    tokens:
+      - --card-inset
+      - --card-inner-radius
+    classes:
+      - fp-card
+      - fp-card-inner-radius
     status: documented
 
   - key: carousel
@@ -485,6 +491,11 @@ components:
     related_classes:
       - FlatPack::Overlay::Component
       - FlatPack::Overlay::Item
+    args:
+      - "radius: :card_inner"
+    classes:
+      - fp-media__frame
+      - fp-card-inner-radius
     status: documented
 
   - key: masonry

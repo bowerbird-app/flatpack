@@ -20,7 +20,8 @@ Link wrapping is the host's job. Do not put a button inside that link. To open a
 | `alt` | String |  | yes | Accessible name. Required, including `""` when the image is decorative. Non-strings raise `ArgumentError`. |
 | `width` | Integer |  | yes | Positive pixel width. Sets the attribute and, with `height`, `aspect-ratio`. Non-positive values raise `ArgumentError`. |
 | `height` | Integer |  | yes | Positive pixel height. Same rules as `width`. |
-| `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the overlay root. There is no `style`, colour, radius, or theme prop. |
+| `radius` | Symbol |  | no | Omit it and the frame uses `--media-radius`. `:card_inner` sets `fp-card-inner-radius` on the frame, so the corner is `max(0, card radius − card inset)`. Any other value raises `ArgumentError`. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the overlay root. There is no `style`, colour, or theme prop. |
 
 There is no `href`. Wrap the component in a link when the photo should navigate.
 
@@ -41,7 +42,19 @@ There is no `href`. Wrap the component in a link when the photo should navigate.
 The root is `group/media`. A control that should appear on hover can use `group-hover/media:` on the item. Keep it visible for keyboard focus (`focus-within:opacity-100`) and for pointers that cannot hover.
 
 ## Variants
-None. `width` and `height` set the shape. Radius comes from `--media-radius` (default `--radius-md`). The hairline is `--media-outline-color`.
+`width` and `height` set the shape. The frame (`div.fp-media__frame`) owns the radius, the muted fill, and the hairline. Omit `radius:` and that radius is `--media-radius`, which follows `--card-radius`. `radius: :card_inner` uses the card's inner radius. See [Card](card.md).
+
+```erb
+<%= render FlatPack::Card::Component.new(padding: :md) do %>
+  <%= render FlatPack::Media::Component.new(
+    src: "/photos/harbour.jpg",
+    alt: "Harbour at dusk",
+    width: 1200,
+    height: 800,
+    radius: :card_inner
+  ) %>
+<% end %>
+```
 
 ## Example
 
@@ -69,9 +82,11 @@ A button on the photo. The host leaves this one unlinked:
 ```
 
 ## Theming
-`--media-radius` follows `--card-radius` (default `--radius-lg`). `--media-outline-color` is a 12% mix of `--surface-content-color`. Set either token on `:root` or a named `[data-theme]` block. There is no prop that resets them.
+`--media-radius` follows `--card-radius` (default `--radius-lg`). `--media-outline-color` is a 12% mix of `--surface-content-color`. Set either token on `:root` or a named `[data-theme~="…"]` block. Omit `radius:` and there is no prop that resets those tokens.
 
-The image uses `loading="lazy"` and `decoding="async"`. `width` and `height` write `aspect-ratio` so the box is reserved before the file arrives. A muted surface fill shows in that box.
+The frame paints the fill, the hairline, and the radius. The `<img>` is the bitmap. It uses `loading="lazy"` and `decoding="async"`. `width` and `height` write `aspect-ratio` so the box is reserved before the file arrives.
+
+Inside a padded card, `radius: :card_inner` reads `--card-inner-radius`. On the default theme that length is 0 for sm, md, and lg, because the padding is at least the card radius. Outside a card the same option is square, because the card did not set the variable.
 
 ## Accessibility
 `alt` is required. Use `""` only when nearby text already names the image. Overlay items do not name the image. A button in an item needs its own label. Do not wrap a button in the same link as the image. `group-hover/media:` is visual only. The control must still be reachable by keyboard, and it stays visible when the pointer cannot hover.
@@ -79,5 +94,5 @@ The image uses `loading="lazy"` and `decoding="async"`. `width` and `height` wri
 ## Dependencies
 - `FlatPack::Overlay::Component` for placement.
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Tailwind must see the image class literals in `FlatPack::Media::Component`, including `rounded-[var(--media-radius)]` and `outline-[var(--media-outline-color)]`.
+- The frame's fill, hairline, and default radius live in kit CSS (`.fp-media__frame`). `fp-card-inner-radius` does too. Reload kit CSS after an upgrade. A Tailwind rebuild is not required for those rules.
 - No Stimulus controller.

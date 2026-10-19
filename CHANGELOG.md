@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.261] - 2026-10-19
+
+### Added
+- A card publishes its padding step as `data-fp-card-padding` (`none`, `sm`, `md`, or `lg`). Kit CSS sets `--card-inset` from that step and `--card-inner-radius: max(0px, calc(var(--card-radius) - var(--card-inset)))` on `.fp-card`. A nested card recomputes for its own children. Stat cards publish `md`, which is the padding they already use.
+- The kit class `fp-card-inner-radius` sets `border-radius` to that length. `FlatPack::Media::Component` accepts `radius: :card_inner` and puts the class on `div.fp-media__frame`, which also owns the fill and the hairline. Omit `radius:` and the frame keeps `--media-radius`.
+- On the default theme, sm, md, and lg padding are at least the card radius, so the inner radius is 0. The media slot stays on the full card radius and has no radius argument.
+- Bumped the gem version to `0.1.261`.
+
+### Upgrade notes
+- Media now wraps the image in `div.fp-media__frame`, and the radius, fill and hairline moved from `img.fp-media__image` to the frame. There is no alias.
+- Token overrides of `--media-radius`, `--media-outline-color`, and `--surface-muted-background-color` still apply. A stylesheet that targeted those utilities on `img.fp-media__image` should target `.fp-media__frame`.
+- Reload kit CSS so `.fp-card-inner-radius`, `.fp-media__frame`, and the inset rules load. Do not rebuild Tailwind for this change. Those rules live in kit CSS, not in the Tailwind layer.
+- No host call site has to change. No `bin/rails generate flat_pack:install` rerun.
+- Redeploy so `meta.gem_version` shows `0.1.261`.
+
 ## [0.1.260] - 2026-10-19
 
 ### Added
