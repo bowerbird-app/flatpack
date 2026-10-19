@@ -49,6 +49,8 @@ module FlatPack
       --fp-collection-min-item-width
       --fp-fab-offset
       --fp-fab-nav-offset
+      --fp-primary-hover-fill
+      --fp-primary-pressed-fill
       --fp-list-key-width
       --fp-range-max
       --fp-range-scale

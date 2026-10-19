@@ -50,7 +50,9 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - Label lines: `1` (default), `2`
 
 ## Host-registered styles
-The seven built-in styles are kit-owned. Do not override `--color-primary` (or other theme tokens) to recolour one button. A host or third-party gem registers a named colourway, then paints it with local `--fp-button-*` tokens.
+The seven built-in styles are kit-owned. Do not override `--color-primary` (or other theme tokens) to recolour one button. Register a style to recolour one button. A host or third-party gem registers a named colourway, then paints it with local `--fp-button-*` tokens.
+
+A wrapper is a region brand. Set `--color-primary` and `--color-primary-text` on it. Primary button rest, text, border, hover, and pressed follow. Hover mixes that colour 88% toward black on a light page, and toward white in dark. Pressed mixes at 80%. Saturated colours also lose chroma. `--button-primary-hover-background-color` wins when it is set. Then `--color-primary-hover`. Then the mix. Ocean keeps hover at `oklch(0.42 0.18 220)` unless the wrapper sets `--color-primary-hover`. Set `--color-primary-text` with the brand colour and check AA contrast. White text fails on a light brand such as yellow. CSS cannot pick the text colour. The focus ring stays `--color-ring`, which follows the page `--color-primary` and does not follow the wrapper.
 
 Ruby (initializer or gem engine):
 
@@ -75,7 +77,7 @@ CSS loaded after `flat_pack/application`:
 <%= render FlatPack::Button::Component.new(text: "Manage billing", style: :partner) %>
 ```
 
-The button sets `data-fp-style` to the style name. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Built-in styles map that attribute onto `--button-primary-*` and the other scheme tokens, so theme and hero overlay remaps still apply. A registered style sets `--fp-button-*` directly and does not change the page theme.
+The button sets `data-fp-style` to the style name. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Built-in primary reads `--button-primary-*` when a host or the hero overlay sets those pins, and otherwise follows the wrapper `--color-primary` and `--color-primary-text`. Hero press uses the hero hover token. A registered style sets `--fp-button-*` directly and does not change the page theme.
 
 A pill group uses the same `[data-fp-style]` rule. Omitting `style:` leaves the active pill on `--tabs-pill-active-*` (the neutral active surface, no shadow) and does not set `data-fp-style`. Any named style, including `:primary`, adds `fp-pill-button-slots`. That class copies the button slots onto the active pill and restores `--tabs-pill-active-shadow` to `--shadow-md`. A selector that only matches `.fp-button[data-fp-style="partner"]` still paints buttons. Those pill groups need the slots class, which a named pill `style:` adds.
 
@@ -184,7 +186,7 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
 - Leading icons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`. `icon_variant` selects the Heroicon weight. `icon_style` colours that glyph only. The trailing slot is unchanged.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
-- `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover stays on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
+- `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover and press stay on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
 - Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
 - Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Colour does not come from per-style Tailwind background classes.

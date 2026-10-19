@@ -13,6 +13,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.267] - 2026-10-19
+
+### Added
+- `--button-primary-active-background-color`. Override only. The base scope leaves it unset. A host or theme that sets it pins the pressed fill of a primary button.
+
+### Changed
+- A wrapper that sets `--color-primary` and `--color-primary-text` rebrands primary button rest, text, border, hover, and pressed. Hover and pressed are worked out on the element that paints.
+- Hover is `--button-primary-hover-background-color`, then `--color-primary-hover`, then `color-mix(in oklab, var(--color-primary) 88%, var(--primary-shade-mix-target, black))`. Pressed is `--button-primary-active-background-color`, then the same mix at 80%. The 1px press stays. Focus stays the ring.
+- The same hover mix is on the FAB trigger, the chat send button (it is a primary button), the comments submit button, the comments replies toggle, the rich-text link apply button, and date-picker preset buttons.
+- Comments Replies adds the class `fp-comments-replies-toggle`. Its hover colour uses that mix.
+- Bumped the gem version to `0.1.267`.
+
+### Upgrade notes
+- Default charcoal hover shifts. Rest stays `oklch(0.3211 0 0)`. Hover lightness moves from `0.2211` to about `0.283` oklab (`0.282568`, 88% of that charcoal toward black, chroma 0). Saturated brands also lose chroma toward the mix target.
+- Primary buttons now have a pressed fill. Pressed on that charcoal is about `0.257` oklab (`0.25688`, the 80% mix). The 1px press stays. There is no alias for the old hover formula `oklch(calc(var(--brand-lightness) - 0.10) …)` or for `oklch(from var(--color-primary) …)`.
+- Set `--color-primary-text` next to `--color-primary` and check AA contrast. White text fails on a light brand such as yellow. CSS cannot pick the text colour.
+- New token `--button-primary-active-background-color`. Leave it unset to derive pressed. Set it to pin pressed, including on `.fp-hero-overlay`, which pins it to the hero hover token.
+- `--button-primary-hover-background-color` still wins for hover. Then `--color-primary-hover`. Then the mix. `--color-primary-hover` is no longer set on the default palette or on dark. Ocean still sets `--color-primary-hover: oklch(0.42 0.18 220)`. A host that sets `--color-primary-hover` still wins. There is no alias from the brand knobs to `--color-primary-hover`.
+- Dark mixes hover and pressed toward white, so pressed is lighter than hover. `--bottom-nav-item-active-color` on dark stays `oklch(0.72 0.15 250)`. There is no alias from that bar colour to primary hover.
+- `--primary-shade-mix-target` is private (`black` on bare `:root`, `white` on `[data-theme~="dark"]`, `black` on `[data-theme~="ocean"]`). It is not in `@theme inline`.
+- These `:root` aliases are gone. There is no alias. `--button-primary-background-color`, `--button-primary-hover-background-color`, `--button-primary-text-color`, `--button-primary-border-color`, `--fab-background-color`, `--fab-text-color`, `--fab-hover-background-color`, `--chat-send-button-background-color`, `--chat-send-button-text-color`, `--chat-send-button-hover-background-color`, `--comments-composer-submit-background-color`, `--comments-composer-submit-text-color`, `--comments-composer-submit-hover-background-color`, `--comments-replies-toggle-color`, and `--comments-replies-toggle-hover-color` stay as pins. They are unset until a host sets them. The painters then fall through to `--color-primary` and the mix.
+- FAB hover follows the mix unless `--fab-hover-background-color` is set. Comments submit hover follows the mix unless `--comments-composer-submit-hover-background-color` is set. The old comments submit `color-mix(… 90%, black)` is gone. There is no alias. Comments replies hover follows the mix unless `--comments-replies-toggle-hover-color` is set.
+- Chat send is a primary button, so its hover is the primary button hover. `--chat-send-button-hover-background-color` no longer paints it. There is no alias. Pin hover with `--button-primary-hover-background-color` or `--color-primary-hover`.
+- A `theme.css` generated earlier only sets `--brand-hue`, `--brand-chroma`, and `--brand-lightness`. Leave that file. Hover and pressed follow those knobs without a regenerate. Regenerate only if you want the new comment about `--color-primary-text`.
+- Do not rerun `bin/rails generate flat_pack:install`. Do not rebuild Tailwind. No new Tailwind class literals. Reload kit CSS.
+- Redeploy so `meta.gem_version` shows `0.1.267`.
 ## [0.1.266] - 2026-10-19
 
 ### Added

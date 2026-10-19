@@ -51,12 +51,13 @@ Override FlatPack variables in your application stylesheet after the FlatPack li
 
 [data-theme~="dark"] {
   --color-primary: oklch(0.70 0.20 250);
-  --color-primary-hover: oklch(0.64 0.18 250);
   --surface-background-color: oklch(0.18 0.01 250);
   --surface-content-color: oklch(0.95 0.01 250);
   --surface-border-color: oklch(0.30 0.02 250);
 }
 ```
+
+Shipped dark does not set `--color-primary-hover`. Primary hover mixes 88% toward white. `--bottom-nav-item-active-color` on dark is `oklch(0.72 0.15 250)`. Set `--color-primary-hover` on your own theme only when hover should be a fixed colour. Ocean keeps `--color-primary-hover: oklch(0.42 0.18 220)`.
 
 You can define additional custom themes the same way. Prefer brand primitives when you only need a recolor:
 

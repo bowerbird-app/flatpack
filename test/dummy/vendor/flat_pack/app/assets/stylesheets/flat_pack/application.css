@@ -1072,8 +1072,8 @@ html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] 
   padding: 0;
   border: 0;
   border-radius: 9999px;
-  background-color: var(--fab-background-color);
-  color: var(--fab-text-color);
+  background-color: var(--fab-background-color, var(--color-primary));
+  color: var(--fab-text-color, var(--color-primary-text));
   box-shadow: var(--fab-shadow);
   cursor: pointer;
   text-decoration: none;
@@ -1100,7 +1100,7 @@ html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] 
 }
 
 .fp-fab__trigger:hover {
-  background-color: var(--fab-hover-background-color);
+  background-color: var(--fab-hover-background-color, var(--fp-primary-hover-fill));
   box-shadow: var(--fab-shadow-hover);
 }
 
@@ -2043,6 +2043,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   padding-top: var(--hero-overlay-copy-padding-top);
   --button-primary-background-color: var(--hero-overlay-button-primary-background-color);
   --button-primary-hover-background-color: var(--hero-overlay-button-primary-hover-background-color);
+  --button-primary-active-background-color: var(--hero-overlay-button-primary-hover-background-color);
   --button-primary-text-color: var(--hero-overlay-button-primary-text-color);
   --button-primary-border-color: var(--hero-overlay-button-primary-border-color);
   --button-secondary-background-color: var(--hero-overlay-button-secondary-background-color);
@@ -2082,17 +2083,23 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-button.fp-button-current,
-.fp-button.fp-button-current:hover:not(:disabled) {
+.fp-button.fp-button-current:hover:not(:disabled),
+.fp-button.fp-button-current:active:not(:disabled) {
   background-color: var(--surface-active-background-color);
   color: var(--surface-active-text-color);
   border-color: var(--surface-active-border-color);
 }
 
-.flat-pack-radio-group-wrapper label.fp-button:has(:checked) {
+.flat-pack-radio-group-wrapper label.fp-button:has(:checked),
+.flat-pack-radio-group-wrapper label.fp-button:has(:checked):active {
   --fp-button-background: var(--surface-active-background-color);
   --fp-button-hover-background: var(--surface-active-background-color);
   --fp-button-text: var(--surface-active-text-color);
   --fp-button-border: var(--surface-active-border-color);
+  background-color: var(--surface-active-background-color);
+}
+
+.flat-pack-radio-group-wrapper label.fp-button:has(:checked) {
   box-shadow: var(--button-shadow);
 }
 
@@ -2111,11 +2118,61 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-button-border: var(--button-default-border-color);
 }
 
+/* Specified on the painter. A value on :root would bake and ignore a wrapper. */
+[data-fp-style="primary"],
+.fp-fab__trigger,
+.flat-pack-rt-link-apply-btn,
+.flat-pack-comments-composer-input > button[type="submit"],
+.fp-comments-replies-toggle,
+[data-flat-pack-date-picker-command="preset"],
+[data-flat-pack-date-picker-command="show-calendar"] {
+  --fp-primary-hover-fill: var(--color-primary-hover, color-mix(in oklab, var(--color-primary) 88%, var(--primary-shade-mix-target, black)));
+  --fp-primary-pressed-fill: var(--button-primary-active-background-color, color-mix(in oklab, var(--color-primary) 80%, var(--primary-shade-mix-target, black)));
+}
+
 [data-fp-style="primary"] {
-  --fp-button-background: var(--button-primary-background-color);
-  --fp-button-hover-background: var(--button-primary-hover-background-color);
-  --fp-button-text: var(--button-primary-text-color);
-  --fp-button-border: var(--button-primary-border-color);
+  --fp-button-background: var(--button-primary-background-color, var(--color-primary));
+  --fp-button-hover-background: var(--button-primary-hover-background-color, var(--fp-primary-hover-fill));
+  --fp-button-text: var(--button-primary-text-color, var(--color-primary-text));
+  --fp-button-border: var(--button-primary-border-color, var(--color-primary));
+}
+
+.fp-button[data-fp-style="primary"]:active:not(:disabled):not(.fp-button-current):not(:has(:checked)) {
+  background-color: var(--fp-primary-pressed-fill);
+}
+
+.flat-pack-comments-composer-input > button[type="submit"] {
+  background-color: var(--comments-composer-submit-background-color, var(--color-primary));
+  color: var(--comments-composer-submit-text-color, var(--color-primary-text));
+}
+
+.flat-pack-comments-composer-input > button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--comments-composer-submit-hover-background-color, var(--fp-primary-hover-fill));
+}
+
+.fp-comments-replies-toggle {
+  color: var(--comments-replies-toggle-color, var(--color-primary));
+}
+
+.fp-comments-replies-toggle:hover {
+  color: var(--comments-replies-toggle-hover-color, var(--fp-primary-hover-fill));
+}
+
+/* Unlayered. Selected preset utilities name unset pins and have no fallback. */
+[data-flat-pack-date-picker-command="preset"].bg-\[var\(--button-primary-background-color\)\],
+[data-flat-pack-date-picker-command="show-calendar"].bg-\[var\(--button-primary-background-color\)\],
+[data-flat-pack-date-picker-command="day"].bg-\[var\(--button-primary-background-color\)\] {
+  background-color: var(--button-primary-background-color, var(--color-primary));
+  color: var(--button-primary-text-color, var(--color-primary-text));
+}
+
+[data-flat-pack-date-picker-command="preset"].hover\:bg-\[var\(--button-primary-hover-background-color\)\]:hover,
+[data-flat-pack-date-picker-command="show-calendar"].hover\:bg-\[var\(--button-primary-hover-background-color\)\]:hover {
+  background-color: var(--button-primary-hover-background-color, var(--fp-primary-hover-fill));
+}
+
+[data-flat-pack-date-picker-command="day"].bg-\[var\(--button-primary-background-color\)\]\/20 {
+  background-color: color-mix(in oklab, var(--button-primary-background-color, var(--color-primary)) 20%, transparent);
 }
 
 [data-fp-style="secondary"] {

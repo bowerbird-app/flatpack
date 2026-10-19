@@ -12,7 +12,8 @@
  * :root, [data-theme] is the single source of concrete colour and unremapped padding formulas
  *   (browsers skip @theme when this file is a stylesheet). Declaring the wiring on [data-theme]
  *   as well re-resolves derived tokens when a host puts data-theme on <body> or another descendant.
- * Concrete --space-* , --density, and --radius-* live on bare :root only. A nested theme inherits them.
+ * Concrete --space-* , --density, --radius-*, and --primary-shade-mix-target live on bare :root only.
+ *   A nested theme inherits them. [data-theme] must not reset the mix target.
  * Remapped shells (--dropdown-padding, --select-menu-padding, --combobox-menu-padding,
  *   --search-menu-padding, --search-result-padding-y) and the component radii rounded changes
  *   (--button-border-radius, --form-control-radius, --chip-border-radius, --badge-radius,
@@ -489,6 +490,7 @@
   --button-primary-hover-background-color: var(--button-primary-hover-background-color);
   --button-primary-text-color: var(--button-primary-text-color);
   --button-primary-border-color: var(--button-primary-border-color);
+  --button-primary-active-background-color: var(--button-primary-active-background-color);
   --button-secondary-background-color: var(--button-secondary-background-color);
   --button-secondary-hover-background-color: var(--button-secondary-hover-background-color);
   --button-secondary-text-color: var(--button-secondary-text-color);
@@ -934,8 +936,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
-  /* Fallback when `oklch(from …)` is unsupported. Same charcoal look via brand knobs. */
-  --color-primary-hover: oklch(calc(var(--brand-lightness) - 0.10) var(--brand-chroma) var(--brand-hue));
   --color-primary-text: #fff;
   --color-default: var(--surface-background-color);
   --color-default-hover: var(--surface-muted-background-color);
@@ -1005,9 +1005,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --bottom-nav-item-hover-color: #f9fafb;
   --bottom-nav-item-padding-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --bottom-nav-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
-  --fab-background-color: var(--color-primary);
-  --fab-hover-background-color: var(--color-primary-hover);
-  --fab-text-color: var(--color-primary-text);
   --fab-backdrop-color: var(--overlay-backdrop-color);
   --fab-action-background-color: var(--surface-background-color);
   --fab-action-hover-background-color: var(--surface-muted-background-color);
@@ -1401,9 +1398,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-typing-dot-color: var(--surface-content-color);
   --chat-avatar-placeholder-background-color: var(--surface-muted-background-color);
   --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
-  --chat-send-button-background-color: var(--color-primary);
-  --chat-send-button-hover-background-color: var(--color-primary-hover);
-  --chat-send-button-text-color: var(--color-primary-text);
   --chat-send-button-focus-ring-color: var(--color-ring);
   --comments-item-background-color: var(--surface-background-color);
   --comments-item-system-background-color: var(--surface-muted-background-color);
@@ -1423,9 +1417,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-slots-background-color: var(--comments-composer-actions-background-color);
   --comments-composer-cancel-text-color: var(--surface-content-color);
   --comments-composer-cancel-hover-background-color: var(--surface-muted-background-color);
-  --comments-composer-submit-background-color: var(--color-primary);
-  --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
-  --comments-composer-submit-text-color: var(--color-primary-text);
   --comments-inline-input-radius: var(--form-control-radius);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
@@ -1434,16 +1425,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-thread-empty-title-color: var(--surface-content-color);
   --comments-thread-empty-body-color: var(--surface-muted-content-color);
   --comments-replies-border-color: var(--surface-border-color);
-  --comments-replies-toggle-color: var(--color-primary);
-  --comments-replies-toggle-hover-color: var(--color-primary-hover);
   --button-default-background-color: var(--color-default);
   --button-default-hover-background-color: var(--color-default-hover);
   --button-default-text-color: var(--color-default-text);
   --button-default-border-color: var(--color-default-border);
-  --button-primary-background-color: var(--color-primary);
-  --button-primary-hover-background-color: var(--color-primary-hover);
-  --button-primary-text-color: var(--color-primary-text);
-  --button-primary-border-color: var(--color-primary);
   --button-secondary-background-color: var(--color-secondary);
   --button-secondary-hover-background-color: var(--color-secondary-hover);
   --button-secondary-text-color: var(--color-secondary-text);
@@ -1791,20 +1776,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --badge-padding-y-lg: 0.5rem;
 }
 
-/* Hover follows --color-primary itself so a host that sets an exact hex (not
- * --brand-*) still gets a darker shade. Relative color syntax is the match for
- * `l - 0.10`; color-mix() cannot keep that delta across lightness values.
- * Tailwind never sees this value — @theme inline only self-maps the name, and
- * this file is a stylesheet, not a Tailwind entry. Named themes that set
- * --color-primary-hover (dark, ocean) still win: they are equally specific and
- * come later.
- */
-@supports (color: oklch(from red calc(l - 0.1) c h)) {
-  :root, [data-theme] {
-    --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
-  }
-}
-
 /* ApexCharts tooltips can be rendered outside chart containers and keep
  * a built-in .apexcharts-theme-light style. Force them to use app surface tokens.
  */
@@ -1833,8 +1804,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * Shape scale sits here too. Moderate corners are the default. Component radii
  * that [data-theme~="rounded"] changes are declared here, not on [data-theme],
  * for the same reason as the menu shells.
+ * --primary-shade-mix-target is black here. A nested theme must not reset a
+ * dark ancestor's white target.
  */
 :root {
+  --primary-shade-mix-target: black;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -1881,15 +1855,16 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 
 /* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
  * Dark inherits --space-*, --density, and the shape scale. It does not restate them.
- * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
+ * Primary hover mixes toward white. This block does not set --color-primary-hover.
+ * The previous lift stays on --bottom-nav-item-active-color. Shadows change recipe (white hairline),
  * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
  * Modal blur stays a dark-only exception (3px vs 4px light).
  */
 [data-theme~="dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.62 0.22 250);
-  --color-primary-hover: oklch(0.72 0.15 250);
   --color-primary-text: oklch(0.15 0.01 250);
+  --primary-shade-mix-target: white;
   --color-success-background-color: oklch(67% .194 149.214);
   --color-success-hover-background-color: oklch(72% .194 149.214);
   --color-success-text: oklch(0.15 0.01 250);
@@ -1910,7 +1885,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --overlay-scrim-color: rgb(15 20 36 / 0.72);
   --bottom-nav-background-color: oklch(0.11 0.01 250);
   --bottom-nav-border-color: oklch(0.29 0.02 250);
-  --bottom-nav-item-active-color: var(--color-primary-hover);
+  --bottom-nav-item-active-color: oklch(0.72 0.15 250);
   --bottom-nav-item-color: oklch(0.76 0.01 250);
   --bottom-nav-item-hover-color: oklch(0.96 0.01 250);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(255 255 255 / 0.06);
@@ -1933,10 +1908,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-message-outgoing-background-color: oklch(0.32 0.015 250);
 }
 
-/* Ocean theme — overrides only */
+/* Ocean theme — overrides only. Black mix target so a dark ocean stack presses toward black. */
 [data-theme~="ocean"] {
   --color-primary: oklch(0.52 0.15 220);
   --color-primary-hover: oklch(0.42 0.18 220);
+  --primary-shade-mix-target: black;
   --color-secondary: oklch(0.92 0.02 220);
   --color-secondary-hover: oklch(0.87 0.03 220);
   --color-secondary-text: oklch(0.25 0.02 220);

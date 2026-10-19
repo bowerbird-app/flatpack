@@ -10,6 +10,19 @@ module FlatPack
       assert_predicate result, :success?, -> { "Missing tokens: #{result.missing.join(", ")}" }
     end
 
+    test "primary shade fills are runtime tokens, not theme tokens" do
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-primary-hover-fill"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-primary-pressed-fill"
+
+      variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+      refute_includes variables, "--fp-primary-hover-fill:"
+      refute_includes variables, "--fp-primary-pressed-fill:"
+      assert_includes application, "--fp-primary-hover-fill:"
+      assert_includes application, "--fp-primary-pressed-fill:"
+    end
+
     test "runtime fill percent is not a theme token" do
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--range-progress"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--collection-editor-columns"
@@ -26,6 +39,8 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-trash-button-size"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-offset"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-fab-nav-offset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-primary-hover-fill"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-primary-pressed-fill"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-collection-min-item-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-list-key-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-value"

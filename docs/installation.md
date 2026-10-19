@@ -299,7 +299,7 @@ To **customize the theme**, override CSS variables in your own stylesheet:
 
 /* Override FlatPack defaults (loaded via stylesheet_link_tag in the layout) */
 :root {
-  --color-primary: oklch(0.55 0.22 160);        /* teal primary; hover follows */
+  --color-primary: oklch(0.55 0.22 160);        /* teal primary. Set --color-primary-text too. */
   --surface-background-color: oklch(1.0 0 0);   /* white background */
   --surface-content-color: oklch(0.20 0.01 250); /* dark text */
 }
@@ -774,7 +774,7 @@ Check these host blocks:
 **Examples of valid cross-mappings — keep these:**
 
 ```css
---button-primary-background-color: var(--color-primary);   /* OK — component alias → semantic */
+--badge-primary-background-color: var(--color-primary);   /* OK. Component alias to a semantic token. */
 --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue)); /* OK — semantic → primitives */
 ```
 
