@@ -7,7 +7,7 @@ FlatPack ships a rounded / charcoal light palette by default and supports dark o
 FlatPack theme behavior is split into two layers:
 
 - **CSS defaults** - `:root, [data-theme] {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens. Repeating the wiring on `[data-theme]` re-resolves those aliases when the attribute is on `<body>` or another descendant. `:root` also sets `color-scheme: light`.
-- **Theme variants** - selectors such as `[data-theme="dark"]` and `[data-theme="ocean"]` override only tokens that differ from the default. `[data-theme="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. Both inherit `--space-*` and `--density`. `[data-theme="rounded"]` shifts spacing steps 2–6 and does not restate colour. Focus rings and active nav fills follow `--color-primary`. Component aliases re-resolve unless you override them. A dark region nested inside rounded keeps the generous scale, because the scale is not restated on `[data-theme]`.
+- **Theme variants** - selectors such as `[data-theme~="dark"]` and `[data-theme~="ocean"]` override only tokens that differ from the default. `[data-theme~="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. Both inherit `--space-*` and `--density`. `[data-theme~="rounded"]` shifts spacing steps 2–6 and does not restate colour. Focus rings and active nav fills follow `--color-primary`. Component aliases re-resolve unless you override them. A dark region nested inside rounded keeps the generous scale, because the scale is not restated on `[data-theme]`.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
@@ -26,17 +26,19 @@ To force a built-in variant, set `data-theme` on the root element:
 
 Supported built-in values documented by the install guide are:
 
-- `light` - same as omitting the attribute (default rounded / charcoal)
+- `light` - same as omitting the attribute (charcoal palette, compact spacing, moderate corners)
 - `dark`
 - `ocean`
-- `rounded` - alias of the default (same look with or without the attribute)
+- `rounded` - charcoal palette with generous spacing and pill controls
 
 ## System Mode
 
 When you use the optional `flat-pack--theme` controller, selecting `system` checks `prefers-color-scheme: dark` and then either:
 
-- removes `data-theme` for the default rounded / charcoal palette, or
-- sets `data-theme="dark"` when the OS prefers dark mode
+- clears owned base names for the default palette, removing `data-theme` when no custom name remains, or
+- sets the base to `dark` when the OS prefers dark mode
+
+A custom name already on the element stays. `data-theme="rounded featured-in"` becomes `featured-in` in light and `dark featured-in` in dark. Dark detection looks for the whole name `dark`.
 
 That controller also keeps `dark` and `light` classes in sync on `<html>` for legacy selectors.
 
@@ -47,7 +49,7 @@ Override FlatPack variables in your application stylesheet after the FlatPack li
 ```css
 /* app/assets/stylesheets/application.css */
 
-[data-theme="dark"] {
+[data-theme~="dark"] {
   --color-primary: oklch(0.70 0.20 250);
   --color-primary-hover: oklch(0.64 0.18 250);
   --surface-background-color: oklch(0.18 0.01 250);
@@ -59,7 +61,7 @@ Override FlatPack variables in your application stylesheet after the FlatPack li
 You can define additional custom themes the same way. Prefer brand primitives when you only need a recolor:
 
 ```css
-[data-theme="forest"] {
+[data-theme~="forest"] {
   --brand-hue: 155;
   --brand-chroma: 0.18;
   --brand-lightness: 0.52;
@@ -68,7 +70,7 @@ You can define additional custom themes the same way. Prefer brand primitives wh
 
 Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit.
 
-A brand dark theme does not copy `[data-theme="dark"]`. Set `color-scheme: dark` and the surface / primary tokens; ghost buttons, secondary, list hover, chip remove, and switch track follow those semantics. Optional extras: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`. Outgoing chat follows the hover surface with normal foreground text. The shipped dark theme sets `--chat-message-outgoing-background-color` to `oklch(0.32 0.015 250)` because dark hover and muted are the same lightness. Ocean sets `oklch(0.90 0.025 220)` so the sent bubble does not sit on the muted incoming fill. If your hover and muted surfaces match, set that token or the two bubbles match. See [Custom Theming](custom_theming.md#minimal-brand-themes) for the minimal token list and a `[data-theme="featured-in-dark"]` example. `data-theme` on `<body>` works because component aliases are declared on `:root, [data-theme]`.
+A brand dark theme does not copy `[data-theme~="dark"]`. Set `color-scheme: dark` and the surface / primary tokens; ghost buttons, secondary, list hover, chip remove, and switch track follow those semantics. Optional extras: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`. Outgoing chat follows the hover surface with normal foreground text. The shipped dark theme sets `--chat-message-outgoing-background-color` to `oklch(0.32 0.015 250)` because dark hover and muted are the same lightness. Ocean sets `oklch(0.90 0.025 220)` so the sent bubble does not sit on the muted incoming fill. If your hover and muted surfaces match, set that token or the two bubbles match. See [Custom Theming](custom_theming.md#minimal-brand-themes) for the minimal token list and a `[data-theme~="featured-in-dark"]` example. `data-theme` on `<body>` works because component aliases are declared on `:root, [data-theme]`.
 
 For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 
@@ -104,7 +106,7 @@ When testing `system` mode, use your browser's `prefers-color-scheme` emulation 
 
 1. Make sure your stylesheet loads after FlatPack's stylesheet tags.
 2. Override concrete variable values, not self-referential mappings such as `--radius-md: var(--radius-md)`.
-3. Verify your selector matches the active theme, for example `[data-theme="dark"]`.
+3. Verify your selector matches the active theme, for example `[data-theme~="dark"]`.
 
 ### Flash of the light theme
 

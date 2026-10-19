@@ -92,7 +92,7 @@ The dummy app loads gem CSS first, then the compiled host Tailwind bundle last (
 
 Tokens come from `flat_pack/variables`. Do not `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet (fingerprinted filenames 404). Do not fork tokens as `--color-fp-*` in the Tailwind entry.
 
-Host overrides (for example `[data-theme="sunrise"] { --brand-hue: 35; --brand-chroma: 0.19; --brand-lightness: 0.52; }`) live in `app/assets/stylesheets/application.tailwind.css` and win because `application` loads last. The same file re-sets `--font-sans` / `--font-mono` and kit `--radius-*` on unlayered `:root` so Tailwind `@layer theme` does not keep `ui-sans-serif` or `--radius-md: 0.375rem`.
+Host overrides (for example `[data-theme~="sunrise"] { --brand-hue: 35; --brand-chroma: 0.19; --brand-lightness: 0.52; }`) live in `app/assets/stylesheets/application.tailwind.css` and win because `application` loads last. The same file re-sets `--font-sans` / `--font-mono` and kit `--radius-*` on unlayered `:root` so Tailwind `@layer theme` does not keep `ui-sans-serif` or `--radius-md: 0.375rem`.
 
 ### 3. Tailwind Configuration
 

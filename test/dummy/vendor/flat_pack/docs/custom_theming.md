@@ -2,7 +2,7 @@
 
 FlatPack uses inset rings for selected, active, drag, and focus-visible states. Keep focus-ring color tokens sufficiently distinct from their component backgrounds so the indicator remains accessible inside overflow-clipped containers.
 
-FlatPack ships with a default rounded / charcoal palette on `:root, [data-theme]` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
+FlatPack ships with a default rounded / charcoal palette on `:root, [data-theme]` and additional named variants under `data-theme` selectors. You can add your own named theme by defining a new selector such as `[data-theme~="sunrise"]` in your host app stylesheet and overriding the same variables FlatPack already uses.
 
 Use this guide when you want a complete starting point instead of hand-picking a few overrides.
 
@@ -12,8 +12,8 @@ FlatPack's theming surface has three layers:
 
 - `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
 - `:root, [data-theme] {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.). Repeating the wiring on `[data-theme]` re-resolves those aliases when `data-theme` is on `<body>` or another descendant, not only on `<html>`.
-- `[data-theme="rounded"]` shifts `--space-2`…`--space-6`, a few menu shells, and component radii (buttons, inputs, badges, tabs, and the chat composer become `--radius-full`; chips, sidebar items, and menu items stay `--radius-md`; cards, menus, popovers, modals, alerts, and toasts become `--radius-xl`). It does not restate colour or the global `--radius-*` steps. Dark and ocean inherit the compact scale and the moderate shape.
-- `[data-theme="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
+- `[data-theme~="rounded"]` shifts `--space-2`…`--space-6`, a few menu shells, and component radii (buttons, inputs, badges, tabs, and the chat composer become `--radius-full`; chips, sidebar items, and menu items stay `--radius-md`; cards, menus, popovers, modals, alerts, and toasts become `--radius-xl`). It does not restate colour or the global `--radius-*` steps. Dark and ocean inherit the compact scale and the moderate shape.
+- `[data-theme~="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
 - `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
 For most apps, generate a brand kit instead of copying every variable:
@@ -25,7 +25,7 @@ bin/rails generate flat_pack:theme sunrise --hue=35 --chroma=0.2 --lightness=0.5
 That means a custom host-app theme is usually just brand/semantic overrides:
 
 ```css
-[data-theme="sunrise"] {
+[data-theme~="sunrise"] {
   --brand-hue: 35;
   --brand-chroma: 0.19;
   --brand-lightness: 0.52;
@@ -49,8 +49,14 @@ A named host theme should set semantic tokens, not component aliases. Component 
 
 **Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`, `--layout-background-tint-opacity`.
 
+Stack the brand on rounded. The attribute is a list, base first. Rounded still supplies spacing and shape. The brand block overrides only the tokens it sets. Load that block after `flat_pack/variables`. Both selectors have the same specificity, so source order decides the winner.
+
+```html
+<html data-theme="rounded featured-in">
+```
+
 ```css
-[data-theme="featured-in"] {
+[data-theme~="featured-in"] {
   --color-primary: #c41e6a;
   --color-primary-text: #fff;
   --surface-page-background-color: oklch(0.98 0.01 350);
@@ -61,7 +67,7 @@ A named host theme should set semantic tokens, not component aliases. Component 
   --surface-muted-content-color: oklch(0.45 0.03 350);
 }
 
-[data-theme="featured-in-dark"] {
+[data-theme~="featured-in-dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.72 0.18 350);
   --color-primary-text: oklch(0.18 0.04 350);
@@ -78,10 +84,10 @@ Do not copy `--button-*`, `--color-ghost-*`, or `--list-item-*` onto a brand the
 
 ## Fastest Path
 
-1. Prefer `bin/rails generate flat_pack:theme NAME --hue=… --chroma=… --lightness=…` (or a `:root { --brand-hue; --brand-chroma; --brand-lightness }` override) when you only need a recolor. Pass `--as_root` to write brand overrides on `:root` so no `data-theme` attribute is needed.
+1. Prefer `bin/rails generate flat_pack:theme NAME --hue=… --chroma=… --lightness=…` (or a `:root { --brand-hue; --brand-chroma; --brand-lightness }` override) when you only need a recolor. Pass `--as_root` to write brand overrides on `:root` so no `data-theme` attribute is needed. Pass `--inherits=rounded` to stack the new theme on rounded. The file stays overrides only. Set `data-theme="rounded NAME"`.
 2. If you need a named theme with extra semantic/surface tweaks, create or open a host stylesheet that loads **after** the FlatPack tags.
 3. Start from brand/semantic overrides. Copy the complete starter block below only when you need a full fork.
-4. Rename `[data-theme="your-theme-name"]` to your own theme name.
+4. Rename `[data-theme~="your-theme-name"]` to your own theme name.
 5. Apply the theme by setting `data-theme="your-theme-name"` on `<html>` (preferred) or `<body>`. Derived tokens re-resolve in either place.
 
 Example:
@@ -100,7 +106,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
 <summary>Show complete custom-theme template</summary>
 
 ```css
-[data-theme="your-theme-name"] {
+[data-theme~="your-theme-name"] {
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -904,15 +910,22 @@ document.documentElement.setAttribute("data-theme", "your-theme-name")
 
 ## Theme Controller Behavior
 
-FlatPack's `flat-pack--theme` controller already supports arbitrary theme values when applying themes:
+`flat-pack--theme` treats `data-theme` as a list of names. The value you pick becomes the base. Names that are not in the picker list stay, in their previous order, after the base.
 
-- `system` removes the attribute for light mode or sets `data-theme="dark"` when the OS prefers dark mode.
-- `light` removes `data-theme` so `:root` is active again.
-- Any other value is written directly to `data-theme`.
+- `system` follows `prefers-color-scheme`. Dark sets the base to `dark`. Light clears owned base names. A custom name such as `featured-in` stays. Storage is cleared.
+- `light` clears owned base names (`light`, `dark`, `ocean`, `rounded`, and any other name in the picker list). If none remain, it removes `data-theme`.
+- Any other picker value is written first. Custom names stay after it.
+- Dark mode is the list containing the whole name `dark`. `featured-in-dark` is not dark.
 
-That means custom selectors work without JavaScript changes if you set the attribute yourself.
+A single name still behaves as before. Picking `dark` while the attribute is `rounded` sets `dark`. Picking `light` on `rounded` alone removes the attribute.
 
-One limitation remains: the controller's built-in label helper only knows the shipped names `system`, `light`, `dark`, `ocean`, and `rounded`. If you want a FlatPack-powered theme picker that shows a friendly label for your custom theme, extend your host-app UI or override the controller label mapping.
+There is no generator for a full token fork. `flat_pack:theme` writes the brand knobs. `--inherits=rounded` is the stack:
+
+```bash
+bin/rails generate flat_pack:theme featured-in --inherits=rounded --hue=330
+```
+
+The stylesheet is overrides only. Set `data-theme="rounded featured-in"`. The generated selector is `[data-theme~="featured-in"]`, so `data-theme="featured-in"` still matches.
 
 ## Where the Canonical Variables Live
 
@@ -920,7 +933,7 @@ The source of truth remains `app/assets/stylesheets/flat_pack/variables.css` in 
 
 - `@theme inline {}` contains the token names used by Tailwind utilities. Values are not stored there.
 - `:root, [data-theme] {}` contains the default rounded / charcoal palette and component aliases.
-- `[data-theme="dark"]` and `[data-theme="ocean"]` are **override-only** — they list tokens that differ from the default and inherit the spacing scale. `[data-theme="rounded"]` shifts the scale. Component aliases re-resolve on `[data-theme]`.
+- `[data-theme~="dark"]` and `[data-theme~="ocean"]` are **override-only** — they list tokens that differ from the default and inherit the spacing scale. `[data-theme~="rounded"]` shifts the scale. Component aliases re-resolve on `[data-theme]`.
 
 When FlatPack adds a new **semantic** token, copy it into your host theme if you need a different value. Component aliases that are `var(--semantic)` do not need to be re-copied. `--color-ring` follows `--color-primary`. `--sidebar-item-active-*`, `--top-nav-item-active-*`, list, pill, table, and pagination selected fills follow `--surface-active-*`. Hover fills follow `--surface-hover-background-color`. Outgoing chat does too: background is `--surface-hover-background-color`, text is `--surface-content-color`. Incoming stays the muted surface. The shipped dark and ocean themes set `--chat-message-outgoing-background-color` because those hover surfaces do not separate the two bubbles. Set that one token when your own hover and muted fills match. Timestamps and read receipts stay on `--surface-muted-content-color`. Set those semantic tokens once. Set a component token only when that one control should diverge.
 

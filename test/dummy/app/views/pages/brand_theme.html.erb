@@ -6,7 +6,7 @@
 <p class="text-sm text-[var(--surface-muted-content-color)] mb-6">
   <%= @body_theme == "featured-in-dark" ? "Dark" : "Light" %>
   kit:
-  <code class="font-mono text-xs">body[data-theme="<%= @body_theme %>"]</code>.
+  <code class="font-mono text-xs">body[data-theme~="<%= @body_theme %>"]</code>.
   Ghost labels, secondary buttons, list hover, and primary hover must follow those tokens.
 </p>
 

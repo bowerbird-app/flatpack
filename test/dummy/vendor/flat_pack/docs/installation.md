@@ -78,7 +78,9 @@ bin/rails generate flat_pack:theme Sunrise --hue=35 --chroma=0.2 --lightness=0.5
 
 Creates `app/assets/stylesheets/flat_pack_theme_sunrise.css` with `--brand-hue` / `--brand-chroma` / `--brand-lightness`. Load it after FlatPack variables and set `data-theme="sunrise"` on `<html>`. See [Theming](theming.md).
 
-Pass `--as_root` to write brand overrides on `:root` instead of `[data-theme="…"]`, so no `data-theme` attribute is needed.
+Pass `--as_root` to write brand overrides on `:root` instead of `[data-theme~="…"]`, so no `data-theme` attribute is needed.
+
+Pass `--inherits=rounded` to stack the new theme on rounded. The file stays overrides only. Set `data-theme="rounded sunrise"`. The selector is `[data-theme~="sunrise"]`, so a single name still matches. Load the file after `flat_pack/variables`. Kit theme selectors use the same word match and the same specificity, so the later file wins where both set a token.
 
 ### 3.2 Optional: Generate a Sidebar Layout Shell
 
@@ -193,7 +195,7 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 `flat_pack/variables.css` contains the complete FlatPack theming system:
 - Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens on `:root {}`
 - `@theme inline {}` inventory so Tailwind can emit utilities without copying those values
-- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme="rounded"]` shifts the spacing scale and the shape tokens. It does not restate colour.
+- Slim `[data-theme]` override blocks for `dark` and `ocean`. `[data-theme~="rounded"]` shifts the spacing scale and the shape tokens. It does not restate colour.
 
 **2. In your Tailwind CSS file** (e.g., `app/assets/stylesheets/application.tailwind.css`) — component scanning only:
 
@@ -260,10 +262,10 @@ If the generator cannot automatically detect your Tailwind CSS 4 file, it will d
 The imported `variables.css` contains:
 - `:root, [data-theme] {}` — the **default (rounded / charcoal) palette** plus once-defined component wiring (the values browsers actually use). `[data-theme]` repeats the wiring so a named theme on `<body>` re-resolves aliases
 - `@theme inline {}` — token names for Tailwind utilities (`--color-primary: var(--color-primary)`). Tailwind does not re-emit these onto `:root`
-- `[data-theme="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
-- `[data-theme="ocean"] {}` — ocean variant (overrides only)
+- `[data-theme~="dark"] {}` — dark overrides only. Focus rings and active nav fills follow `--color-primary`
+- `[data-theme~="ocean"] {}` — ocean variant (overrides only)
 - A bare `:root {}` after the palette holds `--space-1`…`--space-6`, `--density`, the menu shells that rounded remaps, and the shape scale (`--radius-xs` through `--radius-full`) plus the component radii rounded changes. Do not move those onto `[data-theme]` or a nested theme resets the scale or the corners.
-- `[data-theme="rounded"] {}` — larger `--space-2`…`--space-6` (step 1 stays `0.25rem`), the remapped menu shells, and the shape overrides (pill controls, larger cards, menus, and modals). It does not restate colour or shadow, and it does not restate the global `--radius-*` steps. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
+- `[data-theme~="rounded"] {}` — larger `--space-2`…`--space-6` (step 1 stays `0.25rem`), the remapped menu shells, and the shape overrides (pill controls, larger cards, menus, and modals). It does not restate colour or shadow, and it does not restate the global `--radius-*` steps. A `--token: var(--token)` assignment there is the same element as `:root` and blanks the token.
 
 To recolor without copying the full token list:
 
@@ -277,7 +279,7 @@ or in host CSS loaded after FlatPack:
 :root { --brand-hue: 160; --brand-chroma: 0.18; --brand-lightness: 0.52; }
 ```
 
-**Charcoal is the default palette.** The `:root, [data-theme] {}` block establishes that palette without requiring any attribute. `[data-theme="rounded"]` is the generous spacing scale and the pill shape on that same palette. Set the attribute when you want it. Dark and ocean stay on the compact scale and the moderate corners.
+**Charcoal is the default palette.** The `:root, [data-theme] {}` block establishes that palette without requiring any attribute. `[data-theme~="rounded"]` is the generous spacing scale and the pill shape on that same palette. Set the attribute when you want it. Dark and ocean stay on the compact scale and the moderate corners.
 
 To **explicitly force light mode** regardless of any ThemeController state or stored preferences (useful if you are not using the theme switcher), add `data-theme="light"` to your HTML root element in your layout:
 
@@ -303,7 +305,7 @@ To **customize the theme**, override CSS variables in your own stylesheet:
 
 Make sure `application.css` is linked in your layout **after** the FlatPack stylesheet tags so your overrides take precedence.
 
-If you want to create a fully named host-app theme such as `[data-theme="brand"]` with the complete current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
+If you want to create a fully named host-app theme such as `[data-theme~="brand"]` with the complete current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 
 ### 5. JavaScript / Importmap Configuration (Automatic)
 
@@ -752,8 +754,8 @@ FlatPack avoids that by using `@theme inline` for the inventory (`--radius-md: v
 
 Check these host blocks:
 - `:root { ... }`
-- `[data-theme="dark"] { ... }`
-- `[data-theme="..."] { ... }` (any theme variant)
+- `[data-theme~="dark"] { ... }`
+- `[data-theme~="..."] { ... }` (any theme variant)
 - `@layer base { ... }`
 
 **Examples of circular (invalid) references — remove these:**

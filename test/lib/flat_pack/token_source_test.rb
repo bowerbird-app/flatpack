@@ -18,6 +18,19 @@ module FlatPack
       assert_match(/^:root,\s*\[data-theme\]\s*\{/, @css)
     end
 
+    test "kit stylesheets do not use exact named-theme selectors" do
+      root = FlatPack::Engine.root
+      offenders = Dir[root.join("app/assets/stylesheets/**/*.css").to_s].flat_map do |path|
+        File.readlines(path).filter_map.with_index(1) do |line, number|
+          next unless line.include?('[data-theme="')
+
+          "#{Pathname.new(path).relative_path_from(root)}:#{number}: #{line.strip}"
+        end
+      end
+
+      assert_empty offenders
+    end
+
     test "theme inventory is @theme inline pointing at :root names" do
       theme_block = @css[/@theme inline \{.*?^\}/m]
 

@@ -507,7 +507,7 @@
       box-shadow: var(--sidebar-float-shadow);
     }
 
-    html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-sidebar-floating="true"] aside {
+    html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-sidebar-floating="true"] aside {
       border-radius: 0 !important;
     }
 
@@ -805,10 +805,10 @@
   box-shadow: var(--sidebar-float-shadow);
 }
 
-html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
-html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"],
-html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > *,
-html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
+html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
+html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"],
+html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > *,
+html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
   border-radius: 0;
 }
 

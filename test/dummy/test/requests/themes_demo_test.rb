@@ -17,6 +17,10 @@ class ThemesDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Themes"
     assert_includes response.body, "Theme Variable Reference"
+    assert_includes response.body, "Stacked themes"
+    assert_includes response.body, 'data-theme="rounded"'
+    assert_includes response.body, 'data-theme="rounded harbor"'
+    assert_includes response.body, 'id="theme-default"'
   end
 
   test "theme demo pages load for each supported theme" do
