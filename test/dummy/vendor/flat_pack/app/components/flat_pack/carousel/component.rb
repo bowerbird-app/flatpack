@@ -64,7 +64,7 @@ module FlatPack
         items_per_view_desktop: 1,
         side_preview: false,
         bleed: false,
-        hide_controls_on_touch: false,
+        controls_on_touch: nil,
         logo_items_per_view_mobile: 3,
         logo_items_per_view_tablet: 3,
         logo_items_per_view_desktop: 5,
@@ -113,7 +113,7 @@ module FlatPack
         @items_per_view_desktop = normalize_items_per_view(items_per_view_desktop, fallback: 1)
         @side_preview = !!side_preview
         @bleed = !!bleed
-        @hide_controls_on_touch = !!hide_controls_on_touch
+        @controls_on_touch = controls_on_touch.nil? ? nil : !!controls_on_touch
         @logo_items_per_view_mobile = normalize_logo_items_per_view(logo_items_per_view_mobile, fallback: 3)
         @logo_items_per_view_tablet = normalize_logo_items_per_view(logo_items_per_view_tablet, fallback: 3)
         @logo_items_per_view_desktop = normalize_logo_items_per_view(logo_items_per_view_desktop, fallback: 5)
@@ -363,9 +363,15 @@ module FlatPack
       end
 
       def touch_control_classes
-        return nil unless @hide_controls_on_touch
+        return nil unless controls_hidden_on_touch?
 
         "flat-pack-carousel__control--touch-hidden"
+      end
+
+      def controls_hidden_on_touch?
+        return !@controls_on_touch unless @controls_on_touch.nil?
+
+        item_layout?
       end
 
       def render_footer
@@ -590,7 +596,7 @@ module FlatPack
         if @transition == :fade
           item_layout? ? "relative h-auto w-full" : "relative h-full w-full overflow-hidden"
         else
-          "flex w-full transition-transform duration-[var(--duration-slow)] ease-out #{item_layout? ? "h-auto items-stretch" : "h-full"} #{"items-center" if @variant == :logo_slider}".squish
+          "flex w-full transition-transform duration-[var(--duration-slow)] ease-out #{item_layout? ? "flat-pack-carousel__frame--items h-auto" : "h-full"} #{"items-center" if @variant == :logo_slider}".squish
         end
       end
 
@@ -600,7 +606,7 @@ module FlatPack
         end
 
         if item_layout? && @transition == :slide
-          return "h-auto min-w-0 shrink-0 self-stretch"
+          return "flat-pack-carousel__slide flat-pack-carousel__slide--item h-auto min-w-0 shrink-0"
         end
 
         base = "h-full w-full shrink-0"

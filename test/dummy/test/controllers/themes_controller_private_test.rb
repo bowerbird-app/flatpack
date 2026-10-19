@@ -6,9 +6,9 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
   test "extract_selector_block returns fallback when selector is missing" do
     controller = ThemesController.new
 
-    block = controller.send(:extract_selector_block, ":root {\n  --color-primary: #111;\n}\n", "[data-theme=\"missing\"]")
+    block = controller.send(:extract_selector_block, ":root {\n  --color-primary: #111;\n}\n", "[data-theme~=\"missing\"]")
 
-    assert_includes block, "[data-theme=\"missing\"]"
+    assert_includes block, "[data-theme~=\"missing\"]"
     assert_includes block, "Variables for this selector were not found"
   end
 
@@ -46,7 +46,7 @@ class ThemesControllerPrivateTest < ActiveSupport::TestCase
     code = controller.send(:theme_variables_code, "rounded")
 
     assert_includes code, "shifts --space-2 through --space-6"
-    assert_includes code, '[data-theme="rounded"]'
+    assert_includes code, '[data-theme~="rounded"]'
     assert_includes code, "--space-4: 1.25rem"
     assert_includes code, "--dropdown-padding:"
     refute_includes code, "--color-primary"

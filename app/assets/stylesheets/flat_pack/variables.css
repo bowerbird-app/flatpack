@@ -19,14 +19,14 @@
  *   --tabs-pill-corner-radius, --card-radius, --menu-radius, --popover-radius, --modal-radius,
  *   --alert-border-radius, --toast-border-radius, --chat-composer-radius,
  *   --sidebar-item-radius, --dropdown-item-radius) are also bare :root,
- *   then overridden on [data-theme="rounded"]. Restating the moderate value on [data-theme]
+ *   then overridden on [data-theme~="rounded"]. Restating the moderate value on [data-theme]
  *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
- * [data-theme="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
- * [data-theme="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
+ * [data-theme~="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
+ * [data-theme~="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
  *   It does not restate colour. Buttons, inputs, badges, and tabs become pills.
  *   Chips, sidebar item highlights, and menu item highlights stay --radius-md.
  *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
- * Do not assign `--token: var(--token)` on rounded. html[data-theme="rounded"] is :root, so that blanks the token.
+ * Do not assign `--token: var(--token)` on rounded. html[data-theme~="rounded"] is :root, so that blanks the token.
  */
 
 @theme inline {
@@ -1821,7 +1821,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * shared selector so a dark region inside rounded keeps the generous inset.
  *
  * Shape scale sits here too. Moderate corners are the default. Component radii
- * that [data-theme="rounded"] changes are declared here, not on [data-theme],
+ * that [data-theme~="rounded"] changes are declared here, not on [data-theme],
  * for the same reason as the menu shells.
  */
 :root {
@@ -1875,7 +1875,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
  * Modal blur stays a dark-only exception (3px vs 4px light).
  */
-[data-theme="dark"] {
+[data-theme~="dark"] {
   color-scheme: dark;
   --color-primary: oklch(0.62 0.22 250);
   --color-primary-hover: oklch(0.72 0.15 250);
@@ -1924,7 +1924,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 }
 
 /* Ocean theme — overrides only */
-[data-theme="ocean"] {
+[data-theme~="ocean"] {
   --color-primary: oklch(0.52 0.15 220);
   --color-primary-hover: oklch(0.42 0.18 220);
   --color-secondary: oklch(0.92 0.02 220);
@@ -1962,7 +1962,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * --density stays 1. The global --radius-* steps stay moderate; this block
  * only remaps component radii. Do not self-map a token here.
  */
-[data-theme="rounded"] {
+[data-theme~="rounded"] {
   --space-1: 0.25rem;
   --space-2: 0.75rem;
   --space-3: 1rem;

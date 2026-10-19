@@ -39,7 +39,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-slider rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). Ignored when the `items` slot supplies slides. The viewport then grows with the tallest slide. |
 | `bleed` | Boolean | `false` | no | Pull the track out to the parent edge. The first slide stays lined up with the content. The inset is `--carousel-bleed`, then `--card-inset`, then `--card-padding-md`. |
-| `hide_controls_on_touch` | Boolean | `false` | no | Hide previous and next on `@media (hover: none)`. Swipe still moves the track. Arrows stay absolutely positioned and take no width. |
+| `controls_on_touch` | Boolean | hidden for `items`, shown for hash slides | no | `false` hides previous and next on `@media (hover: none)`. Swipe still moves the track. Arrows stay absolutely positioned and take no width. Omit it and a card row hides them. A hash `slides:` carousel keeps them. |
 | `show_border` | Boolean | `true` for hash slides, `false` for `items` | no | Draw the viewport border. `:logo_slider` stays borderless. Pass `true` or `false` to override the `items` default. |
 | `show_background` | Boolean | `true` for hash slides, `false` for `items` | no | Fill the viewport. `:logo_slider` stays transparent. Pass `true` or `false` to override the `items` default. |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
@@ -57,7 +57,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 |---|---|
 | `items` | One slide per call. The block is trusted component output: images, buttons, and `data-action` render as written, with no forced padding. Hash `slides:` can be omitted. When both are set, hash slides come first. |
 
-`with_item` switches the viewport to content height. There is no aspect ratio and no letterboxing. The default border and muted fill turn off unless you pass `show_border:` or `show_background:`.
+`with_item` switches the viewport to content height. There is no aspect ratio and no letterboxing. The default border and muted fill turn off unless you pass `show_border:` or `show_background:`. Each item sizes to its own content, so a card's title and actions stay visible. The row is as tall as the tallest item.
 
 ## Card row
 Put the carousel in a padded card and set `bleed: true` so the next card peeks to the card edge instead of stopping at the padding. `side_preview: true` reads `--carousel-peek`. A theme or host sets that token to change the peek. `0.25` shows about 80% of a slide when one slide is in view (`100 / 1.25`).
@@ -127,7 +127,10 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   <%= render FlatPack::Carousel::Component.new(
     side_preview: true,
     bleed: true,
-    hide_controls_on_touch: true,
+    items_per_view_desktop: 3,
+    items_per_view_tablet: 2,
+    items_per_view_mobile: 1,
+    controls_on_touch: false,
     show_indicators: false,
     show_counter: false,
     show_captions: false,

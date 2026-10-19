@@ -17,19 +17,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `FlatPack::Carousel::Component` accepts an `items` slot (`with_item`). Each block is one slide of trusted component output. Images, buttons, and `data-action` render as written, with no `overflow-auto p-4` wrapper. Hash `slides:` can be omitted. When both are set, hash slides come first.
-- Slot slides size the viewport to the tallest slide. The aspect ratio, default border, and default fill are off. Pass `show_border:` or `show_background:` to turn them back on.
+- Slot slides size the viewport to the tallest slide. The aspect ratio, default border, and default fill are off. Pass `show_border:` or `show_background:` to turn them back on. An item card sizes to its content, so the title and actions are not clipped by the card's fixed height.
 - `side_preview: true` adds `--carousel-peek` to the items-per-view count. The default is `0.25`, the same peek as before. A theme or host can set the token. `0.25` with one slide in view shows about 80% of the slide.
 - `bleed: true` lets the track run to the parent edge while the first slide stays lined up with the content. The inset is `--carousel-bleed`, then `--card-inset`, then `--card-padding-md`. `--card-inset` is not in this version.
-- `hide_controls_on_touch: true` hides previous and next on `@media (hover: none)`. Arrows stay `absolute` overlays and take no width. `controls_on_hover` is unchanged and still shows arrows on small screens.
+- `controls_on_touch:` hides previous and next on `@media (hover: none)` when `false`. A card row (`items`) hides them by default, because swipe covers that case. A hash `slides:` carousel keeps them unless you pass `false`. Pass `true` on a card row to keep the arrows. Arrows stay `absolute` overlays and take no width. `controls_on_hover` is unchanged and still shows arrows on small screens.
 - Demo: the Card row section on `/demo/carousel`.
 - Bumped the gem version to `0.1.262`.
 
 ### Upgrade notes
 - Additive. The `slides:` hash API, sanitizer, aspect ratio, border, and background are unchanged when you do not pass `with_item`. No host call site has to change.
 - Reload kit CSS and the carousel controller so `--carousel-peek` and `.flat-pack-carousel__control--touch-hidden` load. No new Stimulus controller. Importmap hosts need no new pin. esbuild, webpack, and Vite hosts already register `flat-pack--carousel`. Do not register another controller.
-- No Tailwind rebuild. The slot layout reuses `h-auto`, `min-w-0`, `items-stretch`, and `self-stretch`, which the kit already ships. No `bin/rails generate flat_pack:install` rerun.
+- No Tailwind rebuild. The slot layout reuses `h-auto`, `min-w-0`, and `shrink-0`, which the kit already ships. Content height and the touch rule live in kit CSS. No `bin/rails generate flat_pack:install` rerun.
 - Set `--carousel-bleed` on the parent when the card padding is not `--card-padding-md`. When a later release defines `--card-inset`, bleed picks it up without a call-site change.
 - Redeploy so `meta.gem_version` shows `0.1.262`.
+
+## [0.1.259] - 2026-10-19
+
+### Added
+- `data-theme` can list more than one name, base first. `data-theme="rounded featured-in"` applies rounded, then the custom theme's tokens where they differ.
+- Named kit selectors are word matches: `[data-theme~="rounded"]`, `[data-theme~="dark"]`, and `[data-theme~="ocean"]`. `:root, [data-theme]` is unchanged. The floating sidebar and floating top-nav cards use `:not([data-theme~="rounded"])`, so `data-theme="rounded harbor"` keeps the pill corners.
+- `flat-pack--theme` swaps the base name and keeps names that are not in the picker list. Light clears owned base names and removes the attribute when nothing remains. Dark mode is true when the list contains the whole name `dark`.
+- `bin/rails generate flat_pack:theme NAME --inherits=rounded` writes an overrides-only file and tells you to set `data-theme="rounded NAME"`. The generated selector is `[data-theme~="NAME"]`. There is no full-fork theme generator.
+- Dummy themes page shows Harbor stacked on rounded. Those samples are cards, so the corners follow `--card-radius` (`--radius-xl` on the rounded page).
+- Bumped the gem version to `0.1.259`.
+
+### Upgrade notes
+- Single-name themes keep working. `data-theme="rounded"` still matches `[data-theme~="rounded"]`. `data-theme="dark"` still matches dark. Picking light while the only name is a base theme still removes the attribute.
+- A nested `data-theme="harbor"` inside a rounded page keeps the rounded shape. Harbor does not restate radii, and `[data-theme]` does not put the moderate radii back. The moderate shape is `data-theme="harbor"` on the root, with no rounded ancestor.
+- A host selector that is an exact match, `[data-theme="brand"]`, does not match `data-theme="rounded brand"`. Change that host selector to `[data-theme~="brand"]` when you stack. Load the host file after `flat_pack/variables`. Specificity is unchanged, so source order still decides the winner. Kit CSS is not in a cascade layer. Putting it in one would let unlayered host CSS beat the kit even when the host file loads first.
+- The picker stores the base name, not the full list. A custom name rendered in the HTML stays when the base changes.
+- Reload kit CSS. No Tailwind rebuild is required for the kit selector change. Rebuild Tailwind only if a host stylesheet that Tailwind compiles still uses exact `data-theme` selectors you are stacking. No `bin/rails generate flat_pack:install` rerun.
+- Redeploy so `meta.gem_version` shows `0.1.259`.
 
 ## [0.1.258] - 2026-10-19
 
@@ -59,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats. Hosts that do not pass `height: :content` keep the full-height floating rail.
-- New tokens `--top-nav-float-clearance` and `--top-nav-float-radius`. The radius defaults to `var(--sidebar-float-radius)`. `[data-theme="rounded"]` sets it to `var(--radius-full)`, so the cards are pills. The rail still uses `--sidebar-float-radius`. The content-height cap reuses `--sidebar-float-inset`. No token was renamed.
+- New tokens `--top-nav-float-clearance` and `--top-nav-float-radius`. The radius defaults to `var(--sidebar-float-radius)`. `[data-theme~="rounded"]` sets it to `var(--radius-full)`, so the cards are pills. The rail still uses `--sidebar-float-radius`. The content-height cap reuses `--sidebar-float-inset`. No token was renamed.
 - `--layout-content-inset` is the horizontal page padding: `1rem`, then `2rem` from `640px`. `.fp-layout-content` applies it to the main pane. `.fp-layout-column` is the page column inside that pane. `--layout-content-max-width` defaults to `100%`, so the column fills the pane. A length centers that measure, and the floating bar follows it. The bar's left and right edges use the inset plus `--top-nav-float-offset` (`0px`) plus that centering. A nested `max-width` with auto margins is a second column and will not meet the bar. Override `--layout-content-inset` to move the page and the bar together. The docked bar still uses `--top-nav-padding-inline`.
 - Below `768px`, floating `left` and `center` cards use `0.25rem` of inline padding and the row gap is `0.5rem`. Text buttons in those cards use `0.625rem` of inline padding. The cards shrink before the row wraps.
 - When the floating cards are more than `8px` taller than `--top-nav-float-clearance`, the layout sets that token on the main column to the bottom of the band so a wrapped row does not cover the page.

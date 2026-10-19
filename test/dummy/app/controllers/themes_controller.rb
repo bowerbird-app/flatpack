@@ -66,8 +66,8 @@ class ThemesController < ApplicationController
 
   THEME_SELECTORS = {
     "light" => ":root, [data-theme]",
-    "dark" => "[data-theme=\"dark\"]",
-    "ocean" => "[data-theme=\"ocean\"]"
+    "dark" => "[data-theme~=\"dark\"]",
+    "ocean" => "[data-theme~=\"ocean\"]"
   }.freeze
 
   helper_method :theme_demo_variables_subtitle
@@ -127,7 +127,7 @@ class ThemesController < ApplicationController
          * Colour, radius, and shadow stay on :root.
          */
 
-        #{extract_selector_block(css, '[data-theme="rounded"]')}
+        #{extract_selector_block(css, '[data-theme~="rounded"]')}
       CODE
     end
 

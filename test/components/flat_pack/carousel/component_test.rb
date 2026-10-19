@@ -703,7 +703,6 @@ module FlatPack
         render_inline(Component.new(
           side_preview: true,
           bleed: true,
-          hide_controls_on_touch: true,
           show_controls: true
         )) do |carousel|
           carousel.with_item do
@@ -737,7 +736,30 @@ module FlatPack
 
         slide = page.all("[data-flat-pack--carousel-target='slide']", visible: :all).first
         assert_includes slide[:class], "h-auto"
+        assert_includes slide[:class], "flat-pack-carousel__slide--item"
         refute_includes slide[:class], "h-full"
+        refute_includes slide[:class], "self-stretch"
+      end
+
+      def test_controls_on_touch_defaults_and_overrides
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new(controls_on_touch: true, show_controls: true)) do |carousel|
+          carousel.with_item { view.tag.p("One") }
+          carousel.with_item { view.tag.p("Two") }
+        end
+
+        shown = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
+        refute_includes shown[:class], "flat-pack-carousel__control--touch-hidden"
+
+        render_inline(Component.new(
+          slides: sample_slides.first(2),
+          controls_on_touch: false,
+          show_controls: true
+        ))
+
+        hidden = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
+        assert_includes hidden[:class], "flat-pack-carousel__control--touch-hidden"
       end
 
       def test_hash_slides_keep_sanitized_html_and_the_aspect_ratio
@@ -771,6 +793,7 @@ module FlatPack
         controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/carousel_controller.js").read
 
         assert_match(/--carousel-peek:\s*0\.25;/, variables)
+        assert_includes application, ".flat-pack-carousel__slide--item > .fp-card"
         assert_includes application, ".flat-pack-carousel__control--touch-hidden"
         touch_rule = application[application.index("@media (hover: none)"), 220]
         assert_includes touch_rule, ".flat-pack-carousel__control--touch-hidden"

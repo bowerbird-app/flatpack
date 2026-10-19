@@ -21,7 +21,10 @@
       <%= render FlatPack::Carousel::Component.new(
         side_preview: true,
         bleed: true,
-        hide_controls_on_touch: true,
+        controls_on_touch: false,
+        items_per_view_desktop: 3,
+        items_per_view_tablet: 2,
+        items_per_view_mobile: 1,
         show_indicators: false,
         show_counter: false,
         show_captions: false,
@@ -29,7 +32,7 @@
       ) do |carousel| %>
         <% episode_cards.each do |episode| %>
           <% carousel.with_item do %>
-            <%= render FlatPack::Card::Component.new(padding: :none, class: "min-w-0 h-full") do |card| %>
+            <%= render FlatPack::Card::Component.new(padding: :none, class: "min-w-0") do |card| %>
               <% card.media(aspect_ratio: "1/1", padding: :none) do %>
                 <%= image_tag episode[:art], alt: "", class: "h-full w-full object-cover" %>
               <% end %>
@@ -56,7 +59,10 @@
         &lt;%= render FlatPack::Carousel::Component.new(
           side_preview: true,
           bleed: true,
-          hide_controls_on_touch: true,
+          controls_on_touch: false,
+          items_per_view_desktop: 3,
+          items_per_view_tablet: 2,
+          items_per_view_mobile: 1,
           show_indicators: false,
           show_counter: false,
           show_captions: false
