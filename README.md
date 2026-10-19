@@ -333,7 +333,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Popover** - Anchored floating panel with Stimulus positioning
 - **Tooltip** - Accessible tooltip via Stimulus
 - **Picker** - Modal-based asset picker with single/multi selection
-- **Carousel** - Interactive slide carousel with controls, autoplay, and lightbox
+- **Carousel** - Slide carousel with controls, autoplay, and lightbox, plus a slot for a row of component cards
 - **Chips** - Chip + ChipGroup for tag-like selection UI
 - **RangeInput** - Slider control for bounded numeric values
 - **Search** - Search field with a live-result dropdown from a local `items:` list or a JSON endpoint

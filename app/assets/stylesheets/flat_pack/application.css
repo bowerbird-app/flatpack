@@ -4157,6 +4157,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   overflow: hidden;
 }
 
+@media (hover: none) {
+  .flat-pack-carousel__control--touch-hidden {
+    display: none;
+  }
+}
+
 @media (scripting: none) {
   .fp-number:not(.is-static) .fp-number__final {
     position: static;

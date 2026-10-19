@@ -278,6 +278,7 @@
   --carousel-caption-below-text-color: var(--carousel-caption-below-text-color);
   --carousel-media-background-color: var(--carousel-media-background-color);
   --carousel-lightbox-image-background-color: var(--carousel-lightbox-image-background-color);
+  --carousel-peek: var(--carousel-peek);
   --modal-backdrop-color: var(--modal-backdrop-color);
   --modal-surface-color: var(--modal-surface-color);
   --modal-border-color: var(--modal-border-color);
@@ -1227,6 +1228,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --carousel-caption-below-text-color: var(--surface-muted-content-color);
   --carousel-media-background-color: oklch(0 0 0);
   --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
+  --carousel-peek: 0.25;
   --modal-backdrop-color: var(--overlay-backdrop-color);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);

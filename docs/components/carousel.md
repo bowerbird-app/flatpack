@@ -12,7 +12,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `slides` | Array<Hash> | `[]` | yes | Slide payloads (`:image`, `:video`, `:html`) with sanitization. Image slides accept `lightbox` (default `true`). Video and HTML default `lightbox` to `false`. |
+| `slides` | Array<Hash> | `[]` | no | Slide payloads (`:image`, `:video`, `:html`) with sanitization. Image slides accept `lightbox` (default `true`). Video and HTML default `lightbox` to `false`. Omit it when every slide comes from the `items` slot. |
 | `initial_index` | Integer | `0` | no | Zero-based starting slide index. |
 | `show_thumbs` | Boolean | `false` | no | Render clickable thumbnail navigation. |
 | `thumbs_position` | Symbol | `:bottom` | no | Thumbnail row position: `:top`, `:bottom`. |
@@ -30,16 +30,18 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `items_per_view_desktop` | Integer | `1` | no | Slides visible at desktop width when `variant: :default` and `transition: :slide`. |
 | `items_per_view_tablet` | Integer | `1` | no | Slides visible at tablet width when `variant: :default` and `transition: :slide`. |
 | `items_per_view_mobile` | Integer | `1` | no | Slides visible at mobile width when `variant: :default` and `transition: :slide`. |
-| `side_preview` | Boolean | `false` | no | In default slide mode, reveals `0.25` of the next slide while preserving configured full items-per-view. Ignored for `:logo_slider` and `:fade`. |
+| `side_preview` | Boolean | `false` | no | In default slide mode, reveals the next slide by `--carousel-peek` (default `0.25`, so one full slide plus a quarter of the next). Ignored for `:logo_slider` and `:fade`. |
 | `logo_items_per_view_desktop` | Integer | `5` | no | Logos visible at desktop width when `variant: :logo_slider`. |
 | `logo_items_per_view_tablet` | Integer | `3` | no | Logos visible at tablet width when `variant: :logo_slider`. |
 | `logo_items_per_view_mobile` | Integer | `3` | no | Logos visible at mobile width when `variant: :logo_slider`. |
 | `logo_grayscale` | Boolean | `true` | no | Apply grayscale filter to logo images in logo-slider mode. |
 | `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-slider mode (`0.0..1.0`). |
 | `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-slider rendering keeps wrapper/viewport transparent. |
-| `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). |
-| `show_border` | Boolean | `true` | no | Draw the viewport border. `:logo_slider` stays borderless. |
-| `show_background` | Boolean | `true` | no | Fill the viewport. `:logo_slider` stays transparent. |
+| `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). Ignored when the `items` slot supplies slides. The viewport then grows with the tallest slide. |
+| `bleed` | Boolean | `false` | no | Pull the track out to the parent edge. The first slide stays lined up with the content. The inset is `--carousel-bleed`, then `--card-inset`, then `--card-padding-md`. |
+| `hide_controls_on_touch` | Boolean | `false` | no | Hide previous and next on `@media (hover: none)`. Swipe still moves the track. Arrows stay absolutely positioned and take no width. |
+| `show_border` | Boolean | `true` for hash slides, `false` for `items` | no | Draw the viewport border. `:logo_slider` stays borderless. Pass `true` or `false` to override the `items` default. |
+| `show_background` | Boolean | `true` for hash slides, `false` for `items` | no | Fill the viewport. `:logo_slider` stays transparent. Pass `true` or `false` to override the `items` default. |
 | `responsive` | Boolean | `true` | no | Keep container responsive width behavior. |
 | `touch_swipe` | Boolean | `true` | no | Enable pointer swipe navigation. |
 | `show_captions` | Boolean | `true` | no | Render active slide captions. |
@@ -51,7 +53,16 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for root wrapper. |
 
 ## Slots
-None.
+| name | description |
+|---|---|
+| `items` | One slide per call. The block is trusted component output: images, buttons, and `data-action` render as written, with no forced padding. Hash `slides:` can be omitted. When both are set, hash slides come first. |
+
+`with_item` switches the viewport to content height. There is no aspect ratio and no letterboxing. The default border and muted fill turn off unless you pass `show_border:` or `show_background:`.
+
+## Card row
+Put the carousel in a padded card and set `bleed: true` so the next card peeks to the card edge instead of stopping at the padding. `side_preview: true` reads `--carousel-peek`. A theme or host sets that token to change the peek. `0.25` shows about 80% of a slide when one slide is in view (`100 / 1.25`).
+
+`--card-inset` is not defined in this version. Bleed falls through to `--card-padding-md`, which is the Card `padding: :md` inset. Set `--carousel-bleed` or `--card-inset` on the parent when the padding differs.
 
 ## Variants
 - Transition: `:slide`, `:fade`.
@@ -70,8 +81,9 @@ The default viewport draws a border and a muted fill. `show_border: false` repla
 
 ## Side Preview Notes
 - Applies only to `variant: :default` with `transition: :slide`.
-- Adds a visual `+0.25` peek of the next slide.
+- Adds `--carousel-peek` (default `0.25`) to the items-per-view count. The previous fixed `+0.25` is that default.
 - Keep per-breakpoint full-card counts with `items_per_view_desktop`, `items_per_view_tablet`, and `items_per_view_mobile`.
+- Previous and next are overlays (`absolute`). They do not sit beside the track.
 
 ## Interactive Demo
 - `/demo/carousel`
@@ -107,6 +119,34 @@ The dummy app consolidates carousel behavior (basic, autoplay, thumbnails, trans
   show_indicators: false,
   show_captions: false
 ) %>
+```
+
+## Card Row Example
+```erb
+<%= render FlatPack::Card::Component.new(padding: :md) do %>
+  <%= render FlatPack::Carousel::Component.new(
+    side_preview: true,
+    bleed: true,
+    hide_controls_on_touch: true,
+    show_indicators: false,
+    show_counter: false,
+    show_captions: false,
+    aria_label: "Episodes"
+  ) do |carousel| %>
+    <% carousel.with_item do %>
+      <%= render FlatPack::Card::Component.new(padding: :none) do |card| %>
+        <% card.media(aspect_ratio: "1/1", padding: :none) do %>
+          <%= image_tag episode_art_url, alt: "" %>
+        <% end %>
+        <% card.body do %>
+          <h3>Night drive</h3>
+          <%= render FlatPack::Button::Component.new(text: "Play", icon: "play", style: :primary, size: :sm) %>
+          <%= render FlatPack::Button::Component.new(text: "Save", style: :secondary, size: :sm) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
 ```
 
 ## Side Preview Charts Example
