@@ -33,7 +33,7 @@ That means a custom host-app theme is usually just brand/semantic overrides:
 }
 ```
 
-For an exact primary hex, set `--color-primary`. Hover derives from that colour (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), with a `--brand-*` fallback in browsers that do not support relative colour syntax. Override `--color-primary-hover` only when hover should diverge. Focus rings (`--color-ring`) follow `--color-primary`. Active sidebar and top-nav fills follow `--surface-active-background-color`, with text and icons on `--surface-active-text-color`. Primary button text stays on `--color-primary-text` (default `#fff` — keep it unless the fill is light). The bottom nav bar is inverted chrome (`--bottom-nav-background-color`); leave it unless you want a different bar colour.
+For an exact primary hex, set `--color-primary` and `--color-primary-text` on the element that should rebrand. Primary button rest, text, border, hover, and pressed follow. Hover mixes that colour 88% toward black on a light page and toward white in dark. Pressed mixes at 80%. Set `--color-primary-hover` only when hover should diverge. `--button-primary-hover-background-color` wins over that pin. Ocean still sets `--color-primary-hover` to `oklch(0.42 0.18 220)`. Focus rings (`--color-ring`) follow the palette `--color-primary` and do not follow a nested wrapper. Active sidebar and top-nav fills follow `--surface-active-background-color`, with text and icons on `--surface-active-text-color`. Set `--color-primary-text` with the brand colour and check AA contrast. White text fails on a light brand such as yellow. CSS cannot pick the text colour. The bottom nav bar is inverted chrome (`--bottom-nav-background-color`). Leave it unless you want a different bar colour.
 
 Any non-`light` theme value applied to `<html data-theme="...">` (or `<body data-theme="...">`) will activate the matching selector.
 
@@ -100,6 +100,8 @@ Example:
 
 This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped charcoal palette, leave `:root` alone. Set `data-theme="rounded"` for the generous spacing scale and pill controls. Padding tokens below are formulas on the scale. Override `--space-*` or `--density` to move a whole theme. Override one component token only when that control should diverge. Do not self-map a token (`--token: var(--token)`).
 
+Leave `--color-primary-hover`, `--button-primary-*`, `--fab-background-color`, `--fab-text-color`, `--fab-hover-background-color`, the chat send colour tokens, and the comments submit and replies colour tokens unset. The painters read them as pins. A value here freezes the shade. A wrapper `--color-primary` then leaves hover on that frozen colour.
+
 Do not copy decorative `--gradient-*` tokens unless this theme actually needs a wash. The kit default has none.
 
 <details>
@@ -116,7 +118,6 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --density: 1;
 
   --color-primary: oklch(0.52 0.26 250);
-  --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h);
   --color-primary-text: oklch(1.0 0 0);
 
   --color-default: var(--surface-background-color);
@@ -189,9 +190,6 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --bottom-nav-item-hover-color: oklch(1.0 0 0);
   --bottom-nav-item-padding-x: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --bottom-nav-item-padding-y: round(nearest, calc(var(--space-2) * var(--density)), 1px);
-  --fab-background-color: var(--color-primary);
-  --fab-hover-background-color: var(--color-primary-hover);
-  --fab-text-color: var(--color-primary-text);
   --fab-backdrop-color: var(--overlay-backdrop-color);
   --fab-action-background-color: var(--surface-background-color);
   --fab-action-hover-background-color: var(--surface-muted-background-color);
@@ -626,9 +624,6 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --chat-typing-dot-color: var(--surface-content-color);
   --chat-avatar-placeholder-background-color: var(--surface-muted-background-color);
   --chat-avatar-placeholder-text-color: var(--surface-muted-content-color);
-  --chat-send-button-background-color: var(--color-primary);
-  --chat-send-button-hover-background-color: var(--color-primary-hover);
-  --chat-send-button-text-color: var(--color-primary-text);
   --chat-send-button-focus-ring-color: var(--color-ring);
   --comments-item-background-color: var(--surface-background-color);
   --comments-item-system-background-color: var(--surface-muted-background-color);
@@ -648,9 +643,6 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --comments-composer-slots-background-color: var(--comments-composer-actions-background-color);
   --comments-composer-cancel-text-color: var(--surface-content-color);
   --comments-composer-cancel-hover-background-color: var(--surface-muted-background-color);
-  --comments-composer-submit-background-color: var(--color-primary);
-  --comments-composer-submit-hover-background-color: color-mix(in oklab, var(--color-primary) 90%, black);
-  --comments-composer-submit-text-color: var(--color-primary-text);
   --comments-inline-input-radius: var(--form-control-radius);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
@@ -659,16 +651,10 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --comments-thread-empty-title-color: var(--surface-content-color);
   --comments-thread-empty-body-color: var(--surface-muted-content-color);
   --comments-replies-border-color: var(--surface-border-color);
-  --comments-replies-toggle-color: var(--color-primary);
-  --comments-replies-toggle-hover-color: var(--color-primary-hover);
   --button-default-background-color: var(--color-default);
   --button-default-hover-background-color: var(--color-default-hover);
   --button-default-text-color: var(--color-default-text);
   --button-default-border-color: var(--color-default-border);
-  --button-primary-background-color: var(--color-primary);
-  --button-primary-hover-background-color: var(--color-primary-hover);
-  --button-primary-text-color: var(--color-primary-text);
-  --button-primary-border-color: var(--color-primary);
   --button-secondary-background-color: var(--color-secondary);
   --button-secondary-hover-background-color: var(--color-secondary-hover);
   --button-secondary-text-color: var(--color-secondary-text);

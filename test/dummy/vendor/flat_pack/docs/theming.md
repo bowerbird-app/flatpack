@@ -50,12 +50,17 @@ Or override primitives directly:
 }
 ```
 
-`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. Hover follows `--color-primary` and subtracts `0.10` from lightness (`oklch(from var(--color-primary) calc(l - 0.1) c h)`), so an exact hex still darkens on hover. Browsers without relative colour syntax keep the brand-knob fallback. Charcoal chroma `0` stays valid. Surfaces keep their own colors unless you override `--surface-*`. `--color-primary-text` stays `#fff` unless you override it.
+`--color-primary` is `oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue))`. A primary button reads that colour on the element that paints, so a wrapper hex changes rest, text, border, hover, and pressed. Hover mixes the colour 88% toward black on a light page. Pressed mixes at 80%. Dark mixes toward white. The default palette does not set `--color-primary-hover`. Charcoal rest stays `oklch(0.3211 0 0)`. Charcoal chroma `0` stays valid. Set `--color-primary-text` with the brand colour and check AA contrast. White text fails on a light brand such as yellow. CSS cannot pick the text colour. Surfaces keep their own colors unless you override `--surface-*`.
 
-These follow `--color-primary` (and `--color-primary-text` for text or icons on that fill). You do not set them on a named theme unless you want them to diverge:
+These follow the palette `--color-primary`. A nested wrapper does not change them:
 
-- `--color-ring` — focus rings
-- `--button-primary-*`, `--badge-primary-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, underline tab marks, the tree's 2px bar, and other primary-filled controls
+- `--color-ring` for focus rings
+
+These still alias `--color-primary` on `:root, [data-theme]`, so they follow the theme and not a nested wrapper. Set one on a named theme only when it should diverge:
+
+- `--badge-primary-*`, `--progress-fill-color`, `--range-fill-color`, `--range-thumb-color`, `--switch-track-checked-background-color`, `--stepper-current-color`, underline tab marks, the tree's 2px bar, and other primary-filled controls
+
+Primary buttons are not in that list. The kit does not assign `--button-primary-*` on `:root`. Set those names when one control should diverge from the wrapper.
 
 Outgoing chat follows the hover surface, not primary. `--chat-message-outgoing-background-color` is `var(--surface-hover-background-color)` (`#f0f0f0` on the default palette) and `--chat-message-outgoing-text-color` is `var(--surface-content-color)`. Incoming stays `--surface-muted-background-color` (`#e5e5e5`) with the same foreground. Dark and ocean set their own outgoing fill so the two bubbles stay apart: dark hover matches muted, and ocean hover sits on the muted fill. Timestamps, read receipts, and attachment icons use `--surface-muted-content-color`. They sit under the bubble or on the attachment card. Links inside a bubble inherit the bubble text colour.
 
@@ -69,7 +74,7 @@ Selected and hover chrome follows the surface pair instead. Set these once and s
 
 The bottom nav bar (`--bottom-nav-background-color`) is a dark surface, not a brand fill. Dark and ocean set their own bar colours. Active bottom-nav *items* use `--bottom-nav-item-active-color` (contrast on that bar), not `--color-primary`.
 
-For an exact brand hex, set `--color-primary`. Hover derives from it; set `--color-primary-hover` only when it should not be `l - 0.10`:
+For an exact brand hex, set `--color-primary` and `--color-primary-text` on the wrapper. Hover and pressed follow. Set `--color-primary-hover` only when hover should diverge from the mix. `--button-primary-hover-background-color` wins over that pin:
 
 ```css
 :root {
@@ -475,7 +480,7 @@ Drawer tokens alias Modal. Keyboard, skip link, and stepper tokens alias surface
 
 ## Component Variable Usage
 
-Component tokens such as `--button-primary-background-color` map to semantic tokens (`var(--color-primary)`). `--color-ring` does the same. Active sidebar, top nav, list, pill, table, and pagination fills map to `--surface-active-*` and `--surface-hover-background-color`. You normally change `--brand-hue` / `--brand-chroma` / `--brand-lightness` or `--color-primary` for brand colour, and the surface hover / active tokens for selected chrome.
+`--color-ring` maps to `var(--color-primary)` on the palette. Active sidebar, top nav, list, pill, table, and pagination fills map to `--surface-active-*` and `--surface-hover-background-color`. Primary button paint is specified on the button. `--button-primary-*` are optional pins. You normally change the brand knobs or `--color-primary` for brand colour, and the surface hover and active tokens for selected chrome.
 
 Alert and toast success/warning/danger wash the status fill into the surface (`color-mix` at 18%) and keep chroma on the icon and border. Info toasts alias the quiet info alert, not `--color-primary`. Buttons, badges, chips, and progress keep the filled `--color-success-*` / `--color-warning-*` / `--color-danger-*` paints. Progress reads those fills through `--progress-*-fill-color` and `.fp-progress-fill`, not Tailwind `bg-primary`. Range input paints the native slider through `.fp-range-input` and `--range-*` tokens, not `accent-color`.
 
@@ -485,7 +490,7 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 
 ### Buttons
 - Colors: `--color-default-*`, `--color-primary-*`, `--color-secondary-*`, `--color-ghost-*`, `--color-success-*`, `--color-warning-*`
-- Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in `data-fp-style` values map these from `--button-primary-*` and the other scheme tokens. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. A host-registered style sets the paint tokens on `[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
+- Local paint: `--fp-button-background`, `--fp-button-hover-background`, `--fp-button-text`, `--fp-button-border`. Built-in primary sets those from `--button-primary-*` when the pin is set, and otherwise from `--color-primary` and `--color-primary-text`. Hover reads `--button-primary-hover-background-color`, then `--color-primary-hover`, then the mix. Pressed reads `--button-primary-active-background-color`, then the 80% mix. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. A host-registered style sets the paint tokens on `[data-fp-style="…"]` and does not change the theme. See [Button](components/button.md).
 - Leading icon colour: `--button-icon-primary-color` (`--color-primary`), `--button-icon-success-color` (`--color-success-background-color`), `--button-icon-warning-color` (`--color-warning`), `--button-icon-danger-color` (`--color-danger-background-color`). `icon_style: nil` uses the button text. A set style mixes that token 55% toward `--fp-button-text` so the glyph stays readable on every button fill, including host-registered styles. When the icon style matches the button style, the glyph uses `--fp-button-text`. Disabled opacity on `.fp-button` still mutes it. There is no per-button icon class.
 - Radius: `--radius-md`
 - Shadow: `--button-shadow`, `--button-shadow-hover`, `--button-shadow-active`
@@ -544,7 +549,7 @@ Collection Editor aliases the same surface and list tokens. `--collection-editor
 
 See [Dark Mode](dark_mode.md). Built-in variants (`dark`, `ocean`) only override tokens that differ from the default palette. `rounded` is an alias of the default. Component aliases are declared on `:root, [data-theme]` and re-resolve against that element's semantic tokens.
 
-`var()` inside a custom property is computed on the element that declares it. If the kit only declared `--button-primary-background-color: var(--color-primary)` on `:root`, a host that sets `--color-primary` on `<body data-theme="…">` would keep the already-resolved `:root` value. Declaring the same wiring on `[data-theme]` is the generic fix. Prefer `data-theme` on `<html>` when you can; either placement works.
+`var()` inside a custom property is computed on the element that declares it. `--badge-primary-background-color: var(--color-primary)` on `:root, [data-theme]` re-resolves when `data-theme` is on `<body>`. Primary buttons do not use that alias. The button specifies the fallback itself, so a wrapper `--color-primary` changes the face without a theme attribute. Prefer `data-theme` on `<html>` when you can. Either placement works for the aliases that remain on `[data-theme]`.
 
 Dark and ocean set `--color-primary` directly. Their focus rings and active nav fills follow that primary. They do not restate `--color-ring`.
 

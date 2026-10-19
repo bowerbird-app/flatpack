@@ -65,17 +65,16 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
   --brand-chroma: var(--brand-chroma);
   --brand-lightness: var(--brand-lightness);
   --color-primary: var(--color-primary);
-  --button-primary-background-color: var(--button-primary-background-color);
+  --color-primary-hover: var(--color-primary-hover);
+  --button-primary-active-background-color: var(--button-primary-active-background-color);
 }
 
 :root {
-  /* Default rounded / charcoal palette + component aliases (the values browsers use) */
+  /* Default rounded / charcoal palette (the values browsers use) */
   --brand-hue: 0;
   --brand-chroma: 0;
   --brand-lightness: 0.3211;
   --color-primary: oklch(var(--brand-lightness) var(--brand-chroma) var(--brand-hue));
-  --color-primary-hover: oklch(from var(--color-primary) calc(l - 0.1) c h); /* @supports; brand-knob fallback otherwise */
-  --button-primary-background-color: var(--color-primary);
 }
 
 /* Named themes override brand/semantic tokens only */
@@ -83,6 +82,8 @@ FlatPack defines CSS variables in `app/assets/stylesheets/flat_pack/variables.cs
   --color-primary: oklch(0.70 0.20 250);
 }
 ```
+
+`--color-primary-hover` and `--button-primary-active-background-color` are self-maps in `@theme inline`. The palette does not assign them. The primary button mixes hover and pressed on the element that paints.
 
 ### Component Classes
 
@@ -94,7 +95,7 @@ SCHEMES = {
 }
 ```
 
-The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as values.
+The `[var(--color-primary)]` syntax allows Tailwind to use CSS variables as values. Primary buttons do not use `hover:bg-[var(--color-primary-hover)]`. That token is unset until a host pins it.
 
 Button colour is kit CSS. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. `[data-fp-style]` assigns local `--fp-button-*` paint tokens. Built-in styles map those from `--button-primary-*` and the other scheme tokens. Hosts register extra names with `FlatPack::Button.register_style` and paint the same tokens in host CSS. Do not add per-style Tailwind `bg-[var(--button-…)]` classes for a new colourway — Tailwind will not scan dynamically registered names.
 
