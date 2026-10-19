@@ -14,6 +14,9 @@
 <% float_top_query = request.query_parameters.merge("floating" => "1", "background" => "1", "floating_top_nav" => "1").except("content_scroll") %>
 <% dock_top_query = request.query_parameters.except("floating_top_nav", "content_scroll") %>
 <% scroll_query = float_top_query.merge("content_scroll" => content_below ? "behind" : "below") %>
+<% content_height = params[:height] == "content" %>
+<% fit_rail_query = request.query_parameters.merge("floating" => "1", "background" => "1", "height" => "content") %>
+<% fill_rail_query = request.query_parameters.except("height") %>
 
 <div class="mb-8 flex flex-wrap items-center gap-3">
   <%= link_to(
@@ -30,6 +33,12 @@
   <%= render FlatPack::Button::Component.new(
     text: top_nav_floating ? "Dock the top" : "Float the top",
     href: demo_sidebar_layout_path(top_nav_floating ? dock_top_query : float_top_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: content_height ? "Fill the rail" : "Fit the rail",
+    href: demo_sidebar_layout_path(content_height ? fill_rail_query : fit_rail_query),
     style: :secondary,
     size: :sm
   ) %>
@@ -53,6 +62,7 @@
     This page focuses only on the layout shell. The detailed sidebar component demos now live under the Sidebar menu group.
     Photo background uses <code>?background=1</code>. Add <code>?floating=1</code> for the detached rail. The flush rail is <code>?background=1</code> alone.
     <code>?floating_top_nav=1</code> turns the bar into cards. <code>content_scroll=below</code> parks those cards above the page.
+    <code>?height=content</code> with <code>?floating=1</code> sizes the desktop rail to its items.
   </p>
 
   <%= render FlatPack::CodeBlock::Component.new(

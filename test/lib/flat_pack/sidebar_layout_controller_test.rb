@@ -53,6 +53,8 @@ module FlatPack
       assert_includes css, "box-shadow: var(--sidebar-float-shadow);"
       assert_includes css, "border-radius: var(--sidebar-float-radius);"
       assert_includes css, "[data-flat-pack-top-nav-section=\"right\"] > *"
+      assert_includes css, "[data-flat-pack-top-nav-section=\"right\"] > [class*=\"--button-round-border-radius\"]"
+      assert_includes css, "border-radius: var(--button-round-border-radius);"
       assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-top-nav-floating]"
       top_nav_float = css[/Floating top nav\..*?^\}/m]
       refute_nil top_nav_float
@@ -61,6 +63,12 @@ module FlatPack
       refute_nil desktop_rail
       assert_includes desktop_rail, "@media (min-width: 768px)"
       assert_includes desktop_rail, "[data-flat-pack-sidebar-floating=\"true\"]"
+      assert_includes desktop_rail, "[data-flat-pack-sidebar-floating=\"true\"]:not([data-flat-pack-sidebar-height=\"content\"])"
+      assert_includes desktop_rail, "height: calc(100vh - (var(--sidebar-float-inset) * 2)) !important;"
+      assert_includes desktop_rail, "[data-flat-pack-sidebar-floating=\"true\"][data-flat-pack-sidebar-height=\"content\"]"
+      assert_includes desktop_rail, "height: auto !important;"
+      assert_includes desktop_rail, "max-height: calc(100vh - (var(--sidebar-float-inset) * 2)) !important;"
+      refute_includes css.sub(desktop_rail, ""), "[data-flat-pack-sidebar-height=\"content\"]"
       refute_includes css, "margin-left: calc((100% - 1.25rem) / 2)"
       refute_includes css, "justify-content: center"
       refute_includes css, "desktopToggle"

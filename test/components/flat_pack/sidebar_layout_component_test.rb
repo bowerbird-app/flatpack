@@ -292,6 +292,50 @@ module FlatPack
         assert_includes error.message, "content_scroll must be :behind or :below"
       end
 
+      def test_floating_rail_stays_full_height_by_default
+        render_inline(Component.new(floating: true, height: :full)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        refute_includes page.native.to_html, "data-flat-pack-sidebar-height"
+        assert_includes page.native.to_html, "md:h-screen"
+      end
+
+      def test_floating_rail_can_size_to_its_content
+        render_inline(Component.new(floating: true, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "[data-flat-pack-sidebar-floating='true'][data-flat-pack-sidebar-height='content']", text: "Sidebar"
+      end
+
+      def test_content_height_without_floating_matches_the_flush_rail
+        render_inline(Component.new(floating: false, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        html = page.native.to_html
+        refute_includes html, "data-flat-pack-sidebar-floating"
+        refute_includes html, "data-flat-pack-sidebar-height"
+        assert_includes html, "md:h-screen"
+      end
+
+      def test_content_height_accepts_the_string_form
+        render_inline(Component.new(floating: true, height: "content")) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "[data-flat-pack-sidebar-height='content']"
+      end
+
+      def test_height_rejects_unknown_values
+        error = assert_raises(ArgumentError) do
+          Component.new(height: :page)
+        end
+
+        assert_includes error.message, "height must be :full or :content"
+      end
+
       def test_content_scroll_accepts_the_string_form
         render_inline(Component.new(floating_top_nav: true, content_scroll: "below")) do |layout|
           layout.top_nav { "TopNav" }

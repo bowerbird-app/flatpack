@@ -20,12 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `content_scroll:` is `:behind` (default) or `:below`. It applies only when the top nav floats. `:behind` lets main content scroll under the cards and pads the pane with `--top-nav-float-clearance`. `:below` keeps the cards above the pane.
 - `TopNav` sections always set `data-flat-pack-top-nav-section`, including when `mobile_menu: false`.
 - Dummy chrome reads `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` shows the cards over the photo. `content_scroll=below` parks the cards above the scroll pane.
+- `height:` is `:full` (default) or `:content`. `:content` sizes the floating desktop rail to its items and caps it at the viewport minus `--sidebar-float-inset`. The list scrolls inside that cap. It does nothing when `floating` is false. The mobile drawer stays full height.
+- Dummy chrome reads `?height=content`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&height=content` shows the short rail.
 - Bumped the gem version to `0.1.256`.
 
 ### Upgrade notes
-- Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats.
-- New token `--top-nav-float-clearance`. The cards reuse `--sidebar-float-*`. No token was renamed.
-- Reload kit CSS. There are no new Tailwind class literals. Do not rerun `flat_pack:install`.
+- Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats. Hosts that do not pass `height: :content` keep the full-height floating rail.
+- New token `--top-nav-float-clearance`. The cards and the content-height cap reuse `--sidebar-float-*`. No token was renamed.
+- Reload kit CSS. There are no new Tailwind class literals for this layout. Do not rerun `flat_pack:install`.
 - Redeploy so `meta.gem_version` shows `0.1.256`.
 
 ## [0.1.255] - 2026-10-19

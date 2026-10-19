@@ -9,6 +9,7 @@ module FlatPack
       renders_one :background_slot
 
       CONTENT_SCROLLS = %i[behind below].freeze
+      HEIGHTS = %i[full content].freeze
 
       def initialize(
         side: :left,
@@ -17,6 +18,7 @@ module FlatPack
         floating: false,
         floating_top_nav: false,
         content_scroll: :behind,
+        height: :full,
         **system_arguments
       )
         super(**system_arguments)
@@ -26,11 +28,13 @@ module FlatPack
         @floating = floating
         @floating_top_nav = floating_top_nav
         @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
+        @height = height.is_a?(String) ? height.to_sym : height
 
         validate_side!
         validate_floating!
         validate_floating_top_nav!
         validate_content_scroll!
+        validate_height!
       end
 
       def sidebar(**args, &block)
@@ -263,8 +267,13 @@ module FlatPack
         {
           "flat-pack--sidebar-layout-target": "sidebar",
           "mobile-drawer-side": @side.to_s,
-          "flat-pack-sidebar-floating": ("true" if @floating)
+          "flat-pack-sidebar-floating": ("true" if @floating),
+          "flat-pack-sidebar-height": ("content" if content_height?)
         }.compact
+      end
+
+      def content_height?
+        @floating && @height == :content
       end
 
       def backdrop_attributes
@@ -305,6 +314,12 @@ module FlatPack
         return if CONTENT_SCROLLS.include?(@content_scroll)
 
         raise ArgumentError, "content_scroll must be :behind or :below"
+      end
+
+      def validate_height!
+        return if HEIGHTS.include?(@height)
+
+        raise ArgumentError, "height must be :full or :content"
       end
     end
   end

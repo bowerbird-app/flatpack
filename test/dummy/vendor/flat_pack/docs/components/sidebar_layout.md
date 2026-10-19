@@ -20,6 +20,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `floating` | Boolean | `false` | No | Desktop-only detached rail. Insets the top, bottom, and outer edge. Rounded corners follow the rounded palette (no `data-theme`, or `data-theme="rounded"`). Ignored below the `md` breakpoint. |
 | `floating_top_nav` | Boolean | `false` | No | Replaces the full-width top bar with floating cards. Uses the same `--sidebar-float-*` gap, fill, shadow, and corner as the rail. `false` leaves the bar unchanged. |
 | `content_scroll` | Symbol | `:behind` | No | Where main content sits when `floating_top_nav: true`. `:behind` scrolls the page under the cards and pads the scroll pane with `--top-nav-float-clearance`. `:below` keeps the cards above the scroll pane. Ignored when the top nav is not floating. |
+| `height` | Symbol | `:full` | No | Height of the floating desktop rail. `:full` is today's rail (viewport minus the float insets). `:content` sizes the rail to its items and caps it at that same viewport height. The items scroll inside the cap. Ignored when `floating` is false. The mobile drawer stays full height. Not the image `height` attribute. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into root container. |
 
 ## Slots
@@ -39,6 +40,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side: :right` | Grid columns render as `1fr auto`; sidebar enters from right on mobile. |
 | `storage_key: "..."` | Enables persisted desktop collapse state in localStorage. |
 | `floating: true` | Desktop rail sits inset from the top, bottom, and outer edge, with its own fill, border, and shadow. The rounded palette rounds the panel with `--sidebar-float-radius`. Other named themes stay square. Below `md` the drawer stays full height and square. |
+| `height: :content` | Floating desktop rail shrinks to its items and sits at the top inset. A rail taller than the viewport stops at the float cap and scrolls inside. |
 | `floating_top_nav: true` | The full-width bar is gone. `TopNav` `left` and `center` each become one card sized to their contents. `right` lays its children out as separate cards. Content scrolls under the cards. |
 | `content_scroll: :below` | Same cards, in flow above the scroll pane. Content does not slide under them. |
 | `background` slot | Full-viewport photo behind the rail, the top nav, and main. Blur and tint come from `--layout-background-*`. |
@@ -78,7 +80,7 @@ Float the top nav on its own, or with the rail. Put a toolbar in `left` and sepa
         <%= render FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm) %>
       <% end %>
       <% nav.right(always_display: true) do %>
-        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, aria: {label: "Notifications"}) %>
+        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :ghost, aria: {label: "Notifications"}) %>
       <% end %>
     <% end %>
   <% end %>
@@ -90,6 +92,20 @@ Float the top nav on its own, or with the rail. Put a toolbar in `left` and sepa
 ```
 
 `content_scroll: :below` keeps those cards above the scroll pane. Omit `floating_top_nav` and the bar is the full-width `TopNav` from the first example.
+
+`height: :content` with `floating: true` shortens the desktop rail to its items:
+
+```erb
+<%= render FlatPack::SidebarLayout::Component.new(floating: true, height: :content) do |layout| %>
+  <% layout.sidebar do %>
+    <%= render FlatPack::Sidebar::Component.new do |sidebar| %>
+      <% sidebar.items do %>
+        <%= render FlatPack::Sidebar::Item::Component.new(text: "Featured in", href: "/", icon: :home, active: true) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+```
 
 `FlatPack::Navbar::Component` (and `Navbar::Sidebar`, `Navbar::TopNav`) is removed. Hosts that still render it should switch to the composition above. Stimulus is `flat-pack--sidebar-layout` plus `flat-pack--sidebar` / `flat-pack--top-nav` as needed. Dummy `/demo/navbar` remains the Top Nav slot demo.
 
@@ -121,11 +137,21 @@ Round corners are `--sidebar-float-radius` (`--radius-lg`). They apply on the ro
 
 Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail.
 
+## Rail height
+
+`height: :full` (the default) keeps the floating desktop rail at `calc(100vh - (var(--sidebar-float-inset) * 2))`. `height: :content` sizes that rail to its items and keeps the same cap as a max-height, so a long list scrolls inside the card. The two heights are separate rules. Content height does not override the full-height declaration.
+
+`height: :content` does nothing when `floating` is false. The flush column stays `md:h-screen`. Below `md`, the drawer stays full height either way. The content-height rules live in the same `min-width: 768px` block as the rest of the floating rail.
+
+A bottom-left avatar card is not part of this layout. Content height leaves the space under the rail empty: the column stays `md:self-start` and only as tall as its items, or the viewport cap. A later corner slot can pin a second card to the same outer inset and the bottom inset without stretching the rail. Keep that card out of the sidebar footer. The footer sits inside the rail and scrolls away once the list hits the cap.
+
+Dummy chrome accepts `?height=content`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&height=content` is the short rail with the floating cards. `?height=content` without `?floating=1` stays the flush full-height rail.
+
 ## Floating top nav
 
 `floating_top_nav: true` takes the full-width bar out of the main column and paints cards on the page, including over a `background` photo. The cards share the rail's float tokens: `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--sidebar-float-radius`. A second token set would drift from the rail, and renaming `--sidebar-float-*` would break hosts that already set it. One new token, `--top-nav-float-clearance`, is the space the scroll pane keeps clear above the first content. It defaults to the inset (or the top safe area, whichever is larger) plus `3.25rem`.
 
-`TopNav` `left` and `center` are each one card, sized to their contents. An empty section is hidden, so a host that only fills `left` and `right` does not get a blank center card. `right` is not one card. Each direct child is its own card, so a bell stays separate from the toolbar. There is no new slot. The existing `top_nav` slot and `TopNav`'s `left`, `center`, and `right` are the API.
+`TopNav` `left` and `center` are each one card, sized to their contents. An empty section is hidden, so a host that only fills `left` and `right` does not get a blank center card. `right` is not one card. Each direct child is its own card, so a bell stays separate from the toolbar. A `Button` with `round: true` keeps `--button-round-border-radius`. Other children use `--sidebar-float-radius`. Named themes other than rounded still square every floating card, including a round button. There is no new slot. The existing `top_nav` slot and `TopNav`'s `left`, `center`, and `right` are the API.
 
 Corners follow the rail. `--sidebar-float-radius` applies when there is no `data-theme`, or `data-theme="rounded"`. Any other `data-theme` keeps square corners.
 
@@ -143,7 +169,7 @@ With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that
 
 `content_scroll` does nothing while `floating_top_nav` is false. The full-width bar stays outside the pane.
 
-A whole-page scroll mode is not part of this layout. The scroll pane is still one element (`.fp-layout-scroll` when content runs behind the cards). A later option can move `overflow` to the shell without a new chrome component. The corner slot, a content-height rail, and an account item are also out of scope.
+A whole-page scroll mode is not part of this layout. The scroll pane is still one element (`.fp-layout-scroll` when content runs behind the cards). A later option can move `overflow` to the shell without a new chrome component. The corner slot and an account item are also out of scope.
 
 ## Background
 
