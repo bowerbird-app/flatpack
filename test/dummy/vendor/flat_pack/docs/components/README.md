@@ -50,6 +50,7 @@ collection_editor | FlatPack::CollectionEditor::Component | docs/components/coll
 combobox | FlatPack::Combobox::Component | docs/components/combobox.md
 command_palette | FlatPack::CommandPalette::Component | docs/components/command-palette.md
 content | FlatPack::Content::Component | docs/components/content.md
+read_more | FlatPack::ReadMore::Component | docs/components/read_more.md
 content_editor | FlatPack::ContentEditor::Component | docs/components/content-editor.md
 comments_composer | FlatPack::Comments::Composer::Component | docs/components/comments-composer.md
 comments_inline_input | FlatPack::Comments::InlineInput::Component | docs/components/comments-inline-input.md

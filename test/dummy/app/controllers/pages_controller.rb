@@ -45,6 +45,7 @@ class PagesController < ApplicationController
     {action: /\Acolor_swatches\z/, title: "Color Swatches", patterns: [/\A--color-swatch-/]},
     {action: /\Afont_swatches\z/, title: "Font Swatches", patterns: [/\A--font-swatch-/]},
     {action: /\Aoverflow_row\z/, title: "Overflow Row", patterns: [/\A--overflow-row-/]},
+    {action: /\Aread_more\z/, title: "Read more", patterns: [/\A--read-more-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
     {action: /\Ahero_title/, title: "Hero Title", patterns: [/\A--hero-title-/, /\A--display-/]},
     {action: /\Ahero(_.*)?\z/, title: "Hero", patterns: [/\A--hero-/]},
@@ -301,6 +302,9 @@ class PagesController < ApplicationController
   end
 
   def overflow_row
+  end
+
+  def read_more
   end
 
   def divider

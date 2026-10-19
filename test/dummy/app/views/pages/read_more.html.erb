@@ -1,0 +1,165 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Read more",
+  subtitle: "Clamp a block, then show the rest."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :read_more %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="fits">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Short enough",
+    anchor_link: true,
+    subtitle: "One line. The button stays hidden."
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(class: "max-w-xl") do %>
+    <p>The kettle's on.</p>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Short enough (ERB)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::ReadMore::Component.new(class: "max-w-xl") do #{erb_tag_close}
+        <p>The kettle's on.</p>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="long">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "The long way home",
+    anchor_link: true,
+    subtitle: "Plain paragraphs. Four lines, then the rest."
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(class: "max-w-xl") do %>
+    <p>We missed the fast train and took the one that stops at every lamp post. Someone had a cello. Someone else had a paper bag of warm buns.</p>
+    <p>At the third stop a dog got on, looked at the cello, and decided the bun bag was the better story. The owner apologized to the whole carriage, which made it funnier.</p>
+    <p>We got off two stops early to walk along the river. The buns were gone by then. The cello was not. It played the last block home, badly, and we clapped anyway.</p>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Plain paragraphs (ERB)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::ReadMore::Component.new(lines: 4, class: "max-w-xl") do #{erb_tag_close}
+        <p>We missed the fast train.</p>
+        <p>A dog got on at the third stop.</p>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="content">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Packing list",
+    anchor_link: true,
+    subtitle: "Content sets the type. Read more clamps it."
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(lines: 3, class: "max-w-xl") do %>
+    <%= render FlatPack::Content::Component.new do %>
+      <p>Saturday market, leave by nine.</p>
+      <ul>
+        <li>Peaches, the ones that smell like the shop</li>
+        <li>A loaf still warm in the middle</li>
+        <li>Cheese, and then a little more cheese</li>
+        <li>Napkins, because last time was a lesson</li>
+      </ul>
+      <p>Come hungry. Leave room for the peaches.</p>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="open">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Already open",
+    anchor_link: true,
+    subtitle: "Starts expanded. The button says Show less."
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(open: true, class: "max-w-xl") do %>
+    <p>The postcard was mostly a drawing of a fish. The fish was wearing a hat. Under the fish, in tiny letters, it said the water was warm and the hat was not for swimming.</p>
+    <p>We stuck it on the fridge with the magnet from the place that sells too much jam. It still makes the morning nicer.</p>
+  <% end %>
+</section>
+
+<section class="mb-12" id="labels">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Your own words",
+    anchor_link: true
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(
+    lines: 2,
+    more_label: "Keep reading",
+    less_label: "That's enough",
+    class: "max-w-xl"
+  ) do %>
+    <p>There is a bench by the bakery that only appears when the queue is long. Sit there and the buns taste better. Stand up and the bench is gone. We have tested this twice.</p>
+    <p>The third test is scheduled for Saturday, with peaches.</p>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Custom labels (ERB)",
+    language: "erb",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::ReadMore::Component.new(lines: 2, more_label: "Keep reading", less_label: "That's enough") do #{erb_tag_close}
+        <p>There is a bench by the bakery.</p>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="card">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inside a card",
+    anchor_link: true
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::ReadMore::Component.new(lines: 3) do %>
+        <p>Note from the fridge: the jam is for toast, the peaches are for Saturday, and the cello stays out of the bun bag.</p>
+        <p>Also, someone hid the good mugs behind the everyday ones. Check the back row.</p>
+        <p>If the kettle clicks off before you get there, start it again. The note can wait. The tea should not.</p>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12 rounded-[var(--radius-lg)] bg-[var(--surface-page-background-color)] p-6 text-[var(--surface-content-color)]" id="dark" data-theme="dark">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "After dark",
+    anchor_link: true
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(lines: 2, class: "max-w-xl") do %>
+    <p>The river path has no lamps past the bridge. Bring the small torch, the one that clips to a pocket, not the one that lives in the junk drawer and sulks.</p>
+    <p>If the dog comes, the torch is mostly for us. He already knows the way to the buns.</p>
+  <% end %>
+</section>
+
+<section class="mb-12 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] p-6" id="rounded" data-theme="rounded">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Rounded",
+    anchor_link: true
+  ) %>
+
+  <%= render FlatPack::ReadMore::Component.new(lines: 2, class: "max-w-xl") do %>
+    <p>Round corners, same clamp. The story about the fish in the hat does not get longer just because the card is softer.</p>
+    <p>The hat, for the record, was yellow. The fish had opinions about that.</p>
+  <% end %>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Content", href: "/demo/text/content"},
+  {text: "Collapse", href: "/demo/collapse"}
+] %>
