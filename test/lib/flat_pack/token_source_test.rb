@@ -54,6 +54,7 @@ module FlatPack
       assert_match(/--sidebar-float-inset:\s*1rem/, root_block)
       assert_match(/--sidebar-float-background-color:\s*#fff/, root_block)
       assert_match(/--sidebar-float-radius:\s*var\(--radius-lg\)/, root_block)
+      assert_match(/--top-nav-float-clearance:\s*calc\(max\(var\(--sidebar-float-inset\), env\(safe-area-inset-top, 0px\)\) \+ 3\.25rem\)/, root_block)
       assert_match(/--layout-background-blur:\s*40px/, root_block)
       assert_match(/--layout-background-tint-color:\s*var\(--surface-page-background-color\)/, root_block)
       assert_match(/--layout-background-tint-opacity:\s*0\.55/, root_block)

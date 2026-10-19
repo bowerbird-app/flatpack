@@ -516,6 +516,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --sidebar-float-background-color: #fff;
   --sidebar-float-shadow: var(--shadow-md);
   --sidebar-float-radius: var(--radius-lg);
+  --top-nav-float-clearance: calc(max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px)) + 3.25rem);
   --layout-background-blur: 40px;
   --layout-background-tint-color: var(--surface-page-background-color);
   --layout-background-tint-opacity: 0.55;

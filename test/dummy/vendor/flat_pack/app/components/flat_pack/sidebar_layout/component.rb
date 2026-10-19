@@ -8,11 +8,15 @@ module FlatPack
       renders_one :main_slot
       renders_one :background_slot
 
+      CONTENT_SCROLLS = %i[behind below].freeze
+
       def initialize(
         side: :left,
         open: true,
         storage_key: nil,
         floating: false,
+        floating_top_nav: false,
+        content_scroll: :behind,
         **system_arguments
       )
         super(**system_arguments)
@@ -20,9 +24,13 @@ module FlatPack
         @open = open
         @storage_key = storage_key
         @floating = floating
+        @floating_top_nav = floating_top_nav
+        @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
 
         validate_side!
         validate_floating!
+        validate_floating_top_nav!
+        validate_content_scroll!
       end
 
       def sidebar(**args, &block)
@@ -125,12 +133,26 @@ module FlatPack
       def render_main_column
         content_tag(:div, class: main_column_classes) do
           safe_join([
-            (top_nav if top_nav?),
+            render_top_nav,
             content_tag(:div, class: main_content_classes) do
               main? ? main.to_s : content
             end
           ].compact)
         end
+      end
+
+      def render_top_nav
+        return unless top_nav?
+        return top_nav unless @floating_top_nav
+
+        content_tag(:div, top_nav.to_s, **top_nav_float_attributes)
+      end
+
+      def top_nav_float_attributes
+        {
+          class: "fp-layout-top-nav",
+          data: {"flat-pack-top-nav-floating": @content_scroll.to_s}
+        }
       end
 
       def render_background
@@ -221,12 +243,20 @@ module FlatPack
           "min-w-0",
           "min-h-0",
           "overflow-hidden",
+          ("relative" if floating_top_nav_active?),
           ("fp-layout-main" if background?)
         )
       end
 
       def main_content_classes
-        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain"
+        classes(
+          "flex-1 min-h-0 overflow-y-auto overscroll-y-contain",
+          ("fp-layout-scroll" if floating_top_nav_active? && @content_scroll == :behind)
+        )
+      end
+
+      def floating_top_nav_active?
+        @floating_top_nav && top_nav?
       end
 
       def sidebar_column_data
@@ -263,6 +293,18 @@ module FlatPack
         return if @floating == true || @floating == false
 
         raise ArgumentError, "floating must be true or false"
+      end
+
+      def validate_floating_top_nav!
+        return if @floating_top_nav == true || @floating_top_nav == false
+
+        raise ArgumentError, "floating_top_nav must be true or false"
+      end
+
+      def validate_content_scroll!
+        return if CONTENT_SCROLLS.include?(@content_scroll)
+
+        raise ArgumentError, "content_scroll must be :behind or :below"
       end
     end
   end

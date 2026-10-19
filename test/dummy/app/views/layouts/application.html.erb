@@ -99,10 +99,14 @@
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
     <% sidebar_floating = params[:floating].in?(%w[1 true]) %>
     <% sidebar_background = params[:background].in?(%w[1 true]) %>
+    <% floating_top_nav = params[:floating_top_nav].in?(%w[1 true]) %>
+    <% content_scroll = params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
       storage_key: "flatpack-dummy-shell",
-      floating: sidebar_floating
+      floating: sidebar_floating,
+      floating_top_nav: floating_top_nav,
+      content_scroll: content_scroll
     ) do |layout| %>
       <% if sidebar_background %>
         <% layout.background do %>
@@ -153,9 +157,16 @@
               },
               class: "md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
             ) %>
+            <% if floating_top_nav %>
+              <%= render FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm) %>
+              <%= render FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm) %>
+              <%= render FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm) %>
+            <% else %>
             <span class="text-sm font-medium text-[var(--surface-muted-content-color)]">FlatPack Demo</span>
+            <% end %>
           <% end %>
 
+          <% unless floating_top_nav %>
           <% nav.center do %>
             <%= render FlatPack::Search::Component.new(
               items: DemoCatalog.searchable_items,
@@ -165,8 +176,18 @@
               class: "max-w-xl"
             ) %>
           <% end %>
+          <% end %>
 
-          <% nav.right do %>
+          <% nav.right(always_display: floating_top_nav) do %>
+            <% if floating_top_nav %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "bell",
+                icon_only: true,
+                style: :ghost,
+                size: :md,
+                aria: { label: "Notifications" }
+              ) %>
+            <% else %>
             <div
               class="ml-auto flex items-center gap-3"
               <% unless @body_theme.present? %>
@@ -221,6 +242,7 @@
               aria: { label: "Notifications" }
             ) %>
             </div>
+            <% end %>
           <% end %>
 
         <% end %>

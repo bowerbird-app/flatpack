@@ -630,6 +630,116 @@
   }
 }
 
+/* Floating top nav. Unlayered so it wins over .fp-top-nav and Tailwind utilities.
+ * The wrapper covers the top band. pointer-events stay on the cards so the gaps
+ * still hit the page. Empty TopNav sections are always in the DOM.
+ */
+[data-flat-pack-top-nav-floating] {
+  z-index: 20;
+  pointer-events: none;
+}
+
+[data-flat-pack-top-nav-floating="behind"] {
+  position: absolute;
+  top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
+  right: max(var(--sidebar-float-inset), env(safe-area-inset-right, 0px));
+  left: max(var(--sidebar-float-inset), env(safe-area-inset-left, 0px));
+}
+
+[data-flat-pack-top-nav-floating="below"] {
+  position: relative;
+  flex: none;
+  margin-top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
+  margin-right: max(var(--sidebar-float-inset), env(safe-area-inset-right, 0px));
+  margin-bottom: var(--sidebar-float-inset);
+  margin-left: max(var(--sidebar-float-inset), env(safe-area-inset-left, 0px));
+}
+
+[data-flat-pack-top-nav-floating="behind"] ~ .fp-layout-scroll {
+  padding-top: var(--top-nav-float-clearance);
+  scroll-padding-top: var(--top-nav-float-clearance);
+}
+
+[data-flat-pack-top-nav-floating] .fp-top-nav,
+[data-flat-pack-top-nav-floating] .fp-top-nav[data-scrolled="true"] {
+  position: static;
+  height: auto;
+  padding: 0;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  pointer-events: none;
+}
+
+[data-flat-pack-top-nav-floating] .fp-top-nav > div {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section] {
+  width: auto;
+  min-width: 0;
+  height: auto;
+  flex: 0 1 auto;
+  pointer-events: auto;
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section]:not(:has(*)) {
+  display: none;
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
+[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] {
+  max-width: 100%;
+  flex-wrap: wrap;
+  padding: 0.25rem;
+  background-color: var(--sidebar-float-background-color);
+  border: 1px solid var(--sidebar-border-color);
+  border-radius: var(--sidebar-float-radius);
+  box-shadow: var(--sidebar-float-shadow);
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-left: auto;
+  background: transparent;
+  pointer-events: none;
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > * {
+  pointer-events: auto;
+  background-color: var(--sidebar-float-background-color);
+  border: 1px solid var(--sidebar-border-color);
+  border-radius: var(--sidebar-float-radius);
+  box-shadow: var(--sidebar-float-shadow);
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="menu"] {
+  pointer-events: auto;
+}
+
+[data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
+  background-color: var(--sidebar-float-background-color);
+  border: 1px solid var(--sidebar-border-color);
+  border-radius: var(--sidebar-float-radius);
+  box-shadow: var(--sidebar-float-shadow);
+}
+
+html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
+html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"],
+html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > *,
+html[data-theme]:not([data-theme="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
+  border-radius: 0;
+}
+
 /* Overlay inset padding follows --overlay-padding / --overlay-padding-wide, never less than the notch.
  * Unlayered for the same preflight reason as .fp-top-nav. Modal, drawer,
  * command palette, and lightbox all use this class.

@@ -230,6 +230,17 @@ module FlatPack
         assert_text "Search"
       end
 
+      def test_sections_keep_their_names_when_the_mobile_menu_is_off
+        render_inline(Component.new(mobile_menu: false)) do |nav|
+          nav.left { "Brand" }
+          nav.right { "Bell" }
+        end
+
+        assert_selector "[data-flat-pack-top-nav-section='left']", text: "Brand"
+        assert_selector "[data-flat-pack-top-nav-section='right']", text: "Bell"
+        refute_selector "[data-flat-pack--top-nav-target='section']", visible: :all
+      end
+
       private
 
       def section_for(alignment)

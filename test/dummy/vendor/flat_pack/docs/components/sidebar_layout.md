@@ -18,6 +18,8 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `open` | Boolean | `true` | No | Initial desktop sidebar state (expanded when true, collapsed when false). |
 | `storage_key` | String or nil | `nil` | No | localStorage key used by controller for desktop collapsed-state persistence. |
 | `floating` | Boolean | `false` | No | Desktop-only detached rail. Insets the top, bottom, and outer edge. Rounded corners follow the rounded palette (no `data-theme`, or `data-theme="rounded"`). Ignored below the `md` breakpoint. |
+| `floating_top_nav` | Boolean | `false` | No | Replaces the full-width top bar with floating cards. Uses the same `--sidebar-float-*` gap, fill, shadow, and corner as the rail. `false` leaves the bar unchanged. |
+| `content_scroll` | Symbol | `:behind` | No | Where main content sits when `floating_top_nav: true`. `:behind` scrolls the page under the cards and pads the scroll pane with `--top-nav-float-clearance`. `:below` keeps the cards above the scroll pane. Ignored when the top nav is not floating. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into root container. |
 
 ## Slots
@@ -37,6 +39,8 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side: :right` | Grid columns render as `1fr auto`; sidebar enters from right on mobile. |
 | `storage_key: "..."` | Enables persisted desktop collapse state in localStorage. |
 | `floating: true` | Desktop rail sits inset from the top, bottom, and outer edge, with its own fill, border, and shadow. The rounded palette rounds the panel with `--sidebar-float-radius`. Other named themes stay square. Below `md` the drawer stays full height and square. |
+| `floating_top_nav: true` | The full-width bar is gone. `TopNav` `left` and `center` each become one card sized to their contents. `right` lays its children out as separate cards. Content scrolls under the cards. |
+| `content_scroll: :below` | Same cards, in flow above the scroll pane. Content does not slide under them. |
 | `background` slot | Full-viewport photo behind the rail, the top nav, and main. Blur and tint come from `--layout-background-*`. |
 
 ## Example
@@ -62,6 +66,30 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
   <% end %>
 <% end %>
 ```
+
+Float the top nav on its own, or with the rail. Put a toolbar in `left` and separate actions in `right`. `TopNav` still owns the `<header>` landmark and the mobile menu.
+
+```erb
+<%= render FlatPack::SidebarLayout::Component.new(floating: true, floating_top_nav: true) do |layout| %>
+  <% layout.top_nav do %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
+      <% nav.left do %>
+        <%= render FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm) %>
+        <%= render FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm) %>
+      <% end %>
+      <% nav.right(always_display: true) do %>
+        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, aria: {label: "Notifications"}) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% layout.main do %>
+    <div class="p-6">Main content</div>
+  <% end %>
+<% end %>
+```
+
+`content_scroll: :below` keeps those cards above the scroll pane. Omit `floating_top_nav` and the bar is the full-width `TopNav` from the first example.
 
 `FlatPack::Navbar::Component` (and `Navbar::Sidebar`, `Navbar::TopNav`) is removed. Hosts that still render it should switch to the composition above. Stimulus is `flat-pack--sidebar-layout` plus `flat-pack--sidebar` / `flat-pack--top-nav` as needed. Dummy `/demo/navbar` remains the Top Nav slot demo.
 
@@ -92,6 +120,30 @@ For static/non-interactive collapsed demos (without the layout controller) pass 
 Round corners are `--sidebar-float-radius` (`--radius-lg`). They apply on the rounded palette: no `data-theme`, or `data-theme="rounded"`. Any other `data-theme` (dark, ocean, a host theme) keeps square corners. Below the `md` breakpoint the attribute is present and unused: the drawer stays edge-to-edge, including its safe-area padding.
 
 Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail.
+
+## Floating top nav
+
+`floating_top_nav: true` takes the full-width bar out of the main column and paints cards on the page, including over a `background` photo. The cards share the rail's float tokens: `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--sidebar-float-radius`. A second token set would drift from the rail, and renaming `--sidebar-float-*` would break hosts that already set it. One new token, `--top-nav-float-clearance`, is the space the scroll pane keeps clear above the first content. It defaults to the inset (or the top safe area, whichever is larger) plus `3.25rem`.
+
+`TopNav` `left` and `center` are each one card, sized to their contents. An empty section is hidden, so a host that only fills `left` and `right` does not get a blank center card. `right` is not one card. Each direct child is its own card, so a bell stays separate from the toolbar. There is no new slot. The existing `top_nav` slot and `TopNav`'s `left`, `center`, and `right` are the API.
+
+Corners follow the rail. `--sidebar-float-radius` applies when there is no `data-theme`, or `data-theme="rounded"`. Any other `data-theme` keeps square corners.
+
+The cards apply at every width, including `390px`. The row wraps, and the left card can shrink. `TopNav`'s mobile menu still collapses `center` and `right` below `mobile_breakpoint` unless the slot passes `always_display: true`. Pass that on `right` when the bell should stay on screen. The mobile drawer is unchanged: it stays edge-to-edge, uses the backdrop, and paints above the cards (`z-50` over `z-20`).
+
+The wrapper does not cover clicks in the gaps between cards. The `<header>` landmark stays. Tab order is still the top nav, then main.
+
+Dummy chrome accepts `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` is the floating photo with the cards. Add `content_scroll=below` to park the cards above the scroll pane.
+
+## Where content scrolls
+
+The shell stays `h-screen overflow-hidden`. Only the main pane scrolls, so the rail and the top nav stay put. That is the default, and hosts that do not opt in keep it.
+
+With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that pane run under the cards. The pane's `padding-top` and `scroll-padding-top` use `--top-nav-float-clearance`, so the first paint and a focused control are not hidden under the cards. `content_scroll: :below` puts the cards back in the flow, above the pane, still with the float gap and the card chrome.
+
+`content_scroll` does nothing while `floating_top_nav` is false. The full-width bar stays outside the pane.
+
+A whole-page scroll mode is not part of this layout. The scroll pane is still one element (`.fp-layout-scroll` when content runs behind the cards). A later option can move `overflow` to the shell without a new chrome component. The corner slot, a content-height rail, and an account item are also out of scope.
 
 ## Background
 

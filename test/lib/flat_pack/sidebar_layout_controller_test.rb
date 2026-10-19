@@ -45,6 +45,18 @@ module FlatPack
       assert_includes css, "@supports not ((filter: blur(1px)) or (-webkit-filter: blur(1px)))"
       assert_includes css, "--surface-page-background-color: transparent;"
       assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-sidebar-floating=\"true\"] aside"
+      assert_includes css, "[data-flat-pack-top-nav-floating=\"behind\"]"
+      assert_includes css, "[data-flat-pack-top-nav-floating=\"below\"]"
+      assert_includes css, "padding-top: var(--top-nav-float-clearance);"
+      assert_includes css, "scroll-padding-top: var(--top-nav-float-clearance);"
+      assert_includes css, "background-color: var(--sidebar-float-background-color);"
+      assert_includes css, "box-shadow: var(--sidebar-float-shadow);"
+      assert_includes css, "border-radius: var(--sidebar-float-radius);"
+      assert_includes css, "[data-flat-pack-top-nav-section=\"right\"] > *"
+      assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-top-nav-floating]"
+      top_nav_float = css[/Floating top nav\..*?^\}/m]
+      refute_nil top_nav_float
+      refute_includes top_nav_float, "@media (min-width: 768px)"
       desktop_rail = css[/Sidebar layout:.*?\n  \}/m]
       refute_nil desktop_rail
       assert_includes desktop_rail, "@media (min-width: 768px)"
