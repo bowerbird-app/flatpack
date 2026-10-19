@@ -4077,6 +4077,86 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+.fp-search--collapsible {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  transition: width var(--duration-base) var(--easing-standard);
+}
+
+.fp-search--collapsible[data-fp-grow="start"] {
+  margin-inline-start: auto;
+}
+
+.fp-search--collapsible[data-fp-collapsed="true"] {
+  overflow: visible;
+}
+
+.fp-search--collapsible[data-fp-size="sm"][data-fp-collapsed="true"] {
+  flex: 0 0 var(--button-round-size-sm);
+  width: var(--button-round-size-sm);
+  height: var(--button-round-size-sm);
+  min-width: var(--button-round-size-sm);
+  max-width: var(--button-round-size-sm);
+}
+
+.fp-search--collapsible[data-fp-size="md"][data-fp-collapsed="true"] {
+  flex: 0 0 var(--button-round-size-md);
+  width: var(--button-round-size-md);
+  height: var(--button-round-size-md);
+  min-width: var(--button-round-size-md);
+  max-width: var(--button-round-size-md);
+}
+
+.fp-search--collapsible[data-fp-size="lg"][data-fp-collapsed="true"] {
+  flex: 0 0 var(--button-round-size-lg);
+  width: var(--button-round-size-lg);
+  height: var(--button-round-size-lg);
+  min-width: var(--button-round-size-lg);
+  max-width: var(--button-round-size-lg);
+}
+
+.fp-search--collapsible[data-fp-collapsed="false"] {
+  flex: 1 1 auto;
+  width: min(100%, var(--search-expanded-width));
+  max-width: min(100%, var(--search-expanded-width));
+  min-width: 0;
+  height: auto;
+  overflow: visible;
+}
+
+.fp-search--collapsible .fp-search__toggle {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  inset-inline-start: 0;
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: var(--duration-fast), var(--duration-fast), var(--duration-fast), var(--duration-fast), var(--duration-fast), var(--duration-base);
+  transition-timing-function: var(--easing-standard);
+}
+
+.fp-search--collapsible[data-fp-grow="start"] .fp-search__toggle {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
+.fp-search--collapsible[data-fp-collapsed="false"] .fp-search__toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fp-search--collapsible .fp-search__field {
+  min-width: 0;
+  width: 100%;
+  transition: opacity var(--duration-base) var(--easing-standard);
+}
+
+.fp-search--collapsible[data-fp-collapsed="true"] .fp-search__field {
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 @media (scripting: none) {
   .fp-number:not(.is-static) .fp-number__final {
     position: static;

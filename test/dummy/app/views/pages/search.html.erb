@@ -4,6 +4,66 @@
 ) %>
 <%= render "pages/component_method_variables_table", component: :search %>
 
+<section class="mb-12" id="toolbar">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Toolbar", anchor_link: true, subtitle: "Starts as a circle. Click it and the field slides open.") %>
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-8">
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Collapsed, beside a bell. Grows toward the start.</p>
+      <div class="ms-auto flex w-fit max-w-full items-center gap-2 rounded-full border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] px-2 py-2">
+        <%= render FlatPack::Search::Component.new(
+          collapsible: true,
+          grow: :start,
+          id: "toolbar-search",
+          placeholder: "Search the kit"
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          icon: "bell",
+          icon_only: true,
+          round: true,
+          aria: { label: "Notifications" }
+        ) %>
+      </div>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Already open.</p>
+      <%= render FlatPack::Search::Component.new(
+        collapsible: true,
+        collapsed: false,
+        id: "toolbar-open",
+        placeholder: "Search the kit"
+      ) %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">A saved query stays open.</p>
+      <%= render FlatPack::Search::Component.new(
+        collapsible: true,
+        value: "lamps",
+        id: "toolbar-filled",
+        placeholder: "Search the kit"
+      ) %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Grows toward the end.</p>
+      <div class="flex items-center gap-2">
+        <%= render FlatPack::Search::Component.new(
+          collapsible: true,
+          grow: :end,
+          id: "toolbar-end",
+          placeholder: "Search the kit"
+        ) %>
+      </div>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Search::Component.new(collapsible: true, grow: :start, placeholder: "Search the kit") %&gt;
+      &lt;%= render FlatPack::Search::Component.new(collapsible: true, collapsed: false, placeholder: "Search the kit") %&gt;
+      &lt;%= render FlatPack::Search::Component.new(collapsible: true, value: "lamps", placeholder: "Search the kit") %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Small, medium (default), and large. Pick the size that matches nearby controls.") %>
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-4">
@@ -140,6 +200,7 @@
         --search-result-description-color: var(--surface-muted-content-color);
         --search-result-hover-background-color: var(--surface-muted-background-color);
         --search-result-divider-color: var(--surface-border-color);
+        --search-expanded-width: 16rem;
       }
     CSS
   ) %>

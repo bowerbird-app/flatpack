@@ -231,6 +231,13 @@ Pass `show_border: false` and `show_background: false` when the viewport border 
   placeholder: "Search components..."
 ) %>
 
+# Round search button that grows into the field
+<%= render FlatPack::Search::Component.new(
+  collapsible: true,
+  grow: :start,
+  placeholder: "Search the kit"
+) %>
+
 # Text Area with auto-expand
 <%= render FlatPack::TextArea::Component.new(
   name: "description",

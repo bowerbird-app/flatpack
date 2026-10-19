@@ -550,6 +550,9 @@
   .ms-3 {
     margin-inline-start: calc(var(--spacing) * 3);
   }
+  .ms-auto {
+    margin-inline-start: auto;
+  }
   .me-2 {
     margin-inline-end: calc(var(--spacing) * 2);
   }

@@ -16,6 +16,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.257] - 2026-10-19
 
 ### Added
+- `FlatPack::Search::Component` accepts `collapsible:` (`false` by default). `true` rests the field as a round icon button and grows it into the same search field. `collapsed:` (`true` by default) chooses the starting posture. `false` starts expanded. A present `value` stays open. `grow:` is `:end` (default, the start edge stays put) or `:start` (the end edge stays put).
+- The collapsed face is `FlatPack::Button` with `round: true` and `icon_only: true`. Its accessible name is `flatpack.common.search`, overridable with `aria: { label: }`.
+- `--search-expanded-width` (`16rem`) is the open width, capped with `min(100%, var(--search-expanded-width))` so a 390px toolbar does not overflow. Rounded, dark, and ocean do not remap it.
+- Stimulus controller `flat-pack--search-collapse` runs the expand and collapse. Demo: the Toolbar section on `/demo/search`.
+- Bumped the gem version to `0.1.257`.
+
+### Upgrade notes
+- Additive. Existing arguments, tokens, classes, and the default render are unchanged. No host call site has to change.
+- Reload kit CSS and JS so `.fp-search--collapsible` and `--search-expanded-width` load. No new Tailwind class literals. The circle classes are the Button round classes from `0.1.255`. No `bin/rails generate flat_pack:install` rerun. The install generator does not stamp this controller.
+- Importmap hosts need no new pin. The engine already pins `app/javascript/flat_pack/controllers`. esbuild, webpack, and Vite hosts add `import SearchCollapseController from ".../search_collapse_controller.js"` and `application.register("flat-pack--search-collapse", SearchCollapseController)`.
+- Redeploy so `meta.gem_version` shows `0.1.257`.
+
+## [0.1.257] - 2026-10-19
+
+### Added
 - `FlatPack::SidebarLayout::Component` accepts `floating_top_nav:` (`false` by default). The full-width bar becomes cards on the page. `TopNav` `left` and `center` are each one card sized to their contents. Each direct child of `right` is its own card. The cards use `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--top-nav-float-radius`.
 - `content_scroll:` is `:behind` (default) or `:below`. It applies only when the top nav floats. `:behind` lets main content scroll under the cards and pads the pane with `--top-nav-float-clearance`. `:below` keeps the cards above the pane.
 - `TopNav` sections always set `data-flat-pack-top-nav-section`, including when `mobile_menu: false`.

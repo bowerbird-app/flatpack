@@ -51,6 +51,9 @@ module FlatPack
         min_characters: 2,
         debounce: 250,
         no_results_text: FlatPack::Copy::OMITTED,
+        collapsible: false,
+        collapsed: true,
+        grow: :end,
         **system_arguments
       )
         super(**system_arguments)
@@ -64,6 +67,8 @@ module FlatPack
         @min_characters = min_characters
         @debounce = debounce
         @no_results_text = fp_text(no_results_text, "search.no_results")
+        @collapse = Collapse.resolve(collapsible: collapsible, collapsed: collapsed, grow: grow, value: @value)
+        @generated_input_id = "fp-search-#{SecureRandom.hex(4)}" if @collapse.active?
 
         validate_search_url!(search_url) if search_url.present?
         validate_max_width!
@@ -71,6 +76,12 @@ module FlatPack
       end
 
       def call
+        @collapse.active? ? render_collapsible : render_field
+      end
+
+      private
+
+      def render_field
         content_tag(:div, **wrapper_attributes) do
           safe_join([
             render_icon,
@@ -81,7 +92,40 @@ module FlatPack
         end
       end
 
-      private
+      def render_collapsible
+        content_tag(:div, **collapsible_wrapper_attributes) do
+          safe_join([
+            render_toggle,
+            content_tag(:div, **field_attributes) do
+              safe_join([render_icon, render_input, render_clear_button].compact)
+            end,
+            (render_dropdown if live_search?)
+          ].compact)
+        end
+      end
+
+      def render_toggle
+        options = {
+          text: toggle_label,
+          icon: :search,
+          icon_only: true,
+          round: true,
+          size: @size,
+          type: "button",
+          class: "fp-search__toggle",
+          data: {
+            flat_pack__search_collapse_target: "toggle",
+            action: "click->flat-pack--search-collapse#expand"
+          },
+          aria: {
+            expanded: (@collapse.collapsed? ? "false" : "true"),
+            controls: input_control_id
+          }
+        }
+        options[:inert] = true unless @collapse.collapsed?
+
+        render FlatPack::Button::Component.new(**options)
+      end
 
       def render_icon
         content_tag(:span, class: icon_wrapper_classes) do
@@ -120,17 +164,77 @@ module FlatPack
           }
         }
 
-        if live_search?
-          attrs[:data].merge!(
-            flat_pack__search_url_value: @search_url,
-            flat_pack__search_param_value: @name,
-            flat_pack__search_min_characters_value: @min_characters,
-            flat_pack__search_debounce_value: @debounce,
-            flat_pack__search_items_value: @items
-          )
-        end
+        attrs[:data].merge!(live_search_data)
 
         merge_attributes(**attrs)
+      end
+
+      def collapsible_wrapper_attributes
+        attrs = {
+          class: collapsible_wrapper_classes,
+          data: merge_data_attributes(data_attributes, {
+            controller: classes("flat-pack--search-collapse", wrapper_controller_names),
+            action: "focusout->flat-pack--search-collapse#dismiss",
+            flat_pack__search_collapse_collapsed_value: @collapse.collapsed?,
+            fp_collapsed: @collapse.collapsed?.to_s,
+            fp_grow: @collapse.grow.to_s,
+            fp_size: @size.to_s
+          })
+        }
+        attrs[:data].merge!(live_search_data)
+
+        merged = merge_attributes(**attrs)
+        label = merged[:aria]
+        return merged unless label.is_a?(Hash)
+
+        stripped = label.except(:label, "label")
+        stripped.empty? ? merged.except(:aria) : merged.merge(aria: stripped)
+      end
+
+      def collapsible_wrapper_classes
+        classes(
+          "fp-search",
+          "fp-search--collapsible",
+          "relative",
+          "flex",
+          "items-center",
+          "min-w-0",
+          "max-w-full",
+          max_width_class
+        )
+      end
+
+      def field_attributes
+        attrs = {
+          class: "fp-search__field min-w-0 w-full",
+          data: {flat_pack__search_collapse_target: "field"}
+        }
+        attrs[:inert] = true if @collapse.collapsed?
+        attrs
+      end
+
+      def live_search_data
+        return {} unless live_search?
+
+        {
+          flat_pack__search_url_value: @search_url,
+          flat_pack__search_param_value: @name,
+          flat_pack__search_min_characters_value: @min_characters,
+          flat_pack__search_debounce_value: @debounce,
+          flat_pack__search_items_value: @items
+        }
+      end
+
+      def toggle_label
+        explicit = aria_attributes[:label].presence || aria_attributes["label"].presence
+        explicit || fp_t("common.search")
+      end
+
+      def input_control_id
+        return unless @collapse.active?
+
+        host_id = html_attributes[:id].presence
+        host_id ? "#{host_id}-field" : @generated_input_id
       end
 
       def wrapper_classes
@@ -151,7 +255,7 @@ module FlatPack
         classes(
           "absolute",
           "inset-y-0",
-          ICON_INSET_CLASSES.fetch(@size),
+          icon_inset_class,
           "flex",
           "items-center",
           "pointer-events-none",
@@ -159,18 +263,36 @@ module FlatPack
         )
       end
 
+      def icon_inset_class
+        insets = grow_toward_start? ? CLEAR_INSET_CLASSES : ICON_INSET_CLASSES
+        insets.fetch(@size)
+      end
+
+      def clear_inset_class
+        insets = grow_toward_start? ? ICON_INSET_CLASSES : CLEAR_INSET_CLASSES
+        insets.fetch(@size)
+      end
+
+      def grow_toward_start?
+        @collapse.active? && @collapse.grow == :start
+      end
+
       def input_attributes
+        input_data = {
+          flat_pack__search_input_target: "input",
+          action: input_action
+        }
+        input_data[:flat_pack__search_collapse_target] = "input" if @collapse.active?
+
         attrs = {
           type: "text",
           name: @name,
           value: @value,
           placeholder: @placeholder,
           class: input_classes,
-          data: {
-            flat_pack__search_input_target: "input",
-            action: input_action
-          }
+          data: input_data
         }
+        attrs[:id] = input_control_id if @collapse.active?
 
         if live_search?
           attrs[:autocomplete] = "off"
@@ -187,6 +309,7 @@ module FlatPack
       def input_classes
         classes(
           "w-full",
+          ("min-w-0" if @collapse.active?),
           size_classes,
           "bg-[var(--search-input-background-color)]",
           "text-[var(--search-input-text-color)]",
@@ -213,7 +336,7 @@ module FlatPack
       def clear_button_classes
         classes(
           "absolute",
-          CLEAR_INSET_CLASSES.fetch(@size),
+          clear_inset_class,
           "top-1/2",
           "-translate-y-1/2",
           "h-full",

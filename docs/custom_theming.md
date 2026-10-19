@@ -801,6 +801,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --search-padding-inline-sm: 2rem;
   --search-padding-inline-md: 2.5rem;
   --search-padding-inline-lg: 3rem;
+  --search-expanded-width: 16rem;
   --search-dropdown-background-color: var(--surface-background-color);
   --search-dropdown-border-color: var(--surface-border-color);
   --search-dropdown-muted-text-color: var(--surface-muted-content-color);

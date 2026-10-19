@@ -641,6 +641,7 @@
   --search-padding-inline-sm: var(--search-padding-inline-sm);
   --search-padding-inline-md: var(--search-padding-inline-md);
   --search-padding-inline-lg: var(--search-padding-inline-lg);
+  --search-expanded-width: var(--search-expanded-width);
   --search-dropdown-background-color: var(--search-dropdown-background-color);
   --search-dropdown-border-color: var(--search-dropdown-border-color);
   --search-dropdown-muted-text-color: var(--search-dropdown-muted-text-color);
@@ -1586,6 +1587,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-padding-inline-sm: 2rem;
   --search-padding-inline-md: 2.5rem;
   --search-padding-inline-lg: 3rem;
+  --search-expanded-width: 16rem;
   --search-dropdown-background-color: var(--surface-background-color);
   --search-dropdown-border-color: var(--surface-border-color);
   --search-dropdown-muted-text-color: var(--surface-muted-content-color);
