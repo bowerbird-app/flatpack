@@ -56,6 +56,7 @@ module FlatPack
       --range-progress
       --sidebar-measured-width
       --spacing
+      --carousel-bleed
       --card-inset
       --card-inner-radius
     ].freeze

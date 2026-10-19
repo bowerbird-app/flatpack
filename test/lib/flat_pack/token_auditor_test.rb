@@ -31,9 +31,10 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-value"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-scale"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-range-max"
-      assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-measured-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--carousel-bleed"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-inset"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-inner-radius"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-measured-width"
     end
 
     test "brand primitives and transition aliases are defined" do

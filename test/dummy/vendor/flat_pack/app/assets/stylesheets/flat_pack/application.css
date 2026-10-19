@@ -4238,6 +4238,42 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   overflow: hidden;
 }
 
+.flat-pack-carousel__frame--items {
+  align-items: stretch;
+  height: auto;
+}
+
+.flat-pack-carousel__slide--item {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  box-sizing: border-box;
+  height: auto;
+  padding-inline-end: var(--space-3);
+}
+
+.flat-pack-carousel__slide--item > .fp-card {
+  flex: 1 1 auto;
+  height: auto;
+  min-height: 100%;
+}
+
+.flat-pack-carousel__slide--item > .fp-card > * {
+  flex: 0 0 auto;
+  min-height: min-content;
+  overflow: visible;
+}
+
+.flat-pack-carousel__slide--item > .fp-card > :last-child {
+  flex: 1 1 auto;
+}
+
+@media (hover: none) {
+  .flat-pack-carousel__control--touch-hidden {
+    display: none;
+  }
+}
+
 @media (scripting: none) {
   .fp-number:not(.is-static) .fp-number__final {
     position: static;

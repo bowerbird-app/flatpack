@@ -19,6 +19,9 @@ module FlatPack
       # "[justify-content:safe_center]"
       # "bg-[var(--carousel-lightbox-image-background-color)]"
       # "text-[var(--carousel-caption-overlay-text-color)]"
+      # "h-auto" "min-w-0" "items-stretch" "self-stretch"
+
+      renders_many :items
 
       SANITIZED_HTML_TAGS = %w[
         p div span a ul ol li strong em b i u br
@@ -41,7 +44,7 @@ module FlatPack
       ].freeze
 
       def initialize(
-        slides:,
+        slides: nil,
         initial_index: 0,
         show_thumbs: false,
         thumbs_position: :bottom,
@@ -60,6 +63,8 @@ module FlatPack
         items_per_view_tablet: 1,
         items_per_view_desktop: 1,
         side_preview: false,
+        bleed: false,
+        controls_on_touch: nil,
         logo_items_per_view_mobile: 3,
         logo_items_per_view_tablet: 3,
         logo_items_per_view_desktop: 5,
@@ -71,8 +76,8 @@ module FlatPack
         touch_swipe: true,
         show_captions: true,
         caption_mode: :below,
-        show_border: true,
-        show_background: true,
+        show_border: nil,
+        show_background: nil,
         show_counter: true,
         fit: :cover,
         stage: false,
@@ -107,6 +112,8 @@ module FlatPack
         @items_per_view_tablet = normalize_items_per_view(items_per_view_tablet, fallback: 1)
         @items_per_view_desktop = normalize_items_per_view(items_per_view_desktop, fallback: 1)
         @side_preview = !!side_preview
+        @bleed = !!bleed
+        @controls_on_touch = controls_on_touch.nil? ? nil : !!controls_on_touch
         @logo_items_per_view_mobile = normalize_logo_items_per_view(logo_items_per_view_mobile, fallback: 3)
         @logo_items_per_view_tablet = normalize_logo_items_per_view(logo_items_per_view_tablet, fallback: 3)
         @logo_items_per_view_desktop = normalize_logo_items_per_view(logo_items_per_view_desktop, fallback: 5)
@@ -118,13 +125,14 @@ module FlatPack
         @touch_swipe = !!touch_swipe
         @show_captions = !!show_captions
         @caption_mode = caption_mode.to_sym
-        @show_border = !!show_border
-        @show_background = !!show_background
+        @show_border = show_border.nil? ? nil : !!show_border
+        @show_background = show_background.nil? ? nil : !!show_background
         @show_counter = !!show_counter
         @fit = fit.to_sym
         @stage = !!stage
         @aria_label = fp_text(aria_label.equal?(FlatPack::Copy::OMITTED) ? FlatPack::Copy::OMITTED : (aria_label.presence || FlatPack::Copy::OMITTED), "carousel.label")
-        @initial_index = normalize_initial_index(initial_index)
+        @requested_initial_index = Integer(initial_index, exception: false) || 0
+        @initial_index = @requested_initial_index.clamp(0, [@slides.length - 1, 0].max)
         @lightbox_items = build_lightbox_items
         @lightbox_group = @lightbox_items.any? ? "carousel-#{SecureRandom.hex(4)}" : nil
 
@@ -132,6 +140,9 @@ module FlatPack
       end
 
       def call
+        @initial_index = normalize_initial_index(@requested_initial_index)
+        raise ArgumentError, "slides must include at least one valid slide" if slide_entries.empty?
+
         carousel = content_tag(root_tag, **carousel_attributes) do
           safe_join([
             (thumbs_visible? && @thumbs_position == :top && !stage_layout?) ? render_thumbs : nil,
@@ -180,7 +191,7 @@ module FlatPack
           flat_pack__carousel_logo_items_per_view_mobile_value: @logo_items_per_view_mobile,
           flat_pack__carousel_logo_items_per_view_tablet_value: @logo_items_per_view_tablet,
           flat_pack__carousel_logo_items_per_view_desktop_value: @logo_items_per_view_desktop,
-          flat_pack__carousel_logical_slide_count_value: @slides.length
+          flat_pack__carousel_logical_slide_count_value: slide_entries.size
         }
         data[:flat_pack_lightbox_group] = @lightbox_group if @lightbox_group
         data[:flat_pack_lightbox_stage] = "true" if @stage
@@ -230,9 +241,10 @@ module FlatPack
       end
 
       def rendered_slides
-        return @slides unless logo_slider_loop_clones?
+        entries = slide_entries
+        return entries unless logo_slider_loop_clones?
 
-        @slides + @slides.first(logo_slider_clone_count)
+        entries + entries.first(logo_slider_clone_count)
       end
 
       def logo_slider_loop_clones?
@@ -248,18 +260,19 @@ module FlatPack
         aria_hidden = (@variant == :logo_slider) ? false : !is_active
 
         content_tag(:div,
+          render_slide_content(slide),
           class: [slide_classes, slide_state_classes(is_active)].compact.join(" "),
           hidden: hide_slide?(is_active),
           data: slide_data(slide, index),
           aria: {
             hidden: aria_hidden.to_s,
-            label: fp_t("carousel.slide", current: index + 1, total: @slides.length)
-          }) do
-          render_slide_content(slide)
-        end
+            label: fp_t("carousel.slide", current: index + 1, total: slide_entries.size)
+          })
       end
 
       def render_slide_content(slide)
+        return slide[:content] if slide[:type] == :trusted
+
         case slide[:type]
         when :image
           return render_logo_image(slide) if @variant == :logo_slider
@@ -331,7 +344,12 @@ module FlatPack
 
         content_tag(:button,
           type: "button",
-          class: "absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring #{controls_visibility_classes} #{classes}",
+          class: [
+            "flat-pack-carousel__control absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+            controls_visibility_classes,
+            touch_control_classes,
+            classes
+          ].compact.join(" "),
           aria: {label: label},
           data: {action: "click->flat-pack--carousel##{direction}"}) do
           render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
@@ -342,6 +360,18 @@ module FlatPack
         return nil unless @controls_on_hover
 
         "opacity-100 md:opacity-0 md:pointer-events-none md:group-hover:opacity-100 md:group-hover:pointer-events-auto md:group-focus-within:opacity-100 md:group-focus-within:pointer-events-auto"
+      end
+
+      def touch_control_classes
+        return nil unless controls_hidden_on_touch?
+
+        "flat-pack-carousel__control--touch-hidden"
+      end
+
+      def controls_hidden_on_touch?
+        return !@controls_on_touch unless @controls_on_touch.nil?
+
+        item_layout?
       end
 
       def render_footer
@@ -380,7 +410,7 @@ module FlatPack
       end
 
       def multiple_slides?
-        @slides.length > visible_item_threshold
+        slide_entries.size > visible_item_threshold
       end
 
       def visible_item_threshold
@@ -432,7 +462,7 @@ module FlatPack
       def render_indicators
         content_tag(:div, class: "justify-self-center") do
           content_tag(:div, class: "flex items-center gap-2 rounded-[var(--radius-full)] bg-[var(--carousel-indicator-track-background-color)] px-3 py-2") do
-            safe_join(@slides.map.with_index { |_slide, index| render_indicator(index) })
+            safe_join(slide_entries.map.with_index { |_slide, index| render_indicator(index) })
           end
         end
       end
@@ -455,7 +485,7 @@ module FlatPack
 
       def render_thumbs
         content_tag(:div, class: thumb_strip_classes, data: thumb_strip_data) do
-          safe_join(@slides.map.with_index { |slide, index| render_thumb(slide, index) })
+          safe_join(slide_entries.map.with_index { |slide, index| render_thumb(slide, index) })
         end
       end
 
@@ -564,18 +594,19 @@ module FlatPack
 
       def slide_frame_classes
         if @transition == :fade
-          "relative h-full w-full overflow-hidden"
+          item_layout? ? "relative h-auto w-full" : "relative h-full w-full overflow-hidden"
         else
-          classes(
-            "flex h-full w-full transition-transform duration-[var(--duration-slow)] ease-out",
-            (@variant == :logo_slider) ? "items-center" : nil
-          )
+          "flex w-full transition-transform duration-[var(--duration-slow)] ease-out #{item_layout? ? "flat-pack-carousel__frame--items h-auto" : "h-full"} #{"items-center" if @variant == :logo_slider}".squish
         end
       end
 
       def slide_classes
         if @variant == :logo_slider
           return "h-full shrink-0 basis-1/3 md:basis-1/3 lg:basis-1/5"
+        end
+
+        if item_layout? && @transition == :slide
+          return "flat-pack-carousel__slide flat-pack-carousel__slide--item h-auto min-w-0 shrink-0"
         end
 
         base = "h-full w-full shrink-0"
@@ -596,8 +627,8 @@ module FlatPack
 
         classes(
           "flat-pack-carousel__viewport group relative overflow-hidden rounded-[var(--radius-lg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          @show_border ? "border border-[var(--carousel-viewport-border-color)]" : "border-0",
-          @show_background ? "bg-[var(--carousel-viewport-background-color)]" : "bg-transparent",
+          border_on? ? "border border-[var(--carousel-viewport-border-color)]" : "border-0",
+          background_on? ? "bg-[var(--carousel-viewport-background-color)]" : "bg-transparent",
           @touch_swipe ? "cursor-grab select-none" : nil
         )
       end
@@ -619,11 +650,53 @@ module FlatPack
 
       def viewport_style
         declarations = []
-        declarations << "aspect-ratio: #{@aspect_ratio}" unless @variant == :logo_slider || stage_layout?
+        declarations << "aspect-ratio: #{@aspect_ratio}" unless skip_aspect_ratio?
         declarations << "touch-action: pan-y" if @touch_swipe
-        declarations << "height: auto" if @variant == :logo_slider
+        declarations << "height: auto" if @variant == :logo_slider || item_layout?
         declarations << "background: transparent" if @variant == :logo_slider
+        declarations.concat(bleed_declarations) if bleed_track?
         "#{declarations.join("; ")};"
+      end
+
+      def skip_aspect_ratio?
+        @variant == :logo_slider || stage_layout? || item_layout?
+      end
+
+      def bleed_track?
+        @bleed && !stage_layout?
+      end
+
+      def bleed_declarations
+        inset = "var(--carousel-bleed, var(--card-inset, var(--card-padding-md)))"
+        [
+          "width: calc(100% + 2 * #{inset})",
+          "margin-inline: calc(-1 * #{inset})",
+          "padding-inline-start: #{inset}"
+        ]
+      end
+
+      def slide_entries
+        @slide_entries ||= @slides + trusted_item_entries
+      end
+
+      def trusted_item_entries
+        items.map { |item| {type: :trusted, content: item, caption: ""} }
+      end
+
+      def item_layout?
+        items.any?
+      end
+
+      def border_on?
+        return @show_border unless @show_border.nil?
+
+        !item_layout?
+      end
+
+      def background_on?
+        return @show_background unless @show_background.nil?
+
+        !item_layout?
       end
 
       def hide_slide?(is_active)
@@ -810,7 +883,7 @@ module FlatPack
       end
 
       def lightbox_available_for_index?(index)
-        slide = @slides[index]
+        slide = slide_entries[index]
         slide.present? && slide_lightbox_enabled?(slide)
       end
 
@@ -831,7 +904,7 @@ module FlatPack
 
       def normalize_initial_index(value)
         parsed = Integer(value, exception: false) || 0
-        max_index = [@slides.length - 1, 0].max
+        max_index = [slide_entries.size - 1, 0].max
 
         parsed.clamp(0, max_index)
       end
@@ -864,8 +937,6 @@ module FlatPack
       end
 
       def validate_configuration!
-        raise ArgumentError, "slides must include at least one valid slide" if @slides.empty?
-
         validate_option!(:variant, @variant, VARIANTS)
         validate_option!(:thumbs_position, @thumbs_position, THUMBS_POSITIONS)
         validate_option!(:thumbs_alignment, @thumbs_alignment, THUMBS_ALIGNMENTS)

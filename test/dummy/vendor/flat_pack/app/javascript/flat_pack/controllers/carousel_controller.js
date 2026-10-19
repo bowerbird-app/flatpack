@@ -685,7 +685,15 @@ export default class extends Controller {
       return perView
     }
 
-    return perView + 0.25
+    return perView + this.#peekFraction()
+  }
+
+  #peekFraction() {
+    const raw = getComputedStyle(this.element).getPropertyValue("--carousel-peek").trim()
+    const parsed = Number.parseFloat(raw)
+    if (!Number.isFinite(parsed) || parsed < 0) return 0.25
+
+    return parsed
   }
 
   #bindResizeListener() {

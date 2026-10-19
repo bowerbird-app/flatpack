@@ -693,8 +693,128 @@ module FlatPack
 
       def test_requires_at_least_one_valid_slide
         assert_raises(ArgumentError) do
-          Component.new(slides: [{type: :image, src: "javascript:alert('x')"}])
+          render_inline(Component.new(slides: [{type: :image, src: "javascript:alert('x')"}]))
         end
+      end
+
+      def test_item_slot_renders_trusted_markup_without_a_fixed_frame
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new(
+          side_preview: true,
+          bleed: true,
+          show_controls: true
+        )) do |carousel|
+          carousel.with_item do
+            view.safe_join([
+              view.tag.img(src: "/artwork.jpg", alt: "Cover"),
+              view.tag.button(type: "button", data: {action: "click->player#play"}) { "Play" }
+            ])
+          end
+          carousel.with_item { "Next episode" }
+        end
+
+        assert_selector "img[src='/artwork.jpg'][alt='Cover']", visible: :all
+        assert_selector "button[data-action='click->player#play']", text: "Play", visible: :all
+        refute_selector "[data-flat-pack--carousel-target='slide'] .overflow-auto.p-4", visible: :all
+
+        viewport = page.find(".flat-pack-carousel__viewport")
+        refute_includes viewport[:style].to_s, "aspect-ratio"
+        assert_includes viewport[:style].to_s, "height: auto"
+        assert_includes viewport[:class], "border-0"
+        assert_includes viewport[:class], "bg-transparent"
+        assert_includes viewport[:style], "var(--carousel-bleed, var(--card-inset, var(--card-padding-md)))"
+        assert_includes viewport[:style], "margin-inline: calc(-1 * var(--carousel-bleed, var(--card-inset, var(--card-padding-md))))"
+        assert_includes viewport[:style], "padding-inline-start: var(--carousel-bleed, var(--card-inset, var(--card-padding-md)))"
+        assert_includes viewport[:style], "width: calc(100% + 2 * var(--carousel-bleed, var(--card-inset, var(--card-padding-md))))"
+
+        control = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
+        assert_includes control[:class], "absolute"
+        assert_includes control[:class], "flat-pack-carousel__control"
+        assert_includes control[:class], "flat-pack-carousel__control--touch-hidden"
+        assert_selector "[data-flat-pack--carousel-side-preview-value='true']"
+
+        frame = page.find(".flat-pack-carousel__frame--items")
+        assert_includes frame[:class], "h-auto"
+
+        slide = page.all("[data-flat-pack--carousel-target='slide']", visible: :all).first
+        assert_includes slide[:class], "h-auto"
+        assert_includes slide[:class], "flat-pack-carousel__slide--item"
+        refute_includes slide[:class], "h-full"
+        refute_includes slide[:class], "self-stretch"
+      end
+
+      def test_controls_on_touch_defaults_and_overrides
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new(controls_on_touch: true, show_controls: true)) do |carousel|
+          carousel.with_item { view.tag.p("One") }
+          carousel.with_item { view.tag.p("Two") }
+        end
+
+        shown = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
+        refute_includes shown[:class], "flat-pack-carousel__control--touch-hidden"
+
+        render_inline(Component.new(
+          slides: sample_slides.first(2),
+          controls_on_touch: false,
+          show_controls: true
+        ))
+
+        hidden = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
+        assert_includes hidden[:class], "flat-pack-carousel__control--touch-hidden"
+      end
+
+      def test_hash_slides_keep_sanitized_html_and_the_aspect_ratio
+        render_inline(Component.new(slides: [
+          {
+            type: :html,
+            html: "<button type=\"button\" data-action=\"click->player#play\">Play</button><img src=\"/artwork.jpg\" alt=\"Cover\"><p>Keep</p>"
+          },
+          {type: :image, src: "https://images.example.com/two.jpg", alt: "Two"}
+        ]))
+
+        html = page.native.to_html
+        assert_includes html, "<p>Keep</p>"
+        assert_includes html, "overflow-auto p-4"
+        refute_includes html, "click->player#play"
+        refute_includes html, "src=\"/artwork.jpg\""
+
+        viewport = page.find(".flat-pack-carousel__viewport")
+        assert_includes viewport[:style], "aspect-ratio: 16/9"
+        refute_includes viewport[:style].to_s, "margin-inline"
+        assert_includes viewport[:class], "border"
+        refute_includes viewport[:class], "border-0"
+        control = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
+        assert_includes control[:class], "absolute"
+        refute_includes control[:class], "flat-pack-carousel__control--touch-hidden"
+        refute_includes html, "flat-pack-carousel__slide--item"
+        refute_includes html, "flat-pack-carousel__frame--items"
+      end
+
+      def test_peek_token_and_touch_rule_live_in_kit_css
+        variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+        application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/carousel_controller.js").read
+
+        assert_match(/--carousel-peek:\s*0\.25;/, variables)
+        assert_includes application, ".flat-pack-carousel__slide--item > .fp-card"
+        frame_rule = application[application.index(".flat-pack-carousel__frame--items"), 80]
+        assert_includes frame_rule, "align-items: stretch"
+        refute_includes frame_rule, "flex-start"
+        card_rule = application[application.index(".flat-pack-carousel__slide--item > .fp-card {"), 120]
+        assert_includes card_rule, "min-height: 100%"
+        assert_includes card_rule, "flex: 1 1 auto"
+        slide_rule = application[application.index(".flat-pack-carousel__slide--item {"), 240]
+        assert_includes slide_rule, "padding-inline-end: var(--space-3)"
+        assert_includes slide_rule, "box-sizing: border-box"
+        refute_includes application, "--carousel-gap"
+        assert_includes application, ".flat-pack-carousel__control--touch-hidden"
+        touch_rule = application[application.index("@media (hover: none)"), 220]
+        assert_includes touch_rule, ".flat-pack-carousel__control--touch-hidden"
+        refute_includes touch_rule, "data-theme="
+        assert_includes controller, 'getPropertyValue("--carousel-peek")'
+        refute_includes controller, "perView + 0.25"
       end
     end
   end

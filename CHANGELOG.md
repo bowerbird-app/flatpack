@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.262] - 2026-10-19
+
+### Added
+- `FlatPack::Carousel::Component` accepts an `items` slot (`with_item`). Each block is one slide of trusted component output. Images, buttons, and `data-action` render as written, with no `overflow-auto p-4` wrapper. Hash `slides:` can be omitted. When both are set, hash slides come first.
+- Slot slides size the viewport to the tallest slide. The aspect ratio, default border, and default fill are off. Pass `show_border:` or `show_background:` to turn them back on. Items stretch to that height and the card fills the item, so a wrapped title does not leave a ragged row, and the title and actions stay visible. Each item leaves a `--space-3` gap after the card. The gap is padding inside the slide, so the peek and `bleed:` alignment stay put. Hash slides do not get it.
+- `side_preview: true` adds `--carousel-peek` to the items-per-view count. The default is `0.25`, the same peek as before. A theme or host can set the token. `0.25` with one slide in view shows about 80% of the slide.
+- `bleed: true` lets the track run to the parent edge while the first slide stays lined up with the content. The inset is `--carousel-bleed`, then `--card-inset` (the padding step on an ancestor `.fp-card`), then `--card-padding-md`.
+- `controls_on_touch:` hides previous and next on `@media (hover: none)` when `false`. A card row (`items`) hides them by default, because swipe covers that case. A hash `slides:` carousel keeps them unless you pass `false`. Pass `true` on a card row to keep the arrows. Arrows stay `absolute` overlays and take no width. `controls_on_hover` is unchanged and still shows arrows on small screens.
+- Demo: the Card row section on `/demo/carousel`.
+- Bumped the gem version to `0.1.262`.
+
+### Upgrade notes
+- Additive. The `slides:` hash API, sanitizer, aspect ratio, border, and background are unchanged when you do not pass `with_item`. No host call site has to change.
+- Reload kit CSS and the carousel controller so `--carousel-peek` and `.flat-pack-carousel__control--touch-hidden` load. No new Stimulus controller. Importmap hosts need no new pin. esbuild, webpack, and Vite hosts already register `flat-pack--carousel`. Do not register another controller.
+- No Tailwind rebuild. The slot layout reuses `h-auto`, `min-w-0`, and `shrink-0`, which the kit already ships. Content height and the touch rule live in kit CSS. No `bin/rails generate flat_pack:install` rerun.
+- A carousel inside a card inherits that card's `--card-inset`. Set `--carousel-bleed` on the parent when the carousel is not inside a card and the padding is not `--card-padding-md`.
+- Redeploy so `meta.gem_version` shows `0.1.262`.
+
 ## [0.1.261] - 2026-10-19
 
 ### Added
