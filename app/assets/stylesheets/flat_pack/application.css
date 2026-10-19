@@ -4247,7 +4247,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   display: flex;
   flex-direction: column;
   align-self: stretch;
+  box-sizing: border-box;
   height: auto;
+  padding-inline-end: var(--space-3);
 }
 
 .flat-pack-carousel__slide--item > .fp-card {

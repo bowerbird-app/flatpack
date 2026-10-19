@@ -805,6 +805,10 @@ module FlatPack
         card_rule = application[application.index(".flat-pack-carousel__slide--item > .fp-card {"), 120]
         assert_includes card_rule, "min-height: 100%"
         assert_includes card_rule, "flex: 1 1 auto"
+        slide_rule = application[application.index(".flat-pack-carousel__slide--item {"), 240]
+        assert_includes slide_rule, "padding-inline-end: var(--space-3)"
+        assert_includes slide_rule, "box-sizing: border-box"
+        refute_includes application, "--carousel-gap"
         assert_includes application, ".flat-pack-carousel__control--touch-hidden"
         touch_rule = application[application.index("@media (hover: none)"), 220]
         assert_includes touch_rule, ".flat-pack-carousel__control--touch-hidden"
