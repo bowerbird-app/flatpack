@@ -92,6 +92,7 @@ The engine integrates via:
    <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
    ```
+   `application.css` imports `content_editor.css` and `inline_edit.css` with `@import url(...)`. The extra `variables` and `rich_text` tags repeat those imports. The repeat is harmless.
    Load the host stylesheet last so brand primitives / named-theme overrides win.
 
 2. **Component Rendering**

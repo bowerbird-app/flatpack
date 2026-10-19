@@ -16,4 +16,17 @@ class EngineLoadTest < ActiveSupport::TestCase
   test "FlatPack module is accessible" do
     assert defined?(FlatPack), "FlatPack module should be defined"
   end
+
+  test "application.css imports compile to digested sibling urls" do
+    assembly = Rails.application.assets
+    compiled = assembly.load_path.find("flat_pack/application.css").compiled_content
+
+    refute_match(%r{flat_pack/flat_pack/}, compiled)
+    refute_match(/@import\s+["']/, compiled)
+
+    %w[variables rich_text content_editor inline_edit].each do |name|
+      sibling = assembly.load_path.find("flat_pack/#{name}.css")
+      assert_includes compiled, %(url("#{assembly.prefix}#{sibling.digested_path}"))
+    end
+  end
 end

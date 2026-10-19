@@ -64,7 +64,7 @@ bin/rake flat_pack:verify_install
 ```
 
 **What the generator does:**
-- Adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your `app/views/layouts/application.html.erb` — Propshaft serves the FlatPack CSS at digested URLs. `variables` holds the full token hierarchy (brand → semantic → component); `application` holds component helper classes.
+- Adds `stylesheet_link_tag "flat_pack/variables"`, `stylesheet_link_tag "flat_pack/application"`, and `stylesheet_link_tag "flat_pack/rich_text"` to your `app/views/layouts/application.html.erb`. Propshaft serves those files at digested URLs. `variables` holds the token hierarchy (brand, then semantic, then component). `application` holds component helper classes and imports `content_editor.css` and `inline_edit.css`, so those sheets load without their own link tags. The `variables` and `rich_text` tags repeat imports inside `application.css`. That repeat is harmless.
 - **Automatically configures Tailwind CSS 4** by detecting your Tailwind CSS file and injecting an `@source` directive for FlatPack components (tokens are **not** re-declared in the host Tailwind file)
 - **Configures importmap** to load FlatPack Stimulus controllers and the Heroicons JS module
 - **Configures Stimulus** to lazy load FlatPack controllers on first use
@@ -190,7 +190,9 @@ The `rails generate flat_pack:install` command now **automatically configures Ta
 <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
 ```
 
-> **Why `stylesheet_link_tag` and not `@import`?** Propshaft fingerprints asset filenames (e.g. `flat_pack/variables-17d9435e.css`). A bare CSS `@import "flat_pack/variables.css"` in a static stylesheet would send the browser looking for an un-digested URL that Propshaft never serves, resulting in a 404. `stylesheet_link_tag` asks Propshaft for the correct digested path at request time.
+`application.css` also imports `variables.css`, `rich_text.css`, `content_editor.css`, and `inline_edit.css` with `@import url(...)`. Propshaft rewrites those `url()` values to digested files. Linking `variables` and `rich_text` again is a harmless duplicate. `content_editor` and `inline_edit` are not generator link tags. They arrive through `application.css`.
+
+A bare `@import "flat_pack/variables.css"` does not get a digest. The browser asks for `/assets/flat_pack/flat_pack/variables.css` and gets a 404. Keep the three `stylesheet_link_tag` calls from the generator.
 
 `flat_pack/variables.css` contains the complete FlatPack theming system:
 - Brand primitives (`--brand-hue`, `--brand-chroma`, `--brand-lightness`) plus semantic and component tokens on `:root {}`

@@ -85,12 +85,12 @@ The dummy app loads gem CSS first, then the compiled host Tailwind bundle last (
 <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
-<%= stylesheet_link_tag "flat_pack/content_editor", "data-turbo-track": "reload" %>
-<%= stylesheet_link_tag "flat_pack/inline_edit", "data-turbo-track": "reload" %>
 <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 ```
 
-Tokens come from `flat_pack/variables`. Do not `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet (fingerprinted filenames 404). Do not fork tokens as `--color-fp-*` in the Tailwind entry.
+That is the install-contract set plus the host sheet. `flat_pack/application.css` imports `variables`, `rich_text`, `content_editor`, and `inline_edit` with `@import url(...)`. Propshaft rewrites those to digested files, so the demo does not link `content_editor` or `inline_edit` on its own. The `variables` and `rich_text` tags repeat imports inside `application.css`. The repeat is harmless, and it matches `bin/rails generate flat_pack:install`.
+
+Do not use a bare `@import "flat_pack/variables.css"` in a Propshaft-served stylesheet. The browser requests `/assets/flat_pack/flat_pack/variables.css` and gets a 404. Do not fork tokens as `--color-fp-*` in the Tailwind entry.
 
 Host overrides (for example `[data-theme~="sunrise"] { --brand-hue: 35; --brand-chroma: 0.19; --brand-lightness: 0.52; }`) live in `app/assets/stylesheets/application.tailwind.css` and win because `application` loads last. The same file re-sets `--font-sans` / `--font-mono` and kit `--radius-*` on unlayered `:root` so Tailwind `@layer theme` does not keep `ui-sans-serif` or `--radius-md: 0.375rem`.
 
