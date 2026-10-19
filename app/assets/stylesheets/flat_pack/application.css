@@ -4197,22 +4197,31 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .flat-pack-carousel__frame--items {
-  align-items: flex-start;
+  align-items: stretch;
   height: auto;
 }
 
 .flat-pack-carousel__slide--item {
-  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
   height: auto;
 }
 
 .flat-pack-carousel__slide--item > .fp-card {
+  flex: 1 1 auto;
   height: auto;
+  min-height: 100%;
 }
 
 .flat-pack-carousel__slide--item > .fp-card > * {
   flex: 0 0 auto;
+  min-height: min-content;
   overflow: visible;
+}
+
+.flat-pack-carousel__slide--item > .fp-card > :last-child {
+  flex: 1 1 auto;
 }
 
 @media (hover: none) {

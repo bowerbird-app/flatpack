@@ -57,7 +57,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 |---|---|
 | `items` | One slide per call. The block is trusted component output: images, buttons, and `data-action` render as written, with no forced padding. Hash `slides:` can be omitted. When both are set, hash slides come first. |
 
-`with_item` switches the viewport to content height. There is no aspect ratio and no letterboxing. The default border and muted fill turn off unless you pass `show_border:` or `show_background:`. Each item sizes to its own content, so a card's title and actions stay visible. The row is as tall as the tallest item.
+`with_item` switches the viewport to content height. There is no aspect ratio and no letterboxing. The default border and muted fill turn off unless you pass `show_border:` or `show_background:`. The row is as tall as the tallest item. Each item stretches to that height, and the card inside fills the item, so the bottoms line up and the title and actions stay visible.
 
 ## Card row
 Put the carousel in a padded card and set `bleed: true` so the next card peeks to the card edge instead of stopping at the padding. `side_preview: true` reads `--carousel-peek`. A theme or host sets that token to change the peek. `0.25` shows about 80% of a slide when one slide is in view (`100 / 1.25`).

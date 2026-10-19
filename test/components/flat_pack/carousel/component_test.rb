@@ -734,6 +734,9 @@ module FlatPack
         assert_includes control[:class], "flat-pack-carousel__control--touch-hidden"
         assert_selector "[data-flat-pack--carousel-side-preview-value='true']"
 
+        frame = page.find(".flat-pack-carousel__frame--items")
+        assert_includes frame[:class], "h-auto"
+
         slide = page.all("[data-flat-pack--carousel-target='slide']", visible: :all).first
         assert_includes slide[:class], "h-auto"
         assert_includes slide[:class], "flat-pack-carousel__slide--item"
@@ -785,6 +788,8 @@ module FlatPack
         control = page.find("button[data-action='click->flat-pack--carousel#prev']", visible: :all)
         assert_includes control[:class], "absolute"
         refute_includes control[:class], "flat-pack-carousel__control--touch-hidden"
+        refute_includes html, "flat-pack-carousel__slide--item"
+        refute_includes html, "flat-pack-carousel__frame--items"
       end
 
       def test_peek_token_and_touch_rule_live_in_kit_css
@@ -794,6 +799,12 @@ module FlatPack
 
         assert_match(/--carousel-peek:\s*0\.25;/, variables)
         assert_includes application, ".flat-pack-carousel__slide--item > .fp-card"
+        frame_rule = application[application.index(".flat-pack-carousel__frame--items"), 80]
+        assert_includes frame_rule, "align-items: stretch"
+        refute_includes frame_rule, "flex-start"
+        card_rule = application[application.index(".flat-pack-carousel__slide--item > .fp-card {"), 120]
+        assert_includes card_rule, "min-height: 100%"
+        assert_includes card_rule, "flex: 1 1 auto"
         assert_includes application, ".flat-pack-carousel__control--touch-hidden"
         touch_rule = application[application.index("@media (hover: none)"), 220]
         assert_includes touch_rule, ".flat-pack-carousel__control--touch-hidden"
