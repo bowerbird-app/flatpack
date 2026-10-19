@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.256] - 2026-10-19
+
+### Fixed
+- `FlatPack::Copy.t` (and `fp_t` / `fp_text`) uses the English `flatpack.*` string when the active locale has no translation for that key. A translation already in the active locale still wins. `I18n.t`, `I18n.fallbacks`, and `I18n.exception_handler` are unchanged.
+- Bumped the gem version to `0.1.256`.
+
+### Upgrade notes
+- A host locale can omit kit keys. Chrome rendered through `FlatPack::Copy.t` shows English until the host translates that key.
+- `config.i18n.raise_on_missing_translations` still raises for a missing host key, and for a `flatpack.*` key that English does not define either.
+- Redeploy so `meta.gem_version` shows `0.1.256`.
+
 ## [0.1.255] - 2026-10-19
 
 ### Added
