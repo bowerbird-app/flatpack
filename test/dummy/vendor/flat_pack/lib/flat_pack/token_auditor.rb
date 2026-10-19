@@ -53,6 +53,7 @@ module FlatPack
       --fp-range-scale
       --fp-range-value
       --range-progress
+      --sidebar-measured-width
       --spacing
     ].freeze
 

@@ -17,6 +17,9 @@
 <% content_height = params[:height] == "content" %>
 <% fit_rail_query = request.query_parameters.merge("floating" => "1", "background" => "1", "height" => "content") %>
 <% fill_rail_query = request.query_parameters.except("height") %>
+<% content_width = params[:width] == "content" %>
+<% fit_width_query = request.query_parameters.merge("width" => "content") %>
+<% fixed_width_query = request.query_parameters.except("width") %>
 
 <div class="mb-8 flex flex-wrap items-center gap-3">
   <%= link_to(
@@ -42,6 +45,12 @@
     style: :secondary,
     size: :sm
   ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: content_width ? "Fixed width" : "Fit the labels",
+    href: demo_sidebar_layout_path(content_width ? fixed_width_query : fit_width_query),
+    style: :secondary,
+    size: :sm
+  ) %>
   <% if top_nav_floating %>
     <%= render FlatPack::Button::Component.new(
       text: content_below ? "Scroll under" : "Start below",
@@ -63,6 +72,7 @@
     Photo background uses <code>?background=1</code>. Add <code>?floating=1</code> for the detached rail. The flush rail is <code>?background=1</code> alone.
     <code>?floating_top_nav=1</code> turns the bar into cards. <code>content_scroll=below</code> parks those cards above the page.
     <code>?height=content</code> with <code>?floating=1</code> sizes the desktop rail to its items.
+    <code>?width=content</code> sizes the open desktop rail to its widest item.
   </p>
 
   <%= render FlatPack::CodeBlock::Component.new(

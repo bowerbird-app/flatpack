@@ -336,6 +336,51 @@ module FlatPack
         assert_includes error.message, "height must be :full or :content"
       end
 
+      def test_fixed_width_is_the_default
+        render_inline(Component.new(floating: true, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        html = page.native.to_html
+        refute_includes html, "data-flat-pack-sidebar-width"
+        refute_includes html, "w-64"
+        assert_includes html, "md:w-auto"
+        assert_includes html, "fp-sidebar-drawer"
+      end
+
+      def test_content_width_sets_the_desktop_hook
+        render_inline(Component.new(width: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "[data-flat-pack-sidebar-width='content']", text: "Sidebar"
+        refute_includes page.native.to_html, "w-64"
+      end
+
+      def test_content_width_accepts_the_string_form
+        render_inline(Component.new(width: "content", floating: true, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "[data-flat-pack-sidebar-width='content'][data-flat-pack-sidebar-floating='true'][data-flat-pack-sidebar-height='content']"
+      end
+
+      def test_fixed_width_accepts_the_symbol
+        render_inline(Component.new(width: :fixed)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        refute_includes page.native.to_html, "data-flat-pack-sidebar-width"
+      end
+
+      def test_width_rejects_unknown_values
+        error = assert_raises(ArgumentError) do
+          Component.new(width: :page)
+        end
+
+        assert_includes error.message, "width must be :fixed or :content"
+      end
+
       def test_content_scroll_accepts_the_string_form
         render_inline(Component.new(floating_top_nav: true, content_scroll: "below")) do |layout|
           layout.top_nav { "TopNav" }

@@ -29,10 +29,10 @@ module FlatPack
       assert_includes css, "padding-left: var(--sidebar-item-padding-collapsed) !important"
       assert_includes css, "padding-left: 0 !important"
       assert_includes css, "gap: 0 !important"
-      assert_includes css, "margin-left: calc((4rem - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
+      assert_includes css, "margin-left: calc((var(--sidebar-collapsed-width) - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
       assert_includes css, "[data-flat-pack-sidebar-floating=\"true\"]"
       assert_includes css, "margin-top: var(--sidebar-float-inset) !important;"
-      assert_includes css, "margin-left: calc((4rem - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
+      assert_includes css, "margin-left: calc((var(--sidebar-collapsed-width) - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
       assert_includes css, "border-radius: var(--sidebar-float-radius);"
       assert_includes css, "[data-flat-pack-layout-background]"
       assert_includes css, "isolation: isolate;"
@@ -79,6 +79,23 @@ module FlatPack
       desktop_rail = css[/Sidebar layout:.*?\n  \}/m]
       refute_nil desktop_rail
       assert_includes desktop_rail, "@media (min-width: 768px)"
+      assert_includes desktop_rail, "width: var(--sidebar-width) !important;"
+      assert_includes desktop_rail, "width: var(--sidebar-collapsed-width) !important;"
+      assert_includes desktop_rail, "[data-flat-pack-sidebar-width=\"content\"] aside"
+      assert_includes desktop_rail, "width: var(--sidebar-measured-width, max-content) !important;"
+      assert_includes desktop_rail, "min-width: var(--sidebar-measured-width, var(--sidebar-content-min-width)) !important;"
+      assert_includes desktop_rail, "max-width: var(--sidebar-measured-width, var(--sidebar-content-max-width)) !important;"
+      assert_includes desktop_rail, "interpolate-size: allow-keywords;"
+      assert_includes desktop_rail, ".fp-sidebar-drawer"
+      assert_includes desktop_rail, "width: var(--sidebar-width) !important;"
+      refute_includes css, "width: 16rem !important;"
+      refute_includes css, "width: 4rem !important;"
+      assert_includes controller, "var(--sidebar-width, 16rem)"
+      assert_includes controller, "var(--sidebar-collapsed-width, 4rem)"
+      assert_includes controller, "rememberOpenWidth"
+      assert_includes controller, 'setProperty("transition-property", "none", "important")'
+      refute_includes controller, 'style.width = "16rem"'
+      refute_includes controller, 'style.width = "4rem"'
       assert_includes desktop_rail, "[data-flat-pack-sidebar-floating=\"true\"]"
       assert_includes desktop_rail, "[data-flat-pack-sidebar-floating=\"true\"]:not([data-flat-pack-sidebar-height=\"content\"])"
       assert_includes desktop_rail, "height: calc(100vh - (var(--sidebar-float-inset) * 2)) !important;"

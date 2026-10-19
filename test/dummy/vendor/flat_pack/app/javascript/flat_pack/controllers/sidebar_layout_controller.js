@@ -57,6 +57,9 @@ export default class extends Controller {
     this.element.addEventListener("click", this.handleSidebarLinkClick, true)
     this.bindScrollPersistenceListener()
     this.bindFloatingTopNavClearance()
+    this.bindOpenWidthMemory()
+    this.rememberOpenWidth()
+    this.remeasureOpenWidthWhenFontsReady()
 
     // Groups apply open state after this parent controller connects. Wait until
     // that height is in so a long list can restore the real scrollTop.
@@ -72,6 +75,7 @@ export default class extends Controller {
     this.element.removeEventListener("click", this.handleSidebarLinkClick, true)
     this.unbindScrollPersistenceListener()
     this.unbindFloatingTopNavClearance()
+    this.unbindOpenWidthMemory()
 
     // Persist as a fallback when leaving without Turbo lifecycle
     this.persistScrollState()
@@ -93,6 +97,7 @@ export default class extends Controller {
         this.applySidebarPresentationMode()
         this.sidebarTarget.style.pointerEvents = ""
         this.applyDesktopState({ immediate: true })
+        this.rememberOpenWidth()
       }
     }
   }
@@ -222,13 +227,8 @@ export default class extends Controller {
     // Inline styles are set as a fallback for host apps that haven't imported
     // the FlatPack CSS rules that respond to this attribute.
     const sidebarContent = this.sidebarTarget.querySelector("aside")
-    if (this.collapsed) {
-      this.sidebarTarget.style.width = "4rem"
-      if (sidebarContent) sidebarContent.style.width = "4rem"
-    } else {
-      this.sidebarTarget.style.width = "16rem"
-      if (sidebarContent) sidebarContent.style.width = "16rem"
-    }
+    this.paintFallbackWidth(this.sidebarTarget)
+    this.paintFallbackWidth(sidebarContent)
 
     this.syncToggleAria()
 
@@ -245,6 +245,91 @@ export default class extends Controller {
     }
 
     this.applyCollapsedHeaderChrome()
+  }
+
+  usesContentWidth() {
+    return this.hasSidebarTarget && this.sidebarTarget.dataset.flatPackSidebarWidth === "content"
+  }
+
+  paintFallbackWidth(element) {
+    if (!element) return
+
+    const collapsedWidth = "var(--sidebar-collapsed-width, 4rem)"
+    if (!this.usesContentWidth()) {
+      element.style.width = this.collapsed ? collapsedWidth : "var(--sidebar-width, 16rem)"
+      element.style.minWidth = ""
+      element.style.maxWidth = ""
+      return
+    }
+
+    if (this.collapsed) {
+      element.style.width = collapsedWidth
+      element.style.minWidth = collapsedWidth
+      element.style.maxWidth = collapsedWidth
+      return
+    }
+
+    element.style.width = "var(--sidebar-measured-width, max-content)"
+    element.style.minWidth = "var(--sidebar-measured-width, var(--sidebar-content-min-width, 12rem))"
+    element.style.maxWidth = "var(--sidebar-measured-width, var(--sidebar-content-max-width, 20rem))"
+  }
+
+  bindOpenWidthMemory() {
+    if (!this.hasSidebarTarget || this.handleWidthTransitionEnd) return
+
+    this.handleWidthTransitionEnd = (event) => {
+      if (event.propertyName !== "width") return
+      const aside = this.sidebarTarget.querySelector("aside")
+      if (event.target !== this.sidebarTarget && event.target !== aside) return
+      this.rememberOpenWidth()
+    }
+    this.sidebarTarget.addEventListener("transitionend", this.handleWidthTransitionEnd)
+  }
+
+  unbindOpenWidthMemory() {
+    if (!this.handleWidthTransitionEnd || !this.hasSidebarTarget) return
+
+    this.sidebarTarget.removeEventListener("transitionend", this.handleWidthTransitionEnd)
+    this.handleWidthTransitionEnd = null
+  }
+
+  remeasureOpenWidthWhenFontsReady() {
+    if (!document.fonts?.ready) return
+
+    document.fonts.ready.then(() => {
+      if (!this.hasSidebarTarget || !this.sidebarTarget.isConnected) return
+      if (this.isMobile || !this.usesContentWidth()) return
+      if (this.collapsed) {
+        this.sidebarTarget.style.removeProperty("--sidebar-measured-width")
+        return
+      }
+
+      this.rememberOpenWidth()
+    })
+  }
+
+  rememberOpenWidth() {
+    if (this.isMobile || this.collapsed || !this.usesContentWidth()) return
+
+    const rail = this.sidebarTarget
+    const aside = rail.querySelector("aside")
+    const targets = [rail, aside].filter(Boolean)
+
+    // The width transition is !important. Reading mid-transition stores the
+    // old 16rem length and the next paint never reaches max-content.
+    targets.forEach((element) => {
+      element.style.setProperty("transition-property", "none", "important")
+    })
+    rail.style.removeProperty("--sidebar-measured-width")
+
+    const width = rail.getBoundingClientRect().width
+    if (width > 0) {
+      rail.style.setProperty("--sidebar-measured-width", `${Math.round(width)}px`)
+    }
+
+    targets.forEach((element) => {
+      element.style.removeProperty("transition-property")
+    })
   }
 
   syncToggleAria() {

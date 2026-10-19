@@ -10,6 +10,7 @@ module FlatPack
 
       CONTENT_SCROLLS = %i[behind below].freeze
       HEIGHTS = %i[full content].freeze
+      WIDTHS = %i[fixed content].freeze
 
       def initialize(
         side: :left,
@@ -19,6 +20,7 @@ module FlatPack
         floating_top_nav: false,
         content_scroll: :behind,
         height: :full,
+        width: :fixed,
         **system_arguments
       )
         super(**system_arguments)
@@ -29,12 +31,14 @@ module FlatPack
         @floating_top_nav = floating_top_nav
         @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
         @height = height.is_a?(String) ? height.to_sym : height
+        @width = width.is_a?(String) ? width.to_sym : width
 
         validate_side!
         validate_floating!
         validate_floating_top_nav!
         validate_content_scroll!
         validate_height!
+        validate_width!
       end
 
       def sidebar(**args, &block)
@@ -229,7 +233,6 @@ module FlatPack
           "md:relative",
           "fixed",
           "inset-y-0",
-          "w-64",
           "md:w-auto",
           "z-50",
           "md:z-auto",
@@ -268,8 +271,13 @@ module FlatPack
           "flat-pack--sidebar-layout-target": "sidebar",
           "mobile-drawer-side": @side.to_s,
           "flat-pack-sidebar-floating": ("true" if @floating),
-          "flat-pack-sidebar-height": ("content" if content_height?)
+          "flat-pack-sidebar-height": ("content" if content_height?),
+          "flat-pack-sidebar-width": ("content" if content_width?)
         }.compact
+      end
+
+      def content_width?
+        @width == :content
       end
 
       def content_height?
@@ -320,6 +328,12 @@ module FlatPack
         return if HEIGHTS.include?(@height)
 
         raise ArgumentError, "height must be :full or :content"
+      end
+
+      def validate_width!
+        return if WIDTHS.include?(@width)
+
+        raise ArgumentError, "width must be :fixed or :content"
       end
     end
   end

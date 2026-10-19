@@ -330,6 +330,10 @@
   --tooltip-font-size: var(--tooltip-font-size);
   --tooltip-max-width: var(--tooltip-max-width);
   --tooltip-radius: var(--tooltip-radius);
+  --sidebar-width: var(--sidebar-width);
+  --sidebar-collapsed-width: var(--sidebar-collapsed-width);
+  --sidebar-content-min-width: var(--sidebar-content-min-width);
+  --sidebar-content-max-width: var(--sidebar-content-max-width);
   --sidebar-background-color: var(--sidebar-background-color);
   --sidebar-float-inset: var(--sidebar-float-inset);
   --sidebar-float-background-color: var(--sidebar-float-background-color);
@@ -1278,6 +1282,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --tooltip-radius: var(--radius-sm);
   --tooltip-font-size: 0.875rem;
   --tooltip-max-width: 20rem;
+  --sidebar-width: 16rem;
+  --sidebar-collapsed-width: 4rem;
+  --sidebar-content-min-width: 12rem;
+  --sidebar-content-max-width: 20rem;
   --sidebar-background-color: var(--surface-page-background-color);
   --sidebar-float-inset: 1rem;
   --sidebar-float-background-color: #fff;
