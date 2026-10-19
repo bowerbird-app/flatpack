@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["clip", "body", "toggle"]
+  static targets = ["line", "body", "toggle"]
   static values = {
     open: { type: Boolean, default: false },
     overflowing: { type: Boolean, default: false },
@@ -10,7 +10,7 @@ export default class extends Controller {
   }
 
   connect() {
-    this.disconnect()
+    this.resetObserver()
 
     if (typeof ResizeObserver !== "undefined") {
       this.observer = new ResizeObserver(() => this.measure())
@@ -22,6 +22,10 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.resetObserver()
+  }
+
+  resetObserver() {
     if (!this.observer) return
 
     this.observer.disconnect()
@@ -47,10 +51,10 @@ export default class extends Controller {
   }
 
   measure() {
-    if (!this.hasBodyTarget || !this.hasClipTarget) return
+    if (!this.hasBodyTarget || !this.hasLineTarget) return
 
     const lines = Number.parseFloat(getComputedStyle(this.element).getPropertyValue("--read-more-lines"))
-    const lineBox = Number.parseFloat(getComputedStyle(this.clipTarget, "::before").height)
+    const lineBox = Number.parseFloat(getComputedStyle(this.lineTarget).height)
     this.overflowingValue = this.contentOverflows(this.bodyTarget.scrollHeight, lineBox, lines)
     this.publish()
   }

@@ -40,6 +40,8 @@ The toggle is a `button` with `type="button"`. `aria-expanded` is the string `"t
 
 ## Dependencies
 - `FlatPack::Button::Component` renders the toggle at `style: :ghost` and `size: :sm`.
+- Styles ship unlayered in `flat_pack/application.css` on `.fp-read-more`, after `@layer components`.
+- `.fp-read-more-line` is the `1lh` strut. The controller reads that element's height when it decides overflow.
 - Stimulus controller `flat-pack--read-more` (`read_more_controller.js`). It reads `open` and `overflowing`. It does not set `max-height`.
 - Importmap hosts already pin `app/javascript/flat_pack/controllers` with `pin_all_from`. Do not add a pin. Do not rerun `bin/rails generate flat_pack:install`.
 - esbuild, webpack, and Vite hosts must register the controller. Import `ReadMoreController` from `read_more_controller.js` and call `application.register("flat-pack--read-more", ReadMoreController)`.

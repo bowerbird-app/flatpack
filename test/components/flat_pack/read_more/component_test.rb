@@ -16,7 +16,8 @@ module FlatPack
         assert_equal "false", root["data-flat-pack--read-more-open-value"]
         assert_includes root[:style], "--read-more-lines: 4"
         assert_match(/\Afp-read-more-[0-9a-f]{8}\z/, clip[:id])
-        assert_equal "clip", clip["data-flat-pack--read-more-target"]
+        assert_equal "line", page.find(".fp-read-more-line", visible: :all)["data-flat-pack--read-more-target"]
+        assert_equal "true", page.find(".fp-read-more-line", visible: :all)["aria-hidden"]
         assert_selector ".fp-read-more-clip .fp-read-more-body", text: "The kettle is on."
         assert_equal "body", page.find(".fp-read-more-body")["data-flat-pack--read-more-target"]
         assert_equal clip[:id], button[:"aria-controls"]

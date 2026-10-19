@@ -30,8 +30,16 @@ module FlatPack
 
       def clip
         content_tag(:div, **clip_attributes) do
-          content_tag(:div, content, **body_attributes)
+          safe_join([line_box, content_tag(:div, content, **body_attributes)])
         end
+      end
+
+      def line_box
+        tag.span(
+          class: "fp-read-more-line",
+          aria: {hidden: true},
+          data: {flat_pack__read_more_target: "line"}
+        )
       end
 
       def toggle
@@ -66,8 +74,7 @@ module FlatPack
       def clip_attributes
         {
           id: @clip_id,
-          class: "fp-read-more-clip",
-          data: {flat_pack__read_more_target: "clip"}
+          class: "fp-read-more-clip"
         }
       end
 

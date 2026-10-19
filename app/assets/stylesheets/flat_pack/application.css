@@ -575,7 +575,6 @@
 
 }
 
-/* Unlayered so a host utility in a later layer cannot cover the clamp. */
 .fp-read-more {
   display: flex;
   flex-direction: column;
@@ -593,8 +592,7 @@
   transition: max-height var(--duration-slow) var(--easing-standard);
 }
 
-.fp-read-more-clip::before {
-  content: "";
+.fp-read-more-line {
   position: absolute;
   width: 0;
   height: 1lh;

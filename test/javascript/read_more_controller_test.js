@@ -30,9 +30,9 @@ function loadController() {
     }
   }
 
-  function getComputedStyle(element, pseudo) {
-    if (pseudo) return { height: element.lineBox }
+  function getComputedStyle(element) {
     return {
+      height: element.lineBox,
       getPropertyValue(name) {
         return name === '--read-more-lines' ? element.lines : ''
       }
@@ -56,7 +56,7 @@ function buildController({ scrollHeight = 40, lines = '4', lineBox = '24px' } = 
   const { ControllerClass, observers } = loadController()
   const controller = new ControllerClass()
   const element = { lines, style: {} }
-  const clip = { lineBox }
+  const line = { lineBox }
   const body = { scrollHeight }
   const span = { textContent: '' }
   const toggle = {
@@ -68,10 +68,10 @@ function buildController({ scrollHeight = 40, lines = '4', lineBox = '24px' } = 
   }
 
   controller.element = element
-  controller.clipTarget = clip
+  controller.lineTarget = line
   controller.bodyTarget = body
   controller.toggleTarget = toggle
-  controller.hasClipTarget = true
+  controller.hasLineTarget = true
   controller.hasBodyTarget = true
   controller.hasToggleTarget = true
   controller.moreLabelValue = 'Show more'
@@ -91,7 +91,7 @@ function buildController({ scrollHeight = 40, lines = '4', lineBox = '24px' } = 
 
   controller.connect()
 
-  return { controller, element, clip, body, toggle, span, observers }
+  return { controller, element, line, body, toggle, span, observers }
 }
 
 test('content that fits hides the button', () => {
