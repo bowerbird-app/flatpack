@@ -335,6 +335,9 @@
   --sidebar-float-background-color: var(--sidebar-float-background-color);
   --sidebar-float-shadow: var(--sidebar-float-shadow);
   --sidebar-float-radius: var(--sidebar-float-radius);
+  --layout-background-blur: var(--layout-background-blur);
+  --layout-background-tint-color: var(--layout-background-tint-color);
+  --layout-background-tint-opacity: var(--layout-background-tint-opacity);
   --sidebar-border-color: var(--sidebar-border-color);
   --sidebar-divider-color: var(--sidebar-divider-color);
   --sidebar-item-text-color: var(--sidebar-item-text-color);
@@ -1270,6 +1273,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-float-background-color: #fff;
   --sidebar-float-shadow: var(--shadow-md);
   --sidebar-float-radius: var(--radius-lg);
+  --layout-background-blur: 40px;
+  --layout-background-tint-color: var(--surface-page-background-color);
+  --layout-background-tint-opacity: 0.55;
   --sidebar-border-color: var(--surface-border-color);
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
@@ -1872,6 +1878,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-backdrop-blur: 3px;
   --sidebar-background-color: oklch(0.17 0.01 250);
   --sidebar-float-background-color: oklch(0.22 0.02 250);
+  --layout-background-tint-opacity: 0.78;
   --top-nav-background-color: oklch(0.18 0.01 250);
   --inline-edit-cue-color: color-mix(in oklab, var(--surface-content-color) 38%, transparent);
   --inline-edit-focus-color: var(--color-primary);

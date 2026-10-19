@@ -206,6 +206,46 @@ module FlatPack
         assert_includes error.message, "floating must be true or false"
       end
 
+      def test_background_slot_is_absent_by_default
+        render_inline(Component.new) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.main { "Main" }
+        end
+
+        refute_selector ".fp-layout-background"
+        refute_selector ".fp-layout-main"
+        refute_includes page.native.to_html, "data-flat-pack-layout-background"
+      end
+
+      def test_background_slot_renders_a_decorative_layer
+        render_inline(Component.new(floating: true)) do |layout|
+          layout.background { %(<img src="/images/hero-packaging.jpg" alt="">).html_safe }
+          layout.sidebar { "Sidebar" }
+          layout.main { "Main" }
+        end
+
+        assert_selector "[data-flat-pack-layout-background='true']"
+        assert_selector ".fp-layout-background[aria-hidden='true']"
+        assert_selector ".fp-layout-background-media img[alt=''][src='/images/hero-packaging.jpg']"
+        assert_selector ".fp-layout-background-tint"
+        assert_selector ".fp-layout-main"
+        refute_selector ".fp-layout-background img[alt]:not([alt=''])"
+
+        html = page.native.to_html
+        assert_operator html.index("fp-layout-background"), :<, html.index("Sidebar")
+      end
+
+      def test_background_image_is_hidden_from_assistive_tech
+        render_inline(Component.new) do |layout|
+          layout.background { %(<img src="/images/hero-packaging.jpg" alt="">).html_safe }
+        end
+
+        layer = page.find(".fp-layout-background")
+        assert_equal "true", layer["aria-hidden"]
+        assert_equal "", layer.find("img")["alt"]
+        refute layer.has_selector?("[tabindex]")
+      end
+
       def test_shell_does_not_register_legacy_navbar_controller
         render_inline(Component.new) do |layout|
           layout.sidebar { "Sidebar" }

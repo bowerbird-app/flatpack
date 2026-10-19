@@ -34,6 +34,16 @@ module FlatPack
       assert_includes css, "margin-top: var(--sidebar-float-inset) !important;"
       assert_includes css, "margin-left: calc((4rem - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
       assert_includes css, "border-radius: var(--sidebar-float-radius);"
+      assert_includes css, "[data-flat-pack-layout-background]"
+      assert_includes css, "isolation: isolate;"
+      assert_includes css, ".fp-layout-background"
+      assert_includes css, "filter: blur(var(--layout-background-blur));"
+      assert_includes css, "background-color: var(--layout-background-tint-color);"
+      assert_includes css, "opacity: var(--layout-background-tint-opacity);"
+      assert_includes css, "@media (prefers-reduced-transparency: reduce)"
+      assert_includes css, ".fp-layout-background-media {\n    visibility: hidden;\n  }"
+      assert_includes css, "@supports not ((filter: blur(1px)) or (-webkit-filter: blur(1px)))"
+      assert_includes css, "--surface-page-background-color: transparent;"
       assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-sidebar-floating=\"true\"] aside"
       desktop_rail = css[/Sidebar layout:.*?\n  \}/m]
       refute_nil desktop_rail
