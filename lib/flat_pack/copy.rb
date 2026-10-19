@@ -111,11 +111,17 @@ module FlatPack
     module_function
 
     def t(key, **options)
+      if options.key?(:scope)
+        raise ArgumentError, "FlatPack::Copy.t does not take scope. The key is already under flatpack."
+      end
+
       full_key = "#{NAMESPACE}.#{key}"
       locale = (options[:locale] || I18n.locale).to_sym
 
       if english_fallback?(full_key, locale, options)
-        return I18n.t(full_key, **options, locale: ENGLISH_LOCALE)
+        return ActiveSupport::Notifications.instrument("fallback.flat_pack_copy", key: full_key, locale: locale) do
+          I18n.t(full_key, **options, locale: ENGLISH_LOCALE)
+        end
       end
 
       I18n.t(full_key, **options)
@@ -140,22 +146,21 @@ module FlatPack
     class << self
       private
 
-      # Only `flatpack.*`. An explicit default is the caller's missing-key
-      # answer, so I18n keeps it. A key missing in English too falls through
-      # to I18n, which still raises when the host raises on missing translations.
+      # An explicit default is the caller's missing-key answer, so I18n keeps
+      # it. A key missing in English too falls through to I18n, which still
+      # raises when the host raises on missing translations. `t` builds the
+      # key as `flatpack.*` and rejects `scope:`, so this lookup cannot leave
+      # that namespace.
       def english_fallback?(full_key, locale, options)
         return false if locale == ENGLISH_LOCALE
-        return false unless full_key == NAMESPACE || full_key.start_with?("#{NAMESPACE}.")
         return false if options.key?(:default) && !options[:default].nil?
 
-        !translation_present?(full_key, locale, options) &&
-          translation_present?(full_key, ENGLISH_LOCALE, options)
+        !translation_present?(full_key, locale) &&
+          translation_present?(full_key, ENGLISH_LOCALE)
       end
 
-      def translation_present?(full_key, locale, options)
-        exists_options = {}
-        exists_options[:scope] = options[:scope] if options.key?(:scope)
-        I18n.exists?(full_key, locale, **exists_options)
+      def translation_present?(full_key, locale)
+        I18n.exists?(full_key, locale)
       end
     end
   end

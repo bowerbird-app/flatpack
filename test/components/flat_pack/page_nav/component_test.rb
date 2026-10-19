@@ -8,7 +8,8 @@ module FlatPack
       def test_renders_wrapper_with_default_aria_label
         render_inline(Component.new)
 
-        assert_selector "nav[aria-label='Page navigation']"
+        # The dummy host overrides this English label in config/locales/flatpack_overrides.en.yml.
+        assert_selector "nav[aria-label='Host pages']"
       end
 
       def test_renders_history_back_button_with_controller_action
