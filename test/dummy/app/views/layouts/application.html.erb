@@ -284,7 +284,12 @@
       <% end %>
 
       <% layout.main do %>
-        <main id="main" tabindex="-1" class="p-4 sm:p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+        <main id="main" tabindex="-1" class="fp-layout-content py-4 sm:py-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+          <% if floating_top_nav %>
+            <%= render FlatPack::Card::Component.new(class: "mb-6") do %>
+              <p class="text-sm text-[var(--surface-muted-content-color)]">This card uses the same left and right edge as the toolbar.</p>
+            <% end %>
+          <% end %>
           <div class="max-w-4xl mx-auto pb-24">
             <% if notice.present? %>
               <%= render FlatPack::Alert::Component.new(description: notice, style: :success, dismissible: true, class: "mb-4") %>

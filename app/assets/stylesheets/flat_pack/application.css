@@ -665,20 +665,25 @@
   pointer-events: none;
 }
 
+/* Horizontal page padding. Hosts put this on the main pane so it shares an edge with the floating bar. */
+.fp-layout-content {
+  padding-inline: var(--layout-content-inset);
+}
+
 [data-flat-pack-top-nav-floating="behind"] {
   position: absolute;
   top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
-  right: max(var(--sidebar-float-inset), env(safe-area-inset-right, 0px));
-  left: max(var(--sidebar-float-inset), env(safe-area-inset-left, 0px));
+  right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-right, 0px));
+  left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-left, 0px));
 }
 
 [data-flat-pack-top-nav-floating="below"] {
   position: relative;
   flex: none;
   margin-top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
-  margin-right: max(var(--sidebar-float-inset), env(safe-area-inset-right, 0px));
+  margin-right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-right, 0px));
   margin-bottom: var(--sidebar-float-inset);
-  margin-left: max(var(--sidebar-float-inset), env(safe-area-inset-left, 0px));
+  margin-left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-left, 0px));
 }
 
 [data-flat-pack-top-nav-floating="behind"] ~ .fp-layout-scroll {
