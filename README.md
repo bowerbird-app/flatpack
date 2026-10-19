@@ -282,7 +282,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Masonry** - Mixed-ratio photos and tiles stacked without empty holes
 - **Collage** - A tilted grid, or a brick such as five over four. On a phone, a short overlapping row. Cards can rise, deal, or drift
 - **Overflow Row** - One-row layout that scrolls sideways when same-size items do not fit
-- **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content. Optional `background` slot for a blurred page photo.
+- **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content. Optional `background` slot for a blurred page photo. Optional `floating_top_nav:` turns the top bar into cards that share the floating rail tokens. Optional `height: :content` sizes a floating desktop rail to its items.
 - **Hero** - Full-width landing-page hero with seven layout variants
 - **PageHeader** - Page-level header with title, subtitle, and action slots
 - **PageTitle** - Lightweight semantic heading block with optional subtitle

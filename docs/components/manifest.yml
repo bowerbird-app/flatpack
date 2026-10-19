@@ -647,6 +647,13 @@ components:
     title: Sidebar Layout
     doc: docs/components/sidebar_layout.md
     primary_class: FlatPack::SidebarLayout::Component
+    tokens:
+      - --layout-content-inset
+      - --layout-content-max-width
+      - --top-nav-float-offset
+      - --top-nav-float-radius
+      - --top-nav-float-clearance
+      - --sidebar-float-inset
     status: documented
 
   - key: skeleton

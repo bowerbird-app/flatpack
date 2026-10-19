@@ -105,13 +105,13 @@ module FlatPack
       end
 
       def section_data(alignment)
-        return {} unless @mobile_menu
+        data = {"flat-pack-top-nav-section": alignment}
+        return data unless @mobile_menu
 
-        {
+        data.merge(
           "flat-pack--top-nav-target": "section",
-          "flat-pack-top-nav-section": alignment,
           "flat-pack-top-nav-collapsible": collapsible?(alignment).to_s
-        }
+        )
       end
 
       # Rendered hidden and revealed by the Stimulus controller only when the

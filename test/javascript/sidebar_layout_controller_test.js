@@ -405,4 +405,23 @@ test('controller source restores scroll after groups and skips section-title sr-
   assert.equal(source.includes('markItemCurrent'), true)
   assert.equal(source.includes('isSectionTitleLabel'), true)
   assert.equal(source.includes('this.scrollActiveItemIntoView()'), true)
+  assert.equal(source.includes('syncFloatingTopNavClearance'), true)
+})
+
+test('wrapped floating top nav raises the clearance and one row does not', () => {
+  const { Controller } = loadSidebarLayoutController()
+  const controller = new Controller()
+  const column = {
+    property: '',
+    style: {
+      setProperty(name, value) { column.property = `${name}:${value}` },
+      removeProperty() { column.property = '' }
+    }
+  }
+
+  controller.applyFloatingTopNavClearance(column, 130, 68)
+  assert.equal(column.property, '--top-nav-float-clearance:130px')
+
+  controller.applyFloatingTopNavClearance(column, 72, 68)
+  assert.equal(column.property, '')
 })

@@ -13,6 +13,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.257] - 2026-10-19
+
+### Added
+- `FlatPack::SidebarLayout::Component` accepts `floating_top_nav:` (`false` by default). The full-width bar becomes cards on the page. `TopNav` `left` and `center` are each one card sized to their contents. Each direct child of `right` is its own card. The cards use `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--top-nav-float-radius`.
+- `content_scroll:` is `:behind` (default) or `:below`. It applies only when the top nav floats. `:behind` lets main content scroll under the cards and pads the pane with `--top-nav-float-clearance`. `:below` keeps the cards above the pane.
+- `TopNav` sections always set `data-flat-pack-top-nav-section`, including when `mobile_menu: false`.
+- Dummy chrome reads `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` shows the cards over the photo. `content_scroll=below` parks the cards above the scroll pane.
+- `height:` is `:full` (default) or `:content`. `:content` sizes the floating desktop rail to its items and caps it at the viewport minus `--sidebar-float-inset`. The list scrolls inside that cap. It does nothing when `floating` is false. The mobile drawer stays full height.
+- Dummy chrome reads `?height=content`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&height=content` shows the short rail.
+- Bumped the gem version to `0.1.257`.
+
+### Upgrade notes
+- Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats. Hosts that do not pass `height: :content` keep the full-height floating rail.
+- New tokens `--top-nav-float-clearance` and `--top-nav-float-radius`. The radius defaults to `var(--sidebar-float-radius)`. `[data-theme="rounded"]` sets it to `var(--radius-full)`, so the cards are pills. The rail still uses `--sidebar-float-radius`. The content-height cap reuses `--sidebar-float-inset`. No token was renamed.
+- `--layout-content-inset` is the horizontal page padding: `1rem`, then `2rem` from `640px`. `.fp-layout-content` applies it to the main pane. `.fp-layout-column` is the page column inside that pane. `--layout-content-max-width` defaults to `100%`, so the column fills the pane. A length centers that measure, and the floating bar follows it. The bar's left and right edges use the inset plus `--top-nav-float-offset` (`0px`) plus that centering. A nested `max-width` with auto margins is a second column and will not meet the bar. Override `--layout-content-inset` to move the page and the bar together. The docked bar still uses `--top-nav-padding-inline`.
+- Below `768px`, floating `left` and `center` cards use `0.25rem` of inline padding and the row gap is `0.5rem`. Text buttons in those cards use `0.625rem` of inline padding. The cards shrink before the row wraps.
+- When the floating cards are more than `8px` taller than `--top-nav-float-clearance`, the layout sets that token on the main column to the bottom of the band so a wrapped row does not cover the page.
+- Reload kit CSS. There are no new Tailwind class literals for this layout. Do not rerun `flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.257`.
+
 ## [0.1.256] - 2026-10-19
 
 ### Fixed

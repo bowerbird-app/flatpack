@@ -206,6 +206,144 @@ module FlatPack
         assert_includes error.message, "floating must be true or false"
       end
 
+      def test_default_top_nav_stays_out_of_the_scroll_pane
+        render_inline(Component.new(content_scroll: :below)) do |layout|
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        html = page.native.to_html
+        assert_operator html.index("TopNav"), :<, html.index("Main")
+        refute_includes html, "data-flat-pack-top-nav-floating"
+        refute_includes html, "fp-layout-top-nav"
+        refute_includes html, "fp-layout-scroll"
+        assert_selector "div.flex-1.min-h-0.overflow-y-auto", text: "Main"
+        column = page.native.at_css("div.flex.flex-col.min-w-0")
+        refute_includes column["class"].to_s.split, "relative"
+      end
+
+      def test_floating_top_nav_scrolls_content_behind_the_cards
+        render_inline(Component.new(floating_top_nav: true)) do |layout|
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        assert_selector ".fp-layout-top-nav[data-flat-pack-top-nav-floating='behind']", text: "TopNav"
+        assert_selector ".fp-layout-scroll", text: "Main"
+        float = page.find(".fp-layout-top-nav")
+        assert_nil float["aria-hidden"]
+
+        html = page.native.to_html
+        assert_operator html.index("TopNav"), :<, html.index("Main")
+        column = page.native.at_css("div.flex.flex-col.min-w-0")
+        assert_includes column["class"].to_s.split, "relative"
+      end
+
+      def test_floating_top_nav_can_leave_content_below_the_cards
+        render_inline(Component.new(floating_top_nav: true, content_scroll: :below)) do |layout|
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        assert_selector "[data-flat-pack-top-nav-floating='below']", text: "TopNav"
+        refute_selector ".fp-layout-scroll"
+        assert_selector "div.flex-1.min-h-0.overflow-y-auto", text: "Main"
+      end
+
+      def test_floating_top_nav_keeps_the_header_landmark
+        nav = FlatPack::TopNav::Component.new
+        nav.left { "Preview" }
+        nav.right { "Bell" }
+
+        render_inline(Component.new(floating_top_nav: true, floating: true)) do |layout|
+          layout.sidebar { "Rail" }
+          layout.top_nav { nav.render_in(vc_test_controller.view_context).to_s.html_safe }
+          layout.main { "Main" }
+        end
+
+        assert_selector ".fp-layout-top-nav header.fp-top-nav", text: "Preview"
+        assert_selector "[data-flat-pack-top-nav-section='left']", text: "Preview"
+        assert_selector "[data-flat-pack-top-nav-section='right']", text: "Bell"
+        assert_selector "[data-flat-pack-sidebar-floating='true']"
+      end
+
+      def test_floating_top_nav_without_a_slot_matches_the_flush_bar
+        render_inline(Component.new(floating_top_nav: true)) do |layout|
+          layout.main { "Main" }
+        end
+
+        refute_includes page.native.to_html, "data-flat-pack-top-nav-floating"
+        refute_includes page.native.to_html, "fp-layout-scroll"
+      end
+
+      def test_floating_top_nav_rejects_non_boolean
+        error = assert_raises(ArgumentError) do
+          Component.new(floating_top_nav: "yes")
+        end
+
+        assert_includes error.message, "floating_top_nav must be true or false"
+      end
+
+      def test_content_scroll_rejects_unknown_values
+        error = assert_raises(ArgumentError) do
+          Component.new(content_scroll: :page)
+        end
+
+        assert_includes error.message, "content_scroll must be :behind or :below"
+      end
+
+      def test_floating_rail_stays_full_height_by_default
+        render_inline(Component.new(floating: true, height: :full)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        refute_includes page.native.to_html, "data-flat-pack-sidebar-height"
+        assert_includes page.native.to_html, "md:h-screen"
+      end
+
+      def test_floating_rail_can_size_to_its_content
+        render_inline(Component.new(floating: true, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "[data-flat-pack-sidebar-floating='true'][data-flat-pack-sidebar-height='content']", text: "Sidebar"
+      end
+
+      def test_content_height_without_floating_matches_the_flush_rail
+        render_inline(Component.new(floating: false, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        html = page.native.to_html
+        refute_includes html, "data-flat-pack-sidebar-floating"
+        refute_includes html, "data-flat-pack-sidebar-height"
+        assert_includes html, "md:h-screen"
+      end
+
+      def test_content_height_accepts_the_string_form
+        render_inline(Component.new(floating: true, height: "content")) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        assert_selector "[data-flat-pack-sidebar-height='content']"
+      end
+
+      def test_height_rejects_unknown_values
+        error = assert_raises(ArgumentError) do
+          Component.new(height: :page)
+        end
+
+        assert_includes error.message, "height must be :full or :content"
+      end
+
+      def test_content_scroll_accepts_the_string_form
+        render_inline(Component.new(floating_top_nav: true, content_scroll: "below")) do |layout|
+          layout.top_nav { "TopNav" }
+        end
+
+        assert_selector "[data-flat-pack-top-nav-floating='below']"
+      end
+
       def test_background_slot_is_absent_by_default
         render_inline(Component.new) do |layout|
           layout.sidebar { "Sidebar" }

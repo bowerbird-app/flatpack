@@ -1399,7 +1399,11 @@
       variables: [
         { variable: "side", accepts: ":left, :right", example: "side: :right" },
         { variable: "open", accepts: "true, false", example: "open: false" },
-        { variable: "storage_key", accepts: "String or nil", example: "storage_key: \"demo-sidebar-state\"" }
+        { variable: "storage_key", accepts: "String or nil", example: "storage_key: \"demo-sidebar-state\"" },
+        { variable: "floating", accepts: "true, false", example: "floating: true" },
+        { variable: "floating_top_nav", accepts: "true, false", example: "floating_top_nav: true" },
+        { variable: "content_scroll", accepts: ":behind, :below", example: "content_scroll: :below" },
+        { variable: "height", accepts: ":full, :content", example: "height: :content" }
       ]
     },
     table: {

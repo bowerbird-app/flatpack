@@ -335,6 +335,11 @@
   --sidebar-float-background-color: var(--sidebar-float-background-color);
   --sidebar-float-shadow: var(--sidebar-float-shadow);
   --sidebar-float-radius: var(--sidebar-float-radius);
+  --top-nav-float-radius: var(--top-nav-float-radius);
+  --top-nav-float-clearance: var(--top-nav-float-clearance);
+  --top-nav-float-offset: var(--top-nav-float-offset);
+  --layout-content-inset: var(--layout-content-inset);
+  --layout-content-max-width: var(--layout-content-max-width);
   --layout-background-blur: var(--layout-background-blur);
   --layout-background-tint-color: var(--layout-background-tint-color);
   --layout-background-tint-opacity: var(--layout-background-tint-opacity);
@@ -1277,6 +1282,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-float-background-color: #fff;
   --sidebar-float-shadow: var(--shadow-md);
   --sidebar-float-radius: var(--radius-lg);
+  --top-nav-float-radius: var(--sidebar-float-radius);
+  --top-nav-float-clearance: calc(max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px)) + 3.25rem);
+  --top-nav-float-offset: 0px;
+  /* Horizontal page padding: 1rem (p-4, default --space-4). The sm step is below. */
+  --layout-content-inset: 1rem;
+  /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
+  --layout-content-max-width: 100%;
   --layout-background-blur: 40px;
   --layout-background-tint-color: var(--surface-page-background-color);
   --layout-background-tint-opacity: 0.55;
@@ -1844,6 +1856,15 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-composer-radius: var(--radius-lg);
 }
 
+/* p-8 / default --space-6. Kept as a length so a theme that remaps --space-* does not shift the page.
+   The same step is on [data-theme] so a theme on body does not pin the inset at 1rem. */
+@media (min-width: 640px) {
+  :root,
+  [data-theme] {
+    --layout-content-inset: 2rem;
+  }
+}
+
 /* Dark theme — semantic overrides only. Component aliases re-resolve from :root, [data-theme].
  * Dark inherits --space-*, --density, and the shape scale. It does not restate them.
  * Hover is a lift (not l - 0.10), so it stays explicit. Shadows change recipe (white hairline),
@@ -1950,6 +1971,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --combobox-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-menu-padding: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-result-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --top-nav-float-radius: var(--radius-full);
   --button-border-radius: var(--radius-full);
   --form-control-radius: var(--radius-full);
   --chip-border-radius: var(--radius-md);

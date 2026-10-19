@@ -99,10 +99,17 @@
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
     <% sidebar_floating = params[:floating].in?(%w[1 true]) %>
     <% sidebar_background = params[:background].in?(%w[1 true]) %>
+    <% floating_top_nav = params[:floating_top_nav].in?(%w[1 true]) %>
+    <% content_scroll = params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind %>
+    <% sidebar_height = params[:height].in?(%w[full content]) ? params[:height].to_sym : :full %>
+    <% content_height = sidebar_floating && sidebar_height == :content %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
       storage_key: "flatpack-dummy-shell",
-      floating: sidebar_floating
+      floating: sidebar_floating,
+      floating_top_nav: floating_top_nav,
+      content_scroll: content_scroll,
+      height: sidebar_height
     ) do |layout| %>
       <% if sidebar_background %>
         <% layout.background do %>
@@ -110,7 +117,37 @@
         <% end %>
       <% end %>
       <% layout.sidebar do %>
-        <div id="dummy-demo-sidebar" data-turbo-permanent class="h-full min-h-0">
+        <div id="<%= content_height ? "dummy-demo-sidebar-content" : "dummy-demo-sidebar" %>" data-turbo-permanent class="<%= content_height ? "min-h-0" : "h-full min-h-0" %>">
+        <% if content_height %>
+          <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
+            <% sidebar.header do %>
+              <%= render FlatPack::Sidebar::Header::Component.new(
+                brand_abbr: "FP",
+                title: "FlatPack",
+                subtitle: "Short rail"
+              ) %>
+            <% end %>
+            <% sidebar.items do %>
+              <nav class="py-2" aria-label="Main navigation">
+                <% [
+                  ["Featured in", :home, true],
+                  ["Photos", :table, false],
+                  ["Videos", :alert, false],
+                  ["Press", :dashboard, false],
+                  ["Brand", :users, false],
+                  ["Contacts", :key, false]
+                ].each do |label, icon, active| %>
+                  <%= render FlatPack::Sidebar::Item::Component.new(
+                    text: label,
+                    href: demo_sidebar_layout_path(request.query_parameters),
+                    icon: icon,
+                    active: active
+                  ) %>
+                <% end %>
+              </nav>
+            <% end %>
+          <% end %>
+        <% else %>
         <% cache ["dummy/sidebar-shell-v5", FlatPack::VERSION, sidebar_side, user_signed_in?] do %>
           <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
           <% sidebar.header do %>
@@ -135,6 +172,7 @@
 
           <% end %>
         <% end %>
+        <% end %>
         </div>
       <% end %>
 
@@ -153,9 +191,16 @@
               },
               class: "md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
             ) %>
+            <% if floating_top_nav %>
+              <%= render FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm) %>
+              <%= render FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm) %>
+              <%= render FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm) %>
+            <% else %>
             <span class="text-sm font-medium text-[var(--surface-muted-content-color)]">FlatPack Demo</span>
+            <% end %>
           <% end %>
 
+          <% unless floating_top_nav %>
           <% nav.center do %>
             <%= render FlatPack::Search::Component.new(
               items: DemoCatalog.searchable_items,
@@ -165,8 +210,19 @@
               class: "max-w-xl"
             ) %>
           <% end %>
+          <% end %>
 
-          <% nav.right do %>
+          <% nav.right(always_display: floating_top_nav) do %>
+            <% if floating_top_nav %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "bell",
+                icon_only: true,
+                round: true,
+                style: :ghost,
+                size: :md,
+                aria: { label: "Notifications" }
+              ) %>
+            <% else %>
             <div
               class="ml-auto flex items-center gap-3"
               <% unless @body_theme.present? %>
@@ -221,14 +277,15 @@
               aria: { label: "Notifications" }
             ) %>
             </div>
+            <% end %>
           <% end %>
 
         <% end %>
       <% end %>
 
       <% layout.main do %>
-        <main id="main" tabindex="-1" class="p-4 sm:p-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
-          <div class="max-w-4xl mx-auto pb-24">
+        <main id="main" tabindex="-1" class="fp-layout-content py-4 sm:py-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+          <div class="fp-layout-column pb-24">
             <% if notice.present? %>
               <%= render FlatPack::Alert::Component.new(description: notice, style: :success, dismissible: true, class: "mb-4") %>
             <% end %>

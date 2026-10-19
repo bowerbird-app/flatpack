@@ -20,6 +20,10 @@ On that default, `--sidebar-background-color` is `var(--surface-page-background-
 
 `SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel on the rounded palette (no `data-theme`, or `data-theme="rounded"`). Other named themes stay square. The flush rail ignores these tokens.
 
+`height: :content` on a floating rail uses that same inset as a max-height. The flush rail and the mobile drawer ignore it.
+
+`floating_top_nav: true` uses the rail fill and shadow for the top cards, at every breakpoint. The vertical gap stays `--sidebar-float-inset`. The left and right edges use `--layout-content-inset` plus `--top-nav-float-offset` (`0px`), then the centering from `--layout-content-max-width`. `--layout-content-inset` is the page's horizontal padding: `1rem`, then `2rem` from `640px`. Those lengths match `p-4` and `p-8`, and default `--space-4` and `--space-6`. `.fp-layout-content` applies that padding to the main pane. `.fp-layout-column` is the page column. `--layout-content-max-width` defaults to `100%`, so the column fills the pane and the bar stays on the inset. Set a length to center a measure; the bar follows that column. A nested `max-width` with auto margins does not. Override `--layout-content-inset` to move the page and the bar together. Override `--top-nav-float-offset` when the bar should sit off that edge. `--top-nav-float-radius` rounds the cards. It defaults to `var(--sidebar-float-radius)`, so the cards match the rail until a theme sets it. `[data-theme="rounded"]` sets it to `var(--radius-full)` (pills). The rail keeps `--sidebar-float-radius`. `--top-nav-float-clearance` is the padding on the scroll pane when content runs under the cards. It defaults to the float inset (or the top safe area, whichever is larger) plus `3.25rem`. Override that token when the cards are taller than a toolbar. If the rendered band is still more than `8px` past the token, the layout raises `--top-nav-float-clearance` on the main column to the bottom of the cards. The docked bar still uses `--top-nav-padding-inline`.
+
 `SidebarLayout`'s `background` slot blurs its photo with `--layout-background-blur` (`40px`) and washes it with `--layout-background-tint-color` (the page colour) at `--layout-background-tint-opacity` (`0.55`, `0.78` on dark). Set those tokens to recolour the wash. The slot does not use hero or dialog overlay tokens.
 
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
@@ -425,6 +429,11 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --top-nav-height
 --top-nav-backdrop-blur
 --top-nav-background-color
+--top-nav-float-radius
+--top-nav-float-clearance
+--top-nav-float-offset
+--layout-content-inset
+--layout-content-max-width
 
 --kbd-background-color
 --kbd-border-color

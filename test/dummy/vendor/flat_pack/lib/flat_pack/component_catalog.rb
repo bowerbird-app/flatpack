@@ -78,7 +78,9 @@ module FlatPack
       {constant: :DELAYS, kwargs: %i[delay]},
       {constant: :FORMATS, kwargs: %i[format]},
       {constant: :ANIMATIONS, kwargs: %i[animate]},
-      {constant: :DURATIONS, kwargs: %i[duration]}
+      {constant: :DURATIONS, kwargs: %i[duration]},
+      {constant: :CONTENT_SCROLLS, kwargs: %i[content_scroll]},
+      {constant: :HEIGHTS, kwargs: %i[height]}
     ].freeze
 
     DOC_KEYS = {
