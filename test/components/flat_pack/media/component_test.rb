@@ -14,9 +14,10 @@ module FlatPack
         assert_selector "img[width='1120'][height='1400'][loading='lazy'][decoding='async']"
         html = page.native.to_html
         assert_includes html, "aspect-ratio: 1120 / 1400"
-        assert_includes html, "rounded-[var(--media-radius)]"
-        assert_includes html, "outline-[var(--media-outline-color)]"
-        assert_includes html, "bg-[var(--surface-muted-background-color)]"
+        assert_selector "div.fp-overlay > div.contents > div.fp-media__frame > img.fp-media__image"
+        refute_includes page.find("img.fp-media__image")[:class], "rounded-[var(--media-radius)]"
+        refute_includes page.find("img.fp-media__image")[:class], "outline"
+        refute_includes page.find("img.fp-media__image")[:class], "bg-[var(--surface-muted-background-color)]"
         refute_selector "a"
       end
 
@@ -93,6 +94,37 @@ module FlatPack
           Component.new(src: "https://example.com/a.jpg", alt: "A", width: 100, height: -4)
         end
         assert_match(/height must be a positive integer/, error.message)
+      end
+
+      def test_card_inner_radius_is_on_the_frame
+        render_inline(Component.new(src: "/masonry/harbour.svg", alt: "Harbour", width: 80, height: 80, radius: :card_inner))
+
+        assert_selector "div.fp-media__frame.fp-card-inner-radius"
+        refute_includes page.find("div.fp-media__frame")[:class], "rounded-[var(--media-radius)]"
+        refute_includes page.find("img.fp-media__image")[:class], "fp-card-inner-radius"
+      end
+
+      def test_card_inner_radius_accepts_a_string
+        render_inline(Component.new(src: "/masonry/harbour.svg", alt: "Harbour", width: 80, height: 80, radius: "card_inner"))
+
+        assert_selector "div.fp-media__frame.fp-card-inner-radius"
+      end
+
+      def test_rejects_an_unknown_radius
+        error = assert_raises(ArgumentError) do
+          Component.new(src: "/a.jpg", alt: "A", width: 10, height: 10, radius: :media)
+        end
+        assert_match(/:card_inner/, error.message)
+      end
+
+      def test_overlay_item_stays_outside_the_frame
+        render_inline(Component.new(src: "/masonry/harbour.svg", alt: "Harbour", width: 80, height: 80, radius: :card_inner)) do |media|
+          media.with_item(placement: :top_left, inset: :sm) { "Save" }
+        end
+
+        assert_selector "div.fp-media__frame.fp-card-inner-radius"
+        assert_selector "[data-fp-placement='top_left']", text: "Save"
+        refute_selector "div.fp-media__frame [data-fp-placement='top_left']"
       end
 
       def test_rejects_unknown_placement
