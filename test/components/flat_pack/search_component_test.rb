@@ -116,6 +116,60 @@ module FlatPack
         end
       end
 
+      def test_default_render_is_not_collapsible
+        render_inline(Component.new)
+
+        refute_selector ".fp-search--collapsible"
+        refute_includes rendered_content, "flat-pack--search-collapse"
+        assert_selector "div.w-full.max-w-md"
+      end
+
+      def test_collapsible_renders_a_round_search_button
+        render_inline(Component.new(collapsible: true, id: "kit-search"))
+
+        assert_selector "div.fp-search--collapsible[data-fp-collapsed='true'][data-fp-grow='end'][data-fp-size='md']"
+        assert_selector "div[data-controller='flat-pack--search-collapse flat-pack--search-input']"
+        assert_selector "button.fp-search__toggle[aria-expanded='false'][aria-controls='kit-search-field'][aria-label='Search']"
+        html = CGI.unescapeHTML(rendered_content)
+        assert_includes html, "rounded-[var(--button-round-border-radius)]"
+        assert_includes html, "h-[var(--button-round-size-md)]"
+        assert_includes html, "w-[var(--button-round-size-md)]"
+        assert_selector "div.fp-search__field[inert]"
+        assert_selector "input#kit-search-field[data-flat-pack--search-collapse-target='input']"
+        refute_selector "div.fp-search--collapsible[aria-label]"
+      end
+
+      def test_collapsed_false_starts_expanded
+        render_inline(Component.new(collapsible: true, collapsed: false, id: "open-search"))
+
+        assert_selector "div[data-fp-collapsed='false']"
+        assert_selector "button[aria-expanded='true'][inert]"
+        refute_selector "div.fp-search__field[inert]"
+      end
+
+      def test_a_value_stays_open
+        render_inline(Component.new(collapsible: true, collapsed: true, value: "lamps", id: "filled-search"))
+
+        assert_selector "div[data-fp-collapsed='false']"
+        assert_selector "input[value='lamps']"
+        refute_selector "div.fp-search__field[inert]"
+      end
+
+      def test_grow_start_and_custom_label
+        render_inline(Component.new(collapsible: true, grow: :start, aria: {label: "Find orders"}, id: "edge-search"))
+
+        assert_selector "div[data-fp-grow='start']"
+        assert_selector "button[aria-label='Find orders']"
+        assert_selector "span.left-3"
+        assert_selector "button.right-3"
+      end
+
+      def test_invalid_grow_raises
+        assert_raises(ArgumentError) do
+          Component.new(collapsible: true, grow: :left)
+        end
+      end
+
       def test_search_result_rows_use_roomy_padding
         controller = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/search_controller.js").read
 

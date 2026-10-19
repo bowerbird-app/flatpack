@@ -961,6 +961,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Local catalog"
     assert_includes response.body, "data-flat-pack--search-items-value"
     assert_includes response.body, "Try form, accordion, or chart..."
+    assert_includes response.body, "Toolbar"
+    assert_includes response.body, "id=\"toolbar-search\""
+    assert_includes response.body, "data-fp-grow=\"start\""
+    assert_includes response.body, "data-fp-collapsed=\"false\""
+    assert_includes response.body, "value=\"lamps\""
     assert_includes response.body, "Remote JSON"
     assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end
