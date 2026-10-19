@@ -339,6 +339,7 @@
   --top-nav-float-clearance: var(--top-nav-float-clearance);
   --top-nav-float-offset: var(--top-nav-float-offset);
   --layout-content-inset: var(--layout-content-inset);
+  --layout-content-max-width: var(--layout-content-max-width);
   --layout-background-blur: var(--layout-background-blur);
   --layout-background-tint-color: var(--layout-background-tint-color);
   --layout-background-tint-opacity: var(--layout-background-tint-opacity);
@@ -1286,6 +1287,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-float-offset: 0px;
   /* Horizontal page padding: 1rem (p-4, default --space-4). The sm step is below. */
   --layout-content-inset: 1rem;
+  /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
+  --layout-content-max-width: 100%;
   --layout-background-blur: 40px;
   --layout-background-tint-color: var(--surface-page-background-color);
   --layout-background-tint-opacity: 0.55;

@@ -58,6 +58,7 @@ module FlatPack
       assert_match(/--top-nav-float-clearance:\s*calc\(max\(var\(--sidebar-float-inset\), env\(safe-area-inset-top, 0px\)\) \+ 3\.25rem\)/, root_block)
       assert_match(/--top-nav-float-offset:\s*0px/, root_block)
       assert_match(/--layout-content-inset:\s*1rem/, root_block)
+      assert_match(/--layout-content-max-width:\s*100%/, root_block)
       assert_match(/@media \(min-width: 640px\) \{\s*:root,\s*\[data-theme\] \{\s*--layout-content-inset:\s*2rem;/, @css)
       assert_match(/--layout-background-blur:\s*40px/, root_block)
       assert_match(/--layout-background-tint-color:\s*var\(--surface-page-background-color\)/, root_block)

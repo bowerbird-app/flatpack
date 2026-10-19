@@ -520,6 +520,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-float-clearance: calc(max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px)) + 3.25rem);
   --top-nav-float-offset: 0px;
   /* --layout-content-inset stays on the kit: 1rem, then 2rem from 640px. Set it here only to change that page padding. */
+  /* --layout-content-max-width stays 100% (the padded column). Set a length here to center a measure; the floating bar follows it. */
   --layout-background-blur: 40px;
   --layout-background-tint-color: var(--surface-page-background-color);
   --layout-background-tint-opacity: 0.55;

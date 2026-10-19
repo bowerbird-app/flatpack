@@ -665,25 +665,33 @@
   pointer-events: none;
 }
 
-/* Horizontal page padding. Hosts put this on the main pane so it shares an edge with the floating bar. */
+/* Horizontal page padding. Hosts put this on the main pane so it shares an edge with the floating bar.
+ * .fp-layout-column is the page column. --layout-content-max-width at 100% fills that pane.
+ * A length centers the same measure under the bar. A nested max-width does not. */
 .fp-layout-content {
   padding-inline: var(--layout-content-inset);
+}
+
+.fp-layout-column {
+  width: 100%;
+  max-width: var(--layout-content-max-width);
+  margin-inline: auto;
 }
 
 [data-flat-pack-top-nav-floating="behind"] {
   position: absolute;
   top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
-  right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-right, 0px));
-  left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-left, 0px));
+  right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-right, 0px));
+  left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-left, 0px));
 }
 
 [data-flat-pack-top-nav-floating="below"] {
   position: relative;
   flex: none;
   margin-top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
-  margin-right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-right, 0px));
+  margin-right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-right, 0px));
   margin-bottom: var(--sidebar-float-inset);
-  margin-left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset)), env(safe-area-inset-left, 0px));
+  margin-left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-left, 0px));
 }
 
 [data-flat-pack-top-nav-floating="behind"] ~ .fp-layout-scroll {

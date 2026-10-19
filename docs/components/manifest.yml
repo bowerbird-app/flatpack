@@ -649,6 +649,7 @@ components:
     primary_class: FlatPack::SidebarLayout::Component
     tokens:
       - --layout-content-inset
+      - --layout-content-max-width
       - --top-nav-float-offset
       - --top-nav-float-radius
       - --top-nav-float-clearance

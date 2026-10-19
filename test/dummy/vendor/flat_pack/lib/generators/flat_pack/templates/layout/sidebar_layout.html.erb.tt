@@ -28,6 +28,7 @@
 
       <%% layout.main do %>
         <main id="main" tabindex="-1" class="fp-layout-content py-6">
+          <div class="fp-layout-column">
           <%% if notice.present? %>
             <%%= render FlatPack::Alert::Component.new(
               description: notice,
@@ -46,6 +47,7 @@
           <%% end %>
 
           <%%= yield %>
+          </div>
         </main>
       <%% end %>
     <%% end %>
