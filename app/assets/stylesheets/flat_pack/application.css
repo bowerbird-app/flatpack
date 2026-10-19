@@ -724,10 +724,12 @@
 [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] {
   max-width: 100%;
   flex-wrap: wrap;
-  padding: 0.25rem;
+  overflow: visible;
+  padding-block: 0.25rem;
+  padding-inline: max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))));
   background-color: var(--sidebar-float-background-color);
   border: 1px solid var(--sidebar-border-color);
-  border-radius: var(--sidebar-float-radius);
+  border-radius: var(--top-nav-float-radius);
   box-shadow: var(--sidebar-float-shadow);
 }
 
@@ -736,15 +738,17 @@
   justify-content: flex-end;
   gap: 0.75rem;
   margin-left: auto;
+  overflow: visible;
   background: transparent;
   pointer-events: none;
 }
 
 [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > * {
   pointer-events: auto;
+  overflow: visible;
   background-color: var(--sidebar-float-background-color);
   border: 1px solid var(--sidebar-border-color);
-  border-radius: var(--sidebar-float-radius);
+  border-radius: var(--top-nav-float-radius);
   box-shadow: var(--sidebar-float-shadow);
 }
 
@@ -757,9 +761,10 @@
 }
 
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
+  overflow: visible;
   background-color: var(--sidebar-float-background-color);
   border: 1px solid var(--sidebar-border-color);
-  border-radius: var(--sidebar-float-radius);
+  border-radius: var(--top-nav-float-radius);
   box-shadow: var(--sidebar-float-shadow);
 }
 

@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.256] - 2026-10-19
 
 ### Added
-- `FlatPack::SidebarLayout::Component` accepts `floating_top_nav:` (`false` by default). The full-width bar becomes cards on the page. `TopNav` `left` and `center` are each one card sized to their contents. Each direct child of `right` is its own card. The cards use `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--sidebar-float-radius`.
+- `FlatPack::SidebarLayout::Component` accepts `floating_top_nav:` (`false` by default). The full-width bar becomes cards on the page. `TopNav` `left` and `center` are each one card sized to their contents. Each direct child of `right` is its own card. The cards use `--sidebar-float-inset`, `--sidebar-float-background-color`, `--sidebar-float-shadow`, and `--top-nav-float-radius`.
 - `content_scroll:` is `:behind` (default) or `:below`. It applies only when the top nav floats. `:behind` lets main content scroll under the cards and pads the pane with `--top-nav-float-clearance`. `:below` keeps the cards above the pane.
 - `TopNav` sections always set `data-flat-pack-top-nav-section`, including when `mobile_menu: false`.
 - Dummy chrome reads `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` shows the cards over the photo. `content_scroll=below` parks the cards above the scroll pane.
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 - Additive. Hosts that do not pass `floating_top_nav: true` keep the full-width bar and the same scroll pane. `content_scroll:` does nothing until the top nav floats. Hosts that do not pass `height: :content` keep the full-height floating rail.
-- New token `--top-nav-float-clearance`. The cards and the content-height cap reuse `--sidebar-float-*`. No token was renamed.
+- New tokens `--top-nav-float-clearance` and `--top-nav-float-radius`. The radius defaults to `var(--sidebar-float-radius)`. `[data-theme="rounded"]` sets it to `var(--radius-full)`, so the cards are pills. The rail still uses `--sidebar-float-radius`. The content-height cap reuses `--sidebar-float-inset`. No token was renamed.
 - Reload kit CSS. There are no new Tailwind class literals for this layout. Do not rerun `flat_pack:install`.
 - Redeploy so `meta.gem_version` shows `0.1.256`.
 

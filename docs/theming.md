@@ -20,9 +20,9 @@ On that default, `--sidebar-background-color` is `var(--surface-page-background-
 
 `SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel on the rounded palette (no `data-theme`, or `data-theme="rounded"`). Other named themes stay square. The flush rail ignores these tokens.
 
-`height: :content` on a floating rail uses that same inset as a max-height. There is no new token. The flush rail and the mobile drawer ignore it.
+`height: :content` on a floating rail uses that same inset as a max-height. The flush rail and the mobile drawer ignore it.
 
-`floating_top_nav: true` uses those same four tokens for the top cards, at every breakpoint. `--top-nav-float-clearance` is the padding on the scroll pane when content runs under the cards. It defaults to the float inset (or the top safe area, whichever is larger) plus `3.25rem`. Override that token when the cards are taller than a toolbar.
+`floating_top_nav: true` uses the inset, fill, and shadow for the top cards, at every breakpoint. `--top-nav-float-radius` rounds those cards. It defaults to `var(--sidebar-float-radius)`, so the cards match the rail until a theme sets it. `[data-theme="rounded"]` sets it to `var(--radius-full)` (pills). The rail keeps `--sidebar-float-radius`. `--top-nav-float-clearance` is the padding on the scroll pane when content runs under the cards. It defaults to the float inset (or the top safe area, whichever is larger) plus `3.25rem`. Override that token when the cards are taller than a toolbar.
 
 `SidebarLayout`'s `background` slot blurs its photo with `--layout-background-blur` (`40px`) and washes it with `--layout-background-tint-color` (the page colour) at `--layout-background-tint-opacity` (`0.55`, `0.78` on dark). Set those tokens to recolour the wash. The slot does not use hero or dialog overlay tokens.
 
@@ -429,6 +429,7 @@ Use `--easing-enter` for modal, drawer, command palette, toast, dropdown, popove
 --top-nav-height
 --top-nav-backdrop-blur
 --top-nav-background-color
+--top-nav-float-radius
 --top-nav-float-clearance
 
 --kbd-background-color
