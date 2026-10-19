@@ -6,11 +6,15 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "group/media" "w-full" "block" "h-auto" "max-w-full" "object-cover"
-      # "rounded-[var(--media-radius)]" "bg-[var(--surface-muted-background-color)]"
-      # "outline" "outline-1" "-outline-offset-1" "outline-[var(--media-outline-color)]"
+      # The frame fill, hairline, and radius live in kit CSS (.fp-media__frame), not these utilities.
       # "opacity-0" "opacity-100" "group-hover/media:opacity-100" "focus-within:opacity-100"
       # "transition-opacity" "duration-[var(--duration-fast)]" "ease-[var(--easing-standard)]"
       # "motion-reduce:transition-none"
+
+      FRAME_RADIUS = {
+        nil => nil,
+        :card_inner => "fp-card-inner-radius"
+      }.freeze
 
       # Slot carrier. Placement and inset are applied by FlatPack::Overlay::Item.
       class Item < ViewComponent::Base
@@ -29,7 +33,7 @@ module FlatPack
 
       renders_many :items, Item
 
-      def initialize(src:, alt:, width:, height:, **system_arguments)
+      def initialize(src:, alt:, width:, height:, radius: nil, **system_arguments)
         if system_arguments.key?(:href) || system_arguments.key?(:caption)
           raise ArgumentError, "Media does not take href or caption. Wrap a link in the host and put the filename beside the image."
         end
@@ -40,13 +44,16 @@ module FlatPack
         @width = positive_integer!(width, :width)
         @height = positive_integer!(height, :height)
 
+        @radius = radius&.to_sym
+
         validate_src!(src)
         validate_alt!
+        validate_radius!
       end
 
       def call
         render(FlatPack::Overlay::Component.new(**overlay_arguments)) do |overlay|
-          overlay.with_media { image_tag_html }
+          overlay.with_media { media_frame }
           forward_items(overlay)
         end
       end
@@ -65,6 +72,14 @@ module FlatPack
             item.to_s
           end
         end
+      end
+
+      def media_frame
+        tag.div(class: frame_classes) { image_tag_html }
+      end
+
+      def frame_classes
+        ["fp-media__frame", FRAME_RADIUS.fetch(@radius)].compact.join(" ")
       end
 
       def image_tag_html
@@ -87,14 +102,14 @@ module FlatPack
           "h-auto",
           "w-full",
           "max-w-full",
-          "object-cover",
-          "rounded-[var(--media-radius)]",
-          "bg-[var(--surface-muted-background-color)]",
-          "outline",
-          "outline-1",
-          "-outline-offset-1",
-          "outline-[var(--media-outline-color)]"
+          "object-cover"
         ].join(" ")
+      end
+
+      def validate_radius!
+        return if FRAME_RADIUS.key?(@radius)
+
+        raise ArgumentError, "Invalid radius: #{@radius.inspect}. Must be :card_inner"
       end
 
       def validate_src!(original)

@@ -4,6 +4,7 @@ require "pathname"
 
 module FlatPack
   # Ensures every CSS custom property referenced in the gem is defined in variables.css.
+  # RUNTIME_TOKENS are set by a component or by kit CSS, not by the theme file.
   class TokenAuditor
     REFERENCE_PATTERN = /
       var\(\s*(--[A-Za-z0-9-]+)
@@ -57,6 +58,7 @@ module FlatPack
       --spacing
       --carousel-bleed
       --card-inset
+      --card-inner-radius
     ].freeze
 
     Result = Struct.new(:defined, :referenced, :missing, keyword_init: true) do

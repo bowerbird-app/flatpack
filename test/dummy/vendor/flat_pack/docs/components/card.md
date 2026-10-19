@@ -26,6 +26,42 @@ Behavior note:
 - Card root uses `overflow-visible` by default so pop-out UI (for example, dropdown menus) is not clipped by the card container.
 - When the `media` slot is present, card root switches to `overflow-hidden` to preserve media edge clipping.
 - The `body` slot applies `overflow-hidden` by default to prevent inner content from overflowing the card boundaries.
+- The root sets `data-fp-card-padding` to the card's `padding:` step (`none`, `sm`, `md`, or `lg`), including when slots move the padding utility onto the header, footer, or media slot. `FlatPack::Card::Stat::Component` publishes `md`, which is the padding it already uses.
+
+## Inner radius
+Kit CSS sets `--card-inset` from `data-fp-card-padding` (`0px`, or the matching `--card-padding-*` token) and computes this on `.fp-card`:
+
+```css
+--card-inner-radius: max(0px, calc(var(--card-radius) - var(--card-inset)));
+```
+
+Children inherit that length. A nested card sets its own step, so its children use its own inner radius.
+
+`fp-card-inner-radius` sets `border-radius` to that length. It ships in kit CSS. Put it on a photo inside the padding, and add `overflow-hidden` when the bitmap should clip. `FlatPack::Media::Component` accepts `radius: :card_inner` and puts the class on the image frame.
+
+The media slot stays on the card corner. The shell's `overflow-hidden` and `rounded-[var(--card-radius)]` clip it. The slot has no radius argument.
+
+At a 16px root the default card radius is 12px. Padding sm, md, and lg is 12px, 16px, and 24px, so the inner radius is 0. The rounded theme uses a 20px card radius and padding of 16px, 20px, and 28px, so only small padding leaves a 4px curve. Padding none keeps the full card radius.
+
+```erb
+<%= render FlatPack::Card::Component.new(padding: :md) do %>
+  <%= render FlatPack::Media::Component.new(
+    src: "/photos/harbour.jpg",
+    alt: "Harbour",
+    width: 1200,
+    height: 800,
+    radius: :card_inner
+  ) %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::Card::Component.new(padding: :sm) do %>
+  <div class="fp-card-inner-radius overflow-hidden">
+    <%= image_tag "harbour.jpg", alt: "Harbour", class: "block w-full" %>
+  </div>
+<% end %>
+```
 
 ## Slots
 | name | type | required | description |

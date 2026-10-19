@@ -647,6 +647,78 @@ module FlatPack
         render_inline(Component.new(clickable: true, href: "https://example.com"))
         assert_selector "a[href='https://example.com']"
       end
+
+      def test_publishes_the_padding_step_on_the_root
+        {none: "none", sm: "sm", md: "md", lg: "lg"}.each do |padding, step|
+          render_inline(Component.new(padding: padding)) { "Hi" }
+          assert_selector ".fp-card[data-fp-card-padding='#{step}']", count: 1
+        end
+      end
+
+      def test_slotted_card_still_publishes_the_padding_step
+        render_inline(Component.new(padding: :lg)) do |card|
+          card.header { "Title" }
+        end
+
+        assert_selector ".fp-card[data-fp-card-padding='lg']"
+        refute_includes page.find(".fp-card")[:class], "p-[var(--card-padding-lg)]"
+        assert_includes page.native.to_html, "p-[var(--card-padding-lg)]"
+      end
+
+      def test_clickable_card_publishes_the_padding_step
+        render_inline(Component.new(padding: :sm, clickable: true, href: "/posts/1")) { "Go" }
+        assert_selector "a.fp-card[data-fp-card-padding='sm'][href='/posts/1']"
+      end
+
+      def test_card_padding_step_wins_over_a_host_data_attribute
+        render_inline(Component.new(padding: :sm, data: {fp_card_padding: "lg"})) { "Hi" }
+        assert_selector ".fp-card[data-fp-card-padding='sm']"
+        refute_selector "[data-fp-card-padding='lg']"
+      end
+
+      def test_nested_card_publishes_its_own_padding_step
+        render_inline(Component.new(padding: :lg)) do
+          vc_test_controller.view_context.render(Component.new(padding: :none)) { "Inner" }
+        end
+
+        assert_selector ".fp-card[data-fp-card-padding='lg']"
+        assert_selector ".fp-card[data-fp-card-padding='none']"
+      end
+
+      def test_stat_card_publishes_medium_padding_step
+        render_inline(Stat::Component.new(value: "12", label: "Open", trend: "4%", trend_direction: :up))
+        assert_selector ".fp-card[data-fp-card-padding='md']"
+        assert_includes page.native.to_html, "p-[var(--card-padding-md)]"
+      end
+
+      def test_media_slot_keeps_the_card_radius
+        render_inline(Component.new) do |card|
+          card.media(padding: :none) { "Photo" }
+        end
+
+        assert_includes page.native.to_html, "rounded-[var(--card-radius)]"
+        refute_includes page.native.to_html, "fp-card-inner-radius"
+      end
+
+      def test_kit_css_computes_the_inner_radius_on_the_card
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+
+        assert_includes css, "--card-inner-radius: max(0px, calc(var(--card-radius) - var(--card-inset)));"
+        assert_includes css, '.fp-card[data-fp-card-padding="none"]'
+        assert_includes css, "--card-inset: 0px;"
+        assert_includes css, '.fp-card[data-fp-card-padding="sm"]'
+        assert_includes css, "--card-inset: var(--card-padding-sm);"
+        assert_includes css, '.fp-card[data-fp-card-padding="md"]'
+        assert_includes css, "--card-inset: var(--card-padding-md);"
+        assert_includes css, '.fp-card[data-fp-card-padding="lg"]'
+        assert_includes css, "--card-inset: var(--card-padding-lg);"
+        assert_includes css, ".fp-card-inner-radius {"
+        assert_includes css, "border-radius: var(--card-inner-radius);"
+        assert_includes css, ".fp-media__frame.fp-card-inner-radius {"
+        refute_includes variables, "--card-inset"
+        refute_includes variables, "--card-inner-radius"
+      end
     end
   end
 end

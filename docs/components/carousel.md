@@ -38,7 +38,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 | `logo_opacity` | Float | `1.0` | no | Opacity for logo images in logo-slider mode (`0.0..1.0`). |
 | `logo_wrapper_background` | String | `nil` | no | Reserved for compatibility (sanitized input); current logo-slider rendering keeps wrapper/viewport transparent. |
 | `aspect_ratio` | String | `"16/9"` | no | CSS aspect ratio (`"16/9"` format). Ignored when the `items` slot supplies slides. The viewport then grows with the tallest slide. |
-| `bleed` | Boolean | `false` | no | Pull the track out to the parent edge. The first slide stays lined up with the content. The inset is `--carousel-bleed`, then `--card-inset`, then `--card-padding-md`. |
+| `bleed` | Boolean | `false` | no | Pull the track out to the parent edge. The first slide stays lined up with the content. The inset is `--carousel-bleed`, then `--card-inset` on an ancestor card, then `--card-padding-md`. |
 | `controls_on_touch` | Boolean | hidden for `items`, shown for hash slides | no | `false` hides previous and next on `@media (hover: none)`. Swipe still moves the track. Arrows stay absolutely positioned and take no width. Omit it and a card row hides them. A hash `slides:` carousel keeps them. |
 | `show_border` | Boolean | `true` for hash slides, `false` for `items` | no | Draw the viewport border. `:logo_slider` stays borderless. Pass `true` or `false` to override the `items` default. |
 | `show_background` | Boolean | `true` for hash slides, `false` for `items` | no | Fill the viewport. `:logo_slider` stays transparent. Pass `true` or `false` to override the `items` default. |
@@ -62,7 +62,7 @@ Use Carousel when users need to browse a sequence of visual or rich-content slid
 ## Card row
 Put the carousel in a padded card and set `bleed: true` so the next card peeks to the card edge instead of stopping at the padding. `side_preview: true` reads `--carousel-peek`. A theme or host sets that token to change the peek. `0.25` shows about 80% of a slide when one slide is in view (`100 / 1.25`).
 
-`--card-inset` is not defined in this version. Bleed falls through to `--card-padding-md`, which is the Card `padding: :md` inset. Set `--carousel-bleed` or `--card-inset` on the parent when the padding differs.
+A card publishes `--card-inset` from its padding step. Bleed uses that length when the carousel sits inside the card. Set `--carousel-bleed` when the parent is not a card, or when that inset is not the one you want.
 
 ## Variants
 - Transition: `:slide`, `:fade`.
