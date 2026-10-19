@@ -218,6 +218,9 @@ en:
     progress:
       label: Progress
       percent: "%{count}%"
+    read_more:
+      more: Show more
+      less: Show less
     search:
       placeholder: Search...
       no_results: No results found
