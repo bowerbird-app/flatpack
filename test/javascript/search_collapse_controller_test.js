@@ -32,7 +32,7 @@ function loadController() {
 
   vm.runInNewContext(transformedSource, context, { filename: filePath })
 
-  return { ControllerClass: context.module.exports, listeners }
+  return { ControllerClass: context.module.exports, listeners, document }
 }
 
 function fakeNode() {
@@ -55,7 +55,7 @@ function fakeNode() {
 }
 
 function buildController({ collapsed = true, value = '' } = {}) {
-  const { ControllerClass, listeners } = loadController()
+  const { ControllerClass, listeners, document } = loadController()
   const controller = new ControllerClass()
   const element = fakeNode()
   const toggle = fakeNode()
@@ -90,7 +90,7 @@ function buildController({ collapsed = true, value = '' } = {}) {
   controller.collapsedValueChanged(collapsedValue, undefined)
   skipping = false
 
-  return { controller, element, toggle, field, input, dropdown, listeners }
+  return { controller, element, toggle, field, input, dropdown, listeners, document }
 }
 
 function flushFrame() {
@@ -114,8 +114,9 @@ test('expand focuses the input and marks the button open', async () => {
 })
 
 test('escape on an empty field collapses and returns focus', async () => {
-  const { controller, toggle, input, listeners } = buildController({ collapsed: false })
+  const { controller, document, toggle, input, listeners } = buildController({ collapsed: false })
   await flushFrame()
+  document.activeElement = input
   input.focused = false
 
   const event = { key: 'Escape', defaultPrevented: false, preventDefault() { this.defaultPrevented = true } }
@@ -144,8 +145,9 @@ test('a value ignores escape and outside clicks', async () => {
 })
 
 test('outside click on empty field collapses without stealing another control', async () => {
-  const { controller, toggle, listeners } = buildController({ collapsed: false })
+  const { controller, document, input, toggle, listeners } = buildController({ collapsed: false })
   await flushFrame()
+  document.activeElement = input
 
   const other = fakeNode()
   other.closest = () => other
@@ -157,9 +159,23 @@ test('outside click on empty field collapses without stealing another control', 
   assert.equal(toggle.focused, false)
 })
 
-test('outside click on empty space returns focus to the button', async () => {
-  const { controller, toggle, listeners } = buildController({ collapsed: false })
+test('an open field that does not hold focus stays open when something else is clicked', async () => {
+  const { controller, document, listeners } = buildController({ collapsed: false })
   await flushFrame()
+  document.activeElement = fakeNode()
+
+  const other = fakeNode()
+  other.closest = () => other
+  listeners.pointerdown.forEach((handler) => handler({ target: other, preventDefault() {} }))
+
+  assert.equal(controller.collapsedValue, false)
+  assert.equal(controller.element.dataset.fpCollapsed, 'false')
+})
+
+test('outside click on empty space returns focus to the button', async () => {
+  const { controller, document, input, toggle, listeners } = buildController({ collapsed: false })
+  await flushFrame()
+  document.activeElement = input
 
   const canvas = fakeNode()
   const event = { target: canvas, defaultPrevented: false, preventDefault() { this.defaultPrevented = true } }

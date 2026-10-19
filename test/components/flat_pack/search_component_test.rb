@@ -160,8 +160,8 @@ module FlatPack
 
         assert_selector "div[data-fp-grow='start']"
         assert_selector "button[aria-label='Find orders']"
-        assert_selector "span.right-3"
-        assert_selector "button.left-3"
+        assert_selector "span.left-3"
+        assert_selector "button.right-3"
       end
 
       def test_invalid_grow_raises

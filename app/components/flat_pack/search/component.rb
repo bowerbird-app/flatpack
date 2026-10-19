@@ -264,17 +264,11 @@ module FlatPack
       end
 
       def icon_inset_class
-        insets = grow_toward_start? ? CLEAR_INSET_CLASSES : ICON_INSET_CLASSES
-        insets.fetch(@size)
+        ICON_INSET_CLASSES.fetch(@size)
       end
 
       def clear_inset_class
-        insets = grow_toward_start? ? ICON_INSET_CLASSES : CLEAR_INSET_CLASSES
-        insets.fetch(@size)
-      end
-
-      def grow_toward_start?
-        @collapse.active? && @collapse.grow == :start
+        CLEAR_INSET_CLASSES.fetch(@size)
       end
 
       def input_attributes

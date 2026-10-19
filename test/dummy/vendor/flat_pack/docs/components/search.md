@@ -75,7 +75,7 @@ Local `items:` ranking prefers exact title, then title prefix, then title substr
 
 ## Collapsible toolbar
 
-`collapsible: true` rests the field as a round icon button. The button is `FlatPack::Button` with `round: true` and `icon_only: true`, so it matches a bell beside it. Click, Enter, or Space grows the shell to `--search-expanded-width` (capped at the parent's width) and focuses the input. Escape, a click outside, or blur while the field is empty collapses it and returns focus to the button. Tabbing to another control collapses an empty field and leaves focus on that control. A typed value stays open. Enter still submits a host form. Search itself is not a form.
+`collapsible: true` rests the field as a round icon button. The button is `FlatPack::Button` with `round: true` and `icon_only: true`, so it matches a bell beside it. Click, Enter, or Space grows the shell to `--search-expanded-width` (capped at the parent's width) and focuses the input. The open field uses the same icon, padding, and clear button as a plain search. Escape, a click outside, or blur while the focused field is empty collapses it and returns focus to the button. A click elsewhere leaves an open field alone until that field holds focus. Tabbing to another control collapses an empty field and leaves focus on that control. A typed value stays open. Enter still submits a host form. Search itself is not a form.
 
 `grow: :end` (default) anchors the start edge. `grow: :start` anchors the end edge, so a trailing toolbar slot opens back into the bar. On a narrow row the open width is `min(100%, var(--search-expanded-width))` and the shell can shrink beside a sibling.
 

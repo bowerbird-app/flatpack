@@ -114,7 +114,7 @@ export default class extends Controller {
   }
 
   onPointerDown(event) {
-    if (this.collapsedValue || this.element.contains(event.target) || this.occupied()) return
+    if (this.collapsedValue || this.element.contains(event.target) || this.occupied() || !this.holdsFocus()) return
 
     const landedOnControl = event.target.closest?.("a, button, input, select, textarea, summary, [tabindex]:not([tabindex='-1'])")
     if (!landedOnControl) event.preventDefault()
@@ -123,10 +123,15 @@ export default class extends Controller {
   }
 
   onKeyDown(event) {
-    if (event.key !== "Escape" || this.collapsedValue || this.occupied()) return
+    if (event.key !== "Escape" || this.collapsedValue || this.occupied() || !this.holdsFocus()) return
 
     event.preventDefault()
     this.focusAfter = "toggle"
     this.collapse()
+  }
+
+  holdsFocus() {
+    const active = document.activeElement
+    return !!active && this.element.contains(active)
   }
 }
