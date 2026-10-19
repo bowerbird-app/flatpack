@@ -362,6 +362,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 ### Content
 - **CodeBlock** - Syntax-highlighted code block
 - **Quote** - Blockquote with optional attribution
+- **Read More** - Clamp a block, then show the rest
 - **ContentEditor** - In-place rich-text editor with balloon toolbar and image upload
 - **Chat** - Full chat UI suite (panel, messages, composer, attachments, inbox)
 - **Comments** - Comment thread system (Thread, Item, Replies, Composer, InlineInput)

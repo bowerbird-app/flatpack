@@ -468,6 +468,7 @@ import PasswordInputController    from "${controllersDir}/password_input_control
 import PickerController           from "${controllersDir}/picker_controller.js";
 import PopoverController          from "${controllersDir}/popover_controller.js";
 import RangeInputController       from "${controllersDir}/range_input_controller.js";
+import ReadMoreController         from "${controllersDir}/read_more_controller.js";
 import SearchController           from "${controllersDir}/search_controller.js";
 import SearchCollapseController   from "${controllersDir}/search_collapse_controller.js";
 import SearchInputController      from "${controllersDir}/search_input_controller.js";
@@ -519,6 +520,7 @@ application.register("flat-pack--password-input",      PasswordInputController);
 application.register("flat-pack--picker",              PickerController);
 application.register("flat-pack--popover",             PopoverController);
 application.register("flat-pack--range-input",         RangeInputController);
+application.register("flat-pack--read-more",           ReadMoreController);
 application.register("flat-pack--search",              SearchController);
 application.register("flat-pack--search-collapse",     SearchCollapseController);
 application.register("flat-pack--search-input",        SearchInputController);

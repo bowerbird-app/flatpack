@@ -575,6 +575,55 @@
 
 }
 
+.fp-read-more {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--stack-gap-sm);
+  min-width: 0;
+}
+
+.fp-read-more-clip {
+  position: relative;
+  width: 100%;
+  interpolate-size: allow-keywords;
+  overflow: hidden;
+  max-height: max-content;
+  transition: max-height var(--duration-slow) var(--easing-standard);
+}
+
+.fp-read-more-line {
+  position: absolute;
+  width: 0;
+  height: 1lh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fp-read-more-body {
+  display: flow-root;
+  min-width: 0;
+}
+
+.fp-read-more[data-flat-pack--read-more-open-value="false"] .fp-read-more-clip {
+  max-height: calc(var(--read-more-lines) * 1lh);
+}
+
+.fp-read-more[data-flat-pack--read-more-open-value="false"][data-flat-pack--read-more-overflowing-value="true"] .fp-read-more-clip {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 calc(100% - min(var(--read-more-fade-height), 50%)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 calc(100% - min(var(--read-more-fade-height), 50%)),
+    transparent 100%
+  );
+}
+
 /* isolation holds z-index: -1 above the body paint and under the shell.
  * Unlayered so a host page-background utility still sees the cleared token.
  */

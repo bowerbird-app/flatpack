@@ -598,6 +598,12 @@ components:
     primary_class: FlatPack::RangeInput::Component
     status: documented
 
+  - key: read_more
+    title: Read More
+    doc: docs/components/read_more.md
+    primary_class: FlatPack::ReadMore::Component
+    status: documented
+
   - key: reveal
     title: Reveal
     doc: docs/components/reveal.md

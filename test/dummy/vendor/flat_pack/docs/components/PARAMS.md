@@ -49,7 +49,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Nav accessible name | `label` | Collection `as: :nav` requires `label:`. That string is the nav's `aria-label`. Not the visible button label (`text`). |
 | Collection item floor | `min_item_width` | Collection `layout: :grid` only. A CSS length such as `"14rem"` (the default). Sets `--fp-collection-min-item-width`. Not Table `min_width`. |
 | Collection gap | `gap` | Collection, Grid, and Masonry. `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
-| Button label lines | `lines` | `FlatPack::Button::Component` only. `1` (default) or `2`. Clamps the label with an ellipsis. |
+| Button label lines | `lines` | `FlatPack::Button::Component`. `1` (default) or `2`. Clamps the label with an ellipsis. ReadMore `lines` is the clamp budget, a positive integer of line boxes (default `4`). |
 | Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon and on EmptyState `icon:`. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
 | Button icon colour | `icon_style` | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, `:danger` use `--button-icon-*` tokens. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |

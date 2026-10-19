@@ -623,6 +623,7 @@
   --font-swatch-text-color: var(--font-swatch-text-color);
   --overflow-row-gap: var(--overflow-row-gap);
   --overflow-row-fade-size: var(--overflow-row-fade-size);
+  --read-more-fade-height: var(--read-more-fade-height);
   --top-nav-background-color: var(--top-nav-background-color);
   --top-nav-border-color: var(--top-nav-border-color);
   --top-nav-item-text-color: var(--top-nav-item-text-color);
@@ -1574,6 +1575,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --font-swatch-text-color: var(--surface-content-color);
   --overflow-row-gap: var(--stack-gap-md);
   --overflow-row-fade-size: 2rem;
+  --read-more-fade-height: 2.5rem;
   --top-nav-background-color: transparent;
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: var(--surface-muted-content-color);

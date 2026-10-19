@@ -524,6 +524,18 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-md\", id: \"theme-swatches\"" }
       ]
     },
+    read_more: {
+      label: "Read More",
+      method_call: "render FlatPack::ReadMore::Component.new(lines: 4) do ... end",
+      variables: [
+        { variable: "lines", accepts: "positive Integer", example: "lines: 4" },
+        { variable: "open", accepts: "true, false", example: "open: true" },
+        { variable: "more_label", accepts: "String", example: "more_label: \"Keep reading\"" },
+        { variable: "less_label", accepts: "String", example: "less_label: \"That's enough\"" },
+        { variable: "content", accepts: "block", example: "do ... end" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-xl\", id: \"trip-notes\"" }
+      ]
+    },
     divider: {
       label: "Divider",
       method_call: "render FlatPack::Divider::Component.new(label: \"Or\")",

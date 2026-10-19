@@ -228,6 +228,7 @@ class DemoCatalog
             {title: "Type scale", path: "/demo/type_scale", description: "Kit type rungs from xs through 8xl, plus display", icon: :type},
             {title: "Section Title", path: "/demo/section_title", description: "In-page headings with size, spacing, and a trailing slot", icon: :type},
             {title: "Content", path: "/demo/text/content", description: "Article type for CMS HTML", icon: :align_left},
+            {title: "Read more", path: "/demo/read_more", description: "Clamp a block, then show the rest", icon: :align_left},
             {title: "Quote", path: "/demo/text/quote", description: "Blockquote and citation text examples", icon: :message_circle}
           ]
         },
