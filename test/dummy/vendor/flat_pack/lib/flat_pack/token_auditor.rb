@@ -54,6 +54,8 @@ module FlatPack
       --fp-range-value
       --range-progress
       --spacing
+      --carousel-bleed
+      --card-inset
     ].freeze
 
     Result = Struct.new(:defined, :referenced, :missing, keyword_init: true) do

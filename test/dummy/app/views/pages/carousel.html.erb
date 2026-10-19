@@ -5,6 +5,80 @@
 
 <%= render "pages/component_method_variables_table", component: :carousel %>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Card row", anchor_link: true, subtitle: "Component cards with a peek of the next one.") %>
+  <%
+    episode_cards = [
+      {title: "Night drive", art: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=640&h=640&q=80"},
+      {title: "Studio notes", art: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=640&h=640&q=80"},
+      {title: "A longer episode title that wraps onto a second line", art: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?auto=format&fit=crop&w=640&h=640&q=80"},
+      {title: "City static", art: "https://images.unsplash.com/photo-1483412033650-1015ddeb83d1?auto=format&fit=crop&w=640&h=640&q=80"},
+      {title: "After hours", art: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=640&h=640&q=80"}
+    ]
+  %>
+  <div class="mb-4">
+    <%= render FlatPack::Card::Component.new(padding: :md) do %>
+      <%= render FlatPack::Carousel::Component.new(
+        side_preview: true,
+        bleed: true,
+        hide_controls_on_touch: true,
+        show_indicators: false,
+        show_counter: false,
+        show_captions: false,
+        aria_label: "Episode row"
+      ) do |carousel| %>
+        <% episode_cards.each do |episode| %>
+          <% carousel.with_item do %>
+            <%= render FlatPack::Card::Component.new(padding: :none, class: "min-w-0 h-full") do |card| %>
+              <% card.media(aspect_ratio: "1/1", padding: :none) do %>
+                <%= image_tag episode[:art], alt: "", class: "h-full w-full object-cover" %>
+              <% end %>
+              <% card.body(class: "flex flex-1 flex-col gap-3") do %>
+                <h3 class="text-base font-medium"><%= episode[:title] %></h3>
+                <div class="mt-auto flex flex-wrap gap-2">
+                  <%= render FlatPack::Button::Component.new(text: "Play", icon: "play", style: :primary, size: :sm) %>
+                  <%= render FlatPack::Button::Component.new(text: "Save", style: :secondary, size: :sm) %>
+                </div>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <p class="mb-3 text-sm text-(--surface-muted-content-color)">
+    The row sits in a padded card. The first episode lines up with the card text. The next episode peeks to the card edge.
+  </p>
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Card::Component.new(padding: :md) do %&gt;
+        &lt;%= render FlatPack::Carousel::Component.new(
+          side_preview: true,
+          bleed: true,
+          hide_controls_on_touch: true,
+          show_indicators: false,
+          show_counter: false,
+          show_captions: false
+        ) do |carousel| %&gt;
+          &lt;% carousel.with_item do %&gt;
+            &lt;%= render FlatPack::Card::Component.new(padding: :none) do |card| %&gt;
+              &lt;% card.media(aspect_ratio: "1/1", padding: :none) do %&gt;
+                &lt;%= image_tag episode_art_url, alt: "" %&gt;
+              &lt;% end %&gt;
+              &lt;% card.body do %&gt;
+                &lt;h3&gt;Night drive&lt;/h3&gt;
+                &lt;%= render FlatPack::Button::Component.new(text: "Play", icon: "play", style: :primary, size: :sm) %&gt;
+                &lt;%= render FlatPack::Button::Component.new(text: "Save", style: :secondary, size: :sm) %&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <!-- Basic Carousel -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Basic Carousel", anchor_link: true, subtitle: "Examples for Basic Carousel.") %>
