@@ -18,6 +18,8 @@ The kit default (no `data-theme`) is the charcoal palette on the compact spacing
 
 On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme="rounded"]`. Rounded sets spacing and shape. Set `<html data-theme="rounded">` when the generous steps and pill controls should show. Without the attribute, the compact scale and moderate corners apply.
 
+`SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel on the rounded palette (no `data-theme`, or `data-theme="rounded"`). Other named themes stay square. The flush rail ignores these tokens.
+
 If you want a complete copy-pasteable custom theme with every current FlatPack variable, use the [Custom Theming Guide](custom_theming.md). Prefer the brand-kit path below for most apps.
 
 ## Fastest path: change the brand color

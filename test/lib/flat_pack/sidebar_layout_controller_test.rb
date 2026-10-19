@@ -30,6 +30,15 @@ module FlatPack
       assert_includes css, "padding-left: 0 !important"
       assert_includes css, "gap: 0 !important"
       assert_includes css, "margin-left: calc((4rem - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
+      assert_includes css, "[data-flat-pack-sidebar-floating=\"true\"]"
+      assert_includes css, "margin-top: var(--sidebar-float-inset) !important;"
+      assert_includes css, "margin-left: calc((4rem - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important"
+      assert_includes css, "border-radius: var(--sidebar-float-radius);"
+      assert_includes css, "html[data-theme]:not([data-theme=\"rounded\"]) [data-flat-pack-sidebar-floating=\"true\"] aside"
+      desktop_rail = css[/Sidebar layout:.*?\n  \}/m]
+      refute_nil desktop_rail
+      assert_includes desktop_rail, "@media (min-width: 768px)"
+      assert_includes desktop_rail, "[data-flat-pack-sidebar-floating=\"true\"]"
       refute_includes css, "margin-left: calc((100% - 1.25rem) / 2)"
       refute_includes css, "justify-content: center"
       refute_includes css, "desktopToggle"

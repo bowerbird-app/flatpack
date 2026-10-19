@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.253] - 2026-10-19
+
+### Added
+- `FlatPack::SidebarLayout::Component` accepts an optional `floating:` argument (`false` by default). On desktop the rail insets by `--sidebar-float-inset` on the top, bottom, and outer edge, and paints `--sidebar-float-background-color` with a full border and `--sidebar-float-shadow`. The rounded palette rounds it with `--sidebar-float-radius`. Other named themes stay square. Below the `md` breakpoint the drawer stays flush.
+- Dummy chrome reads `?floating=1` to show the detached rail.
+- Bumped the gem version to `0.1.253`.
+
+### Upgrade notes
+- New optional `floating:` argument on `SidebarLayout`, and new `--sidebar-float-*` tokens. No host change required.
+- Reload kit CSS/JS. Redeploy so `meta.gem_version` shows `0.1.253`.
+
 ## [0.1.252] - 2026-10-17
 
 ### Added

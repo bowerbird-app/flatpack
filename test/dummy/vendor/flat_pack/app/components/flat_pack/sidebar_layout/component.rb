@@ -11,14 +11,17 @@ module FlatPack
         side: :left,
         open: true,
         storage_key: nil,
+        floating: false,
         **system_arguments
       )
         super(**system_arguments)
         @side = side.to_sym
         @open = open
         @storage_key = storage_key
+        @floating = floating
 
         validate_side!
+        validate_floating!
       end
 
       def sidebar(**args, &block)
@@ -201,8 +204,9 @@ module FlatPack
       def sidebar_column_data
         {
           "flat-pack--sidebar-layout-target": "sidebar",
-          "mobile-drawer-side": @side.to_s
-        }
+          "mobile-drawer-side": @side.to_s,
+          "flat-pack-sidebar-floating": ("true" if @floating)
+        }.compact
       end
 
       def backdrop_attributes
@@ -225,6 +229,12 @@ module FlatPack
       def validate_side!
         return if [:left, :right].include?(@side)
         raise ArgumentError, "Invalid side: #{@side}. Must be :left or :right"
+      end
+
+      def validate_floating!
+        return if @floating == true || @floating == false
+
+        raise ArgumentError, "floating must be true or false"
       end
     end
   end

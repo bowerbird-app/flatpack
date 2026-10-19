@@ -97,9 +97,11 @@
     <%= render "layouts/icon_sprite" %>
 
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
+    <% sidebar_floating = params[:floating].in?(%w[1 true]) %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
-      storage_key: "flatpack-dummy-shell"
+      storage_key: "flatpack-dummy-shell",
+      floating: sidebar_floating
     ) do |layout| %>
       <% layout.sidebar do %>
         <div id="dummy-demo-sidebar" data-turbo-permanent class="h-full min-h-0">

@@ -17,6 +17,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side` | Symbol | `:left` | No | Sidebar side. Allowed: `:left`, `:right`. |
 | `open` | Boolean | `true` | No | Initial desktop sidebar state (expanded when true, collapsed when false). |
 | `storage_key` | String or nil | `nil` | No | localStorage key used by controller for desktop collapsed-state persistence. |
+| `floating` | Boolean | `false` | No | Desktop-only detached rail. Insets the top, bottom, and outer edge. Rounded corners follow the rounded palette (no `data-theme`, or `data-theme="rounded"`). Ignored below the `md` breakpoint. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into root container. |
 
 ## Slots
@@ -34,6 +35,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side: :left` | Grid columns render as `auto 1fr`; sidebar enters from left on mobile. |
 | `side: :right` | Grid columns render as `1fr auto`; sidebar enters from right on mobile. |
 | `storage_key: "..."` | Enables persisted desktop collapse state in localStorage. |
+| `floating: true` | Desktop rail sits inset from the top, bottom, and outer edge, with its own fill, border, and shadow. The rounded palette rounds the panel with `--sidebar-float-radius`. Other named themes stay square. Below `md` the drawer stays full height and square. |
 
 ## Example
 
@@ -78,6 +80,14 @@ This is applied to:
 - Every element with `data-flat-pack-sidebar-section-title="true"`, and each icon row — a tooltip shows the full label on hover while `data-flat-pack-sidebar-collapsed` is `true`. The tip does not wait for an `sr-only` label.
 
 For static/non-interactive collapsed demos (without the layout controller) pass `collapsed: true` to `Sidebar::Item::Component` and `Sidebar::SectionTitle::Component` to render compact icon-only markup server-side.
+
+## Floating
+
+`floating: true` detaches the desktop rail from the viewport edges. The column keeps the same width transition (`16rem` / `4rem`) and adds `--sidebar-float-inset` (`1rem`) on the top, bottom, and outer edge (`margin-left` when `side: :left`, `margin-right` when `side: :right`). The panel fill is `--sidebar-float-background-color` (`#fff` on the default palette, a lifted surface on dark), with a full border and `--sidebar-float-shadow`. Header fill follows that panel.
+
+Round corners are `--sidebar-float-radius` (`--radius-lg`). They apply on the rounded palette: no `data-theme`, or `data-theme="rounded"`. Any other `data-theme` (dark, ocean, a host theme) keeps square corners. Below the `md` breakpoint the attribute is present and unused: the drawer stays edge-to-edge, including its safe-area padding.
+
+Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail.
 
 ## Current item
 Clicking a sidebar link marks it current immediately (`aria-current="page"` plus the item active colour tokens) and clears the previous item. Modifier-clicks and `_blank` targets are left alone. Hosts that paint `active:` on the server still win after the next render. Dummy chrome also clears-then-sets on `turbo:load` so command-palette visits and a remounted cached shell stay in sync.
