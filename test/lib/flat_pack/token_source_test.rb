@@ -161,6 +161,7 @@ module FlatPack
       assert_match(/--radius-xl:\s*1\.25rem/, scale_block)
       assert_match(/--radius-full:\s*9999px/, scale_block)
       assert_match(/--button-border-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--button-round-border-radius:\s*var\(--radius-full\)/, scale_block)
       assert_match(/--form-control-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--sidebar-item-radius:\s*var\(--radius-lg\)/, scale_block)
@@ -172,6 +173,10 @@ module FlatPack
       assert_match(/--modal-radius:\s*var\(--radius-lg\)/, scale_block)
       refute_includes root_block, "--radius-md:"
       refute_includes root_block, "--button-border-radius:"
+      refute_includes root_block, "--button-round-border-radius:"
+      assert_match(/--button-round-size-sm:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-sm\) \* 2\) \+ 1rem \+ 2px\)\)/, root_block)
+      assert_match(/--button-round-size-md:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-md\) \* 2\) \+ 1\.25rem \+ 2px\)\)/, root_block)
+      assert_match(/--button-round-size-lg:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-lg\) \* 2\) \+ 1\.5rem \+ 2px\)\)/, root_block)
     end
 
     test "rounded shifts spacing and does not restate the default palette" do
@@ -181,6 +186,7 @@ module FlatPack
       refute_includes rounded_block, "--color-primary"
       refute_match(/--radius-(?:xs|sm|md|lg|xl|full)\s*:/, rounded_block)
       assert_match(/--button-border-radius:\s*var\(--radius-full\)/, rounded_block)
+      refute_includes rounded_block, "--button-round-border-radius"
       assert_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, rounded_block)
       assert_match(/--sidebar-item-radius:\s*var\(--radius-md\)/, rounded_block)

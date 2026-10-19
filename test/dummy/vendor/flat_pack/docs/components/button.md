@@ -16,6 +16,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. On `icon_only` buttons, `text` is the accessible name (`aria-label`) and is not shown. |
 | `style` | Symbol | `:default` | no | Built-in: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`. Hosts and gems may register more names with `FlatPack::Button.register_style`. Unknown names raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | One of `:sm`, `:md`, `:lg`. |
+| `round` | Boolean | `false` | no | `true` uses `--button-round-border-radius` (`--radius-full` on every theme). A label becomes a pill. `icon_only: true` also sets an equal width and height (`--button-round-size-sm`, `--button-round-size-md`, `--button-round-size-lg`) so the control is a circle at every size. `false` keeps `--button-border-radius`. Anything other than `true` or `false` raises `ArgumentError`. A host `rounded-*` class still replaces the radius. |
 | `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
@@ -40,6 +41,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - Built-in styles: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`
 - Host-registered styles: any name added with `FlatPack::Button.register_style`
 - Sizes: `:sm`, `:md`, `:lg`
+- Round: `round: true` for a pill label or a circular icon-only button. Omit it for the theme corner.
 - Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only, current (`current: true`)
 - Icon artwork: omit `icon_variant` (host default), or `:outline`, `:solid`, `:mini`, `:micro`

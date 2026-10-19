@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.255] - 2026-10-19
+
+### Added
+- `FlatPack::Button::Component` accepts `round:` (`false` by default). `true` paints `--button-round-border-radius`. A label becomes a pill. `icon_only: true` also sets an equal width and height from `--button-round-size-sm`, `--button-round-size-md`, or `--button-round-size-lg`, so the button is a circle at every size. Omit `round:` and the theme corner is unchanged.
+- `--button-round-border-radius` is `--radius-full` on the moderate scale and is not remapped by rounded, dark, or ocean. The size tokens follow icon-only padding and `--hit-target-min`.
+- Demo: the Round section on `/demo/buttons`.
+- Bumped the gem version to `0.1.255`.
+
+### Upgrade notes
+- Additive. Existing arguments, tokens, classes, and defaults are unchanged. No host call site has to change.
+- Rebuild Tailwind. New class literals: `rounded-[var(--button-round-border-radius)]`, `h-[var(--button-round-size-sm)]`, `w-[var(--button-round-size-sm)]`, and the `md` and `lg` size pair. No `bin/rails generate flat_pack:install` rerun. The install generator does not stamp these classes.
+- Redeploy so `meta.gem_version` shows `0.1.255`.
+
 ## [0.1.254] - 2026-10-19
 
 ### Added

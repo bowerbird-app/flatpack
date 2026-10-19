@@ -643,6 +643,93 @@ module FlatPack
         assert_match(/icon-only/, error.message)
       end
 
+      def test_round_defaults_to_the_theme_radius
+        render_inline(Component.new(text: "Save"))
+
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--button-border-radius)]"
+        refute_includes html, "rounded-[var(--button-round-border-radius)]"
+        refute_includes html, "button-round-size"
+      end
+
+      def test_round_text_button_uses_the_round_radius_and_keeps_label_padding
+        render_inline(Component.new(text: "Notify", round: true, size: :lg, style: :danger))
+
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--button-round-border-radius)]"
+        refute_includes html, "rounded-[var(--button-border-radius)]"
+        refute_includes html, "button-round-size"
+        assert_includes html, "px-[var(--button-padding-x-lg)]"
+        assert_selector "button", text: "Notify"
+      end
+
+      def test_round_icon_only_is_square_at_every_size
+        %i[sm md lg].each do |size|
+          render_inline(Component.new(icon: "bell", icon_only: true, round: true, size: size, aria: {label: "Notifications"}))
+
+          html = page.native.to_html
+          assert_includes html, "rounded-[var(--button-round-border-radius)]"
+          assert_includes html, "h-[var(--button-round-size-#{size})]"
+          assert_includes html, "w-[var(--button-round-size-#{size})]"
+          assert_includes html, "p-[var(--button-icon-only-padding-#{size})]"
+          assert_includes html, "fp-hit-target"
+          assert_includes html, "shrink-0"
+          refute_includes html, "rounded-[var(--button-border-radius)]"
+        end
+      end
+
+      def test_icon_only_without_round_keeps_theme_radius_and_padding
+        render_inline(Component.new(icon: "bell", icon_only: true, aria: {label: "Notifications"}))
+
+        html = page.native.to_html
+        assert_includes html, "p-[var(--button-icon-only-padding-md)]"
+        assert_includes html, "rounded-[var(--button-border-radius)]"
+        refute_includes html, "button-round-size"
+        refute_includes html, "rounded-[var(--button-round-border-radius)]"
+      end
+
+      def test_round_host_radius_class_still_wins
+        render_inline(Component.new(text: "Notify", round: true, class: "rounded-xl"))
+
+        assert_selector "button.rounded-xl"
+        html = page.native.to_html
+        refute_includes html, "rounded-[var(--button-round-border-radius)]"
+        refute_includes html, "rounded-[var(--button-border-radius)]"
+      end
+
+      def test_round_link_loading_and_current_keep_the_round_radius
+        FlatPack::Button::StyleRegistry::BUILT_IN.each_key do |style|
+          render_inline(Component.new(text: "Go", round: true, style: style, href: "/alerts", current: true, loading: true))
+
+          assert_selector "a[href='/alerts'][aria-current='page'][aria-busy='true']"
+          html = page.native.to_html
+          assert_includes html, "fp-button-current"
+          assert_includes html, "fp-spinner"
+          assert_includes html, "rounded-[var(--button-round-border-radius)]"
+          assert_includes html, "focus-visible:ring-2"
+          assert_includes html, "focus-visible:ring-inset"
+          assert_includes html, "focus-visible:ring-offset-2"
+        end
+      end
+
+      def test_round_icon_only_loading_button_stays_square
+        render_inline(Component.new(icon: "bell", icon_only: true, round: true, loading: true, size: :sm, aria: {label: "Notifications"}))
+
+        assert_selector "button[disabled][aria-busy='true'][aria-label='Notifications']"
+        html = page.native.to_html
+        assert_includes html, "fp-spinner"
+        assert_includes html, "h-[var(--button-round-size-sm)]"
+        assert_includes html, "w-[var(--button-round-size-sm)]"
+        refute_selector "button", text: "Loading"
+      end
+
+      def test_invalid_round_raises
+        [nil, :round, "true", 1].each do |round|
+          error = assert_raises(ArgumentError) { Component.new(text: "Save", round: round) }
+          assert_match(/round/, error.message)
+        end
+      end
+
       def test_invalid_align_lines_current_and_title
         error = assert_raises(ArgumentError) { Component.new(text: "Save", align: :end) }
         assert_match(/align/, error.message)

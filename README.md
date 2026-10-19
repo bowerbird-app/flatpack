@@ -85,9 +85,16 @@ For AI-assisted installation and usage, start with the gem-shipped contract and 
   text: "Click me",
   style: :primary
 ) %>
+
+<%= render FlatPack::Button::Component.new(
+  icon: "bell",
+  icon_only: true,
+  round: true,
+  aria: { label: "Notifications" }
+) %>
 ```
 
-Styles: `:primary`, `:secondary`, `:ghost`
+Styles: `:primary`, `:secondary`, `:ghost`. `round: true` makes a label a pill and an icon-only button a circle. Omit it and the theme corner stays.
 
 ### Card Component
 

@@ -5,6 +5,39 @@
 
   <%= render "pages/component_method_variables_table", component: :button %>
 
+  <section class="mb-12" id="round">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Round",
+      anchor_link: true,
+      subtitle: "A bell is a circle. A label is a pill. This row uses the moderate corner so you can see it."
+    ) %>
+    <div class="mb-4 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-4" style="--button-border-radius: var(--radius-md)">
+      <div class="mb-4 flex flex-wrap items-center gap-3">
+        <%= render FlatPack::Button::Component.new(text: "Theme corner", style: :primary, size: :md) %>
+        <% %i[sm md lg].each do |size| %>
+          <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, size: size, style: :primary, aria: { label: "Notifications" }) %>
+        <% end %>
+        <% %i[sm md lg].each do |size| %>
+          <%= render FlatPack::Button::Component.new(text: "Notify", round: true, size: size, style: :primary) %>
+        <% end %>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :ghost, aria: { label: "Notifications" }) %>
+        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :danger, aria: { label: "Notifications" }) %>
+        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :secondary, href: demo_buttons_path, aria: { label: "Notifications" }) %>
+        <%= render FlatPack::Button::Component.new(text: "Current", round: true, style: :secondary, current: true) %>
+        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, loading: true, aria: { label: "Notifications" }) %>
+        <%= render FlatPack::Button::Component.new(text: "Saving", round: true, style: :primary, loading: true) %>
+      </div>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, aria: { label: "Notifications" }) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(text: "Notify", round: true, style: :primary) %&gt;
+      CODE
+    ) %>
+  </section>
+
 
   <!-- Basic Buttons -->
   <section class="mb-12">
