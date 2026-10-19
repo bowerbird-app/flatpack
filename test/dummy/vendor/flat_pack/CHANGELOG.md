@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.257] - 2026-10-19
 
 ### Added
-- `FlatPack::Search::Component` accepts `collapsible:` (`false` by default). `true` rests the field as a round icon button and grows it into the same search field. `collapsed:` (`true` by default) chooses the starting posture. `false` starts expanded. A present `value` stays open. `grow:` is `:end` (default, the start edge stays put) or `:start` (the end edge stays put).
+- `FlatPack::Search::Component` accepts `collapsible:` (`false` by default). `true` rests the field as a round icon button and grows it into the same search field. `collapsed:` (`true` by default) chooses the starting posture. `false` starts expanded. A present `value` stays open. An outside click or Escape collapses an empty field only while that field holds focus, so a field that starts open stays open until you use it. `grow:` is `:end` (default, the start edge stays put) or `:start` (the end edge stays put). The open field keeps the plain search icon on the left and the clear button on the right.
 - The collapsed face is `FlatPack::Button` with `round: true` and `icon_only: true`. Its accessible name is `flatpack.common.search`, overridable with `aria: { label: }`.
 - `--search-expanded-width` (`16rem`) is the open width, capped with `min(100%, var(--search-expanded-width))` so a 390px toolbar does not overflow. Rounded, dark, and ocean do not remap it.
 - Stimulus controller `flat-pack--search-collapse` runs the expand and collapse. Demo: the Toolbar section on `/demo/search`.
