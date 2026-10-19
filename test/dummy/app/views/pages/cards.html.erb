@@ -59,11 +59,15 @@
     On the default theme the padding is at least the card corner, so the photo is square. Rounded leaves a curve on the small card. A photo in the media slot still uses the card corner.
   </p>
   <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
-    <%= render FlatPack::Card::Component.new(padding: :none) do %>
-      <div class="fp-card-inner-radius overflow-hidden">
-        <%= image_tag "/images/hero-stool.jpg", alt: "Stool", class: "block h-40 w-full object-cover" %>
-      </div>
-      <p class="mt-3 text-sm font-medium">None</p>
+    <%= render FlatPack::Card::Component.new(padding: :none) do |card| %>
+      <% card.media(padding: :none) do %>
+        <div class="fp-card-inner-radius overflow-hidden">
+          <%= image_tag "/images/hero-stool.jpg", alt: "Stool", class: "block h-40 w-full object-cover" %>
+        </div>
+      <% end %>
+      <% card.footer(divider: false, padding: :md) do %>
+        <p class="text-sm font-medium">None</p>
+      <% end %>
     <% end %>
 
     <%= render FlatPack::Card::Component.new(padding: :sm) do %>
