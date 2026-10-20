@@ -3,7 +3,7 @@
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
  *   2. Spacing scale (--space-1..--space-6) and --density — component padding multiplies a step by density
- *   3. Shape scale (--radius-xs..--radius-xxl, --radius-full) — component radii alias a step
+ *   3. Shape scale (--radius-xs..--radius-xxxl, --radius-full) — component radii alias a step
  *   4. Semantic tokens (--color-*, --surface-*, --overlay-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --motion-*)
  *   5. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
  *
@@ -25,7 +25,8 @@
  * [data-theme~="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
  * [data-theme~="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
  *   It does not restate colour. Buttons, inputs, badges, and tabs become pills.
- *   Chips, sidebar item highlights, and menu item highlights stay --radius-md.
+ *   Chips and menu item highlights stay --radius-md.
+ *   The rounded sidebar highlight is the float radius minus the item inset.
  *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
  * Do not assign `--token: var(--token)` on rounded. html[data-theme~="rounded"] is :root, so that blanks the token.
  */
@@ -665,6 +666,7 @@
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
   --radius-xxl: var(--radius-xxl);
+  --radius-xxxl: var(--radius-xxxl);
   --radius-full: var(--radius-full);
   --form-control-radius: var(--form-control-radius);
   --badge-radius: var(--badge-radius);
@@ -1828,6 +1830,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --radius-lg: 0.75rem;
   --radius-xl: 1.25rem;
   --radius-xxl: 2rem;
+  --radius-xxxl: 2.5rem;
   --radius-full: 9999px;
   --button-border-radius: var(--radius-md);
   --button-round-border-radius: var(--radius-full);
@@ -1967,8 +1970,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-border-radius: var(--radius-full);
   --form-control-radius: var(--radius-full);
   --chip-border-radius: var(--radius-md);
-  --sidebar-float-radius: var(--radius-xl);
-  --sidebar-item-radius: var(--radius-md);
+  --sidebar-float-radius: var(--radius-xxxl);
+  --sidebar-item-radius: max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)));
   --dropdown-item-radius: var(--radius-md);
   --badge-radius: var(--radius-full);
   --tabs-pill-corner-radius: var(--radius-full);
