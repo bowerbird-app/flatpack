@@ -13,19 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.279] - 2026-10-20
-
-### Changed
-- `[data-theme~="rounded"]` sets `--form-control-radius` to `1rem` (16px). Text inputs, textareas, selects, search fields, date and number inputs, the date range trigger, and the comments inline input follow that token. Buttons, badges, tabs, chips, and the other component radii are unchanged.
-- The rich text editor's field corners follow `--form-control-radius`. Toolbar buttons and bubble chrome stay on `--radius-md` and `--radius-sm`.
-- Bumped the gem version to `0.1.279`.
-
-### Upgrade notes
-- Rounded-theme form controls go from a pill (`--radius-full`) to 16px corners. There are no token renames.
-- Hosts reload kit CSS. The `rounded-[var(--form-control-radius)]` class already ships, so this token change does not need a Tailwind rebuild.
-- Do not rerun `bin/rails generate flat_pack:install`.
-- Redeploy so `meta.gem_version` shows `0.1.279`.
-## [0.1.277] - 2026-10-20
+## [0.1.280] - 2026-10-20
 
 ### Changed
 - A floating `FlatPack::SidebarLayout` column is the card. Border, radius, shadow, and `--sidebar-float-background-color` sit on the column for the rail and the aside. The column sets `--sidebar-background-color`, `--sidebar-header-background-color`, and `--sidebar-collapsed-frame` (`2px`). Contents fill the column.
@@ -33,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The floating resize handle is the column's inner edge. The hit strip straddles that border. Hover and `data-flat-pack-panel-dragging` paint the border with `--resize-handle-active-color`. Keyboard focus uses `--color-ring` on that border. A flush panel still draws the full-height `::after` line.
 - Collapsed sidebar icons are centered by `FlatPack::Sidebar::Component` from `data-flat-pack-sidebar-collapsed` on the menu, using `--sidebar-collapsed-width`, `--sidebar-item-inset`, `--sidebar-item-padding-collapsed`, and `--sidebar-collapsed-frame`.
 - A missing rail storage key keeps the server `open:` value. `open: false` stays collapsed after `flat-pack--sidebar-layout` connects, matching the first-paint script.
-- Bumped the gem version to `0.1.277`.
+- Bumped the gem version to `0.1.280`.
 
 ### Upgrade notes
 - The floating card styling now lives on the column. Hosts that styled `[data-flat-pack-sidebar-floating="true"] aside` directly should drop that CSS. There is no alias.
@@ -46,7 +34,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The floating resize handle is now the panel edge. `--resize-handle-color` is unchanged. The floating handle does not draw `::after`.
 - Hosts reload kit CSS and JS. esbuild and Vite hosts already register `flat-pack--panel-resize`. Importmap hosts already pin the controllers. Do not rerun `bin/rails generate flat_pack:install`.
 - No new tokens. `--sidebar-collapsed-frame` is a length on the floating column, not a theme token.
-- Redeploy so `meta.gem_version` shows `0.1.277`.
+- Redeploy so `meta.gem_version` shows `0.1.280`.
+
+## [0.1.279] - 2026-10-20
+
+### Changed
+- `[data-theme~="rounded"]` sets `--form-control-radius` to `1rem` (16px). Text inputs, textareas, selects, search fields, date and number inputs, the date range trigger, and the comments inline input follow that token. Buttons, badges, tabs, chips, and the other component radii are unchanged.
+- The rich text editor's field corners follow `--form-control-radius`. Toolbar buttons and bubble chrome stay on `--radius-md` and `--radius-sm`.
+- Bumped the gem version to `0.1.279`.
+
+### Upgrade notes
+- Rounded-theme form controls go from a pill (`--radius-full`) to 16px corners. There are no token renames.
+- Hosts reload kit CSS. The `rounded-[var(--form-control-radius)]` class already ships, so this token change does not need a Tailwind rebuild.
+- Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.279`.
 
 ## [0.1.276] - 2026-10-20
 
