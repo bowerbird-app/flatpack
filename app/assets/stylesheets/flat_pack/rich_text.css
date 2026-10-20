@@ -40,7 +40,7 @@
     background-color: var(--surface-muted-background-color);
     border: 1px solid var(--surface-border-color);
     border-bottom: none;
-    border-radius: calc(var(--radius-md, 0.5rem) - 1px) calc(var(--radius-md, 0.5rem) - 1px) 0 0;
+    border-radius: calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px) calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px) 0 0;
     min-height: 2.25rem;
   }
 
@@ -97,7 +97,7 @@
     /* Width/color also come from FormField::ControlStyles#form_control_border_classes
        so host Tailwind preflight (often loaded last) cannot zero the field chrome. */
     border: 1px solid var(--surface-border-color);
-    border-radius: 0 0 calc(var(--radius-md, 0.5rem) - 1px) calc(var(--radius-md, 0.5rem) - 1px);
+    border-radius: 0 0 calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px) calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px);
     transition: border-color 0.15s;
     overflow: hidden;
   }
@@ -110,7 +110,7 @@
 
   /* When there is no toolbar, round all corners */
   .flat-pack-richtext-wrapper:not(:has(.flat-pack-richtext-toolbar)) .flat-pack-richtext-editor {
-    border-radius: calc(var(--radius-md, 0.5rem) - 1px);
+    border-radius: calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px);
   }
 
   /* Bubble-only comments composer mode removes editor chrome and inner padding */

@@ -98,7 +98,7 @@ Example:
 
 ## Complete Starter Template
 
-This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped charcoal palette, leave `:root` alone. Set `data-theme="rounded"` for the generous spacing scale and pill controls. Padding tokens below are formulas on the scale. Override `--space-*` or `--density` to move a whole theme. Override one component token only when that control should diverge. Do not self-map a token (`--token: var(--token)`).
+This block is a full-token override starter (historically based on the earlier purple-blue palette). Rename the selector, paste it into your app stylesheet, and edit values in place. For the shipped charcoal palette, leave `:root` alone. Set `data-theme="rounded"` for the generous spacing scale, pill buttons, and 16px form controls. Padding tokens below are formulas on the scale. Override `--space-*` or `--density` to move a whole theme. Override one component token only when that control should diverge. Do not self-map a token (`--token: var(--token)`).
 
 Leave `--color-primary-hover`, `--button-primary-*`, `--fab-background-color`, `--fab-text-color`, `--fab-hover-background-color`, the chat send colour tokens, and the comments submit and replies colour tokens unset. The painters read them as pins. A value here freezes the shade. A wrapper `--color-primary` then leaves hover on that frozen colour.
 

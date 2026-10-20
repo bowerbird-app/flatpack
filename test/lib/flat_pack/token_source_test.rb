@@ -283,7 +283,8 @@ module FlatPack
       assert_match(/--sidebar-float-radius:\s*var\(--radius-xxxl\)/, rounded_block)
       assert_match(/--button-border-radius:\s*var\(--radius-full\)/, rounded_block)
       refute_includes rounded_block, "--button-round-border-radius"
-      assert_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
+      assert_match(/--form-control-radius:\s*1rem/, rounded_block)
+      refute_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, rounded_block)
       assert_match(/--sidebar-item-radius:\s*max\(0px, calc\(var\(--sidebar-float-radius\) - var\(--sidebar-item-inset\)\)\)/, rounded_block)
       assert_match(/--dropdown-item-radius:\s*var\(--radius-md\)/, rounded_block)
@@ -623,6 +624,8 @@ module FlatPack
       rich_text = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/rich_text.css").read
       assert_includes rich_text, "background-color: var(--fp-primary-hover-fill);"
       assert_includes rich_text, "border-color: var(--fp-primary-hover-fill);"
+      assert_includes rich_text, "border-radius: calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px);"
+      assert_includes rich_text, "border-radius: 0 0 calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px) calc(var(--form-control-radius, var(--radius-md, 0.5rem)) - 1px);"
       refute_includes application, "color-mix(in oklab, var(--color-primary) 90%, black)"
       refute_includes @css, "color-mix(in oklab, var(--color-primary) 90%, black)"
     end

@@ -118,6 +118,9 @@ components:
     title: Button Dropdown
     doc: docs/components/button-dropdown.md
     primary_class: FlatPack::Button::Dropdown::Component
+    args:
+      - "icon_only: true"
+      - "round: true"
     status: documented
 
   - key: button_group

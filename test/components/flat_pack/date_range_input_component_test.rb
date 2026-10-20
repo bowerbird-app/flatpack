@@ -5,6 +5,14 @@ require "test_helper"
 module FlatPack
   module DateRangeInput
     class ComponentTest < ViewComponent::TestCase
+      def test_trigger_uses_form_control_radius
+        render_inline(Component.new(start_name: "start_date", end_name: "end_date"))
+
+        input = page.find("input[type='text'][readonly]")
+        assert_includes input[:class], "rounded-[var(--form-control-radius)]"
+        refute_includes input[:class], "rounded-[var(--radius-md)]"
+      end
+
       def test_renders_hidden_range_inputs_with_required_names
         render_inline(Component.new(
           start_name: "start_date",

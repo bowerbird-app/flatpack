@@ -24,7 +24,8 @@
  *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
  * [data-theme~="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
  * [data-theme~="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
- *   It does not restate colour. Buttons, inputs, badges, and tabs become pills.
+ *   It does not restate colour. Buttons, badges, and tabs become pills.
+ *   Form controls use 1rem (16px). No radius step equals 1rem, so the value is literal.
  *   Chips and menu item highlights stay --radius-md.
  *   The rounded sidebar highlight is the float radius minus the item inset.
  *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
@@ -1978,7 +1979,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-result-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --top-nav-float-radius: var(--radius-full);
   --button-border-radius: var(--radius-full);
-  --form-control-radius: var(--radius-full);
+  --form-control-radius: 1rem;
   --chip-border-radius: var(--radius-md);
   --sidebar-float-radius: var(--radius-xxxl);
   --sidebar-item-radius: max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)));
