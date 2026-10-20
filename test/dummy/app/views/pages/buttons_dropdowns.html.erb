@@ -207,8 +207,8 @@
             placement: :bottom_left
           ) do |dropdown| %>
             <% dropdown.menu_item(text: "Favorites", icon: "heart", href: "#") %>
-            <% dropdown.menu_item(text: "Weekend", href: "#") %>
-            <% dropdown.menu_item(text: "Gift ideas", href: "#") %>
+            <% dropdown.menu_item(text: "Weekend", icon: "calendar", href: "#") %>
+            <% dropdown.menu_item(text: "Gift ideas", icon: "gift", href: "#") %>
           <% end %>
         <% end %>
       <% end %>
@@ -246,7 +246,7 @@
         placement: placement
       ) do |dropdown| %>
         <% dropdown.menu_item(text: label, href: "#") %>
-        <% dropdown.menu_item(text: "Favorites", icon: "heart", href: "#") %>
+        <% dropdown.menu_item(text: "Favorites", href: "#") %>
       <% end %>
     <% end %>
   </div>
@@ -261,6 +261,8 @@
         size: :lg
       ) do |dropdown| %&gt;
         &lt;% dropdown.menu_item(text: "Favorites", icon: "heart", href: "#") %&gt;
+        &lt;% dropdown.menu_item(text: "Weekend", icon: "calendar", href: "#") %&gt;
+        &lt;% dropdown.menu_item(text: "Gift ideas", icon: "gift", href: "#") %&gt;
       &lt;% end %&gt;
 
       &lt;%= render FlatPack::Button::Dropdown::Component.new(

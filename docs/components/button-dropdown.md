@@ -22,7 +22,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on the leading icon. Omit to use `default_icon_variant`. The chevron stays on that default. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the trigger text. `:primary`, `:success`, `:warning`, or `:danger` colour the leading icon the same way as Button. The chevron stays the trigger text colour. Unknown names raise `ArgumentError`. |
 | `icon_only` | Boolean | `false` | no | Hides the label, drops the chevron, and uses `ICON_ONLY_SIZES` plus `fp-hit-target` from Button. Needs `icon:` and an accessible name (`text:` or `trigger_attributes: { aria: { label: } }`). A blank name raises `ArgumentError`. |
-| `show_chevron` | Boolean | `true` | no | Shows the chevron on a labeled trigger. `icon_only: true` hides it. Passing `true` with `icon_only: true` raises `ArgumentError`. |
+| `show_chevron` | Boolean | `nil` | no | Omitted or `nil` shows the chevron on a labeled trigger and hides it when `icon_only: true`. `false` hides it. `true` with `icon_only: true` raises `ArgumentError`. |
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
 | `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
 | `max_height` | String | `"384px"` | no | Applied to menu `max-height` style; menu scrolls when content exceeds this value. |
@@ -106,7 +106,7 @@ A round heart on a photo. `text` is the accessible name. The chevron stays off.
   style: :primary
 ) do |dropdown| %>
   <% dropdown.menu_item(text: "Favorites", icon: "heart", href: "#") %>
-  <% dropdown.menu_item(text: "Weekend", href: "#") %>
+  <% dropdown.menu_item(text: "Weekend", icon: "calendar", href: "#") %>
 <% end %>
 ```
 
