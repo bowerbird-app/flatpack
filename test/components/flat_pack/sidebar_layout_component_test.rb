@@ -192,7 +192,7 @@ module FlatPack
         assert_includes column["style"], "--sidebar-background-color: var(--sidebar-float-background-color)"
         assert_includes column["style"], "--sidebar-header-background-color: var(--sidebar-float-background-color)"
         assert_includes column["style"], "--sidebar-collapsed-frame: 2px"
-        assert_includes page.native.to_html, 'menu.setAttribute("data-flat-pack-sidebar-collapsed", collapsed)'
+        refute_includes page.native.to_html, "menu.setAttribute"
       end
 
       def test_floating_aside_column_carries_the_same_surface
@@ -486,6 +486,8 @@ module FlatPack
         refute_includes html, "aside-open-value"
         refute_includes html, "aside-storage-key"
         assert_selector "[data-flat-pack--sidebar-layout-target='sidebar']", count: 1
+        assert_includes html, ".setAttribute('data-flat-pack-sidebar-collapsed',c?'true':'false')"
+        refute_includes html, "menu.setAttribute"
         assert_selector "[data-flat-pack--sidebar-layout-target='backdrop'][data-action='click->flat-pack--sidebar-layout#closeMobile']", count: 1
         assert_includes html, "s!==null?s==='true':!d"
       end

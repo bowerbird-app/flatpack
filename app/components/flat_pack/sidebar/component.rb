@@ -89,9 +89,9 @@ module FlatPack
       end
 
       def sidebar_data
-        return {} unless @collapsed
-
-        {"flat-pack-sidebar-collapsed": "true"}
+        data = {controller: "flat-pack--sidebar"}
+        data["flat-pack-sidebar-collapsed"] = "true" if @collapsed
+        data
       end
 
       def sidebar_classes
@@ -122,7 +122,7 @@ module FlatPack
       end
 
       def items_container_classes
-        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain scrollbar-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain scrollbar-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden fp-sidebar-scroll"
       end
     end
   end

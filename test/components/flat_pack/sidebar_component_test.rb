@@ -17,11 +17,12 @@ module FlatPack
 
       def test_renders_with_collapsed_true
         render_inline(Component.new(collapsed: true))
-        assert_selector "aside.fp-sidebar[data-flat-pack-sidebar-collapsed='true']"
+        assert_selector "aside.fp-sidebar[data-controller='flat-pack--sidebar'][data-flat-pack-sidebar-collapsed='true']"
       end
 
       def test_open_sidebar_does_not_mark_itself_collapsed
         render_inline(Component.new(collapsed: false))
+        assert_selector "aside.fp-sidebar[data-controller='flat-pack--sidebar']"
         refute_includes page.native.to_html, "data-flat-pack-sidebar-collapsed"
       end
 

@@ -17,8 +17,10 @@ module FlatPack
         def test_has_toggle_action_and_target
           render_inline(Component.new)
 
-          assert_selector "button[data-flat-pack--sidebar-layout-target='desktopToggle']"
+          assert_selector "button[data-flat-pack-sidebar-toggle='collapse'][data-flat-pack--sidebar-target='collapse']"
           assert_selector "button[data-action='click->flat-pack--sidebar-layout#toggleDesktop']"
+          assert_selector "button .fp-sidebar-label"
+          refute_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
         end
 
         def test_renders_icon

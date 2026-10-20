@@ -155,7 +155,7 @@ module FlatPack
         # rail <aside> is parsed. CSS then sizes the column before first paint.
         content_tag(
           :div,
-          safe_join([preamble(panel), body, collapsed_menu_script(panel), resize_handle(panel)].compact),
+          safe_join([preamble(panel), body, resize_handle(panel)].compact),
           **panel_tag_attributes(panel)
         )
       end
@@ -172,22 +172,6 @@ module FlatPack
         attributes[:style] = panel.column_style if panel.column_style
         attributes[:inert] = true if panel.role == :aside && panel.open == false
         attributes
-      end
-
-      def collapsed_menu_script(panel)
-        return unless panel.role == :rail
-
-        js = <<~JS.strip
-          (function(){
-            var column=document.currentScript.parentElement;
-            var menu=column.querySelector(".fp-sidebar");
-            if(!menu) return;
-            var collapsed=column.getAttribute("data-flat-pack-sidebar-collapsed");
-            if(!collapsed) return;
-            menu.setAttribute("data-flat-pack-sidebar-collapsed", collapsed);
-          })();
-        JS
-        content_tag(:script, js.html_safe)
       end
 
       def preamble(panel)

@@ -15,13 +15,17 @@ module FlatPack
           assert_no_text "Workspace"
           assert_selector "div.shrink-0"
           assert_selector "div.flex.items-center.gap-3"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerBrand']"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel']"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'].flex.items-center.h-8.fp-sidebar-label"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span", count: 1
-          assert_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
-          assert_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
-          assert_selector "[data-flat-pack--sidebar-layout-target='desktopToggle'][data-action='click->flat-pack--sidebar-layout#toggleDesktop click->flat-pack--sidebar-layout#toggleMobile']"
+          assert_selector ".fp-sidebar-brand"
+          assert_selector ".fp-sidebar-brand .flex.items-center.h-8.fp-sidebar-label"
+          assert_selector ".fp-sidebar-label > span", count: 1
+          assert_selector "button[data-flat-pack-sidebar-toggle='expand'][data-flat-pack--sidebar-target='expand'][aria-expanded='false']"
+          assert_selector "button[data-flat-pack-sidebar-toggle='collapse'][data-flat-pack--sidebar-target='collapse'][aria-expanded='true']"
+          assert_selector "button[data-flat-pack-sidebar-toggle='collapse'][data-action='click->flat-pack--sidebar-layout#toggleDesktop click->flat-pack--sidebar-layout#toggleMobile']"
+          refute_selector "[data-flat-pack--sidebar-layout-target='headerBrand']"
+          refute_selector "[data-flat-pack--sidebar-layout-target='headerLabel']"
+          refute_selector "[data-flat-pack--sidebar-layout-target='headerRow']"
+          refute_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
+          refute_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
         end
 
         def test_renders_custom_brand_values
@@ -35,8 +39,8 @@ module FlatPack
         def test_hides_toggle_buttons_when_not_collapsible
           render_inline(Component.new(collapsible: false))
 
-          assert_no_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
-          assert_no_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
+          assert_no_selector "[data-flat-pack-sidebar-toggle='expand']"
+          assert_no_selector "[data-flat-pack-sidebar-toggle='collapse']"
         end
 
         def test_hides_brand_badge_when_brand_abbr_is_blank
@@ -44,21 +48,21 @@ module FlatPack
 
           assert_text "Menu"
           assert_no_text "FP"
-          assert_no_selector "[data-flat-pack--sidebar-layout-target='headerBrand'] > .w-8.h-8"
+          assert_no_selector ".fp-sidebar-brand > .w-8.h-8"
         end
 
         def test_hides_subtitle_when_blank
           render_inline(Component.new(subtitle: nil))
 
           assert_no_text "Workspace"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > div", count: 1
+          assert_selector ".fp-sidebar-label > div", count: 1
         end
 
         def test_does_not_render_subtitle_even_when_provided
           render_inline(Component.new(subtitle: "Workspace"))
 
           assert_no_text "Workspace"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > div", count: 1
+          assert_selector ".fp-sidebar-label > div", count: 1
         end
 
         def test_hides_version_badge_when_show_version_false
@@ -66,14 +70,14 @@ module FlatPack
 
           assert_text "FlatPack"
           assert_no_text "v#{FlatPack::VERSION}"
-          assert_no_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span"
+          assert_no_selector ".fp-sidebar-label > span"
         end
 
         def test_shows_version_badge_when_show_version_true
           render_inline(Component.new(show_version: true))
 
           assert_text "v#{FlatPack::VERSION}"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span", count: 1
+          assert_selector ".fp-sidebar-label > span", count: 1
         end
 
         def test_renders_square_mark_in_badge_slot_instead_of_abbr
@@ -84,13 +88,13 @@ module FlatPack
           ))
 
           assert_selector "img[src='https://example.com/mark.png'][alt='']"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerBrand'] .h-8"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerBrand'] .w-8"
-          assert_selector "[data-flat-pack--sidebar-layout-target='headerBrand'] [aria-hidden='true']"
+          assert_selector ".fp-sidebar-brand .h-8"
+          assert_selector ".fp-sidebar-brand .w-8"
+          assert_selector ".fp-sidebar-brand [aria-hidden='true']"
           assert_text "Acme"
           assert_text "v#{FlatPack::VERSION}"
-          assert_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
-          assert_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
+          assert_selector "[data-flat-pack-sidebar-toggle='expand']"
+          assert_selector "[data-flat-pack-sidebar-toggle='collapse']"
           assert_no_text "AC"
           refute_selector "div[data-controller='flat-pack--tooltip']"
         end
@@ -172,7 +176,7 @@ module FlatPack
           assert_selector "img[src='https://example.com/mark.png']"
           assert_text "Acme"
           assert_no_text "v#{FlatPack::VERSION}"
-          assert_no_selector "[data-flat-pack--sidebar-layout-target='headerLabel'] > span"
+          assert_no_selector ".fp-sidebar-label > span"
         end
 
         def test_content_block_still_replaces_chrome_when_logo_is_passed
@@ -181,9 +185,9 @@ module FlatPack
           assert_text "Custom chrome"
           assert_no_text "Acme"
           refute_selector "img"
-          refute_selector "[data-flat-pack--sidebar-layout-target='collapsedToggle']"
-          refute_selector "[data-flat-pack--sidebar-layout-target='desktopToggle']"
-          refute_selector "[data-flat-pack--sidebar-layout-target='headerBrand']"
+          refute_selector "[data-flat-pack-sidebar-toggle='expand']"
+          refute_selector "[data-flat-pack-sidebar-toggle='collapse']"
+          refute_selector ".fp-sidebar-brand"
         end
       end
     end

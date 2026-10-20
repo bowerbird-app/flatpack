@@ -64,7 +64,6 @@ module FlatPack
         lightbox_controller.js
         chat_image_deck_controller.js
         sidebar_group_controller.js
-        sidebar_layout_controller.js
         select_controller.js
         combobox_controller.js
         flatpack_date_picker_controller.js
