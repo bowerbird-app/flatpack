@@ -22,24 +22,6 @@ module FlatPack
           top_left: "bottom-full left-0 mb-2"
         }.freeze
 
-        CHEVRON_UNSET = Object.new.freeze
-        private_constant :CHEVRON_UNSET
-
-        def self.new(show_chevron: CHEVRON_UNSET, icon_only: false, **kwargs, &block)
-          if icon_only && show_chevron == true
-            raise ArgumentError, "Icon-only dropdowns hide the chevron. Omit show_chevron or pass false."
-          end
-
-          super(icon_only: icon_only, show_chevron: resolved_chevron(show_chevron, icon_only), **kwargs, &block)
-        end
-
-        def self.resolved_chevron(show_chevron, icon_only)
-          return !icon_only if show_chevron.equal?(CHEVRON_UNSET)
-
-          show_chevron
-        end
-        private_class_method :resolved_chevron
-
         def initialize(
           text:,
           style: :default,
@@ -49,7 +31,7 @@ module FlatPack
           icon_variant: nil,
           icon_style: nil,
           icon_only: false,
-          show_chevron: true,
+          show_chevron: nil,
           disabled: false,
           placement: :bottom_right,
           max_height: "384px",
@@ -65,7 +47,7 @@ module FlatPack
           @icon_variant = IconOptions.normalize_variant!(icon_variant)
           @icon_style = IconOptions.normalize_style!(icon_style)
           @icon_only = icon_only
-          @show_chevron = show_chevron
+          @show_chevron = resolved_chevron(show_chevron)
           @disabled = disabled
           @placement = placement.to_sym
           @max_height = max_height
@@ -239,6 +221,16 @@ module FlatPack
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
             "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]"
           )
+        end
+
+        def resolved_chevron(show_chevron)
+          if @icon_only && show_chevron == true
+            raise ArgumentError, "Icon-only dropdowns hide the chevron. Omit show_chevron or pass false."
+          end
+
+          return !@icon_only if show_chevron.nil?
+
+          show_chevron
         end
 
         def validate_style!

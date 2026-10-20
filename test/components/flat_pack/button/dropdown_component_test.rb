@@ -518,13 +518,17 @@ module FlatPack
         assert_match(/chevron/, error.message)
       end
 
-      def test_labeled_chevron_default_stays_true_in_the_catalog
+      def test_catalog_reports_nil_chevron_default
         FlatPack::ComponentCatalog.reset!
-        parameter = FlatPack::ComponentCatalog.show("Button::Dropdown::Component")
-          .fetch(:parameters)
-          .find { |row| row.fetch(:name) == "show_chevron" }
+        parameters = FlatPack::ComponentCatalog.show("Button::Dropdown::Component").fetch(:parameters)
+        chevron = parameters.find { |row| row.fetch(:name) == "show_chevron" }
+        icon_only = parameters.find { |row| row.fetch(:name) == "icon_only" }
+        round = parameters.find { |row| row.fetch(:name) == "round" }
 
-        assert_equal true, parameter.fetch(:default)
+        assert chevron.key?(:default)
+        assert_nil chevron.fetch(:default)
+        assert_equal false, icon_only.fetch(:default)
+        assert_equal false, round.fetch(:default)
       end
 
       def test_invalid_round_raises
