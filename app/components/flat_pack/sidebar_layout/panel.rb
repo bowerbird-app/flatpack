@@ -61,6 +61,12 @@ module FlatPack
         "#{storage_key}:aside"
       end
 
+      def column_style
+        return unless floating
+
+        "--sidebar-background-color: var(--sidebar-float-background-color); --sidebar-header-background-color: var(--sidebar-float-background-color); --sidebar-collapsed-frame: 2px"
+      end
+
       def column_classes
         [
           "h-full",

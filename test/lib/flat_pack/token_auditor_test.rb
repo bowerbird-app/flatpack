@@ -50,6 +50,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-inset"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-inner-radius"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-measured-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-collapsed-frame"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-panel-width"
     end
 

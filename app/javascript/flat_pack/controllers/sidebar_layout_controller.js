@@ -704,12 +704,15 @@ export default class extends Controller {
   }
 
   loadDesktopState() {
-    if (this.hasStorageKeyValue) {
-      const saved = localStorage.getItem(this.storageKeyValue)
-      if (saved !== null) {
-        this.collapsed = saved === "true"
-      }
+    if (!this.hasStorageKeyValue) return
+
+    const saved = localStorage.getItem(this.storageKeyValue)
+    if (saved !== null) {
+      this.collapsed = saved === "true"
+      return
     }
+
+    if (this.hasOpenValue) this.collapsed = !this.openValue
   }
 
   handleTurboBeforeCache() {
