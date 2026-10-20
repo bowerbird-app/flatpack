@@ -8,11 +8,18 @@ function loadSidebarLayoutController({ prefersReduced = false, extras = {} } = {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'sidebar_layout_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
-    .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
-    .replace(
-      'import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"',
-      `function prefersReducedMotion() { return ${prefersReduced ? 'true' : 'false'} }`
-    )
+    .replace('import { Controller } from "@hotwired/stimulus"', `class Controller {
+      dispatch(name, options = {}) {
+        const event = {
+          type: 'flat-pack--sidebar-layout:' + name,
+          detail: options.detail,
+          bubbles: true,
+          target: options.target
+        }
+        this.collapseEvents = this.collapseEvents || []
+        this.collapseEvents.push(event)
+      }
+    }`)
     .replace('export default class extends Controller', 'class SidebarLayoutController extends Controller') + '\nmodule.exports = SidebarLayoutController\n'
 
   const timeouts = []
@@ -46,7 +53,7 @@ function loadSidebarLayoutController({ prefersReduced = false, extras = {} } = {
 
   vm.runInNewContext(transformedSource, context, { filename: filePath })
 
-  return { Controller: context.module.exports, timeouts }
+  return { Controller: context.module.exports, timeouts, localStorage: context.localStorage }
 }
 
 function classListStub(initial = []) {
@@ -121,7 +128,7 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     setAttribute() {}
   }
 
-  const { Controller, timeouts } = loadSidebarLayoutController({ prefersReduced, duration })
+  const { Controller, timeouts, localStorage } = loadSidebarLayoutController({ prefersReduced, duration })
   const controller = Object.assign(new Controller(), {
     isMobile: false,
     collapsed: false,
@@ -136,21 +143,26 @@ function buildDesktopController({ prefersReduced = false, duration = 300 } = {})
     currentScrollContainer() { return null }
   })
 
-  return { controller, label, sectionLabel, item, brand, aside, sidebarTarget, desktopToggleTarget, collapsedToggleTarget, timeouts, listeners }
+  return { controller, label, sectionLabel, item, brand, aside, sidebarTarget, desktopToggleTarget, collapsedToggleTarget, timeouts, listeners, localStorage }
 }
 
-test('collapse shows the hamburger and hides the brand mark at click time', () => {
-  const { controller, brand, collapsedToggleTarget, desktopToggleTarget } = buildDesktopController()
+test('collapse writes the column attribute, storage, and one collapse event', () => {
+  const { controller, sidebarTarget, localStorage } = buildDesktopController()
+  controller.hasStorageKeyValue = true
+  controller.storageKeyValue = 'app-shell'
 
   controller.toggleDesktop()
 
-  assert.equal(brand.classList.contains('hidden'), true)
-  assert.equal(collapsedToggleTarget.classList.contains('hidden'), false)
-  assert.equal(collapsedToggleTarget.classList.contains('flex'), true)
-  assert.equal(desktopToggleTarget.classList.contains('hidden'), true)
+  assert.equal(sidebarTarget.dataset.flatPackSidebarCollapsed, 'true')
+  assert.equal(localStorage.getItem('app-shell'), 'true')
+  assert.equal(controller.collapseEvents.length, 1)
+  assert.equal(controller.collapseEvents[0].type, 'flat-pack--sidebar-layout:collapse')
+  assert.equal(controller.collapseEvents[0].detail.collapsed, true)
+  assert.equal(controller.collapseEvents[0].target, sidebarTarget)
+  assert.equal(controller.collapseEvents[0].bubbles, true)
 })
 
-test('collapse does not sr-only labels or center icons at click time', () => {
+test('collapse does not restyle labels or icons at click time', () => {
   const { controller, label, item, sidebarTarget, timeouts } = buildDesktopController()
 
   controller.toggleDesktop()
@@ -174,8 +186,10 @@ test('width end does not restyle icons or labels', () => {
   assert.equal(item.classList.contains('px-[var(--sidebar-item-padding-x)]'), true)
 })
 
-test('expand restores the brand before the rail opens', () => {
-  const { controller, label, item, brand, sidebarTarget, collapsedToggleTarget } = buildDesktopController({ prefersReduced: true, duration: 0 })
+test('expand writes the open column attribute and a collapse event', () => {
+  const { controller, label, item, sidebarTarget } = buildDesktopController({ prefersReduced: true, duration: 0 })
+  controller.hasStorageKeyValue = true
+  controller.storageKeyValue = 'app-shell'
 
   controller.toggleDesktop()
   assert.equal(label.classList.contains('sr-only'), false)
@@ -183,10 +197,10 @@ test('expand restores the brand before the rail opens', () => {
 
   controller.toggleDesktop()
   assert.equal(sidebarTarget.dataset.flatPackSidebarCollapsed, 'false')
+  assert.equal(controller.collapsed, false)
+  assert.equal(controller.collapseEvents.at(-1).detail.collapsed, false)
   assert.equal(label.classList.contains('sr-only'), false)
   assert.equal(item.classList.contains('justify-center'), false)
-  assert.equal(brand.classList.contains('hidden'), false)
-  assert.equal(collapsedToggleTarget.classList.contains('hidden'), true)
 })
 
 test('reduced motion does not schedule a layout restyle', () => {
@@ -409,7 +423,10 @@ test('controller source restores scroll after groups and skips section-title sr-
 
   assert.equal(source.includes('scheduleScrollRestore'), true)
   assert.equal(source.includes('markItemCurrent'), true)
-  assert.equal(source.includes('isSectionTitleLabel'), true)
+  assert.equal(source.includes('isSectionTitleLabel'), false)
+  assert.equal(source.includes('labelNodes'), false)
+  assert.equal(source.includes('querySelector("aside")'), false)
+  assert.equal(source.includes('clearCollapsedRestState'), false)
   assert.equal(source.includes('this.scrollActiveItemIntoView()'), true)
   assert.equal(source.includes('syncFloatingTopNavClearance'), true)
 })

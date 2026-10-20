@@ -1,10 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
-import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 const BODY_LOCK = "flatPackModalLockCount"
 
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer", "aside", "asideToggle"]
+  static targets = ["sidebar", "backdrop", "mobileToggle", "scrollContainer", "aside", "asideToggle"]
   static values = {
     side: String,
     open: Boolean,
@@ -137,16 +136,8 @@ export default class extends Controller {
   toggleDesktop() {
     if (this.isMobile) return
 
-    const opening = this.collapsed
     this.collapsed = !this.collapsed
-
-    if (opening) {
-      this.clearCollapsedRestState()
-    } else {
-      this.applyCollapsedHeaderChrome()
-    }
-
-    this.applyDesktopState({ immediate: prefersReducedMotion() })
+    this.applyDesktopState()
     this.saveDesktopState()
   }
 
@@ -422,7 +413,6 @@ export default class extends Controller {
   collapseRailFromResize() {
     if (this.isMobile || this.collapsed || !this.hasSidebarTarget) return
     this.collapsed = true
-    this.applyCollapsedHeaderChrome()
     this.applyDesktopState()
     this.saveDesktopState()
   }
@@ -430,29 +420,9 @@ export default class extends Controller {
   applyDesktopState() {
     if (this.isMobile) return
 
-    // Width is driven by CSS via the data-flat-pack-sidebar-collapsed attribute
-    // (set below, and pre-set by the inline FOUC script before first paint).
-    // Inline styles are set as a fallback for host apps that haven't imported
-    // the FlatPack CSS rules that respond to this attribute.
-    const sidebarContent = this.sidebarTarget.querySelector("aside")
     this.paintFallbackWidth(this.sidebarTarget)
-    this.paintFallbackWidth(sidebarContent)
-
-    this.syncToggleAria()
-
     this.sidebarTarget.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
-    if (sidebarContent) {
-      sidebarContent.dataset.flatPackSidebarCollapsed = this.collapsed ? "true" : "false"
-    }
-
-    this.updateCollapsedScrollContainerState()
-
-    if (!this.collapsed) {
-      this.clearCollapsedRestState()
-      return
-    }
-
-    this.applyCollapsedHeaderChrome()
+    this.dispatch("collapse", { detail: { collapsed: this.collapsed }, target: this.sidebarTarget })
   }
 
   usesContentWidth() {
@@ -487,8 +457,7 @@ export default class extends Controller {
 
     this.handleWidthTransitionEnd = (event) => {
       if (event.propertyName !== "width") return
-      const aside = this.sidebarTarget.querySelector("aside")
-      if (event.target !== this.sidebarTarget && event.target !== aside) return
+      if (event.target !== this.sidebarTarget) return
       this.rememberOpenWidth()
     }
     this.sidebarTarget.addEventListener("transitionend", this.handleWidthTransitionEnd)
@@ -520,14 +489,10 @@ export default class extends Controller {
     if (this.isMobile || this.collapsed || !this.usesContentWidth()) return
 
     const rail = this.sidebarTarget
-    const aside = rail.querySelector("aside")
-    const targets = [rail, aside].filter(Boolean)
 
     // The width transition is !important. Reading mid-transition stores the
     // old 16rem length and the next paint never reaches max-content.
-    targets.forEach((element) => {
-      element.style.setProperty("transition-property", "none", "important")
-    })
+    rail.style.setProperty("transition-property", "none", "important")
     rail.style.removeProperty("--sidebar-measured-width")
 
     const width = rail.getBoundingClientRect().width
@@ -535,166 +500,25 @@ export default class extends Controller {
       rail.style.setProperty("--sidebar-measured-width", `${Math.round(width)}px`)
     }
 
-    targets.forEach((element) => {
-      element.style.removeProperty("transition-property")
-    })
-  }
-
-  syncToggleAria() {
-    if (this.hasDesktopToggleTarget) {
-      this.desktopToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
-      const chevron = this.desktopToggleTarget.querySelector('[data-flat-pack--sidebar-layout-target="chevron"]')
-      if (chevron) {
-        chevron.style.transform = this.collapsed ? "rotate(180deg)" : "rotate(0deg)"
-      }
-    }
-
-    if (this.hasCollapsedToggleTarget) {
-      this.collapsedToggleTarget.setAttribute("aria-expanded", this.collapsed ? "false" : "true")
-    }
-  }
-
-  applyCollapsedHeaderChrome() {
-    this.headerBrandNodes().forEach((brand) => {
-      brand.classList.add("hidden")
-    })
-    this.setCollapsedToggleButtons(true)
-  }
-
-  clearCollapsedRestState() {
-    this.labelNodes().forEach((label) => {
-      if (label.dataset.flatPackSidebarRestHidden === "true") {
-        label.classList.remove("sr-only")
-        delete label.dataset.flatPackSidebarRestHidden
-      }
-    })
-
-    this.itemNodes().forEach((item) => {
-      item.classList.remove("px-[var(--sidebar-item-padding-collapsed)]", "justify-center")
-      item.classList.add("px-[var(--sidebar-item-padding-x)]")
-    })
-
-    this.sectionTitleNodes().forEach((title) => {
-      title.classList.remove("px-[var(--sidebar-item-padding-collapsed)]")
-      title.classList.add("px-[var(--sidebar-section-padding-x)]")
-    })
-
-    this.groupPanelNodes().forEach((panel) => {
-      panel.classList.add("pl-[var(--sidebar-group-item-indent)]")
-    })
-
-    this.groupChevronNodes().forEach((chevron) => {
-      chevron.classList.remove("hidden")
-    })
-
-    this.footerNodes().forEach((footer) => {
-      footer.classList.remove("hidden")
-    })
-
-    this.headerRowNodes().forEach((row) => {
-      row.classList.remove("justify-center")
-    })
-
-    this.headerBrandNodes().forEach((brand) => {
-      brand.classList.remove("hidden")
-    })
-
-    this.setCollapsedToggleButtons(false)
-  }
-
-  setCollapsedToggleButtons(collapsed) {
-    if (this.hasDesktopToggleTarget) {
-      this.desktopToggleTarget.classList.toggle("hidden", collapsed)
-    }
-
-    if (this.hasCollapsedToggleTarget) {
-      if (collapsed) {
-        this.collapsedToggleTarget.classList.remove("hidden")
-        this.collapsedToggleTarget.classList.add("flex")
-      } else {
-        this.collapsedToggleTarget.classList.add("hidden")
-        this.collapsedToggleTarget.classList.remove("flex")
-      }
-    }
-  }
-
-  labelNodes() {
-    const nodes = this.sidebarTarget.querySelectorAll(
-      ".fp-sidebar-label, a > span.flex-1, button > span.flex-1, [data-flat-pack--sidebar-layout-target='headerLabel']"
-    )
-
-    return Array.from(nodes).filter((node) => !this.isSectionTitleLabel(node))
-  }
-
-  isSectionTitleLabel(node) {
-    return !!node.closest?.('[data-flat-pack-sidebar-section-title="true"]')
-  }
-
-  itemNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-item="true"]')
+    rail.style.removeProperty("transition-property")
   }
 
   navItemNodes() {
     return this.sidebarTarget.querySelectorAll('a[data-flat-pack-sidebar-item="true"]')
   }
 
-  sectionTitleNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack-sidebar-section-title="true"]')
-  }
-
-  groupPanelNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="panel"]')
-  }
-
-  groupChevronNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-group-target="chevron"]')
-  }
-
-  footerNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="footer"]')
-  }
-
-  headerRowNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerRow"]')
-  }
-
-  headerBrandNodes() {
-    return this.sidebarTarget.querySelectorAll('[data-flat-pack--sidebar-layout-target="headerBrand"]')
-  }
-
-  updateCollapsedScrollContainerState() {
-    const scrollContainer = this.currentScrollContainer()
-    if (!scrollContainer) return
-
-    scrollContainer.classList.toggle("fp-scrollbar-hidden", this.collapsed)
-  }
-
   applySidebarPresentationMode() {
-    const sidebarContent = this.sidebarTarget.querySelector("aside")
-
     this.sidebarTarget.style.transitionDuration = this.transitionDuration
     this.sidebarTarget.style.transitionTimingFunction = this.transitionEasing
 
     if (this.isMobile) {
       this.sidebarTarget.style.zIndex = "50"
       this.sidebarTarget.style.transitionProperty = "transform"
-
-      if (sidebarContent) {
-        sidebarContent.style.transitionProperty = ""
-        sidebarContent.style.transitionDuration = ""
-        sidebarContent.style.transitionTimingFunction = ""
-      }
       return
     }
 
     this.sidebarTarget.style.zIndex = "auto"
     this.sidebarTarget.style.transitionProperty = "width, transform"
-
-    if (sidebarContent) {
-      sidebarContent.style.transitionProperty = "width"
-      sidebarContent.style.transitionDuration = this.transitionDuration
-      sidebarContent.style.transitionTimingFunction = this.transitionEasing
-    }
   }
 
   saveDesktopState() {
@@ -895,20 +719,13 @@ export default class extends Controller {
   }
 
   findScrollContainerInBody(body) {
-    return body.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]') ||
-      body.querySelector('[data-flat-pack--sidebar-layout-target="sidebar"] aside > .flex-1.min-h-0.overflow-y-auto')
+    return body.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]')
   }
 
   currentScrollContainer() {
-    if (this.hasScrollContainerTarget) {
-      return this.scrollContainerTarget
-    }
+    if (this.hasScrollContainerTarget) return this.scrollContainerTarget
 
-    const marked = this.element.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]')
-    if (marked) return marked
-    if (!this.hasSidebarTarget) return null
-
-    return this.sidebarTarget.querySelector("aside > .flex-1.min-h-0.overflow-y-auto")
+    return this.element.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]')
   }
 
   bindScrollPersistenceListener() {

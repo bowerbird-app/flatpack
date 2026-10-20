@@ -25,7 +25,8 @@ module FlatPack
 
       assert_includes css, ".fp-sidebar-label"
       assert_match(/opacity\s+var\(--duration-fast\)\s+var\(--easing-standard\)/, css)
-      assert_includes css, "[data-flat-pack-sidebar-collapsed=\"true\"] .fp-sidebar-label"
+      assert_includes css, "[data-flat-pack-sidebar-collapsed=\"true\"] .fp-sidebar .fp-sidebar-label"
+      assert_includes css, ".fp-sidebar[data-flat-pack-sidebar-collapsed=\"true\"] .fp-sidebar-label"
       assert_includes css, "padding-left: var(--sidebar-item-padding-collapsed) !important"
       assert_includes css, "padding-left: 0 !important"
       assert_includes css, "gap: 0 !important"
@@ -116,6 +117,7 @@ module FlatPack
       refute_includes css.sub(desktop_rail, ""), "[data-flat-pack-sidebar-height=\"content\"]"
       refute_includes css, "margin-left: calc((100% - 1.25rem) / 2)"
       refute_includes css, "justify-content: center"
+      assert_includes desktop_rail, "[data-flat-pack-sidebar-collapsed=\"true\"] .fp-sidebar"
       refute_includes css, "desktopToggle"
       refute_includes controller, "delayContentReveal"
       refute_includes controller, "setDesktopExpandedContentVisible"
@@ -124,7 +126,10 @@ module FlatPack
       refute_includes controller, "scheduleCollapsedRestState"
       assert_includes controller, "scheduleScrollRestore"
       assert_includes controller, "markItemCurrent"
-      assert_includes controller, "isSectionTitleLabel"
+      refute_includes controller, "isSectionTitleLabel"
+      refute_includes controller, "labelNodes"
+      refute_includes controller, 'querySelector("aside")'
+      refute_includes controller, "clearCollapsedRestState"
     end
   end
 end

@@ -650,7 +650,7 @@ module FlatPack
       assert_match(/--resize-handle-active-color:\s*var\(--surface-muted-content-color\);/, root_block)
 
       application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-      handle = application[/\n  \.fp-panel-resize \{.*?\n  \[data-flat-pack-sidebar-collapsed="true"\] \[data-flat-pack--sidebar-layout-target/m]
+      handle = application[/\n  \.fp-panel-resize \{.*?\n  \[data-flat-pack-sidebar-collapsed="true"\] \.fp-sidebar \.fp-sidebar-scroll/m]
       assert_includes handle, "background-color: var(--resize-handle-color);"
       assert_includes handle, "background-color: var(--resize-handle-active-color);"
       assert_includes handle, "cursor: col-resize"
