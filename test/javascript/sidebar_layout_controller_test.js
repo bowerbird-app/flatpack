@@ -712,6 +712,32 @@ test('crossing the mobile breakpoint does not write the aside key', () => {
   assert.equal(aside.attrs.inert, undefined)
 })
 
+test('a missing rail key keeps the server open value', () => {
+  const closed = buildShell({ withSidebar: true, storageKey: null })
+  closed.controller.hasStorageKeyValue = true
+  closed.controller.storageKeyValue = 'flatpack-dummy-shell-collapsed'
+  closed.controller.hasOpenValue = true
+  closed.controller.openValue = false
+  closed.controller.collapsed = false
+
+  closed.controller.loadDesktopState()
+
+  assert.equal(closed.controller.collapsed, true)
+  assert.equal(closed.localStorage.writes.length, 0)
+
+  const storedOpen = buildShell({ withSidebar: true, storageKey: null })
+  storedOpen.localStorage.setItem('flatpack-dummy-shell-collapsed', 'false')
+  storedOpen.controller.hasStorageKeyValue = true
+  storedOpen.controller.storageKeyValue = 'flatpack-dummy-shell-collapsed'
+  storedOpen.controller.hasOpenValue = true
+  storedOpen.controller.openValue = false
+  storedOpen.controller.collapsed = true
+
+  storedOpen.controller.loadDesktopState()
+
+  assert.equal(storedOpen.controller.collapsed, false)
+})
+
 test('a resize collapse uses the rail collapse path and leaves width storage alone', () => {
   const { controller, sidebar, localStorage } = buildShell({ withSidebar: true, storageKey: null })
   controller.hasStorageKeyValue = true

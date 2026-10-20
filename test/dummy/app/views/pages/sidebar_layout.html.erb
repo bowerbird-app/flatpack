@@ -28,6 +28,10 @@
 <% closed_aside_query = request.query_parameters.merge("aside" => "closed") %>
 <% resize_query = request.query_parameters.merge("resizable" => "1") %>
 <% lock_size_query = request.query_parameters.except("resizable") %>
+<% cards_query = { "floating" => "1", "background" => "1", "height" => "content", "aside" => "1", "resizable" => "1" } %>
+<% flush_query = { "aside" => "1", "resizable" => "1" } %>
+<% notes_query = cards_query.merge("notes" => "1") %>
+<% collapsed_query = cards_query.merge("collapsed" => "1") %>
 
 <div class="mb-8 flex flex-wrap items-center gap-3">
   <%= link_to(
@@ -79,6 +83,30 @@
     style: :secondary,
     size: :sm
   ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Cards on a photo",
+    href: demo_sidebar_layout_path(cards_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Flush panels",
+    href: demo_sidebar_layout_path(flush_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Notes only",
+    href: demo_sidebar_layout_path(notes_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Collapsed rail",
+    href: demo_sidebar_layout_path(collapsed_query),
+    style: :secondary,
+    size: :sm
+  ) %>
   <% if top_nav_floating %>
     <%= render FlatPack::Button::Component.new(
       text: content_below ? "Scroll under" : "Start below",
@@ -103,6 +131,9 @@
     <code>?width=content</code> sizes the open desktop rail to its widest item.
     <code>?aside=1</code> opens Details. <code>?aside=closed</code> starts it shut.
     <code>?resizable=1</code> adds a drag handle.
+    <code>?floating=1&amp;background=1&amp;height=content&amp;aside=1&amp;resizable=1</code> is the short cards on the photo.
+    <code>?notes=1</code> puts field notes in the rail instead of the menu.
+    <code>?collapsed=1</code> starts that rail closed.
   </p>
 
   <%= render FlatPack::CodeBlock::Component.new(

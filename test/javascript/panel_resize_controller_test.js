@@ -273,6 +273,27 @@ test('mobile resize gestures do nothing', () => {
   assert.equal(storage.get('app-shell:rail:width'), '280')
 })
 
+test('a drag marks the column and clears the mark on release', () => {
+  const { controller, column, handle } = mount()
+  controller.connect()
+  controller.start(pointerDown(handle, 100))
+
+  assert.equal(column.dataset.flatPackPanelDragging, 'true')
+
+  handle.listeners.pointerup[0]({ pointerId: 1 })
+  assert.equal(column.dataset.flatPackPanelDragging, undefined)
+})
+
+test('a cancelled drag clears the dragging mark', () => {
+  const { controller, column, handle } = mount()
+  controller.connect()
+  controller.start(pointerDown(handle, 100))
+  handle.listeners.pointercancel[0]({ pointerId: 1 })
+
+  assert.equal(column.dataset.flatPackPanelDragging, undefined)
+  assert.equal(column.style.getPropertyValue('transition-property'), '')
+})
+
 test('a pointer drag marks pointer focus and blurs the handle on release', () => {
   const { controller, handle, document } = mount()
   let blurred = 0

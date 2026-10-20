@@ -187,7 +187,36 @@ module FlatPack
           layout.sidebar { "Sidebar" }
         end
 
-        assert_selector "div[data-flat-pack-sidebar-floating='true'][data-mobile-drawer-side='right']"
+        column = page.find("div[data-flat-pack-sidebar-floating='true'][data-mobile-drawer-side='right']")
+        assert_includes column["class"].to_s.split, "fp-sidebar-drawer"
+        assert_includes column["style"], "--sidebar-background-color: var(--sidebar-float-background-color)"
+        assert_includes column["style"], "--sidebar-header-background-color: var(--sidebar-float-background-color)"
+        assert_includes column["style"], "--sidebar-collapsed-frame: 2px"
+        assert_includes page.native.to_html, 'menu.setAttribute("data-flat-pack-sidebar-collapsed", collapsed)'
+      end
+
+      def test_floating_aside_column_carries_the_same_surface
+        render_inline(Component.new(floating: true, side: :left)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.aside { "Notes" }
+        end
+
+        page.all("[data-flat-pack-sidebar-floating='true']").each do |column|
+          assert_includes column["class"].to_s.split, "fp-sidebar-drawer"
+          assert_includes column["style"], "--sidebar-collapsed-frame: 2px"
+          assert_includes column["style"], "--sidebar-background-color: var(--sidebar-float-background-color)"
+        end
+        assert_selector "[data-flat-pack-panel='aside'].fp-sidebar-drawer", text: "Notes"
+      end
+
+      def test_flush_column_does_not_set_the_floating_frame
+        render_inline(Component.new(floating: false)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.aside { "Notes" }
+        end
+
+        refute_includes page.native.to_html, "--sidebar-collapsed-frame"
+        refute_includes page.native.to_html, "--sidebar-float-background-color"
       end
 
       def test_floating_false_matches_the_flush_rail

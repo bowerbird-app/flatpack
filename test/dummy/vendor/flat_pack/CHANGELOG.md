@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.280] - 2026-10-20
+
+### Changed
+- A floating `FlatPack::SidebarLayout` column is the card. Border, radius, shadow, and `--sidebar-float-background-color` sit on the column for the rail and the aside. The column sets `--sidebar-background-color`, `--sidebar-header-background-color`, and `--sidebar-collapsed-frame` (`2px`). Contents fill the column.
+- Floating panels use `--sidebar-float-inset` on the inner side as well as the top, bottom, and outer side.
+- The floating resize handle is the column's inner edge. The hit strip straddles that border. Hover and `data-flat-pack-panel-dragging` paint the border with `--resize-handle-active-color`. Keyboard focus uses `--color-ring` on that border. A flush panel still draws the full-height `::after` line.
+- Collapsed sidebar icons are centered by `FlatPack::Sidebar::Component` from `data-flat-pack-sidebar-collapsed` on the menu, using `--sidebar-collapsed-width`, `--sidebar-item-inset`, `--sidebar-item-padding-collapsed`, and `--sidebar-collapsed-frame`.
+- A missing rail storage key keeps the server `open:` value. `open: false` stays collapsed after `flat-pack--sidebar-layout` connects, matching the first-paint script.
+- Bumped the gem version to `0.1.280`.
+
+### Upgrade notes
+- The floating card styling now lives on the column. Hosts that styled `[data-flat-pack-sidebar-floating="true"] aside` directly should drop that CSS. There is no alias.
+- Also drop `html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-sidebar-floating="true"] aside`. The square-corner reset is `html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-sidebar-floating="true"]` on the column.
+- Drop `[data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="left"]` and `[data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="right"]`. Both sides use `--sidebar-float-inset`.
+- Drop `[data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"]` and `[data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child`. The menu rule is `.fp-sidebar[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"]` (and the same `span.flex-shrink-0:first-child` descendant).
+- Drop `[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"]` and `[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child`. Those selectors reached into the menu from the layout.
+- Floating panels now have an inner inset, so a card no longer sits flush against main.
+- A layout with `open: false` and an empty rail storage key stays collapsed. Hosts that counted on the controller expanding that rail should pass `open: true`, or write `"false"` to the storage key. That key stores the collapsed state, so `"true"` collapses the rail.
+- The floating resize handle is now the panel edge. `--resize-handle-color` is unchanged. The floating handle does not draw `::after`.
+- Hosts reload kit CSS and JS. esbuild and Vite hosts already register `flat-pack--panel-resize`. Importmap hosts already pin the controllers. Do not rerun `bin/rails generate flat_pack:install`.
+- No new tokens. `--sidebar-collapsed-frame` is a length on the floating column, not a theme token.
+- Redeploy so `meta.gem_version` shows `0.1.280`.
+
 ## [0.1.279] - 2026-10-20
 
 ### Changed

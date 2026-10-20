@@ -17,7 +17,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side` | Symbol | `:left` | No | Sidebar side. Allowed: `:left`, `:right`. |
 | `open` | Boolean | `true` | No | Initial desktop sidebar state (expanded when true, collapsed when false). |
 | `storage_key` | String or nil | `nil` | No | localStorage key used by controller for desktop collapsed-state persistence. |
-| `floating` | Boolean | `false` | No | Desktop-only detached rail. Insets the top, bottom, and outer edge. Rounded corners follow the rounded palette (no `data-theme`, or a list that contains `rounded`, such as `data-theme="rounded harbor"`). Ignored below the `md` breakpoint. |
+| `floating` | Boolean | `false` | No | Desktop-only detached panels. The column is the card. Insets all four sides with `--sidebar-float-inset`. Rounded corners follow the rounded palette (no `data-theme`, or a list that contains `rounded`, such as `data-theme="rounded harbor"`). Ignored below the `md` breakpoint. |
 | `floating_top_nav` | Boolean | `false` | No | Replaces the full-width top bar with floating cards. Uses the same `--sidebar-float-*` gap, fill, shadow, and corner as the rail. `false` leaves the bar unchanged. |
 | `content_scroll` | Symbol | `:behind` | No | Where main content sits when `floating_top_nav: true`. `:behind` scrolls the page under the cards and pads the scroll pane with `--top-nav-float-clearance`. `:below` keeps the cards above the scroll pane. Ignored when the top nav is not floating. |
 | `height` | Symbol | `:full` | No | Height of the floating desktop rail. `:full` is today's rail (viewport minus the float insets). `:content` sizes the rail to its items and caps it at that same viewport height. The items scroll inside the cap. Ignored when `floating` is false. The mobile drawer stays full height. Not the image `height` attribute. |
@@ -42,7 +42,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `side: :left` | Grid columns render as `auto 1fr`; sidebar enters from left on mobile. |
 | `side: :right` | Grid columns render as `1fr auto`; sidebar enters from right on mobile. |
 | `storage_key: "..."` | Enables persisted desktop collapse state in localStorage. |
-| `floating: true` | Desktop rail sits inset from the top, bottom, and outer edge, with its own fill, border, and shadow. The rounded palette rounds the panel with `--sidebar-float-radius`. Other named themes stay square. Below `md` the drawer stays full height and square. |
+| `floating: true` | Desktop columns sit inset on every side. The column carries the fill, border, radius, and shadow. Contents fill that column. The rounded palette rounds it with `--sidebar-float-radius`. Other named themes stay square. Below `md` the drawer stays full height and square. |
 | `height: :content` | Floating desktop rail shrinks to its items and sits at the top inset. A rail taller than the viewport stops at the float cap and scrolls inside. |
 | `width: :fixed` | Open desktop rail is `--sidebar-width`. This is the default. |
 | `width: :content` | Open desktop rail hugs its widest item, between `--sidebar-content-min-width` and `--sidebar-content-max-width`. |
@@ -129,7 +129,7 @@ The background layer is decorative. The layout marks it `aria-hidden="true"`. Pa
 
 Desktop collapse is one motion: the rail width eases `--sidebar-width` → `--sidebar-collapsed-width` (`16rem` → `4rem` unless a theme changes the tokens) on `--duration-slow` / `--easing-standard` while labels fade on `--duration-fast` and shrink to zero width on `--duration-slow`. The icon's leading margin eases on that same curve, by a fixed length, so the closed active pill has the same space on both sides of the icon. Padding and gap ease with the width. The header collapse control keeps its own padding, so the hover fill wraps the chevron. Nothing restyles the row when the width transition ends, so the close does not shudder.
 
-The closed look is the hamburger (`aria-label="Open sidebar"`), hidden brand mark, centered icons, and a `--sidebar-collapsed-width` rail (`4rem` by default). Expanding restores the brand and hamburger first, then eases the rail open. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
+The closed look is the hamburger (`aria-label="Open sidebar"`), hidden brand mark, centered icons, and a `--sidebar-collapsed-width` rail (`4rem` by default). The menu centers those icons from its own `data-flat-pack-sidebar-collapsed` state. The length uses `--sidebar-collapsed-width`, `--sidebar-item-inset`, `--sidebar-item-padding-collapsed`, and `--sidebar-collapsed-frame` (the column sets `2px` while floating, and the menu falls back to `1px`). Expanding restores the brand and hamburger first, then eases the rail open. `prefers-reduced-motion: reduce` snaps to the end state (duration tokens are `0ms`).
 
 This is applied to:
 - Every element with `data-flat-pack-sidebar-item="true"` (`Sidebar::Item::Component` links and `Sidebar::Group::Component` header buttons).
@@ -140,11 +140,11 @@ For static/non-interactive collapsed demos (without the layout controller) pass 
 
 ## Floating
 
-`floating: true` detaches the desktop rail from the viewport edges. The column keeps the same width transition (`--sidebar-width` / `--sidebar-collapsed-width`) and adds `--sidebar-float-inset` (`1rem`) on the top, bottom, and outer edge (`margin-left` when `side: :left`, `margin-right` when `side: :right`). The panel fill is `--sidebar-float-background-color` (`#fff` on the default palette, a lifted surface on dark), with a full border and `--sidebar-float-shadow`. Header fill follows that panel.
+`floating: true` detaches the desktop columns from the viewport edges. Each column keeps the same width transition (`--sidebar-width` / `--sidebar-collapsed-width`) and adds `--sidebar-float-inset` (`1rem`) on the top, bottom, and both sides. The column is the card. Its fill is `--sidebar-float-background-color` (`#fff` on the default palette, a lifted surface on dark), with a full border and `--sidebar-float-shadow`. The column sets `--sidebar-background-color` and `--sidebar-header-background-color` to that fill, and `--sidebar-collapsed-frame` to `2px`. Contents fill the column. They do not select `data-flat-pack-sidebar-floating`. Header fill follows the inherited panel colour.
 
 Round corners are `--sidebar-float-radius`. The unset theme is `--radius-lg`. Rounded is `--radius-xxxl` (2.5rem, 40px). They apply when `html` has no `data-theme`, or when the list contains `rounded` (`data-theme="rounded"` or `data-theme="rounded harbor"`). A list without `rounded` (dark, ocean, a host theme alone) keeps square corners. The rounded item highlight is the float radius minus `--sidebar-item-inset`, so it shares the rail's center. The top-nav clamp still holds because the pill is `--radius-full`. Below the `md` breakpoint the attribute is present and unused: the drawer stays edge-to-edge, including its safe-area padding.
 
-Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail.
+Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail. `/demo/sidebar_layout?floating=1&background=1&height=content&aside=1&resizable=1` is the short rail and the open aside, both cards, on the photo. Add `notes=1` for a rail that is not a menu. Add `collapsed=1` to start the rail closed.
 
 ## Rail height
 
@@ -186,11 +186,11 @@ Dummy chrome accepts `?width=content`. `/demo/sidebar_layout?width=content` hugs
 
 `open:` defaults to `true`. Desktop state is `data-flat-pack-aside-open`. A closed aside has no width and is `inert`. Below `768px` the aside starts off-canvas either way. Desktop `open:` does not open the phone drawer.
 
-The column owns the width. The scrollport is `<aside class="fp-aside">`, so the landmark fills the column instead of taking `--sidebar-width`. The main pane still scrolls on its own. `floating:` and `height: :content` reuse the rail attributes. Content height keeps this landmark as a scrollport (`display: block`, `overflow-y: auto`). A floating aside uses `--sidebar-float-radius`. On the rounded theme that token is `--radius-xxxl` (2.5rem), the same corner as the rail.
+The column owns the width and, when floating, the card. The scrollport is `<aside class="fp-aside">`, so the landmark fills the column instead of taking `--sidebar-width`. The main pane still scrolls on its own. `floating:` and `height: :content` reuse the rail attributes. Content height keeps this landmark as a scrollport (`display: block`, `overflow-y: auto`). A floating aside column uses `--sidebar-float-radius`. On the rounded theme that token is `--radius-xxxl` (2.5rem), the same corner as the rail. The landmark inside does not draw a second border.
 
 The tracks are kit CSS on `data-flat-pack-layout-columns` (`three`, `main-aside`, or `aside-main`). The main track is `minmax(0, 1fr)`, so a wide page shrinks instead of pushing the aside out of the shell. There is no new Tailwind class.
 
-With a `storage_key`, the aside key is `storage_key:aside`. `"true"` means open. A missing key keeps the server `open:` value. The rail key is unchanged: `"true"` still means collapsed. The phone drawer is not stored.
+With a `storage_key`, the aside key is `storage_key:aside`. `"true"` means open. A missing key keeps the server `open:` value. The rail key is unchanged: `"true"` still means collapsed. A missing rail key keeps the server `open:` value, so `open: false` stays collapsed. The phone drawer is not stored.
 
 ```erb
 <% layout.aside(open: true) do %>
@@ -212,7 +212,9 @@ Arrow keys step 16px. Right grows a left panel and shrinks a right panel. Double
 
 A committed width sets `--fp-panel-width` on the column and `data-flat-pack-panel-resized="true"`. The controller does not set `style.width`. The rail stays between `--sidebar-content-min-width` and `--sidebar-content-max-width`. `width: :content` starts from `--sidebar-measured-width`. A rail drag or arrow below the minimum collapses the rail and does not write a width. The aside stays between `--aside-min-width` (`16rem`) and `--aside-max-width` (`32rem`). It starts at `--aside-width` (`20rem`) and does not collapse.
 
-The 1px line is `--resize-handle-color` at rest. That token aliases `--surface-border-color`. Hover and a pressed button use `--resize-handle-active-color`. That token aliases `--surface-muted-content-color`. Keyboard focus widens that line to 3px in `--color-ring` and draws a soft ring of the same colour on the line. A pointer drag does not leave that ring. There is no grip.
+On a flush column the 1px line is `--resize-handle-color` at rest. That token aliases `--surface-border-color`. Hover and a pressed button use `--resize-handle-active-color`. That token aliases `--surface-muted-content-color`. Keyboard focus widens that line to 3px in `--color-ring` and draws a soft ring of the same colour on the line. A pointer drag does not leave that ring. There is no grip.
+
+On a floating column the card border is the line. The handle does not draw `::after`. The hit strip is `0.5rem` wide and straddles the inner border. The strip is positioned from the padding edge, so the offset is `calc(-0.25rem - 1px)` (`right` on a left column, `left` on a right column) and the strip is centered on the 1px border, at the column's own height. Hover, and `data-flat-pack-panel-dragging="true"` for the whole drag, set the column border to `--resize-handle-active-color`. Keyboard focus paints that border in `--color-ring` with the same soft ring. `data-pointer-focus` still suppresses the ring after a pointer drag. The cursor stays `col-resize`.
 
 Saved widths are `storage_key:rail:width` and `storage_key:aside:width`, integer pixels. No key when `storage_key` is nil.
 

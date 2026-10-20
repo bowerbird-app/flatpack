@@ -108,9 +108,12 @@
     <% show_aside = aside_state.in?(%w[1 true closed]) %>
     <% aside_open = aside_state != "closed" %>
     <% panels_resizable = params[:resizable].in?(%w[1 true]) %>
+    <% sidebar_collapsed = params[:collapsed].in?(%w[1 true]) %>
+    <% notes_panel = params[:notes].in?(%w[1 true]) %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
-      storage_key: "flatpack-dummy-shell",
+      open: !sidebar_collapsed,
+      storage_key: sidebar_collapsed ? "flatpack-dummy-shell-collapsed" : "flatpack-dummy-shell",
       floating: sidebar_floating,
       floating_top_nav: floating_top_nav,
       content_scroll: content_scroll,
@@ -124,6 +127,13 @@
         <% end %>
       <% end %>
       <% layout.sidebar do %>
+        <% if notes_panel %>
+          <div class="flex flex-col gap-3 p-4">
+            <h2 class="text-sm font-medium">Field notes</h2>
+            <p class="text-sm leading-6">This panel is not a menu. The column is still the card.</p>
+            <p class="text-sm leading-6">Same border, same shadow, same inset.</p>
+          </div>
+        <% else %>
         <div id="<%= content_height ? "dummy-demo-sidebar-content" : "dummy-demo-sidebar" %>" data-turbo-permanent class="<%= content_height ? "min-h-0" : "h-full min-h-0" %>">
         <% if content_height %>
           <%= render FlatPack::Sidebar::Component.new(side: sidebar_side) do |sidebar| %>
@@ -182,6 +192,7 @@
         <% end %>
         <% end %>
         </div>
+        <% end %>
       <% end %>
 
       <% if show_aside %>

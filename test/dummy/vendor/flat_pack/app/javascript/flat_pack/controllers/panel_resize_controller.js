@@ -43,6 +43,7 @@ export default class extends Controller {
     this.liveWidth = null
     this.collapsedFromDrag = false
     this.dragging = true
+    this.element.dataset.flatPackPanelDragging = "true"
     this.pointerId = event.pointerId
     this.captureTarget = handle
     this.element.style.setProperty("transition-property", "none", "important")
@@ -160,6 +161,7 @@ export default class extends Controller {
 
   stopDrag() {
     this.dragging = false
+    delete this.element.dataset.flatPackPanelDragging
     this.element.style.removeProperty("transition-property")
     const handle = this.captureTarget
     if (handle && typeof handle.removeEventListener === "function") {
