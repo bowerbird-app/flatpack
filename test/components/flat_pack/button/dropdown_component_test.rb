@@ -399,6 +399,177 @@ module FlatPack
 
         assert_selector "a[href='/path/to/page']", text: "Safe"
       end
+
+      def test_default_trigger_html_stays_the_labeled_button
+        render_inline(Dropdown::Component.new(text: "Actions"))
+        default_html = page.native.to_html
+
+        render_inline(Dropdown::Component.new(text: "Actions", icon_only: false, round: false))
+
+        assert_equal default_html, page.native.to_html
+        assert_equal labeled_trigger_class, page.find("button")["class"]
+        assert_selector "button span", text: "Actions"
+        assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+        refute_includes default_html, "fp-hit-target"
+        refute_includes default_html, "button-round-size"
+        refute_includes default_html, "button-icon-only-padding"
+        refute_includes default_html, "aria-label"
+      end
+
+      def test_icon_only_uses_button_padding_hit_target_and_hides_the_label
+        %i[sm md lg].each do |size|
+          render_inline(Dropdown::Component.new(text: "Add to list", icon: "heart", icon_only: true, size: size))
+
+          html = page.native.to_html
+          assert_selector "button[aria-label='Add to list'][aria-haspopup='true'][aria-expanded='false']"
+          refute_selector "button span", text: "Add to list"
+          refute_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+          assert_includes html, FlatPack::Button::Component::ICON_ONLY_SIZES.fetch(size)
+          assert_includes html, "fp-hit-target"
+          assert_includes html, "rounded-[var(--button-border-radius)]"
+          refute_includes html, "button-round-size"
+          refute_includes html, FlatPack::Button::Component::SIZES.fetch(size)
+        end
+      end
+
+      def test_round_icon_only_uses_button_circle_sizes
+        %i[sm md lg].each do |size|
+          render_inline(Dropdown::Component.new(
+            text: "Add to list",
+            icon: "heart",
+            icon_only: true,
+            round: true,
+            size: size
+          ))
+
+          html = page.native.to_html
+          assert_includes html, FlatPack::Button::Component::ROUND_RADIUS_CLASS
+          assert_includes html, FlatPack::Button::Component::ROUND_ICON_ONLY_SIZES.fetch(size)
+          assert_includes html, FlatPack::Button::Component::ICON_ONLY_SIZES.fetch(size)
+          assert_includes html, "fp-hit-target"
+          refute_includes html, "rounded-[var(--button-border-radius)]"
+          refute_selector "button span", text: "Add to list"
+        end
+      end
+
+      def test_round_labeled_trigger_keeps_label_padding_and_chevron
+        render_inline(Dropdown::Component.new(text: "Notify", round: true, size: :lg))
+
+        html = page.native.to_html
+        assert_includes html, FlatPack::Button::Component::ROUND_RADIUS_CLASS
+        assert_includes html, FlatPack::Button::Component::SIZES.fetch(:lg)
+        refute_includes html, "button-round-size"
+        refute_includes html, "fp-hit-target"
+        assert_selector "button span", text: "Notify"
+        assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+      end
+
+      def test_icon_only_text_becomes_aria_label_and_keeps_popup_state
+        render_inline(Dropdown::Component.new(text: "Add to list", icon: "heart", icon_only: true))
+
+        assert_selector "button[aria-label='Add to list'][aria-haspopup='true'][aria-expanded='false']"
+        refute_selector "button span", text: "Add to list"
+      end
+
+      def test_icon_only_keeps_trigger_aria_label
+        render_inline(Dropdown::Component.new(
+          text: "Heart",
+          icon: "heart",
+          icon_only: true,
+          trigger_attributes: {aria: {label: "Add to list"}}
+        ))
+
+        assert_selector "button[aria-label='Add to list'][aria-haspopup='true'][aria-expanded='false']"
+        refute_selector "button[aria-label='Heart']"
+        refute_selector "button span", text: "Heart"
+      end
+
+      def test_icon_only_without_accessible_name_raises
+        error = assert_raises(ArgumentError) do
+          Dropdown::Component.new(text: "", icon: "heart", icon_only: true)
+        end
+
+        assert_match("Icon-only buttons need an accessible name", error.message)
+      end
+
+      def test_icon_only_without_icon_raises
+        error = assert_raises(ArgumentError) do
+          Dropdown::Component.new(text: "Add to list", icon_only: true)
+        end
+
+        assert_match(/icon/, error.message)
+      end
+
+      def test_icon_only_hides_the_chevron_unless_the_caller_asks_for_it
+        render_inline(Dropdown::Component.new(text: "Add to list", icon: "heart", icon_only: true))
+        refute_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+
+        render_inline(Dropdown::Component.new(
+          text: "Add to list",
+          icon: "heart",
+          icon_only: true,
+          show_chevron: false
+        ))
+        refute_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+
+        error = assert_raises(ArgumentError) do
+          Dropdown::Component.new(text: "Add to list", icon: "heart", icon_only: true, show_chevron: true)
+        end
+        assert_match(/chevron/, error.message)
+      end
+
+      def test_catalog_reports_nil_chevron_default
+        FlatPack::ComponentCatalog.reset!
+        parameters = FlatPack::ComponentCatalog.show("Button::Dropdown::Component").fetch(:parameters)
+        chevron = parameters.find { |row| row.fetch(:name) == "show_chevron" }
+        icon_only = parameters.find { |row| row.fetch(:name) == "icon_only" }
+        round = parameters.find { |row| row.fetch(:name) == "round" }
+
+        assert chevron.key?(:default)
+        assert_nil chevron.fetch(:default)
+        assert_equal false, icon_only.fetch(:default)
+        assert_equal false, round.fetch(:default)
+      end
+
+      def test_invalid_round_raises
+        [nil, :round, "true", 1].each do |round|
+          error = assert_raises(ArgumentError) { Dropdown::Component.new(text: "Actions", round: round) }
+          assert_match(/round/, error.message)
+        end
+      end
+
+      def test_icon_only_menu_stays_fixed_for_every_placement
+        %i[bottom_right bottom_left top_right top_left].each do |placement|
+          render_inline(Dropdown::Component.new(
+            text: "Add to list",
+            icon: "heart",
+            icon_only: true,
+            round: true,
+            placement: placement
+          ))
+
+          assert_selector "div[role='menu'].fixed[data-flat-pack--button-dropdown-target='menu']"
+          assert_selector "div[data-flat-pack--button-dropdown-placement-value='#{placement}']"
+          assert_selector "button[data-flat-pack--button-dropdown-target='trigger'][aria-haspopup='true']"
+        end
+      end
+
+      def labeled_trigger_class
+        TailwindMerge::Merger.new.merge([
+          "inline-flex items-center justify-center gap-2",
+          "rounded-[var(--button-border-radius)]",
+          "font-medium",
+          "cursor-pointer",
+          "fp-button",
+          "fp-button-raised",
+          "border",
+          "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
+          "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
+          "fp-touch-manipulation",
+          FlatPack::Button::Component::SIZES.fetch(:md)
+        ].join(" "))
+      end
     end
   end
 end
