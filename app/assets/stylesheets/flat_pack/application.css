@@ -1035,6 +1035,60 @@
   scroll-padding-top: var(--top-nav-float-clearance);
 }
 
+html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating="behind"]) {
+  scroll-padding-top: var(--top-nav-float-clearance);
+}
+
+[data-flat-pack-layout-scroll="page"] {
+  isolation: isolate;
+}
+
+[data-flat-pack-layout-scroll="page"] .fp-layout-page-surface {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--surface-page-background-color);
+  pointer-events: none;
+}
+
+[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) > .fp-layout-top-nav,
+[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) > .fp-layout-scroll {
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+[data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating="behind"] {
+  position: sticky;
+  top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
+  right: auto;
+  left: auto;
+  z-index: 20;
+  align-self: start;
+  height: auto;
+  margin-right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-right, 0px));
+  margin-left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-left, 0px));
+}
+
+@media (min-width: 768px) {
+  [data-flat-pack-layout-scroll="page"] .fp-sidebar-drawer {
+    position: sticky;
+    top: 0;
+    transform: none;
+    will-change: auto;
+  }
+
+  [data-flat-pack-layout-scroll="page"] .fp-sidebar-drawer[data-flat-pack-sidebar-floating="true"] {
+    top: var(--sidebar-float-inset);
+  }
+}
+
 [data-flat-pack-top-nav-floating] .fp-top-nav,
 [data-flat-pack-top-nav-floating] .fp-top-nav[data-scrolled="true"] {
   position: static;

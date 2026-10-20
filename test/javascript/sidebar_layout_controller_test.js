@@ -449,6 +449,44 @@ test('wrapped floating top nav raises the clearance and one row does not', () =>
   assert.equal(column.property, '')
 })
 
+test('page scroll writes clearance on the document element', () => {
+  const root = {
+    property: '',
+    style: {
+      setProperty(name, value) { root.property = `${name}:${value}` },
+      removeProperty() { root.property = '' },
+      getPropertyValue() { return '' }
+    }
+  }
+  const { Controller } = loadSidebarLayoutController({
+    extras: {
+      document: {
+        documentElement: root,
+        addEventListener() {},
+        removeEventListener() {}
+      }
+    }
+  })
+  const controller = new Controller()
+  controller.element = { dataset: { flatPackLayoutScroll: 'page' } }
+  const column = {
+    property: '',
+    style: {
+      setProperty(name, value) { column.property = `${name}:${value}` },
+      removeProperty() { column.property = '' },
+      getPropertyValue() { return '' }
+    }
+  }
+
+  controller.applyFloatingTopNavClearance(column, 130, 68)
+  assert.equal(root.property, '--top-nav-float-clearance:130px')
+  assert.equal(column.property, '')
+
+  controller.applyFloatingTopNavClearance(column, 72, 68)
+  assert.equal(root.property, '')
+  assert.equal(column.property, '')
+})
+
 function storageStub(seed = {}) {
   const memory = new Map(Object.entries(seed))
   const writes = []

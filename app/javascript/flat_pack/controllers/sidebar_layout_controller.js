@@ -828,36 +828,48 @@ export default class extends Controller {
   }
 
   // One toolbar is a few pixels off the token. A wrapped row is not.
-  // Raise the token on the column only when the cards actually need more room.
+  // Raise the token only when the cards actually need more room.
   syncFloatingTopNavClearance() {
     const nav = this.floatingTopNavElement()
     const column = nav && nav.parentElement
     if (!column) return
 
     const floor = this.floatingTopNavClearanceFloor(column)
-    const band = nav.offsetTop + nav.offsetHeight
+    const band = this.pageScrolls()
+      ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight
+      : nav.offsetTop + nav.offsetHeight
     this.applyFloatingTopNavClearance(column, band, floor)
+  }
+
+  pageScrolls() {
+    return this.element?.dataset?.flatPackLayoutScroll === "page"
+  }
+
+  clearanceElement(column) {
+    return this.pageScrolls() ? document.documentElement : column
   }
 
   floatingTopNavClearanceFloor(column) {
     if (Number.isFinite(this.topNavClearanceFloor)) return this.topNavClearanceFloor
 
     const scroll = column.querySelector(".fp-layout-scroll")
-    const inline = column.style.getPropertyValue("--top-nav-float-clearance")
-    if (inline) column.style.removeProperty("--top-nav-float-clearance")
+    const host = this.clearanceElement(column)
+    const inline = host.style.getPropertyValue("--top-nav-float-clearance")
+    if (inline) host.style.removeProperty("--top-nav-float-clearance")
     // Custom properties keep their calc() text. The used padding is pixels.
     const parsed = scroll ? parseFloat(getComputedStyle(scroll).paddingTop) : NaN
-    if (inline) column.style.setProperty("--top-nav-float-clearance", inline)
+    if (inline) host.style.setProperty("--top-nav-float-clearance", inline)
 
     this.topNavClearanceFloor = Number.isFinite(parsed) ? parsed : 0
     return this.topNavClearanceFloor
   }
 
   applyFloatingTopNavClearance(column, band, floor) {
+    const host = this.clearanceElement(column)
     if (band > floor + 8) {
-      column.style.setProperty("--top-nav-float-clearance", `${Math.ceil(band)}px`)
+      host.style.setProperty("--top-nav-float-clearance", `${Math.ceil(band)}px`)
     } else {
-      column.style.removeProperty("--top-nav-float-clearance")
+      host.style.removeProperty("--top-nav-float-clearance")
     }
   }
 }

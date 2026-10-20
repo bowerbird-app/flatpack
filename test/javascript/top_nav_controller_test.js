@@ -122,6 +122,21 @@ test('a sibling overflow pane frosts the bar when window has not scrolled', () =
   assert.equal(dataset.scrolled, 'true')
 })
 
+test('page scroll listens only to the window', () => {
+  const {controller, listeners, sibling} = buildFrostController({
+    siblingOverflow: 'auto',
+    siblingScrollTop: 12
+  })
+  controller.element.closest = () => ({ dataset: { flatPackLayoutScroll: 'page' } })
+
+  controller.connect()
+
+  assert.equal(listeners.length, 1)
+  assert.equal(listeners[0].target, 'window')
+  assert.equal(listeners[0].type, 'scroll')
+  assert.equal(listeners.some((entry) => entry.target === sibling), false)
+})
+
 test('disconnect removes scroll listeners', () => {
   const {controller, listeners} = buildFrostController({siblingOverflow: 'auto'})
 
