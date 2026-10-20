@@ -59,9 +59,9 @@ module FlatPack
         sections = rendered_section_nodes
 
         assert_equal 3, sections.size
-        assert_includes sections[0]["class"], "min-w-[30%]"
-        assert_includes sections[1]["class"], "min-w-[30%]"
-        assert_includes sections[2]["class"], "min-w-[30%]"
+        refute_includes sections[0]["class"], "min-w-[30%]"
+        assert_includes sections[1]["class"], "min-w-0"
+        refute_includes sections[2]["class"], "min-w-[30%]"
         assert_includes sections[0]["class"], "gap-2"
         assert_includes sections[1]["class"], "flex-1"
         assert_includes sections[2]["class"], "gap-2"
@@ -80,9 +80,9 @@ module FlatPack
         sections = rendered_section_nodes
 
         assert_equal 3, sections.size
-        assert_includes sections[0]["class"], "min-w-[30%]"
-        assert_includes sections[1]["class"], "min-w-[30%]"
-        assert_includes sections[2]["class"], "min-w-[30%]"
+        refute_includes sections[0]["class"], "min-w-[30%]"
+        assert_includes sections[1]["class"], "min-w-0"
+        refute_includes sections[2]["class"], "min-w-[30%]"
         assert_includes sections[0]["class"], "gap-2"
         assert_includes sections[1]["class"], "flex-1"
         assert_includes sections[2]["class"], "gap-2"
@@ -101,9 +101,9 @@ module FlatPack
         sections = rendered_section_nodes
 
         assert_equal 3, sections.size
-        assert_includes sections[0]["class"], "min-w-[30%]"
-        assert_includes sections[1]["class"], "min-w-[30%]"
-        assert_includes sections[2]["class"], "min-w-[30%]"
+        refute_includes sections[0]["class"], "min-w-[30%]"
+        assert_includes sections[1]["class"], "min-w-0"
+        refute_includes sections[2]["class"], "min-w-[30%]"
         assert_includes sections[0]["class"], "gap-2"
         assert_includes sections[1]["class"], "flex-1"
         assert_includes sections[2]["class"], "gap-2"

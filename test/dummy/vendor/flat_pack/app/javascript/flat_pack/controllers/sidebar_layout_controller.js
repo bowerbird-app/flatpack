@@ -1,42 +1,61 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
+const BODY_LOCK = "flatPackModalLockCount"
+
 export default class extends Controller {
-  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer"]
+  static targets = ["sidebar", "backdrop", "desktopToggle", "collapsedToggle", "mobileToggle", "headerLabel", "headerBrand", "headerRow", "footer", "scrollContainer", "aside", "asideToggle"]
   static values = {
     side: String,
     open: Boolean,
-    storageKey: String
+    storageKey: String,
+    asideOpen: Boolean,
+    asideStorageKey: String
   }
 
   connect() {
     this.collapsed = false
     this.mobileOpen = false
+    this.openDrawers = []
+    this.holdingLock = false
+    this.drawerOpeners = new Map()
     this.isMobile = window.innerWidth < 768
     this.transitionDuration = "var(--duration-slow)"
     this.transitionEasing = "var(--easing-standard)"
     this.lastAnchorPath = null
     this.lastAnchorOffset = null
 
-    // Load saved desktop state from localStorage
-    if (!this.isMobile && this.hasStorageKeyValue) {
-      this.loadDesktopState()
-    } else if (!this.isMobile) {
-      this.collapsed = !this.openValue
+    if (this.hasSidebarTarget) {
+      // Load saved desktop state from localStorage
+      if (!this.isMobile && this.hasStorageKeyValue) {
+        this.loadDesktopState()
+      } else if (!this.isMobile) {
+        this.collapsed = !this.openValue
+      }
+
+      // Apply initial desktop state. The inline FOUC script in the component HTML
+      // already set the correct data attribute before <aside> was parsed, so CSS
+      // has sized the sidebar correctly. Stimulus setting the same attribute value
+      // here causes no CSS change and therefore no animation.
+      if (!this.isMobile) {
+        this.sidebarTarget.style.pointerEvents = ""
+        this.applySidebarPresentationMode()
+        this.applyDesktopState({ immediate: true })
+      } else {
+        this.applySidebarPresentationMode()
+        this.sidebarTarget.style.pointerEvents = "none"
+      }
     }
 
-    // Apply initial desktop state. The inline FOUC script in the component HTML
-    // already set the correct data attribute before <aside> was parsed, so CSS
-    // has sized the sidebar correctly. Stimulus setting the same attribute value
-    // here causes no CSS change and therefore no animation.
-    if (!this.isMobile) {
-      this.sidebarTarget.style.pointerEvents = ""
-      this.applySidebarPresentationMode()
-      this.applyDesktopState({ immediate: true })
-    } else {
-      this.applySidebarPresentationMode()
-      this.sidebarTarget.style.pointerEvents = "none"
+    if (this.hasAsideTarget) {
+      this.asideOpen = this.readAsideOpen()
+      if (this.isMobile) this.parkAsideOffCanvas()
+      else this.applyAsideOpen({ persist: false })
+      this.syncAsideToggleAria()
     }
+
+    this.boundCollapseRail = (event) => this.collapseRailFromResize(event)
+    this.element.addEventListener("flat-pack:collapse-rail", this.boundCollapseRail)
 
     // Listen for window resize
     this.handleResize = this.handleResize.bind(this)
@@ -76,6 +95,12 @@ export default class extends Controller {
     this.unbindScrollPersistenceListener()
     this.unbindFloatingTopNavClearance()
     this.unbindOpenWidthMemory()
+    if (this.boundCollapseRail) {
+      this.element.removeEventListener("flat-pack:collapse-rail", this.boundCollapseRail)
+    }
+    this.openDrawers = []
+    this.syncBodyLock()
+    this.unbindEscape()
 
     // Persist as a fallback when leaving without Turbo lifecycle
     this.persistScrollState()
@@ -87,18 +112,25 @@ export default class extends Controller {
 
     this.syncFloatingTopNavClearance()
 
-    if (wasMobile !== this.isMobile) {
-      if (this.isMobile) {
-        // Switched to mobile - close sidebar
-        this.applySidebarPresentationMode()
-        this.closeMobile()
-      } else {
-        // Switched to desktop - apply saved state
-        this.applySidebarPresentationMode()
-        this.sidebarTarget.style.pointerEvents = ""
-        this.applyDesktopState({ immediate: true })
-        this.rememberOpenWidth()
-      }
+    if (wasMobile === this.isMobile) return
+
+    if (this.isMobile) {
+      if (this.hasSidebarTarget) this.applySidebarPresentationMode()
+      this.closeMobile()
+      this.parkAsideOffCanvas()
+      return
+    }
+
+    this.releaseMobileDrawers()
+    if (this.hasSidebarTarget) {
+      this.applySidebarPresentationMode()
+      this.sidebarTarget.style.pointerEvents = ""
+      this.applyDesktopState({ immediate: true })
+      this.rememberOpenWidth()
+    }
+    if (this.hasAsideTarget) {
+      this.asideOpen = this.asideTarget.dataset.flatPackAsideOpen !== "false"
+      this.applyAsideOpen({ persist: false })
     }
   }
 
@@ -119,104 +151,280 @@ export default class extends Controller {
   }
 
   toggleMobile() {
-    if (!this.isMobile) return
+    if (!this.isMobile || !this.hasSidebarTarget) return
 
-    this.mobileOpen = !this.mobileOpen
-
-    if (this.mobileOpen) {
-      this.openMobile()
-    } else {
-      this.closeMobile()
-    }
+    if (this.openDrawers.includes(this.sidebarTarget)) this.closeDrawer(this.sidebarTarget)
+    else this.openDrawer(this.sidebarTarget)
   }
 
   openMobile() {
-    // Store the element that triggered the open for focus return
-    this.previouslyFocusedElement = document.activeElement
-
-    // Enable interaction while open
-    this.sidebarTarget.style.pointerEvents = "auto"
-
-    // Ensure starting off-screen state is rendered before animating in
-    if (this.sideValue === "right") {
-      this.sidebarTarget.classList.add("translate-x-full")
-    } else {
-      this.sidebarTarget.classList.add("-translate-x-full")
-    }
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (!this.mobileOpen || !this.isMobile) return
-
-        // Slide in from correct side
-        if (this.sideValue === "right") {
-          this.sidebarTarget.classList.remove("translate-x-full")
-        } else {
-          this.sidebarTarget.classList.remove("-translate-x-full")
-        }
-      })
-    })
-
-    // Show backdrop
-    if (this.hasBackdropTarget) {
-      this.backdropTarget.classList.remove("pointer-events-none")
-      this.backdropTarget.classList.remove("opacity-0")
-      this.backdropTarget.classList.add("opacity-100")
-      this.backdropTarget.setAttribute("aria-hidden", "false")
-    }
-
-    // Prevent body scroll
-    document.body.style.overflow = "hidden"
-
-    // Focus sidebar container without scrolling to avoid layout jump
-    if (!this.sidebarTarget.hasAttribute("tabindex")) {
-      this.sidebarTarget.setAttribute("tabindex", "-1")
-    }
-    this.sidebarTarget.focus({ preventScroll: true })
-
-    // Listen for Escape key
-    this.handleEscape = this.handleEscape.bind(this)
-    document.addEventListener("keydown", this.handleEscape)
+    if (!this.hasSidebarTarget) return
+    this.openDrawer(this.sidebarTarget)
   }
 
   closeMobile() {
-      // Disable interaction while closed
-      this.sidebarTarget.style.pointerEvents = "none"
-
-    // Slide out to correct side
-    if (this.sideValue === "right") {
-      this.sidebarTarget.classList.add("translate-x-full")
-    } else {
-      this.sidebarTarget.classList.add("-translate-x-full")
+    if (!this.openDrawers) this.openDrawers = []
+    if (this.openDrawers.length === 0) {
+      if (this.hasSidebarTarget) this.slideOut(this.sidebarTarget, { restoreFocus: false })
+      this.mobileOpen = false
+      this.syncBackdrop()
+      this.unbindEscape()
+      return
     }
 
-    // Hide backdrop
-    if (this.hasBackdropTarget) {
-      this.backdropTarget.classList.add("pointer-events-none")
-      this.backdropTarget.classList.remove("opacity-100")
-      this.backdropTarget.classList.add("opacity-0")
-      this.backdropTarget.setAttribute("aria-hidden", "true")
-    }
-
-    // Restore body scroll
-    document.body.style.overflow = ""
-
-    // Remove Escape key listener
-    document.removeEventListener("keydown", this.handleEscape)
-
-    // Return focus to toggle button
-    if (this.previouslyFocusedElement) {
-      this.previouslyFocusedElement.focus()
-      this.previouslyFocusedElement = null
-    }
-
-    this.mobileOpen = false
+    ;[...this.openDrawers].forEach((panel) => this.closeDrawer(panel))
   }
 
   handleEscape(event) {
-    if (event.key === "Escape" && this.mobileOpen) {
-      this.closeMobile()
+    if (event.key !== "Escape" || !this.openDrawers || this.openDrawers.length === 0) return
+    this.closeDrawer(this.openDrawers[this.openDrawers.length - 1])
+  }
+
+  toggleAside(event) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault()
+    if (!this.hasAsideTarget) return
+
+    if (this.isMobile) {
+      if (this.openDrawers.includes(this.asideTarget)) this.closeDrawer(this.asideTarget)
+      else this.openDrawer(this.asideTarget)
+      return
     }
+
+    this.asideOpen = !this.asideOpen
+    this.applyAsideOpen({ persist: true })
+  }
+
+  closeAside(event) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault()
+    if (!this.hasAsideTarget) return
+
+    if (this.isMobile) {
+      this.closeDrawer(this.asideTarget)
+      return
+    }
+
+    if (!this.asideOpen) return
+    this.asideOpen = false
+    this.applyAsideOpen({ persist: true })
+  }
+
+  openAside(event) {
+    if (event && typeof event.preventDefault === "function") event.preventDefault()
+    if (!this.hasAsideTarget) return
+
+    if (this.isMobile) {
+      this.openDrawer(this.asideTarget)
+      return
+    }
+
+    if (this.asideOpen) return
+    this.asideOpen = true
+    this.applyAsideOpen({ persist: true })
+  }
+
+  openDrawer(panel) {
+    if (!this.openDrawers) this.openDrawers = []
+    if (!this.drawerOpeners) this.drawerOpeners = new Map()
+    if (!panel || this.openDrawers.includes(panel)) return
+
+    const opener = document.activeElement
+    const others = this.openDrawers.filter((item) => item !== panel)
+    this.openDrawers = [panel]
+    others.forEach((other) => {
+      this.slideOut(other, { restoreFocus: false })
+      this.drawerOpeners.delete(other)
+    })
+    this.syncBodyLock()
+    this.slideIn(panel)
+    this.syncBackdrop()
+    if (opener) this.drawerOpeners.set(panel, opener)
+    this.focusPanel(panel)
+    this.bindEscape()
+    if (this.hasSidebarTarget && panel === this.sidebarTarget) this.mobileOpen = true
+    this.syncAsideToggleAria()
+  }
+
+  closeDrawer(panel) {
+    if (!this.openDrawers) this.openDrawers = []
+    if (!this.drawerOpeners) this.drawerOpeners = new Map()
+    if (!this.openDrawers.includes(panel)) return
+
+    this.openDrawers = this.openDrawers.filter((item) => item !== panel)
+    this.slideOut(panel, { restoreFocus: true })
+    this.syncBackdrop()
+    this.syncBodyLock()
+    if (this.openDrawers.length === 0) this.unbindEscape()
+    if (this.hasSidebarTarget && panel === this.sidebarTarget) this.mobileOpen = false
+    this.syncAsideToggleAria()
+  }
+
+  slideIn(panel) {
+    panel.style.pointerEvents = "auto"
+    if (this.isAsidePanel(panel)) panel.removeAttribute("inert")
+
+    const side = this.drawerSide(panel)
+    if (side === "right") panel.classList.add("translate-x-full")
+    else panel.classList.add("-translate-x-full")
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!this.openDrawers.includes(panel) || !this.isMobile) return
+        if (side === "right") panel.classList.remove("translate-x-full")
+        else panel.classList.remove("-translate-x-full")
+      })
+    })
+  }
+
+  slideOut(panel, { restoreFocus = false } = {}) {
+    if (!panel) return
+    panel.style.pointerEvents = "none"
+    if (this.isAsidePanel(panel)) panel.setAttribute("inert", "")
+
+    const side = this.drawerSide(panel)
+    if (side === "right") panel.classList.add("translate-x-full")
+    else panel.classList.add("-translate-x-full")
+
+    if (!restoreFocus) return
+    const opener = this.drawerOpeners.get(panel)
+    this.drawerOpeners.delete(panel)
+    if (opener && opener !== panel && typeof opener.focus === "function") opener.focus()
+  }
+
+  drawerSide(panel) {
+    if (panel?.dataset?.mobileDrawerSide) return panel.dataset.mobileDrawerSide
+    if (this.hasSidebarTarget && panel === this.sidebarTarget && this.hasSideValue) return this.sideValue
+    return "left"
+  }
+
+  isAsidePanel(panel) {
+    return this.hasAsideTarget && panel === this.asideTarget
+  }
+
+  focusPanel(panel) {
+    if (!panel) return
+    if (typeof panel.hasAttribute === "function" && !panel.hasAttribute("tabindex") && typeof panel.setAttribute === "function") {
+      panel.setAttribute("tabindex", "-1")
+    }
+    if (typeof panel.focus === "function") panel.focus({ preventScroll: true })
+  }
+
+  syncBackdrop() {
+    if (!this.hasBackdropTarget) return
+    const open = this.openDrawers.length > 0
+    this.backdropTarget.classList.toggle("pointer-events-none", !open)
+    this.backdropTarget.classList.toggle("opacity-0", !open)
+    this.backdropTarget.classList.toggle("opacity-100", open)
+    this.backdropTarget.setAttribute("aria-hidden", open ? "false" : "true")
+  }
+
+  syncBodyLock() {
+    const body = document.body
+    if (!body) return
+    if (!this.openDrawers) this.openDrawers = []
+
+    const want = this.openDrawers.length > 0
+    if (want && !this.holdingLock) {
+      const count = Number(body.dataset[BODY_LOCK] || "0")
+      if (count === 0) {
+        this.savedOverflow = body.style.overflow
+        body.style.overflow = "hidden"
+      }
+      body.dataset[BODY_LOCK] = String(count + 1)
+      this.holdingLock = true
+      return
+    }
+
+    if (!want && this.holdingLock) {
+      const count = Number(body.dataset[BODY_LOCK] || "0")
+      if (count > 1) {
+        body.dataset[BODY_LOCK] = String(count - 1)
+      } else {
+        delete body.dataset[BODY_LOCK]
+        body.style.overflow = this.savedOverflow || ""
+      }
+      this.holdingLock = false
+    }
+  }
+
+  bindEscape() {
+    if (this.escapeBound) return
+    this.handleEscape = this.handleEscape.bind(this)
+    document.addEventListener("keydown", this.handleEscape)
+    this.escapeBound = true
+  }
+
+  unbindEscape() {
+    if (!this.escapeBound) return
+    document.removeEventListener("keydown", this.handleEscape)
+    this.escapeBound = false
+  }
+
+  releaseMobileDrawers() {
+    this.openDrawers = []
+    this.mobileOpen = false
+    this.syncBackdrop()
+    this.syncBodyLock()
+    this.unbindEscape()
+  }
+
+  parkAsideOffCanvas() {
+    if (!this.hasAsideTarget) return
+    this.asideTarget.setAttribute("inert", "")
+    this.asideTarget.style.pointerEvents = "none"
+    const side = this.drawerSide(this.asideTarget)
+    if (side === "right") this.asideTarget.classList.add("translate-x-full")
+    else this.asideTarget.classList.add("-translate-x-full")
+  }
+
+  readAsideOpen() {
+    if (!this.isMobile && this.hasAsideStorageKeyValue) {
+      try {
+        const saved = localStorage.getItem(this.asideStorageKeyValue)
+        if (saved !== null) return saved === "true"
+      } catch {
+        // Ignore storage errors (private mode / disabled storage)
+      }
+    }
+
+    return this.hasAsideOpenValue ? this.asideOpenValue : true
+  }
+
+  applyAsideOpen({ persist = false } = {}) {
+    if (!this.hasAsideTarget) return
+
+    const open = !!this.asideOpen
+    this.asideTarget.dataset.flatPackAsideOpen = open ? "true" : "false"
+    if (!this.isMobile) {
+      if (open) this.asideTarget.removeAttribute("inert")
+      else this.asideTarget.setAttribute("inert", "")
+      this.asideTarget.style.pointerEvents = ""
+    }
+    this.syncAsideToggleAria()
+    if (!persist || this.isMobile || !this.hasAsideStorageKeyValue) return
+
+    try {
+      localStorage.setItem(this.asideStorageKeyValue, open ? "true" : "false")
+    } catch {
+      // Ignore storage errors (private mode / disabled storage)
+    }
+  }
+
+  syncAsideToggleAria() {
+    if (!this.hasAsideToggleTarget) return
+    const expanded = this.isMobile
+      ? this.hasAsideTarget && this.openDrawers.includes(this.asideTarget)
+      : !!this.asideOpen
+    this.asideToggleTargets.forEach((node) => {
+      node.setAttribute("aria-expanded", expanded ? "true" : "false")
+    })
+  }
+
+  collapseRailFromResize() {
+    if (this.isMobile || this.collapsed || !this.hasSidebarTarget) return
+    this.collapsed = true
+    this.applyCollapsedHeaderChrome()
+    this.applyDesktopState()
+    this.saveDesktopState()
   }
 
   applyDesktopState() {
@@ -547,6 +755,7 @@ export default class extends Controller {
   }
 
   handleSidebarLinkClick(event) {
+    if (!this.hasSidebarTarget) return
     const link = event.target.closest("a[href]")
     if (!link || !this.sidebarTarget.contains(link)) return
 
@@ -692,8 +901,11 @@ export default class extends Controller {
       return this.scrollContainerTarget
     }
 
-    return this.element.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]') ||
-      this.sidebarTarget?.querySelector('aside > .flex-1.min-h-0.overflow-y-auto')
+    const marked = this.element.querySelector('[data-flat-pack--sidebar-layout-target="scrollContainer"]')
+    if (marked) return marked
+    if (!this.hasSidebarTarget) return null
+
+    return this.sidebarTarget.querySelector("aside > .flex-1.min-h-0.overflow-y-auto")
   }
 
   bindScrollPersistenceListener() {

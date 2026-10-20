@@ -337,6 +337,11 @@
   --sidebar-collapsed-width: var(--sidebar-collapsed-width);
   --sidebar-content-min-width: var(--sidebar-content-min-width);
   --sidebar-content-max-width: var(--sidebar-content-max-width);
+  --aside-width: var(--aside-width);
+  --aside-min-width: var(--aside-min-width);
+  --aside-max-width: var(--aside-max-width);
+  --resize-handle-color: var(--resize-handle-color);
+  --resize-handle-active-color: var(--resize-handle-active-color);
   --sidebar-background-color: var(--sidebar-background-color);
   --sidebar-float-inset: var(--sidebar-float-inset);
   --sidebar-float-background-color: var(--sidebar-float-background-color);
@@ -1289,6 +1294,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --sidebar-collapsed-width: 4rem;
   --sidebar-content-min-width: 12rem;
   --sidebar-content-max-width: 20rem;
+  --aside-width: 20rem;
+  --aside-min-width: 16rem;
+  --aside-max-width: 32rem;
+  --resize-handle-color: var(--surface-border-color);
+  --resize-handle-active-color: var(--surface-muted-content-color);
   --sidebar-background-color: var(--surface-page-background-color);
   --sidebar-float-inset: 1rem;
   --sidebar-float-background-color: #fff;

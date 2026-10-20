@@ -683,6 +683,11 @@ components:
       - --sidebar-collapsed-width
       - --sidebar-content-min-width
       - --sidebar-content-max-width
+      - --aside-width
+      - --aside-min-width
+      - --aside-max-width
+      - --resize-handle-color
+      - --resize-handle-active-color
     status: documented
 
   - key: skeleton

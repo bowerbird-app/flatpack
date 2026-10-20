@@ -3,7 +3,7 @@
   "updated_at": "2026-10-20",
   "gem": {
     "name": "flat_pack",
-    "version": "0.1.274"
+    "version": "0.1.275"
   },
   "compatibility": {
     "ruby": ">= 3.2.0",
@@ -30,6 +30,7 @@
     ],
     "optional_commands": [
       "bin/rails generate flat_pack:layout --type=sidebar",
+      "bin/rails generate flat_pack:layout --type=sidebar --aside",
       "bin/rails generate flat_pack:theme BrandName --hue=160 --chroma=0.18 --lightness=0.52",
       "bin/rails generate flat_pack:theme BrandName --inherits=rounded --hue=160 --chroma=0.18 --lightness=0.52"
     ],

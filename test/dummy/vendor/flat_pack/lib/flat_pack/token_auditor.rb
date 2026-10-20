@@ -57,6 +57,7 @@ module FlatPack
       --fp-range-value
       --range-progress
       --sidebar-measured-width
+      --fp-panel-width
       --read-more-lines
       --spacing
       --carousel-bleed

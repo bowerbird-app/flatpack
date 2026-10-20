@@ -63,6 +63,35 @@ module FlatPack
         assert_no_file "app/views/layouts/flat_pack_sidebar.html.erb"
       end
 
+      test "aside is omitted unless the flag is passed" do
+        run_generator
+
+        assert_file "app/views/layouts/flat_pack_sidebar.html.erb" do |content|
+          refute_includes content, "layout.aside"
+          refute_includes content, "closeAside"
+        end
+        assert_file "app/views/layouts/flat_pack/_top_nav.html.erb" do |content|
+          refute_includes content, "toggleAside"
+          refute_includes content, "asideToggle"
+        end
+      end
+
+      test "aside flag adds a details panel and a close button" do
+        run_generator %w[--aside]
+
+        assert_file "app/views/layouts/flat_pack_sidebar.html.erb" do |content|
+          assert_includes content, "layout.aside"
+          assert_includes content, "closeAside"
+          assert_includes content, "Details"
+          assert_includes content, "Close details"
+          refute_includes content, "toggleAside"
+        end
+        assert_file "app/views/layouts/flat_pack/_top_nav.html.erb" do |content|
+          refute_includes content, "toggleAside"
+          refute_includes content, "asideToggle"
+        end
+      end
+
       test "unsupported side does not generate files" do
         quietly do
           run_generator %w[--side upside]

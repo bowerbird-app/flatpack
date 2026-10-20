@@ -50,6 +50,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-inset"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-inner-radius"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-measured-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-panel-width"
     end
 
     test "brand primitives and transition aliases are defined" do

@@ -340,6 +340,20 @@
    * !important overrides Tailwind width utilities (md:w-auto and any host w-*).
    * The mobile drawer stays on --sidebar-width. Content width is desktop only.
    */
+    /* Aside tracks. Not a Tailwind utility: `1fr` will not shrink below
+       min-content, and overflow-hidden on the shell would clip the column. */
+    [data-flat-pack-layout-columns="three"] {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+    }
+
+    [data-flat-pack-layout-columns="main-aside"] {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    [data-flat-pack-layout-columns="aside-main"] {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
     .fp-sidebar {
       width: var(--sidebar-width);
     }
@@ -347,6 +361,30 @@
     .fp-sidebar-drawer,
     .fp-sidebar-drawer > aside {
       width: var(--sidebar-width) !important;
+    }
+
+    .fp-sidebar-drawer {
+      --fp-panel-min: var(--sidebar-content-min-width);
+      --fp-panel-max: var(--sidebar-content-max-width);
+      --fp-panel-default: var(--sidebar-width);
+    }
+
+    .fp-sidebar-drawer[data-flat-pack-sidebar-width="content"] {
+      --fp-panel-default: var(--sidebar-measured-width, var(--sidebar-width));
+    }
+
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"] {
+      --fp-panel-min: var(--aside-min-width);
+      --fp-panel-max: var(--aside-max-width);
+      --fp-panel-default: var(--aside-width);
+      width: var(--aside-width) !important;
+    }
+
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"] > .fp-aside {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      background-color: var(--sidebar-background-color);
     }
 
     [data-flat-pack-sidebar-width="content"] {
@@ -554,7 +592,95 @@
     [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
       margin-left: calc((var(--sidebar-collapsed-width) - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
     }
+
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-open="false"] {
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    [data-flat-pack-panel-resized="true"][data-flat-pack-aside-open="true"],
+    [data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"] {
+      width: var(--fp-panel-width) !important;
+      min-width: var(--fp-panel-width) !important;
+      max-width: var(--fp-panel-width) !important;
+    }
+
+    [data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"] > aside,
+    [data-flat-pack-panel-resized="true"][data-flat-pack-aside-open="true"] > .fp-aside,
+    [data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside,
+    [data-flat-pack-panel-resized="true"][data-flat-pack-aside-open="true"] .fp-aside {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+
+    [data-flat-pack-sidebar-collapsed="true"] > .fp-panel-resize,
+    [data-flat-pack-aside-open="false"] > .fp-panel-resize {
+      display: none !important;
+    }
+
+    [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-height="content"][data-flat-pack-panel="aside"] .fp-aside {
+      display: block;
+      overflow-y: auto;
+      height: auto !important;
+      max-height: inherit;
+    }
   }
+
+  .fp-panel-resize {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0.5rem;
+    cursor: col-resize;
+    touch-action: none;
+    background: transparent;
+    outline: none;
+  }
+
+  .fp-panel-resize:focus,
+  .fp-panel-resize:focus-visible {
+    outline: none;
+  }
+
+  .fp-panel-resize::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-50%);
+    background-color: var(--resize-handle-color);
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      width var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard);
+  }
+
+  .fp-panel-resize:is(:hover, :active)::after {
+    background-color: var(--resize-handle-active-color);
+  }
+
+  .fp-panel-resize:focus-visible:not([data-pointer-focus])::after {
+    width: 3px;
+    background-color: var(--color-ring);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 70%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-panel-resize::after {
+      transition: none;
+    }
+  }
+
+  [data-mobile-drawer-side="left"] > .fp-panel-resize { right: 0; }
+  [data-mobile-drawer-side="right"] > .fp-panel-resize { left: 0; }
 
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
     scrollbar-width: none;
@@ -759,6 +885,10 @@
  * host sheet orders @layer base after it. Preflight's * { padding: 0 } then
  * beats any padding still inside @layer components.
  */
+.fp-top-nav [data-flat-pack-top-nav-section="center"] input {
+  min-width: 0;
+}
+
 .fp-top-nav {
   box-sizing: border-box;
   height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));

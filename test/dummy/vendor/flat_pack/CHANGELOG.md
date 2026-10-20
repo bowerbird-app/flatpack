@@ -13,6 +13,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.275] - 2026-10-20
+
+### Added
+- `FlatPack::SidebarLayout::Component` accepts `resizable:` (`true` or `false`, default `false`). `true` puts a separator on the rail. Drag and arrow keys set the desktop width. Double-click returns to the token, or to the measured content width when `width: :content`. A rail dragged or keyed below its minimum collapses through the existing collapse path.
+- Slot `aside`. It sits on the opposite edge from `side:`. Call `layout.aside(open: true, resizable: false)`. `open:` defaults to `true`. `resizable:` defaults to `false`. Both must be booleans. The panel stays put on desktop and scrolls inside. `floating:` and `height: :content` apply the same way they do on the rail. A floating aside uses `--sidebar-float-radius`, so the rounded theme rounds it to `--radius-xxxl` (2.5rem), the same corner as the rail.
+- Actions `toggleAside`, `openAside`, and `closeAside` on `flat-pack--sidebar-layout`. An optional `asideToggle` target gets `aria-expanded`. `openAside` and `closeAside` are idempotent.
+- Below `768px` the aside is a drawer from its own edge. It reuses the shell drawer and the one backdrop. Opening one drawer closes the other. Escape closes the open drawer. Focus moves to the panel and returns to the opener. `closeMobile` closes whichever shell drawer is open.
+- Stimulus controller `flat-pack--panel-resize`, on the column rather than the layout root.
+- Tokens `--aside-width` (`20rem`), `--aside-min-width` (`16rem`), and `--aside-max-width` (`32rem`).
+- Tokens `--resize-handle-color` and `--resize-handle-active-color`. The shared resize line uses `--resize-handle-color` at rest and `--resize-handle-active-color` on hover and while the button is down. The defaults are `--surface-border-color` and `--surface-muted-content-color`. Keyboard focus widens that line to 3px in `--color-ring` and draws a soft ring of the same colour on the line. A pointer drag does not leave that ring.
+- `rails generate flat_pack:layout --aside` adds the slot and a close button. The flag defaults to off.
+- Bumped the gem version to `0.1.275`.
+
+### Changed
+- `FlatPack::TopNav::Component` drops the `min-w-[30%]` reserve on each section. The center section is `min-w-0` and its search field can shrink. `mobile_breakpoint` is the bar's width, so a wide viewport with a narrow main column collapses into the existing chevron menu.
+
+### Upgrade notes
+- Existing layouts are unchanged. No `aside` slot means the same markup, classes, and backdrop. `resizable:` defaults to `false`.
+- New argument `resizable:` on `FlatPack::SidebarLayout::Component`.
+- New slot `aside`, with `open:` and `resizable:`.
+- New tokens `--aside-width`, `--aside-min-width`, and `--aside-max-width`. Reload kit CSS. `--fp-panel-width` is a runtime length written on the column after a drag. Do not set it on `:root`. `--fp-panel-min`, `--fp-panel-max`, and `--fp-panel-default` are wiring on the column, not theme tokens.
+- New tokens `--resize-handle-color` and `--resize-handle-active-color`. No removals. Hosts reload kit CSS.
+- New Stimulus controller `flat-pack--panel-resize`.
+- Storage, when `storage_key` is set. The unsuffixed key is unchanged: `"true"` means the rail is collapsed. `storage_key:aside` uses the opposite polarity: `"true"` means the aside is open. `storage_key:rail:width` and `storage_key:aside:width` are integer pixel widths. A missing aside key keeps the server `open:` value. The mobile drawer is not stored. Nothing is written when `storage_key` is nil.
+- Do not rerun `bin/rails generate flat_pack:install`. Importmap hosts already pin `app/javascript/flat_pack/controllers` with `pin_all_from`. No new pin.
+- Do not rebuild Tailwind unless the host sheet copies the sidebar width rules. Those hosts copy the new desktop width rules as well, or a drag looks stuck. Kit CSS is enough when the host sheet does not restate those rules. The aside tracks are kit CSS on `data-flat-pack-layout-columns` (`three`, `main-aside`, `aside-main`). The main track is `minmax(0, 1fr)`. There is no new Tailwind class.
+- esbuild and Vite hosts must register `flat-pack--panel-resize`. Import `PanelResizeController` from `panel_resize_controller.js` and call `application.register("flat-pack--panel-resize", PanelResizeController)`.
+- TopNav no longer reserves 30% for each section. `mobile_breakpoint` (default `768`) is the bar's width. A narrower bar, including the main column beside an aside, moves collapsible center and right content into the existing chevron menu. The center search can shrink above that width. Reload kit CSS and JS. No new controller.
+- No removals. No renames.
+- Redeploy so `meta.gem_version` shows `0.1.275`.
+
 ## [0.1.274] - 2026-10-20
 
 ### Added

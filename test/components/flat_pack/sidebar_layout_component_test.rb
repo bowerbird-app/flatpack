@@ -439,6 +439,226 @@ module FlatPack
         assert_selector "[data-controller='flat-pack--sidebar-layout']"
         refute_selector "[data-controller='flat-pack--navbar']"
       end
+
+      def test_without_an_aside_keeps_the_two_column_shell
+        render_inline(Component.new(side: :left, storage_key: "app-shell")) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.main { "Main" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "grid-cols-[auto_1fr]"
+        refute_includes html, "grid-cols-[auto_1fr_auto]"
+        refute_includes html, "data-flat-pack-layout-columns"
+        refute_includes html, "fp-aside"
+        refute_includes html, "data-flat-pack-panel"
+        refute_includes html, "data-flat-pack-aside-open"
+        refute_includes html, "flat-pack--panel-resize"
+        refute_includes html, "aside-open-value"
+        refute_includes html, "aside-storage-key"
+        assert_selector "[data-flat-pack--sidebar-layout-target='sidebar']", count: 1
+        assert_selector "[data-flat-pack--sidebar-layout-target='backdrop'][data-action='click->flat-pack--sidebar-layout#closeMobile']", count: 1
+        assert_includes html, "s!==null?s==='true':!d"
+      end
+
+      def test_resizable_rail_adds_a_handle_without_an_aside
+        render_inline(Component.new(resizable: true, storage_key: "app-shell", width: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "grid-cols-[auto_1fr]"
+        refute_includes html, "fp-aside"
+        assert_selector "[data-flat-pack--sidebar-layout-target='sidebar'][data-controller='flat-pack--panel-resize'][data-flat-pack-sidebar-width='content']"
+        assert_selector "[role='separator'][aria-orientation='vertical'][aria-label='Resize sidebar'][tabindex='0'].fp-panel-resize.hidden"
+        assert_includes html, 'data-flat-pack--panel-resize-storage-key-value="app-shell:rail:width"'
+        assert_includes html, 'data-flat-pack--panel-resize-collapses-value="true"'
+        assert_selector "[data-action='pointerdown->flat-pack--panel-resize#start keydown->flat-pack--panel-resize#nudge dblclick->flat-pack--panel-resize#reset']"
+        assert_includes html, "app-shell:rail:width"
+        refute_selector "[aria-label='Resize aside']"
+      end
+
+      def test_resize_handle_is_absent_when_resizable_is_false
+        render_inline(Component.new(resizable: false)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.aside(resizable: false) { "Details" }
+        end
+
+        refute_selector "[role='separator']"
+        refute_includes page.native.to_html, "flat-pack--panel-resize"
+      end
+
+      def test_aside_sits_on_the_opposite_edge_when_the_rail_is_left
+        render_inline(Component.new(side: :left, storage_key: "app-shell", floating: true, height: :content)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.main { "Main" }
+          layout.aside(open: true, resizable: true) { "Details" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, 'data-flat-pack-layout-columns="three"'
+        refute_includes html, "grid-cols-[auto_1fr"
+        assert_operator html.index("Sidebar"), :<, html.index("Main")
+        assert_operator html.index("Main"), :<, html.index("Details")
+        assert_selector "aside.fp-aside.h-full.min-h-0.overflow-y-auto.overscroll-y-contain", text: "Details"
+        assert_selector "[data-flat-pack--sidebar-layout-target='aside'][data-flat-pack-panel='aside'][data-flat-pack-aside-open='true'][data-mobile-drawer-side='right'][data-flat-pack-sidebar-floating='true'][data-flat-pack-sidebar-height='content']"
+        refute_selector "[data-flat-pack-panel='aside'][data-flat-pack-sidebar-width]"
+        assert_selector "[data-flat-pack--sidebar-layout-target='backdrop']", count: 1
+        assert_includes html, 'data-flat-pack--sidebar-layout-aside-open-value="true"'
+        assert_includes html, 'data-flat-pack--sidebar-layout-aside-storage-key-value="app-shell:aside"'
+        assert_includes html, 'data-flat-pack--panel-resize-storage-key-value="app-shell:aside:width"'
+        assert_includes html, 'data-flat-pack--panel-resize-collapses-value="false"'
+        assert_selector "[data-flat-pack-panel='aside'] [role='separator'][aria-label='Resize aside']"
+        refute_selector "[data-flat-pack--sidebar-layout-target='sidebar'] [role='separator']"
+        assert_includes html, 'var stored=localStorage.getItem("app-shell:aside")'
+        assert_includes html, "var open=stored===null?true:stored===\"true\""
+        assert_includes html, "s!==null?s==='true':!d"
+      end
+
+      def test_aside_sits_on_the_left_when_the_rail_is_right
+        render_inline(Component.new(side: :right, storage_key: "app-shell")) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.main { "Main" }
+          layout.aside(open: false) { "Details" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, 'data-flat-pack-layout-columns="three"'
+        refute_includes html, "grid-cols-"
+        assert_operator html.index("Details"), :<, html.index("Main")
+        assert_operator html.index("Main"), :<, html.index("Sidebar")
+        assert_selector "[data-flat-pack-panel='aside'][data-flat-pack-aside-open='false'][data-mobile-drawer-side='left'][inert]"
+        assert_includes html, "var open=stored===null?false:stored===\"true\""
+        refute_selector "[data-flat-pack--sidebar-layout-target='sidebar'][data-flat-pack-panel]"
+      end
+
+      def test_aside_only_uses_a_two_track_grid_on_its_edge
+        render_inline(Component.new(side: :left)) do |layout|
+          layout.main { "Main" }
+          layout.aside { "Details" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, 'data-flat-pack-layout-columns="main-aside"'
+        refute_includes html, "grid-cols-"
+        refute_selector "[data-flat-pack--sidebar-layout-target='sidebar']"
+        assert_selector "[data-flat-pack-panel='aside'][data-mobile-drawer-side='right'][data-flat-pack-aside-open='true']"
+        assert_operator html.index("Main"), :<, html.index("Details")
+        refute_includes html, "localStorage"
+
+        render_inline(Component.new(side: :right)) do |layout|
+          layout.main { "Main" }
+          layout.aside(open: false) { "Notes" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, 'data-flat-pack-layout-columns="aside-main"'
+        refute_includes html, "grid-cols-"
+        assert_selector "[data-flat-pack-panel='aside'][data-mobile-drawer-side='left'][data-flat-pack-aside-open='false'][inert]"
+        assert_operator html.index("Notes"), :<, html.index("Main")
+      end
+
+      def test_aside_open_defaults_to_true
+        render_inline(Component.new) do |layout|
+          layout.aside { "Details" }
+        end
+
+        assert_selector "[data-flat-pack-aside-open='true']"
+        assert_selector "[data-flat-pack--sidebar-layout-aside-open-value='true']"
+        refute_selector "[data-flat-pack--sidebar-layout-aside-storage-key-value]"
+      end
+
+      def test_resizable_rejects_non_booleans
+        error = assert_raises(ArgumentError) do
+          Component.new(resizable: "yes")
+        end
+        assert_includes error.message, "resizable must be true or false"
+
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |layout|
+            layout.aside(open: "yes") { "Details" }
+          end
+        end
+        assert_includes error.message, "open must be true or false"
+
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |layout|
+            layout.aside(resizable: nil) { "Details" }
+          end
+        end
+        assert_includes error.message, "resizable must be true or false"
+      end
+
+      def test_panel_storage_keys_stay_on_the_record
+        rail = Panel.rail(
+          edge: :left,
+          open: true,
+          resizable: true,
+          width_mode: :content,
+          floating: false,
+          content_height: false,
+          storage_key: "app-shell"
+        )
+        aside = Panel.aside(
+          edge: :right,
+          open: false,
+          resizable: true,
+          floating: true,
+          content_height: true,
+          storage_key: "app-shell"
+        )
+        unstored = Panel.aside(
+          edge: :right,
+          open: true,
+          resizable: false,
+          floating: false,
+          content_height: false,
+          storage_key: nil
+        )
+
+        assert_equal :rail, rail.role
+        assert_equal true, rail.collapses
+        assert_equal :content, rail.width_mode
+        assert_nil rail.open_storage_key
+        assert_equal "app-shell:rail:width", rail.width_storage_key
+
+        assert_equal :aside, aside.role
+        assert_equal false, aside.collapses
+        assert_equal :fixed, aside.width_mode
+        assert_equal "app-shell:aside", aside.open_storage_key
+        assert_equal "app-shell:aside:width", aside.width_storage_key
+        assert_nil unstored.open_storage_key
+        assert_nil unstored.width_storage_key
+      end
+
+      def test_resized_width_beats_the_content_width_rule
+        kit = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        dummy = FlatPack::Engine.root.join("test/dummy/app/assets/stylesheets/application.tailwind.css").read
+        content = '[data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside'
+        resized = '[data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside'
+
+        [kit, dummy].each do |sheet|
+          compact = sheet.gsub(/\s+/, " ")
+          content_at = compact.index(content)
+          resized_at = compact.index(resized)
+
+          assert content_at
+          assert resized_at
+          assert_operator resized_at, :>, content_at
+          assert_operator (selector_rank(resized) <=> selector_rank(content)), :>=, 0
+        end
+      end
+
+      def selector_rank(selector)
+        working = selector.gsub(/:not\(([^)]*)\)/, "\\1")
+        ids = working.scan(/#[A-Za-z0-9_-]+/).length
+        attributes = working.scan(/\[[^\]]+\]/).length
+        classes = working.scan(/\.[\w-]+/).length
+        pseudos = working.scan(/:(?!not\b)[\w-]+/).length
+        stripped = working.gsub(/\[[^\]]+\]/, " ").gsub(/\.[\w-]+/, " ").gsub(/::?[\w-]+/, " ")
+        elements = stripped.scan(/[a-zA-Z][\w-]*/).length
+        [ids, attributes + classes + pseudos, elements]
+      end
     end
   end
 end

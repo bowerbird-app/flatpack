@@ -25,6 +25,22 @@
       <%% layout.top_nav do %>
         <%%= render "layouts/flat_pack/top_nav" %>
       <%% end %>
+<% if options[:aside] %>
+
+      <%% layout.aside do %>
+        <div class="flex items-center justify-between gap-3 border-b border-(--surface-border-color) px-4 py-3">
+          <h2 class="text-sm font-medium">Details</h2>
+          <%%= render FlatPack::Button::Component.new(
+            icon: "x-mark",
+            icon_only: true,
+            style: :ghost,
+            size: :sm,
+            aria: { label: "Close details" },
+            data: { action: "click->flat-pack--sidebar-layout#closeAside" }
+          ) %>
+        </div>
+      <%% end %>
+<% end %>
 
       <%% layout.main do %>
         <main id="main" tabindex="-1" class="fp-layout-content py-6">

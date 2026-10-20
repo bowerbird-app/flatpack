@@ -17,6 +17,7 @@ function loadSidebarLayoutController({ prefersReduced = false, extras = {} } = {
 
   const timeouts = []
   const memory = new Map()
+  const localMemory = new Map()
   const context = {
     module: { exports: {} },
     exports: {},
@@ -28,6 +29,11 @@ function loadSidebarLayoutController({ prefersReduced = false, extras = {} } = {
     sessionStorage: {
       getItem(key) { return memory.has(key) ? memory.get(key) : null },
       setItem(key, value) { memory.set(key, String(value)) }
+    },
+    localStorage: {
+      getItem(key) { return localMemory.has(key) ? localMemory.get(key) : null },
+      setItem(key, value) { localMemory.set(key, String(value)) },
+      removeItem(key) { localMemory.delete(key) }
     },
     setTimeout(callback, ms) {
       timeouts.push({ callback, ms })
@@ -424,4 +430,309 @@ test('wrapped floating top nav raises the clearance and one row does not', () =>
 
   controller.applyFloatingTopNavClearance(column, 72, 68)
   assert.equal(column.property, '')
+})
+
+function storageStub(seed = {}) {
+  const memory = new Map(Object.entries(seed))
+  const writes = []
+  return {
+    memory,
+    writes,
+    getItem(key) { return memory.has(key) ? memory.get(key) : null },
+    setItem(key, value) {
+      memory.set(key, String(value))
+      writes.push([key, String(value)])
+    },
+    removeItem(key) { memory.delete(key) }
+  }
+}
+
+function drawerPanel(side) {
+  const attrs = {}
+  const panel = {
+    style: { pointerEvents: '' },
+    dataset: { mobileDrawerSide: side },
+    classList: classListStub([side === 'right' ? 'translate-x-full' : '-translate-x-full']),
+    focused: 0,
+    hasAttribute(name) { return Object.prototype.hasOwnProperty.call(attrs, name) },
+    getAttribute(name) { return attrs[name] },
+    setAttribute(name, value) { attrs[name] = String(value) },
+    removeAttribute(name) { delete attrs[name] },
+    focus() { panel.focused += 1 },
+    querySelector() { return { style: {}, dataset: {} } },
+    querySelectorAll() { return [] },
+    addEventListener() {},
+    removeEventListener() {},
+    attrs
+  }
+  return panel
+}
+
+function buttonStub() {
+  const attrs = {}
+  const button = {
+    attrs,
+    focused: 0,
+    setAttribute(name, value) { attrs[name] = value },
+    getAttribute(name) { return attrs[name] },
+    focus() { button.focused += 1 }
+  }
+  return button
+}
+
+function backdropStub() {
+  const attrs = { 'aria-hidden': 'true' }
+  return {
+    attrs,
+    classList: classListStub(['pointer-events-none', 'opacity-0']),
+    setAttribute(name, value) { attrs[name] = value },
+    getAttribute(name) { return attrs[name] }
+  }
+}
+
+function buildShell({
+  mobile = false,
+  asideOpen = true,
+  storageKey = 'app-shell:aside',
+  stored,
+  withSidebar = false
+} = {}) {
+  const seed = stored === undefined || !storageKey ? {} : { [storageKey]: stored }
+  const localStorage = storageStub(seed)
+  const opener = buttonStub()
+  const listeners = []
+  const doc = {
+    body: { style: { overflow: '' }, dataset: {} },
+    activeElement: opener,
+    listeners,
+    addEventListener(type, fn) { listeners.push({ type, fn }) },
+    removeEventListener(type, fn) {
+      const index = listeners.findIndex((entry) => entry.type === type && entry.fn === fn)
+      if (index >= 0) listeners.splice(index, 1)
+    }
+  }
+  const aside = drawerPanel('right')
+  aside.dataset.flatPackAsideOpen = asideOpen ? 'true' : 'false'
+  const sidebar = drawerPanel('left')
+  const toggle = buttonStub()
+  const backdrop = backdropStub()
+  const element = {
+    addEventListener() {},
+    removeEventListener() {},
+    querySelector() { return null }
+  }
+  const windowStub = {
+    innerWidth: mobile ? 390 : 1280,
+    addEventListener() {},
+    removeEventListener() {}
+  }
+  const { Controller } = loadSidebarLayoutController({
+    extras: { localStorage, document: doc, window: windowStub }
+  })
+  const controller = Object.assign(new Controller(), {
+    element,
+    hasSidebarTarget: withSidebar,
+    sidebarTarget: sidebar,
+    hasAsideTarget: true,
+    asideTarget: aside,
+    hasAsideToggleTarget: true,
+    asideToggleTargets: [toggle],
+    hasAsideOpenValue: true,
+    asideOpenValue: asideOpen,
+    hasAsideStorageKeyValue: !!storageKey,
+    asideStorageKeyValue: storageKey || '',
+    hasBackdropTarget: true,
+    backdropTarget: backdrop,
+    hasStorageKeyValue: false,
+    hasSideValue: true,
+    sideValue: 'left',
+    hasDesktopToggleTarget: false,
+    hasCollapsedToggleTarget: false,
+    currentScrollContainer() { return null }
+  })
+
+  return { controller, aside, sidebar, toggle, opener, doc, localStorage, backdrop, windowStub }
+}
+
+test('a missing aside key keeps the server closed state', () => {
+  const { controller, aside, toggle, localStorage } = buildShell({ asideOpen: false })
+
+  controller.connect()
+
+  assert.equal(aside.dataset.flatPackAsideOpen, 'false')
+  assert.equal(aside.attrs.inert, '')
+  assert.equal(toggle.attrs['aria-expanded'], 'false')
+  assert.equal(localStorage.writes.length, 0)
+})
+
+test('aside storage uses open polarity', () => {
+  const closedServer = buildShell({ asideOpen: false, stored: 'true' })
+  closedServer.controller.connect()
+  assert.equal(closedServer.aside.dataset.flatPackAsideOpen, 'true')
+  assert.equal(closedServer.aside.attrs.inert, undefined)
+
+  const openServer = buildShell({ asideOpen: true, stored: 'false' })
+  openServer.controller.connect()
+  assert.equal(openServer.aside.dataset.flatPackAsideOpen, 'false')
+  assert.equal(openServer.aside.attrs.inert, '')
+})
+
+test('desktop aside open and close persist and a repeat call does not', () => {
+  const { controller, aside, toggle, localStorage } = buildShell({ asideOpen: true })
+
+  controller.connect()
+  controller.openAside()
+  assert.equal(localStorage.writes.length, 0)
+
+  controller.toggleAside()
+  assert.equal(aside.dataset.flatPackAsideOpen, 'false')
+  assert.equal(toggle.attrs['aria-expanded'], 'false')
+  assert.deepEqual(localStorage.writes.at(-1), ['app-shell:aside', 'false'])
+
+  const writes = localStorage.writes.length
+  controller.closeAside()
+  assert.equal(localStorage.writes.length, writes)
+
+  controller.openAside()
+  assert.deepEqual(localStorage.writes.at(-1), ['app-shell:aside', 'true'])
+  assert.equal(aside.attrs.inert, undefined)
+  controller.openAside()
+  assert.equal(localStorage.writes.length, 2)
+})
+
+test('desktop aside toggle does not lock body scroll', () => {
+  const { controller, doc } = buildShell()
+
+  controller.connect()
+  controller.toggleAside()
+
+  assert.equal(doc.body.dataset.flatPackModalLockCount, undefined)
+  assert.equal(doc.body.style.overflow, '')
+})
+
+test('mobile aside drawer ignores the desktop open key', () => {
+  const { controller, aside, toggle, localStorage, backdrop, doc, opener } = buildShell({
+    mobile: true,
+    asideOpen: true,
+    stored: 'false'
+  })
+
+  controller.connect()
+
+  assert.equal(aside.dataset.flatPackAsideOpen, 'true')
+  assert.equal(aside.attrs.inert, '')
+  assert.equal(aside.style.pointerEvents, 'none')
+  assert.equal(aside.classList.contains('translate-x-full'), true)
+  assert.equal(toggle.attrs['aria-expanded'], 'false')
+  assert.equal(localStorage.writes.length, 0)
+
+  controller.toggleAside()
+
+  assert.equal(localStorage.writes.length, 0)
+  assert.equal(aside.dataset.flatPackAsideOpen, 'true')
+  assert.equal(aside.attrs.inert, undefined)
+  assert.equal(aside.classList.contains('translate-x-full'), false)
+  assert.equal(aside.focused, 1)
+  assert.equal(toggle.attrs['aria-expanded'], 'true')
+  assert.equal(backdrop.attrs['aria-hidden'], 'false')
+  assert.equal(backdrop.classList.contains('opacity-100'), true)
+  assert.equal(backdrop.classList.contains('pointer-events-none'), false)
+  assert.equal(doc.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(doc.body.style.overflow, 'hidden')
+
+  const escape = doc.listeners.find((entry) => entry.type === 'keydown')
+  escape.fn({ key: 'Escape' })
+
+  assert.equal(aside.classList.contains('translate-x-full'), true)
+  assert.equal(aside.attrs.inert, '')
+  assert.equal(opener.focused, 1)
+  assert.equal(doc.body.dataset.flatPackModalLockCount, undefined)
+  assert.equal(doc.body.style.overflow, '')
+  assert.equal(backdrop.attrs['aria-hidden'], 'true')
+  assert.equal(toggle.attrs['aria-expanded'], 'false')
+})
+
+test('one shell drawer is open and the body lock is held once', () => {
+  const { controller, aside, sidebar, doc, opener } = buildShell({ mobile: true, withSidebar: true })
+
+  controller.connect()
+  doc.activeElement = opener
+  controller.openMobile()
+  assert.equal(sidebar.classList.contains('-translate-x-full'), false)
+  assert.equal(doc.body.dataset.flatPackModalLockCount, '1')
+
+  const details = buttonStub()
+  doc.activeElement = details
+  controller.openAside()
+
+  assert.equal(sidebar.classList.contains('-translate-x-full'), true)
+  assert.equal(aside.classList.contains('translate-x-full'), false)
+  assert.equal(opener.focused, 0)
+  assert.equal(doc.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(doc.body.style.overflow, 'hidden')
+
+  controller.closeMobile()
+
+  assert.equal(aside.classList.contains('translate-x-full'), true)
+  assert.equal(sidebar.classList.contains('-translate-x-full'), true)
+  assert.equal(doc.body.dataset.flatPackModalLockCount, undefined)
+})
+
+test('a shell drawer joins an existing body lock', () => {
+  const { controller, doc } = buildShell({ mobile: true })
+  doc.body.dataset.flatPackModalLockCount = '1'
+  doc.body.style.overflow = 'hidden'
+
+  controller.connect()
+  controller.openAside()
+  assert.equal(doc.body.dataset.flatPackModalLockCount, '2')
+  assert.equal(doc.body.style.overflow, 'hidden')
+
+  controller.closeAside()
+  assert.equal(doc.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(doc.body.style.overflow, 'hidden')
+})
+
+test('crossing the mobile breakpoint does not write the aside key', () => {
+  const { controller, aside, localStorage, windowStub } = buildShell({ asideOpen: true })
+
+  controller.connect()
+  windowStub.innerWidth = 390
+  controller.handleResize()
+
+  assert.equal(localStorage.writes.length, 0)
+  assert.equal(aside.attrs.inert, '')
+  assert.equal(aside.dataset.flatPackAsideOpen, 'true')
+
+  windowStub.innerWidth = 1280
+  controller.handleResize()
+
+  assert.equal(localStorage.writes.length, 0)
+  assert.equal(aside.dataset.flatPackAsideOpen, 'true')
+  assert.equal(aside.attrs.inert, undefined)
+})
+
+test('a resize collapse uses the rail collapse path and leaves width storage alone', () => {
+  const { controller, sidebar, localStorage } = buildShell({ withSidebar: true, storageKey: null })
+  controller.hasStorageKeyValue = true
+  controller.storageKeyValue = 'app-shell'
+  controller.isMobile = false
+  controller.collapsed = false
+  controller.openDrawers = []
+
+  controller.collapseRailFromResize()
+
+  assert.equal(controller.collapsed, true)
+  assert.equal(sidebar.dataset.flatPackSidebarCollapsed, 'true')
+  assert.equal(localStorage.memory.get('app-shell'), 'true')
+  assert.equal(localStorage.memory.has('app-shell:rail:width'), false)
+
+  const writes = localStorage.writes.length
+  controller.collapseRailFromResize()
+  assert.equal(localStorage.writes.length, writes)
+
+  controller.collapsed = false
+  controller.isMobile = true
+  controller.collapseRailFromResize()
+  assert.equal(controller.collapsed, false)
 })
