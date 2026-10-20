@@ -1,9 +1,57 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Page Nav Component",
-  subtitle: "Compact icon-only page navigation with browser back, optional close control, tooltips, and an optional trailing action."
+  subtitle: "Compact icon-only page navigation with browser back, optional close control, middle icon links, and an optional trailing action."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :page_nav %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Round links", anchor_link: true, subtitle: "Home and Admin sit between close and add. Every nav icon is round.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new(
+      round: true,
+      anchor_href: demo_path,
+      anchor_tooltip: "Close"
+    ) do |nav| %>
+      <% nav.with_link(href: demo_forms_path, icon: "home", tooltip: "Home") %>
+      <% nav.with_link(href: demo_page_header_path, icon: "squares-2x2", tooltip: "Admin") %>
+      <% nav.right_slot do %>
+        <%= render FlatPack::Button::Component.new(
+          icon: "plus",
+          icon_only: true,
+          round: true,
+          style: :secondary,
+          size: :md,
+          href: demo_forms_path,
+          aria: {label: "Add"}
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new(
+        round: true,
+        anchor_href: demo_path,
+        anchor_tooltip: "Close"
+      ) do |nav| %&gt;
+        &lt;% nav.with_link(href: demo_forms_path, icon: "home", tooltip: "Home") %&gt;
+        &lt;% nav.with_link(href: demo_page_header_path, icon: "squares-2x2", tooltip: "Admin") %&gt;
+        &lt;% nav.right_slot do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            icon: "plus",
+            icon_only: true,
+            round: true,
+            style: :secondary,
+            size: :md,
+            href: demo_forms_path,
+            aria: {label: "Add"}
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Back Only", anchor_link: true, subtitle: "Always renders browser history back on the left icon.") %>
@@ -88,30 +136,6 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_href: demo_path,
-        anchor_tooltip: "Close"
-      ) %&gt;
-    CODE
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Secondary Anchor", anchor_link: true, subtitle: "Secondary anchor renders immediately to the left of the primary anchor.") %>
-  <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new(
-      secondary_anchor_href: demo_forms_path,
-      secondary_anchor_icon: "home",
-      secondary_anchor_tooltip: "Home",
-      anchor_href: demo_path,
-      anchor_tooltip: "Close"
-    ) %>
-  </div>
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new(
-        secondary_anchor_href: demo_forms_path,
-        secondary_anchor_icon: "home",
-        secondary_anchor_tooltip: "Home",
         anchor_href: demo_path,
         anchor_tooltip: "Close"
       ) %&gt;

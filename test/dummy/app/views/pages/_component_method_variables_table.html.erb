@@ -156,15 +156,14 @@
         { variable: "back_size", accepts: ":sm, :md, :lg", example: "back_size: :md" },
         { variable: "show_back", accepts: "true, false", example: "show_back: false" },
         { variable: "back_href", accepts: "String or nil", example: "back_href: demo_path" },
-        { variable: "secondary_anchor_href", accepts: "String or nil", example: "secondary_anchor_href: demo_forms_path" },
-        { variable: "secondary_anchor_icon", accepts: "String", example: "secondary_anchor_icon: \"chevron-left\"" },
-        { variable: "secondary_anchor_tooltip", accepts: "String or nil", example: "secondary_anchor_tooltip: \"Previous page\"" },
+        { variable: "round", accepts: "true, false", example: "round: true" },
         { variable: "anchor_href", accepts: "String or nil", example: "anchor_href: demo_path" },
         { variable: "anchor_icon", accepts: "String", example: "anchor_icon: \"x-mark\"" },
         { variable: "anchor_tooltip", accepts: "String or nil", example: "anchor_tooltip: \"Close\"" },
         { variable: "anchor_label", accepts: "String", example: "anchor_label: \"Close\" # deprecated" },
         { variable: "anchor_style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "anchor_style: :secondary" },
         { variable: "anchor_size", accepts: ":sm, :md, :lg", example: "anchor_size: :md" },
+        { variable: "with_link", accepts: "slot, href, icon, and tooltip", example: "nav.with_link(href: demo_forms_path, icon: \"home\", tooltip: \"Home\")" },
         { variable: "right_slot", accepts: "slot block", example: "component.right_slot { render FlatPack::Button::Component.new(icon: \"plus\", icon_only: true, href: demo_forms_path, aria: { label: \"Action\" }) }" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mb-4\", data: { testid: \"page-nav\" }" }
       ]

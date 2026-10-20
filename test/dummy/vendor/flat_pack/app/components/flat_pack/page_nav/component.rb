@@ -18,7 +18,49 @@ module FlatPack
       end
       private_constant :BackPlan
 
+      # Icon link in the middle of the row. The tooltip is the accessible name.
+      class Link < FlatPack::BaseComponent
+        def initialize(href:, icon:, tooltip:, style:, size:, round:)
+          super()
+          @href = href
+          @icon = icon
+          @tooltip = tooltip
+          @style = style
+          @size = size
+          @round = round
+
+          raise ArgumentError, "Page nav link needs an href." if @href.blank?
+          raise ArgumentError, "Page nav link needs an icon." if @icon.blank?
+          raise ArgumentError, "Page nav link needs a tooltip." if @tooltip.blank?
+        end
+
+        def call
+          button = render(FlatPack::Button::Component.new(
+            icon: @icon,
+            icon_only: true,
+            style: @style,
+            size: @size,
+            round: @round,
+            href: @href,
+            aria: {label: @tooltip}
+          ))
+
+          render(FlatPack::Tooltip::Component.new(text: @tooltip)) { button }
+        end
+      end
+      private_constant :Link
+
       renders_one :right_slot
+      renders_many :links, lambda { |href:, icon:, tooltip:|
+        Link.new(
+          href: href,
+          icon: icon,
+          tooltip: tooltip,
+          style: @anchor_style,
+          size: @anchor_size,
+          round: @round
+        )
+      }
 
       def initialize(
         back_icon: "chevron-left",
@@ -29,9 +71,7 @@ module FlatPack
         back_size: :md,
         show_back: true,
         back_href: nil,
-        secondary_anchor_href: nil,
-        secondary_anchor_icon: "chevron-left",
-        secondary_anchor_tooltip: nil,
+        round: false,
         anchor_href: nil,
         anchor_icon: "x-mark",
         anchor_tooltip: nil,
@@ -41,6 +81,7 @@ module FlatPack
         anchor_size: :md,
         **system_arguments
       )
+        reject_removed_secondary!(system_arguments)
         super(**system_arguments)
 
         @back_icon = back_icon
@@ -49,17 +90,15 @@ module FlatPack
         @back_size = back_size
         @show_back = show_back
         @back_href = back_href
-
-        @secondary_anchor_href = secondary_anchor_href
-        @secondary_anchor_icon = secondary_anchor_icon
-        @secondary_anchor_tooltip = secondary_anchor_tooltip
-        @secondary_anchor_label = secondary_anchor_tooltip.presence || fp_t("page_nav.previous")
+        @round = round
 
         @anchor_href = anchor_href
         @anchor_icon = anchor_icon
         @anchor_label = anchor_tooltip.presence || fp_text(anchor_label, "page_nav.close")
         @anchor_style = anchor_style
         @anchor_size = anchor_size
+
+        validate_round!
       end
 
       def right_slot(*args, **kwargs, &block)
@@ -82,6 +121,7 @@ module FlatPack
             safe_join([
               left_actions,
               anchor_actions,
+              link_actions,
               right_slot_wrapper
             ].compact)
           end
@@ -157,29 +197,20 @@ module FlatPack
         end
       end
 
-      def secondary_anchor_action
-        return unless @secondary_anchor_href.present?
+      def anchor_actions
+        action = anchor_action
+        return if action.nil?
 
-        tooltip_wrapper(@secondary_anchor_tooltip) do
-          icon_button(
-            icon: @secondary_anchor_icon,
-            label: @secondary_anchor_label,
-            style: @anchor_style,
-            size: @anchor_size,
-            href: @secondary_anchor_href
-          )
+        content_tag(:div, class: "flex items-center gap-2") do
+          action
         end
       end
 
-      def anchor_actions
-        actions = [
-          secondary_anchor_action,
-          anchor_action
-        ].compact
-        return if actions.empty?
+      def link_actions
+        return unless links?
 
         content_tag(:div, class: "flex items-center gap-2") do
-          safe_join(actions)
+          safe_join(links)
         end
       end
 
@@ -206,12 +237,26 @@ module FlatPack
           icon_only: true,
           style: style,
           size: size,
+          round: @round,
           aria: {label: label}
         }
         button_arguments[:href] = href if href.present?
         button_arguments[:data] = data if data.present?
 
         render FlatPack::Button::Component.new(**button_arguments)
+      end
+
+      def validate_round!
+        return if @round == true || @round == false
+
+        raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
+      end
+
+      def reject_removed_secondary!(arguments)
+        removed = arguments.keys.grep(/\Asecondary_anchor/)
+        return if removed.empty?
+
+        raise ArgumentError, "unknown keyword: :#{removed.first}"
       end
     end
   end

@@ -109,35 +109,102 @@ module FlatPack
         assert_selector "[role='tooltip']", text: "Dismiss"
       end
 
-      def test_renders_secondary_anchor_action_with_tooltip
-        render_inline(Component.new(
-          secondary_anchor_href: "/secondary",
-          secondary_anchor_tooltip: "Previous item"
-        ))
+      def test_secondary_anchor_arguments_are_unknown
+        error = assert_raises(ArgumentError) do
+          Component.new(secondary_anchor_href: "/secondary")
+        end
 
-        assert_selector "[data-controller='flat-pack--tooltip'] a[href='/secondary'][aria-label='Previous item']"
-        assert_selector "[role='tooltip']", text: "Previous item"
+        assert_match(/unknown keyword: :?secondary_anchor_href/, error.message)
       end
 
-      def test_renders_secondary_anchor_with_default_accessible_label_without_tooltip
-        render_inline(Component.new(secondary_anchor_href: "/secondary"))
+      def test_round_is_false_by_default_and_passes_through_when_true
+        render_inline(Component.new(back_href: "/back"))
 
-        assert_selector "a[href='/secondary'][aria-label='Previous page']"
-        refute_selector "[data-controller='flat-pack--tooltip'] a[href='/secondary']"
+        back = page.find("a[href='/back']")
+        assert_includes back[:class], "rounded-[var(--button-border-radius)]"
+        refute_includes back[:class], "rounded-[var(--button-round-border-radius)]"
+
+        render_inline(Component.new(
+          round: true,
+          back_href: "/back",
+          back_size: :lg,
+          anchor_href: "/close",
+          anchor_tooltip: "Close",
+          anchor_size: :sm
+        )) do |nav|
+          nav.with_link(href: "/home", icon: "home", tooltip: "Home")
+          nav.right_slot do
+            '<a href="/add" class="squared" aria-label="Add">Add</a>'.html_safe
+          end
+        end
+
+        [page.find("a[href='/back']"), page.find("a[href='/close']"), page.find("a[href='/home']")].each do |control|
+          assert_includes control[:class], "rounded-[var(--button-round-border-radius)]"
+          refute_includes control[:class], "rounded-[var(--button-border-radius)]"
+        end
+        assert_includes page.find("a[href='/back']")[:class], "h-[var(--button-round-size-lg)]"
+        assert_includes page.find("a[href='/close']")[:class], "h-[var(--button-round-size-sm)]"
+        assert_includes page.find("a[href='/home']")[:class], "h-[var(--button-round-size-sm)]"
+        refute_includes page.find("a[href='/add']")[:class].to_s, "button-round-border-radius"
       end
 
-      def test_renders_secondary_anchor_to_left_of_anchor_action
+      def test_rejects_a_round_value_that_is_not_a_boolean
+        error = assert_raises(ArgumentError) { Component.new(round: "yes") }
+
+        assert_match(/Invalid round/, error.message)
+      end
+
+      def test_renders_middle_links_in_order_between_close_and_the_trailing_action
         render_inline(Component.new(
-          secondary_anchor_href: "/secondary",
-          secondary_anchor_tooltip: "Previous item",
-          anchor_href: "/primary",
-          anchor_tooltip: "Close item"
-        ))
+          back_style: :primary,
+          anchor_href: "/close",
+          anchor_tooltip: "Close",
+          anchor_style: :ghost,
+          anchor_size: :sm
+        )) do |nav|
+          nav.with_link(href: "/home", icon: "home", tooltip: "Home")
+          nav.with_link(href: "/admin", icon: "squares-2x2", tooltip: "Admin")
+          nav.right_slot do
+            '<a href="/add" aria-label="Add">Add</a>'.html_safe
+          end
+        end
 
-        secondary = page.find("a[href='/secondary']")
-        primary = page.find("a[href='/primary']")
+        assert_selector "nav > div.flex.gap-2 > div", count: 4
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(1) button[data-action='click->flat-pack--page-nav#back'][data-fp-style='primary']"
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(2) a[href='/close'][data-fp-style='ghost']"
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(3) a[href='/home'][aria-label='Home'][data-fp-style='ghost']"
+        assert_selector "nav > div.flex.gap-2 > div:nth-child(3) a[href='/admin'][aria-label='Admin']"
+        assert_selector "nav > div.flex.gap-2 > div.ml-auto a[href='/add']"
+        assert_selector "[data-controller='flat-pack--tooltip'] a[href='/home']"
+        assert_selector "[role='tooltip']", text: "Home"
+        assert_selector "[role='tooltip']", text: "Admin"
+        assert_selector "a[href='/home'] svg[data-flat-pack--icon-name-value='home']"
+        assert_selector "a[href='/admin'] svg[data-flat-pack--icon-name-value='squares-2x2']"
+        assert_includes page.find("a[href='/home']")[:class], "p-[var(--button-icon-only-padding-sm)]"
 
-        assert_operator page.native.to_html.index(secondary.native.to_html), :<, page.native.to_html.index(primary.native.to_html)
+        html = page.native.to_html
+        indexes = ["/close", "/home", "/admin", "/add"].map { |href| html.index("href=\"#{href}\"") }
+
+        assert_equal indexes, indexes.sort
+        assert_equal indexes.uniq, indexes
+      end
+
+      def test_an_empty_link_slot_leaves_the_markup_unchanged
+        plain = render_inline(Component.new(anchor_href: "/demo", anchor_tooltip: "Close")).to_html
+        empty = render_inline(Component.new(anchor_href: "/demo", anchor_tooltip: "Close")) { |nav| nav }.to_html
+
+        assert_equal plain, empty
+        assert_selector "nav > div.flex.gap-2 > div", count: 2
+      end
+
+      def test_rejects_an_unsafe_link_href
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |nav|
+            nav.with_link(href: "javascript:alert(1)", icon: "home", tooltip: "Home")
+          end
+        end
+
+        assert_match(/Unsafe URL detected/, error.message)
       end
 
       def test_renders_right_slot_content_when_provided
@@ -152,10 +219,7 @@ module FlatPack
       end
 
       def test_renders_right_slot_in_separate_right_aligned_wrapper
-        render_inline(Component.new(
-          secondary_anchor_href: "/secondary",
-          anchor_href: "/primary"
-        )) do |component|
+        render_inline(Component.new(anchor_href: "/primary")) do |component|
           component.right_slot do
             '<a href="/demo/forms" aria-label="Add"><span data-flat-pack--icon-name-value="plus"></span></a>'.html_safe
           end
@@ -163,7 +227,6 @@ module FlatPack
 
         assert_selector "nav > div.flex.gap-2 > div", count: 3
         assert_selector "nav > div.flex.gap-2 > div:nth-child(1) button[data-action='click->flat-pack--page-nav#back']"
-        assert_selector "nav > div.flex.gap-2 > div:nth-child(2) a[href='/secondary']"
         assert_selector "nav > div.flex.gap-2 > div:nth-child(2) a[href='/primary']"
         assert_selector "nav > div.flex.gap-2 > div.ml-auto.flex.items-center.gap-2 a[href='/demo/forms'][aria-label='Add']"
       end

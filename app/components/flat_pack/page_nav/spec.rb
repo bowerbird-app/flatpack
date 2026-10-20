@@ -6,7 +6,7 @@ module FlatPack
       DEPRECATED_LABELS = %i[back_label anchor_label].freeze
       HTML_ATTRIBUTES = %i[class id data aria].freeze
 
-      def initialize(**kwargs)
+      def initialize(**kwargs, &block)
         rejected = kwargs.keys & DEPRECATED_LABELS
         if rejected.any?
           raise ArgumentError, "Unknown page nav argument: #{rejected.join(", ")}"
@@ -18,12 +18,24 @@ module FlatPack
         end
 
         @kwargs = kwargs.freeze
+        @links = []
+        block&.call(self)
+      end
+
+      def with_link(href:, icon:, tooltip:)
+        @links << {href: href, icon: icon, tooltip: tooltip}
+      end
+
+      def links
+        @links.dup
       end
 
       def with_inbound_anchor(url)
         return self if @kwargs[:anchor_href].present? || url.blank?
 
-        self.class.new(**@kwargs, anchor_href: url)
+        duplicate = self.class.new(**@kwargs, anchor_href: url)
+        @links.each { |link| duplicate.with_link(**link) }
+        duplicate
       end
 
       def to_component_kwargs

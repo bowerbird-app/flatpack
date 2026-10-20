@@ -121,14 +121,14 @@ module FlatPack
       without_i18n_fallbacks do
         with_available_locale(:ms) do
           I18n.with_locale(:ms) do
-            render_inline(FlatPack::PageNav::Component.new(secondary_anchor_href: "/prev"))
+            render_inline(FlatPack::PageNav::Component.new)
           end
         end
       end
 
       html = page.native.to_html
       assert_includes html, 'aria-label="Host pages"'
-      assert_includes html, 'aria-label="Previous page"'
+      assert_includes html, 'aria-label="Go back"'
       refute_includes html, "translation missing"
       refute_includes html, "translation_missing"
     end

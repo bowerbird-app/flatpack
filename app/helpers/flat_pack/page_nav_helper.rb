@@ -4,8 +4,8 @@ module FlatPack
   module PageNavHelper
     REQUEST_KEY = "flat_pack.page_nav"
 
-    def flat_pack_page_nav(**kwargs)
-      request.env[REQUEST_KEY] = FlatPack::PageNav::Spec.new(**kwargs)
+    def flat_pack_page_nav(**kwargs, &block)
+      request.env[REQUEST_KEY] = FlatPack::PageNav::Spec.new(**kwargs, &block)
       nil
     end
 
@@ -13,7 +13,12 @@ module FlatPack
       spec = page_nav_spec
       return if spec.nil?
 
-      render FlatPack::PageNav::Component.new(**spec.to_component_kwargs)
+      kwargs = spec.to_component_kwargs
+      return render(FlatPack::PageNav::Component.new(**kwargs)) if spec.links.empty?
+
+      render(FlatPack::PageNav::Component.new(**kwargs)) do |nav|
+        spec.links.each { |link| nav.with_link(**link) }
+      end
     end
 
     def flat_pack_return_to_url(path)
