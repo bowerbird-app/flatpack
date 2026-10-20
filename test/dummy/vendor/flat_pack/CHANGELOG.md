@@ -16,28 +16,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.274] - 2026-10-20
 
 ### Added
-- `FlatPack::PageNav::Component` accepts `show_back` (default true) and `back_href`. `show_back: false` omits the back control. `back_href` renders the back icon as a link and does not attach the page-nav Stimulus controller.
-- When the history back button has an `anchor_href`, the nav sets `data-flat-pack--page-nav-fallback-url-value` to that href. The click calls `history.back` when the visit has in-app history. Otherwise it assigns that href. With no href, it still calls `history.back`.
-- `round:` (Boolean, default `false`) on `FlatPack::PageNav::Component`. It is passed to every button the nav renders (back, close, and each middle link) as `FlatPack::Button::Component`'s existing `round:`. No new tokens.
-- `with_link(href:, icon:, tooltip:)` adds an icon-only link between the back and close controls and the trailing action. The tooltip is the accessible name. Links use `anchor_style`, `anchor_size`, and `round`. With no links, the markup is unchanged.
-- View helpers `flat_pack_page_nav`, `flat_pack_page_nav_tag`, `flat_pack_return_to_url`, and `flat_pack_return_to_field`. `flat_pack_page_nav` accepts `round:` and a block of `with_link` calls.
-- `FlatPack::ReturnTo` with `flat_pack_return_to` and `redirect_to_return_to(fallback:)`. The engine does not include the concern.
+- `FlatPack::PageNav::Component` renders items in call order. `with_item` is arbitrary content. `with_back`, `with_close`, `with_link`, and `with_action` are the styled pieces. `round:` (Boolean, default `false`) is passed to each of those buttons as `FlatPack::Button::Component`'s existing `round:`. `style:` and `size:` are the row defaults. No new tokens.
+- `with_back` without `href:` is the history button. `fallback_url:` sets `data-flat-pack--page-nav-fallback-url-value`. `with_back(href:)` is a link and does not attach the page-nav controller. The click calls `history.back` when the visit has in-app history. Otherwise it assigns the fallback href. With no fallback href, it still calls `history.back`.
+- View helpers `flat_pack_page_nav`, `flat_pack_page_nav_tag`, `flat_pack_return_to_url`, and `flat_pack_return_to_field`. With no block, `flat_pack_page_nav` renders the history back control and a close link when `anchor_href` is set. A block replaces that arrangement. `back_href:` and `anchor_href:` on the helper feed that default only.
+- `rails generate flat_pack:layout` writes `flat_pack_page_nav_tag` into the sidebar layout, above `yield`.
+- `FlatPack::ReturnTo` with `flat_pack_return_to` and `redirect_to_return_to(fallback:)`. The engine does not include the concern. `FlatPack::ReturnTo.origin_url` remains the only `url_from` check for `return_to`.
 - Bumped the gem version to `0.1.274`.
 
 ### Removed
-- `secondary_anchor_href`, `secondary_anchor_icon`, and `secondary_anchor_tooltip` on `FlatPack::PageNav::Component`. Use `with_link`.
+- `show_back:` on `FlatPack::PageNav::Component` and `flat_pack_page_nav`. Omit `with_back`.
+- `right_slot` on `FlatPack::PageNav::Component` and `flat_pack_page_nav`. Use `with_action` or `with_item` at the position you want.
+- `secondary_anchor_href`, `secondary_anchor_icon`, and `secondary_anchor_tooltip`. Use `with_link`.
+- Component keywords `back_href`, `back_icon`, `back_tooltip`, `back_label`, `back_style`, `back_size`, `anchor_href`, `anchor_icon`, `anchor_tooltip`, `anchor_label`, `anchor_style`, and `anchor_size`. The helper still accepts the arrangement names, except `back_label` and `anchor_label`.
 
 ### Upgrade notes
-- New arguments `show_back`, `back_href`, and `round`. New helpers `flat_pack_page_nav`, `flat_pack_page_nav_tag`, `flat_pack_return_to_url`, and `flat_pack_return_to_field`. New concern `FlatPack::ReturnTo`. New slot `with_link`.
-- A non-blank `anchor_href` from the view wins. A valid `return_to` fills `anchor_href` only when the view did not set one.
-- Existing `PageNav::Component.new` output is unchanged when the new arguments are omitted and you do not call `with_link`. A call that already passes `anchor_href` also gets `data-flat-pack--page-nav-fallback-url-value` on the history nav.
-- A layout switches by calling `flat_pack_page_nav_tag`.
-- A host can replace `content_for` page-nav plumbing with the helper.
-- `back_label` and `anchor_label` still work on the component. The helpers do not accept them.
-- `round: true` passes through to Button. `round: false` is the default. `right_slot` content does not inherit it.
-- No Tailwind rebuild. No `bin/rails generate flat_pack:install` rerun. Importmap hosts already pin the page-nav controller.
+- `PageNav::Component.new` with no item calls renders an empty row. Call `with_back`, or call `flat_pack_page_nav` with no block, to keep the history back button.
+- A layout switches by calling `flat_pack_page_nav_tag`. Regenerate the sidebar layout, or paste the tag above `yield`, to pick up the default row.
+- A non-blank `anchor_href` on `flat_pack_page_nav` wins. A valid `return_to` fills `anchor_href` only when the view did not set one. That default row passes the anchor to `with_close` and to the history back `fallback_url`. A custom block is not rewritten when `return_to` arrives. The filled anchor still feeds `flat_pack_return_to_url` and `flat_pack_return_to_field`.
+- `round: true` passes through to Button on `with_back`, `with_close`, `with_link`, and `with_action`. `round: false` is the default. `with_item` content does not inherit it.
+- No Tailwind rebuild. No `bin/rails generate flat_pack:install` rerun. Importmap hosts already pin the page-nav controller. Spacing stays on `gap-2`.
 - Redeploy so `meta.gem_version` shows `0.1.274`.
-- Breaking change for hosts using `secondary_anchor_href`, `secondary_anchor_icon`, or `secondary_anchor_tooltip`. Move them to one `with_link` call. `href` was `secondary_anchor_href`. `icon` was `secondary_anchor_icon` (`"chevron-left"` when you omitted it). `tooltip` was `secondary_anchor_tooltip`. A blank tooltip no longer falls back to "Previous page". Pass `tooltip:`. The link uses `anchor_style`, `anchor_size`, and `round`. It renders after the close control and before the trailing action. `flat_pack_page_nav` takes the same `with_link` calls in its block. `flatpack.page_nav.previous` is no longer read. There is no alias.
+- `show_back:` is gone. Before: `PageNav::Component.new(show_back: false, anchor_href: close_path)`. After: `PageNav::Component.new { |nav| nav.with_close(href: close_path) }`. There is no alias.
+- `right_slot` is gone. Before: `nav.right_slot { render FlatPack::Button::Component.new(icon: "plus", icon_only: true, href: new_path, aria: { label: "Add" }) }` inside a nav that also rendered back. After: `nav.with_back` then `nav.with_action(icon: "plus", icon_only: true, href: new_path, aria: { label: "Add" })`. Call it where it should sit. There is no alias.
+- Breaking change for hosts using `secondary_anchor_href`, `secondary_anchor_icon`, or `secondary_anchor_tooltip`. Before: `PageNav::Component.new(secondary_anchor_href: admin_path, secondary_anchor_icon: "home", secondary_anchor_tooltip: "Home")`. After: `nav.with_link(href: admin_path, icon: "home", tooltip: "Home")` at the position you want. `href` was `secondary_anchor_href`. `icon` was `secondary_anchor_icon` (`"chevron-left"` when you omitted it). `tooltip` was `secondary_anchor_tooltip`. A blank tooltip no longer falls back to "Previous page". Pass `tooltip:`. `flatpack.page_nav.previous` is no longer read. There is no alias.
 
 ## [0.1.272] - 2026-10-20
 

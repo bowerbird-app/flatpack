@@ -121,7 +121,7 @@ module FlatPack
       without_i18n_fallbacks do
         with_available_locale(:ms) do
           I18n.with_locale(:ms) do
-            render_inline(FlatPack::PageNav::Component.new)
+            render_inline(FlatPack::PageNav::Component.new) { |nav| nav.with_back }
           end
         end
       end

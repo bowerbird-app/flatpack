@@ -3,247 +3,162 @@
 module FlatPack
   module PageNav
     class Component < FlatPack::BaseComponent
-      BackPlan = Data.define(:mode, :href) do
-        def hidden?
-          mode == :hidden
-        end
+      REMOVED_KEYWORDS = %i[
+        show_back
+        right_slot
+        back_href
+        back_icon
+        back_tooltip
+        back_label
+        back_style
+        back_size
+        anchor_href
+        anchor_icon
+        anchor_tooltip
+        anchor_label
+        anchor_style
+        anchor_size
+      ].freeze
 
-        def link?
-          mode == :link
-        end
-
-        def history?
-          mode == :history
-        end
-      end
-      private_constant :BackPlan
-
-      # Icon link in the middle of the row. The tooltip is the accessible name.
-      class Link < FlatPack::BaseComponent
-        def initialize(href:, icon:, tooltip:, style:, size:, round:)
-          super()
-          @href = href
-          @icon = icon
-          @tooltip = tooltip
-          @style = style
-          @size = size
-          @round = round
-
-          raise ArgumentError, "Page nav link needs an href." if @href.blank?
-          raise ArgumentError, "Page nav link needs an icon." if @icon.blank?
-          raise ArgumentError, "Page nav link needs a tooltip." if @tooltip.blank?
-        end
-
-        def call
-          button = render(FlatPack::Button::Component.new(
-            icon: @icon,
-            icon_only: true,
-            style: @style,
-            size: @size,
-            round: @round,
-            href: @href,
-            aria: {label: @tooltip}
-          ))
-
-          render(FlatPack::Tooltip::Component.new(text: @tooltip)) { button }
-        end
-      end
-      private_constant :Link
-
-      renders_one :right_slot
-      renders_many :links, lambda { |href:, icon:, tooltip:|
-        Link.new(
-          href: href,
-          icon: icon,
-          tooltip: tooltip,
-          style: @anchor_style,
-          size: @anchor_size,
-          round: @round
-        )
-      }
-
-      def initialize(
-        back_icon: "chevron-left",
-        back_tooltip: nil,
-        # Deprecated: Use back_tooltip instead.
-        back_label: FlatPack::Copy::OMITTED,
-        back_style: :secondary,
-        back_size: :md,
-        show_back: true,
-        back_href: nil,
-        round: false,
-        anchor_href: nil,
-        anchor_icon: "x-mark",
-        anchor_tooltip: nil,
-        # Deprecated: Use anchor_tooltip instead.
-        anchor_label: FlatPack::Copy::OMITTED,
-        anchor_style: :secondary,
-        anchor_size: :md,
-        **system_arguments
-      )
-        reject_removed_secondary!(system_arguments)
+      def initialize(round: false, style: :secondary, size: :md, **system_arguments)
+        reject_removed!(system_arguments)
         super(**system_arguments)
 
-        @back_icon = back_icon
-        @back_label = back_tooltip.presence || fp_text(back_label, "page_nav.back")
-        @back_style = back_style
-        @back_size = back_size
-        @show_back = show_back
-        @back_href = back_href
         @round = round
-
-        @anchor_href = anchor_href
-        @anchor_icon = anchor_icon
-        @anchor_label = anchor_tooltip.presence || fp_text(anchor_label, "page_nav.close")
-        @anchor_style = anchor_style
-        @anchor_size = anchor_size
-
+        @style = style
+        @size = size
+        @items = []
+        @history_back = false
+        @fallback_url = nil
         validate_round!
       end
 
-      def right_slot(*args, **kwargs, &block)
-        return get_slot(:right_slot) if args.empty? && kwargs.empty? && !block_given?
+      def with_item(&block)
+        raise ArgumentError, "Page nav item needs a block." unless block
 
-        set_slot(:right_slot, nil, *args, **kwargs, &block)
+        remember { capture_item(&block) }
       end
 
-      def right(*args, **kwargs, &block)
-        right_slot(*args, **kwargs, &block)
+      def with_back(href: nil, icon: nil, tooltip: nil, fallback_url: nil, style: nil, size: nil)
+        label = tooltip.presence || fp_t("page_nav.back")
+        link = href.presence
+        record_history(link, fallback_url)
+        remember do
+          icon_control(
+            icon: icon.presence || "chevron-left",
+            label: label,
+            style: style,
+            size: size,
+            href: link,
+            data: link.present? ? nil : {action: "click->flat-pack--page-nav#back"}
+          )
+        end
       end
 
-      def right?
-        right_slot?
+      def with_close(href:, icon: nil, tooltip: nil, style: nil, size: nil)
+        raise ArgumentError, "Page nav close needs an href." if href.blank?
+
+        label = tooltip.presence || fp_t("page_nav.close")
+        remember do
+          icon_control(
+            icon: icon.presence || "x-mark",
+            label: label,
+            style: style,
+            size: size,
+            href: href
+          )
+        end
+      end
+
+      def with_link(href:, icon:, tooltip:, style: nil, size: nil)
+        raise ArgumentError, "Page nav link needs an href." if href.blank?
+        raise ArgumentError, "Page nav link needs an icon." if icon.blank?
+        raise ArgumentError, "Page nav link needs a tooltip." if tooltip.blank?
+
+        remember do
+          icon_control(icon: icon, label: tooltip, style: style, size: size, href: href)
+        end
+      end
+
+      def with_action(**button_arguments, &block)
+        arguments = button_arguments.merge(round: @round)
+        remember do
+          if block
+            render(FlatPack::Button::Component.new(**arguments), &block)
+          else
+            render(FlatPack::Button::Component.new(**arguments))
+          end
+        end
       end
 
       def call
+        content
         content_tag(:nav, **nav_attributes) do
-          content_tag(:div, class: "flex gap-2") do
-            safe_join([
-              left_actions,
-              anchor_actions,
-              link_actions,
-              right_slot_wrapper
-            ].compact)
+          content_tag(:div, class: "flex items-center gap-2") do
+            safe_join(@items.map(&:call))
           end
         end
       end
 
       private
 
+      def remember(&block)
+        @items << block
+        nil
+      end
+
+      def record_history(link, fallback_url)
+        return if link.present?
+
+        @history_back = true
+        @fallback_url = fallback_url.presence
+      end
+
       def nav_attributes
         attributes = {
           class: "flat-pack-page-nav",
           aria: {label: fp_t("page_nav.label")}
         }
-        attributes[:data] = history_nav_data if back_plan.history?
-
+        attributes[:data] = history_nav_data if @history_back
         merge_attributes(**attributes)
-      end
-
-      def left_actions
-        plan = back_plan
-        return if plan.hidden?
-
-        content_tag(:div, class: "flex items-center gap-2") do
-          back_action(plan)
-        end
-      end
-
-      def back_action(plan)
-        tooltip_wrapper(@back_label) do
-          icon_button(
-            icon: @back_icon,
-            label: @back_label,
-            style: @back_style,
-            size: @back_size,
-            **back_button_arguments(plan)
-          )
-        end
-      end
-
-      def back_button_arguments(plan)
-        return {href: plan.href} if plan.link?
-
-        {data: {action: "click->flat-pack--page-nav#back"}}
       end
 
       def history_nav_data
         data = {controller: "flat-pack--page-nav"}
-        data[:flat_pack__page_nav_fallback_url_value] = @anchor_href if @anchor_href.present?
+        data[:flat_pack__page_nav_fallback_url_value] = @fallback_url if @fallback_url.present?
         data
       end
 
-      def back_plan
-        @back_plan ||= if !@show_back
-          BackPlan.new(:hidden, nil)
-        elsif @back_href.present?
-          BackPlan.new(:link, @back_href)
-        else
-          BackPlan.new(:history, nil)
-        end
-      end
-
-      def anchor_action
-        return unless @anchor_href.present?
-
-        tooltip_wrapper(@anchor_label) do
-          icon_button(
-            icon: @anchor_icon,
-            label: @anchor_label,
-            style: @anchor_style,
-            size: @anchor_size,
-            href: @anchor_href
-          )
-        end
-      end
-
-      def anchor_actions
-        action = anchor_action
-        return if action.nil?
-
-        content_tag(:div, class: "flex items-center gap-2") do
-          action
-        end
-      end
-
-      def link_actions
-        return unless links?
-
-        content_tag(:div, class: "flex items-center gap-2") do
-          safe_join(links)
-        end
-      end
-
-      def right_slot_wrapper
-        return unless right?
-
-        content_tag(:div, class: "ml-auto flex items-center gap-2") do
-          right.to_s
-        end
-      end
-
-      def tooltip_wrapper(text)
-        button = capture { yield }
-        return button if text.blank?
-
-        render FlatPack::Tooltip::Component.new(text: text) do
-          button
-        end
-      end
-
-      def icon_button(icon:, label:, style:, size:, href: nil, data: nil)
-        button_arguments = {
+      def icon_control(icon:, label:, style:, size:, href: nil, data: nil)
+        button = render(FlatPack::Button::Component.new(**icon_button_arguments(
           icon: icon,
-          icon_only: true,
+          label: label,
           style: style,
           size: size,
+          href: href,
+          data: data
+        )))
+        return button if label.blank?
+
+        render(FlatPack::Tooltip::Component.new(text: label)) { button }
+      end
+
+      def icon_button_arguments(icon:, label:, style:, size:, href:, data:)
+        arguments = {
+          icon: icon,
+          icon_only: true,
+          style: style || @style,
+          size: size || @size,
           round: @round,
           aria: {label: label}
         }
-        button_arguments[:href] = href if href.present?
-        button_arguments[:data] = data if data.present?
+        arguments[:href] = href if href.present?
+        arguments[:data] = data if data.present?
+        arguments
+      end
 
-        render FlatPack::Button::Component.new(**button_arguments)
+      def capture_item
+        capture { yield }.to_s.html_safe
       end
 
       def validate_round!
@@ -252,8 +167,9 @@ module FlatPack
         raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
       end
 
-      def reject_removed_secondary!(arguments)
+      def reject_removed!(arguments)
         removed = arguments.keys.grep(/\Asecondary_anchor/)
+        removed |= arguments.keys & REMOVED_KEYWORDS
         return if removed.empty?
 
         raise ArgumentError, "unknown keyword: :#{removed.first}"

@@ -22,10 +22,10 @@ class PageNavReturnToTest < ActionDispatch::IntegrationTest
     get "/demo/page_nav"
 
     assert_response :success
-    assert_includes response.body, "The close icon stays. The back control does not."
+    assert_includes response.body, "Custom order"
     assert_includes response.body, "The back icon is a link."
-    assert_includes response.body, "show_back: false"
-    assert_includes response.body, "when anchor_href is provided"
+    refute_includes response.body, "show_back:"
+    refute_includes response.body, "right_slot"
     refute_includes response.body, "anchor_url"
   end
 

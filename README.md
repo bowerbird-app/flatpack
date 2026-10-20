@@ -315,7 +315,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **SidebarGroup** - Collapsible group of sidebar items with persisted state
 - **TopNav** - Sticky top navigation bar with composable left, center, and right regions
 - **BottomNav** - Fixed bottom navigation bar for mobile layouts
-- **PageNav** - Icon row with a back control, an optional close link, and an optional trailing action
+- **PageNav** - Ordered row of back, close, link, and action items. The helper supplies the default order.
 - **Tabs** - Tabbed content panels with URL-aware active state
 - **Pagination** - Page-based navigation with Pagy integration
 - **PaginationInfinite** - Infinite-scroll / load-more pagination

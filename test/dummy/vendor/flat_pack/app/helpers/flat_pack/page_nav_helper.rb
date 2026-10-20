@@ -13,11 +13,8 @@ module FlatPack
       spec = page_nav_spec
       return if spec.nil?
 
-      kwargs = spec.to_component_kwargs
-      return render(FlatPack::PageNav::Component.new(**kwargs)) if spec.links.empty?
-
-      render(FlatPack::PageNav::Component.new(**kwargs)) do |nav|
-        spec.links.each { |link| nav.with_link(**link) }
+      render(FlatPack::PageNav::Component.new(**spec.to_component_kwargs)) do |nav|
+        spec.items.each { |item| replay_page_nav_item(nav, item) }
       end
     end
 
@@ -54,7 +51,34 @@ module FlatPack
     end
 
     def page_nav_anchor
-      page_nav_spec&.to_component_kwargs&.[](:anchor_href)
+      page_nav_spec&.anchor_href
+    end
+
+    def replay_page_nav_item(nav, item)
+      case item.kind
+      when :back
+        nav.with_back(**item.options)
+      when :close
+        nav.with_close(**item.options)
+      when :link
+        nav.with_link(**item.options)
+      when :action
+        replay_page_nav_action(nav, item)
+      when :html
+        html = item.html
+        nav.with_item { html }
+      else
+        raise ArgumentError, "Unknown page nav item: #{item.kind}"
+      end
+    end
+
+    def replay_page_nav_action(nav, item)
+      html = item.html
+      if html.nil?
+        nav.with_action(**item.options)
+      else
+        nav.with_action(**item.options) { html }
+      end
     end
   end
 end

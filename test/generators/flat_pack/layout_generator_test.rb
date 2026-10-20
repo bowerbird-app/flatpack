@@ -31,6 +31,7 @@ module FlatPack
           assert_includes content, 'id="main"'
           assert_includes content, 'render "layouts/flat_pack/sidebar"'
           assert_includes content, 'render "layouts/flat_pack/top_nav"'
+          assert_includes content, "flat_pack_page_nav_tag"
         end
         assert_file "app/views/layouts/flat_pack/_sidebar.html.erb" do |content|
           assert_includes content, "FlatPack::Sidebar::Component"
