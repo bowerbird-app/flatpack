@@ -21,6 +21,7 @@ module FlatPack
         content_scroll: :behind,
         height: :full,
         width: :fixed,
+        resizable: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -32,6 +33,7 @@ module FlatPack
         @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
+        @resizable = resizable
 
         validate_side!
         validate_floating!
@@ -39,6 +41,7 @@ module FlatPack
         validate_content_scroll!
         validate_height!
         validate_width!
+        validate_resizable!(@resizable)
       end
 
       def sidebar(**args, &block)
@@ -108,13 +111,57 @@ module FlatPack
       end
 
       def render_sidebar_column
-        return unless sidebar?
+        render_panel(rail_panel, sidebar.to_s) if sidebar?
+      end
 
-        # fouc_prevention_script is injected as the FIRST child so it runs
-        # synchronously before <aside> is parsed, setting the data attribute
-        # that CSS uses to determine width — no paint at wrong size.
-        content = safe_join([fouc_prevention_script, sidebar.to_s].compact)
-        content_tag(:div, content, class: sidebar_column_classes, data: sidebar_column_data)
+      def render_panel(panel, body)
+        # The collapse script stays the first child so it runs before the
+        # rail <aside> is parsed. CSS then sizes the column before first paint.
+        content_tag(
+          :div,
+          safe_join([preamble(panel), body, resize_handle(panel)].compact),
+          **panel_tag_attributes(panel)
+        )
+      end
+
+      def panel_tag_attributes(panel)
+        {
+          class: classes(*panel.column_classes),
+          data: panel.column_data
+        }
+      end
+
+      def preamble(panel)
+        fouc_prevention_script if panel.role == :rail
+      end
+
+      def resize_handle(panel)
+        return unless panel.resizable
+
+        content_tag(
+          :div,
+          "",
+          class: "fp-panel-resize hidden md:block",
+          role: "separator",
+          tabindex: "0",
+          aria: {orientation: "vertical", label: panel.resize_label},
+          data: {
+            "flat-pack--panel-resize-target": "handle",
+            action: "pointerdown->flat-pack--panel-resize#start keydown->flat-pack--panel-resize#nudge dblclick->flat-pack--panel-resize#reset"
+          }
+        )
+      end
+
+      def rail_panel
+        Panel.rail(
+          edge: @side,
+          open: @open,
+          resizable: @resizable,
+          width_mode: @width,
+          floating: @floating,
+          content_height: content_height?,
+          storage_key: @storage_key
+        )
       end
 
       def fouc_prevention_script
@@ -215,34 +262,6 @@ module FlatPack
         end
       end
 
-      def sidebar_column_classes
-        classes(
-          "h-full",
-          "md:h-screen",
-          "md:self-start",
-          "min-h-0",
-          "transition-transform",
-          "md:transition-[width,transform]",
-          "duration-[var(--duration-slow)]",
-          "ease-[var(--easing-standard)]",
-          "transform-gpu",
-          "will-change-transform",
-          # Desktop styles
-          "block",
-          # Mobile drawer styles
-          "md:relative",
-          "fixed",
-          "inset-y-0",
-          "md:w-auto",
-          "z-50",
-          "md:z-auto",
-          "fp-sidebar-drawer",
-          ((@side == :left) ? "left-0" : "right-0"),
-          ((@side == :left) ? "-translate-x-full" : "translate-x-full"),
-          "md:translate-x-0"
-        )
-      end
-
       def main_column_classes
         classes(
           "flex",
@@ -264,20 +283,6 @@ module FlatPack
 
       def floating_top_nav_active?
         @floating_top_nav && top_nav?
-      end
-
-      def sidebar_column_data
-        {
-          "flat-pack--sidebar-layout-target": "sidebar",
-          "mobile-drawer-side": @side.to_s,
-          "flat-pack-sidebar-floating": ("true" if @floating),
-          "flat-pack-sidebar-height": ("content" if content_height?),
-          "flat-pack-sidebar-width": ("content" if content_width?)
-        }.compact
-      end
-
-      def content_width?
-        @width == :content
       end
 
       def content_height?
@@ -334,6 +339,12 @@ module FlatPack
         return if WIDTHS.include?(@width)
 
         raise ArgumentError, "width must be :fixed or :content"
+      end
+
+      def validate_resizable!(value)
+        return if value == true || value == false
+
+        raise ArgumentError, "resizable must be true or false"
       end
     end
   end
