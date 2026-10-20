@@ -3,7 +3,7 @@
  * Token hierarchy:
  *   1. Brand primitives (--brand-hue, --brand-chroma, --brand-lightness) — change these to recolor primary
  *   2. Spacing scale (--space-1..--space-6) and --density — component padding multiplies a step by density
- *   3. Shape scale (--radius-xs..--radius-xl, --radius-full) — component radii alias a step
+ *   3. Shape scale (--radius-xs..--radius-xxl, --radius-full) — component radii alias a step
  *   4. Semantic tokens (--color-*, --surface-*, --overlay-*, --shadow-*, --font-*, --text-*, --duration-*, --easing-*, --motion-*)
  *   5. Component tokens (--button-*, --sidebar-*, …) — padding is round(nearest, calc(var(--space-N) * var(--density)), 1px)
  *
@@ -664,6 +664,7 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
+  --radius-xxl: var(--radius-xxl);
   --radius-full: var(--radius-full);
   --form-control-radius: var(--form-control-radius);
   --badge-radius: var(--badge-radius);
@@ -1826,6 +1827,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1.25rem;
+  --radius-xxl: 2rem;
   --radius-full: 9999px;
   --button-border-radius: var(--radius-md);
   --button-round-border-radius: var(--radius-full);
@@ -1965,6 +1967,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-border-radius: var(--radius-full);
   --form-control-radius: var(--radius-full);
   --chip-border-radius: var(--radius-md);
+  --sidebar-float-radius: var(--radius-xl);
   --sidebar-item-radius: var(--radius-md);
   --dropdown-item-radius: var(--radius-md);
   --badge-radius: var(--radius-full);
