@@ -212,6 +212,8 @@ Arrow keys step 16px. Right grows a left panel and shrinks a right panel. Double
 
 A committed width sets `--fp-panel-width` on the column and `data-flat-pack-panel-resized="true"`. The controller does not set `style.width`. The rail stays between `--sidebar-content-min-width` and `--sidebar-content-max-width`. `width: :content` starts from `--sidebar-measured-width`. A rail drag or arrow below the minimum collapses the rail and does not write a width. The aside stays between `--aside-min-width` (`16rem`) and `--aside-max-width` (`32rem`). It starts at `--aside-width` (`20rem`) and does not collapse.
 
+The 1px line is `--resize-handle-color` at rest. That token aliases `--surface-border-color`. Hover and a pressed button use `--resize-handle-active-color`. That token aliases `--surface-muted-content-color`. Keyboard focus draws one soft ring from `--color-ring` on the line. A pointer drag does not leave that ring. There is no grip.
+
 Saved widths are `storage_key:rail:width` and `storage_key:aside:width`, integer pixels. No key when `storage_key` is nil.
 
 The controller is `flat-pack--panel-resize` on the column. A drag sets `transition-property: none` and clears it on release. `prefers-reduced-motion: reduce` still snaps, because `--duration-slow` is `0ms`.

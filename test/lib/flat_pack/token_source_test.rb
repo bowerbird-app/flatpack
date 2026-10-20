@@ -639,6 +639,26 @@ module FlatPack
       refute_includes root_block, "--fp-panel-min"
     end
 
+    test "resize handle colors are theme tokens on the shared separator" do
+      theme_block = @css[/@theme inline \{.*?^\}/m]
+      assert_match(/--resize-handle-color:\s*var\(--resize-handle-color\);/, theme_block)
+      assert_match(/--resize-handle-active-color:\s*var\(--resize-handle-active-color\);/, theme_block)
+      assert_match(/--resize-handle-color:\s*var\(--surface-border-color\);/, root_block)
+      assert_match(/--resize-handle-active-color:\s*var\(--surface-muted-content-color\);/, root_block)
+
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      handle = application[/\n  \.fp-panel-resize \{.*?\n  \[data-flat-pack-sidebar-collapsed="true"\] \[data-flat-pack--sidebar-layout-target/m]
+      assert_includes handle, "background-color: var(--resize-handle-color);"
+      assert_includes handle, "background-color: var(--resize-handle-active-color);"
+      assert_includes handle, "cursor: col-resize"
+      assert_includes handle, ".fp-panel-resize:focus-visible:not([data-pointer-focus])::after"
+      assert_includes handle, "box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 35%, transparent);"
+      assert_includes handle, "outline: none"
+      refute_includes handle, "outline: 2px solid var(--color-ring)"
+      after = handle[/\.fp-panel-resize::after \{.*?\}/m]
+      refute_includes after, "opacity: 0"
+    end
+
     private
 
     def token_names(block)

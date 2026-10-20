@@ -34,6 +34,7 @@ export default class extends Controller {
     if (typeof event.preventDefault === "function") event.preventDefault()
 
     const handle = event.currentTarget || (this.hasHandleTarget ? this.handleTarget : null)
+    if (handle && handle.dataset) handle.dataset.pointerFocus = "true"
     this.snapshotWidth = this.element.style.getPropertyValue("--fp-panel-width")
     this.snapshotResized = this.element.dataset.flatPackPanelResized
     this.originX = event.clientX
@@ -166,6 +167,8 @@ export default class extends Controller {
       handle.removeEventListener("pointerup", this.onPointerUp)
       handle.removeEventListener("pointercancel", this.onPointerUp)
     }
+    if (handle && document.activeElement === handle && typeof handle.blur === "function") handle.blur()
+    if (handle && handle.dataset) delete handle.dataset.pointerFocus
     this.releaseCapture()
   }
 

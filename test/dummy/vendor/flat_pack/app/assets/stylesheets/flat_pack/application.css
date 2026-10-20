@@ -640,6 +640,12 @@
     cursor: col-resize;
     touch-action: none;
     background: transparent;
+    outline: none;
+  }
+
+  .fp-panel-resize:focus,
+  .fp-panel-resize:focus-visible {
+    outline: none;
   }
 
   .fp-panel-resize::after {
@@ -650,18 +656,16 @@
     left: 50%;
     width: 1px;
     transform: translateX(-50%);
-    background: var(--surface-border-color);
-    opacity: 0;
-    transition: opacity var(--duration-fast) var(--easing-standard);
+    background-color: var(--resize-handle-color);
+    transition: background-color var(--duration-fast) var(--easing-standard);
   }
 
-  .fp-panel-resize:is(:hover, :focus-visible)::after {
-    opacity: 1;
+  .fp-panel-resize:is(:hover, :active)::after {
+    background-color: var(--resize-handle-active-color);
   }
 
-  .fp-panel-resize:focus-visible {
-    outline: 2px solid var(--color-ring);
-    outline-offset: -2px;
+  .fp-panel-resize:focus-visible:not([data-pointer-focus])::after {
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 35%, transparent);
   }
 
   [data-mobile-drawer-side="left"] > .fp-panel-resize { right: 0; }

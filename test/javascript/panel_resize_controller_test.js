@@ -51,7 +51,7 @@ function loadPanelResizeController() {
   }
 
   vm.runInNewContext(source, context, { filename: filePath })
-  return { Controller: context.module.exports, storage: localMemory, window: context.window, env }
+  return { Controller: context.module.exports, storage: localMemory, window: context.window, env, document: context.document }
 }
 
 function mount({
@@ -66,6 +66,8 @@ function mount({
   const listeners = {}
   const handle = {
     attrs: {},
+    dataset: {},
+    blur() {},
     listeners,
     setAttribute(name, value) { this.attrs[name] = String(value) },
     addEventListener(type, fn) { (listeners[type] ||= []).push(fn) },
@@ -269,6 +271,34 @@ test('mobile resize gestures do nothing', () => {
   assert.equal(column.style.getPropertyValue('transition-property'), '')
   assert.equal(column.style.getPropertyValue('--fp-panel-width'), painted)
   assert.equal(storage.get('app-shell:rail:width'), '280')
+})
+
+test('a pointer drag marks pointer focus and blurs the handle on release', () => {
+  const { controller, handle, document } = mount()
+  let blurred = 0
+  handle.blur = () => { blurred += 1 }
+  controller.connect()
+  document.activeElement = handle
+
+  controller.start(pointerDown(handle, 100))
+  assert.equal(handle.dataset.pointerFocus, 'true')
+
+  handle.listeners.pointerup[0]({ pointerId: 1 })
+  assert.equal(blurred, 1)
+  assert.equal(handle.dataset.pointerFocus, undefined)
+})
+
+test('an arrow nudge does not mark pointer focus or blur the handle', () => {
+  const { controller, handle, document } = mount()
+  let blurred = 0
+  handle.blur = () => { blurred += 1 }
+  controller.connect()
+  document.activeElement = handle
+
+  controller.nudge({ key: 'ArrowRight', preventDefault() {} })
+
+  assert.equal(handle.dataset.pointerFocus, undefined)
+  assert.equal(blurred, 0)
 })
 
 test('a non primary button does not start a drag', () => {
