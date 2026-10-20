@@ -1,5 +1,6 @@
+<% page_scroll = controller.action_name == "sidebar_layout" && params[:scroll] == "page" %>
 <!DOCTYPE html>
-<html <%= tag.attributes(flat_pack_html_attributes(class: "h-full overflow-hidden overscroll-none", data: {theme: "rounded"})) %>>
+<html <%= tag.attributes(flat_pack_html_attributes(class: (page_scroll ? "min-h-full" : "h-full overflow-hidden overscroll-none"), data: {theme: "rounded"})) %>>
   <head>
     <title>FlatPack Demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -92,7 +93,7 @@
     </script>
   </head>
 
-  <body class="m-0 h-full overflow-hidden overscroll-none bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode"<% if @body_theme.present? %> data-theme="<%= @body_theme %>"<% end %>>
+  <body class="m-0<%= page_scroll ? "" : " h-full overflow-hidden overscroll-none" %> bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode"<% if @body_theme.present? %> data-theme="<%= @body_theme %>"<% end %>>
     <%= render FlatPack::SkipLink::Component.new(href: "#main") %>
     <%= render "layouts/icon_sprite" %>
 
@@ -100,7 +101,7 @@
     <% sidebar_floating = params[:floating].in?(%w[1 true]) %>
     <% sidebar_background = params[:background].in?(%w[1 true]) %>
     <% floating_top_nav = params[:floating_top_nav].in?(%w[1 true]) %>
-    <% content_scroll = params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind %>
+    <% content_scroll = page_scroll ? :behind : (params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind) %>
     <% sidebar_height = params[:height].in?(%w[full content]) ? params[:height].to_sym : :full %>
     <% sidebar_width = params[:width].in?(%w[fixed content]) ? params[:width].to_sym : :fixed %>
     <% content_height = sidebar_floating && sidebar_height == :content %>
@@ -117,6 +118,7 @@
       floating: sidebar_floating,
       floating_top_nav: floating_top_nav,
       content_scroll: content_scroll,
+      scroll: (page_scroll ? :page : :pane),
       height: sidebar_height,
       width: sidebar_width,
       resizable: panels_resizable
