@@ -117,7 +117,8 @@
       [:sm, "Small"],
       [:md, "Medium"],
       [:lg, "Large"],
-      [:xl, "Extra large"]
+      [:xl, "Extra large"],
+      [:xxl, "32px"]
     ].each do |radius, label| %>
       <%= render FlatPack::Card::Component.new(radius: radius) do |card| %>
         <% card.body do %>
@@ -128,13 +129,15 @@
   <% end %>
   <div class="mt-4">
     <%= render FlatPack::Grid::Component.new(cols: 1, gap: :md) do %>
-      <%= render FlatPack::Card::Component.new(radius: :xxl, padding: :none) do |card| %>
-        <% card.media(padding: :none) do %>
-          <%= image_tag "/images/hero-stool.jpg", alt: "Stool", class: "block h-56 w-full object-cover" %>
-        <% end %>
-        <% card.footer(divider: false, padding: :md) do %>
-          <p class="text-sm font-medium">Largest</p>
-        <% end %>
+      <%= render FlatPack::Card::Component.new(radius: :xxxl, padding: :md) do %>
+        <%= render FlatPack::Media::Component.new(
+          src: "/images/hero-stool.jpg",
+          alt: "Stool",
+          width: 1200,
+          height: 800,
+          radius: :card_inner
+        ) %>
+        <p class="mt-3 text-sm font-medium">40px corner</p>
       <% end %>
     <% end %>
   </div>

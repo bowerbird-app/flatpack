@@ -92,7 +92,8 @@ module FlatPack
         md: "var(--radius-md)",
         lg: "var(--radius-lg)",
         xl: "var(--radius-xl)",
-        xxl: "var(--radius-xxl)"
+        xxl: "var(--radius-xxl)",
+        xxxl: "var(--radius-xxxl)"
       }.freeze
 
       def initialize(

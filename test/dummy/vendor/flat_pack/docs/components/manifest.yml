@@ -146,11 +146,13 @@ components:
       - FlatPack::Card::Stat::Component
     args:
       - "radius: :xxl"
+      - "radius: :xxxl"
     tokens:
       - --card-inset
       - --card-inner-radius
       - --card-radius
       - --radius-xxl
+      - --radius-xxxl
     classes:
       - fp-card
       - fp-card-inner-radius
@@ -675,6 +677,8 @@ components:
       - --top-nav-float-radius
       - --top-nav-float-clearance
       - --sidebar-float-inset
+      - --sidebar-float-radius
+      - --sidebar-item-radius
       - --sidebar-width
       - --sidebar-collapsed-width
       - --sidebar-content-min-width

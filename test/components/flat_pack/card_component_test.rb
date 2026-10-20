@@ -579,7 +579,8 @@ module FlatPack
           md: "var(--radius-md)",
           lg: "var(--radius-lg)",
           xl: "var(--radius-xl)",
-          xxl: "var(--radius-xxl)"
+          xxl: "var(--radius-xxl)",
+          xxxl: "var(--radius-xxxl)"
         }.each do |radius, length|
           render_inline(Component.new(radius: radius)) { "Hi" }
           assert_equal "--card-radius: #{length}", page.find(".fp-card")["style"]
@@ -623,6 +624,33 @@ module FlatPack
         assert_equal "--card-radius: var(--radius-xxl)", page.find(".fp-card")["style"]
         assert_equal 1, page.native.to_html.scan("--card-radius:").size
         refute_includes page.find(".fp-card div").native.to_html, "--card-radius"
+      end
+
+      def test_xxxl_card_inner_media_nests_inside_the_card
+        render_inline(Component.new(radius: :xxxl, padding: :md)) do |card|
+          card.body do
+            vc_test_controller.view_context.render(
+              FlatPack::Media::Component.new(
+                src: "/images/hero-stool.jpg",
+                alt: "Stool",
+                width: 1200,
+                height: 800,
+                radius: :card_inner
+              )
+            )
+          end
+        end
+
+        card = page.find(".fp-card")
+        assert_equal "md", card["data-fp-card-padding"]
+        assert_equal "--card-radius: var(--radius-xxxl)", card["style"]
+        frame = page.find(".fp-media__frame")
+        assert_includes frame["class"], "fp-card-inner-radius"
+        refute_includes frame.native.to_html, "--card-radius"
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        assert_includes css, "--card-inner-radius: max(0px, calc(var(--card-radius) - var(--card-inset)));"
+        assert_includes css, '.fp-card[data-fp-card-padding="md"]'
+        assert_includes css, "--card-inset: var(--card-padding-md);"
       end
 
       def test_card_radius_and_inner_media_radius_stay_separate

@@ -20,7 +20,7 @@ Use Card to group related content in a consistent surface with optional hover an
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
-| `radius` | Symbol | `:default` | no | `:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`. `:default` keeps the theme `--card-radius` and adds no markup. Other values set inline `--card-radius`. Independent of `padding:`. Invalid values raise `ArgumentError`. The inline value carries through to `--media-radius` and `--card-inner-radius`. `FlatPack::Card::Stat::Component` does not take `radius:`. |
+| `radius` | Symbol | `:default` | no | `:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`, `:xxxl`. `:default` keeps the theme `--card-radius` and adds no markup. Other values set inline `--card-radius`. Independent of `padding:`. Invalid values raise `ArgumentError`. The inline value carries through to `--media-radius` and `--card-inner-radius`. `FlatPack::Card::Stat::Component` does not take `radius:`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
 Behavior note:
@@ -143,6 +143,20 @@ Light mode defines every token on `:root, [data-theme]`. Default follows `--card
 ```
 
 `radius: :xxl` sets the corner to `--radius-xxl` (2rem). `padding: :none` is separate.
+
+```erb
+<%= render FlatPack::Card::Component.new(radius: :xxxl, padding: :md) do %>
+  <%= render FlatPack::Media::Component.new(
+    src: "/images/hero-stool.jpg",
+    alt: "Stool",
+    width: 1200,
+    height: 800,
+    radius: :card_inner
+  ) %>
+<% end %>
+```
+
+`radius: :xxxl` sets the corner to `--radius-xxxl` (2.5rem, 40px). `radius: :card_inner` on Media uses `max(0px, calc(var(--card-radius) - var(--card-inset)))`, so the photo nests inside that corner. `padding: :md` only sets the inset.
 
 ```erb
 <%= render FlatPack::Card::Stat::Component.new(

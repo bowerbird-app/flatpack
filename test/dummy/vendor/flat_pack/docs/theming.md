@@ -14,7 +14,7 @@ Component tokens (--button-*, --sidebar-*, …) — defined once as var(--semant
 Components / Stimulus
 ```
 
-The kit default (no `data-theme`) is the charcoal palette on the compact spacing scale and the moderate shape scale. Named themes (`[data-theme~="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme~="rounded"]` keeps that palette, shifts `--space-2` through `--space-6`, remaps the menu shells, and changes shape: buttons, inputs, badges, tabs, and the chat composer become pills (`--radius-full`). Chips, sidebar item highlights, and menu item highlights stay `--radius-md` (8px). Cards, menus, popovers, modals, alerts, and toasts step up to `--radius-xl`. Dark and ocean inherit the compact spacing and the moderate shape. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)` on `:root, [data-theme]`, so a descendant theme re-resolves it. Concrete `--space-*`, `--density`, and `--radius-*` live on bare `:root` only. Component radii that rounded changes live on that same bare `:root`, not on `[data-theme]`, so a dark region inside rounded keeps the pill or the larger shell. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto a named theme. `html[data-theme~="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
+The kit default (no `data-theme`) is the charcoal palette on the compact spacing scale and the moderate shape scale. Named themes (`[data-theme~="dark"]`, `ocean`, or your own) should override **brand/semantic** tokens. `[data-theme~="rounded"]` keeps that palette, shifts `--space-2` through `--space-6`, remaps the menu shells, and changes shape: buttons, inputs, badges, tabs, and the chat composer become pills (`--radius-full`). Chips and menu item highlights stay `--radius-md` (8px). The rounded sidebar highlight is the float radius minus the item inset. Cards, menus, popovers, modals, alerts, and toasts step up to `--radius-xl`. Dark and ocean inherit the compact spacing and the moderate shape. Component padding is `round(nearest, calc(var(--space-N) * var(--density)), 1px)` on `:root, [data-theme]`, so a descendant theme re-resolves it. Concrete `--space-*`, `--density`, and `--radius-*` live on bare `:root` only. Component radii that rounded changes live on that same bare `:root`, not on `[data-theme]`, so a dark region inside rounded keeps the pill or the larger shell. Do not copy `@theme inline` self-maps (`--token: var(--token)`) onto a named theme. `html[data-theme~="rounded"]` is `:root`, so those lines blank the token and sidebar `border-r` falls back to `currentColor`.
 
 On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme~="rounded"]`. Rounded sets spacing and shape. Set `<html data-theme="rounded">` when the generous steps and pill controls should show. Without the attribute, the compact scale and moderate corners apply.
 
@@ -225,6 +225,7 @@ Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`5deg`), `
 --radius-lg: 0.75rem    /* 12px */
 --radius-xl: 1.25rem    /* 20px */
 --radius-xxl: 2rem      /* 32px */
+--radius-xxxl: 2.5rem  /* 40px */
 --radius-full: 9999px
 ```
 
@@ -237,14 +238,14 @@ The shape scale lives on bare `:root`, same as `--space-*`. Component radii alia
 | `--form-control-radius` | `--radius-md` | `--radius-full` |
 | `--badge-radius`, `--tabs-pill-corner-radius` | `--radius-md` | `--radius-full` |
 | `--chip-border-radius` | `--radius-md` | `--radius-md` |
-| `--sidebar-float-radius` | `--radius-lg` | `--radius-xl` |
-| `--sidebar-item-radius` | `--radius-lg` | `--radius-md` |
+| `--sidebar-float-radius` | `--radius-lg` | `--radius-xxxl` |
+| `--sidebar-item-radius` | `--radius-lg` | `max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)))` |
 | `--dropdown-item-radius` | `--radius-sm` | `--radius-md` |
 | `--chat-composer-radius` | `--radius-lg` | `--radius-full` |
 | `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius` | `--radius-lg` | `--radius-xl` |
 | `--alert-border-radius`, `--toast-border-radius` | `--radius-lg` | `--radius-xl` |
 
-Rounded sets `--sidebar-float-radius` to `--radius-xl` (1.25rem). It was the inherited `--radius-lg` at 0.75rem. The item row stays `--radius-md`. The item inset is 0.75rem. 1.25rem minus 0.75rem is 0.5rem, so the highlight already shares the panel center.
+Rounded sets `--sidebar-float-radius` to `--radius-xxxl` (2.5rem, 40px). The item highlight is `max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)))`. The rounded item inset is 0.75rem, so the highlight is 1.75rem and shares the panel center. Charcoal (no `data-theme`) keeps the floating rail at `--radius-lg`. Dark and ocean stay square.
 
 `Button` `round: true` uses `--button-round-border-radius`, which stays `--radius-full` on the moderate scale and on rounded. An icon-only round button also sets its side from `--button-round-size-sm`, `--button-round-size-md`, or `--button-round-size-lg` (`max(--hit-target-min, padding + icon + border)`), declared with the other button padding formulas so density still applies.
 
@@ -264,6 +265,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the kit radii on unla
   --radius-lg: 0.75rem;
   --radius-xl: 1.25rem;
   --radius-xxl: 2rem;
+  --radius-xxxl: 2.5rem;
   --radius-full: 9999px;
 }
 ```
