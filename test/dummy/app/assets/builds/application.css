@@ -6608,6 +6608,14 @@
   }
 }
 @layer components {
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"] {
+    width: var(--aside-width) !important;
+  }
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"] > .fp-aside {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
   @media (min-width: 768px) {
     [data-flat-pack-sidebar-collapsed="true"] {
       width: var(--sidebar-collapsed-width) !important;
@@ -6630,6 +6638,39 @@
       width: var(--sidebar-collapsed-width) !important;
       min-width: var(--sidebar-collapsed-width) !important;
       max-width: var(--sidebar-collapsed-width) !important;
+    }
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-open="false"] {
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+      margin: 0 !important;
+      overflow: hidden !important;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    [data-flat-pack-panel-resized="true"][data-flat-pack-aside-open="true"],
+    [data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"] {
+      width: var(--fp-panel-width) !important;
+      min-width: var(--fp-panel-width) !important;
+      max-width: var(--fp-panel-width) !important;
+    }
+    [data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"] > aside,
+    [data-flat-pack-panel-resized="true"][data-flat-pack-aside-open="true"] > .fp-aside,
+    [data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside,
+    [data-flat-pack-panel-resized="true"][data-flat-pack-aside-open="true"] .fp-aside {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+    [data-flat-pack-sidebar-collapsed="true"] > .fp-panel-resize,
+    [data-flat-pack-aside-open="false"] > .fp-panel-resize {
+      display: none !important;
+    }
+    [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-height="content"][data-flat-pack-panel="aside"] .fp-aside {
+      display: block;
+      overflow-y: auto;
+      height: auto !important;
+      max-height: inherit;
     }
   }
   .fp-scrollbar-hidden {

@@ -466,6 +466,7 @@ import ListSelectableController   from "${controllersDir}/list_selectable_contro
 import ModalController            from "${controllersDir}/modal_controller.js";
 import NestedMultiselectController from "${controllersDir}/nested_multiselect_controller.js";
 import PaginationInfiniteController from "${controllersDir}/pagination_infinite_controller.js";
+import PanelResizeController      from "${controllersDir}/panel_resize_controller.js";
 import PasswordInputController    from "${controllersDir}/password_input_controller.js";
 import PickerController           from "${controllersDir}/picker_controller.js";
 import PopoverController          from "${controllersDir}/popover_controller.js";
@@ -518,6 +519,7 @@ application.register("flat-pack--list-selectable",     ListSelectableController)
 application.register("flat-pack--modal",               ModalController);
 application.register("flat-pack--nested-multiselect",  NestedMultiselectController);
 application.register("flat-pack--pagination-infinite", PaginationInfiniteController);
+application.register("flat-pack--panel-resize",        PanelResizeController);
 application.register("flat-pack--password-input",      PasswordInputController);
 application.register("flat-pack--picker",              PickerController);
 application.register("flat-pack--popover",             PopoverController);
@@ -607,7 +609,7 @@ npm run build:stimulus
 
 Add this to your CI / deploy pipeline to keep the bundle current automatically.
 
-**Sidebar localStorage key:** The `flat-pack--sidebar-layout` controller persists the sidebar open/closed state in localStorage. The key is controlled by the `data-flat-pack--sidebar-layout-storage-key-value` attribute on the controller element. The generated sidebar template defaults to `flat-pack-sidebar-layout`. Override it per layout if you need app-specific namespacing:
+**Sidebar localStorage key:** The `flat-pack--sidebar-layout` controller persists the sidebar open/closed state in localStorage. The key is controlled by the `data-flat-pack--sidebar-layout-storage-key-value` attribute on the controller element. The generated sidebar template defaults to `flat-pack-sidebar-layout`. Override it per layout if you need app-specific namespacing. `"true"` on that key means the rail is collapsed. The aside key is the same string plus `:aside`, and `"true"` there means the aside is open. A drag stores integer pixels at `:rail:width` and `:aside:width`. A layout with no aside slot does not write the aside keys.
 
 ```erb
 <div data-controller="flat-pack--sidebar-layout"

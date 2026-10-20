@@ -29,6 +29,11 @@ module FlatPack
         default: "flat-pack-sidebar-layout",
         desc: "localStorage key used by FlatPack::SidebarLayout::Component"
 
+      class_option :aside,
+        type: :boolean,
+        default: false,
+        desc: "Add an aside column opposite the sidebar"
+
       def validate_options
         unless supported_layout_types.include?(layout_type)
           raise Thor::Error, "Unsupported layout type '#{options[:type]}'. Supported types: #{supported_layout_types.join(", ")}"

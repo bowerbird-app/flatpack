@@ -104,6 +104,10 @@
     <% sidebar_height = params[:height].in?(%w[full content]) ? params[:height].to_sym : :full %>
     <% sidebar_width = params[:width].in?(%w[fixed content]) ? params[:width].to_sym : :fixed %>
     <% content_height = sidebar_floating && sidebar_height == :content %>
+    <% aside_state = params[:aside].to_s %>
+    <% show_aside = aside_state.in?(%w[1 true closed]) %>
+    <% aside_open = aside_state != "closed" %>
+    <% panels_resizable = params[:resizable].in?(%w[1 true]) %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
       storage_key: "flatpack-dummy-shell",
@@ -111,7 +115,8 @@
       floating_top_nav: floating_top_nav,
       content_scroll: content_scroll,
       height: sidebar_height,
-      width: sidebar_width
+      width: sidebar_width,
+      resizable: panels_resizable
     ) do |layout| %>
       <% if sidebar_background %>
         <% layout.background do %>
@@ -179,6 +184,26 @@
         </div>
       <% end %>
 
+      <% if show_aside %>
+        <% layout.aside(open: aside_open, resizable: panels_resizable) do %>
+          <div class="flex items-center justify-between gap-3 border-b border-(--surface-border-color) px-4 py-3">
+            <h2 class="text-sm font-medium">Details</h2>
+            <%= render FlatPack::Button::Component.new(
+              icon: "x-mark",
+              icon_only: true,
+              style: :ghost,
+              size: :sm,
+              aria: { label: "Close details" },
+              data: { action: "click->flat-pack--sidebar-layout#closeAside" }
+            ) %>
+          </div>
+          <div class="space-y-3 p-4 text-sm leading-6">
+            <p>Notes for this page stay here.</p>
+            <p>The panel scrolls on its own. The page column does not move with it.</p>
+          </div>
+        <% end %>
+      <% end %>
+
       <% layout.top_nav do %>
         <%= render FlatPack::TopNav::Component.new do |nav| %>
           <% nav.left do %>
@@ -194,6 +219,18 @@
               },
               class: "md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
             ) %>
+            <% if show_aside %>
+              <%= render FlatPack::Button::Component.new(
+                text: "Details",
+                style: :ghost,
+                size: :sm,
+                aria: { expanded: aside_open },
+                data: {
+                  "flat-pack--sidebar-layout-target": "asideToggle",
+                  action: "click->flat-pack--sidebar-layout#toggleAside"
+                }
+              ) %>
+            <% end %>
             <% if floating_top_nav %>
               <%= render FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm) %>
               <%= render FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm) %>

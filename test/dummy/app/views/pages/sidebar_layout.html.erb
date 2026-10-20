@@ -20,6 +20,14 @@
 <% content_width = params[:width] == "content" %>
 <% fit_width_query = request.query_parameters.merge("width" => "content") %>
 <% fixed_width_query = request.query_parameters.except("width") %>
+<% aside_on = params[:aside].in?(%w[1 true closed]) %>
+<% aside_closed = params[:aside] == "closed" %>
+<% resizable_on = params[:resizable].in?(%w[1 true]) %>
+<% show_aside_query = request.query_parameters.merge("aside" => "1") %>
+<% hide_aside_query = request.query_parameters.except("aside") %>
+<% closed_aside_query = request.query_parameters.merge("aside" => "closed") %>
+<% resize_query = request.query_parameters.merge("resizable" => "1") %>
+<% lock_size_query = request.query_parameters.except("resizable") %>
 
 <div class="mb-8 flex flex-wrap items-center gap-3">
   <%= link_to(
@@ -51,6 +59,26 @@
     style: :secondary,
     size: :sm
   ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: aside_on ? "Hide details" : "Show details",
+    href: demo_sidebar_layout_path(aside_on ? hide_aside_query : show_aside_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <% if aside_on %>
+    <%= render FlatPack::Button::Component.new(
+      text: aside_closed ? "Start open" : "Start closed",
+      href: demo_sidebar_layout_path(aside_closed ? show_aside_query : closed_aside_query),
+      style: :ghost,
+      size: :sm
+    ) %>
+  <% end %>
+  <%= render FlatPack::Button::Component.new(
+    text: resizable_on ? "Lock size" : "Resize",
+    href: demo_sidebar_layout_path(resizable_on ? lock_size_query : resize_query),
+    style: :secondary,
+    size: :sm
+  ) %>
   <% if top_nav_floating %>
     <%= render FlatPack::Button::Component.new(
       text: content_below ? "Scroll under" : "Start below",
@@ -73,6 +101,8 @@
     <code>?floating_top_nav=1</code> turns the bar into cards. <code>content_scroll=below</code> parks those cards above the page.
     <code>?height=content</code> with <code>?floating=1</code> sizes the desktop rail to its items.
     <code>?width=content</code> sizes the open desktop rail to its widest item.
+    <code>?aside=1</code> opens Details. <code>?aside=closed</code> starts it shut.
+    <code>?resizable=1</code> adds a drag handle.
   </p>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -90,6 +120,22 @@
 
         &lt;% layout.main do %&gt;
           &lt;main&gt;...&lt;/main&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::SidebarLayout::Component.new(resizable: true, storage_key: "app-shell") do |layout| %&gt;
+        &lt;% layout.aside(open: true, resizable: true) do %&gt;
+          &lt;h2&gt;Details&lt;/h2&gt;
+          &lt;%= render FlatPack::Button::Component.new(
+            icon: "x-mark",
+            icon_only: true,
+            aria: { label: "Close details" },
+            data: { action: "click->flat-pack--sidebar-layout#closeAside" }
+          ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
     CODE
