@@ -47,6 +47,7 @@ module FlatPack
           helper FlatPack::CopyHelper
           helper FlatPack::ModalHelper
           helper FlatPack::LightboxHelper
+          helper FlatPack::PageNavHelper
         end
       end
 
@@ -54,6 +55,7 @@ module FlatPack
         include FlatPack::CopyHelper
         include FlatPack::ModalHelper
         include FlatPack::LightboxHelper
+        include FlatPack::PageNavHelper
       end
     end
 

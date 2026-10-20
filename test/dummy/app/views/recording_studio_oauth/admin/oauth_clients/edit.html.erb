@@ -3,6 +3,12 @@
      page_nav_back_url: oauth_clients_admin_screen_path,
      page_nav_anchor_url: oauth_clients_admin_screen_path
    ) %>
+<% flat_pack_page_nav(
+     back_href: oauth_clients_admin_screen_path,
+     anchor_href: oauth_clients_admin_screen_path,
+     back_tooltip: "Back",
+     anchor_tooltip: "Close"
+   ) %>
 
 <%= render FlatPack::PageTitle::Component.new(
   title: "Edit app",

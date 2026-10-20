@@ -20,6 +20,33 @@ module FlatPack
         assert_selector "button[data-action='click->flat-pack--page-nav#back']"
         assert_selector "button[aria-label='Go back']"
         assert_selector "button svg[data-flat-pack--icon-name-value='chevron-left']"
+        refute_selector "nav[data-flat-pack--page-nav-fallback-url-value]"
+      end
+
+      def test_omits_back_control_and_controller_when_show_back_is_false
+        render_inline(Component.new(show_back: false, anchor_href: "/demo"))
+
+        refute_selector "button"
+        refute_selector "[data-action='click->flat-pack--page-nav#back']"
+        refute_selector "[data-controller='flat-pack--page-nav']"
+        assert_selector "a[href='/demo'][aria-label='Close']"
+        assert_selector "nav > div.flex.gap-2 > div", count: 1
+      end
+
+      def test_renders_back_href_as_a_link_without_history_action
+        render_inline(Component.new(back_href: "/studio"))
+
+        assert_selector "a[href='/studio'][aria-label='Go back']"
+        refute_selector "[data-action='click->flat-pack--page-nav#back']"
+        refute_selector "[data-controller='flat-pack--page-nav']"
+      end
+
+      def test_sets_fallback_url_when_history_back_has_an_anchor
+        render_inline(Component.new(anchor_href: "/demo"))
+
+        assert_selector "nav[data-controller='flat-pack--page-nav'][data-flat-pack--page-nav-fallback-url-value='/demo']"
+        assert_selector "button[data-action='click->flat-pack--page-nav#back']"
+        assert_selector "a[href='/demo']"
       end
 
       def test_hides_anchor_and_right_actions_when_not_provided

@@ -50,6 +50,10 @@ module FlatPack
       refute app.config.respond_to?(:view_component)
     end
 
+    test "page nav helper is mixed into views" do
+      assert_includes ActionView::Base.included_modules, FlatPack::PageNavHelper
+    end
+
     test "copy helper is mixed into views and skipped on API-like controllers" do
       assert_includes ActionView::Base.included_modules, FlatPack::CopyHelper
 

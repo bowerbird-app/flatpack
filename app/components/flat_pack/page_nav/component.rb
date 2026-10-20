@@ -3,6 +3,21 @@
 module FlatPack
   module PageNav
     class Component < FlatPack::BaseComponent
+      BackPlan = Data.define(:mode, :href) do
+        def hidden?
+          mode == :hidden
+        end
+
+        def link?
+          mode == :link
+        end
+
+        def history?
+          mode == :history
+        end
+      end
+      private_constant :BackPlan
+
       renders_one :right_slot
 
       def initialize(
@@ -12,6 +27,8 @@ module FlatPack
         back_label: FlatPack::Copy::OMITTED,
         back_style: :secondary,
         back_size: :md,
+        show_back: true,
+        back_href: nil,
         secondary_anchor_href: nil,
         secondary_anchor_icon: "chevron-left",
         secondary_anchor_tooltip: nil,
@@ -30,6 +47,8 @@ module FlatPack
         @back_label = back_tooltip.presence || fp_text(back_label, "page_nav.back")
         @back_style = back_style
         @back_size = back_size
+        @show_back = show_back
+        @back_href = back_href
 
         @secondary_anchor_href = secondary_anchor_href
         @secondary_anchor_icon = secondary_anchor_icon
@@ -72,28 +91,55 @@ module FlatPack
       private
 
       def nav_attributes
-        merge_attributes(
+        attributes = {
           class: "flat-pack-page-nav",
-          aria: {label: fp_t("page_nav.label")},
-          data: {controller: "flat-pack--page-nav"}
-        )
+          aria: {label: fp_t("page_nav.label")}
+        }
+        attributes[:data] = history_nav_data if back_plan.history?
+
+        merge_attributes(**attributes)
       end
 
       def left_actions
+        plan = back_plan
+        return if plan.hidden?
+
         content_tag(:div, class: "flex items-center gap-2") do
-          back_action
+          back_action(plan)
         end
       end
 
-      def back_action
+      def back_action(plan)
         tooltip_wrapper(@back_label) do
           icon_button(
             icon: @back_icon,
             label: @back_label,
             style: @back_style,
             size: @back_size,
-            data: {action: "click->flat-pack--page-nav#back"}
+            **back_button_arguments(plan)
           )
+        end
+      end
+
+      def back_button_arguments(plan)
+        return {href: plan.href} if plan.link?
+
+        {data: {action: "click->flat-pack--page-nav#back"}}
+      end
+
+      def history_nav_data
+        data = {controller: "flat-pack--page-nav"}
+        data[:flat_pack__page_nav_fallback_url_value] = @anchor_href if @anchor_href.present?
+        data
+      end
+
+      def back_plan
+        @back_plan ||= if !@show_back
+          BackPlan.new(:hidden, nil)
+        elsif @back_href.present?
+          BackPlan.new(:link, @back_href)
+        else
+          BackPlan.new(:history, nil)
         end
       end
 

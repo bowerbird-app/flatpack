@@ -296,6 +296,13 @@
               <%= render FlatPack::Alert::Component.new(description: alert, style: :danger, dismissible: true, class: "mb-4") %>
             <% end %>
 
+            <% page_nav = flat_pack_page_nav_tag %>
+            <% if page_nav %>
+              <div class="mb-4">
+                <%= page_nav %>
+              </div>
+            <% end %>
+
             <%= yield %>
 
             <% if @demo_theme_token_rows.present? %>

@@ -3,6 +3,7 @@
 require "flat_pack/version"
 require "flat_pack/copy"
 require "flat_pack/engine"
+require "flat_pack/return_to"
 require "flat_pack/animated_character"
 require "flat_pack/button/style_registry"
 require "flat_pack/component_catalog"
