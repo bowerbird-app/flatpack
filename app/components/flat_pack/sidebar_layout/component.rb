@@ -7,6 +7,7 @@ module FlatPack
       renders_one :top_nav_slot
       renders_one :main_slot
       renders_one :background_slot
+      renders_one :aside_slot
 
       CONTENT_SCROLLS = %i[behind below].freeze
       HEIGHTS = %i[full content].freeze
@@ -34,6 +35,8 @@ module FlatPack
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
         @resizable = resizable
+        @aside_open = true
+        @aside_resizable = false
 
         validate_side!
         validate_floating!
@@ -84,17 +87,42 @@ module FlatPack
         background_slot?
       end
 
+      def aside(open: true, resizable: false, **args, &block)
+        return aside_slot unless block
+
+        validate_boolean!(open, "open")
+        validate_resizable!(resizable)
+        @aside_open = open
+        @aside_resizable = resizable
+        with_aside_slot(**args, &block)
+      end
+
+      def aside?
+        aside_slot?
+      end
+
       def call
         content_tag(:div, **container_attributes) do
           safe_join([
             render_background,
-            render_sidebar_and_main,
+            render_columns,
             render_backdrop
           ].compact)
         end
       end
 
       private
+
+      def render_columns
+        return render_sidebar_and_main unless aside?
+
+        parts = if @side == :right
+          [render_aside_column, render_main_column, render_rail_column]
+        else
+          [render_rail_column, render_main_column, render_aside_column]
+        end
+        safe_join(parts.compact)
+      end
 
       def render_sidebar_and_main
         if @side == :right
@@ -110,8 +138,16 @@ module FlatPack
         end
       end
 
+      def render_rail_column
+        render_sidebar_column
+      end
+
       def render_sidebar_column
         render_panel(rail_panel, sidebar.to_s) if sidebar?
+      end
+
+      def render_aside_column
+        render_panel(aside_panel, aside_landmark(aside_slot.to_s)) if aside?
       end
 
       def render_panel(panel, body)
@@ -124,15 +160,29 @@ module FlatPack
         )
       end
 
+      def aside_landmark(body)
+        content_tag(:aside, body, class: "fp-aside h-full min-h-0 overflow-y-auto overscroll-y-contain")
+      end
+
       def panel_tag_attributes(panel)
-        {
+        attributes = {
           class: classes(*panel.column_classes),
           data: panel.column_data
         }
+        attributes[:inert] = true if panel.role == :aside && panel.open == false
+        attributes
       end
 
       def preamble(panel)
-        fouc_prevention_script if panel.role == :rail
+        parts = if panel.role == :rail
+          [fouc_prevention_script, panel_width_script(panel)]
+        else
+          [aside_state_script(panel)]
+        end
+        parts.compact!
+        return if parts.empty?
+
+        safe_join(parts)
       end
 
       def resize_handle(panel)
@@ -162,6 +212,79 @@ module FlatPack
           content_height: content_height?,
           storage_key: @storage_key
         )
+      end
+
+      def aside_panel
+        Panel.aside(
+          edge: ((@side == :right) ? :left : :right),
+          open: @aside_open,
+          resizable: @aside_resizable,
+          floating: @floating,
+          content_height: content_height?,
+          storage_key: @storage_key
+        )
+      end
+
+      def aside_state_script(panel)
+        open_key = panel.open_storage_key
+        return if open_key.blank?
+
+        js = <<~JS.strip
+          (function(){
+            try{
+              var column=document.currentScript.parentElement;
+              var stored=localStorage.getItem(#{open_key.to_json});
+              var open=stored===null?#{panel.open ? "true" : "false"}:stored==="true";
+              column.setAttribute("data-flat-pack-aside-open",open?"true":"false");
+              if(open){column.removeAttribute("inert");}else{column.setAttribute("inert","");}
+              #{width_apply_js(panel.resizable ? panel.width_storage_key : nil)}
+            }catch(e){}
+          })();
+        JS
+        content_tag(:script, js.html_safe)
+      end
+
+      def panel_width_script(panel)
+        return unless panel.resizable
+
+        key = panel.width_storage_key
+        return if key.blank?
+
+        js = <<~JS.strip
+          (function(){
+            try{
+              var column=document.currentScript.parentElement;
+              #{width_apply_js(key)}
+            }catch(e){}
+          })();
+        JS
+        content_tag(:script, js.html_safe)
+      end
+
+      def width_apply_js(key)
+        return "" if key.blank?
+
+        <<~JS.strip
+          var panelLengthPx=function(raw){
+            var value=String(raw||"").trim();
+            var px=/^(-?[\\d.]+)px$/.exec(value);
+            if(px){return parseFloat(px[1]);}
+            var rem=/^(-?[\\d.]+)rem$/.exec(value);
+            if(!rem){return NaN;}
+            return parseFloat(rem[1])*parseFloat(getComputedStyle(document.documentElement).fontSize);
+          };
+          var width=localStorage.getItem(#{key.to_json});
+          if(/^\\d+$/.test(width)){
+            var raw=parseInt(width,10);
+            var min=panelLengthPx(getComputedStyle(column).getPropertyValue("--fp-panel-min"));
+            var max=panelLengthPx(getComputedStyle(column).getPropertyValue("--fp-panel-max"));
+            if(Number.isFinite(min)&&Number.isFinite(max)){
+              var next=Math.round(Math.min(max,Math.max(min,raw)));
+              column.style.setProperty("--fp-panel-width",next+"px");
+              column.setAttribute("data-flat-pack-panel-resized","true");
+            }
+          }
+        JS
       end
 
       def fouc_prevention_script
@@ -236,13 +359,19 @@ module FlatPack
       end
 
       def controller_data
-        {
+        data = {
           controller: "flat-pack--sidebar-layout",
           "flat-pack--sidebar-layout-side-value": @side.to_s,
           "flat-pack--sidebar-layout-open-value": @open,
           "flat-pack--sidebar-layout-storage-key-value": @storage_key,
           "flat-pack-layout-background": ("true" if background?)
-        }.compact
+        }
+        if aside?
+          data["flat-pack--sidebar-layout-aside-open-value"] = @aside_open
+          aside_key = aside_panel.open_storage_key
+          data["flat-pack--sidebar-layout-aside-storage-key-value"] = aside_key if aside_key
+        end
+        data.compact
       end
 
       def container_classes
@@ -255,11 +384,13 @@ module FlatPack
       end
 
       def grid_columns_classes
-        if @side == :right
-          "grid-cols-[1fr_auto]"
-        else
-          "grid-cols-[auto_1fr]"
+        unless aside?
+          return (@side == :right) ? "grid-cols-[1fr_auto]" : "grid-cols-[auto_1fr]"
         end
+
+        return "grid-cols-[auto_1fr_auto]" if sidebar? && aside?
+
+        (@side == :left) ? "grid-cols-[1fr_auto]" : "grid-cols-[auto_1fr]"
       end
 
       def main_column_classes
@@ -345,6 +476,12 @@ module FlatPack
         return if value == true || value == false
 
         raise ArgumentError, "resizable must be true or false"
+      end
+
+      def validate_boolean!(value, name)
+        return if value == true || value == false
+
+        raise ArgumentError, "#{name} must be true or false"
       end
     end
   end
