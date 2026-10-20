@@ -1,221 +1,75 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Page Nav Component",
-  subtitle: "Compact icon-only page navigation with browser back, optional close control, tooltips, and an optional trailing action."
+  subtitle: "A row of items in the order you call them. The helper renders the default back control when you pass no items."
 ) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Default", anchor_link: true, subtitle: "flat_pack_page_nav with no items renders this history back control.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new do |nav| %>
+      <% nav.with_back %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;% flat_pack_page_nav %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom order", anchor_link: true, subtitle: "Back, two icon links, then close. Every nav button is round.") %>
+  <div class="mb-4">
+    <%= render FlatPack::PageNav::Component.new(round: true) do |nav| %>
+      <% nav.with_back %>
+      <% nav.with_link(href: demo_forms_path, icon: "home", tooltip: "Home") %>
+      <% nav.with_link(href: demo_page_header_path, icon: "squares-2x2", tooltip: "Admin") %>
+      <% nav.with_close(href: demo_path, tooltip: "Close") %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::PageNav::Component.new(round: true) do |nav| %&gt;
+        &lt;% nav.with_back %&gt;
+        &lt;% nav.with_link(href: demo_forms_path, icon: "home", tooltip: "Home") %&gt;
+        &lt;% nav.with_link(href: demo_page_header_path, icon: "squares-2x2", tooltip: "Admin") %&gt;
+        &lt;% nav.with_close(href: demo_path, tooltip: "Close") %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
 
 <%= render "pages/component_method_variables_table", component: :page_nav %>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Back Only", anchor_link: true, subtitle: "Always renders browser history back on the left icon.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Back link", anchor_link: true, subtitle: "The back icon is a link.") %>
   <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new %>
-  </div>
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new %&gt;
-    CODE
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Right-to-left", anchor_link: true, subtitle: "Back chevrons flip in RTL so they still point toward the start of the reading direction.") %>
-  <div class="mb-4" dir="rtl">
-    <%= render FlatPack::PageNav::Component.new(
-      anchor_href: demo_path,
-      anchor_tooltip: "Close"
-    ) %>
-  </div>
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;div dir="rtl"&gt;
-        &lt;%= render FlatPack::PageNav::Component.new(
-          anchor_href: demo_path,
-          anchor_tooltip: "Close"
-        ) %&gt;
-      &lt;/div&gt;
-    CODE
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Anchor Action", anchor_link: true, subtitle: "Right-side icon appears only when anchor_url is provided.") %>
-  <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new(
-      anchor_href: demo_path,
-      anchor_tooltip: "Close"
-    ) %>
-  </div>
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_href: demo_path,
-        anchor_tooltip: "Close"
-      ) %&gt;
-    CODE
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With Secondary Anchor", anchor_link: true, subtitle: "Secondary anchor renders immediately to the left of the primary anchor.") %>
-  <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new(
-      secondary_anchor_href: demo_forms_path,
-      secondary_anchor_icon: "home",
-      secondary_anchor_tooltip: "Home",
-      anchor_href: demo_path,
-      anchor_tooltip: "Close"
-    ) %>
-  </div>
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new(
-        secondary_anchor_href: demo_forms_path,
-        secondary_anchor_icon: "home",
-        secondary_anchor_tooltip: "Home",
-        anchor_href: demo_path,
-        anchor_tooltip: "Close"
-      ) %&gt;
-    CODE
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With a close control and a trailing action", anchor_link: true, subtitle: "The divider fills the space between the close control and a trailing add action.") %>
-  <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new(
-      anchor_href: demo_path,
-      anchor_tooltip: "Close"
-    ) do |component| %>
-      <% component.right_slot do %>
-        <%= render FlatPack::Button::Component.new(
-          icon: "plus",
-          icon_only: true,
-          style: :secondary,
-          size: :md,
-          href: demo_forms_path,
-          aria: {label: "Add"}
-        ) %>
-      <% end %>
+    <%= render FlatPack::PageNav::Component.new do |nav| %>
+      <% nav.with_back(href: demo_path) %>
     <% end %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_href: demo_path,
-        anchor_tooltip: "Close"
-      ) do |component| %&gt;
-        &lt;% component.right_slot do %&gt;
-          &lt;%= render FlatPack::Button::Component.new(
-            icon: "plus",
-            icon_only: true,
-            style: :secondary,
-            size: :md,
-            href: demo_forms_path,
-            aria: {label: "Add"}
-          ) %&gt;
-        &lt;% end %&gt;
+      &lt;%= render FlatPack::PageNav::Component.new do |nav| %&gt;
+        &lt;% nav.with_back(href: demo_path) %&gt;
       &lt;% end %&gt;
     CODE
   ) %>
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "With a trailing dropdown", anchor_link: true, subtitle: "Put a dropdown in the trailing action when more than one action belongs in the nav.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Action", anchor_link: true, subtitle: "An action is a button at the position you call it. round: comes from the nav.") %>
   <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new(
-      anchor_href: demo_path,
-      anchor_tooltip: "Close"
-    ) do |component| %>
-      <% component.right_slot do %>
-        <%= render FlatPack::Button::Dropdown::Component.new(
-          text: "",
-          icon: "ellipsis-vertical",
-          style: :ghost,
-          size: :sm,
-          show_chevron: false,
-          trigger_attributes: {
-            title: "More actions",
-            aria: {label: "More actions"}
-          }
-        ) do |dropdown| %>
-          <% dropdown.menu_item(text: "Edit", href: demo_forms_path) %>
-          <% dropdown.menu_item(text: "Archive", href: demo_path) %>
-        <% end %>
-      <% end %>
+    <%= render FlatPack::PageNav::Component.new(round: true) do |nav| %>
+      <% nav.with_back %>
+      <% nav.with_action(icon: "plus", icon_only: true, href: demo_forms_path, aria: {label: "Add"}) %>
     <% end %>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new(
-        anchor_href: demo_path,
-        anchor_tooltip: "Close"
-      ) do |component| %&gt;
-        &lt;% component.right_slot do %&gt;
-          &lt;%= render FlatPack::Button::Dropdown::Component.new(
-            text: "",
-            icon: "ellipsis-vertical",
-            style: :ghost,
-            size: :sm,
-            show_chevron: false,
-            trigger_attributes: {
-              title: "More actions",
-              aria: {label: "More actions"}
-            }
-          ) do |dropdown| %&gt;
-            &lt;% dropdown.menu_item(text: "Edit", href: demo_forms_path) %&gt;
-            &lt;% dropdown.menu_item(text: "Archive", href: demo_path) %&gt;
-          &lt;% end %&gt;
-        &lt;% end %&gt;
-      &lt;% end %&gt;
-    CODE
-  ) %>
-</section>
-
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Custom Icons and Tooltips", anchor_link: true, subtitle: "Customize icon names, tooltips, accessible labels, and button styles.") %>
-  <div class="mb-4">
-    <%= render FlatPack::PageNav::Component.new(
-      back_icon: "arrow-left",
-      back_tooltip: "Back to previous page",
-      anchor_href: demo_path,
-      anchor_icon: "trash",
-      anchor_tooltip: "Discard",
-      back_style: :ghost,
-      anchor_style: :ghost
-    ) do |component| %>
-      <% component.right_slot do %>
-        <%= render FlatPack::Button::Component.new(
-          icon: "check",
-          icon_only: true,
-          style: :primary,
-          size: :md,
-          href: demo_forms_path,
-          aria: {label: "Create"}
-        ) %>
-      <% end %>
-    <% end %>
-  </div>
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::PageNav::Component.new(
-        back_icon: "arrow-left",
-        back_tooltip: "Back to previous page",
-        anchor_href: demo_path,
-        anchor_icon: "trash",
-        anchor_tooltip: "Discard",
-        back_style: :ghost,
-        anchor_style: :ghost
-      ) do |component| %&gt;
-        &lt;% component.right_slot do %&gt;
-          &lt;%= render FlatPack::Button::Component.new(
-            icon: "check",
-            icon_only: true,
-            style: :primary,
-            size: :md,
-            href: demo_forms_path,
-            aria: {label: "Create"}
-          ) %&gt;
-        &lt;% end %&gt;
+      &lt;%= render FlatPack::PageNav::Component.new(round: true) do |nav| %&gt;
+        &lt;% nav.with_back %&gt;
+        &lt;% nav.with_action(icon: "plus", icon_only: true, href: demo_forms_path, aria: { label: "Add" }) %&gt;
       &lt;% end %&gt;
     CODE
   ) %>

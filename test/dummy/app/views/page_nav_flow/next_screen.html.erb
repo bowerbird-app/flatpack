@@ -1,0 +1,13 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Save and close",
+  subtitle: "The close icon came with you."
+) %>
+
+<%= form_with url: demo_page_nav_carry_path, method: :post do %>
+  <%= flat_pack_return_to_field %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Save and close",
+    style: :primary,
+    type: "submit"
+  ) %>
+<% end %>

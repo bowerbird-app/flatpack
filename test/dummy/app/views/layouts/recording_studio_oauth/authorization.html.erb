@@ -21,12 +21,7 @@
     <main class="flex min-h-dvh items-center justify-center p-6">
       <div class="w-full max-w-sm space-y-6">
         <% unless content_for?(:skip_connect_page_nav) %>
-          <%= render FlatPack::PageNav::Component.new(
-            back_icon: content_for(:page_nav_back_icon).presence || "chevron-left",
-            back_label: content_for(:page_nav_back_label).presence || "Go back",
-            back_style: (content_for(:page_nav_back_style).presence || "secondary").to_sym,
-            back_size: (content_for(:page_nav_back_size).presence || "md").to_sym
-          ) %>
+          <%= flat_pack_page_nav_tag %>
         <% end %>
         <%= yield %>
       </div>

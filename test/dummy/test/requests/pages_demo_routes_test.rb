@@ -99,6 +99,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /pages/hero/display
     /demo/section_title
     /demo/page_nav
+    /demo/page_nav/carry
+    /demo/page_nav/carry/next
     /demo/text/content
     /demo/text/quote
     /demo/empty_state

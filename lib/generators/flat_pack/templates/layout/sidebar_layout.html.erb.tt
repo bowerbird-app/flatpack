@@ -46,6 +46,13 @@
             ) %>
           <%% end %>
 
+          <%% page_nav = flat_pack_page_nav_tag %>
+          <%% if page_nav %>
+            <div class="mb-4">
+              <%%= page_nav %>
+            </div>
+          <%% end %>
+
           <%%= yield %>
           </div>
         </main>

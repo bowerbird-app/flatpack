@@ -1,0 +1,12 @@
+<% flat_pack_page_nav(anchor_href: demo_page_nav_path, anchor_tooltip: "Close") %>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Take the close icon along",
+  subtitle: "Next keeps this close link."
+) %>
+
+<%= render FlatPack::Button::Component.new(
+  text: "Next",
+  style: :primary,
+  href: flat_pack_return_to_url(demo_page_nav_carry_next_path)
+) %>

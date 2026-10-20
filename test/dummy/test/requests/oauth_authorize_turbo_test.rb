@@ -55,6 +55,7 @@ class OauthAuthorizeTurboTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
+    assert_select "nav.flat-pack-page-nav", count: 1
     assert_includes response.body, 'data-turbo="false"'
     assert_match(/data-turbo="false"|data-turbo='false'/, response.body)
   end
