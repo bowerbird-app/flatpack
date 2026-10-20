@@ -218,6 +218,7 @@ A bare `@import "flat_pack/variables.css"` does not get a digest. The browser as
   --radius-lg: 0.75rem;
   --radius-xl: 1.25rem;
   --radius-xxl: 2rem;
+  --radius-xxxl: 2.5rem;
   --radius-full: 9999px;
 }
 ```

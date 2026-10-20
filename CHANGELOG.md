@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.272] - 2026-10-20
+
+### Added
+- `--radius-xxxl: 2.5rem` (40px) on bare `:root`, pinned in `@theme inline` as `--radius-xxxl: var(--radius-xxxl)`.
+- `FlatPack::Card::Component` `radius:` accepts `:xxxl`. That sets inline `--card-radius` to `var(--radius-xxxl)`. `padding:` stays independent. `Media` `radius: :card_inner` still nests with `max(0px, calc(var(--card-radius) - var(--card-inset)))`.
+- Bumped the gem version to `0.1.272`.
+
+### Changed
+- `[data-theme~="rounded"]` sets `--sidebar-float-radius` to `var(--radius-xxxl)`. The floating panel moves from `--radius-xl` (1.25rem) to 2.5rem.
+- Rounded `--sidebar-item-radius` is `max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)))`. It was `--radius-md` (0.5rem). The rounded inset is 0.75rem, so the highlight is 1.75rem and shares the rail center.
+
+### Upgrade notes
+- Additive. `:xxxl` is new. Existing cards stay `:default`. Nothing is removed. Do not rerun `bin/rails generate flat_pack:install`.
+- `--radius-xxxl` is `2.5rem` on bare `:root`.
+- The rounded floating rail is rounder. It moves from `1.25rem` to `2.5rem` (40px). The rounded item highlight moves from `0.5rem` to the rail radius minus the item inset (1.75rem at the rounded spacing). Charcoal, dark, and ocean stay as they are.
+- Hosts rebuild Tailwind only if their sheet restates the radius tokens. Add `--radius-xxxl: 2.5rem` next to `--radius-xxl` in that block.
+- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.272`.
+
 ## [0.1.269] - 2026-10-20
 
 ### Added
