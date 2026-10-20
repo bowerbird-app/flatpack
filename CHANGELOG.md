@@ -13,13 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.278] - 2026-10-20
+## [0.1.281] - 2026-10-20
 
 ### Changed
 - Column collapse is one boolean, `data-flat-pack-sidebar-collapsed`, written only by `FlatPack::SidebarLayout` on the column it owns. The menu reads that ancestor attribute. A menu used alone with `collapsed: true` writes the same attribute on its own `<aside class="fp-sidebar">`. `collapsed: false` does not write it.
 - The layout still changes column width, persists `localStorage` (`"true"` collapses), honors `open:`, keeps the first-paint script on the column, and still collapses from resize. Each desktop apply dispatches `flat-pack--sidebar-layout:collapse` with `{ collapsed }` from the column.
 - The menu owns the collapsed look in CSS, for the ancestor column and for a menu that carries the attribute. `flat-pack--sidebar` sets `aria-expanded` on the collapse and expand controls.
-- Bumped the gem version to `0.1.278`.
+- Bumped the gem version to `0.1.281`.
 
 ### Upgrade notes
 - There is no alias. Hosts reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Controllers stay `pin_all_from` the directory. Do not rebuild Tailwind. No new tokens.
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed selectors that hide the footer or labels from a layout target. Those rules are under `.fp-sidebar`. Drop `[data-flat-pack--sidebar-layout-target="footer"]` and `[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"]`.
 - New hooks: `flat-pack--sidebar`, `data-flat-pack-sidebar-toggle`, `fp-sidebar-brand`, `fp-sidebar-footer`, `fp-sidebar-scroll`, and the event `flat-pack--sidebar-layout:collapse`.
 - Header buttons drop the `hidden` utility. Kit CSS shows the collapse chevron when the rail is open and the menu icon when it is collapsed, at `min-width: 768px`. Below that, both stay hidden.
-- Redeploy so `meta.gem_version` shows `0.1.278`.
+- Redeploy so `meta.gem_version` shows `0.1.281`.
 
 ## [0.1.280] - 2026-10-20
 
