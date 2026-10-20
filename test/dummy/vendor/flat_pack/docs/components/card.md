@@ -20,6 +20,7 @@ Use Card to group related content in a consistent surface with optional hover an
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
+| `radius` | Symbol | `:default` | no | `:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`. `:default` keeps the theme `--card-radius` and adds no markup. Other values set inline `--card-radius`. Independent of `padding:`. Invalid values raise `ArgumentError`. The inline value carries through to `--media-radius` and `--card-inner-radius`. `FlatPack::Card::Stat::Component` does not take `radius:`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
 Behavior note:
@@ -102,7 +103,7 @@ The card writes those tokens back onto `--surface-content-color`, `--surface-mut
 
 Light mode defines every token on `:root, [data-theme]`. Default follows `--card-background-color`. Shaded follows `--card-background-muted-color`. Brand follows `--color-primary` and `--color-primary-text`. Soft brand mixes the primary into the surface. The gradient runs from `--color-primary` toward a darker mix so contrasting text stays readable. Dark mode overrides only `--card-style-gradient-background`, lifting the gradient toward white so dark primary text still reads. The other styles follow the dark semantic tokens.
 
-`FlatPack::Card::Stat::Component` takes the same `style:` and paints that fill on itself.
+`FlatPack::Card::Stat::Component` takes the same `style:` and paints that fill on itself. It does not take `radius:`.
 
 ## Example
 ```erb
@@ -126,6 +127,22 @@ Light mode defines every token on `:root, [data-theme]`. Default follows `--card
   <% end %>
 <% end %>
 ```
+
+```erb
+<%= render FlatPack::Card::Component.new(radius: :xxl, padding: :none) do |card| %>
+  <% card.media(padding: :none) do %>
+    <%= render FlatPack::Media::Component.new(
+      src: "/images/hero-stool.jpg",
+      alt: "Stool",
+      width: 1200,
+      height: 800
+    ) %>
+  <% end %>
+  <% card.body { "Harbour card" } %>
+<% end %>
+```
+
+`radius: :xxl` sets the corner to `--radius-xxl` (2rem). `padding: :none` is separate.
 
 ```erb
 <%= render FlatPack::Card::Stat::Component.new(

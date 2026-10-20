@@ -105,6 +105,41 @@
   <% end %>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Radius",
+    anchor_link: true,
+    subtitle: "A step overrides the theme corner."
+  ) %>
+  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+    <% [
+      [:none, "None"],
+      [:sm, "Small"],
+      [:md, "Medium"],
+      [:lg, "Large"],
+      [:xl, "Extra large"]
+    ].each do |radius, label| %>
+      <%= render FlatPack::Card::Component.new(radius: radius) do |card| %>
+        <% card.body do %>
+          <p class="text-sm font-medium"><%= label %></p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <div class="mt-4">
+    <%= render FlatPack::Grid::Component.new(cols: 1, gap: :md) do %>
+      <%= render FlatPack::Card::Component.new(radius: :xxl, padding: :none) do |card| %>
+        <% card.media(padding: :none) do %>
+          <%= image_tag "/images/hero-stool.jpg", alt: "Stool", class: "block h-56 w-full object-cover" %>
+        <% end %>
+        <% card.footer(divider: false, padding: :md) do %>
+          <p class="text-sm font-medium">Largest</p>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
 <!-- Combined Default Grid Card -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Combined Default Card (Grid Default)", anchor_link: true, subtitle: "Examples for Combined Default Card (Grid Default).") %>

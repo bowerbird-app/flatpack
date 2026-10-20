@@ -144,9 +144,13 @@ components:
     primary_class: FlatPack::Card::Component
     related_classes:
       - FlatPack::Card::Stat::Component
+    args:
+      - "radius: :xxl"
     tokens:
       - --card-inset
       - --card-inner-radius
+      - --card-radius
+      - --radius-xxl
     classes:
       - fp-card
       - fp-card-inner-radius

@@ -13,6 +13,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.269] - 2026-10-19
+
+### Added
+- `FlatPack::Card::Component` accepts `radius:`. `:default` keeps the theme `--card-radius` and adds no markup. `:none`, `:sm`, `:md`, `:lg`, `:xl`, and `:xxl` set an inline `--card-radius` (`0px`, or `var(--radius-sm)` through `var(--radius-xxl)`). Invalid values raise `ArgumentError`. `padding:` stays independent.
+- `--radius-xxl: 2rem` on bare `:root`, pinned in `@theme inline` as `--radius-xxl: var(--radius-xxl)`.
+- Bumped the gem version to `0.1.269`.
+
+### Changed
+- `[data-theme~="rounded"]` sets `--sidebar-float-radius` to `var(--radius-xl)`. The floating panel moves from the inherited `--radius-lg` (0.75rem) to 1.25rem. `--sidebar-item-radius` stays `var(--radius-md)` (0.5rem).
+
+### Upgrade notes
+- `radius:` is new. Existing cards keep `:default`. `FlatPack::Card::Stat::Component` does not take `radius:`. Media stays omit or `:card_inner`.
+- An inline `--card-radius` beats a host `.fp-card { --card-radius: ... }` rule on that card. A host `style:` on the same card comes first. `radius:` is last.
+- `--media-radius` and `--card-inner-radius` follow that card's `--card-radius`, including the inline value.
+- The new step is `--radius-xxl` (`2rem`, 32px). Tailwind already sets `--radius-2xl` to `1rem`, and `RadiusLanguage` rewrites `rounded-2xl` to `--radius-md`, so this step uses the `xxl` name.
+- Rounded floating rails grow from 0.75rem to 1.25rem. Sidebar item highlights stay 0.5rem. The item inset is 0.75rem. 1.25rem minus 0.75rem is 0.5rem.
+- Hosts do not rebuild Tailwind for this change. There is no new arbitrary class. A later rebuild may grow `rounded-xxl` because the token is pinned. The kit does not emit that class.
+- Nothing is removed. Reload kit CSS. No `bin/rails generate flat_pack:install` rerun.
+- Redeploy so `meta.gem_version` shows `0.1.269`.
+
 ## [0.1.267] - 2026-10-19
 
 ### Added

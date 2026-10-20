@@ -18,7 +18,7 @@ The kit default (no `data-theme`) is the charcoal palette on the compact spacing
 
 On that default, `--sidebar-background-color` is `var(--surface-page-background-color)`, so the rail matches the page. `--sidebar-header-background-color` aliases the sidebar token, so the header follows. Dark and ocean set their own sidebar fill. A host that wants a white rail sets `--sidebar-background-color` after FlatPack CSS. Do not assign colour on `[data-theme~="rounded"]`. Rounded sets spacing and shape. Set `<html data-theme="rounded">` when the generous steps and pill controls should show. Without the attribute, the compact scale and moderate corners apply.
 
-`SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel when there is no `data-theme`, or when the list contains `rounded`. Other named themes stay square. The flush rail ignores these tokens.
+`SidebarLayout` `floating: true` paints the desktop panel with `--sidebar-float-background-color` (`#fff` by default, `oklch(0.22 0.02 250)` on dark), `--sidebar-float-shadow`, and `--sidebar-float-inset` (`1rem`). `--sidebar-float-radius` rounds that panel when there is no `data-theme`, or when the list contains `rounded`. Unset, that token is `--radius-lg` (0.75rem). Rounded sets it to `--radius-xl` (1.25rem). Other named themes stay square. The flush rail ignores these tokens.
 
 `height: :content` on a floating rail uses that same inset as a max-height. The flush rail and the mobile drawer ignore it.
 
@@ -224,6 +224,7 @@ Collage tilt, offset, hover lift, and stagger are `--collage-rotate` (`5deg`), `
 --radius-md: 0.5rem     /* 8px */
 --radius-lg: 0.75rem    /* 12px */
 --radius-xl: 1.25rem    /* 20px */
+--radius-xxl: 2rem      /* 32px */
 --radius-full: 9999px
 ```
 
@@ -236,11 +237,14 @@ The shape scale lives on bare `:root`, same as `--space-*`. Component radii alia
 | `--form-control-radius` | `--radius-md` | `--radius-full` |
 | `--badge-radius`, `--tabs-pill-corner-radius` | `--radius-md` | `--radius-full` |
 | `--chip-border-radius` | `--radius-md` | `--radius-md` |
+| `--sidebar-float-radius` | `--radius-lg` | `--radius-xl` |
 | `--sidebar-item-radius` | `--radius-lg` | `--radius-md` |
 | `--dropdown-item-radius` | `--radius-sm` | `--radius-md` |
 | `--chat-composer-radius` | `--radius-lg` | `--radius-full` |
 | `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius` | `--radius-lg` | `--radius-xl` |
 | `--alert-border-radius`, `--toast-border-radius` | `--radius-lg` | `--radius-xl` |
+
+Rounded sets `--sidebar-float-radius` to `--radius-xl` (1.25rem). It was the inherited `--radius-lg` at 0.75rem. The item row stays `--radius-md`. The item inset is 0.75rem. 1.25rem minus 0.75rem is 0.5rem, so the highlight already shares the panel center.
 
 `Button` `round: true` uses `--button-round-border-radius`, which stays `--radius-full` on the moderate scale and on rounded. An icon-only round button also sets its side from `--button-round-size-sm`, `--button-round-size-md`, or `--button-round-size-lg` (`max(--hit-target-min, padding + icon + border)`), declared with the other button padding formulas so density still applies.
 
@@ -259,6 +263,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the kit radii on unla
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1.25rem;
+  --radius-xxl: 2rem;
   --radius-full: 9999px;
 }
 ```
