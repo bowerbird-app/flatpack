@@ -40,24 +40,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `right_slot` is gone. Before: `nav.right_slot { render FlatPack::Button::Component.new(icon: "plus", icon_only: true, href: new_path, aria: { label: "Add" }) }` inside a nav that also rendered back. After: `nav.with_back` then `nav.with_action(icon: "plus", icon_only: true, href: new_path, aria: { label: "Add" })`. Call it where it should sit. There is no alias.
 - Breaking change for hosts using `secondary_anchor_href`, `secondary_anchor_icon`, or `secondary_anchor_tooltip`. Before: `PageNav::Component.new(secondary_anchor_href: admin_path, secondary_anchor_icon: "home", secondary_anchor_tooltip: "Home")`. After: `nav.with_link(href: admin_path, icon: "home", tooltip: "Home")` at the position you want. `href` was `secondary_anchor_href`. `icon` was `secondary_anchor_icon` (`"chevron-left"` when you omitted it). `tooltip` was `secondary_anchor_tooltip`. A blank tooltip no longer falls back to "Previous page". Pass `tooltip:`. `flatpack.page_nav.previous` is no longer read. There is no alias.
 
-## [0.1.272] - 2026-10-20
-
-### Added
-- `--radius-xxxl: 2.5rem` (40px) on bare `:root`, pinned in `@theme inline` as `--radius-xxxl: var(--radius-xxxl)`.
-- `FlatPack::Card::Component` `radius:` accepts `:xxxl`. That sets inline `--card-radius` to `var(--radius-xxxl)`. `padding:` stays independent. `Media` `radius: :card_inner` still nests with `max(0px, calc(var(--card-radius) - var(--card-inset)))`.
-- Bumped the gem version to `0.1.272`.
-
-### Changed
-- `[data-theme~="rounded"]` sets `--sidebar-float-radius` to `var(--radius-xxxl)`. The floating panel moves from `--radius-xl` (1.25rem) to 2.5rem.
-- Rounded `--sidebar-item-radius` is `max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)))`. It was `--radius-md` (0.5rem). The rounded inset is 0.75rem, so the highlight is 1.75rem and shares the rail center.
-
-### Upgrade notes
-- Additive. `:xxxl` is new. Existing cards stay `:default`. Nothing is removed. Do not rerun `bin/rails generate flat_pack:install`.
-- `--radius-xxxl` is `2.5rem` on bare `:root`.
-- The rounded floating rail is rounder. It moves from `1.25rem` to `2.5rem` (40px). The rounded item highlight moves from `0.5rem` to the rail radius minus the item inset (1.75rem at the rounded spacing). Charcoal, dark, and ocean stay as they are.
-- Hosts rebuild Tailwind only if their sheet restates the radius tokens. Add `--radius-xxxl: 2.5rem` next to `--radius-xxl` in that block.
-- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.272`.
-
 ## [0.1.273] - 2026-10-20
 
 ### Added
@@ -86,6 +68,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - TopNav no longer reserves 30% for each section. `mobile_breakpoint` (default `768`) is the bar's width. A narrower bar, including the main column beside an aside, moves collapsible center and right content into the existing chevron menu. The center search can shrink above that width. Reload kit CSS and JS. No new controller.
 - No removals. No renames.
 - Redeploy so `meta.gem_version` shows `0.1.273`.
+
+## [0.1.272] - 2026-10-20
+
+### Added
+- `--radius-xxxl: 2.5rem` (40px) on bare `:root`, pinned in `@theme inline` as `--radius-xxxl: var(--radius-xxxl)`.
+- `FlatPack::Card::Component` `radius:` accepts `:xxxl`. That sets inline `--card-radius` to `var(--radius-xxxl)`. `padding:` stays independent. `Media` `radius: :card_inner` still nests with `max(0px, calc(var(--card-radius) - var(--card-inset)))`.
+- Bumped the gem version to `0.1.272`.
+
+### Changed
+- `[data-theme~="rounded"]` sets `--sidebar-float-radius` to `var(--radius-xxxl)`. The floating panel moves from `--radius-xl` (1.25rem) to 2.5rem.
+- Rounded `--sidebar-item-radius` is `max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)))`. It was `--radius-md` (0.5rem). The rounded inset is 0.75rem, so the highlight is 1.75rem and shares the rail center.
+
+### Upgrade notes
+- Additive. `:xxxl` is new. Existing cards stay `:default`. Nothing is removed. Do not rerun `bin/rails generate flat_pack:install`.
+- `--radius-xxxl` is `2.5rem` on bare `:root`.
+- The rounded floating rail is rounder. It moves from `1.25rem` to `2.5rem` (40px). The rounded item highlight moves from `0.5rem` to the rail radius minus the item inset (1.75rem at the rounded spacing). Charcoal, dark, and ocean stay as they are.
+- Hosts rebuild Tailwind only if their sheet restates the radius tokens. Add `--radius-xxxl: 2.5rem` next to `--radius-xxl` in that block.
+- Reload kit CSS. Redeploy so `meta.gem_version` shows `0.1.272`.
 
 ## [0.1.269] - 2026-10-20
 
