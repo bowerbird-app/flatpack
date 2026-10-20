@@ -138,7 +138,7 @@ For static/non-interactive collapsed demos (without the layout controller) pass 
 
 Round corners are `--sidebar-float-radius`. The unset theme is `--radius-lg`. Rounded is `--radius-xl`. They apply when `html` has no `data-theme`, or when the list contains `rounded` (`data-theme="rounded"` or `data-theme="rounded harbor"`). A list without `rounded` (dark, ocean, a host theme alone) keeps square corners. The top-nav clamp still holds because the pill is `--radius-full`. Below the `md` breakpoint the attribute is present and unused: the drawer stays edge-to-edge, including its safe-area padding.
 
-Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail. `/demo/sidebar_layout` starts detached. Pass `?floating=0` there for the flush rail.
+Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flush rail.
 
 ## Rail height
 

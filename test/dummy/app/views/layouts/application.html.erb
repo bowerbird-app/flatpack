@@ -97,7 +97,7 @@
     <%= render "layouts/icon_sprite" %>
 
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
-    <% sidebar_floating = params[:floating].in?(%w[1 true]) || (controller.action_name == "sidebar_layout" && !params.key?(:floating)) %>
+    <% sidebar_floating = params[:floating].in?(%w[1 true]) %>
     <% sidebar_background = params[:background].in?(%w[1 true]) %>
     <% floating_top_nav = params[:floating_top_nav].in?(%w[1 true]) %>
     <% content_scroll = params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind %>
