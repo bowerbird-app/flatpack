@@ -132,3 +132,91 @@ test('disconnect removes scroll listeners', () => {
 
   assert.equal(listeners.length, 0)
 })
+
+function buildFitController({clientWidth, scrollWidth, viewportNarrow = false}) {
+  const child = {nodeType: 1, dataset: {}, childNodes: []}
+  const sectionChildren = [child]
+  const section = {
+    dataset: {flatPackTopNavCollapsible: 'true'},
+    childNodes: sectionChildren,
+    classList: {toggle() {}, remove() {}},
+    insertBefore(node, before) {
+      node.parentNode = section
+      sectionChildren.splice(sectionChildren.indexOf(before), 0, node)
+    },
+    replaceChild(node, placeholder) {
+      if (node.parentNode && node.parentNode.removeChild) node.parentNode.removeChild(node)
+      sectionChildren.splice(sectionChildren.indexOf(placeholder), 1, node)
+      node.parentNode = section
+    }
+  }
+  const panelChildren = []
+  const panel = {
+    children: panelChildren,
+    hidden: true,
+    appendChild(node) {
+      const index = sectionChildren.indexOf(node)
+      if (index >= 0) sectionChildren.splice(index, 1)
+      node.parentNode = panel
+      panelChildren.push(node)
+    },
+    removeChild(node) {
+      const index = panelChildren.indexOf(node)
+      if (index >= 0) panelChildren.splice(index, 1)
+    }
+  }
+  const menu = {classList: {toggle() {}}}
+  const bar = {clientWidth, scrollWidth, dataset: {}}
+  const TopNavController = loadTopNavController({
+    window: {},
+    document: {createComment() { return {nodeType: 8} }},
+    Node: {TEXT_NODE: 3, ELEMENT_NODE: 1}
+  })
+
+  return {
+    bar,
+    child,
+    sectionChildren,
+    panelChildren,
+    controller: Object.assign(new TopNavController(), {
+      element: bar,
+      mediaQuery: {matches: viewportNarrow},
+      hasPanelTarget: true,
+      hasMenuTarget: true,
+      hasToggleTarget: false,
+      sectionTargets: [section],
+      panelTarget: panel,
+      menuTarget: menu,
+      movedNodes: [],
+      breakpointValue: 768,
+      fitting: false,
+      menuOpen: false
+    })
+  }
+}
+
+test('a wide viewport collapses the bar when its content overflows', () => {
+  const {controller, panelChildren, sectionChildren, child, bar} = buildFitController({
+    clientWidth: 400,
+    scrollWidth: 640
+  })
+
+  controller.applyLayout()
+
+  assert.equal(panelChildren.length, 1)
+  assert.equal(sectionChildren.includes(child), false)
+
+  bar.clientWidth = 800
+  controller.applyLayout()
+
+  assert.equal(panelChildren.length, 0)
+  assert.equal(sectionChildren[0], child)
+})
+
+test('a bar that fits keeps its sections inline', () => {
+  const {controller, panelChildren} = buildFitController({clientWidth: 800, scrollWidth: 640})
+
+  controller.applyLayout()
+
+  assert.equal(panelChildren.length, 0)
+})

@@ -202,11 +202,11 @@ module FlatPack
       def section_classes(alignment)
         case alignment
         when "left"
-          "h-full min-w-[30%] flex items-center gap-2"
+          "h-full flex items-center gap-2"
         when "center"
-          "h-full min-w-[30%] flex-1 flex items-center justify-center"
+          "h-full min-w-0 flex-1 flex items-center justify-center"
         when "right"
-          "h-full min-w-[30%] flex items-center justify-end gap-2"
+          "h-full flex items-center justify-end gap-2"
         end
       end
     end

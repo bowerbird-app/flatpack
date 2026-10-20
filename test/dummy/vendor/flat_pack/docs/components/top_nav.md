@@ -15,7 +15,7 @@ Use TopNav in app shells for page context, global actions, and optional search o
 |------|------|---------|----------|-------------|
 | `mobile_menu` | Boolean | `true` | No | Collapse narrow-viewport content into a right-aligned chevron menu. |
 | `mobile_menu_label` | String | `"More navigation items"` | No | Accessible label for the chevron toggle and menu panel. |
-| `mobile_breakpoint` | Integer | `768` | No | Viewport width (px) at and above which content returns to the bar. |
+| `mobile_breakpoint` | Integer | `768` | No | Bar width (px) at and above which content returns to the bar. A narrow viewport is included. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the `<header>` element (`class`, `id`, `data`, `aria`, `style`). |
 
 ## Slots
@@ -23,10 +23,10 @@ Use TopNav in app shells for page context, global actions, and optional search o
 | name | type | required | description |
 |------|------|----------|-------------|
 | `left` | block slot | No | Left-aligned content wrapper (`h-full flex items-center gap-2`). Accepts `always_display:` (default `true`). |
-| `center` | block slot | No | Center wrapper (`h-full flex-1 flex items-center justify-center`). Accepts `always_display:` (default `false`). |
-| `right` | block slot | No | Right-aligned content wrapper (`h-full flex items-center gap-2`). Accepts `always_display:` (default `false`). |
+| `center` | block slot | No | Center wrapper (`h-full min-w-0 flex-1 flex items-center justify-center`). The search field inside it can shrink. Accepts `always_display:` (default `false`). |
+| `right` | block slot | No | Right-aligned content wrapper (`h-full flex items-center justify-end gap-2`). Accepts `always_display:` (default `false`). |
 
-TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. This keeps horizontal alignment stable across pages and states.
+TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. The center wrapper shrinks. Left and right keep their content width.
 
 Each section carries `data-flat-pack-top-nav-section` (`left`, `center`, or `right`) even when `mobile_menu: false`. [Sidebar Layout](sidebar_layout.md) `floating_top_nav: true` uses that hook to turn the bar into cards. The `<header>` landmark stays on this component.
 
@@ -36,7 +36,7 @@ At rest the bar does not frost the page (`backdrop-filter: blur(0)`). After the 
 
 ## Mobile chevron menu
 
-Below `mobile_breakpoint`, collapsible slot content moves into a menu at the right end of the bar, opened by a chevron-down toggle. Content is relocated rather than duplicated, so ids, event listeners, and Stimulus controllers inside slot content keep working. Above the breakpoint the content returns to its original position.
+Below `mobile_breakpoint`, collapsible slot content moves into a menu at the right end of the bar, opened by a chevron-down toggle. The measure is the bar's width, so a wide viewport whose main column sits between a rail and an aside collapses the same way as a phone. Content is relocated rather than duplicated, so ids, event listeners, and Stimulus controllers inside slot content keep working. The content returns when the bar is at least `mobile_breakpoint` wide.
 
 Defaults keep branding and the sidebar toggle visible: `left` is `always_display: true`, while `center` and `right` collapse.
 

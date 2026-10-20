@@ -70,6 +70,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `rails generate flat_pack:layout --aside` adds the slot and a close button. The flag defaults to off.
 - Bumped the gem version to `0.1.273`.
 
+### Changed
+- `FlatPack::TopNav::Component` drops the `min-w-[30%]` reserve on each section. The center section is `min-w-0` and its search field can shrink. `mobile_breakpoint` is the bar's width, so a wide viewport with a narrow main column collapses into the existing chevron menu.
+
 ### Upgrade notes
 - Existing layouts are unchanged. No `aside` slot means the same markup, classes, and backdrop. `resizable:` defaults to `false`.
 - New argument `resizable:` on `FlatPack::SidebarLayout::Component`.
@@ -80,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Do not rerun `bin/rails generate flat_pack:install`. Importmap hosts already pin `app/javascript/flat_pack/controllers` with `pin_all_from`. No new pin.
 - Do not rebuild Tailwind unless the host sheet copies the sidebar width rules. Those hosts copy the new desktop width rules as well, or a drag looks stuck. Kit CSS is enough when the host sheet does not restate those rules. The aside tracks are kit CSS on `data-flat-pack-layout-columns` (`three`, `main-aside`, `aside-main`). The main track is `minmax(0, 1fr)`. There is no new Tailwind class.
 - esbuild and Vite hosts must register `flat-pack--panel-resize`. Import `PanelResizeController` from `panel_resize_controller.js` and call `application.register("flat-pack--panel-resize", PanelResizeController)`.
+- TopNav no longer reserves 30% for each section. `mobile_breakpoint` (default `768`) is the bar's width. A narrower bar, including the main column beside an aside, moves collapsible center and right content into the existing chevron menu. The center search can shrink above that width. Reload kit CSS and JS. No new controller.
 - No removals. No renames.
 - Redeploy so `meta.gem_version` shows `0.1.273`.
 

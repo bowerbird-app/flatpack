@@ -870,6 +870,10 @@
  * host sheet orders @layer base after it. Preflight's * { padding: 0 } then
  * beats any padding still inside @layer components.
  */
+.fp-top-nav [data-flat-pack-top-nav-section="center"] input {
+  min-width: 0;
+}
+
 .fp-top-nav {
   box-sizing: border-box;
   height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));

@@ -39,6 +39,12 @@ export default class extends Controller {
     document.addEventListener("click", this.handleDocumentClick)
     document.addEventListener("keydown", this.handleKeydown)
 
+    this.fitting = false
+    if (typeof ResizeObserver !== "undefined") {
+      this.resizeObserver = new ResizeObserver(() => this.applyLayout())
+      this.resizeObserver.observe(this.element)
+    }
+
     this.applyLayout()
   }
 
@@ -60,6 +66,7 @@ export default class extends Controller {
 
     document.removeEventListener("click", this.handleDocumentClick)
     document.removeEventListener("keydown", this.handleKeydown)
+    this.resizeObserver?.disconnect()
 
     // Leave the markup as it was rendered so a cached Turbo snapshot never
     // stores relocated nodes.
@@ -123,12 +130,26 @@ export default class extends Controller {
   }
 
   applyLayout() {
-    if (this.isNarrowViewport) {
-      this.collapseIntoMenu()
-    } else {
-      this.closeMenu()
-      this.restoreCollapsedNodes()
+    if (this.fitting) return
+
+    const tight = this.isNarrowViewport || this.barIsNarrow()
+    this.fitting = true
+    try {
+      if (tight) this.collapseIntoMenu()
+      else {
+        this.closeMenu()
+        this.restoreCollapsedNodes()
+      }
+    } finally {
+      this.fitting = false
     }
+  }
+
+  // A wide viewport can still leave a narrow bar, such as the main column
+  // between a rail and an aside. The breakpoint is that bar's width.
+  barIsNarrow() {
+    const width = this.element?.clientWidth || 0
+    return width > 0 && width < this.breakpointValue
   }
 
   collapseIntoMenu() {
