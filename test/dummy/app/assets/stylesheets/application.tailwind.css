@@ -118,6 +118,13 @@
 			height: auto !important;
 			max-height: inherit;
 		}
+
+		.fp-sidebar-drawer[data-flat-pack-sidebar-floating="true"] > :not(script):not(.fp-panel-resize) {
+			width: 100% !important;
+			min-width: 0 !important;
+			max-width: 100% !important;
+			border-width: 0 !important;
+		}
 	}
 
 	.fp-scrollbar-hidden {

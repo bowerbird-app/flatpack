@@ -83,8 +83,15 @@ module FlatPack
 
       def sidebar_attributes
         merge_attributes(
-          class: sidebar_classes
+          class: sidebar_classes,
+          data: sidebar_data
         )
+      end
+
+      def sidebar_data
+        return {} unless @collapsed
+
+        {"flat-pack-sidebar-collapsed": "true"}
       end
 
       def sidebar_classes

@@ -474,21 +474,20 @@
     }
 
     /*
-      Center the icon in the collapsed row with a length, not a percentage.
-      A percentage margin on a flex item is cyclic and computes to 0, so the
-      active pill stayed heavier on the left. Centering the whole row pulls the
-      icon sideways while the label is still wide. Collapsed rail, 1px side border,
-      the item inset on both sides, a 1.25rem icon, and the collapsed padding.
+      The menu centers its own collapsed icon. A percentage margin on a flex
+      item is cyclic and computes to 0. The length uses the collapsed width,
+      the item inset, and --sidebar-collapsed-frame from the column (1px when
+      the menu draws the side border, 2px when the column is the floating card).
     */
-    [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
-    [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+    .fp-sidebar [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    .fp-sidebar [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
       margin-left: 0;
       transition: margin-left var(--duration-slow) var(--easing-standard);
     }
 
-    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
-    [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
-      margin-left: calc((var(--sidebar-collapsed-width) - 1px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
+    .fp-sidebar[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
+    .fp-sidebar[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
+      margin-left: calc((var(--sidebar-collapsed-width) - var(--sidebar-collapsed-frame, 1px) - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
     }
 
     [data-flat-pack--sidebar-group-target="chevron"] {
@@ -537,6 +536,19 @@
     [data-flat-pack-sidebar-floating="true"] {
       margin-top: var(--sidebar-float-inset) !important;
       margin-bottom: var(--sidebar-float-inset) !important;
+      margin-left: var(--sidebar-float-inset) !important;
+      margin-right: var(--sidebar-float-inset) !important;
+      background-color: var(--sidebar-float-background-color);
+      border-style: solid !important;
+      border-width: 1px !important;
+      border-color: var(--sidebar-border-color) !important;
+      border-radius: var(--sidebar-float-radius);
+      box-shadow: var(--sidebar-float-shadow);
+      transition:
+        width var(--duration-slow) var(--easing-standard),
+        transform var(--duration-slow) var(--easing-standard),
+        border-color var(--duration-fast) var(--easing-standard),
+        box-shadow var(--duration-fast) var(--easing-standard) !important;
     }
 
     [data-flat-pack-sidebar-floating="true"]:not([data-flat-pack-sidebar-height="content"]) {
@@ -566,31 +578,18 @@
       overflow-y: auto;
     }
 
-    [data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="left"] {
-      margin-left: var(--sidebar-float-inset) !important;
-    }
-
-    [data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="right"] {
-      margin-right: var(--sidebar-float-inset) !important;
-    }
-
-    [data-flat-pack-sidebar-floating="true"] aside {
-      --sidebar-background-color: var(--sidebar-float-background-color);
-      --sidebar-header-background-color: var(--sidebar-float-background-color);
-      border-style: solid !important;
-      border-width: 1px !important;
-      border-color: var(--sidebar-border-color) !important;
-      border-radius: var(--sidebar-float-radius);
-      box-shadow: var(--sidebar-float-shadow);
-    }
-
-    html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-sidebar-floating="true"] aside {
+    html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-sidebar-floating="true"] {
       border-radius: 0 !important;
     }
 
-    [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > [data-flat-pack-sidebar-item-icon="true"],
-    [data-flat-pack-sidebar-floating="true"][data-flat-pack-sidebar-collapsed="true"] [data-flat-pack-sidebar-item="true"] > span.flex-shrink-0:first-child {
-      margin-left: calc((var(--sidebar-collapsed-width) - 2px - (var(--sidebar-item-inset) * 2) - 1.25rem) / 2 - var(--sidebar-item-padding-collapsed)) !important;
+    .fp-sidebar-drawer[data-flat-pack-sidebar-floating="true"] > :not(script):not(.fp-panel-resize) {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      border-width: 0 !important;
+      box-shadow: none !important;
+      border-radius: inherit;
+      overflow: hidden;
     }
 
     .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-open="false"] {
@@ -681,6 +680,32 @@
 
   [data-mobile-drawer-side="left"] > .fp-panel-resize { right: 0; }
   [data-mobile-drawer-side="right"] > .fp-panel-resize { left: 0; }
+
+  [data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="left"] > .fp-panel-resize {
+    right: calc(-0.25rem - 1px);
+    z-index: 1;
+  }
+
+  [data-flat-pack-sidebar-floating="true"][data-mobile-drawer-side="right"] > .fp-panel-resize {
+    left: calc(-0.25rem - 1px);
+    z-index: 1;
+  }
+
+  [data-flat-pack-sidebar-floating="true"] > .fp-panel-resize::after {
+    content: none;
+  }
+
+  [data-flat-pack-sidebar-floating="true"]:has(> .fp-panel-resize:hover),
+  [data-flat-pack-sidebar-floating="true"][data-flat-pack-panel-dragging="true"] {
+    border-color: var(--resize-handle-active-color) !important;
+  }
+
+  [data-flat-pack-sidebar-floating="true"]:has(> .fp-panel-resize:focus-visible:not([data-pointer-focus])) {
+    border-color: var(--color-ring) !important;
+    box-shadow:
+      0 0 0 2px color-mix(in oklab, var(--color-ring) 70%, transparent),
+      var(--sidebar-float-shadow) !important;
+  }
 
   [data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
     scrollbar-width: none;
