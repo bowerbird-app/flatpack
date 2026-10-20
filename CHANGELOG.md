@@ -13,6 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.269] - 2026-10-20
+
+### Added
+- `FlatPack::Card::Component` accepts `radius:`. `:default` keeps the theme `--card-radius` and adds no markup. `:none`, `:sm`, `:md`, `:lg`, `:xl`, and `:xxl` set an inline `--card-radius` (`0px`, or `var(--radius-sm)` through `var(--radius-xxl)`). Invalid values raise `ArgumentError`. `padding:` stays independent.
+- `--radius-xxl: 2rem` on bare `:root`, pinned in `@theme inline` as `--radius-xxl: var(--radius-xxl)`.
+- Bumped the gem version to `0.1.269`.
+
+### Changed
+- `[data-theme~="rounded"]` sets `--sidebar-float-radius` to `var(--radius-xl)`. The floating panel moves from the inherited `--radius-lg` (0.75rem) to 1.25rem. `--sidebar-item-radius` stays `var(--radius-md)` (0.5rem).
+
+### Upgrade notes
+- `radius:` is new (`:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`). Existing cards stay `:default`.
+- `--radius-xxl` is `2rem` on bare `:root`.
+- Rounded floating rails move from `0.75rem` to `1.25rem`. Item highlights stay `0.5rem`.
+- Nothing is removed.
+- Reload kit CSS/JS. Redeploy so `meta.gem_version` shows `0.1.269`.
+
 ## [0.1.267] - 2026-10-19
 
 ### Added

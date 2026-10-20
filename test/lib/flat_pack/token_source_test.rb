@@ -251,6 +251,7 @@ module FlatPack
       assert_match(/--radius-md:\s*0\.5rem/, scale_block)
       assert_match(/--radius-lg:\s*0\.75rem/, scale_block)
       assert_match(/--radius-xl:\s*1\.25rem/, scale_block)
+      assert_match(/--radius-xxl:\s*2rem/, scale_block)
       assert_match(/--radius-full:\s*9999px/, scale_block)
       assert_match(/--button-border-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--button-round-border-radius:\s*var\(--radius-full\)/, scale_block)
@@ -276,9 +277,9 @@ module FlatPack
 
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
-      refute_match(/--radius-(?:xs|sm|md|lg|xl|full)\s*:/, rounded_block)
+      refute_match(/--radius-(?:xs|sm|md|lg|xl|xxl|full)\s*:/, rounded_block)
       assert_match(/--top-nav-float-radius:\s*var\(--radius-full\)/, rounded_block)
-      refute_includes rounded_block, "--sidebar-float-radius"
+      assert_match(/--sidebar-float-radius:\s*var\(--radius-xl\)/, rounded_block)
       assert_match(/--button-border-radius:\s*var\(--radius-full\)/, rounded_block)
       refute_includes rounded_block, "--button-round-border-radius"
       assert_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)

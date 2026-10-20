@@ -553,6 +553,105 @@ module FlatPack
         assert_includes page.native.to_html, "rounded-[var(--card-radius)]"
       end
 
+      def test_omitted_radius_matches_default
+        render_inline(Component.new) { "Hi" }
+        omitted = page.native.to_html
+
+        render_inline(Component.new(radius: :default)) { "Hi" }
+        chosen = page.native.to_html
+
+        assert_equal omitted, chosen
+        assert_includes chosen, "rounded-[var(--card-radius)]"
+        refute_includes chosen, "--card-radius:"
+        refute_includes chosen, "data-fp-card-radius"
+      end
+
+      def test_default_radius_keeps_caller_style_byte_for_byte
+        render_inline(Component.new("style" => "color: red;")) { "Hi" }
+
+        assert_includes page.native.to_html, 'style="color: red;"'
+      end
+
+      def test_radius_steps_set_an_inline_card_radius
+        {
+          none: "0px",
+          sm: "var(--radius-sm)",
+          md: "var(--radius-md)",
+          lg: "var(--radius-lg)",
+          xl: "var(--radius-xl)",
+          xxl: "var(--radius-xxl)"
+        }.each do |radius, length|
+          render_inline(Component.new(radius: radius)) { "Hi" }
+          assert_equal "--card-radius: #{length}", page.find(".fp-card")["style"]
+        end
+      end
+
+      def test_radius_and_padding_do_not_imply_each_other
+        render_inline(Component.new(radius: :lg, padding: :none)) { "Hi" }
+
+        assert_selector ".fp-card[data-fp-card-padding='none']"
+        assert_equal "--card-radius: var(--radius-lg)", page.find(".fp-card")["style"]
+      end
+
+      def test_radius_declaration_follows_the_caller_style
+        render_inline(Component.new(:radius => :lg, "style" => "color: red;")) { "Hi" }
+
+        style = page.find(".fp-card")["style"]
+        assert_equal "color: red; --card-radius: var(--radius-lg)", style
+      end
+
+      def test_radius_declaration_strips_space_after_the_caller_semicolon
+        render_inline(Component.new(:radius => :lg, "style" => "color: red; ")) { "Hi" }
+
+        style = page.find(".fp-card")["style"]
+        assert_equal "color: red; --card-radius: var(--radius-lg)", style
+      end
+
+      def test_rejects_unknown_radius
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(radius: :bogus))
+        end
+
+        assert_match(/Invalid radius: bogus/, error.message)
+      end
+
+      def test_xxl_radius_stays_on_the_card_when_media_is_slotted
+        render_inline(Component.new(radius: :xxl)) do |card|
+          card.media(padding: :none) { "Photo" }
+        end
+
+        assert_equal "--card-radius: var(--radius-xxl)", page.find(".fp-card")["style"]
+        assert_equal 1, page.native.to_html.scan("--card-radius:").size
+        refute_includes page.find(".fp-card div").native.to_html, "--card-radius"
+      end
+
+      def test_card_radius_and_inner_media_radius_stay_separate
+        render_inline(Component.new(radius: :lg)) do |card|
+          card.body do
+            vc_test_controller.view_context.render(
+              FlatPack::Media::Component.new(
+                src: "/images/hero-stool.jpg",
+                alt: "Stool",
+                width: 1200,
+                height: 800,
+                radius: :card_inner
+              )
+            )
+          end
+        end
+
+        assert_equal "--card-radius: var(--radius-lg)", page.find(".fp-card")["style"]
+        assert_selector ".fp-media__frame.fp-card-inner-radius"
+        refute_includes page.find(".fp-media__frame").native.to_html, "--card-radius"
+      end
+
+      def test_stat_card_does_not_set_a_radius_style
+        render_inline(Stat::Component.new(value: "12", label: "Open", trend: "4%", trend_direction: :up))
+
+        refute_includes page.native.to_html, "--card-radius:"
+        assert_includes page.native.to_html, "rounded-[var(--card-radius)]"
+      end
+
       def test_card_without_media_has_overflow_visible
         render_inline(Component.new)
         assert_includes page.native.to_html, "overflow-visible"
