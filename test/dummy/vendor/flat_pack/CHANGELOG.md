@@ -13,6 +13,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.279] - 2026-10-20
+
+### Changed
+- `[data-theme~="rounded"]` sets `--form-control-radius` to `1rem` (16px). Text inputs, textareas, selects, search fields, date and number inputs, the date range trigger, and the comments inline input follow that token. Buttons, badges, tabs, chips, and the other component radii are unchanged.
+- The rich text editor's field corners follow `--form-control-radius`. Toolbar buttons and bubble chrome stay on `--radius-md` and `--radius-sm`.
+- Bumped the gem version to `0.1.279`.
+
+### Upgrade notes
+- Rounded-theme form controls go from a pill (`--radius-full`) to 16px corners. There are no token renames.
+- Hosts reload kit CSS. The `rounded-[var(--form-control-radius)]` class already ships, so this token change does not need a Tailwind rebuild.
+- Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.279`.
+
+## [0.1.276] - 2026-10-20
+
+### Added
+- `FlatPack::Button::Dropdown::Component` accepts `icon_only:` and `round:`. Both default to `false`. `icon_only: true` requires `icon:` and an accessible name from `text:` or `trigger_attributes: { aria: { label: } }`. The name becomes the trigger `aria-label`. The label is not shown. `aria-haspopup` and `aria-expanded` stay. Padding, the circle sizes, the round radius, and `fp-hit-target` come from `FlatPack::Button::Component`.
+- `show_chevron` defaults to `nil`. Omitted or `nil` shows the chevron on a labeled trigger and hides it on an icon-only trigger. `show_chevron: true` with `icon_only: true` raises `ArgumentError`. The component catalog reports that `nil` default.
+- Bumped the gem version to `0.1.276`.
+
+### Upgrade notes
+- Additive. Two new options, `icon_only:` and `round:`. No removals. A labeled trigger renders the same markup.
+- `round:` must be `true` or `false`. Anything else raises `ArgumentError`.
+- No new tokens. No Tailwind rebuild. Reload kit CSS and JS if the host caches them. The classes already ship with Button.
+- Do not rerun `bin/rails generate flat_pack:install`.
+- A labeled trigger still shows the chevron when you omit `show_chevron`. An icon-only trigger hides it. The catalog default is `nil`.
+- Redeploy so `meta.gem_version` shows `0.1.276`.
+
 ## [0.1.275] - 2026-10-20
 
 ### Added

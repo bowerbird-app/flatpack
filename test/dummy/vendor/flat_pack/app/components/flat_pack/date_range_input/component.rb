@@ -358,7 +358,7 @@ module FlatPack
         base_classes = [
           "flat-pack-input",
           "w-full",
-          "rounded-[var(--radius-md)]",
+          "rounded-[var(--form-control-radius)]",
           "border",
           "bg-[var(--surface-background-color)]",
           "text-[var(--surface-content-color)]",

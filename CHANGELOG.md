@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.279] - 2026-10-20
+
+### Changed
+- `[data-theme~="rounded"]` sets `--form-control-radius` to `1rem` (16px). Text inputs, textareas, selects, search fields, date and number inputs, the date range trigger, and the comments inline input follow that token. Buttons, badges, tabs, chips, and the other component radii are unchanged.
+- The rich text editor's field corners follow `--form-control-radius`. Toolbar buttons and bubble chrome stay on `--radius-md` and `--radius-sm`.
+- Bumped the gem version to `0.1.279`.
+
+### Upgrade notes
+- Rounded-theme form controls go from a pill (`--radius-full`) to 16px corners. There are no token renames.
+- Hosts reload kit CSS. The `rounded-[var(--form-control-radius)]` class already ships, so this token change does not need a Tailwind rebuild.
+- Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.279`.
+
 ## [0.1.276] - 2026-10-20
 
 ### Added
