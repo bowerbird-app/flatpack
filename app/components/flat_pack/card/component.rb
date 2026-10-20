@@ -85,6 +85,16 @@ module FlatPack
         lg: "p-[var(--card-padding-lg)]"
       }.freeze
 
+      RADII = {
+        default: nil,
+        none: "0px",
+        sm: "var(--radius-sm)",
+        md: "var(--radius-md)",
+        lg: "var(--radius-lg)",
+        xl: "var(--radius-xl)",
+        xxl: "var(--radius-xxl)"
+      }.freeze
+
       def initialize(
         style: :default,
         shadow: :none,
@@ -93,6 +103,7 @@ module FlatPack
         clickable: false,
         href: nil,
         padding: :md,
+        radius: :default,
         **system_arguments
       )
         reject_removed_theme!(system_arguments)
@@ -103,6 +114,7 @@ module FlatPack
         @hover = (hover || :none).to_sym
         @clickable = clickable
         @padding = padding.to_sym
+        @radius = radius.to_sym
 
         # Sanitize URL for security and validate
         if href
@@ -117,6 +129,7 @@ module FlatPack
         validate_border!
         validate_hover!
         validate_padding!
+        validate_radius!
       end
 
       def call
@@ -150,7 +163,8 @@ module FlatPack
         )
 
         attributes.delete("style")
-        attributes[:style] = caller_style if caller_style.present?
+        style = joined_style
+        attributes[:style] = style if style.present?
         attributes
       end
 
@@ -173,6 +187,21 @@ module FlatPack
 
       def caller_style
         html_attributes[:style] || html_attributes["style"]
+      end
+
+      def joined_style
+        declaration = radius_declaration
+        return caller_style if declaration.nil?
+        return declaration if caller_style.blank?
+
+        "#{caller_style.to_s.sub(/;\s*\z/, "")}; #{declaration}"
+      end
+
+      def radius_declaration
+        length = RADII.fetch(@radius)
+        return if length.nil?
+
+        "--card-radius: #{length}"
       end
 
       def overflow_class
@@ -242,6 +271,12 @@ module FlatPack
       def validate_padding!
         return if PADDINGS.key?(@padding)
         raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{PADDINGS.keys.join(", ")}"
+      end
+
+      def validate_radius!
+        return if RADII.key?(@radius)
+
+        raise ArgumentError, "Invalid radius: #{@radius}. Must be one of: #{RADII.keys.join(", ")}"
       end
 
       def validate_hover!
