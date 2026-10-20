@@ -651,10 +651,13 @@ module FlatPack
       assert_includes handle, "background-color: var(--resize-handle-color);"
       assert_includes handle, "background-color: var(--resize-handle-active-color);"
       assert_includes handle, "cursor: col-resize"
-      assert_includes handle, ".fp-panel-resize:focus-visible:not([data-pointer-focus])::after"
-      assert_includes handle, "box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 35%, transparent);"
+      focus = handle[/\.fp-panel-resize:focus-visible:not\(\[data-pointer-focus\]\)::after \{.*?\}/m]
+      assert_includes focus, "width: 3px;"
+      assert_includes focus, "background-color: var(--color-ring);"
+      assert_includes focus, "box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 70%, transparent);"
       assert_includes handle, "outline: none"
       refute_includes handle, "outline: 2px solid var(--color-ring)"
+      refute_includes handle, "35%"
       after = handle[/\.fp-panel-resize::after \{.*?\}/m]
       refute_includes after, "opacity: 0"
     end

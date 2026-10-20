@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Below `768px` the aside is a drawer from its own edge. It reuses the shell drawer and the one backdrop. Opening one drawer closes the other. Escape closes the open drawer. Focus moves to the panel and returns to the opener. `closeMobile` closes whichever shell drawer is open.
 - Stimulus controller `flat-pack--panel-resize`, on the column rather than the layout root.
 - Tokens `--aside-width` (`20rem`), `--aside-min-width` (`16rem`), and `--aside-max-width` (`32rem`).
-- Tokens `--resize-handle-color` and `--resize-handle-active-color`. The shared resize line uses `--resize-handle-color` at rest and `--resize-handle-active-color` on hover and while the button is down. The defaults are `--surface-border-color` and `--surface-muted-content-color`. Keyboard focus draws one soft ring from `--color-ring` on the line. A pointer drag does not leave that ring.
+- Tokens `--resize-handle-color` and `--resize-handle-active-color`. The shared resize line uses `--resize-handle-color` at rest and `--resize-handle-active-color` on hover and while the button is down. The defaults are `--surface-border-color` and `--surface-muted-content-color`. Keyboard focus widens that line to 3px in `--color-ring` and draws a soft ring of the same colour on the line. A pointer drag does not leave that ring.
 - `rails generate flat_pack:layout --aside` adds the slot and a close button. The flag defaults to off.
 - Bumped the gem version to `0.1.275`.
 

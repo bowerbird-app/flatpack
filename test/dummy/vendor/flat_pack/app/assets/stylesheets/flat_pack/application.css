@@ -657,7 +657,10 @@
     width: 1px;
     transform: translateX(-50%);
     background-color: var(--resize-handle-color);
-    transition: background-color var(--duration-fast) var(--easing-standard);
+    transition:
+      background-color var(--duration-fast) var(--easing-standard),
+      width var(--duration-fast) var(--easing-standard),
+      box-shadow var(--duration-fast) var(--easing-standard);
   }
 
   .fp-panel-resize:is(:hover, :active)::after {
@@ -665,7 +668,15 @@
   }
 
   .fp-panel-resize:focus-visible:not([data-pointer-focus])::after {
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 35%, transparent);
+    width: 3px;
+    background-color: var(--color-ring);
+    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-ring) 70%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-panel-resize::after {
+      transition: none;
+    }
   }
 
   [data-mobile-drawer-side="left"] > .fp-panel-resize { right: 0; }
