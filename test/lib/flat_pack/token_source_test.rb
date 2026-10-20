@@ -627,6 +627,18 @@ module FlatPack
       refute_includes @css, "color-mix(in oklab, var(--color-primary) 90%, black)"
     end
 
+    test "aside widths are theme tokens beside the sidebar widths" do
+      theme_block = @css[/@theme inline \{.*?^\}/m]
+      assert_match(/--aside-width:\s*var\(--aside-width\);/, theme_block)
+      assert_match(/--aside-min-width:\s*var\(--aside-min-width\);/, theme_block)
+      assert_match(/--aside-max-width:\s*var\(--aside-max-width\);/, theme_block)
+      assert_match(/--aside-width:\s*20rem/, root_block)
+      assert_match(/--aside-min-width:\s*16rem/, root_block)
+      assert_match(/--aside-max-width:\s*32rem/, root_block)
+      refute_includes root_block, "--fp-panel-width"
+      refute_includes root_block, "--fp-panel-min"
+    end
+
     private
 
     def token_names(block)

@@ -626,6 +626,35 @@ module FlatPack
         assert_nil unstored.open_storage_key
         assert_nil unstored.width_storage_key
       end
+
+      def test_resized_width_beats_the_content_width_rule
+        kit = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        dummy = FlatPack::Engine.root.join("test/dummy/app/assets/stylesheets/application.tailwind.css").read
+        content = '[data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside'
+        resized = '[data-flat-pack-panel-resized="true"][data-flat-pack-sidebar-collapsed="false"][data-flat-pack-sidebar-width="content"] aside'
+
+        [kit, dummy].each do |sheet|
+          compact = sheet.gsub(/\s+/, " ")
+          content_at = compact.index(content)
+          resized_at = compact.index(resized)
+
+          assert content_at
+          assert resized_at
+          assert_operator resized_at, :>, content_at
+          assert_operator (selector_rank(resized) <=> selector_rank(content)), :>=, 0
+        end
+      end
+
+      def selector_rank(selector)
+        working = selector.gsub(/:not\(([^)]*)\)/, "\\1")
+        ids = working.scan(/#[A-Za-z0-9_-]+/).length
+        attributes = working.scan(/\[[^\]]+\]/).length
+        classes = working.scan(/\.[\w-]+/).length
+        pseudos = working.scan(/:(?!not\b)[\w-]+/).length
+        stripped = working.gsub(/\[[^\]]+\]/, " ").gsub(/\.[\w-]+/, " ").gsub(/::?[\w-]+/, " ")
+        elements = stripped.scan(/[a-zA-Z][\w-]*/).length
+        [ids, attributes + classes + pseudos, elements]
+      end
     end
   end
 end
