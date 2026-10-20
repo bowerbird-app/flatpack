@@ -105,6 +105,7 @@ class AdminOauthAppsTest < ActionDispatch::IntegrationTest
 
     get "/recording_studio_oauth/admin/oauth_clients/#{client.id}/edit"
     assert_response :success
+    assert_select "nav.flat-pack-page-nav", count: 1
     assert_includes response.body, "Redirect URLs"
     refute_includes response.body, 'name="oauth_client[secret]"'
 
