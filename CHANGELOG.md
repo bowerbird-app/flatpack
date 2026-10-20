@@ -78,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New Stimulus controller `flat-pack--panel-resize`.
 - Storage, when `storage_key` is set. The unsuffixed key is unchanged: `"true"` means the rail is collapsed. `storage_key:aside` uses the opposite polarity: `"true"` means the aside is open. `storage_key:rail:width` and `storage_key:aside:width` are integer pixel widths. A missing aside key keeps the server `open:` value. The mobile drawer is not stored. Nothing is written when `storage_key` is nil.
 - Do not rerun `bin/rails generate flat_pack:install`. Importmap hosts already pin `app/javascript/flat_pack/controllers` with `pin_all_from`. No new pin.
-- Do not rebuild Tailwind unless the host sheet copies the sidebar width rules. Those hosts copy the new desktop width rules as well, or a drag looks stuck. Kit CSS is enough when the host sheet does not restate those rules.
+- Do not rebuild Tailwind unless the host sheet copies the sidebar width rules. Those hosts copy the new desktop width rules as well, or a drag looks stuck. Kit CSS is enough when the host sheet does not restate those rules. The aside tracks are kit CSS on `data-flat-pack-layout-columns` (`three`, `main-aside`, `aside-main`). The main track is `minmax(0, 1fr)`. There is no new Tailwind class.
 - esbuild and Vite hosts must register `flat-pack--panel-resize`. Import `PanelResizeController` from `panel_resize_controller.js` and call `application.register("flat-pack--panel-resize", PanelResizeController)`.
 - No removals. No renames.
 - Redeploy so `meta.gem_version` shows `0.1.273`.

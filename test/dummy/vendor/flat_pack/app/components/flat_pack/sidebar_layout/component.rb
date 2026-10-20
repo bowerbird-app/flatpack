@@ -367,6 +367,7 @@ module FlatPack
           "flat-pack-layout-background": ("true" if background?)
         }
         if aside?
+          data["flat-pack-layout-columns"] = layout_columns
           data["flat-pack--sidebar-layout-aside-open-value"] = @aside_open
           aside_key = aside_panel.open_storage_key
           data["flat-pack--sidebar-layout-aside-storage-key-value"] = aside_key if aside_key
@@ -384,13 +385,17 @@ module FlatPack
       end
 
       def grid_columns_classes
-        unless aside?
-          return (@side == :right) ? "grid-cols-[1fr_auto]" : "grid-cols-[auto_1fr]"
-        end
+        return ((@side == :right) ? "grid-cols-[1fr_auto]" : "grid-cols-[auto_1fr]") unless aside?
 
-        return "grid-cols-[auto_1fr_auto]" if sidebar? && aside?
+        nil
+      end
 
-        (@side == :left) ? "grid-cols-[1fr_auto]" : "grid-cols-[auto_1fr]"
+      # Tracks live in kit CSS. A Tailwind `1fr` column is minmax(auto, 1fr),
+      # so a wide main pane would push the aside out of the overflow-hidden shell.
+      def layout_columns
+        return "three" if sidebar?
+
+        (@side == :left) ? "main-aside" : "aside-main"
       end
 
       def main_column_classes

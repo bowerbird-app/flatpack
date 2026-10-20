@@ -449,6 +449,7 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "grid-cols-[auto_1fr]"
         refute_includes html, "grid-cols-[auto_1fr_auto]"
+        refute_includes html, "data-flat-pack-layout-columns"
         refute_includes html, "fp-aside"
         refute_includes html, "data-flat-pack-panel"
         refute_includes html, "data-flat-pack-aside-open"
@@ -495,7 +496,8 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "grid-cols-[auto_1fr_auto]"
+        assert_includes html, 'data-flat-pack-layout-columns="three"'
+        refute_includes html, "grid-cols-[auto_1fr"
         assert_operator html.index("Sidebar"), :<, html.index("Main")
         assert_operator html.index("Main"), :<, html.index("Details")
         assert_selector "aside.fp-aside.h-full.min-h-0.overflow-y-auto.overscroll-y-contain", text: "Details"
@@ -521,7 +523,8 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "grid-cols-[auto_1fr_auto]"
+        assert_includes html, 'data-flat-pack-layout-columns="three"'
+        refute_includes html, "grid-cols-"
         assert_operator html.index("Details"), :<, html.index("Main")
         assert_operator html.index("Main"), :<, html.index("Sidebar")
         assert_selector "[data-flat-pack-panel='aside'][data-flat-pack-aside-open='false'][data-mobile-drawer-side='left'][inert]"
@@ -536,8 +539,8 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "grid-cols-[1fr_auto]"
-        refute_includes html, "grid-cols-[auto_1fr_auto]"
+        assert_includes html, 'data-flat-pack-layout-columns="main-aside"'
+        refute_includes html, "grid-cols-"
         refute_selector "[data-flat-pack--sidebar-layout-target='sidebar']"
         assert_selector "[data-flat-pack-panel='aside'][data-mobile-drawer-side='right'][data-flat-pack-aside-open='true']"
         assert_operator html.index("Main"), :<, html.index("Details")
@@ -549,7 +552,8 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "grid-cols-[auto_1fr]"
+        assert_includes html, 'data-flat-pack-layout-columns="aside-main"'
+        refute_includes html, "grid-cols-"
         assert_selector "[data-flat-pack-panel='aside'][data-mobile-drawer-side='left'][data-flat-pack-aside-open='false'][inert]"
         assert_operator html.index("Notes"), :<, html.index("Main")
       end

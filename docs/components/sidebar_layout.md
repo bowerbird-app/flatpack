@@ -182,11 +182,13 @@ Dummy chrome accepts `?width=content`. `/demo/sidebar_layout?width=content` hugs
 
 ## Aside
 
-`layout.aside` is a column on the opposite edge from `side:`. Leave the slot out and the shell matches a layout with no aside. Same grid, same rail column, one backdrop.
+`layout.aside` is a column on the opposite edge from `side:`. Leave the slot out and the shell matches a layout with no aside. Same Tailwind tracks, same rail column, one backdrop.
 
 `open:` defaults to `true`. Desktop state is `data-flat-pack-aside-open`. A closed aside has no width and is `inert`. Below `768px` the aside starts off-canvas either way. Desktop `open:` does not open the phone drawer.
 
-The column owns the width. The scrollport is `<aside class="fp-aside">`, so the landmark fills the column instead of taking `--sidebar-width`. The main pane still scrolls on its own. `floating:` and `height: :content` reuse the rail attributes. Content height keeps this landmark as a scrollport (`display: block`, `overflow-y: auto`).
+The column owns the width. The scrollport is `<aside class="fp-aside">`, so the landmark fills the column instead of taking `--sidebar-width`. The main pane still scrolls on its own. `floating:` and `height: :content` reuse the rail attributes. Content height keeps this landmark as a scrollport (`display: block`, `overflow-y: auto`). A floating aside uses `--sidebar-float-radius`. On the rounded theme that token is `--radius-xl` (1.25rem), the same corner as the rail.
+
+The tracks are kit CSS on `data-flat-pack-layout-columns` (`three`, `main-aside`, or `aside-main`). The main track is `minmax(0, 1fr)`, so a wide page shrinks instead of pushing the aside out of the shell. There is no new Tailwind class.
 
 With a `storage_key`, the aside key is `storage_key:aside`. `"true"` means open. A missing key keeps the server `open:` value. The rail key is unchanged: `"true"` still means collapsed. The phone drawer is not stored.
 
