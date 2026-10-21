@@ -291,7 +291,7 @@ Dark theme (`[data-theme~="dark"]`) adds a faint white hairline to `--shadow-sm`
 --hit-target-inline-min: 1.5rem  /* 24px — chip and badge remove */
 ```
 
-Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `.fp-hit-target` grows the painted box to 44px. `.fp-hit-slop` keeps the control icon-sized and expands the hit with a pseudo-element — toast close uses that so the X is not a 44px empty square. Hosts get those classes from `flat_pack/application` without a Tailwind rebuild.
+Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `.fp-hit-target` grows the painted box to 44px. `.fp-hit-slop` keeps the control icon-sized and expands the hit with a pseudo-element. Toast close and icon-only `Button` `size: :xs` use that so the paint stays small. `.fp-button` is unlayered, so the slop's transparent background does not replace the button fill. Hosts get those classes from `flat_pack/application` without a Tailwind rebuild. `--button-icon-only-padding-xs` and `--button-round-size-xs` (`2rem`, no hit-target floor) are the `:xs` tokens. The utilities that read them need a Tailwind rebuild.
 
 ### Color scheme
 `:root` sets `color-scheme: light`. `[data-theme~="dark"]` sets `color-scheme: dark` so native controls, scrollbars, and form chrome match the theme.

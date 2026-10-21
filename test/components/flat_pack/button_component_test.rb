@@ -723,6 +723,51 @@ module FlatPack
         refute_selector "button", text: "Loading"
       end
 
+      def test_xs_icon_only_uses_slop_and_a_one_rem_icon
+        render_inline(Component.new(icon: "heart", icon_only: true, round: true, size: :xs, aria: {label: "Save"}))
+
+        html = page.native.to_html
+        assert_includes html, "p-[var(--button-icon-only-padding-xs)]"
+        assert_includes html, "h-[var(--button-round-size-xs)]"
+        assert_includes html, "w-[var(--button-round-size-xs)]"
+        assert_includes html, "fp-hit-slop"
+        assert_includes html, "w-4 h-4"
+        refute_includes html, "fp-hit-target"
+        assert_selector "button[aria-label='Save']"
+        assert_hit_slop_does_not_cover_the_button_fill
+      end
+
+      def test_xs_without_icon_only_raises
+        error = assert_raises(ArgumentError) do
+          Component.new(text: "Save", size: :xs)
+        end
+
+        assert_equal FlatPack::Button::Component::XS_REQUIRES_ICON_ONLY, error.message
+      end
+
+      def test_labeled_sizes_stay_on_the_shared_table
+        assert_equal %i[sm md lg], FlatPack::Button::Component::SIZES.keys
+        refute_includes FlatPack::Button::Component::SIZES.keys, :xs
+
+        %i[sm md lg].each do |size|
+          render_inline(Component.new(text: "Save", size: size))
+          html = page.native.to_html
+          assert_includes html, FlatPack::Button::Component::SIZES.fetch(size)
+          refute_includes html, "fp-hit-slop"
+          refute_includes html, "button-icon-only-padding-xs"
+          refute_includes html, "button-round-size-xs"
+        end
+      end
+
+      def test_existing_icon_only_sizes_keep_the_hit_target
+        %i[sm md lg].each do |size|
+          render_inline(Component.new(icon: "bell", icon_only: true, size: size, aria: {label: "Notifications"}))
+          html = page.native.to_html
+          assert_includes html, "fp-hit-target"
+          refute_includes html, "fp-hit-slop"
+        end
+      end
+
       def test_invalid_round_raises
         [nil, :round, "true", 1].each do |round|
           error = assert_raises(ArgumentError) { Component.new(text: "Save", round: round) }
@@ -745,6 +790,22 @@ module FlatPack
       end
 
       private
+
+      def assert_hit_slop_does_not_cover_the_button_fill
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        layer_open = css.index("@layer components {")
+        slop = css.index(".fp-hit-slop {")
+        after_layer = css.index(".fp-read-more {")
+        button = css.index(".fp-button {")
+
+        assert layer_open < slop
+        assert slop < after_layer
+        assert after_layer < button
+        assert_includes css, ".fp-hit-slop::after"
+        assert_includes css, "width: var(--hit-target-min);"
+        assert_includes css, "height: var(--hit-target-min);"
+        assert_includes css, ".fp-button {\n  background-color: var(--fp-button-background);"
+      end
 
       def count_badge
         vc_test_controller.view_context.render(

@@ -16,12 +16,12 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Trigger label. On `icon_only: true`, this is the accessible name (`aria-label`) and is not shown. Pass `""` when `trigger_attributes` already sets `aria-label`. |
 | `style` | Symbol | `:default` | no | Trigger style. Built-in button styles plus any name registered with `FlatPack::Button.register_style`. Invalid values raise `ArgumentError`. |
-| `size` | Symbol | `:md` | no | Trigger size. Delegates to `FlatPack::Button::Component` sizes (`:sm`, `:md`, `:lg`). |
+| `size` | Symbol | `:md` | no | Trigger size. Delegates to `FlatPack::Button::Component` (`:sm`, `:md`, `:lg`, and icon-only `:xs`). `:xs` without `icon_only: true` raises `ArgumentError`. |
 | `round` | Boolean | `false` | no | `true` uses `FlatPack::Button::Component::ROUND_RADIUS_CLASS` (`--button-round-border-radius`). A label becomes a pill. `icon_only: true` also applies `ROUND_ICON_ONLY_SIZES`, so the trigger is a circle. `false` keeps `--button-border-radius`. Anything other than `true` or `false` raises `ArgumentError`. |
 | `icon` | String/Symbol | `nil` | no | Optional leading icon. Required when `icon_only: true`. A missing icon raises `ArgumentError`. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on the leading icon. Omit to use `default_icon_variant`. The chevron stays on that default. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the trigger text. `:primary`, `:success`, `:warning`, or `:danger` colour the leading icon the same way as Button. The chevron stays the trigger text colour. Unknown names raise `ArgumentError`. |
-| `icon_only` | Boolean | `false` | no | Hides the label, drops the chevron, and uses `ICON_ONLY_SIZES` plus `fp-hit-target` from Button. Needs `icon:` and an accessible name (`text:` or `trigger_attributes: { aria: { label: } }`). A blank name raises `ArgumentError`. |
+| `icon_only` | Boolean | `false` | no | Hides the label, drops the chevron, and uses Button `ICON_ONLY_SIZES`. `:sm`, `:md`, and `:lg` add `fp-hit-target`. `:xs` adds `fp-hit-slop` so the painted trigger stays about 32px and the tap stays 44px. Needs `icon:` and an accessible name (`text:` or `trigger_attributes: { aria: { label: } }`). Always pass an `aria-label`. A blank name raises `ArgumentError`. Leave about 12px before the next `:xs` control or the tap areas overlap. |
 | `show_chevron` | Boolean | `nil` | no | Omitted or `nil` shows the chevron on a labeled trigger and hides it when `icon_only: true`. `false` hides it. `true` with `icon_only: true` raises `ArgumentError`. |
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
 | `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
@@ -107,6 +107,21 @@ A round heart on a photo. `text` is the accessible name. The chevron stays off.
 ) do |dropdown| %>
   <% dropdown.menu_item(text: "Favorites", icon: "heart", href: "#") %>
   <% dropdown.menu_item(text: "Weekend", icon: "calendar", href: "#") %>
+<% end %>
+```
+
+`:xs` matches the icon-only button. The painted trigger is about 32px. The tap area stays 44px, so leave about 12px before the next control. Pass an `aria-label`.
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(
+  text: "Share",
+  icon: "share",
+  icon_only: true,
+  round: true,
+  size: :xs,
+  trigger_attributes: { aria: { label: "Share" } }
+) do |dropdown| %>
+  <% dropdown.menu_item(text: "Copy link", href: "#") %>
 <% end %>
 ```
 

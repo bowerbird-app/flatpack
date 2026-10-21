@@ -15,15 +15,15 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | --- | --- | --- | --- | --- |
 | `text` | String, nil | `nil` | no | Visible label text. Required unless `icon` is provided. On `icon_only` buttons, `text` is the accessible name (`aria-label`) and is not shown. |
 | `style` | Symbol | `:default` | no | Built-in: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`. Hosts and gems may register more names with `FlatPack::Button.register_style`. Unknown names raise `ArgumentError`. |
-| `size` | Symbol | `:md` | no | One of `:sm`, `:md`, `:lg`. |
-| `round` | Boolean | `false` | no | `true` uses `--button-round-border-radius` (`--radius-full` on every theme). A label becomes a pill. `icon_only: true` also sets an equal width and height (`--button-round-size-sm`, `--button-round-size-md`, `--button-round-size-lg`) so the control is a circle at every size. `false` keeps `--button-border-radius`. Anything other than `true` or `false` raises `ArgumentError`. A host `rounded-*` class still replaces the radius. |
+| `size` | Symbol | `:md` | no | `:sm`, `:md`, `:lg`, or icon-only `:xs`. `:xs` with a label raises `ArgumentError`. `:xs` stays out of `SIZES`, so SegmentedButtons, Tabs, and Button::Pill do not accept it. |
+| `round` | Boolean | `false` | no | `true` uses `--button-round-border-radius` (`--radius-full` on every theme). A label becomes a pill. `icon_only: true` also sets an equal width and height (`--button-round-size-sm`, `--button-round-size-md`, `--button-round-size-lg`, `--button-round-size-xs`) so the control is a circle at every size. `:xs` is `2rem` with no hit-target floor. `false` keeps `--button-border-radius`. Anything other than `true` or `false` raises `ArgumentError`. A host `rounded-*` class still replaces the radius. |
 | `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
 | `icon` | String, nil | `nil` | no | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro`. Omit to use `FlatPack.configuration.default_icon_variant` (`:outline` unless the host changed it). Passed to `FlatPack::Shared::IconComponent` `variant:`. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, or `:danger` paint the glyph from `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`. The class mixes that token toward `--fp-button-text` so it stays readable on every button `style`. When `icon_style` matches `style`, the glyph uses the button text colour. Disabled buttons still mute it with `--button-disabled-opacity`. Unknown names raise `ArgumentError`. There is no `icon_class`. |
-| `icon_only` | Boolean | `false` | no | Uses compact icon-only padding, a 44px hit target (`.fp-hit-target`), and hides visible text. Requires `text:` or `aria: { label: "…" }`. |
+| `icon_only` | Boolean | `false` | no | Uses compact icon-only padding and hides visible text. `:sm`, `:md`, and `:lg` grow the painted box with `.fp-hit-target` (44px). `:xs` paints about 32px (`--button-icon-only-padding-xs`, a 1rem icon) and keeps the 44px tap on `.fp-hit-slop`. Requires `text:` or `aria: { label: "…" }`. Always pass an `aria-label`. Adjacent `:xs` buttons need about 12px between them or the 44px tap areas overlap. |
 | `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
 | `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
 | `align` | Symbol | `:center` | no | `:center` keeps the label in the middle. `:start` left-aligns it and lets the label fill the remaining space (`flex-1 min-w-0`). |
@@ -40,7 +40,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 ## Variants
 - Built-in styles: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`
 - Host-registered styles: any name added with `FlatPack::Button.register_style`
-- Sizes: `:sm`, `:md`, `:lg`
+- Sizes: `:sm`, `:md`, `:lg`. Icon-only also accepts `:xs`.
 - Round: `round: true` for a pill label or a circular icon-only button. Omit it for the theme corner.
 - Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only, current (`current: true`)
@@ -147,6 +147,18 @@ Pass `indicator: :slide` for a sliding fill. Items keep text colour. A normal le
   icon: "magnifying-glass",
   icon_only: true,
   aria: { label: "Search" }
+) %>
+```
+
+`:xs` is the press-kit overlay size. The glyph stays 1rem. The painted control is about 32px. The tap target stays 44px. Leave about 12px between two of them.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  icon: "heart",
+  icon_only: true,
+  round: true,
+  size: :xs,
+  aria: { label: "Save" }
 ) %>
 ```
 
