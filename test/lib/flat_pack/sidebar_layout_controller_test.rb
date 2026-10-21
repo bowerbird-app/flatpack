@@ -41,7 +41,7 @@ module FlatPack
       assert_includes css, "[data-flat-pack-layout-background]"
       assert_includes css, "isolation: isolate;"
       assert_includes css, ".fp-layout-background"
-      assert_includes css, "filter: blur(var(--layout-background-blur));"
+      assert_includes css, "filter: blur(var(--layout-background-blur)) var(--layout-background-filter);"
       assert_includes css, "background-color: var(--layout-background-tint-color);"
       assert_includes css, "opacity: var(--layout-background-tint-opacity);"
       assert_includes css, "@media (prefers-reduced-transparency: reduce)"

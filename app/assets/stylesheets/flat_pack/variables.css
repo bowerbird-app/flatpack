@@ -24,7 +24,8 @@
  *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
  * [data-theme~="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
  * [data-theme~="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
- *   It does not restate colour. Buttons, badges, and tabs become pills.
+ *   It also sets the layout-background wash. That block is after [data-theme~="dark"], same specificity,
+ *   so data-theme="rounded dark" keeps the rounded wash. Buttons, badges, and tabs become pills.
  *   Form controls use 1rem (16px). No radius step equals 1rem, so the value is literal.
  *   Chips and menu item highlights stay --radius-md.
  *   The rounded sidebar highlight is the float radius minus the item inset.
@@ -357,6 +358,8 @@
   --layout-content-inset: var(--layout-content-inset);
   --layout-content-max-width: var(--layout-content-max-width);
   --layout-background-blur: var(--layout-background-blur);
+  --layout-background-color: var(--layout-background-color);
+  --layout-background-filter: var(--layout-background-filter);
   --layout-background-tint-color: var(--layout-background-tint-color);
   --layout-background-tint-opacity: var(--layout-background-tint-opacity);
   --sidebar-border-color: var(--sidebar-border-color);
@@ -1321,6 +1324,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
   --layout-content-max-width: 100%;
   --layout-background-blur: 40px;
+  --layout-background-color: transparent;
+  --layout-background-filter: saturate(1);
   --layout-background-tint-color: var(--surface-page-background-color);
   --layout-background-tint-opacity: 0.55;
   --sidebar-border-color: var(--surface-border-color);
@@ -1970,9 +1975,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 }
 
 /* Rounded shifts spacing steps 2–6 and the shape of controls and shells.
- * Colour and shadow stay on the default palette. --space-1 stays 4px.
- * --density stays 1. The global --radius-* steps stay moderate; this block
- * only remaps component radii. Do not self-map a token here.
+ * --space-1 stays 4px. --density stays 1. The global --radius-* steps stay
+ * moderate; this block remaps component radii. Do not self-map a token here.
+ * The layout-background wash is the colour exception. This block follows
+ * [data-theme~="dark"] at the same specificity, so a combined attribute keeps it.
  */
 [data-theme~="rounded"] {
   --space-1: 0.25rem;
@@ -2003,6 +2009,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --modal-radius: var(--radius-xl);
   --alert-border-radius: var(--radius-xl);
   --toast-border-radius: var(--radius-xl);
+  --layout-background-color: #2f2f2f;
+  --layout-background-tint-color: #000;
+  --layout-background-tint-opacity: 0.18;
 }
 
 @media (prefers-reduced-motion: reduce) {
