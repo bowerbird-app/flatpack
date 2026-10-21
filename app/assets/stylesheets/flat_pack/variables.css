@@ -1992,7 +1992,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --form-control-radius: 1rem;
   --chip-border-radius: var(--radius-md);
   --sidebar-float-radius: var(--radius-xxxl);
-  --sidebar-item-radius: max(0px, calc(var(--sidebar-float-radius) - var(--sidebar-item-inset)));
+  --sidebar-item-radius: var(--radius-md);
   --dropdown-item-radius: var(--radius-md);
   --badge-radius: var(--radius-full);
   --tabs-pill-corner-radius: var(--radius-full);

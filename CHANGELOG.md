@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.286] - 2026-10-21
+
+### Fixed
+- `[data-theme~="rounded"]` sets `--sidebar-item-radius` to `var(--radius-md)` (0.5rem, 8px). Hover and active row highlights use that soft corner. The floating panel stays `--sidebar-float-radius: var(--radius-xxxl)` (2.5rem, 40px).
+
+### Upgrade notes
+- Visual change on the rounded theme. Sidebar row corners go from 1.75rem to 0.5rem. The floating panel stays 2.5rem. Dark, ocean, and the unset theme are unchanged.
+- No new tokens. Hosts reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.286`.
+
 ## [0.1.285] - 2026-10-21
 
 ### Added
