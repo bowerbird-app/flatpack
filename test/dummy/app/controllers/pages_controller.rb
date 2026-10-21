@@ -720,6 +720,10 @@ class PagesController < ApplicationController
     render layout: "fullpage"
   end
 
+  def page_actions
+    render layout: "fullpage" if params[:shell] == "page"
+  end
+
   def overlay
   end
 

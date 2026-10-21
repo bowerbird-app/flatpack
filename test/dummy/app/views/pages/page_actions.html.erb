@@ -1,0 +1,23 @@
+<%
+  page_action "New press kit", "/press-kits/new", role: :primary, icon: :plus
+  page_action "Share", "/press-kits/share", role: :secondary, icon: :share
+  page_action "Delete", "/press-kits/delete", role: :destructive, icon: :trash
+%>
+
+<% if params[:shell] == "page" %>
+  <%= render FlatPack::PageLayout::Component.new(width: :default, id: "page-actions-shell") do |layout| %>
+    <% layout.top_nav do %>
+      <%= render FlatPack::TopNav::Component.new(mobile_menu: false) do |nav| %>
+        <% nav.left do %>
+          Press kit
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <h1>Press kit</h1>
+    <p>Logos, photos, and the short story.</p>
+  <% end %>
+<% else %>
+  <h1>Press kit</h1>
+  <p>Logos, photos, and the short story.</p>
+<% end %>

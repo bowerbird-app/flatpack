@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.293] - 2026-10-21
+
+### Added
+- `page_action` nominates a page-level action for the current request: label, path, `role:` (`:primary`, `:secondary`, or `:destructive`), `icon:`, and pass-through `data:` / `aria:`. The view decides which actions exist and what they mean. It does not pass a CSS class, a button style, or a placement.
+- `FlatPack::PageActionRegistry` collects those actions in source order. The helper stores one registry on `request.env["flat_pack.page_actions"]`. A new request starts empty.
+- `page_actions` turns that list and a context into buttons. `:header` uses a solid primary (`:primary`), a subtle secondary (`:secondary`), and `:danger`. `:top_nav` uses a subtle primary (`:secondary`), a ghost secondary (`:ghost`), and `:danger`. `:mobile` uses the same tokens as `:header` on the first action and puts the rest in the ⋯ menu (`Button::Dropdown`, icon `ellipsis-horizontal`). Header and top nav render a `ButtonGroup`. `styles:` replaces any role's button style for that call.
+- Sidebar Layout renders `:top_nav` in a bar under the top nav and `:mobile` fixed at the bottom-right. Page Layout renders `:header` at the top of the column and the same mobile cluster. An empty registry adds no markup.
+
+### Upgrade notes
+- Call `page_action` in the view. Sidebar Layout and Page Layout place the buttons. A custom layout calls `page_actions(:header)`, `page_actions(:top_nav)`, or `page_actions(:mobile)` and puts the HTML where it wants. Pass `styles: { primary: :ghost }` to replace a role's button style.
+- New copy key: `flatpack.page_actions.more` (`More`). The ⋯ trigger uses it as its accessible name.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.293`.
+
 ## [0.1.292] - 2026-10-21
 
 ### Changed

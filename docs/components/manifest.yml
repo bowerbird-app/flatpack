@@ -566,6 +566,16 @@ components:
       - FlatPack::Overlay::Item
     status: documented
 
+  - key: page_actions
+    title: Page actions
+    doc: docs/components/page-actions.md
+    primary_class: FlatPack::PageActionRegistry
+    related_classes:
+      - FlatPack::PageAction
+      - FlatPack::PageActions
+      - FlatPack::PageActionHelper
+    status: documented
+
   - key: page_header
     title: Page Header
     doc: docs/components/page-header.md

@@ -22,6 +22,25 @@ module FlatPack
         backdrop.with_media { slot.to_s }
         render(backdrop)
       end
+
+      # Desktop or mobile cluster for actions the view nominated.
+      # `context` picks the role → style map. `place` picks the shell position.
+      def layout_page_actions(context, place:, bar: false)
+        return unless helpers.respond_to?(:page_actions)
+
+        markup = helpers.page_actions(context)
+        return if markup.blank?
+
+        content_tag(:div, markup, class: page_actions_classes(place, bar), data: {fp_page_actions: context.to_s})
+      end
+
+      def page_actions_classes(place, bar)
+        [
+          "fp-page-actions",
+          "fp-page-actions--#{place}",
+          ("fp-page-actions--bar" if bar)
+        ].compact.join(" ")
+      end
     end
   end
 end

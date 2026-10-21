@@ -7,7 +7,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background
+      private :layout_top_nav, :layout_background, :layout_page_actions, :page_actions_classes
 
       renders_one :top_nav_slot
       renders_one :footer_slot
@@ -72,7 +72,8 @@ module FlatPack
             render_background,
             render_page_surface,
             render_frame,
-            render_footer
+            render_footer,
+            layout_page_actions(:mobile, place: :mobile)
           ].compact)
         end
       end
@@ -102,7 +103,12 @@ module FlatPack
       end
 
       def main_column
-        content_tag(:div, content, class: "fp-layout-column")
+        content_tag(:div, class: "fp-layout-column") do
+          safe_join([
+            layout_page_actions(:header, place: :desktop),
+            content
+          ].compact)
+        end
       end
 
       def render_footer

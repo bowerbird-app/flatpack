@@ -121,6 +121,9 @@ Float the top nav on its own, or with the rail. Put a toolbar in `left` and sepa
 
 The mobile drawer (below the `md` breakpoint) is `.fp-sidebar-drawer` with `data-mobile-drawer-side`. It pads `env(safe-area-inset-*)` on the top, bottom, and opening edge so the panel clears the notch. Desktop sidebar is in the grid and does not add that pad. TopNav lives in the main column, so drawer padding does not double-pad the bar. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md).
 
+## Page actions
+A view nominates actions with `page_action`. This shell reads the request registry and calls `page_actions`. From the `md` breakpoint up, the bar under the top nav is `page_actions(:top_nav)` (subtle primary). Below that, `page_actions(:mobile)` floats the first action and puts the rest in the ⋯ menu. No nominated actions means no extra markup. See [Page actions](page-actions.md).
+
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.
 
