@@ -236,6 +236,178 @@ test('a phone folds a collapsible section into the menu', () => {
   assert.equal(sectionChildren.includes(child), false)
 })
 
+test('a phone lists dropdown items in one column and restores them', () => {
+  const {controller, panel, sectionChildren, publish, more, publishMenu, moreMenu, publishNow, schedule, duplicate, archive} = buildMenuTree()
+
+  controller.applyLayout()
+
+  const visible = visibleText(panel)
+  assert.deepEqual(visible, ['Section', 'Publish now', 'Schedule', 'Duplicate', 'Archive'])
+  assert.equal(publish.hidden, true)
+  assert.equal(more.hidden, true)
+  assert.equal(publishMenu.children.includes(publishNow), false)
+  assert.equal(moreMenu.children.includes(duplicate), false)
+
+  controller.mediaQuery.matches = false
+  controller.applyLayout()
+
+  assert.equal(publish.hidden, false)
+  assert.equal(more.hidden, false)
+  assert.deepEqual(publishMenu.children.map((node) => node.text), ['Publish now', 'Schedule'])
+  assert.deepEqual(moreMenu.children.map((node) => node.text), ['Duplicate', 'Archive'])
+  assert.equal(sectionChildren[0].nodeName, 'page-nav')
+})
+
+function element(name, {dataset = {}, text = ''} = {}) {
+  const node = {
+    nodeType: 1,
+    nodeName: name,
+    text,
+    hidden: false,
+    dataset,
+    childNodes: [],
+    get children() {
+      return this.childNodes.filter((child) => child.nodeType === 1)
+    },
+    appendChild(child) {
+      if (child.parentNode && child.parentNode.removeChild) child.parentNode.removeChild(child)
+      child.parentNode = this
+      this.childNodes.push(child)
+      return child
+    },
+    insertBefore(child, before) {
+      if (child.parentNode && child.parentNode.removeChild) child.parentNode.removeChild(child)
+      child.parentNode = this
+      const index = this.childNodes.indexOf(before)
+      this.childNodes.splice(index < 0 ? this.childNodes.length : index, 0, child)
+      return child
+    },
+    removeChild(child) {
+      const index = this.childNodes.indexOf(child)
+      if (index >= 0) this.childNodes.splice(index, 1)
+      if (child.parentNode === this) child.parentNode = null
+      return child
+    },
+    querySelector(selector) {
+      return this.querySelectorAll(selector)[0] || null
+    },
+    querySelectorAll(selector) {
+      const matches = []
+      const walk = (current) => {
+        current.children.forEach((child) => {
+          if (selectorMatches(child, selector)) matches.push(child)
+          walk(child)
+        })
+      }
+      walk(this)
+      return matches
+    }
+  }
+  return node
+}
+
+function selectorMatches(node, selector) {
+  if (selector === "[data-controller~='flat-pack--button-dropdown']") {
+    return (node.dataset.controller || '').split(/\s+/).includes('flat-pack--button-dropdown')
+  }
+
+  return node.dataset.flatPackButtonDropdownTarget === 'menu'
+}
+
+function visibleText(root) {
+  const labels = []
+  const walk = (node) => {
+    if (node.hidden) return
+    if (node.text) labels.push(node.text)
+    node.children.forEach(walk)
+  }
+  walk(root)
+  return labels
+}
+
+function buildMenuTree() {
+  const sectionButton = element('button', {text: 'Section'})
+  const publishNow = element('button', {text: 'Publish now'})
+  const schedule = element('button', {text: 'Schedule'})
+  const duplicate = element('button', {text: 'Duplicate'})
+  const archive = element('button', {text: 'Archive'})
+  const publishMenu = element('div', {dataset: {flatPackButtonDropdownTarget: 'menu'}})
+  publishMenu.appendChild(publishNow)
+  publishMenu.appendChild(schedule)
+  const publish = element('div', {dataset: {controller: 'flat-pack--button-dropdown'}})
+  publish.appendChild(element('button', {text: 'Publish'}))
+  publish.appendChild(publishMenu)
+  const moreMenu = element('div', {dataset: {flatPackButtonDropdownTarget: 'menu'}})
+  moreMenu.appendChild(duplicate)
+  moreMenu.appendChild(archive)
+  const more = element('div', {dataset: {controller: 'flat-pack--button-dropdown'}})
+  more.appendChild(element('button', {text: 'More'}))
+  more.appendChild(moreMenu)
+  const row = element('div')
+  row.appendChild(sectionButton)
+  row.appendChild(publish)
+  row.appendChild(more)
+  const pageNav = element('page-nav')
+  pageNav.appendChild(row)
+
+  const sectionChildren = [pageNav]
+  const section = {
+    dataset: {flatPackTopNavCollapsible: 'true'},
+    childNodes: sectionChildren,
+    classList: {toggle() {}, remove() {}},
+    insertBefore(node, before) {
+      node.parentNode = section
+      sectionChildren.splice(sectionChildren.indexOf(before), 0, node)
+    },
+    replaceChild(node, placeholder) {
+      if (node.parentNode && node.parentNode.removeChild) node.parentNode.removeChild(node)
+      sectionChildren.splice(sectionChildren.indexOf(placeholder), 1, node)
+      node.parentNode = section
+    }
+  }
+  const panelChildren = []
+  const panel = element('div')
+  panel.childrenPush = panel.appendChild
+  panel.appendChild = (node) => {
+    const index = sectionChildren.indexOf(node)
+    if (index >= 0) sectionChildren.splice(index, 1)
+    return panel.childrenPush(node)
+  }
+  const menu = {classList: {toggle() {}}}
+  const TopNavController = loadTopNavController({
+    window: {},
+    document: {createComment() { return {nodeType: 8, parentNode: null} }},
+    Node: {TEXT_NODE: 3, ELEMENT_NODE: 1}
+  })
+
+  return {
+    panel,
+    sectionChildren,
+    publish,
+    more,
+    publishMenu,
+    moreMenu,
+    publishNow,
+    schedule,
+    duplicate,
+    archive,
+    controller: Object.assign(new TopNavController(), {
+      element: {dataset: {}},
+      mediaQuery: {matches: true},
+      hasPanelTarget: true,
+      hasMenuTarget: true,
+      hasToggleTarget: false,
+      sectionTargets: [section],
+      panelTarget: panel,
+      menuTarget: menu,
+      movedNodes: [],
+      breakpointValue: 768,
+      fitting: false,
+      menuOpen: false
+    })
+  }
+}
+
 test('a phone leaves the sidebar toggle in the bar', () => {
   const {controller, panelChildren, sectionChildren} = buildFitController({
     clientWidth: 390,

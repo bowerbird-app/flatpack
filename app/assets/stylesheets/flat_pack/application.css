@@ -1553,6 +1553,31 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   pointer-events: auto;
 }
 
+/* The open hamburger menu is one column of full-width rows. */
+[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav,
+[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav > div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 0.125rem;
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(a, button) {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--surface-content-color);
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(a, button):hover {
+  background-color: var(--surface-muted-background-color);
+}
+
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
   overflow: visible;
   background-color: var(--sidebar-float-background-color);

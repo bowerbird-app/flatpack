@@ -1,8 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
-// On a narrow viewport, moves the top nav row into one hamburger menu. A wide
-// viewport keeps the row. Nodes are relocated rather than duplicated so ids,
-// event listeners and Stimulus controllers inside slot content keep working.
+// On a narrow viewport, moves the top nav row into one hamburger menu. The
+// open menu is a single column. A nested dropdown's trigger is left out and
+// its items become rows in that column, in source order. A wide viewport
+// keeps the row. Nodes are relocated rather than duplicated so ids, event
+// listeners and Stimulus controllers inside slot content keep working.
 // The sidebar's own mobile toggle stays in the bar.
 export default class extends Controller {
   static targets = ["section", "menu", "toggle", "panel"]
@@ -166,7 +168,40 @@ export default class extends Controller {
       this.updateSectionVisibility(section)
     })
 
+    this.flattenDropdowns()
     this.updateMenuVisibility()
+  }
+
+  // One tap shows every action. A dropdown trigger is not a second menu.
+  flattenDropdowns() {
+    const panel = this.panelTarget
+    if (!panel || typeof panel.querySelectorAll !== "function") return
+
+    this.flattenedDropdowns = []
+    const dropdowns = Array.from(panel.querySelectorAll("[data-controller~='flat-pack--button-dropdown']"))
+
+    dropdowns.forEach((dropdown) => {
+      const menu = dropdown.querySelector("[data-flat-pack--button-dropdown-target='menu']")
+      const parent = dropdown.parentNode
+      if (!menu || !parent || typeof parent.insertBefore !== "function") return
+
+      const items = Array.from(menu.children).filter((node) => node.nodeType === Node.ELEMENT_NODE)
+      if (items.length === 0) return
+
+      items.forEach((item) => parent.insertBefore(item, dropdown))
+      dropdown.hidden = true
+      this.flattenedDropdowns.push({dropdown, menu, items})
+    })
+  }
+
+  restoreDropdowns() {
+    if (!this.flattenedDropdowns) return
+
+    while (this.flattenedDropdowns.length > 0) {
+      const {dropdown, menu, items} = this.flattenedDropdowns.pop()
+      items.forEach((item) => menu.appendChild(item))
+      dropdown.hidden = false
+    }
   }
 
   isSidebarToggle(node) {
@@ -177,6 +212,8 @@ export default class extends Controller {
   }
 
   restoreCollapsedNodes() {
+    this.restoreDropdowns()
+
     while (this.movedNodes.length > 0) {
       const { node, placeholder } = this.movedNodes.pop()
 
