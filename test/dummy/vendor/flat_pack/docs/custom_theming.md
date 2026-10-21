@@ -49,7 +49,7 @@ A named host theme should set semantic tokens, not component aliases. Component 
 
 **Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`, `--layout-background-color`, `--layout-background-filter`, `--layout-background-tint-opacity`.
 
-Stack the brand on rounded. The attribute is a list, base first. Rounded still supplies spacing and shape. The brand block overrides only the tokens it sets. Load that block after `flat_pack/variables`. Both selectors have the same specificity, so source order decides the winner.
+Stack the brand on rounded. The attribute is a list, base first. Rounded still supplies spacing, shape, and the layout-background wash (`#2f2f2f`, black tint at `0.18`). That wash follows the dark block in the kit, so `rounded dark` keeps `0.18` instead of `0.78`. The brand block overrides only the tokens it sets. Load that block after `flat_pack/variables`. Both selectors have the same specificity, so source order decides the winner.
 
 ```html
 <html data-theme="rounded featured-in">

@@ -32,6 +32,28 @@ module FlatPack
       refute_includes @application, "--layout-background-overhang"
     end
 
+    test "rounded wash is a neutral edge and beats the dark tint when themes combine" do
+      rounded = @css[/\[data-theme~="rounded"\]\s*\{(.*?)\}/m, 1]
+      dark = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+
+      assert_match(/--layout-background-color:\s*#2f2f2f;/, rounded)
+      assert_match(/--layout-background-tint-color:\s*#000;/, rounded)
+      assert_match(/--layout-background-tint-opacity:\s*0\.18;/, rounded)
+      refute_match(/--layout-background-blur\s*:/, rounded)
+      refute_match(/--layout-background-filter\s*:/, rounded)
+      refute_includes rounded[/--layout-background-color:[^;]+/], "oklch("
+      assert_match(/--layout-background-tint-opacity:\s*0\.78;/, dark)
+      refute_match(/--layout-background-tint-color\s*:/, dark)
+
+      dark_rule = @css.index("[data-theme~=\"dark\"] {")
+      rounded_rule = @css.index("[data-theme~=\"rounded\"] {")
+      dark_opacity = @css.index("--layout-background-tint-opacity: 0.78")
+      rounded_opacity = @css.index("--layout-background-tint-opacity: 0.18")
+
+      assert_operator dark_rule, :<, rounded_rule
+      assert_operator dark_opacity, :<, rounded_opacity
+    end
+
     test "reduced transparency and missing blur still hide the photo" do
       transparency = <<~CSS
         @media (prefers-reduced-transparency: reduce) {

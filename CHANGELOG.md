@@ -18,9 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `--layout-background-color` defaults to `transparent` and paints `.fp-layout-background`. That fill shows at the edge where the blur fades.
 - `--layout-background-filter` defaults to `saturate(1)`. The photo filter is `blur(var(--layout-background-blur)) var(--layout-background-filter)`, including `-webkit-filter`.
+- `[data-theme~="rounded"]` sets `--layout-background-color` to `#2f2f2f` (the default bottom-nav neutral), `--layout-background-tint-color` to `#000`, and `--layout-background-tint-opacity` to `0.18`. The block follows `[data-theme~="dark"]` at the same specificity, so `data-theme="rounded dark"` keeps `0.18` instead of `0.78`.
 
 ### Upgrade notes
-- Additive. Blur stays `40px`. Tint colour and opacity stay the same, including `0.78` on dark. A host that does not set the new tokens renders the same.
+- Base blur stays `40px`. Base tint stays the page colour at `0.55`. Dark alone stays `0.78`. The filter default stays `saturate(1)`.
+- Rounded changes the photo wash: neutral edge `#2f2f2f`, black tint at `0.18`, including when dark is combined with rounded. A theme that is not rounded is unchanged.
 - Set `--layout-background-color` for the edge. Set `--layout-background-filter` for extra filters, such as `brightness(0.93) saturate(0.75)`.
 - Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
 - Redeploy so `meta.gem_version` shows `0.1.287`.
