@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.287] - 2026-10-21
+
+### Added
+- `--layout-background-color` defaults to `transparent` and paints `.fp-layout-background`. That fill shows at the edge where the blur fades.
+- `--layout-background-filter` defaults to `saturate(1)`. The photo filter is `blur(var(--layout-background-blur)) var(--layout-background-filter)`, including `-webkit-filter`.
+
+### Upgrade notes
+- Additive. Blur stays `40px`. Tint colour and opacity stay the same, including `0.78` on dark. A host that does not set the new tokens renders the same.
+- Set `--layout-background-color` for the edge. Set `--layout-background-filter` for extra filters, such as `brightness(0.93) saturate(0.75)`.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.287`.
+
 ## [0.1.286] - 2026-10-21
 
 ### Fixed

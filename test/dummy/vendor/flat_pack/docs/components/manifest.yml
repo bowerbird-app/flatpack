@@ -682,6 +682,8 @@ components:
     tokens:
       - --layout-content-inset
       - --layout-content-max-width
+      - --layout-background-color
+      - --layout-background-filter
       - --top-nav-float-offset
       - --top-nav-float-radius
       - --top-nav-float-clearance

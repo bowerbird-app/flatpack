@@ -357,6 +357,8 @@
   --layout-content-inset: var(--layout-content-inset);
   --layout-content-max-width: var(--layout-content-max-width);
   --layout-background-blur: var(--layout-background-blur);
+  --layout-background-color: var(--layout-background-color);
+  --layout-background-filter: var(--layout-background-filter);
   --layout-background-tint-color: var(--layout-background-tint-color);
   --layout-background-tint-opacity: var(--layout-background-tint-opacity);
   --sidebar-border-color: var(--sidebar-border-color);
@@ -1321,6 +1323,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
   --layout-content-max-width: 100%;
   --layout-background-blur: 40px;
+  --layout-background-color: transparent;
+  --layout-background-filter: saturate(1);
   --layout-background-tint-color: var(--surface-page-background-color);
   --layout-background-tint-opacity: 0.55;
   --sidebar-border-color: var(--surface-border-color);

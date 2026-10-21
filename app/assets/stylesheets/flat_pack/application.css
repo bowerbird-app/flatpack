@@ -844,13 +844,14 @@
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  background-color: var(--layout-background-color);
 }
 
 .fp-layout-background-media {
   position: absolute;
   inset: -12%;
-  filter: blur(var(--layout-background-blur));
-  -webkit-filter: blur(var(--layout-background-blur));
+  filter: blur(var(--layout-background-blur)) var(--layout-background-filter);
+  -webkit-filter: blur(var(--layout-background-blur)) var(--layout-background-filter);
 }
 
 .fp-layout-background-media img,
