@@ -20,8 +20,8 @@ module FlatPack
           assert_includes html, "fp-tabular-nums"
           assert_selector "div", text: "Monthly revenue"
           assert_selector "div", text: "$12,400"
-          assert_includes html, 'data-style="default"'
-          assert_includes html, "[background:var(--card-style-default-background)]"
+          assert_includes html, 'data-background="default"'
+          assert_includes html, "[background:var(--card-background-default)]"
         end
 
         def test_style_paints_the_stat_surface
@@ -30,12 +30,12 @@ module FlatPack
             label: "New members",
             trend: "+12%",
             trend_direction: :up,
-            style: :gradient
+            background: :gradient
           ))
 
           html = page.native.to_html
-          assert_includes html, "[background:var(--card-style-gradient-background)]"
-          assert_includes html, 'data-style="gradient"'
+          assert_includes html, "[background:var(--card-background-gradient)]"
+          assert_includes html, 'data-background="gradient"'
           refute_includes html, "uppercase"
         end
 

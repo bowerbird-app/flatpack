@@ -29,7 +29,7 @@ Output is Flatpack components, tokens, themes, and presets. Not ad-hoc markup. N
 
 ## Design DNA muzzle
 
-Allow extract of the measurable system into Flatpack tokens and themes: colour, type (`--font-*`, `--text-*`), space, radius, elevation, motion duration and easing.
+Allow extract of the measurable system into Flatpack tokens and themes: colour, type (`--font-*`, `--text-*`), space, radius, shadow, motion duration and easing.
 
 Forbid implementing DNA `visual_effects` (WebGL, particles, shaders, Canvas, scroll theatres, cursor trails) unless Nic explicitly asks for a Flatpack-owned effect later.
 

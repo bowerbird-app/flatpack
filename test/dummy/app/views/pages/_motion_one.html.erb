@@ -29,7 +29,7 @@
   <% end %>
   <% case variant %>
   <% when :fade, :rise, :blur, :scale %>
-    <%= render FlatPack::Card::Component.new(reveal: variant, intensity: intensity, style: :brand, shadow: :sm, class: box_class) do %>
+    <%= render FlatPack::Card::Component.new(reveal: variant, intensity: intensity, background: :brand, shadow: :sm, class: box_class) do %>
       <p class="text-3xl font-semibold"><%= label %></p>
     <% end %>
   <% when :wipe %>

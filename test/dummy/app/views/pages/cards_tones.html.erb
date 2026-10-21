@@ -1,15 +1,16 @@
 <%# Controller: no instance variables required — style examples are inline. %>
 
 <%= render FlatPack::PageTitle::Component.new(
-  title: "Card styles",
-  subtitle: "Colour is style. Shadow, border, and hover are separate."
+  title: "Card backgrounds",
+  subtitle: "Colour is the background. Shadow, border, and hover are separate."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :card %>
 
 <%
-  styles = [
-    [:default, "Surface", "The page surface."],
+  backgrounds = [
+    [:default, "Surface", "The raised surface."],
+    [:none, "None", "Transparent. The page or a parent shows through."],
     [:shaded, "Shaded", "A soft grey."],
     [:brand, "Brand", "Solid brand colour with contrasting type."],
     [:brand_subtle, "Soft brand", "A light brand tint with normal type."],
@@ -17,11 +18,11 @@
   ]
 %>
 
-<% styles.each do |style, label, description| %>
+<% backgrounds.each do |style, label, description| %>
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: label, anchor_link: true, subtitle: description) %>
     <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
-      <%= render FlatPack::Card::Component.new(style: style) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: style) do |card| %>
         <% card.header do %>
           <div class="flex items-center justify-between gap-3">
             <h3 class="text-lg font-semibold">Default border</h3>
@@ -33,7 +34,7 @@
             <%= render FlatPack::Shared::IconComponent.new(name: "star", size: :md, class: "mt-0.5 text-[var(--surface-muted-content-color)]") %>
             <div>
               <p class="text-sm">Paid plan</p>
-              <p class="mt-1 text-sm text-[var(--surface-muted-content-color)]">Renews on the first. Nested type follows the style.</p>
+              <p class="mt-1 text-sm text-[var(--surface-muted-content-color)]">Renews on the first. Nested type follows the background.</p>
             </div>
           </div>
         <% end %>
@@ -41,7 +42,7 @@
           <%= render FlatPack::Button::Component.new(text: "Add money", style: (style == :brand || style == :gradient) ? :default : :primary, size: :sm) %>
         <% end %>
       <% end %>
-      <%= render FlatPack::Card::Component.new(style: style, shadow: :md, border: :strong) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: style, shadow: :md, border: :strong) do |card| %>
         <% card.header do %>
           <h3 class="text-lg font-semibold">Shadow and strong border</h3>
         <% end %>
@@ -52,6 +53,65 @@
     <% end %>
   </section>
 <% end %>
+
+<section class="mb-12" id="card-border-only-page">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Border only",
+    anchor_link: true,
+    subtitle: "background: :none is transparent, so the page shows through. The first card uses the theme border. On rounded that width is 0, so the second card passes border: :default."
+  ) %>
+  <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
+    <%= render FlatPack::Card::Component.new(background: :none) do |card| %>
+      <% card.header do %>
+        <h3 class="text-lg font-semibold">Theme border</h3>
+      <% end %>
+      <% card.body do %>
+        <p class="text-sm">background: :none. Border and shadow stay with the theme.</p>
+      <% end %>
+    <% end %>
+    <%= render FlatPack::Card::Component.new(background: :none, border: :default, shadow: :none) do |card| %>
+      <% card.header do %>
+        <h3 class="text-lg font-semibold">Explicit border</h3>
+      <% end %>
+      <% card.body do %>
+        <p class="text-sm">background: :none, border: :default. A 1px edge on every theme, including rounded.</p>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="card-border-only-backdrop">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Border only on a Backdrop",
+    anchor_link: true,
+    subtitle: "The same two cards. The photo shows through the transparent fill."
+  ) %>
+  <div class="overflow-hidden rounded-[var(--card-radius)]">
+    <%= render FlatPack::Backdrop::Component.new(class: "flex min-h-96 w-full items-center") do |backdrop| %>
+      <% backdrop.with_media do %>
+        <%= image_tag "/images/hero-stool.jpg", alt: "" %>
+      <% end %>
+      <div class="m-6 grid w-full gap-4 sm:grid-cols-2">
+        <%= render FlatPack::Card::Component.new(background: :none) do |card| %>
+          <% card.header do %>
+            <h3 class="text-lg font-semibold">Theme border</h3>
+          <% end %>
+          <% card.body do %>
+            <p class="text-sm">The Backdrop shows through. Text inherits the page.</p>
+          <% end %>
+        <% end %>
+        <%= render FlatPack::Card::Component.new(background: :none, border: :default, shadow: :none) do |card| %>
+          <% card.header do %>
+            <h3 class="text-lg font-semibold">Explicit border</h3>
+          <% end %>
+          <% card.body do %>
+            <p class="text-sm">border: :default keeps the 1px edge when the theme width is 0.</p>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Shadow", anchor_link: true, subtitle: "None, small, and medium. Dark themes draw the same tokens larger.") %>
@@ -102,17 +162,17 @@
 </section>
 
 <section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Stat cards", anchor_link: true, subtitle: "The same style, painted on the stat itself.") %>
+  <%= render FlatPack::SectionTitle::Component.new(title: "Stat cards", anchor_link: true, subtitle: "The same background, painted on the stat itself.") %>
   <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
-    <%= render FlatPack::Card::Stat::Component.new(value: "$12,400", label: "Monthly revenue", trend: "+4%", trend_direction: :up, style: :default) %>
-    <%= render FlatPack::Card::Stat::Component.new(value: "18", label: "Open invoices", trend: "-2", trend_direction: :down, style: :shaded) %>
-    <%= render FlatPack::Card::Stat::Component.new(value: "86", label: "New members", trend: "+12%", trend_direction: :up, style: :brand) %>
-    <%= render FlatPack::Card::Stat::Component.new(value: "9", label: "Trial seats", trend: "+1", trend_direction: :up, style: :brand_subtle) %>
-    <%= render FlatPack::Card::Stat::Component.new(value: "99.9%", label: "Uptime", trend: "+0.2%", trend_direction: :up, style: :gradient) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "$12,400", label: "Monthly revenue", trend: "+4%", trend_direction: :up, background: :default) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "18", label: "Open invoices", trend: "-2", trend_direction: :down, background: :shaded) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "86", label: "New members", trend: "+12%", trend_direction: :up, background: :brand) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "9", label: "Trial seats", trend: "+1", trend_direction: :up, background: :brand_subtle) %>
+    <%= render FlatPack::Card::Stat::Component.new(value: "99.9%", label: "Uptime", trend: "+0.2%", trend_direction: :up, background: :gradient) %>
   <% end %>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::Card::Component.new(style: :brand, shadow: :md, border: :strong) do |card| %&gt;
+      &lt;%= render FlatPack::Card::Component.new(background: :brand, shadow: :md, border: :strong) do |card| %&gt;
         &lt;% card.body do %&gt;
           <h3 class="text-lg font-semibold">Paid plan</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)]">Renews on the first.</p>
@@ -125,7 +185,7 @@
         label: "Monthly revenue",
         trend: "+4%",
         trend_direction: :up,
-        style: :shaded
+        background: :shaded
       ) %&gt;
     CODE
   ) %>

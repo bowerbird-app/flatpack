@@ -8,7 +8,7 @@ When generating a design from DNA JSON + content:
 
 1. **Color & Typography** — define 80% of visual identity
 2. **Spacing & Layout** — structural rhythm
-3. **Shape & Elevation** — surface treatment
+3. **Shape & Shadow** — surface treatment
 4. **Design Style qualitative fields** — mood, personality, composition approach
 5. **Visual Effects** — special rendering layer (Canvas, WebGL, shaders, etc.)
 6. **Motion & Interaction** — enhance after static layout and effects are solid
@@ -21,7 +21,7 @@ color.primary.hex        → --color-primary / bg-[hex]
 typography.font_families → font-family config
 spacing.scale            → spacing config values
 shape.border_radius      → rounded-{sm|md|lg|full}
-elevation.levels         → shadow-{sm|md|lg}
+shadow.levels            → shadow-{sm|md|lg}
 ```
 
 ### Plain CSS / CSS Variables
@@ -36,9 +36,9 @@ Generate a `:root` block with all design tokens:
   --radius-sm: {shape.border_radius.small};
   --radius-md: {shape.border_radius.medium};
   --radius-lg: {shape.border_radius.large};
-  --shadow-low: {elevation.levels.low};
-  --shadow-med: {elevation.levels.medium};
-  --shadow-high: {elevation.levels.high};
+  --shadow-low: {shadow.levels.low};
+  --shadow-med: {shadow.levels.medium};
+  --shadow-high: {shadow.levels.high};
   --ease: {motion.easing};
   --duration-micro: {motion.duration_scale.micro};
   --duration-normal: {motion.duration_scale.normal};

@@ -97,7 +97,7 @@
     language: "erb",
     class: "mt-4",
     code: <<~CODE
-      #{erb_output_open} render FlatPack::Card::Component.new(reveal: :fade, style: :brand) do #{erb_tag_close}
+      #{erb_output_open} render FlatPack::Card::Component.new(reveal: :fade, background: :brand) do #{erb_tag_close}
         Fade
       #{erb_output_open} end #{erb_tag_close}
     CODE

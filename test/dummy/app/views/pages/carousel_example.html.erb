@@ -189,7 +189,7 @@
       subtitle: "Current behavior this page demonstrates."
     ) %>
 
-    <%= render FlatPack::Card::Component.new(style: :default, class: "mt-6") do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, class: "mt-6") do |card| %>
       <% card.body do %>
         <ul class="list-disc space-y-2 pl-5 text-sm text-(--surface-content-color)">
           <% @carousel_example[:bullets].each do |bullet| %>

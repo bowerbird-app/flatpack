@@ -21,7 +21,7 @@
   <div class="flex gap-4 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
     <% @admin_stats.each do |stat| %>
       <div class="min-w-[220px] md:min-w-0 flex-shrink-0 md:flex-shrink">
-        <%= render FlatPack::Card::Component.new(style: :default, class: "overflow-hidden") do |card| %>
+        <%= render FlatPack::Card::Component.new(background: :default, class: "overflow-hidden") do |card| %>
           <% card.body do %>
             <div class="flex items-center gap-4">
               <div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">

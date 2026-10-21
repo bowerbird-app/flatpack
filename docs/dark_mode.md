@@ -7,7 +7,7 @@ FlatPack ships a rounded / charcoal light palette by default and supports dark o
 FlatPack theme behavior is split into two layers:
 
 - **CSS defaults** - `:root, [data-theme] {}` in `flat_pack/variables.css` provides the default rounded / charcoal palette, including `--brand-hue` / `--brand-chroma` / `--brand-lightness` and component aliases that map once to semantic tokens. Repeating the wiring on `[data-theme]` re-resolves those aliases when the attribute is on `<body>` or another descendant. `:root` also sets `color-scheme: light`.
-- **Theme variants** - selectors such as `[data-theme~="dark"]` and `[data-theme~="ocean"]` override only tokens that differ from the default. `[data-theme~="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. Both inherit `--space-*` and `--density`. `[data-theme~="rounded"]` shifts spacing steps 2–6. It also sets the backdrop edge to `#2f2f2f` and a black tint at `0.18`. That block is later than dark, so a combined `rounded dark` attribute keeps `0.18`. Focus rings and active nav fills follow `--color-primary`. Component aliases re-resolve unless you override them. A dark region nested inside rounded keeps the generous scale, because the scale is not restated on `[data-theme]`. A color-only region such as `data-theme="harbor"` nested inside rounded keeps the pill buttons, the 16px form controls, and `--card-radius` too. The moderate shape is that name on the root, with no `rounded` ancestor.
+- **Theme variants** - selectors such as `[data-theme~="dark"]` and `[data-theme~="ocean"]` override only tokens that differ from the default. `[data-theme~="dark"]` sets `color-scheme: dark` and uses slightly lifted shadows (a faint white hairline plus the usual drop) so cards read against near-black surfaces. The dark page is `oklch(0.12 0.01 250)` and the dark surface is `oklch(0.19 0.015 250)`. Both inherit `--space-*` and `--density`. `[data-theme~="rounded"]` shifts spacing steps 2–6, sets `--card-border-width: 0` and `--card-shadow: var(--shadow-sm)`, and sets the backdrop edge to `#2f2f2f` with a black tint at `0.18`. That block is later than dark, so a combined `rounded dark` attribute keeps `0.18` and the borderless card. Focus rings and active nav fills follow `--color-primary`. Component aliases re-resolve unless you override them. A dark region nested inside rounded keeps the generous scale and the borderless card, because those tokens are not restated on `[data-theme]`. A color-only region such as `data-theme="harbor"` nested inside rounded keeps the pill buttons, the 16px form controls, and `--card-radius` too. The moderate shape is that name on the root, with no `rounded` ancestor.
 - **Optional controller support** - the `flat-pack--theme` Stimulus controller can switch between `system`, `light`, `dark`, and custom variants while persisting the choice in `localStorage` under `flatpack-theme`.
 
 ## How It Works
@@ -51,9 +51,10 @@ Override FlatPack variables in your application stylesheet after the FlatPack li
 
 [data-theme~="dark"] {
   --color-primary: oklch(0.70 0.20 250);
-  --surface-background-color: oklch(0.18 0.01 250);
+  --surface-page-background-color: oklch(0.12 0.01 250);
+  --surface-background-color: oklch(0.19 0.015 250);
   --surface-content-color: oklch(0.95 0.01 250);
-  --surface-border-color: oklch(0.30 0.02 250);
+  --surface-border-color: oklch(0.34 0.02 250);
 }
 ```
 
@@ -71,7 +72,7 @@ You can define additional custom themes the same way. Prefer brand primitives wh
 
 Override semantic tokens (`--color-primary`, `--surface-*`) only when a named theme should diverge from the brand kit.
 
-A brand dark theme does not copy `[data-theme~="dark"]`. Set `color-scheme: dark` and the surface / primary tokens; ghost buttons, secondary, list hover, chip remove, and switch track follow those semantics. Optional extras: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`. Outgoing chat follows the hover surface with normal foreground text. The shipped dark theme sets `--chat-message-outgoing-background-color` to `oklch(0.32 0.015 250)` because dark hover and muted are the same lightness. Ocean sets `oklch(0.90 0.025 220)` so the sent bubble does not sit on the muted incoming fill. If your hover and muted surfaces match, set that token or the two bubbles match. See [Custom Theming](custom_theming.md#minimal-brand-themes) for the minimal token list and a `[data-theme~="featured-in-dark"]` example. `data-theme` on `<body>` works because component aliases are declared on `:root, [data-theme]`.
+A brand dark theme does not copy `[data-theme~="dark"]`. Set `color-scheme: dark` and the surface / primary tokens; ghost buttons, secondary, list hover, chip remove, and switch track follow those semantics. Optional extras: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*`, `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`. Outgoing chat follows the hover surface with normal foreground text. The shipped dark theme sets `--chat-message-outgoing-background-color` to `oklch(0.36 0.015 250)` because dark hover and muted are the same lightness. Ocean sets `oklch(0.90 0.025 220)` so the sent bubble does not sit on the muted incoming fill. If your hover and muted surfaces match, set that token or the two bubbles match. See [Custom Theming](custom_theming.md#minimal-brand-themes) for the minimal token list and a `[data-theme~="featured-in-dark"]` example. `data-theme` on `<body>` works because component aliases are declared on `:root, [data-theme]`.
 
 For a complete copy-pasteable selector with the full current FlatPack variable set, use the [Custom Theming Guide](custom_theming.md).
 

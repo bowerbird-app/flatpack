@@ -2018,6 +2018,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-\[length\:var\(--card-border-width\)\] {
+    border-style: var(--tw-border-style);
+    border-width: var(--card-border-width);
+  }
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
@@ -2045,6 +2049,10 @@
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
+  }
+  .border-solid {
+    --tw-border-style: solid;
+    border-style: solid;
   }
   .border-\(--surface-border-color\) {
     border-color: var(--surface-border-color);
@@ -3951,6 +3959,10 @@
     --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .shadow-\[var\(--card-shadow\)\] {
+    --tw-shadow: var(--card-shadow);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-\[var\(--color-swatch-shadow\)\] {
     --tw-shadow: var(--color-swatch-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -4248,20 +4260,20 @@
   .\[--button-padding-y-md\:var\(--chat-composer-control-padding-y\)\] {
     --button-padding-y-md: var(--chat-composer-control-padding-y);
   }
-  .\[--card-border-color\:var\(--card-style-brand-border-color\)\] {
-    --card-border-color: var(--card-style-brand-border-color);
+  .\[--card-border-color\:var\(--card-background-brand-border-color\)\] {
+    --card-border-color: var(--card-background-brand-border-color);
   }
-  .\[--card-border-color\:var\(--card-style-brand-subtle-border-color\)\] {
-    --card-border-color: var(--card-style-brand-subtle-border-color);
+  .\[--card-border-color\:var\(--card-background-brand-subtle-border-color\)\] {
+    --card-border-color: var(--card-background-brand-subtle-border-color);
   }
-  .\[--card-border-color\:var\(--card-style-default-border-color\)\] {
-    --card-border-color: var(--card-style-default-border-color);
+  .\[--card-border-color\:var\(--card-background-default-border-color\)\] {
+    --card-border-color: var(--card-background-default-border-color);
   }
-  .\[--card-border-color\:var\(--card-style-gradient-border-color\)\] {
-    --card-border-color: var(--card-style-gradient-border-color);
+  .\[--card-border-color\:var\(--card-background-gradient-border-color\)\] {
+    --card-border-color: var(--card-background-gradient-border-color);
   }
-  .\[--card-border-color\:var\(--card-style-shaded-border-color\)\] {
-    --card-border-color: var(--card-style-shaded-border-color);
+  .\[--card-border-color\:var\(--card-background-shaded-border-color\)\] {
+    --card-border-color: var(--card-background-shaded-border-color);
   }
   .\[--chat-message-meta-color\:var\(--chat-message-incoming-meta-color\)\] {
     --chat-message-meta-color: var(--chat-message-incoming-meta-color);
@@ -4284,38 +4296,38 @@
   .\[--surface-border-color\:oklch\(30\%_0\.02_250\)\] {
     --surface-border-color: oklch(30% 0.02 250);
   }
-  .\[--surface-border-color\:var\(--card-style-brand-border-color\)\] {
-    --surface-border-color: var(--card-style-brand-border-color);
+  .\[--surface-border-color\:var\(--card-background-brand-border-color\)\] {
+    --surface-border-color: var(--card-background-brand-border-color);
   }
-  .\[--surface-border-color\:var\(--card-style-brand-subtle-border-color\)\] {
-    --surface-border-color: var(--card-style-brand-subtle-border-color);
+  .\[--surface-border-color\:var\(--card-background-brand-subtle-border-color\)\] {
+    --surface-border-color: var(--card-background-brand-subtle-border-color);
   }
-  .\[--surface-border-color\:var\(--card-style-default-border-color\)\] {
-    --surface-border-color: var(--card-style-default-border-color);
+  .\[--surface-border-color\:var\(--card-background-default-border-color\)\] {
+    --surface-border-color: var(--card-background-default-border-color);
   }
-  .\[--surface-border-color\:var\(--card-style-gradient-border-color\)\] {
-    --surface-border-color: var(--card-style-gradient-border-color);
+  .\[--surface-border-color\:var\(--card-background-gradient-border-color\)\] {
+    --surface-border-color: var(--card-background-gradient-border-color);
   }
-  .\[--surface-border-color\:var\(--card-style-shaded-border-color\)\] {
-    --surface-border-color: var(--card-style-shaded-border-color);
+  .\[--surface-border-color\:var\(--card-background-shaded-border-color\)\] {
+    --surface-border-color: var(--card-background-shaded-border-color);
   }
   .\[--surface-content-color\:oklch\(88\%_0_0\)\] {
     --surface-content-color: oklch(88% 0 0);
   }
-  .\[--surface-content-color\:var\(--card-style-brand-subtle-text-color\)\] {
-    --surface-content-color: var(--card-style-brand-subtle-text-color);
+  .\[--surface-content-color\:var\(--card-background-brand-subtle-text-color\)\] {
+    --surface-content-color: var(--card-background-brand-subtle-text-color);
   }
-  .\[--surface-content-color\:var\(--card-style-brand-text-color\)\] {
-    --surface-content-color: var(--card-style-brand-text-color);
+  .\[--surface-content-color\:var\(--card-background-brand-text-color\)\] {
+    --surface-content-color: var(--card-background-brand-text-color);
   }
-  .\[--surface-content-color\:var\(--card-style-default-text-color\)\] {
-    --surface-content-color: var(--card-style-default-text-color);
+  .\[--surface-content-color\:var\(--card-background-default-text-color\)\] {
+    --surface-content-color: var(--card-background-default-text-color);
   }
-  .\[--surface-content-color\:var\(--card-style-gradient-text-color\)\] {
-    --surface-content-color: var(--card-style-gradient-text-color);
+  .\[--surface-content-color\:var\(--card-background-gradient-text-color\)\] {
+    --surface-content-color: var(--card-background-gradient-text-color);
   }
-  .\[--surface-content-color\:var\(--card-style-shaded-text-color\)\] {
-    --surface-content-color: var(--card-style-shaded-text-color);
+  .\[--surface-content-color\:var\(--card-background-shaded-text-color\)\] {
+    --surface-content-color: var(--card-background-shaded-text-color);
   }
   .\[--surface-hover-background-color\:oklch\(26\%_0\.02_250\)\] {
     --surface-hover-background-color: oklch(26% 0.02 250);
@@ -4323,38 +4335,41 @@
   .\[--surface-muted-content-color\:oklch\(62\%_0_0\)\] {
     --surface-muted-content-color: oklch(62% 0 0);
   }
-  .\[--surface-muted-content-color\:var\(--card-style-brand-muted-text-color\)\] {
-    --surface-muted-content-color: var(--card-style-brand-muted-text-color);
+  .\[--surface-muted-content-color\:var\(--card-background-brand-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-background-brand-muted-text-color);
   }
-  .\[--surface-muted-content-color\:var\(--card-style-brand-subtle-muted-text-color\)\] {
-    --surface-muted-content-color: var(--card-style-brand-subtle-muted-text-color);
+  .\[--surface-muted-content-color\:var\(--card-background-brand-subtle-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-background-brand-subtle-muted-text-color);
   }
-  .\[--surface-muted-content-color\:var\(--card-style-default-muted-text-color\)\] {
-    --surface-muted-content-color: var(--card-style-default-muted-text-color);
+  .\[--surface-muted-content-color\:var\(--card-background-default-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-background-default-muted-text-color);
   }
-  .\[--surface-muted-content-color\:var\(--card-style-gradient-muted-text-color\)\] {
-    --surface-muted-content-color: var(--card-style-gradient-muted-text-color);
+  .\[--surface-muted-content-color\:var\(--card-background-gradient-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-background-gradient-muted-text-color);
   }
-  .\[--surface-muted-content-color\:var\(--card-style-shaded-muted-text-color\)\] {
-    --surface-muted-content-color: var(--card-style-shaded-muted-text-color);
+  .\[--surface-muted-content-color\:var\(--card-background-shaded-muted-text-color\)\] {
+    --surface-muted-content-color: var(--card-background-shaded-muted-text-color);
   }
   .\[--surface-subtle-background-color\:oklch\(28\%_0\.02_250\)\] {
     --surface-subtle-background-color: oklch(28% 0.02 250);
   }
-  .\[background\:var\(--card-style-brand-background\)\] {
-    background: var(--card-style-brand-background);
+  .\[background\:var\(--card-background-brand\)\] {
+    background: var(--card-background-brand);
   }
-  .\[background\:var\(--card-style-brand-subtle-background\)\] {
-    background: var(--card-style-brand-subtle-background);
+  .\[background\:var\(--card-background-brand-subtle\)\] {
+    background: var(--card-background-brand-subtle);
   }
-  .\[background\:var\(--card-style-default-background\)\] {
-    background: var(--card-style-default-background);
+  .\[background\:var\(--card-background-default\)\] {
+    background: var(--card-background-default);
   }
-  .\[background\:var\(--card-style-gradient-background\)\] {
-    background: var(--card-style-gradient-background);
+  .\[background\:var\(--card-background-gradient\)\] {
+    background: var(--card-background-gradient);
   }
-  .\[background\:var\(--card-style-shaded-background\)\] {
-    background: var(--card-style-shaded-background);
+  .\[background\:var\(--card-background-none\)\] {
+    background: var(--card-background-none);
+  }
+  .\[background\:var\(--card-background-shaded\)\] {
+    background: var(--card-background-shaded);
   }
   .\[scrollbar-width\:none\] {
     scrollbar-width: none;
@@ -5098,9 +5113,9 @@
       --tw-ring-offset-shadow: var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
     }
   }
-  .focus\:ring-offset-\[var\(--surface-background-color\)\] {
+  .focus\:ring-offset-\[var\(--button-focus-ring-offset-color\)\] {
     &:focus {
-      --tw-ring-offset-color: var(--surface-background-color);
+      --tw-ring-offset-color: var(--button-focus-ring-offset-color);
     }
   }
   .focus\:outline-none {
@@ -5359,11 +5374,6 @@
   .has-\[\:focus-visible\]\:ring-offset-\[var\(--button-focus-ring-offset-color\)\] {
     &:has(*:is(:focus-visible)) {
       --tw-ring-offset-color: var(--button-focus-ring-offset-color);
-    }
-  }
-  .has-\[\:focus-visible\]\:ring-offset-\[var\(--surface-background-color\)\] {
-    &:has(*:is(:focus-visible)) {
-      --tw-ring-offset-color: var(--surface-background-color);
     }
   }
   .has-\[\:focus-visible\]\:outline-none {

@@ -266,6 +266,10 @@ module FlatPack
       assert_match(/--badge-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--tabs-pill-corner-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--card-radius:\s*var\(--radius-lg\)/, scale_block)
+      assert_match(/--card-border-width:\s*1px/, scale_block)
+      assert_match(/--card-shadow:\s*none/, scale_block)
+      refute_includes root_block, "--card-border-width:"
+      refute_includes root_block, "--card-shadow:"
       assert_match(/--menu-radius:\s*var\(--radius-lg\)/, scale_block)
       assert_match(/--modal-radius:\s*var\(--radius-lg\)/, scale_block)
       refute_includes root_block, "--radius-md:"
@@ -296,9 +300,11 @@ module FlatPack
       assert_match(/--dropdown-item-radius:\s*var\(--radius-md\)/, rounded_block)
       refute_match(/--chip-border-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--card-radius:\s*var\(--radius-xl\)/, rounded_block)
+      assert_match(/--card-border-width:\s*0;/, rounded_block)
+      assert_match(/--card-shadow:\s*var\(--shadow-sm\)/, rounded_block)
       assert_match(/--menu-radius:\s*var\(--radius-xl\)/, rounded_block)
       assert_match(/--modal-radius:\s*var\(--radius-xl\)/, rounded_block)
-      refute_includes rounded_block, "--shadow-sm"
+      refute_match(/^\s*--shadow-/m, rounded_block)
       refute_includes rounded_block, "--button-padding"
       rounded_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
         refute_equal "var(#{name})", value.strip, "[data-theme=rounded] #{name} must not be a circular self-reference"
@@ -333,8 +339,8 @@ module FlatPack
       refute_includes ocean_block, "--density"
       assert_includes dark_block, "--color-primary"
       assert_includes ocean_block, "--color-primary"
-      assert_match(/--sidebar-background-color:\s*oklch\(0\.17 0\.01 250\)/, dark_block)
-      assert_match(/--sidebar-float-background-color:\s*oklch\(0\.22 0\.02 250\)/, dark_block)
+      assert_match(/--sidebar-background-color:\s*oklch\(0\.14 0\.012 250\)/, dark_block)
+      assert_match(/--sidebar-float-background-color:\s*oklch\(0\.23 0\.02 250\)/, dark_block)
       assert_match(/--backdrop-tint-opacity:\s*0\.78/, dark_block)
       assert_match(/--sidebar-background-color:\s*oklch\(0\.96 0\.02 220\)/, ocean_block)
     end
@@ -436,7 +442,7 @@ module FlatPack
       dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
       ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
 
-      assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.32 0\.015 250\)/, dark_block)
+      assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.36 0\.015 250\)/, dark_block)
       assert_match(/--chat-message-outgoing-background-color:\s*oklch\(0\.90 0\.025 220\)/, ocean_block)
       refute_includes dark_block, "--chat-message-outgoing-text-color"
       refute_includes ocean_block, "--chat-message-outgoing-text-color"
@@ -507,7 +513,7 @@ module FlatPack
       refute_nil root_block, "expected a :root, [data-theme] block in variables.css"
       assert_match(/--range-fill-color:\s*var\(--color-primary\)/, root_block)
       assert_match(/--range-thumb-color:\s*var\(--color-primary\)/, root_block)
-      assert_match(/--range-thumb-border-color:\s*var\(--surface-background-color\)/, root_block)
+      assert_match(/--range-thumb-border-color:\s*var\(--surface-page-background-color\)/, root_block)
       refute_match(/--range-thumb-color:\s*var\(--surface-background-color\)/, root_block)
 
       application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
@@ -567,8 +573,8 @@ module FlatPack
 
       dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
       ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
-      assert_match(/--surface-hover-background-color:\s*oklch\(0\.22 0\.02 250\)/, dark_block)
-      assert_match(/--surface-active-background-color:\s*oklch\(0\.28 0\.02 250\)/, dark_block)
+      assert_match(/--surface-hover-background-color:\s*oklch\(0\.26 0\.02 250\)/, dark_block)
+      assert_match(/--surface-active-background-color:\s*oklch\(0\.32 0\.02 250\)/, dark_block)
       assert_match(/--surface-hover-background-color:\s*oklch\(0\.92 0\.03 220\)/, ocean_block)
       assert_match(/--surface-active-background-color:\s*oklch\(0\.88 0\.04 220\)/, ocean_block)
       refute_includes dark_block, "--list-item-hover-background-color"
@@ -677,6 +683,41 @@ module FlatPack
       refute_includes handle, "35%"
       after = handle[/\.fp-panel-resize::after \{.*?\}/m]
       refute_includes after, "opacity: 0"
+    end
+
+    test "page and surface are separate and cards take border and shadow from the theme" do
+      assert_match(/--surface-background-color:\s*#fff;/, root_block)
+      assert_match(/--surface-page-background-color:\s*#f8f9fa;/, root_block)
+
+      dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+      ocean_block = @css[/\[data-theme~="ocean"\]\s*\{(.*?)\}/m, 1]
+      assert_match(/--surface-page-background-color:\s*oklch\(0\.12 0\.01 250\)/, dark_block)
+      assert_match(/--surface-background-color:\s*oklch\(0\.19 0\.015 250\)/, dark_block)
+      assert_match(/--surface-muted-background-color:\s*oklch\(0\.26 0\.02 250\)/, dark_block)
+      assert_match(/--surface-page-background-color:\s*oklch\(0\.96 0\.018 220\)/, ocean_block)
+      assert_match(/--surface-background-color:\s*#fff;/, ocean_block)
+      refute_includes dark_block, "--card-border-width"
+      refute_includes ocean_block, "--card-border-width"
+      refute_includes dark_block, "--card-shadow"
+      refute_includes ocean_block, "--card-shadow"
+      refute_match(/--surface-background-color:/, rounded_body)
+      refute_match(/--surface-page-background-color:/, rounded_body)
+
+      assert_match(/--button-focus-ring-offset-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--fab-focus-ring-offset-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--avatar-group-ring-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--color-swatch-ring-offset-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--font-swatch-ring-offset-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--range-thumb-border-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--timeline-marker-icon-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--switch-thumb-background-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--skip-link-text-color:\s*var\(--surface-background-color\)/, root_block)
+      assert_match(/--sidebar-background-color:\s*var\(--surface-page-background-color\)/, root_block)
+
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      assert_includes application, "--button-focus-ring-offset-color: var(--flat-pack-surface-fill);"
+      assert_includes application, ".fp-card[data-background=\"default\"]"
+      assert_includes application, "[data-flat-pack--modal-target=\"dialog\"]"
     end
 
     test "pill track background defaults to transparent" do

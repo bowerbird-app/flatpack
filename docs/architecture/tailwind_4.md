@@ -270,15 +270,17 @@ Fallbacks not needed as these are modern browsers.
 
 ### Default Light Palette + Theme Variants
 
-FlatPack defines the default charcoal palette in `:root, [data-theme]` and layers additional variants on top with selectors such as `[data-theme~="dark"]`. `[data-theme~="rounded"]` shifts the spacing scale and does not restate that palette.
+FlatPack defines the default charcoal palette in `:root, [data-theme]` and layers additional variants on top with selectors such as `[data-theme~="dark"]`. `[data-theme~="rounded"]` shifts the spacing scale and the card border width and shadow. It does not restate that palette.
 
 ```css
 :root {
-  --surface-background-color: oklch(1 0 0);
+  --surface-page-background-color: #f8f9fa;
+  --surface-background-color: #fff;
 }
 
 [data-theme~="dark"] {
-  --surface-background-color: oklch(0.15 0.01 250);
+  --surface-page-background-color: oklch(0.12 0.01 250);
+  --surface-background-color: oklch(0.19 0.015 250);
 }
 ```
 

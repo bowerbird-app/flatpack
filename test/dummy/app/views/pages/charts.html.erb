@@ -13,7 +13,7 @@
   </p>
 
   <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Chart Types</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Line, column, bar, area, donut, gauge, and geo charts.</p>
@@ -21,7 +21,7 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Composition</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Slots, filter controls, grids, footers, and card-free layouts.</p>
@@ -29,7 +29,7 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Setup &amp; Reference</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Importmap setup, custom options, features, and type reference.</p>

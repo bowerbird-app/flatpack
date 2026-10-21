@@ -99,7 +99,7 @@ The structural and measurable layer.
 - `border_usage`
 - `divider_style`
 
-#### `design_system.elevation`
+#### `design_system.shadow`
 - `shadow_style`
 - `levels.low`
 - `levels.medium`
@@ -322,8 +322,8 @@ Concrete, token-level values. Extract exact values where visible; estimate from 
 - **`spacing.section_rhythm`**: How vertical spacing varies between sections
 - **`layout.alignment_tendency`**: "strict grid", "centered", "asymmetric", "mixed"
 - **`shape.border_usage`**: "none", "subtle 1px", "bold borders", "only on inputs"
-- **`elevation.shadow_style`**: "none", "soft diffused", "hard drop", "layered"
-- **`elevation.depth_cues`**: "shadows", "overlapping layers", "blur/glass", "color intensity"
+- **`shadow.shadow_style`**: "none", "soft diffused", "hard drop", "layered"
+- **`shadow.depth_cues`**: "shadows", "overlapping layers", "blur/glass", "color intensity"
 - **`motion.philosophy`**: "minimal functional", "playful bouncy", "cinematic", "none"
 - **`components`**: Describe observed patterns — e.g. "ghost buttons with thick borders, rounded inputs with inner shadow"
 

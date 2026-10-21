@@ -12,7 +12,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Product Card Example", anchor_link: true, subtitle: "Examples for Product Card Example.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-xl font-semibold">
             Product
@@ -32,7 +32,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-xl font-semibold">
             Product
@@ -52,7 +52,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-xl font-semibold">
             Product
@@ -74,7 +74,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.media(aspect_ratio: "4/3") do %&gt;
             <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-xl font-semibold">
               Product
@@ -110,7 +110,7 @@
     %>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
       <% stat_cards.each do |stat| %>
-        <%= render FlatPack::Card::Component.new(style: :default, class: "overflow-hidden") do |card| %>
+        <%= render FlatPack::Card::Component.new(background: :default, class: "overflow-hidden") do |card| %>
           <% card.body do %>
             <div class="flex items-center gap-4">
               <div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center">
@@ -131,7 +131,7 @@
     <%= render FlatPack::CodeBlock::Component.new(
       language: "erb",
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.body do %&gt;
             &lt;div class="flex items-center gap-4"&gt;
               &lt;div class="shrink-0 w-12 h-12 rounded-xl bg-[var(--surface-background-color)] border border-[var(--surface-border-color)] flex items-center justify-center"&gt;
@@ -155,7 +155,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Profile Card Example", anchor_link: true, subtitle: "Examples for Profile Card Example.") %>
     <div class="max-w-sm mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.body do %>
           <div class="flex items-center space-x-4 mb-4">
             <%= render FlatPack::Avatar::Component.new(name: "John Doe", initials: "JD", size: :xl) %>
@@ -188,7 +188,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.body do %&gt;
             <div class="flex items-center space-x-4 mb-4">
               &lt;%= render FlatPack::Avatar::Component.new(name: &quot;John Doe&quot;, initials: &quot;JD&quot;, size: :xl) %&gt;
@@ -226,7 +226,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Pricing Cards", anchor_link: true, subtitle: "Examples for Pricing Cards.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.header do %>
           <div class="text-center">
             <h3 class="text-xl font-bold mb-2">Basic</h3>
@@ -255,7 +255,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, class: "border-[var(--color-primary)]") do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle, class: "border-[var(--color-primary)]") do |card| %>
         <% card.header do %>
           <div class="text-center">
             <%= render FlatPack::Badge::Component.new(text: "Popular", style: :primary, size: :sm, class: "mb-2") %>
@@ -285,7 +285,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
         <% card.header do %>
           <div class="text-center">
             <h3 class="text-xl font-bold mb-2">Enterprise</h3>
@@ -316,7 +316,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %&gt;
           &lt;% card.header do %&gt;
             <div class="text-center">
               <h3 class="text-xl font-bold mb-2">Basic</h3>
@@ -352,7 +352,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Brand style", anchor_link: true, subtitle: "The fill stays on this card. The card beside it keeps the surface style.") %>
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :brand, shadow: :md) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :brand, shadow: :md) do |card| %>
         <% card.header(divider: false) do %>
           <div class="flex items-start justify-between gap-4">
             <h3 class="text-2xl font-semibold">Paid plan</h3>
@@ -381,7 +381,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :brand, shadow: :md) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :brand, shadow: :md) do |card| %&gt;
           &lt;% card.body do %&gt;
             <p class="text-sm text-[var(--surface-muted-content-color)]">Only this card takes the brand fill.</p>
             &lt;%= render FlatPack::Button::Component.new(text: "Add money", style: :default) %&gt;

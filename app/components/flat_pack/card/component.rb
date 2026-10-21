@@ -56,18 +56,23 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "border" "border-[var(--card-border-color)]" "border-2" "shadow-[var(--shadow-sm)]" "shadow-[var(--shadow-md)]"
+      # "border" "border-[var(--card-border-color)]" "border-2" "border-0" "border-solid"
+      # "border-[length:var(--card-border-width)]"
+      # "shadow-[var(--shadow-sm)]" "shadow-[var(--shadow-md)]" "shadow-none" "shadow-[var(--card-shadow)]"
       SHADOWS = {
-        none: "",
+        none: "shadow-none",
         sm: "shadow-[var(--shadow-sm)]",
         md: "shadow-[var(--shadow-md)]"
       }.freeze
 
       BORDERS = {
-        none: "",
+        none: "border-0",
         default: "border border-[var(--card-border-color)]",
         strong: "border-2 border-[var(--card-border-color)]"
       }.freeze
+
+      THEME_SHADOW = "shadow-[var(--card-shadow)]"
+      THEME_BORDER = "border-solid border-[length:var(--card-border-width)] border-[var(--card-border-color)]"
 
       HOVERS = {
         none: "",
@@ -99,9 +104,9 @@ module FlatPack
       }.freeze
 
       def initialize(
-        style: :default,
-        shadow: :none,
-        border: :default,
+        background: :default,
+        shadow: nil,
+        border: nil,
         hover: :none,
         clickable: false,
         href: nil,
@@ -112,9 +117,9 @@ module FlatPack
       )
         reject_removed_theme!(system_arguments)
         super(**system_arguments)
-        @style = style.to_sym
-        @shadow = shadow.to_sym
-        @border = border.to_sym
+        @background = background.to_sym
+        @shadow = shadow&.to_sym
+        @border = border&.to_sym
         @hover = (hover || :none).to_sym
         @clickable = clickable
         @padding = padding.to_sym
@@ -129,7 +134,7 @@ module FlatPack
           @href = nil
         end
 
-        validate_style!
+        validate_background!
         validate_shadow!
         validate_border!
         validate_hover!
@@ -183,7 +188,7 @@ module FlatPack
           "flex",
           "flex-col",
           "text-[var(--surface-content-color)]",
-          style_classes,
+          background_classes,
           shadow_classes,
           border_classes,
           hover_classes,
@@ -236,15 +241,19 @@ module FlatPack
         {padding: @padding}.merge(args)
       end
 
-      def style_classes
-        Style.classes_for(@style)
+      def background_classes
+        Background.classes_for(@background)
       end
 
       def shadow_classes
+        return THEME_SHADOW if @shadow.nil?
+
         SHADOWS.fetch(@shadow)
       end
 
       def border_classes
+        return THEME_BORDER if @border.nil?
+
         BORDERS.fetch(@border)
       end
 
@@ -256,26 +265,26 @@ module FlatPack
         HOVERS.fetch(@hover)
       end
 
-      def validate_style!
-        return if Style::CLASSES.key?(@style)
+      def validate_background!
+        return if Background::CLASSES.key?(@background)
 
-        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{Style::NAMES.join(", ")}"
+        raise ArgumentError, "Invalid background: #{@background}. Must be one of: #{Background::NAMES.join(", ")}"
       end
 
       def validate_shadow!
-        return if SHADOWS.key?(@shadow)
+        return if @shadow.nil? || SHADOWS.key?(@shadow)
 
         raise ArgumentError, "Invalid shadow: #{@shadow}. Must be one of: #{SHADOWS.keys.join(", ")}"
       end
 
       def validate_border!
-        return if BORDERS.key?(@border)
+        return if @border.nil? || BORDERS.key?(@border)
 
         raise ArgumentError, "Invalid border: #{@border}. Must be one of: #{BORDERS.keys.join(", ")}"
       end
 
       def card_data
-        data = {style: @style.to_s, fp_card_padding: @padding.to_s}
+        data = {background: @background.to_s, fp_card_padding: @padding.to_s}
         data[:fp_card_inset] = @inset.to_s if @inset
         data
       end
@@ -304,12 +313,11 @@ module FlatPack
       end
 
       def reject_removed_theme!(system_arguments)
-        if system_arguments.key?(:theme)
-          raise ArgumentError, "unknown keyword: :theme"
-        end
-        return unless system_arguments.key?(:tone)
+        %i[style theme tone].each do |removed|
+          next unless system_arguments.key?(removed)
 
-        raise ArgumentError, "unknown keyword: :tone"
+          raise ArgumentError, "unknown keyword: :#{removed}"
+        end
       end
 
       def validate_href!(original_href)

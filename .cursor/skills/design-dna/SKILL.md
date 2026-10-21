@@ -18,7 +18,7 @@ description: >-
 
 A 3-phase workflow for extracting, structuring, and applying design identity across three dimensions:
 
-1. **Design System** — measurable tokens (color, typography, spacing, layout, shape, elevation, motion, components)
+1. **Design System** — measurable tokens (color, typography, spacing, layout, shape, shadow, motion, components)
 2. **Design Style** — qualitative perception (mood, visual language, composition, imagery, interaction feel, brand voice)
 3. **Visual Effects** — special rendering (Canvas, WebGL, 3D, particles, shaders, scroll effects, cursor effects, SVG animations, glassmorphism, etc.)
 
@@ -62,7 +62,7 @@ When the user provides images, screenshots, or links representing a target desig
 - **spacing**: Assess density by element proximity. Measure rhythm by section gap consistency.
 - **layout**: Identify grid by content alignment patterns. Note max-width, column count, asymmetry.
 - **shape**: Measure border-radius by comparing to element height. Note border and divider presence.
-- **elevation**: Classify shadow softness, spread, and layering approach.
+- **shadow**: Classify shadow softness, spread, and layering approach.
 - **motion**: If observable (video/interactive), note easing curves and duration feel.
 
 #### Dimension 2: design_style
