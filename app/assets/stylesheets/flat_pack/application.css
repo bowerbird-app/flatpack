@@ -978,9 +978,8 @@
 }
 
 .fp-page-layout[data-fp-page-layout-align="center"] .fp-page-layout-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  align-content: center;
 }
 
 .fp-page-layout[data-fp-page-layout-align="center"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) {

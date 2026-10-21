@@ -31,6 +31,11 @@ module FlatPack
       assert_includes @application, "--layout-content-inset: var(--page-layout-padding-inline);"
       assert_includes @application, '.fp-page-layout[data-fp-page-layout-width="narrow"]'
       assert_includes @application, '.fp-page-layout[data-fp-page-layout-align="center"]'
+
+      center = @application[/\.fp-page-layout\[data-fp-page-layout-align="center"\] \.fp-page-layout-main \{.*?\}/m]
+      assert_includes center, "display: grid;"
+      assert_includes center, "align-content: center;"
+      refute_includes @application, "justify-content: center"
     end
 
     test "rounded padding follows the spacing scale and sets no photo colour" do
