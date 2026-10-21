@@ -14,6 +14,7 @@ module FlatPack
 
     RUNTIME_TOKENS = %w[
       --collection-editor-columns
+      --flat-pack-surface-fill
       --flatpack-modal-body-height
       --flatpack-picker-items-height
       --fp-masonry-gap
