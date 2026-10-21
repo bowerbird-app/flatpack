@@ -38,8 +38,8 @@
         segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
       }
     ) do |group| %>
-      <% group.button(text: "List", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
-      <% group.button(text: "Grid", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
+      <% group.button(text: "List", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
+      <% group.button(text: "Grid", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
       <% group.button(text: "Table", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %>
     <% end %>
   </div>
@@ -71,8 +71,8 @@
           segmented_buttons_demo_inactive_press_class_value: FlatPack::Button::StyleRegistry.press_class(:secondary)
         }
       ) do |group| %&gt;
-        &lt;% group.button(text: "List", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
-        &lt;% group.button(text: "Grid", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
+        &lt;% group.button(text: "List", selected: true, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
+        &lt;% group.button(text: "Grid", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
         &lt;% group.button(text: "Table", aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" }) %&gt;
       &lt;% end %&gt;
     CODE
