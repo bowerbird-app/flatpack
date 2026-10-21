@@ -43,8 +43,6 @@ module FlatPack
         label = tooltip.presence || fp_t("page_nav.back")
         link = href.presence
         record_history(link, fallback_url)
-        data = {flat_pack_page_nav: "back"}
-        data[:action] = "click->flat-pack--page-nav#back" if link.blank?
         remember do
           icon_control(
             icon: icon.presence || "chevron-left",
@@ -52,7 +50,7 @@ module FlatPack
             style: style,
             size: size,
             href: link,
-            data: data
+            data: link.present? ? nil : {action: "click->flat-pack--page-nav#back"}
           )
         end
       end
@@ -67,8 +65,7 @@ module FlatPack
             label: label,
             style: style,
             size: size,
-            href: href,
-            data: {flat_pack_page_nav: "close"}
+            href: href
           )
         end
       end

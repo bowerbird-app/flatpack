@@ -13,10 +13,11 @@ module FlatPack
 
       SECTIONS = %w[left center right].freeze
 
-      # Sections collapse into the mobile menu unless they opt out. `left` keeps
-      # branding and the sidebar toggle inline, so it stays visible by default.
+      # On a narrow viewport every section folds into the hamburger menu.
+      # `always_display: true` keeps a section in the bar, for a control that
+      # is not part of that row (the notification bell).
       DEFAULT_ALWAYS_DISPLAY = {
-        "left" => true,
+        "left" => false,
         "center" => false,
         "right" => false
       }.freeze
@@ -129,7 +130,7 @@ module FlatPack
 
       def render_mobile_menu_toggle
         render FlatPack::Button::Component.new(
-          icon: "ellipsis-horizontal",
+          icon: "menu",
           icon_only: true,
           style: :ghost,
           size: :md,

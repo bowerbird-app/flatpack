@@ -253,7 +253,6 @@
             <% end %>
             <% if editor_toolbar %>
               <%= render FlatPack::PageNav::Component.new(size: :sm) do |page_nav| %>
-                <% page_nav.with_back(href: demo_sidebar_layout_path, size: :sm) %>
                 <% page_nav.with_action(text: "Section", icon: "plus", style: :secondary, size: :sm) %>
                 <% page_nav.with_item do %>
                   <%= render FlatPack::Button::Dropdown::Component.new(text: "Publish", style: :primary, size: :sm, placement: :bottom_left) do |dropdown| %>
@@ -297,8 +296,7 @@
                 round: true,
                 style: :ghost,
                 size: :md,
-                aria: { label: "Notifications" },
-                data: (editor_toolbar ? { flat_pack_unread: "true" } : {})
+                aria: { label: "Notifications" }
               ) %>
             <% else %>
             <div

@@ -1,11 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Moves collapsible top nav content into one ellipsis menu on a narrow bar,
-// and frosts the bar after the page has scrolled. A phone viewport also folds
-// left-slot actions into that menu, keeping the sidebar toggle and a page-nav
-// back or close control. Nodes are relocated rather than duplicated so ids,
-// event listeners and Stimulus controllers inside slot content keep working,
-// and a comment placeholder records where each node has to return to.
+// On a narrow viewport, moves the top nav row into one hamburger menu. A wide
+// viewport keeps the row. Nodes are relocated rather than duplicated so ids,
+// event listeners and Stimulus controllers inside slot content keep working.
+// The sidebar's own mobile toggle stays in the bar.
 export default class extends Controller {
   static targets = ["section", "menu", "toggle", "panel"]
   static classes = ["toggleOpen"]
@@ -15,7 +13,6 @@ export default class extends Controller {
 
   connect() {
     this.movedNodes = []
-    this.flattenedMores = []
     this.menuOpen = false
     this.boundHandleScroll = this.handleScroll.bind(this)
     this.scrollports = this.collectScrollports()
@@ -139,10 +136,9 @@ export default class extends Controller {
   applyLayout() {
     if (this.fitting) return
 
-    const tight = this.isNarrowViewport || this.barIsNarrow()
     this.fitting = true
     try {
-      if (tight) this.collapseIntoMenu()
+      if (this.isNarrowViewport) this.collapseIntoMenu()
       else {
         this.closeMenu()
         this.restoreCollapsedNodes()
@@ -152,32 +148,19 @@ export default class extends Controller {
     }
   }
 
-  // A wide viewport can still leave a narrow bar, such as the main column
-  // between a rail and an aside. The breakpoint is that bar's width.
-  barIsNarrow() {
-    const width = this.element?.clientWidth || 0
-    return width > 0 && width < this.breakpointValue
-  }
-
   collapseIntoMenu() {
     if (!this.hasPanelTarget || this.movedNodes.length > 0) return
-
-    // A wide window keeps the desktop row, even when the bar itself is narrow
-    // (a floating column between a rail and an aside). Collapsible center and
-    // right slots still fold there. Left actions, page-nav unpacking, and the
-    // single More menu are phone-only, so that desktop row stays put.
-    if (this.isNarrowViewport) {
-      this.collapsePhoneBar()
-      return
-    }
 
     this.sectionTargets.forEach((section) => {
       if (section.dataset.flatPackTopNavCollapsible !== "true") return
 
       Array.from(section.childNodes).forEach((node) => {
-        if (this.keepsInlinePlacement(node)) return
+        if (this.keepsInlinePlacement(node) || this.isSidebarToggle(node)) return
 
-        this.relocate(node, section)
+        const placeholder = document.createComment("flat-pack-top-nav-placeholder")
+        section.insertBefore(placeholder, node)
+        this.panelTarget.appendChild(node)
+        this.movedNodes.push({ node, placeholder })
       })
 
       this.updateSectionVisibility(section)
@@ -186,42 +169,14 @@ export default class extends Controller {
     this.updateMenuVisibility()
   }
 
-  // Phone order is source order: left, then center, then right. Page-nav
-  // actions are collected from inside the nav so back can stay in the bar
-  // while the rest join the menu ahead of later slots.
-  collapsePhoneBar() {
-    const pending = []
+  isSidebarToggle(node) {
+    if (!node || node.nodeType !== Node.ELEMENT_NODE) return false
+    if (typeof node.matches !== "function") return false
 
-    this.sectionTargets.forEach((section) => {
-      const collapsible = section.dataset.flatPackTopNavCollapsible === "true"
-
-      Array.from(section.childNodes).forEach((node) => {
-        if (this.keepsInlinePlacement(node)) return
-
-        if (this.isPageNav(node)) {
-          this.collectPageNavActions(node, pending)
-          return
-        }
-
-        if (this.isPinned(node)) return
-        if (collapsible || this.isOverflowAction(node)) pending.push({node, parent: section})
-      })
-    })
-
-    pending.forEach(({node, parent}) => this.relocate(node, parent))
-    this.sectionTargets.forEach((section) => this.updateSectionVisibility(section))
-    this.hideEmptyPageNavs()
-    this.flattenMoreMenus()
-    this.orderPrimaryFirst()
-    this.syncUnreadDot()
-    this.updateMenuVisibility()
+    return node.matches("[data-flat-pack--sidebar-layout-target='mobileToggle']")
   }
 
   restoreCollapsedNodes() {
-    this.unflattenMoreMenus()
-    this.clearUnreadDot()
-    this.showPageNavs()
-
     while (this.movedNodes.length > 0) {
       const { node, placeholder } = this.movedNodes.pop()
 
@@ -234,147 +189,6 @@ export default class extends Controller {
 
     this.sectionTargets.forEach((section) => section.classList.remove("hidden"))
     this.updateMenuVisibility()
-  }
-
-  relocate(node, parent) {
-    if (!parent || node.parentNode === this.panelTarget) return
-
-    const placeholder = document.createComment("flat-pack-top-nav-placeholder")
-    parent.insertBefore(placeholder, node)
-    this.panelTarget.appendChild(node)
-    this.movedNodes.push({ node, placeholder })
-  }
-
-  isPageNav(node) {
-    return node?.nodeType === Node.ELEMENT_NODE && typeof node.matches === "function" && node.matches(".flat-pack-page-nav")
-  }
-
-  collectPageNavActions(nav, pending) {
-    const row = (typeof nav.querySelector === "function" && nav.querySelector(":scope > div")) || nav
-
-    Array.from(row.children || []).forEach((child) => {
-      if (this.keepsInlinePlacement(child) || this.isPinned(child)) return
-
-      pending.push({node: child, parent: row})
-    })
-  }
-
-  hideEmptyPageNavs() {
-    if (typeof this.element.querySelectorAll !== "function") return
-
-    this.element.querySelectorAll(".flat-pack-page-nav").forEach((nav) => {
-      const row = nav.querySelector(":scope > div") || nav
-      const occupied = Array.from(row.children || []).some((child) => child.nodeType === Node.ELEMENT_NODE)
-      if (!occupied) nav.hidden = true
-    })
-  }
-
-  showPageNavs() {
-    if (typeof this.element.querySelectorAll !== "function") return
-
-    this.element.querySelectorAll(".flat-pack-page-nav").forEach((nav) => {
-      nav.hidden = false
-    })
-  }
-
-  // Page nav's own More menu becomes rows in this menu. No nested More.
-  flattenMoreMenus() {
-    if (typeof this.panelTarget.querySelectorAll !== "function") return
-
-    this.flattenedMores = this.flattenedMores || []
-
-    this.panelTarget.querySelectorAll("[data-controller~='flat-pack--button-dropdown']").forEach((dropdown) => {
-      const trigger = dropdown.querySelector("[data-flat-pack--button-dropdown-target='trigger']")
-      const label = (trigger?.innerText || trigger?.textContent || "").replace(/\s+/g, " ").trim()
-      if (label !== "More") return
-
-      const menu = dropdown.querySelector("[role='menu']")
-      if (!menu) return
-
-      const items = Array.from(menu.children).filter((node) => node.nodeType === Node.ELEMENT_NODE)
-      if (items.length === 0) return
-
-      const marker = document.createComment("flat-pack-top-nav-more")
-      dropdown.parentNode.insertBefore(marker, dropdown)
-      items.forEach((item) => dropdown.parentNode.insertBefore(item, dropdown))
-      dropdown.hidden = true
-      this.flattenedMores.push({ dropdown, marker, items, menu })
-    })
-  }
-
-  unflattenMoreMenus() {
-    if (!this.flattenedMores) return
-
-    while (this.flattenedMores.length > 0) {
-      const { dropdown, marker, items, menu } = this.flattenedMores.pop()
-      items.forEach((item) => menu.appendChild(item))
-      dropdown.hidden = false
-      if (marker.parentNode) marker.parentNode.insertBefore(dropdown, marker)
-      marker.remove?.()
-    }
-  }
-
-  orderPrimaryFirst() {
-    const kids = Array.from(this.panelTarget.children || [])
-    if (kids.length < 2) return
-
-    const ordered = [
-      ...kids.filter((el) => this.isPrimary(el)),
-      ...kids.filter((el) => !this.isPrimary(el))
-    ]
-    if (ordered.every((el, index) => el === kids[index])) return
-
-    ordered.forEach((el) => this.panelTarget.appendChild(el))
-  }
-
-  isPrimary(node) {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE) return false
-    if (node.dataset?.fpStyle === "primary") return true
-    if (typeof node.querySelector !== "function") return false
-
-    return !!node.querySelector("[data-fp-style='primary']")
-  }
-
-  syncUnreadDot() {
-    if (!this.hasToggleTarget || typeof this.panelTarget.querySelector !== "function") return
-
-    const unread = this.panelTarget.querySelector(".fp-red-dot, [data-flat-pack-unread='true']")
-    if (unread) this.toggleTarget.setAttribute("data-flat-pack-unread", "true")
-    else this.toggleTarget.removeAttribute("data-flat-pack-unread")
-  }
-
-  clearUnreadDot() {
-    if (!this.hasToggleTarget) return
-
-    this.toggleTarget.removeAttribute?.("data-flat-pack-unread")
-  }
-
-  isOverflowAction(node) {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE || this.isPinned(node)) return false
-    if (typeof node.matches !== "function") return false
-    if (node.matches(".flat-pack-page-nav")) return false
-
-    return node.matches("button, a, [data-controller~='flat-pack--button-dropdown']")
-  }
-
-  isPinned(node) {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE) return false
-    if (node.dataset?.flatPackTopNavAlwaysDisplay === "true") return true
-    if (typeof node.matches !== "function") return false
-
-    const selector = [
-      "[data-flat-pack--sidebar-layout-target='mobileToggle']",
-      "[data-flat-pack--sidebar-layout-target='asideToggle']",
-      "[data-action*='page-nav#back']",
-      "[data-action*='page-nav#close']",
-      "[data-flat-pack-page-nav='back']",
-      "[data-flat-pack-page-nav='close']"
-    ].join(", ")
-
-    if (node.matches(selector)) return true
-    if (typeof node.querySelector !== "function") return false
-
-    return !!node.querySelector(selector)
   }
 
   keepsInlinePlacement(node) {
@@ -425,15 +239,15 @@ export default class extends Controller {
     this.placeMenu()
   }
 
-  // The bar can sit in a short overflow-hidden column. An absolute menu is
-  // clipped there, so the open panel is fixed to the viewport under the toggle.
+  // The bar can sit in a short overflow-hidden column. Fix the open panel to
+  // the viewport so that column does not clip it.
   placeMenu() {
     if (!this.menuOpen || !this.hasPanelTarget || !this.hasToggleTarget) return
     if (typeof this.toggleTarget.getBoundingClientRect !== "function") return
 
     const rect = this.toggleTarget.getBoundingClientRect()
-    const panel = this.panelTarget
     const top = Math.round(rect.bottom + 8)
+    const panel = this.panelTarget
 
     panel.style.position = "fixed"
     panel.style.top = `${top}px`

@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - The menu button gets `aria-expanded` and `aria-controls` when the rail drawer opens, closes, and on connect.
-- On a phone, Top Nav stays one row. `left` keeps the sidebar toggle, the aside trigger, and a page-nav back or close control. Other actions move into one ellipsis menu labelled "More actions", primary first. A page-nav More menu becomes rows in that menu. A wide window keeps the desktop row; a narrow bar there still folds only collapsible center and right slots. Page Nav itself stays one row.
+- On a phone, the Top Nav row folds into one hamburger menu labelled "Menu". A wide window keeps the row. The sidebar's mobile toggle stays in the bar and is only that button. A notification bell stays in the bar when its section passes `always_display: true`. Page Nav stays one row.
 - An open phone drawer paints `--drawer-backdrop-color` on the shell scrim, above the page and below the drawer.
 - Phone drawers animate `translate` and `transform`. `prefers-reduced-motion: reduce` snaps the slide.
 - A stacked aside below `md` uses the floating panel fill, border, radius, and shadow. A close control and an aside trigger stay hidden there. The gap under main is `--stack-gap-md`.
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Upgrade notes
 - `mobile:` on `aside` defaults to `:drawer`. Pass `:stack` to drop the phone drawer. There is no alias.
 - Replace a hand-wired `asideToggle` button with `layout.aside_trigger("Details")` where the control should sit. A hand-wired button still works. The controller now also sets `aria-controls`.
-- Reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Page Nav is one row again. A phone Top Nav folds center, right, and page-nav actions into the ellipsis menu. A wide window still folds only collapsible center and right slots. `data-flat-pack-top-nav-always-display="true"` keeps one action inline on the phone.
+- Reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Page Nav is one row. On a phone the Top Nav row folds into the hamburger menu. `left` folds too. Pass `always_display: true` on a section that should stay in the bar, such as the notification bell.
 - Load `flat_pack/application.css` after Tailwind. Keep `transform`, `filter`, `will-change`, and `contain` off ancestors of the shell. Those pin the fixed drawers to the ancestor.
 - Redeploy so `meta.gem_version` shows `0.1.293`.
 

@@ -907,52 +907,6 @@
   opacity: 1;
 }
 
-/* One ellipsis menu. Relocated actions are rows, not pills. An icon-only
-   control shows its accessible name. A bell's unread mark dots the trigger. */
-[data-flat-pack--top-nav-target="panel"] > * {
-  width: 100%;
-}
-
-[data-flat-pack--top-nav-target="panel"] .fp-button,
-[data-flat-pack--top-nav-target="panel"] [role="menuitem"] {
-  width: 100%;
-  justify-content: flex-start;
-  border-color: transparent;
-  border-radius: var(--radius-md);
-  background-color: transparent;
-  box-shadow: none;
-  min-height: 2.5rem;
-  color: var(--surface-content-color);
-}
-
-[data-flat-pack--top-nav-target="panel"] .fp-button:hover,
-[data-flat-pack--top-nav-target="panel"] [role="menuitem"]:hover {
-  background-color: var(--surface-muted-background-color);
-  color: var(--surface-content-color);
-}
-
-[data-flat-pack--top-nav-target="panel"] button[aria-label]:not(:has(span))::after {
-  content: attr(aria-label);
-  margin-inline-start: 0.5rem;
-}
-
-[data-flat-pack--top-nav-target="toggle"][data-flat-pack-unread="true"] {
-  position: relative;
-}
-
-[data-flat-pack--top-nav-target="toggle"][data-flat-pack-unread="true"]::after {
-  content: "";
-  position: absolute;
-  top: 0.3rem;
-  right: 0.3rem;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 999px;
-  background-color: var(--color-danger-background-color);
-  box-shadow: 0 0 0 2px var(--sidebar-float-background-color, var(--surface-background-color));
-  pointer-events: none;
-}
-
 /* Pane bars follow --pane-scrollbar-width (none, thin, or auto).
    Older Safari ignores scrollbar-width, so the WebKit bar is hidden to match
    none. scrollbar: :visible sets data-pane-scrollbar="visible" and the browser bar.
@@ -1545,8 +1499,14 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   box-shadow: var(--sidebar-float-shadow);
 }
 
-/* Below md the bar stays one row. Collapsed actions live in the ellipsis menu. */
+/* Below md the bar stays one row. Collapsed actions live in the hamburger menu.
+ * The right section already carries margin-left: auto, so the menu drops its
+ * own auto margin and sits against that section (the bell) instead of centering it. */
 @media (max-width: 767px) {
+  [data-flat-pack-top-nav-section="right"]:has(*) ~ [data-flat-pack--top-nav-target="menu"] {
+    margin-left: 0;
+  }
+
   [data-flat-pack-top-nav-floating] .fp-top-nav > div {
     flex-wrap: nowrap;
     gap: 0.5rem;
