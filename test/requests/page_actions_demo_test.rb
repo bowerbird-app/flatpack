@@ -11,8 +11,12 @@ class PageActionsDemoTest < ActionDispatch::IntegrationTest
     assert_select "[data-fp-page-actions=top_nav] a[data-fp-style=secondary]", text: "New press kit"
     assert_select "[data-fp-page-actions=top_nav] a[data-fp-style=ghost]", text: "Share"
     assert_select "[data-fp-page-actions=top_nav] a[data-fp-style=danger]", text: "Delete"
-    assert_select "[data-fp-page-actions=mobile] a[data-fp-style=primary]", text: "New press kit"
-    assert_select "[data-fp-page-actions=mobile] button[aria-label=More]"
+    assert_select "header.fp-top-nav [data-fp-page-actions=menu] a[data-fp-style=secondary]", text: "New press kit"
+    assert_select "[data-fp-page-actions=menu] a[data-fp-style=ghost]", text: "Share"
+    assert_select "[data-fp-page-actions=menu] a[data-fp-style=danger]", text: "Delete"
+    assert_select "[data-flat-pack--top-nav-target=panel]"
+    assert_select ".fp-page-actions--mobile", count: 0
+    assert_select "button[aria-label=More]", count: 0
   end
 
   test "the page shell shows solid header actions" do
@@ -23,7 +27,10 @@ class PageActionsDemoTest < ActionDispatch::IntegrationTest
     assert_select "[data-fp-page-actions=header] a[data-fp-style=primary]", text: "New press kit"
     assert_select "[data-fp-page-actions=header] a[data-fp-style=secondary]", text: "Share"
     assert_select "[data-fp-page-actions=header] a[data-fp-style=danger]", text: "Delete"
-    assert_select "[data-fp-page-actions=mobile] [role=menu] a", text: "Share"
+    assert_select "header.fp-top-nav [data-fp-page-actions=menu] a[data-fp-style=ghost]", text: "Share"
+    assert_select "[data-fp-page-actions=menu] a[data-fp-style=danger]", text: "Delete"
+    assert_select ".fp-page-actions-nav", count: 0
+    assert_select ".fp-page-actions--floating", count: 0
     refute_includes response.body, "flat-pack--sidebar-layout"
   end
 end

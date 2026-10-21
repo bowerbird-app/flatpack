@@ -191,8 +191,6 @@ fr:
       fallback: Notification
       see_all: Voir toutes les notifications
       overflow: 9+
-    page_actions:
-      more: Plus
     page_nav:
       back: Retour
       close: Fermer

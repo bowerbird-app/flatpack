@@ -333,22 +333,33 @@ export default class extends Controller {
   }
 
   // The bar can sit in a short overflow-hidden column. Fix the open panel to
-  // the viewport so that column does not clip it.
+  // the viewport so that column does not clip it. A transformed shell ancestor
+  // becomes the fixed containing block, so the offset is measured, not assumed.
   placeMenu() {
     if (!this.menuOpen || !this.hasPanelTarget || !this.hasToggleTarget) return
     if (typeof this.toggleTarget.getBoundingClientRect !== "function") return
+    if (typeof this.panelTarget.getBoundingClientRect !== "function") return
 
     const rect = this.toggleTarget.getBoundingClientRect()
     const top = Math.round(rect.bottom + 8)
     const panel = this.panelTarget
+    const margin = 8
 
     panel.style.position = "fixed"
     panel.style.top = `${top}px`
-    panel.style.right = `${Math.max(8, Math.round(window.innerWidth - rect.right))}px`
-    panel.style.left = "auto"
+    panel.style.right = "auto"
+    panel.style.left = "0px"
     panel.style.zIndex = "30"
     panel.style.maxHeight = `calc(100vh - ${top + 8}px)`
     panel.style.overflowY = "auto"
+
+    const placed = panel.getBoundingClientRect()
+    const viewportWidth = window.innerWidth || 0
+    const width = placed.width
+    let desired = rect.right - width
+    const maxLeft = Math.max(margin, viewportWidth - width - margin)
+    desired = Math.max(margin, Math.min(desired, maxLeft))
+    panel.style.left = `${Math.round(desired - placed.left)}px`
   }
 
   clearMenuPlacement() {

@@ -1,7 +1,7 @@
 # Page actions
 
 ## Purpose
-Let a view nominate page-level actions, collect them for the request, and let the layout decide where they render and how each role looks.
+Let a view nominate page-level actions, collect them for the request, and let the layout decide where they render. `FlatPack::PageActions` only maps a role to a button style and size.
 
 ## When to use
 Use this when a screen has actions that belong to the page, such as creating a record or deleting it. The view knows the label, the path, the icon, and whether the action is primary, secondary, or destructive. The layout knows the placement.
@@ -12,8 +12,8 @@ Page Nav is the back and close row. Page actions are the page's own buttons.
 - `page_action` and `page_actions` on `FlatPack::PageActionHelper`
 - Registry: `FlatPack::PageActionRegistry`
 - One action: `FlatPack::PageAction`
-- Role to style map and renderer: `FlatPack::PageActions`
-- Related classes: `FlatPack::Button::Component`, `FlatPack::ButtonGroup::Component`, `FlatPack::Button::Dropdown::Component`, `FlatPack::SidebarLayout::Component`, `FlatPack::PageLayout::Component`
+- Role to style map: `FlatPack::PageActions`
+- Related classes: `FlatPack::Button::Component`, `FlatPack::ButtonGroup::Component`, `FlatPack::TopNav::Component`, `FlatPack::SidebarLayout::Component`, `FlatPack::PageLayout::Component`
 
 ## Props
 `page_action` nominates one action. It returns nil.
@@ -24,38 +24,46 @@ Page Nav is the back and close row. Page actions are the page's own buttons.
 | `href` | String | none | yes | Path or URL. A blank path raises `ArgumentError`. An unsafe URL raises `ArgumentError`. |
 | `role` | Symbol | `:secondary` | no | `:primary`, `:secondary`, or `:destructive`. Anything else raises `ArgumentError`. |
 | `icon` | String, Symbol, nil | `nil` | no | Heroicon name, for example `:plus`. |
-| `data` | Hash, nil | `nil` | no | Forwarded to the button or menu item. |
-| `aria` | Hash, nil | `nil` | no | Forwarded to the button or menu item. |
+| `data` | Hash, nil | `nil` | no | Forwarded to the button. |
+| `aria` | Hash, nil | `nil` | no | Forwarded to the button. |
 
 A CSS `class:` or a button `style:` raises `ArgumentError`. The view does not choose placement.
 
-`page_actions` renders a list for one context.
+`page_actions` renders the list as a `ButtonGroup` for one context.
 
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
-| `context` | Symbol | none | yes | `:header`, `:top_nav`, or `:mobile`. Anything else raises `ArgumentError`. |
+| `context` | Symbol | none | yes | `:header` or `:top_nav`. Anything else raises `ArgumentError`. |
 | `actions` | Array, nil | the request list | no | Actions to render. Omit it to use the request registry. |
 | `styles` | Hash, nil | the context map | no | Replaces button `style:` tokens by role. Unknown roles and unknown button styles raise `ArgumentError`. |
 
+`mobile_actions` on Sidebar Layout and Page Layout chooses the phone placement.
+
+| value | default | description |
+| --- | --- | --- |
+| `:menu` | yes | Rows in the Top Nav hamburger. |
+| `:floating` | no | The primary action fixed at the bottom-right. |
+
+Anything else raises `ArgumentError`.
+
 ## Slots
-None on the helper. `:header` and `:top_nav` render `FlatPack::ButtonGroup::Component` and fill its `button` slot. `:mobile` renders the first action as a button and the rest through `FlatPack::Button::Dropdown::Component` `menu_item` slots. The trigger is icon-only `ellipsis-horizontal`. Its accessible name is `flatpack.page_actions.more` (`More`).
+None on the helper. `:header` and `:top_nav` render `FlatPack::ButtonGroup::Component` and fill its `button` slot. The phone menu renders one `FlatPack::Button::Component` per action, as a direct row. The floating option renders the primary action as one button.
 
 ## Variants
-Roles are meaning. Button styles are the layout's choice. `FlatPack::PageActions::STYLES` is the default map. Values are Button `style:` tokens.
+Roles are meaning. Button styles are the map's choice. `FlatPack::PageActions::STYLES` is the default map. Values are Button `style:` tokens. `FlatPack::PageActions.size` is `:sm` for both contexts.
 
 | context | `:primary` | `:secondary` | `:destructive` | size | piece |
 | --- | --- | --- | --- | --- | --- |
 | `:header` | `:primary` (solid) | `:secondary` (subtle) | `:danger` | `:sm` | `ButtonGroup` |
-| `:top_nav` | `:secondary` (subtle) | `:ghost` | `:danger` | `:sm` | `ButtonGroup` |
-| `:mobile` | `:primary` (solid) | `:secondary` | `:danger` | `:md` on the first action | first action, then the ⋯ menu |
-
-On `:mobile`, the first action in source order is the visible button. Its style comes from the mobile row above. Later actions are menu items, in source order. A `:destructive` item sets `destructive: true` on the menu item.
+| `:top_nav` | `:secondary` (subtle) | `:ghost` | `:danger` | `:sm` | `ButtonGroup`, and the phone menu rows |
 
 `styles:` replaces any of those tokens for one call. Omitted roles keep the context default.
 
 ```erb
 <%= page_actions(:header, styles: { primary: :ghost }) %>
 ```
+
+The floating button uses the `:header` map for the primary role and renders at `:md`.
 
 ## Example
 Nominate in the view. Call this before the shell renders. In a normal layout the view runs first, so a call in the template is enough.
@@ -66,7 +74,19 @@ Nominate in the view. Call this before the shell renders. In a normal layout the
 <% page_action "Delete", press_kit_path, role: :destructive, icon: :trash %>
 ```
 
-`FlatPack::SidebarLayout::Component` reads the registry. From the `md` breakpoint up it renders `page_actions(:top_nav)` in a bar under the top nav. Below that it renders `page_actions(:mobile)`, fixed to the bottom-right. `FlatPack::PageLayout::Component` does the same with `page_actions(:header)` at the top of the column. An empty registry adds no markup.
+`FlatPack::SidebarLayout::Component` reads the registry. From the `md` breakpoint up it renders `page_actions(:top_nav)` in a bar under the top nav. Below that, the actions are rows in the Top Nav hamburger. `FlatPack::PageLayout::Component` does the same with `page_actions(:header)` at the top of the column, and the same phone menu. An empty registry adds no markup.
+
+The host Top Nav keeps its mobile menu (the default). The shell inserts the rows into that menu. A shell with no top nav renders one, hidden from `md` up, so the desktop group stays where it was.
+
+```erb
+<%= render FlatPack::SidebarLayout::Component.new(mobile_actions: :floating) do |layout| %>
+  <% layout.main do %>
+    <% page_action "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
+  <% end %>
+<% end %>
+```
+
+`mobile_actions: :floating` is off unless a layout passes it. The dummy does not.
 
 A custom layout reads the same registry and places the HTML itself. Put the result in an existing slot. Do not restyle the buttons.
 
@@ -89,12 +109,11 @@ A custom layout reads the same registry and places the HTML itself. Put the resu
 The registry is `FlatPack::PageActionRegistry`, stored at `request.env["flat_pack.page_actions"]`. `page_action_registry` returns it. Actions stay in source order. Another request does not see them. Do not store the registry on the class.
 
 ## Accessibility
-Each action is a link with the nominated label. `aria:` is forwarded. The ⋯ trigger is icon-only and is named `More` (`aria-label`). Destructive menu items use the dropdown item's destructive treatment. The shell cluster is not a landmark. The buttons carry their own names.
+Each action is a link with the nominated label. `aria:` is forwarded. On a phone the links are rows in the Top Nav menu named "Menu". The floating primary is one link, fixed to the bottom-right, and is hidden from `md` up. The desktop group is not a landmark. The buttons carry their own names.
 
 ## Dependencies
 - `FlatPack::PageActionHelper`, included by the engine on Action View and controllers that respond to `helper`.
-- `FlatPack::Button::Component`, `FlatPack::ButtonGroup::Component`, and `FlatPack::Button::Dropdown::Component`.
-- `flatpack.page_actions.more` in `config/locales/flatpack.en.yml`.
-- Shell placement uses `.fp-page-actions`, `.fp-page-actions--desktop`, `.fp-page-actions--mobile`, and `.fp-page-actions--bar` in `flat_pack/application.css`. Spacing uses `--space-2`, `--space-3`, and `--space-4`. The bar inset uses `--layout-content-inset` when the shell sets it.
-- The ⋯ menu uses the `flat-pack--button-dropdown` controller.
-- Dummy: `/demo/page_actions` (Sidebar Layout) and `/demo/page_actions?shell=page` (Page Layout).
+- `FlatPack::Button::Component` and `FlatPack::ButtonGroup::Component`.
+- The phone menu uses `flat-pack--top-nav`. The controller moves the rows into the open panel.
+- Shell placement uses `.fp-page-actions`, `.fp-page-actions--desktop`, `.fp-page-actions--bar`, `.fp-page-actions-menu`, `.fp-page-actions-nav`, and `.fp-page-actions--floating` in `flat_pack/application.css`. Spacing uses `--space-2`, `--space-3`, and `--space-4`. The bar inset uses `--layout-content-inset` when the shell sets it. `.fp-page-actions--floating` is the opt-in bottom button.
+- Dummy: `/demo/page_actions` (Sidebar Layout) and `/demo/page_actions?shell=page` (Page Layout). Both leave `mobile_actions` at `:menu`.

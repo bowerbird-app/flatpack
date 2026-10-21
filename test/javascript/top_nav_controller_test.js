@@ -478,3 +478,36 @@ test('a phone leaves the sidebar toggle in the bar', () => {
   assert.equal(panelChildren.length, 0)
   assert.equal(sectionChildren[0], toggle)
 })
+
+test('the open menu stays inside the viewport when an ancestor pins fixed positioning', () => {
+  const style = {}
+  const panel = {
+    hidden: false,
+    style,
+    getBoundingClientRect() {
+      const left = Number.parseFloat(style.left || '0')
+      return {left: left - 96, width: 320, right: left - 96 + 320, top: 66, bottom: 290, height: 224}
+    }
+  }
+  const toggle = {
+    getBoundingClientRect() {
+      return {bottom: 58, right: 278, left: 234, top: 14, width: 44, height: 44}
+    }
+  }
+  const TopNavController = loadTopNavController({window: {innerWidth: 390}, document: {}})
+  const controller = Object.assign(new TopNavController(), {
+    menuOpen: true,
+    hasPanelTarget: true,
+    hasToggleTarget: true,
+    panelTarget: panel,
+    toggleTarget: toggle
+  })
+
+  controller.placeMenu()
+
+  const viewportLeft = Number.parseFloat(style.left) - 96
+  assert.equal(style.position, 'fixed')
+  assert.equal(style.right, 'auto')
+  assert.ok(viewportLeft >= 8)
+  assert.ok(viewportLeft + 320 <= 382)
+})

@@ -128,13 +128,15 @@ Check these when the shell is on a phone, or in a narrow main column.
 
 - The menu button uses `data-flat-pack--sidebar-layout-target="mobileToggle"` and `click->flat-pack--sidebar-layout#toggleMobile`. The controller sets `aria-expanded` and `aria-controls` on connect, and again when the drawer opens or closes. `aria-controls` is the rail column id.
 - Open the aside with `layout.aside_trigger("Details")`, or pass `mobile: :stack` and skip the toggle. `:stack` is in flow under main below `md`. Below `md` the kit hides that trigger and any `closeAside` control.
-- On a phone, the Top Nav row folds into one hamburger menu. The open menu is one column. A nested dropdown stays a parent row and discloses its items under that row. A wide window keeps the row, including a narrow column between the rail and the aside. `always_display: true` keeps a section in the bar (the notification bell). The sidebar's mobile toggle stays in the bar.
+- On a phone, the Top Nav row folds into one hamburger menu. The open menu is one column and stays inside the viewport, including when a shell ancestor is the fixed containing block. A nested dropdown stays a parent row and discloses its items under that row. A wide window keeps the row, including a narrow column between the rail and the aside. `always_display: true` keeps a section in the bar (the notification bell). The sidebar's mobile toggle stays in the bar.
 - Load `flat_pack/application.css` after Tailwind. The drawer slide and the stacked aside live in that sheet. A Tailwind utility loaded later, inside a layer, does not override them.
 - Tailwind `@source` has to include the gem's `app/components`. That scan emits the classes on the columns.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
 
 ## Page actions
-A view nominates actions with `page_action`. This shell reads the request registry and calls `page_actions`. From the `md` breakpoint up, the bar under the top nav is `page_actions(:top_nav)` (subtle primary). Below that, `page_actions(:mobile)` floats the first action and puts the rest in the ⋯ menu. No nominated actions means no extra markup. See [Page actions](page-actions.md).
+A view nominates actions with `page_action`. This shell reads the request registry. From the `md` breakpoint up, the bar under the top nav is `page_actions(:top_nav)` (subtle primary). Below that, the same actions are rows in the Top Nav hamburger, using that same `:top_nav` map. They join the menu the rest of the bar folds into. No nominated actions means no extra markup.
+
+`mobile_actions: :floating` pins the primary action to the bottom-right on a phone instead. The default is `:menu`. The dummy leaves the floating button off. See [Page actions](page-actions.md).
 
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.

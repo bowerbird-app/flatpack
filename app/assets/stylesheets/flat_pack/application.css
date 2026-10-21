@@ -1374,7 +1374,7 @@
   margin-inline: auto;
 }
 
-/* Page actions. The shell places the cluster. The helper paints the buttons. */
+/* Page actions. The shell places the desktop group. Phone rows live in the top nav menu. */
 .fp-page-actions {
   display: flex;
   align-items: center;
@@ -1390,7 +1390,13 @@
   padding-inline: var(--layout-content-inset, var(--space-4));
 }
 
-.fp-page-actions--mobile {
+/* Source rows for the hamburger. The controller moves the buttons into the panel
+   and strips a `hidden` class on restore, so this rule keeps the source out of the bar. */
+.fp-page-actions-menu {
+  display: none;
+}
+
+.fp-page-actions--floating {
   position: fixed;
   z-index: 30;
   right: max(var(--space-4), env(safe-area-inset-right, 0px));
@@ -1404,7 +1410,8 @@
 }
 
 @media (min-width: 768px) {
-  .fp-page-actions--mobile {
+  .fp-page-actions-nav,
+  .fp-page-actions--floating {
     display: none;
   }
 }

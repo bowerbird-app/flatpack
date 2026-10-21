@@ -31,6 +31,7 @@ module FlatPack
         height: :full,
         width: :fixed,
         resizable: false,
+        mobile_actions: :menu,
         **system_arguments
       )
         super(**system_arguments)
@@ -45,6 +46,7 @@ module FlatPack
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
         @resizable = resizable
+        assign_mobile_actions!(mobile_actions)
         @aside_open = true
         @aside_resizable = false
         @aside_mobile = :drawer
@@ -142,7 +144,7 @@ module FlatPack
             render_page_surface,
             render_columns,
             render_backdrop,
-            layout_page_actions(:mobile, place: :mobile)
+            render_floating_page_action
           ].compact)
         end
       end
@@ -376,9 +378,11 @@ module FlatPack
       end
 
       def render_top_nav
-        return unless top_nav?
+        body = top_nav? ? top_nav.to_s : nil
+        body = with_menu_page_actions(body)
+        return if body.blank?
 
-        layout_top_nav(top_nav, floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(body, floating: @floating_top_nav, content_scroll: @content_scroll)
       end
 
       def render_page_surface
