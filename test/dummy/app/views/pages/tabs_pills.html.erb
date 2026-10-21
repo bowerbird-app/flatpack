@@ -5,6 +5,68 @@
 
 <%= render "pages/component_method_variables_table", component: :tabs %>
 
+<section class="mb-12" id="tabs-pill-track">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Flush or a track",
+    anchor_link: true,
+    subtitle: "Pill tabs line up with the heading. Pass track: true for a border and padding."
+  ) %>
+
+  <div class="mt-8 space-y-8">
+    <div id="tabs-pill-flush">
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-1">Flush</p>
+      <h3 class="text-lg font-semibold mb-3">Library</h3>
+      <%= render FlatPack::Tabs::Component.new(variant: :pills) do |tabs| %>
+        <% tabs.tab(id: "flush-all", label: "All") %>
+        <% tabs.tab(id: "flush-sale", label: "On sale") %>
+        <% tabs.tab(id: "flush-archive", label: "Archive") %>
+        <% tabs.panel(id: "flush-all") do %><p class="text-[var(--surface-content-color)]">Everything in the library.</p><% end %>
+        <% tabs.panel(id: "flush-sale") do %><p class="text-[var(--surface-content-color)]">Things on sale.</p><% end %>
+        <% tabs.panel(id: "flush-archive") do %><p class="text-[var(--surface-content-color)]">Older releases.</p><% end %>
+      <% end %>
+    </div>
+
+    <div id="tabs-pill-track-row">
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-1">Track</p>
+      <h3 class="text-lg font-semibold mb-3">Library</h3>
+      <%= render FlatPack::Tabs::Component.new(variant: :pills, track: true) do |tabs| %>
+        <% tabs.tab(id: "track-all", label: "All") %>
+        <% tabs.tab(id: "track-sale", label: "On sale") %>
+        <% tabs.tab(id: "track-archive", label: "Archive") %>
+        <% tabs.panel(id: "track-all") do %><p class="text-[var(--surface-content-color)]">Everything in the library.</p><% end %>
+        <% tabs.panel(id: "track-sale") do %><p class="text-[var(--surface-content-color)]">Things on sale.</p><% end %>
+        <% tabs.panel(id: "track-archive") do %><p class="text-[var(--surface-content-color)]">Older releases.</p><% end %>
+      <% end %>
+    </div>
+
+    <div id="tabs-pill-flush-slide">
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-1">Flush, sliding</p>
+      <h3 class="text-lg font-semibold mb-3">Library</h3>
+      <%= render FlatPack::Tabs::Component.new(variant: :pills, indicator: :slide) do |tabs| %>
+        <% tabs.tab(id: "flush-slide-all", label: "All") %>
+        <% tabs.tab(id: "flush-slide-sale", label: "On sale") %>
+        <% tabs.tab(id: "flush-slide-archive", label: "Archive") %>
+        <% tabs.panel(id: "flush-slide-all") do %><p class="text-[var(--surface-content-color)]">The fill slides. The row stays flush.</p><% end %>
+        <% tabs.panel(id: "flush-slide-sale") do %><p class="text-[var(--surface-content-color)]">Things on sale.</p><% end %>
+        <% tabs.panel(id: "flush-slide-archive") do %><p class="text-[var(--surface-content-color)]">Older releases.</p><% end %>
+      <% end %>
+    </div>
+
+    <div id="tabs-pill-track-slide">
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-1">Track, sliding</p>
+      <h3 class="text-lg font-semibold mb-3">Library</h3>
+      <%= render FlatPack::Tabs::Component.new(variant: :pills, track: true, indicator: :slide) do |tabs| %>
+        <% tabs.tab(id: "track-slide-all", label: "All") %>
+        <% tabs.tab(id: "track-slide-sale", label: "On sale") %>
+        <% tabs.tab(id: "track-slide-archive", label: "Archive") %>
+        <% tabs.panel(id: "track-slide-all") do %><p class="text-[var(--surface-content-color)]">The fill slides inside the track.</p><% end %>
+        <% tabs.panel(id: "track-slide-sale") do %><p class="text-[var(--surface-content-color)]">Things on sale.</p><% end %>
+        <% tabs.panel(id: "track-slide-archive") do %><p class="text-[var(--surface-content-color)]">Older releases.</p><% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Pills Variant", anchor_link: true, subtitle: "Rounded tabs. Omit style for the neutral active surface, or pass style: :primary for the brand fill.") %>
   <div class="grid gap-8 md:grid-cols-2">

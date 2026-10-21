@@ -190,8 +190,8 @@ export default class extends Controller {
     const itemRect = item.getBoundingClientRect()
 
     return {
-      left: itemRect.left - listRect.left + list.scrollLeft,
-      top: itemRect.top - listRect.top + list.scrollTop,
+      left: itemRect.left - listRect.left - list.clientLeft + list.scrollLeft,
+      top: itemRect.top - listRect.top - list.clientTop + list.scrollTop,
       width: itemRect.width,
       height: itemRect.height
     }

@@ -99,6 +99,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
 | Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
 | Sliding active marker | `indicator` | Tabs, Button::Pill, and Segmented Buttons. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
+| Pill group track | `track` | Button::Pill and Tabs. `false` keeps the row flush. `true` on a pill row adds the border, the transparent track fill, and `--pill-padding`. Stacked and underline tabs ignore it. |
 | Inline edit flavour | `mode` | InlineEdit only. `:text` (single line), `:plain` (multi-line), `:rich` (bubble toolbar). |
 | Inline edit rest cue | `cue` | InlineEdit only. `:highlight` (default Notion-style wash), `:tint` (same paint), `:underline`, `:none`. Not Badge/Button `style`. |
 | RangeInput end glyphs | `start_icon` / `end_icon` | Kit icon names at the track ends. `variant: :size` / `:text_size` use theme-font `A` glyphs instead; `:zoom` defaults to magnifying-glass minus/plus. |

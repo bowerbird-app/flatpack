@@ -3,6 +3,88 @@
   subtitle: "Reusable pill-style links for segmented navigation and filters."
 ) %>
 
+<section class="mb-12" id="pill-track">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Flush or a track",
+    anchor_link: true,
+    subtitle: "The first pill lines up with the heading. Pass track: true for a border and padding."
+  ) %>
+
+  <div class="mt-8 space-y-8">
+    <div id="pill-flush">
+      <p class="text-sm text-(--surface-muted-content-color) mb-1">Flush</p>
+      <h3 class="text-lg font-semibold text-(--surface-content-color) mb-3">Library</h3>
+      <%= render FlatPack::Button::Pill::Component.new(
+        items: [
+          {text: "All", href: "#pill-flush", active: true},
+          {text: "On sale", href: "#pill-flush"},
+          {text: "Archive", href: "#pill-flush"}
+        ]
+      ) %>
+    </div>
+
+    <div id="pill-track-row">
+      <p class="text-sm text-(--surface-muted-content-color) mb-1">Track</p>
+      <h3 class="text-lg font-semibold text-(--surface-content-color) mb-3">Library</h3>
+      <%= render FlatPack::Button::Pill::Component.new(
+        track: true,
+        items: [
+          {text: "All", href: "#pill-track-row", active: true},
+          {text: "On sale", href: "#pill-track-row"},
+          {text: "Archive", href: "#pill-track-row"}
+        ]
+      ) %>
+    </div>
+
+    <div id="pill-flush-slide">
+      <p class="text-sm text-(--surface-muted-content-color) mb-1">Flush, sliding</p>
+      <h3 class="text-lg font-semibold text-(--surface-content-color) mb-3">Library</h3>
+      <%= render FlatPack::Button::Pill::Component.new(
+        indicator: :slide,
+        items: [
+          {text: "All", href: "#pill-flush-slide", active: true, id: "pill-flush-slide-all"},
+          {text: "On sale", href: "#pill-flush-slide", id: "pill-flush-slide-sale"},
+          {text: "Archive", href: "#pill-flush-slide", id: "pill-flush-slide-archive"}
+        ]
+      ) %>
+    </div>
+
+    <div id="pill-track-slide">
+      <p class="text-sm text-(--surface-muted-content-color) mb-1">Track, sliding</p>
+      <h3 class="text-lg font-semibold text-(--surface-content-color) mb-3">Library</h3>
+      <%= render FlatPack::Button::Pill::Component.new(
+        track: true,
+        indicator: :slide,
+        items: [
+          {text: "All", href: "#pill-track-slide", active: true, id: "pill-track-slide-all"},
+          {text: "On sale", href: "#pill-track-slide", id: "pill-track-slide-sale"},
+          {text: "Archive", href: "#pill-track-slide", id: "pill-track-slide-archive"}
+        ]
+      ) %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Pill::Component.new(
+        items: [
+          {text: "All", href: library_path, active: true},
+          {text: "On sale", href: sale_path}
+        ]
+      ) %&gt;
+
+      &lt;%= render FlatPack::Button::Pill::Component.new(
+        track: true,
+        indicator: :slide,
+        items: [
+          {text: "All", href: library_path, active: true},
+          {text: "On sale", href: sale_path}
+        ]
+      ) %&gt;
+    CODE
+  ) %>
+</section>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Pill Buttons", anchor_link: true, subtitle: "Reusable pill-style links for segmented navigation and filters.") %>

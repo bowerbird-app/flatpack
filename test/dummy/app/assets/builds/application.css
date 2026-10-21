@@ -508,6 +508,9 @@
   .m-0 {
     margin: calc(var(--spacing) * 0);
   }
+  .m-6 {
+    margin: calc(var(--spacing) * 6);
+  }
   .-mx-6 {
     margin-inline: calc(var(--spacing) * -6);
   }
@@ -519,6 +522,9 @@
   }
   .mx-4 {
     margin-inline: calc(var(--spacing) * 4);
+  }
+  .mx-6 {
+    margin-inline: calc(var(--spacing) * 6);
   }
   .mx-\[var\(--breadcrumb-separator-gap\)\] {
     margin-inline: var(--breadcrumb-separator-gap);
@@ -2567,6 +2573,9 @@
   }
   .bg-\[var\(--tabs-pill-active-background-color\)\] {
     background-color: var(--tabs-pill-active-background-color);
+  }
+  .bg-\[var\(--tabs-pill-list-background-color\)\] {
+    background-color: var(--tabs-pill-list-background-color);
   }
   .bg-\[var\(--tabs-stacked-pill-list-background-color\)\] {
     background-color: var(--tabs-stacked-pill-list-background-color);

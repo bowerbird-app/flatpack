@@ -246,6 +246,75 @@ module FlatPack
         assert_includes page.first("button[role='tab']")[:class], "fp-slide-indicator__item"
       end
 
+      def test_pills_are_flush_by_default
+        render_inline(Component.new(variant: :pills)) do |tabs|
+          tabs.tab(id: "alpha", label: "Alpha")
+          tabs.panel(id: "alpha") { "Alpha panel" }
+        end
+
+        tablist = page.find("div[role='tablist']")
+        refute_includes tablist[:class], "p-[var(--pill-padding)]"
+        refute_includes tablist[:class], "border-[var(--tabs-pill-list-border-color)]"
+        refute_includes tablist[:class], "bg-[var(--tabs-pill-list-background-color)]"
+      end
+
+      def test_pills_track_adds_border_background_and_padding
+        render_inline(Component.new(variant: :pills, track: true)) do |tabs|
+          tabs.tab(id: "alpha", label: "Alpha")
+          tabs.panel(id: "alpha") { "Alpha panel" }
+        end
+
+        tablist = page.find("div[role='tablist']")
+        FlatPack::Button::Pill::Component::TRACK_CLASSES.split.each do |css_class|
+          assert_includes tablist[:class].split, css_class
+        end
+      end
+
+      def test_pills_slide_on_a_track_keeps_the_indicator
+        render_inline(Component.new(variant: :pills, track: true, indicator: :slide)) do |tabs|
+          tabs.tab(id: "alpha", label: "Alpha")
+          tabs.panel(id: "alpha") { "Alpha panel" }
+        end
+
+        tablist = page.find("div[role='tablist']")
+        assert_includes tablist[:class], "p-[var(--pill-padding)]"
+        assert_equal "pill", tablist["data-flat-pack--slide-indicator-kind-value"]
+        assert_selector "span.fp-slide-indicator--pill", visible: :all
+      end
+
+      def test_stacked_ignores_track
+        render_inline(Component.new(variant: :stacked, track: true)) do |tabs|
+          tabs.tab(id: "one", label: "One")
+          tabs.panel(id: "one") { "One panel" }
+        end
+
+        tablist = page.find("div[role='tablist']")
+        assert_includes tablist[:class], "p-[var(--tabs-stacked-padding)]"
+        assert_includes tablist[:class], "bg-[var(--tabs-stacked-pill-list-background-color)]"
+        refute_includes tablist[:class], "p-[var(--pill-padding)]"
+        refute_includes tablist[:class], "bg-[var(--tabs-pill-list-background-color)]"
+      end
+
+      def test_underline_ignores_track
+        render_inline(Component.new(variant: :underline, track: true)) do |tabs|
+          tabs.tab(id: "first", label: "First")
+          tabs.panel(id: "first") { "First panel" }
+        end
+
+        tablist = page.find("div[role='tablist']")
+        assert_includes tablist[:class], "border-b"
+        refute_includes tablist[:class], "p-[var(--pill-padding)]"
+        refute_includes tablist[:class], "bg-[var(--tabs-pill-list-background-color)]"
+      end
+
+      def test_track_must_be_boolean
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: :pills, track: "yes")
+        end
+
+        assert_equal "track must be true or false", error.message
+      end
+
       def test_invalid_indicator_raises_argument_error
         error = assert_raises(ArgumentError) { Component.new(indicator: :bounce) }
         assert_includes error.message, "Invalid indicator"

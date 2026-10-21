@@ -192,6 +192,8 @@ module FlatPack
         assert_includes group["data-controller"].to_s.split, "flat-pack--slide-indicator"
         assert_equal "pill", group["data-flat-pack--slide-indicator-kind-value"]
         assert_includes group[:class].split, "fp-pill-style"
+        assert_includes group[:class].split, "p-[var(--pill-padding)]"
+        refute_includes group[:class], "bg-[var(--tabs-pill-list-background-color)]"
         refute_includes group[:class].split, "fp-pill-button-slots"
         refute_includes group[:class], "shadow-sm"
         assert_selector "span.fp-slide-indicator.fp-slide-indicator--pill[aria-hidden='true']", visible: :all

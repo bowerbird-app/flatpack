@@ -209,6 +209,74 @@ module FlatPack
           assert_includes controllers, "flat-pack--slide-indicator"
         end
 
+        def test_default_group_is_flush
+          render_inline(Component.new(items: [
+            {text: "Overview", href: "/demo/buttons", active: true},
+            {text: "Tables", href: "/demo/tables"}
+          ]))
+
+          group = page.find("div.inline-flex")
+          refute_includes group[:class], "p-[var(--pill-padding)]"
+          refute_includes group[:class], "border-[var(--tabs-pill-list-border-color)]"
+          refute_includes group[:class], "bg-[var(--tabs-pill-list-background-color)]"
+          assert_includes group[:class], "[border-radius:var(--tabs-pill-corner-radius)]"
+        end
+
+        def test_track_adds_border_background_and_padding
+          render_inline(Component.new(
+            track: true,
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          group = page.find("div.inline-flex")
+          Component::TRACK_CLASSES.split.each do |css_class|
+            assert_includes group[:class].split, css_class
+          end
+        end
+
+        def test_explicit_false_track_stays_flush
+          render_inline(Component.new(
+            track: false,
+            items: [{text: "Overview", href: "/demo/buttons"}]
+          ))
+
+          refute_includes page.find("div.inline-flex")[:class], "p-[var(--pill-padding)]"
+        end
+
+        def test_track_must_be_boolean
+          error = assert_raises(ArgumentError) do
+            Component.new(track: :yes, items: [{text: "Overview", href: "/demo/buttons"}])
+          end
+
+          assert_equal "track must be true or false", error.message
+        end
+
+        def test_slide_indicator_stays_flush_without_a_track
+          render_inline(Component.new(
+            indicator: :slide,
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          group = page.find("div.fp-slide-indicator-list")
+          refute_includes group[:class], "p-[var(--pill-padding)]"
+          assert_selector "span.fp-slide-indicator--pill", visible: :all
+        end
+
+        def test_slide_indicator_on_a_track
+          render_inline(Component.new(
+            indicator: :slide,
+            track: true,
+            items: [{text: "Overview", href: "/demo/buttons", active: true}]
+          ))
+
+          group = page.find("div.fp-slide-indicator-list")
+          Component::TRACK_CLASSES.split.each do |css_class|
+            assert_includes group[:class].split, css_class
+          end
+          assert_selector "span.fp-slide-indicator--pill", visible: :all
+          refute_includes page.find("a")[:class], "bg-[var(--tabs-pill-active-background-color)]"
+        end
+
         def test_invalid_indicator_raises_argument_error
           error = assert_raises(ArgumentError) do
             Component.new(indicator: :bounce, items: [{text: "Overview", href: "/demo/buttons"}])

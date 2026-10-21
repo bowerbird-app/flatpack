@@ -6,18 +6,25 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         SIZES = FlatPack::Shared::PadTextSizes::SIZES
 
-        GROUP_CLASSES = "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-[var(--pill-padding)]"
+        GROUP_CLASSES = "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)]"
+        TRACK_CLASSES = [
+          "border border-[var(--tabs-pill-list-border-color)]",
+          "bg-[var(--tabs-pill-list-background-color)]",
+          "p-[var(--pill-padding)]"
+        ].join(" ")
         STYLES = FlatPack::Button::StyleRegistry::BUILT_IN
         ITEM_BASE_CLASSES = "inline-flex items-center justify-center border border-transparent font-medium fp-touch-manipulation [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]"
         ITEM_ACTIVE_CLASSES = FlatPack::Button::PillStyle::ACTIVE_CLASSES
         ITEM_INACTIVE_CLASSES = FlatPack::Button::PillStyle::INACTIVE_CLASSES
 
-        def initialize(items:, size: :md, style: FlatPack::Button::PillStyle::DEFAULT, indicator: nil, **system_arguments)
+        def initialize(items:, size: :md, style: FlatPack::Button::PillStyle::DEFAULT, indicator: nil, track: false, **system_arguments)
           super(**system_arguments)
+          @track = track
           @pill_style = FlatPack::Button::PillStyle.resolve(style)
           @size = FlatPack::Shared::PadTextSizes.normalize!(size)
           @indicator = FlatPack::Shared::SlideIndicator.normalize(indicator)
           @items = normalize_items(items)
+          validate_track!
         end
 
         def call
@@ -34,7 +41,7 @@ module FlatPack
         def group_attributes
           unless sliding_indicator?
             return merge_attributes(
-              class: "#{GROUP_CLASSES} #{@pill_style.group_class}",
+              class: group_class_names,
               data: {fp_style: @pill_style.data_fp_style}
             )
           end
@@ -45,7 +52,7 @@ module FlatPack
           )
 
           {
-            class: classes("#{GROUP_CLASSES} #{@pill_style.group_class} #{FlatPack::Shared::SlideIndicator::LIST_CLASS}"),
+            class: classes("#{group_class_names} #{FlatPack::Shared::SlideIndicator::LIST_CLASS}"),
             data: merge_data_attributes(data_attributes, slide_data),
             aria: aria_attributes
           }.merge(html_attributes).compact
@@ -138,6 +145,16 @@ module FlatPack
             "flat-pack-slide-indicator-active-classes": FlatPack::Button::PillStyle::ACTIVE_TEXT_CLASSES,
             "flat-pack-slide-indicator-inactive-classes": FlatPack::Button::PillStyle::INACTIVE_TEXT_CLASSES
           )
+        end
+
+        def group_class_names
+          [GROUP_CLASSES, (TRACK_CLASSES if @track), @pill_style.group_class].compact.join(" ")
+        end
+
+        def validate_track!
+          return if @track == true || @track == false
+
+          raise ArgumentError, "track must be true or false"
         end
 
         def sliding_indicator?
