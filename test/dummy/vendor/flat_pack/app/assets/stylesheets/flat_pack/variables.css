@@ -351,6 +351,9 @@
   --top-nav-float-radius: var(--top-nav-float-radius);
   --top-nav-float-clearance: var(--top-nav-float-clearance);
   --top-nav-float-offset: var(--top-nav-float-offset);
+  --top-nav-float-padding-block: var(--top-nav-float-padding-block);
+  --top-nav-float-padding-inline: var(--top-nav-float-padding-inline);
+  --top-nav-float-gap: var(--top-nav-float-gap);
   --layout-content-inset: var(--layout-content-inset);
   --layout-content-max-width: var(--layout-content-max-width);
   --layout-background-blur: var(--layout-background-blur);
@@ -531,6 +534,7 @@
   --button-round-size-sm: var(--button-round-size-sm);
   --button-round-size-md: var(--button-round-size-md);
   --button-round-size-lg: var(--button-round-size-lg);
+  --button-round-size-xs: var(--button-round-size-xs);
   --button-focus-ring-color: var(--button-focus-ring-color);
   --button-focus-ring-offset-color: var(--button-focus-ring-offset-color);
   --button-disabled-opacity: var(--button-disabled-opacity);
@@ -548,6 +552,7 @@
   --button-icon-only-padding-sm: var(--button-icon-only-padding-sm);
   --button-icon-only-padding-md: var(--button-icon-only-padding-md);
   --button-icon-only-padding-lg: var(--button-icon-only-padding-lg);
+  --button-icon-only-padding-xs: var(--button-icon-only-padding-xs);
   --alert-border-radius: var(--alert-border-radius);
   --alert-padding-sm: var(--alert-padding-sm);
   --alert-padding-md: var(--alert-padding-md);
@@ -1308,6 +1313,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-float-radius: var(--sidebar-float-radius);
   --top-nav-float-clearance: calc(max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px)) + 3.25rem);
   --top-nav-float-offset: 0px;
+  --top-nav-float-padding-block: 0.25rem;
+  --top-nav-float-padding-inline: max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))));
+  --top-nav-float-gap: 0.75rem;
   /* Horizontal page padding: 1rem (p-4, default --space-4). The sm step is below. */
   --layout-content-inset: 1rem;
   /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
@@ -1488,9 +1496,11 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --button-icon-only-padding-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --button-icon-only-padding-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);
+  --button-icon-only-padding-xs: round(nearest, calc((2rem - 1rem - 2px) / 2), 1px);
   --button-round-size-sm: max(var(--hit-target-min), calc((var(--button-icon-only-padding-sm) * 2) + 1rem + 2px));
   --button-round-size-md: max(var(--hit-target-min), calc((var(--button-icon-only-padding-md) * 2) + 1.25rem + 2px));
   --button-round-size-lg: max(var(--hit-target-min), calc((var(--button-icon-only-padding-lg) * 2) + 1.5rem + 2px));
+  --button-round-size-xs: 2rem;
   --alert-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --alert-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --alert-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);

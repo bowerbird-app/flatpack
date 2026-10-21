@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.285] - 2026-10-21
+
+### Added
+- `FlatPack::Button::Component` and `FlatPack::Button::Dropdown::Component` accept `size: :xs` on icon-only controls. The painted control is about 32px (`--button-icon-only-padding-xs`, and `--button-round-size-xs: 2rem` with no hit-target floor). The 44px tap stays on `.fp-hit-slop`. `size: :xs` without `icon_only: true` raises `ArgumentError`. `:sm`, `:md`, and `:lg` are unchanged. `:xs` is not in `SIZES`.
+- `FlatPack::Card::Component` accepts `inset:` (`nil`, `:sm`, `:md`, `:lg`). `nil` keeps `--card-inset` tied to `padding:`. The other values set `data-fp-card-inset` and `--card-inset` from the existing `--card-padding-*` tokens, and add no padding.
+
+### Upgrade notes
+- Additive. Existing markup is unchanged when the new options are omitted.
+- New tokens: `--button-icon-only-padding-xs` and `--button-round-size-xs`. No new card tokens.
+- Do not rerun `bin/rails generate flat_pack:install`.
+- Reload kit CSS for the tokens, `.fp-hit-slop`, and the card inset rules. Rebuild host Tailwind so it emits `p-[var(--button-icon-only-padding-xs)]`, `h-[var(--button-round-size-xs)]`, and `w-[var(--button-round-size-xs)]`. `inset:` does not add utilities.
+- Pass an `aria-label` on `:xs`. Leave about 12px between adjacent `:xs` buttons so the 44px tap areas do not overlap.
+
 ## [0.1.284] - 2026-10-21
 
 ### Added

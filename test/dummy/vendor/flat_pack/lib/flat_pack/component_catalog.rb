@@ -39,6 +39,7 @@ module FlatPack
       {constant: :STYLES, kwargs: %i[style]},
       {constant: :VARIANTS, kwargs: %i[variant style]},
       {constant: :SIZES, kwargs: %i[size]},
+      {constant: :PUBLIC_SIZES, kwargs: %i[size]},
       {constant: :TITLE_SIZES, kwargs: %i[title_size]},
       {constant: :LEVELS, kwargs: %i[level]},
       {constant: :TYPES, kwargs: %i[type]},
@@ -80,6 +81,7 @@ module FlatPack
       {constant: :ANIMATIONS, kwargs: %i[animate]},
       {constant: :DURATIONS, kwargs: %i[duration]},
       {constant: :CONTENT_SCROLLS, kwargs: %i[content_scroll]},
+      {constant: :SCROLLS, kwargs: %i[scroll]},
       {constant: :HEIGHTS, kwargs: %i[height]}
     ].freeze
 

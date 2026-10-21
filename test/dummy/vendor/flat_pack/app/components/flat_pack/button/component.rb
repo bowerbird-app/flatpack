@@ -14,16 +14,30 @@ module FlatPack
       ICON_ONLY_SIZES = {
         sm: "p-[var(--button-icon-only-padding-sm)]",
         md: "p-[var(--button-icon-only-padding-md)]",
-        lg: "p-[var(--button-icon-only-padding-lg)]"
+        lg: "p-[var(--button-icon-only-padding-lg)]",
+        xs: "p-[var(--button-icon-only-padding-xs)]"
       }.freeze
+
+      # :xs is icon-only. It stays out of SIZES so SegmentedButtons, Tabs, and Button::Pill do not inherit it.
+      PUBLIC_SIZES = (SIZES.keys + [:xs]).freeze
 
       ROUND_RADIUS_CLASS = "rounded-[var(--button-round-border-radius)]"
 
       ROUND_ICON_ONLY_SIZES = {
         sm: "h-[var(--button-round-size-sm)] w-[var(--button-round-size-sm)] shrink-0",
         md: "h-[var(--button-round-size-md)] w-[var(--button-round-size-md)] shrink-0",
-        lg: "h-[var(--button-round-size-lg)] w-[var(--button-round-size-lg)] shrink-0"
+        lg: "h-[var(--button-round-size-lg)] w-[var(--button-round-size-lg)] shrink-0",
+        xs: "h-[var(--button-round-size-xs)] w-[var(--button-round-size-xs)] shrink-0"
       }.freeze
+
+      ICON_ONLY_HIT_CLASSES = {
+        sm: "fp-hit-target",
+        md: "fp-hit-target",
+        lg: "fp-hit-target",
+        xs: "fp-hit-slop"
+      }.freeze
+
+      XS_REQUIRES_ICON_ONLY = "size: :xs is only for icon-only buttons. Pass icon_only: true."
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
@@ -121,6 +135,28 @@ module FlatPack
         end
       end
 
+      def self.painted_icon_size(size)
+        (size.to_sym == :xs) ? :sm : size
+      end
+
+      def self.icon_only_classes_for(size, round:)
+        [
+          ICON_ONLY_SIZES.fetch(size),
+          (ROUND_ICON_ONLY_SIZES.fetch(size) if round),
+          ICON_ONLY_HIT_CLASSES.fetch(size)
+        ].compact.join(" ")
+      end
+
+      def self.validate_size!(size, icon_only:)
+        if size == :xs && !icon_only
+          raise ArgumentError, XS_REQUIRES_ICON_ONLY
+        end
+
+        return if SIZES.key?(size) || ICON_ONLY_SIZES.key?(size)
+
+        raise ArgumentError, "Invalid size: #{size}. Must be one of: #{SIZES.keys.join(", ")}"
+      end
+
       private
 
       def render_link
@@ -139,7 +175,7 @@ module FlatPack
         content = []
 
         if @loading
-          content << render(FlatPack::Spinner::Component.new(size: @size, label: nil))
+          content << render(FlatPack::Spinner::Component.new(size: icon_size, label: nil))
           content << content_tag(:span, fp_t("button.loading"), class: label_classes) unless @icon_only
         else
           content << render_leading_icon if @icon
@@ -167,7 +203,7 @@ module FlatPack
         render FlatPack::Shared::IconComponent.new(
           **IconOptions.component_arguments(
             name: @icon,
-            size: @size,
+            size: icon_size,
             icon_variant: @icon_variant,
             icon_style: @icon_style
           )
@@ -185,11 +221,7 @@ module FlatPack
       end
 
       def icon_size
-        case @size
-        when :sm then :sm
-        when :md then :md
-        when :lg then :lg
-        end
+        self.class.painted_icon_size(@size)
       end
 
       def conditional_size_classes
@@ -277,13 +309,7 @@ module FlatPack
       def icon_only_classes
         return unless @icon_only
 
-        [ICON_ONLY_SIZES.fetch(@size), round_icon_only_size_class, "fp-hit-target"].compact.join(" ")
-      end
-
-      def round_icon_only_size_class
-        return unless @round
-
-        ROUND_ICON_ONLY_SIZES.fetch(@size)
+        self.class.icon_only_classes_for(@size, round: @round)
       end
 
       def validate_round!
@@ -311,8 +337,7 @@ module FlatPack
       end
 
       def validate_size!
-        return if SIZES.key?(@size)
-        raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}"
+        self.class.validate_size!(@size, icon_only: @icon_only)
       end
 
       def validate_content!

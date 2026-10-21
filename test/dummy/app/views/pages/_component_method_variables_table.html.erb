@@ -166,6 +166,8 @@
       variables: [
         { variable: "text", accepts: "String", example: "text: \"Save\"" },
         { variable: "style", accepts: ":default, :primary, :secondary, :ghost, :success, :warning, :danger", example: "style: :secondary" },
+        { variable: "size", accepts: ":sm, :md, :lg, and icon-only :xs", example: "size: :xs" },
+        { variable: "icon_only", accepts: "true, false", example: "icon_only: true" },
         { variable: "round", accepts: "true, false", example: "round: true" },
         { variable: "icon", accepts: "String or nil", example: "icon: \"check-circle\"" },
         { variable: "icon_variant", accepts: ":outline, :solid, :mini, :micro, or nil", example: "icon_variant: :solid" },
@@ -260,6 +262,7 @@
         { variable: "border", accepts: ":none, :default, :strong", example: "border: :strong" },
         { variable: "hover", accepts: ":none, :subtle, :strong", example: "hover: :subtle" },
         { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :lg" },
+        { variable: "inset", accepts: "nil, :sm, :md, :lg", example: "inset: :sm" },
         { variable: "radius", accepts: ":default, :none, :sm, :md, :lg, :xl, :xxl", example: "radius: :xxl" }
       ]
     },

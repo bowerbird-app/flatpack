@@ -85,6 +85,8 @@ module FlatPack
         lg: "p-[var(--card-padding-lg)]"
       }.freeze
 
+      INSETS = %i[sm md lg].freeze
+
       RADII = {
         default: nil,
         none: "0px",
@@ -104,6 +106,7 @@ module FlatPack
         clickable: false,
         href: nil,
         padding: :md,
+        inset: nil,
         radius: :default,
         **system_arguments
       )
@@ -115,6 +118,7 @@ module FlatPack
         @hover = (hover || :none).to_sym
         @clickable = clickable
         @padding = padding.to_sym
+        @inset = inset&.to_sym
         @radius = radius.to_sym
 
         # Sanitize URL for security and validate
@@ -130,6 +134,7 @@ module FlatPack
         validate_border!
         validate_hover!
         validate_padding!
+        validate_inset!
         validate_radius!
       end
 
@@ -160,7 +165,7 @@ module FlatPack
       def container_attributes
         attributes = merge_attributes(
           class: card_classes,
-          data: {style: @style.to_s, fp_card_padding: @padding.to_s}
+          data: card_data
         )
 
         attributes.delete("style")
@@ -269,9 +274,21 @@ module FlatPack
         raise ArgumentError, "Invalid border: #{@border}. Must be one of: #{BORDERS.keys.join(", ")}"
       end
 
+      def card_data
+        data = {style: @style.to_s, fp_card_padding: @padding.to_s}
+        data[:fp_card_inset] = @inset.to_s if @inset
+        data
+      end
+
       def validate_padding!
         return if PADDINGS.key?(@padding)
         raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{PADDINGS.keys.join(", ")}"
+      end
+
+      def validate_inset!
+        return if @inset.nil? || INSETS.include?(@inset)
+
+        raise ArgumentError, "Invalid inset: #{@inset}. Must be one of: #{INSETS.join(", ")}"
       end
 
       def validate_radius!
