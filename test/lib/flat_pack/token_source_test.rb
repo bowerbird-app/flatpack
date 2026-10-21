@@ -292,7 +292,7 @@ module FlatPack
       assert_match(/--form-control-radius:\s*1rem/, rounded_block)
       refute_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, rounded_block)
-      assert_match(/--sidebar-item-radius:\s*max\(0px, calc\(var\(--sidebar-float-radius\) - var\(--sidebar-item-inset\)\)\)/, rounded_block)
+      assert_match(/--sidebar-item-radius:\s*var\(--radius-md\)/, rounded_block)
       assert_match(/--dropdown-item-radius:\s*var\(--radius-md\)/, rounded_block)
       refute_match(/--chip-border-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--card-radius:\s*var\(--radius-xl\)/, rounded_block)
@@ -303,6 +303,14 @@ module FlatPack
       rounded_block.scan(/^\s*(--[a-z0-9-]+)\s*:\s*(.+);$/).each do |name, value|
         refute_equal "var(#{name})", value.strip, "[data-theme=rounded] #{name} must not be a circular self-reference"
       end
+    end
+
+    test "rounded sidebar item highlight stays a soft corner and the panel stays large" do
+      rounded_block = rounded_body
+
+      assert_match(/--sidebar-item-radius:\s*var\(--radius-md\)/, rounded_block)
+      assert_match(/--sidebar-float-radius:\s*var\(--radius-xxxl\)/, rounded_block)
+      refute_match(/--sidebar-item-radius:\s*max\(/, rounded_block)
     end
 
     test "named theme blocks do not circular-map tokens" do
