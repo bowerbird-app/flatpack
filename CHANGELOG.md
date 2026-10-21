@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.284] - 2026-10-21
+
+### Added
+- Floating top nav cards read `--top-nav-float-padding-block`, `--top-nav-float-padding-inline`, and `--top-nav-float-gap`. The block padding defaults to `0.25rem`. The inline padding defaults to `max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))))`. The row gap defaults to `0.75rem`. Below `768px` the inline padding stays `0.25rem`, the row gap stays `0.5rem`, and the gap inside `left` and `center` stays `0.25rem`.
+- Bumped the gem version to `0.1.284`.
+
+### Upgrade notes
+- Additive. The three defaults match the previous hard-coded padding and row gap, including on `[data-theme~="rounded"]`. No visual change until a host sets one of the tokens.
+- `--top-nav-float-padding-block` defaults to `0.25rem`. `--top-nav-float-padding-inline` defaults to `max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))))`. `--top-nav-float-gap` defaults to `0.75rem`. Set the inline token to a plain length when the padding should ignore the radius.
+- The full-width bar is unchanged. It still uses `--top-nav-padding-inline`.
+- Hosts reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.284`.
+
 ## [0.1.283] - 2026-10-20
 
 ### Added
