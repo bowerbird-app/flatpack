@@ -1,0 +1,92 @@
+<%
+  variant = @page_layout_variant
+  theme = params[:theme].to_s
+  theme = nil unless %w[light dark rounded].include?(theme)
+  width = (variant == "float") ? :wide : ((variant.in?(%w[article login])) ? :narrow : :default)
+  align = (variant == "login") ? :center : :top
+  floating = variant == "float"
+
+  variant_path = ->(name) {
+    query = {variant: name}
+    query[:theme] = theme if theme.present?
+    demo_page_layout_path(query)
+  }
+  theme_path = ->(name) {
+    demo_page_layout_path(variant: variant, theme: name)
+  }
+%>
+
+<%= render FlatPack::PageLayout::Component.new(
+  width: width,
+  align: align,
+  floating_top_nav: floating,
+  id: "page-layout-demo"
+) do |layout| %>
+  <% layout.top_nav do %>
+    <%= render FlatPack::TopNav::Component.new(mobile_menu: false) do |nav| %>
+      <% nav.left do %>
+        <%= render FlatPack::Link::Component.new(href: variant_path.call("plain")) do %>
+          Field notes
+        <% end %>
+      <% end %>
+      <% nav.right(always_display: true) do %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Sign in",
+          href: variant_path.call("login"),
+          style: (floating ? :default : :primary),
+          size: :sm
+        ) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if variant == "float" %>
+    <% layout.background do %>
+      <%= image_tag "/images/hero-packaging.jpg", alt: "" %>
+    <% end %>
+  <% end %>
+
+  <% layout.footer do %>
+    <div id="page-layout-footer" class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      <% %w[plain float article login].each do |name| %>
+        <%= render FlatPack::Link::Component.new(href: variant_path.call(name)) do %>
+          <%= name %>
+        <% end %>
+      <% end %>
+      <span class="text-[var(--surface-muted-content-color)]" aria-hidden="true">·</span>
+      <% %w[light dark rounded].each do |name| %>
+        <%= render FlatPack::Link::Component.new(href: theme_path.call(name)) do %>
+          <%= name %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if variant == "login" %>
+    <%= render FlatPack::Card::Component.new(padding: :lg, shadow: :md, id: "page-layout-login") do %>
+      <h1 class="text-2xl font-semibold">Welcome back</h1>
+      <p class="mt-2 text-sm text-[var(--surface-muted-content-color)]">Pick up where you left off.</p>
+      <div class="mt-6 flex flex-col gap-4">
+        <%= render FlatPack::EmailInput::Component.new(name: "email", label: "Email", placeholder: "you@example.com") %>
+        <%= render FlatPack::PasswordInput::Component.new(name: "password", label: "Password") %>
+        <%= render FlatPack::Button::Component.new(text: "Sign in", style: :primary, type: "button") %>
+      </div>
+    <% end %>
+  <% elsif variant == "article" %>
+    <article id="page-layout-article">
+      <h1 class="text-3xl font-semibold">A quieter morning</h1>
+      <p class="mt-4 text-[var(--surface-muted-content-color)]">The stool goes in first. The linen goes on top. Leave the tape until the lid is sure.</p>
+      <p class="mt-4">A narrow column keeps the line short enough to read without hunting the next word.</p>
+    </article>
+  <% elsif variant == "float" %>
+    <%= render FlatPack::Card::Component.new(padding: :lg, shadow: :md, id: "page-layout-float") do %>
+      <h1 class="text-3xl font-semibold">On the road</h1>
+      <p class="mt-3 text-[var(--surface-muted-content-color)]">The photo stays behind the page. This card is yours.</p>
+    <% end %>
+  <% else %>
+    <div id="page-layout-plain">
+      <h1 class="text-3xl font-semibold">Packing notes</h1>
+      <p class="mt-4 text-[var(--surface-muted-content-color)]">One column. A bar at the top. A line at the bottom. The words stay yours.</p>
+    </div>
+  <% end %>
+<% end %>

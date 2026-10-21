@@ -180,6 +180,7 @@ class DemoCatalog
         {type: :item, title: "Animated characters", path: "/demo/animated_character", description: "A tiny bot with moods, and icons that wiggle, pop, draw, spin, or nudge", icon: :sparkles},
         {type: :item, title: "Motion", path: "/demo/motion", description: "A labelled gallery of fade, rise, blur, scale, wipe, zoom, words, lines, and numbers", icon: :sparkles},
         {type: :item, title: "Backdrop", path: "/demo/backdrop", description: "A blurred photo behind a hero, a card, or the whole window", icon: :image},
+        {type: :item, title: "Page layout", path: "/demo/page_layout", description: "A public page. One column, a bar, and a footer", icon: :document},
         {type: :item, title: "Overlay", path: "/demo/overlay", description: "Place a badge, icon, or button on a photo", icon: :image},
         {type: :item, title: "Video preview", path: "/demo/video_preview", description: "Play a clip when you ask. The player stays unloaded until then", icon: :play},
         {type: :item, title: "Code Blocks", path: "/demo/code_blocks", description: "Reusable snippets for demo pages", icon: :type},

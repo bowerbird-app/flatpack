@@ -86,6 +86,7 @@ notification | FlatPack::Notification::Component | docs/components/notification.
 number | FlatPack::Number::Component | docs/components/number.md
 overlay | FlatPack::Overlay::Component | docs/components/overlay.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
+page_layout | FlatPack::PageLayout::Component | docs/components/page_layout.md
 page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md
 page_title | FlatPack::PageTitle::Component | docs/components/page-title.md
 pagination | FlatPack::Pagination::Component | docs/components/pagination.md

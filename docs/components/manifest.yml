@@ -572,6 +572,27 @@ components:
     primary_class: FlatPack::PageHeader::Component
     status: documented
 
+  - key: page_layout
+    title: Page Layout
+    doc: docs/components/page_layout.md
+    primary_class: FlatPack::PageLayout::Component
+    related_classes:
+      - FlatPack::TopNav::Component
+      - FlatPack::Backdrop::Component
+    tokens:
+      - --page-layout-width-narrow
+      - --page-layout-width-default
+      - --page-layout-width-wide
+      - --page-layout-width-full
+      - --page-layout-padding-inline
+      - --page-layout-padding-block
+      - --page-layout-gap
+      - --top-nav-float-clearance
+      - --top-nav-float-radius
+      - --layout-content-inset
+      - --layout-content-max-width
+    status: documented
+
   - key: page_nav
     title: Page Nav
     doc: docs/components/page-nav.md

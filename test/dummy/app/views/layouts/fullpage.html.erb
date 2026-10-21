@@ -1,5 +1,10 @@
 <!DOCTYPE html>
-<html <%= tag.attributes(flat_pack_html_attributes(class: "h-full", data: {theme: "rounded"})) %>>
+<%
+  page_theme = (controller.action_name == "page_layout") ? @page_layout_theme : "rounded"
+  html_data = {}
+  html_data[:theme] = page_theme if page_theme.present?
+%>
+<html <%= tag.attributes(flat_pack_html_attributes(class: "h-full", data: html_data)) %>>
   <head>
     <title>FlatPack Demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,7 +15,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 min-h-screen bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode">
+  <body class="m-0 min-h-screen bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]"<% unless controller.action_name == "page_layout" %> data-controller="dark-mode"<% end %>>
     <%= render "layouts/icon_sprite" %>
 
     <%= yield %>
