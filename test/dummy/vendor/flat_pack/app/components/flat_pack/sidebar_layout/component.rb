@@ -348,15 +348,9 @@ module FlatPack
       def render_background
         return unless background?
 
-        content_tag(
-          :div,
-          safe_join([
-            content_tag(:div, background.to_s, class: "fp-layout-background-media"),
-            content_tag(:div, "", class: "fp-layout-background-tint")
-          ]),
-          class: "fp-layout-background",
-          aria: {hidden: true}
-        )
+        backdrop = FlatPack::Backdrop::Component.new
+        backdrop.with_media { background.to_s }
+        render(backdrop)
       end
 
       def render_backdrop

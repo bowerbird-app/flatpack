@@ -52,7 +52,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `floating_top_nav: true` | The full-width bar is gone. `TopNav` `left` and `center` each become one card sized to their contents. `right` lays its children out as separate cards. Content scrolls under the cards. |
 | `content_scroll: :below` | Same cards, in flow above the scroll pane. Content does not slide under them. |
 | `scroll: :page` | The window scrolls. `:pane` is the default and keeps the locked shell. |
-| `background` slot | Full-viewport photo behind the rail, the top nav, and main. Blur and tint come from `--layout-background-*`. |
+| `background` slot | Full-viewport photo behind the rail, the top nav, and main. Renders `FlatPack::Backdrop::Component`. Blur and tint come from `--backdrop-*`. |
 
 ## Example
 
@@ -125,7 +125,7 @@ Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via contr
 
 The resize handle is a vertical `separator` with `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`. Arrow keys move it. Double-click resets it. The name is "Resize sidebar" or "Resize aside". An `asideToggle` control gets `aria-expanded`.
 
-The background layer is decorative. The layout marks it `aria-hidden="true"`. Pass `alt=""` on the image. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is unavailable, the photo is hidden and the tint becomes solid so text stays on the page colour.
+The photo layer is decorative. `FlatPack::Backdrop::Component` marks it `aria-hidden="true"`. Pass `alt=""` on the image. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is unavailable, the photo is hidden and the tint becomes solid so text stays on the page colour. The drawer dim is separate. It still uses `--drawer-backdrop-color`.
 
 ## Collapsed (icon-only) mode
 
@@ -260,7 +260,9 @@ With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that
 
 ## Background
 
-`layout.background` paints a decorative photo behind the whole shell, including the gaps around a floating rail and the flush main column. The host supplies an `<img>` or `<picture>` (responsive `srcset`, `loading: "lazy"`). The layout fixes that layer to the viewport. `.fp-layout-background` uses `--layout-background-color` (`transparent`) for the edge that shows where the blur fades. The photo is blurred with `--layout-background-blur` (`40px`), then `--layout-background-filter` (`saturate(1)`). That second value is an identity so the filter list stays valid. A host can set it to `brightness(0.93) saturate(0.75)`. The tint is `--layout-background-tint-color` at `--layout-background-tint-opacity` (`0.55`). The tint colour aliases `--surface-page-background-color`, so a host recolours it by setting the token. Dark alone sets the opacity to `0.78`. `[data-theme~="rounded"]` sets the edge to `#2f2f2f` (the bottom-nav neutral), the tint to `#000`, and the opacity to `0.18`. That block is after `[data-theme~="dark"]` at the same specificity, so `data-theme="rounded dark"` keeps `0.18`. Blur stays `40px` and the filter stays `saturate(1)`. Do not point the tint at `--hero-overlay-*` or `--overlay-backdrop-color`.
+`layout.background` paints a decorative photo behind the whole shell, including the gaps around a floating rail and the flush main column. The host supplies an `<img>`, `<picture>`, or `<video>` (responsive `srcset`, `loading: "lazy"`). The layout renders [`FlatPack::Backdrop::Component`](backdrop.md) and fixes that layer to the viewport. The slot name is unchanged.
+
+The fill is `--backdrop-color` (`transparent`). It shows at the edge where the blur fades. The photo is blurred with `--backdrop-blur` (`40px`), then `--backdrop-filter` (`saturate(1)`). That second value is an identity so the filter list stays valid. A host can set it to `brightness(0.93) saturate(0.75)`. The tint is `--backdrop-tint-color` at `--backdrop-tint-opacity` (`0.55`). The tint colour aliases `--surface-page-background-color`, so a host recolours it by setting the token. Dark alone sets the opacity to `0.78`. `[data-theme~="rounded"]` sets the edge to `#2f2f2f` (the bottom-nav neutral), the tint to `#000`, and the opacity to `0.18`. That block is after `[data-theme~="dark"]` at the same specificity, so `data-theme="rounded dark"` keeps `0.18`. Blur stays `40px` and the filter stays `saturate(1)`. Do not point the tint at `--hero-overlay-*` or `--overlay-backdrop-color`.
 
 While the slot is set, the main column sets `--surface-page-background-color` to `transparent`, so a host page fill that uses that token shows the photo. The rail keeps its own fill. The mobile drawer and its dim are unchanged, and the photo stays behind them. Omit the slot and the markup matches a layout with no photo.
 
@@ -282,3 +284,4 @@ The rail keeps its place. Turbo visits restore the last `scrollTop` (and the cli
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Responsive drawer/collapse interactions require Stimulus controller `flat-pack--sidebar-layout`.
 - A resizable rail or aside also requires `flat-pack--panel-resize`. Importmap loads it with the other controllers. esbuild and Vite hosts register it.
+- The `background` slot renders `FlatPack::Backdrop::Component`. No extra controller.

@@ -1,0 +1,10 @@
+<%= render FlatPack::Backdrop::Component.new(class: "flex min-h-screen w-full items-center justify-center") do |backdrop| %>
+  <% backdrop.with_media do %>
+    <%= image_tag "/images/hero-subscription-box.webp", alt: "" %>
+  <% end %>
+  <div id="backdrop-full" class="mx-6 max-w-md rounded-[var(--card-radius)] bg-[var(--surface-background-color)] p-8 text-center text-[var(--surface-content-color)] shadow-[var(--shadow-md)]">
+    <h1 class="text-3xl font-semibold">The whole window</h1>
+    <p class="mt-3 text-sm">No sidebar. Same wash.</p>
+    <%= render FlatPack::Button::Component.new(text: "Back to the demo", style: :primary, href: demo_backdrop_path, class: "mt-6") %>
+  </div>
+<% end %>

@@ -90,9 +90,9 @@ module FlatPack
       assert_match(/--layout-content-inset:\s*1rem/, root_block)
       assert_match(/--layout-content-max-width:\s*100%/, root_block)
       assert_match(/@media \(min-width: 640px\) \{\s*:root,\s*\[data-theme\] \{\s*--layout-content-inset:\s*2rem;/, @css)
-      assert_match(/--layout-background-blur:\s*40px/, root_block)
-      assert_match(/--layout-background-tint-color:\s*var\(--surface-page-background-color\)/, root_block)
-      assert_match(/--layout-background-tint-opacity:\s*0\.55/, root_block)
+      assert_match(/--backdrop-blur:\s*40px/, root_block)
+      assert_match(/--backdrop-tint-color:\s*var\(--surface-page-background-color\)/, root_block)
+      assert_match(/--backdrop-tint-opacity:\s*0\.55/, root_block)
       refute_match(/--sidebar-background-color:\s*oklch\(1\.0 0 0\)/, root_block)
       assert_match(/--fp-button-background:\s*var\(--button-default-background-color\)/, root_block)
 
@@ -335,7 +335,7 @@ module FlatPack
       assert_includes ocean_block, "--color-primary"
       assert_match(/--sidebar-background-color:\s*oklch\(0\.17 0\.01 250\)/, dark_block)
       assert_match(/--sidebar-float-background-color:\s*oklch\(0\.22 0\.02 250\)/, dark_block)
-      assert_match(/--layout-background-tint-opacity:\s*0\.78/, dark_block)
+      assert_match(/--backdrop-tint-opacity:\s*0\.78/, dark_block)
       assert_match(/--sidebar-background-color:\s*oklch\(0\.96 0\.02 220\)/, ocean_block)
     end
 

@@ -16,6 +16,7 @@ alert | FlatPack::Alert::Component | docs/components/alert.md
 animated_character | FlatPack::AnimatedCharacter::Component | docs/components/animated-character.md
 avatar | FlatPack::Avatar::Component | docs/components/avatar.md
 avatar_group | FlatPack::AvatarGroup::Component | docs/components/avatar-group.md
+backdrop | FlatPack::Backdrop::Component | docs/components/backdrop.md
 badge | FlatPack::Badge::Component | docs/components/badge.md
 billing | FlatPack::Billing | docs/components/billing.md
 billing_plan_summary | FlatPack::Billing::PlanSummary::Component | docs/components/billing-plan-summary.md
