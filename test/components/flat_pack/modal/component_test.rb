@@ -476,6 +476,57 @@ module FlatPack
 
         assert_match(/Invalid origin/, error.message)
       end
+
+      def test_body_hides_the_bar_and_is_a_named_region
+        render_inline(Component.new(id: "my-modal", title: "Edit")) do |component|
+          component.body { "Fields" }
+        end
+
+        body = page.find(".flat-pack-modal__body")
+        assert_includes body[:class], "fp-pane-scroll"
+        assert_equal "region", body["role"]
+        assert_equal "0", body["tabindex"]
+        assert_equal "Dialog", body["aria-label"]
+        assert_nil body["data-pane-scrollbar"]
+      end
+
+      def test_page_scroll_body_does_not_become_a_pane
+        render_inline(Component.new(id: "my-modal", scroll: :page, title: "Page")) do |component|
+          component.body { "Tall" }
+        end
+
+        body = page.find(".flat-pack-modal__body")
+        refute_includes body[:class], "fp-pane-scroll"
+        assert_nil body["tabindex"]
+        assert_nil body["role"]
+      end
+
+      def test_fixed_page_body_still_hides_its_bar
+        render_inline(Component.new(id: "my-modal", scroll: :page, body_height_mode: :fixed, body_height: "24rem")) do |component|
+          component.body { "Content" }
+        end
+
+        body = page.find(".flat-pack-modal__body")
+        assert_includes body[:class], "fp-pane-scroll"
+        assert_equal "0", body["tabindex"]
+      end
+
+      def test_visible_scrollbar_uses_the_browser_bar
+        render_inline(Component.new(id: "my-modal", scrollbar: "visible")) do |component|
+          component.body { "Fields" }
+        end
+
+        body = page.find(".flat-pack-modal__body")
+        assert_equal "visible", body["data-pane-scrollbar"]
+        assert_nil body["tabindex"]
+        assert_nil body["role"]
+      end
+
+      def test_scrollbar_rejects_unknown_values
+        error = assert_raises(ArgumentError) { Component.new(id: "my-modal", scrollbar: :thin) }
+
+        assert_equal "scrollbar must be :hidden or :visible", error.message
+      end
     end
   end
 end

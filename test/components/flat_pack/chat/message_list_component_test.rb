@@ -105,6 +105,17 @@ module FlatPack
           assert_selector "[data-flat-pack--pagination-infinite-batch-size-value='20']"
         end
 
+        def test_message_scroller_hides_the_bar_and_is_a_named_region
+          render_inline(Component.new) { "Hello" }
+
+          list = page.find("[data-flat-pack--chat-scroll-target='messages']")
+          assert_includes list[:class], "fp-pane-scroll"
+          assert_equal "region", list["role"]
+          assert_equal "0", list["tabindex"]
+          assert_equal "Messages", list["aria-label"]
+          assert_equal "flat-pack--chat-grouping", list["data-controller"]
+        end
+
         def test_does_not_render_history_loader_without_url
           render_inline(Component.new(history_has_more: true)) do
             "Content"

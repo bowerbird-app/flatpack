@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.292] - 2026-10-21
+
+### Changed
+- Layout and panel scrollers hide the bar. `--pane-scrollbar-width` defaults to `none` and is applied as `scrollbar-width`. A theme may set `thin` or `auto`. Older Safari hides the WebKit bar when `scrollbar-width` is unsupported, unless the pane opts into the browser bar.
+- `scrollbar: :hidden` (default) or `:visible` on Sidebar Layout (the main pane and the aside), Drawer, and Modal. Other values raise `ArgumentError`. `:visible` uses the browser bar.
+- A hidden pane is in the tab order (`tabindex="0"`) with an accessible name, so arrow keys and Page Down scroll it when nothing inside can take focus. The main pane is not a second landmark. The aside keeps its landmark. Drawer, Modal, and the chat message list use `role="region"`. Focus uses `--color-ring`.
+- A soft edge fade marks the side that still has content. It uses `animation-timeline: scroll(self)` and `--pane-scroll-fade-size` (`2.5rem`). Browsers without scroll-driven animations skip the fade. `prefers-reduced-motion: reduce` skips it too.
+- The sidebar nav and the chat message list follow the theme token. Tables, code blocks, horizontal scrollers, and menu listboxes keep a visible bar. Page Layout still scrolls the window. `.fp-scrollbar-hidden` stays on Overflow Row.
+
+### Upgrade notes
+- New tokens: `--pane-scrollbar-width` (`none`) and `--pane-scroll-fade-size` (`2.5rem`). Set them on a theme. There is no Ruby setting for the width.
+- `scrollbar: :visible` on Sidebar Layout, Drawer, or Modal shows the browser bar on that pane. The default is hidden.
+- Hidden panes are a new tab stop.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.292`.
+
 ## [0.1.291] - 2026-10-21
 
 ### Changed

@@ -765,6 +765,69 @@ module FlatPack
         end
       end
 
+      def test_pane_scroll_hides_the_bar_and_stays_in_tab_order
+        render_inline(Component.new) do |layout|
+          layout.main { "Main" }
+          layout.aside { "Details" }
+        end
+
+        pane = page.find("div.fp-pane-scroll", text: "Main")
+        assert_includes pane[:class], "overflow-y-auto"
+        assert_equal "0", pane["tabindex"]
+        assert_equal "Content", pane["aria-label"]
+        assert_nil pane["role"]
+        assert_nil pane["data-pane-scrollbar"]
+
+        aside = page.find("aside.fp-pane-scroll", text: "Details")
+        assert_equal "0", aside["tabindex"]
+        assert_equal "Side panel", aside["aria-label"]
+        assert_nil aside["role"]
+        assert_nil aside["data-pane-scrollbar"]
+      end
+
+      def test_visible_scrollbar_resets_the_main_pane_and_the_aside
+        render_inline(Component.new(scrollbar: :visible)) do |layout|
+          layout.main { "Main" }
+          layout.aside { "Details" }
+        end
+
+        pane = page.find("div.fp-pane-scroll", text: "Main")
+        assert_equal "visible", pane["data-pane-scrollbar"]
+        assert_nil pane["tabindex"]
+        assert_nil pane["aria-label"]
+
+        aside = page.find("aside.fp-aside", text: "Details")
+        assert_equal "visible", aside["data-pane-scrollbar"]
+        assert_nil aside["tabindex"]
+        assert_nil aside["aria-label"]
+      end
+
+      def test_scrollbar_accepts_the_string_form
+        render_inline(Component.new(scrollbar: "visible")) do |layout|
+          layout.main { "Main" }
+        end
+
+        assert_equal "visible", page.find("div.fp-pane-scroll")["data-pane-scrollbar"]
+      end
+
+      def test_scrollbar_rejects_unknown_values
+        error = assert_raises(ArgumentError) { Component.new(scrollbar: :thin) }
+
+        assert_equal "scrollbar must be :hidden or :visible", error.message
+      end
+
+      def test_page_scroll_leaves_the_window_bar_and_still_hides_the_aside
+        render_inline(Component.new(scroll: :page)) do |layout|
+          layout.main { "Main" }
+          layout.aside { "Details" }
+        end
+
+        pane = page.find("div.flex-1.min-h-0", text: "Main")
+        refute_includes pane[:class], "fp-pane-scroll"
+        assert_nil pane["tabindex"]
+        assert_selector "aside.fp-pane-scroll", text: "Details"
+      end
+
       def selector_rank(selector)
         working = selector.gsub(/:not\(([^)]*)\)/, "\\1")
         ids = working.scan(/#[A-Za-z0-9_-]+/).length

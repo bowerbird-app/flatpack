@@ -59,6 +59,7 @@ module FlatPack
         body_height: nil,
         close_on_backdrop: true,
         close_on_escape: true,
+        scrollbar: :hidden,
         navigable: false,
         src: nil,
         origin: :center,
@@ -74,6 +75,7 @@ module FlatPack
         @body_height = body_height
         @close_on_backdrop = close_on_backdrop
         @close_on_escape = close_on_escape
+        @scrollbar = FlatPack::PaneScroll.normalize!(scrollbar)
         @navigable = navigable
         @src = src
         @origin = (origin || :center).to_sym
@@ -373,13 +375,24 @@ module FlatPack
       end
 
       def body_attributes
-        attributes = {
-          class: body_classes
-        }
+        attributes = if body_scrolls?
+          FlatPack::PaneScroll.attributes(
+            body_classes,
+            label: fp_t("pane_scroll.modal"),
+            region: true,
+            scrollbar: @scrollbar
+          )
+        else
+          {class: body_classes}
+        end
 
         height_style = body_style
         attributes[:style] = height_style if height_style.present?
         attributes
+      end
+
+      def body_scrolls?
+        body_overflow_class.present?
       end
 
       def render_footer_content

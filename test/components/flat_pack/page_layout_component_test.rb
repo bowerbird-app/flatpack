@@ -148,6 +148,12 @@ module FlatPack
         html = page.native.to_html
         assert_operator html.index("fp-backdrop"), :<, html.index("Story")
       end
+
+      def test_window_scroll_does_not_use_the_pane_bar
+        render_inline(Component.new) { "Story" }
+
+        refute_includes page.native.to_html, "fp-pane-scroll"
+      end
     end
   end
 end

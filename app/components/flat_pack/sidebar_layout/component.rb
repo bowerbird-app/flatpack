@@ -26,6 +26,7 @@ module FlatPack
         floating_top_nav: false,
         content_scroll: :behind,
         scroll: :pane,
+        scrollbar: :hidden,
         height: :full,
         width: :fixed,
         resizable: false,
@@ -39,6 +40,7 @@ module FlatPack
         @floating_top_nav = floating_top_nav
         @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
         @scroll = scroll.is_a?(String) ? scroll.to_sym : scroll
+        @scrollbar = FlatPack::PaneScroll.normalize!(scrollbar)
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
         @resizable = resizable
@@ -170,7 +172,15 @@ module FlatPack
       end
 
       def aside_landmark(body)
-        content_tag(:aside, body, class: "fp-aside h-full min-h-0 overflow-y-auto overscroll-y-contain")
+        content_tag(:aside, body, **aside_scroll_attributes)
+      end
+
+      def aside_scroll_attributes
+        FlatPack::PaneScroll.attributes(
+          "fp-aside h-full min-h-0 overflow-y-auto overscroll-y-contain",
+          label: fp_t("pane_scroll.aside"),
+          scrollbar: @scrollbar
+        )
       end
 
       def panel_tag_attributes(panel)
@@ -322,7 +332,7 @@ module FlatPack
         content_tag(:div, class: main_column_classes) do
           safe_join([
             render_top_nav,
-            content_tag(:div, class: main_content_classes) do
+            content_tag(:div, **main_pane_attributes) do
               main? ? main.to_s : content
             end
           ].compact)
@@ -416,6 +426,16 @@ module FlatPack
         classes(
           page_scroll? ? "flex-1 min-h-0" : "flex-1 min-h-0 overflow-y-auto overscroll-y-contain",
           ("fp-layout-scroll" if floating_top_nav_active? && @content_scroll == :behind)
+        )
+      end
+
+      def main_pane_attributes
+        return {class: main_content_classes} if page_scroll?
+
+        FlatPack::PaneScroll.attributes(
+          main_content_classes,
+          label: fp_t("pane_scroll.main"),
+          scrollbar: @scrollbar
         )
       end
 

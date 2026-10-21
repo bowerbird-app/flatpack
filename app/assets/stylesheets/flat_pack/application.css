@@ -762,19 +762,94 @@
       var(--sidebar-float-shadow) !important;
   }
 
-  [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar .fp-sidebar-scroll,
-  .fp-sidebar[data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-scroll {
-    scrollbar-width: none;
+}
+
+/* Pane bars follow --pane-scrollbar-width (none, thin, or auto).
+   Older Safari ignores scrollbar-width, so the WebKit bar is hidden to match
+   none. scrollbar: :visible sets data-pane-scrollbar="visible" and the browser bar.
+   The edge fade tracks this pane's own scroll(). Unsupported browsers skip it. */
+.fp-pane-scroll {
+  scrollbar-width: var(--pane-scrollbar-width);
+}
+
+.fp-pane-scroll[data-pane-scrollbar="visible"] {
+  scrollbar-width: auto;
+}
+
+.fp-pane-scroll:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: -2px;
+}
+
+@supports not (scrollbar-width: none) {
+  .fp-pane-scroll:not([data-pane-scrollbar="visible"]) {
     -ms-overflow-style: none;
   }
 
-  [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar .fp-sidebar-scroll::-webkit-scrollbar,
-  .fp-sidebar[data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-scroll::-webkit-scrollbar {
+  .fp-pane-scroll:not([data-pane-scrollbar="visible"])::-webkit-scrollbar {
     display: none;
     width: 0;
     height: 0;
   }
+}
 
+@property --fp-pane-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fp-pane-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fp-pane-fade-top {
+  from { --fp-pane-fade-top: 0px; }
+  to { --fp-pane-fade-top: var(--pane-scroll-fade-size); }
+}
+
+@keyframes fp-pane-fade-bottom {
+  from { --fp-pane-fade-bottom: var(--pane-scroll-fade-size); }
+  to { --fp-pane-fade-bottom: 0px; }
+}
+
+@supports (animation-timeline: scroll()) {
+  .fp-pane-scroll {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--fp-pane-fade-top),
+      #000 calc(100% - var(--fp-pane-fade-bottom)),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--fp-pane-fade-top),
+      #000 calc(100% - var(--fp-pane-fade-bottom)),
+      transparent 100%
+    );
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    animation-name: fp-pane-fade-top, fp-pane-fade-bottom;
+    animation-duration: auto, auto;
+    animation-timing-function: linear, linear;
+    animation-fill-mode: both, both;
+    animation-timeline: scroll(self), scroll(self);
+    animation-range: 0px var(--pane-scroll-fade-size), calc(100% - var(--pane-scroll-fade-size)) 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-pane-scroll {
+      animation: none;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+  }
 }
 
 .fp-read-more {

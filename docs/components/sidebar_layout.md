@@ -21,6 +21,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `floating_top_nav` | Boolean | `false` | No | Replaces the full-width top bar with floating cards. Uses the same `--sidebar-float-*` gap, fill, shadow, and corner as the rail. `false` leaves the bar unchanged. |
 | `content_scroll` | Symbol | `:behind` | No | Where main content sits when `floating_top_nav: true`. `:behind` scrolls the page under the cards and pads the scroll pane with `--top-nav-float-clearance`. `:below` keeps the cards above the scroll pane. Ignored when the top nav is not floating. |
 | `scroll` | Symbol | `:pane` | No | `:pane` locks the shell and scrolls the main pane. `:page` scrolls the window. The rail and the aside stick. With floating cards and `:behind`, the cards stick and a fixed `.fp-layout-page-surface` fills the page when there is no photo. `html` gets `scroll-padding-top`. `:page` with `content_scroll: :below` raises `ArgumentError`. |
+| `scrollbar` | Symbol | `:hidden` | No | `:hidden` hides the bar on the main pane and the aside. `:visible` uses the browser bar on both. Anything else raises `ArgumentError`. The rail follows `--pane-scrollbar-width` and does not take this option. `:page` leaves the window bar alone. |
 | `height` | Symbol | `:full` | No | Height of the floating desktop rail. `:full` is today's rail (viewport minus the float insets). `:content` sizes the rail to its items and caps it at that same viewport height. The items scroll inside the cap. Ignored when `floating` is false. The mobile drawer stays full height. Not the image `height` attribute. |
 | `width` | Symbol | `:fixed` | No | Width of the open desktop rail. `:fixed` uses `--sidebar-width` (`16rem`). `:content` sizes the rail to its widest item, clamped by `--sidebar-content-min-width` (`12rem`) and `--sidebar-content-max-width` (`20rem`). Collapsed width stays `--sidebar-collapsed-width` (`4rem`). The mobile drawer stays `--sidebar-width`. Unknown values raise `ArgumentError`. |
 | `resizable` | Boolean | `false` | No | Desktop separator on the rail. `true` or `false`. Anything else raises `ArgumentError`. |
@@ -124,6 +125,8 @@ The mobile drawer (below the `md` breakpoint) is `.fp-sidebar-drawer` with `data
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.
 
 The resize handle is a vertical `separator` with `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`. Arrow keys move it. Double-click resets it. The name is "Resize sidebar" or "Resize aside". An `asideToggle` control gets `aria-expanded`.
+
+A hidden main pane is in the tab order (`tabindex="0"`, name "Content"). It is not a landmark, so it does not sit beside `<main>`. The aside keeps its landmark and takes the name "Side panel". Arrow keys and Page Down scroll a pane that has no focusable children. `:visible` drops that tab stop. Focus uses the `--color-ring` outline.
 
 The photo layer is decorative. `FlatPack::Backdrop::Component` marks it `aria-hidden="true"`. Pass `alt=""` on the image. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is unavailable, the photo is hidden and the tint becomes solid so text stays on the page colour. The drawer dim is separate. It still uses `--drawer-backdrop-color`.
 
@@ -246,7 +249,7 @@ The cards apply at every width, including `390px`. `left` and `center` use `flex
 
 The wrapper does not cover clicks in the gaps between cards. The `<header>` landmark stays. Tab order is still the top nav, then main.
 
-Dummy chrome accepts `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` is the floating photo with the cards. Add `content_scroll=below` to park the cards above the scroll pane.
+Dummy chrome accepts `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` is the floating photo with the cards. Add `content_scroll=below` to park the cards above the scroll pane. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&aside=1&height=content` is the press kit: floating cards, a Backdrop photo, and an aside. Add `scrollbar=visible` to show the browser bar on the page and the aside.
 
 ## Where content scrolls
 
@@ -255,6 +258,10 @@ Dummy chrome accepts `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&bac
 With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that pane run under the cards. The pane's `padding-top` and `scroll-padding-top` use `--top-nav-float-clearance`, so the first paint and a focused control are not hidden under the cards. When the cards are more than `8px` taller than that token, the layout sets `--top-nav-float-clearance` on the main column to the bottom of the band. A wrapped row, or a toolbar that has grown a second line, then clears the title. A one-row toolbar leaves the token alone. `content_scroll: :below` puts the cards back in the flow, above the pane, still with the float gap and the card chrome. That mode does not need the measurement.
 
 `content_scroll` does nothing while `floating_top_nav` is false. The full-width bar stays outside the pane.
+
+The main pane and the aside use `.fp-pane-scroll`. The bar width is `--pane-scrollbar-width` (`none` by default). A theme may set `thin` or `auto`. `scrollbar: :visible` sets the browser bar on the main pane and the aside. The rail scroller (`.fp-sidebar-scroll`) follows the same token. Tables, code, horizontal scrollers, and menu listboxes do not. Page Layout scrolls the window and does not use this class. `.fp-scrollbar-hidden` stays on Overflow Row.
+
+A mask fades the edge that still has content. The length is `--pane-scroll-fade-size` (`2.5rem`). It runs on `animation-timeline: scroll(self)`, so it tracks that pane. Browsers without scroll-driven animations skip the fade. `prefers-reduced-motion: reduce` skips it too. There is no script and no stored preference.
 
 `scroll: :page` lets the window scroll. The shell drops `h-screen` and `overflow-hidden`, and the main pane drops `overflow-y-auto` and `overscroll-y-contain`. From `768px`, the rail and the aside use `position: sticky`. With `floating_top_nav: true` and `content_scroll: :behind`, the cards are sticky too. `.fp-layout-scroll` still sets `padding-top` from `--top-nav-float-clearance`. `html` sets `scroll-padding-top` from that same token. When the cards wrap, page mode writes the measured token on `document.documentElement`, so the anchor offset follows the band. When that mode has no `background` photo, the shell renders a fixed `.fp-layout-page-surface` in the page color. The layout generator writes `class="h-full"` on `html` and `body`. It does not write `overflow-hidden`. Leave `h-full`. It does not lock the window. Remove `overflow-hidden` from `html` and `body` when the host added that class. The generator does not. `scroll: :page` with `content_scroll: :below` raises `ArgumentError`. The corner slot and an account item are out of scope.
 

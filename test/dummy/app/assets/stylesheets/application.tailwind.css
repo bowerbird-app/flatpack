@@ -154,23 +154,6 @@
 		display: block;
 	}
 
-	[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"] {
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-	}
-
-	[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"]::-webkit-scrollbar {
-		display: none;
-		width: 0;
-		height: 0;
-	}
-
-	[data-flat-pack-sidebar-collapsed="true"] .flex-1.min-h-0.overflow-y-auto.overscroll-y-contain::-webkit-scrollbar {
-		display: none;
-		width: 0;
-		height: 0;
-	}
-
 	.fp-theme-demo-box {
 		min-height: 5rem;
 		padding: 0.75rem;

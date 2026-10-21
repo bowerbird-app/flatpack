@@ -196,6 +196,13 @@ en:
       close: Close
       previous: Previous page
       label: Page navigation
+    pane_scroll:
+      main: Content
+      aside: Side panel
+      sidebar: Sidebar
+      drawer: Drawer
+      modal: Dialog
+      messages: Messages
     pagination:
       loading_more: Loading more…
       label: Pagination
