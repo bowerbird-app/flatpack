@@ -802,7 +802,10 @@
 }
 
 /* Stacked aside sits under main on small screens. The shell grows with
-   the page so the panel is not clipped by the locked desktop grid. */
+   the page so the panel is not clipped by the locked desktop grid.
+   The card uses the same surface as the desktop floating aside. The gap
+   under main is --stack-gap-md. A close control and an aside trigger
+   stay hidden, because the panel cannot be dismissed. */
 @media (max-width: 767px) {
   [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] {
     height: auto;
@@ -820,6 +823,16 @@
     grid-row: 1;
   }
 
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] .fp-layout-content,
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] .fp-layout-column {
+    padding-bottom: 0;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] [data-flat-pack--sidebar-layout-target="asideToggle"],
+  .fp-sidebar-drawer[data-flat-pack-aside-mobile="stack"] [data-action*="closeAside"] {
+    display: none;
+  }
+
   /* Beats a host restatement of aside width. The card shares the page inset
      with the floating top nav. min-height stays on the shell, not this panel. */
   .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
@@ -835,17 +848,50 @@
     min-height: 0 !important;
     height: auto !important;
     margin-inline: var(--layout-content-inset, 1rem) !important;
-    margin-block: var(--sidebar-float-inset, 1rem) !important;
+    margin-top: var(--stack-gap-md) !important;
+    margin-bottom: var(--stack-gap-md) !important;
     z-index: auto;
     transform: none;
     translate: none;
     transition-property: none;
   }
 
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"][data-flat-pack-sidebar-floating="true"] {
+    background-color: var(--sidebar-float-background-color);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--sidebar-border-color);
+    border-radius: var(--sidebar-float-radius);
+    box-shadow: var(--sidebar-float-shadow);
+    overflow: hidden;
+  }
+
+  html[data-theme]:not([data-theme~="rounded"]) .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"][data-flat-pack-sidebar-floating="true"] {
+    border-radius: 0;
+  }
+
   .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > .fp-aside {
     height: auto !important;
     max-height: none;
     overflow: visible;
+    border-radius: inherit;
+  }
+}
+
+/* Phone drawers stay full height. On the rounded theme the inner edge
+   uses the floating panel radius. The outer edge stays flush. The rail
+   and the aside share that corner so they match. One backdrop covers both. */
+@media (max-width: 767px) {
+  html[data-theme~="rounded"] .fp-sidebar-drawer[data-mobile-drawer-side="left"]:not([data-flat-pack-aside-mobile="stack"]) {
+    border-top-right-radius: var(--sidebar-float-radius);
+    border-bottom-right-radius: var(--sidebar-float-radius);
+    overflow: hidden;
+  }
+
+  html[data-theme~="rounded"] .fp-sidebar-drawer[data-mobile-drawer-side="right"]:not([data-flat-pack-aside-mobile="stack"]) {
+    border-top-left-radius: var(--sidebar-float-radius);
+    border-bottom-left-radius: var(--sidebar-float-radius);
+    overflow: hidden;
   }
 }
 

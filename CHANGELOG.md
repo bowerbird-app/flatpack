@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The menu button gets `aria-expanded` and `aria-controls` when the rail drawer opens, closes, and on connect.
 - Page Nav wraps below `md` and can shrink, so a toolbar fits the floating top-nav card.
 - Phone drawers animate `translate` and `transform`. `prefers-reduced-motion: reduce` snaps the slide.
+- A stacked aside below `md` uses the floating panel fill, border, radius, and shadow. A close control and an aside trigger stay hidden there. The gap under main is `--stack-gap-md`.
+- On the rounded theme, a phone drawer rounds its inner edge with `--sidebar-float-radius`. The outer edge stays flush. The rail and the aside share that corner and one backdrop.
 
 ### Upgrade notes
 - `mobile:` on `aside` defaults to `:drawer`. Pass `:stack` to drop the phone drawer. There is no alias.
