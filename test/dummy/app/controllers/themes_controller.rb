@@ -124,7 +124,7 @@ class ThemesController < ApplicationController
         /*
          * Rounded keeps the charcoal palette and shifts --space-2 through --space-6.
          * Menu shells and the search result block axis are remapped here.
-         * Colour, radius, and shadow stay on :root.
+         * Colour stays on :root. This block sets the card border width and card shadow.
          */
 
         #{extract_selector_block(css, '[data-theme~="rounded"]')}

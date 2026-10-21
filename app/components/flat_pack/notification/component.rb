@@ -377,7 +377,7 @@ module FlatPack
           "focus:ring-2 focus:ring-inset",
           "focus:ring-[var(--color-primary)]",
           "focus:ring-offset-2",
-          "focus:ring-offset-[var(--surface-background-color)]"
+          "focus:ring-offset-[var(--button-focus-ring-offset-color)]"
         )
       end
 

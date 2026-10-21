@@ -1040,6 +1040,44 @@
   --card-inset: var(--card-padding-lg);
 }
 
+/* The page token is the default colour behind focus rings, swatch gaps, avatar
+ * rings, range thumb borders, and timeline marker dots. A raised surface
+ * resets those tokens to its own fill. --flat-pack-surface-fill is local.
+ */
+.fp-card[data-style="default"] { --flat-pack-surface-fill: var(--card-style-default-background); }
+.fp-card[data-style="shaded"] { --flat-pack-surface-fill: var(--card-style-shaded-background); }
+.fp-card[data-style="brand"] { --flat-pack-surface-fill: var(--card-style-brand-background); }
+.fp-card[data-style="brand_subtle"] { --flat-pack-surface-fill: var(--card-style-brand-subtle-background); }
+.fp-card[data-style="gradient"] { --flat-pack-surface-fill: var(--color-primary); }
+
+[data-flat-pack--modal-target="dialog"] { --flat-pack-surface-fill: var(--modal-surface-color); }
+[data-controller~="flat-pack--popover"] { --flat-pack-surface-fill: var(--popover-background-color); }
+[data-controller~="flat-pack--accordion"] { --flat-pack-surface-fill: var(--accordion-background-color); }
+[data-controller~="flat-pack--collapse"] { --flat-pack-surface-fill: var(--collapse-background-color); }
+[data-controller~="flat-pack--chat-layout"] { --flat-pack-surface-fill: var(--chat-background-color); }
+.fp-table { --flat-pack-surface-fill: var(--table-background-color); }
+.fp-menu-surface,
+[data-flat-pack--button-dropdown-target="menu"],
+[data-flat-pack--combobox-target="list"] { --flat-pack-surface-fill: var(--surface-background-color); }
+
+.fp-card,
+[data-flat-pack--modal-target="dialog"],
+[data-controller~="flat-pack--popover"],
+[data-controller~="flat-pack--accordion"],
+[data-controller~="flat-pack--collapse"],
+[data-controller~="flat-pack--chat-layout"],
+.fp-table,
+.fp-menu-surface,
+[data-flat-pack--button-dropdown-target="menu"],
+[data-flat-pack--combobox-target="list"] {
+  --button-focus-ring-offset-color: var(--flat-pack-surface-fill);
+  --avatar-group-ring-color: var(--flat-pack-surface-fill);
+  --color-swatch-ring-offset-color: var(--flat-pack-surface-fill);
+  --font-swatch-ring-offset-color: var(--flat-pack-surface-fill);
+  --range-thumb-border-color: var(--flat-pack-surface-fill);
+  --timeline-marker-icon-color: var(--flat-pack-surface-fill);
+}
+
 .fp-card-inner-radius {
   border-radius: var(--card-inner-radius);
 }

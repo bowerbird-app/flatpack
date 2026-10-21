@@ -23,9 +23,11 @@ module FlatPack
         render_inline(Component.new(style: :default))
         html = page.native.to_html
         assert_includes html, "[background:var(--card-style-default-background)]"
-        assert_includes html, "border border-[var(--card-border-color)]"
+        assert_includes html, "border-solid border-[length:var(--card-border-width)] border-[var(--card-border-color)]"
+        assert_includes html, "shadow-[var(--card-shadow)]"
         assert_includes html, 'data-style="default"'
         refute_includes html, "shadow-[var(--shadow-md)]"
+        refute_includes html, "border-2"
         refute_includes html, "fp-card-hover-"
         refute_includes html, "bg-[var(--card-background-color)]"
       end
@@ -64,8 +66,26 @@ module FlatPack
         render_inline(Component.new(shadow: :sm, border: :none))
         html = page.native.to_html
         assert_includes html, "shadow-[var(--shadow-sm)]"
+        assert_includes html, "border-0"
         refute_includes html, "border border-[var(--card-border-color)]"
+        refute_includes html, "border-[length:var(--card-border-width)]"
         refute_includes html, "border-2"
+        refute_includes html, "shadow-[var(--card-shadow)]"
+      end
+
+      def test_explicit_shadow_and_border_override_theme_tokens
+        render_inline(Component.new(shadow: :none, border: :default))
+        html = page.native.to_html
+        assert_includes html, "shadow-none"
+        assert_includes html, "border border-[var(--card-border-color)]"
+        refute_includes html, "shadow-[var(--card-shadow)]"
+        refute_includes html, "border-[length:var(--card-border-width)]"
+
+        render_inline(Component.new(shadow: :md, border: :strong))
+        strong = page.native.to_html
+        assert_includes strong, "shadow-[var(--shadow-md)]"
+        assert_includes strong, "border-2"
+        refute_includes strong, "shadow-[var(--card-shadow)]"
       end
 
       def test_renders_with_hover_subtle

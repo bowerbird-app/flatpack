@@ -444,7 +444,7 @@ module FlatPack
       end
 
       def dropdown_classes
-        "absolute z-10 mt-1 w-full hidden rounded-[var(--menu-radius)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
+        "fp-menu-surface absolute z-10 mt-1 w-full hidden rounded-[var(--menu-radius)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] shadow-lg"
       end
 
       def search_input_classes

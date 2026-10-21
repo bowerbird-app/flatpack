@@ -16,7 +16,7 @@ module FlatPack
       # "has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))]"
       # "has-[:focus-visible]:outline-none" "has-[:focus-visible]:ring-2"
       # "has-[:focus-visible]:ring-ring" "has-[:focus-visible]:ring-offset-2"
-      # "has-[:focus-visible]:ring-offset-[var(--surface-background-color)]"
+      # "has-[:focus-visible]:ring-offset-[var(--button-focus-ring-offset-color)]"
       # "has-[:focus-visible]:ring-[var(--button-focus-ring-color)]"
       # "has-[:focus-visible]:ring-offset-[var(--button-focus-ring-offset-color)]"
       # "has-[:disabled]:opacity-50" "has-[:disabled]:cursor-not-allowed"
@@ -472,7 +472,7 @@ module FlatPack
       def visual_option_focus_classes
         "has-[:focus-visible]:outline-none has-[:focus-visible]:ring-2 " \
           "has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 " \
-          "has-[:focus-visible]:ring-offset-[var(--surface-background-color)]"
+          "has-[:focus-visible]:ring-offset-[var(--button-focus-ring-offset-color)]"
       end
 
       def visual_option_disabled_classes

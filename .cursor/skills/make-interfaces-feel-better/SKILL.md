@@ -104,7 +104,7 @@ No custom animation on high-frequency interactions: the attention cost repeats o
 | --- | --- |
 | Same border radius on parent and child | Calculate `outerRadius = innerRadius + padding` |
 | Icons look off-center | Adjust optically with padding or fix SVG directly |
-| Border used only to fake elevation | Use layered `box-shadow` with transparency; keep structural and state borders |
+| Border used only to fake a shadow | Use layered `box-shadow` with transparency; keep structural and state borders |
 | Jarring staged entrance or contextual exit | Stagger infrequent entrances and keep context-preserving exits subtle |
 | Numbers cause layout shift | Apply `tabular-nums` |
 | Heavy text on macOS | Apply `antialiased` to root |

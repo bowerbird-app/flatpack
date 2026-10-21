@@ -24,12 +24,18 @@
  *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
  * [data-theme~="…"] named blocks override only tokens that differ. Dark and ocean inherit spacing and shape.
  * [data-theme~="rounded"] shifts space-2..space-6, those remapped shells, and the shape tokens above.
- *   It also sets the backdrop wash. That block is after [data-theme~="dark"], same specificity,
+ *   It also sets the backdrop wash, --card-border-width: 0, and --card-shadow: var(--shadow-sm).
+ *   That block is after [data-theme~="dark"], same specificity,
  *   so data-theme="rounded dark" keeps the rounded wash. Buttons, badges, and tabs become pills.
  *   Form controls use 1rem (16px). No radius step equals 1rem, so the value is literal.
  *   Chips and menu item highlights stay --radius-md.
  *   The rounded sidebar highlight is the float radius minus the item inset.
  *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
+ * The page token is the tinted canvas. The surface token is the raised layer.
+ *   Rounded does not set either colour. It keeps the light or dark palette it is paired with.
+ * --card-border-width and --card-shadow live on bare :root, then on [data-theme~="rounded"].
+ *   Do not restate them on [data-theme]. A dark region inside rounded would snap
+ *   the card back to a 1px border and no shadow.
  * Do not assign `--token: var(--token)` on rounded. html[data-theme~="rounded"] is :root, so that blanks the token.
  */
 
@@ -211,6 +217,8 @@
   --card-background-color: var(--card-background-color);
   --card-background-muted-color: var(--card-background-muted-color);
   --card-border-color: var(--card-border-color);
+  --card-border-width: var(--card-border-width);
+  --card-shadow: var(--card-shadow);
   --card-style-default-background: var(--card-style-default-background);
   --card-style-default-text-color: var(--card-style-default-text-color);
   --card-style-default-muted-text-color: var(--card-style-default-muted-text-color);
@@ -988,7 +996,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-error: var(--color-danger-background-color);
   --color-error-border: var(--color-danger-border-color);
   --color-info-border: var(--surface-border-color);
-  --surface-background-color: #f8f9fa;
+  /* Page is the tinted canvas. Surface is the raised layer. */
+  --surface-background-color: #fff;
   --surface-page-background-color: #f8f9fa;
   --surface-content-color: #333;
   --surface-muted-background-color: #e5e5e5;
@@ -1042,7 +1051,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --fab-shadow-active: var(--shadow-button-active);
   --fab-action-shadow: var(--shadow-md);
   --fab-focus-ring-color: var(--color-ring);
-  --fab-focus-ring-offset-color: var(--surface-background-color);
+  --fab-focus-ring-offset-color: var(--surface-page-background-color);
   --fab-size: 3.5rem;
   --fab-size-sm: 2.5rem;
   --fab-size-lg: 4rem;
@@ -1069,7 +1078,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --timeline-marker-success-background-color: var(--color-success-background-color);
   --timeline-marker-warning-background-color: var(--color-warning-background-color);
   --timeline-marker-danger-background-color: var(--color-danger-background-color);
-  --timeline-marker-icon-color: var(--surface-background-color);
+  --timeline-marker-icon-color: var(--surface-page-background-color);
   --timeline-line-color: var(--surface-border-color);
   --timeline-title-color: var(--surface-content-color);
   --timeline-timestamp-color: var(--surface-muted-content-color);
@@ -1102,7 +1111,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
-  --switch-thumb-background-color: var(--surface-background-color);
+  --switch-thumb-background-color: var(--surface-page-background-color);
   --switch-thumb-shadow: var(--shadow-sm);
   --switch-error-color: var(--color-error);
   --skeleton-background-color: var(--surface-muted-background-color);
@@ -1276,6 +1285,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --kbd-text-color: var(--surface-content-color);
   --kbd-muted-color: var(--surface-muted-content-color);
   --skip-link-background-color: var(--surface-content-color);
+  /* Inverse ink on the content-coloured chip. The chip is not a knockout of the page. */
   --skip-link-text-color: var(--surface-background-color);
   --stepper-current-color: var(--color-primary);
   --stepper-complete-color: var(--color-success-background-color);
@@ -1290,7 +1300,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --range-track-color: var(--surface-muted-background-color);
   --range-fill-color: var(--color-primary);
   --range-thumb-color: var(--color-primary);
-  --range-thumb-border-color: var(--surface-background-color);
+  --range-thumb-border-color: var(--surface-page-background-color);
   --range-thumb-shadow: var(--shadow-md);
   --range-thumb-size: 1.25rem;
   --range-track-height: 0.375rem;
@@ -1501,7 +1511,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --fp-button-text: var(--button-default-text-color);
   --fp-button-border: var(--button-default-border-color);
   --button-focus-ring-color: var(--color-ring);
-  --button-focus-ring-offset-color: var(--surface-background-color);
+  --button-focus-ring-offset-color: var(--surface-page-background-color);
   --button-disabled-opacity: 0.5;
   --button-shadow: var(--shadow-sm);
   --button-shadow-hover: var(--shadow-button);
@@ -1588,18 +1598,18 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --avatar-group-overlap-sm: -0.25rem;
   --avatar-group-overlap-md: -0.5rem;
   --avatar-group-overlap-lg: -0.75rem;
-  --avatar-group-ring-color: var(--surface-background-color);
+  --avatar-group-ring-color: var(--surface-page-background-color);
   --color-swatch-radius: 9999px;
   --color-swatch-border-color: var(--surface-border-color);
   --color-swatch-selected-ring-color: var(--color-ring);
-  --color-swatch-ring-offset-color: var(--surface-background-color);
+  --color-swatch-ring-offset-color: var(--surface-page-background-color);
   --color-swatch-shadow: var(--shadow-sm);
   --color-swatch-check-on-dark: oklch(1 0 0);
   --color-swatch-check-on-light: oklch(0.22 0 0);
   --font-swatch-radius: 9999px;
   --font-swatch-border-color: var(--surface-border-color);
   --font-swatch-selected-ring-color: var(--color-ring);
-  --font-swatch-ring-offset-color: var(--surface-background-color);
+  --font-swatch-ring-offset-color: var(--surface-page-background-color);
   --font-swatch-shadow: var(--shadow-sm);
   --font-swatch-background-color: var(--surface-background-color);
   --font-swatch-text-color: var(--surface-content-color);
@@ -1882,6 +1892,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --dropdown-item-radius: var(--radius-sm);
   --badge-radius: var(--radius-md);
   --tabs-pill-corner-radius: var(--radius-md);
+  --card-border-width: 1px;
+  --card-shadow: none;
   --card-radius: var(--radius-lg);
   --menu-radius: var(--radius-lg);
   --popover-radius: var(--menu-radius);
@@ -1907,6 +1919,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * The previous lift stays on --bottom-nav-item-active-color. Shadows change recipe (white hairline),
  * not just colour. Bottom nav and top-nav fill are inverted chrome with no surface equivalent.
  * Modal blur stays a dark-only exception (3px vs 4px light).
+ * The page is a step darker than the old shared value. The surface is a step lighter.
+ * Muted, hover, active, border, and muted text keep their steps above that surface
+ * so secondary, ghost, and alerts that mix those colours still read.
  */
 [data-theme~="dark"] {
   color-scheme: dark;
@@ -1919,19 +1934,19 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-warning-background-color: oklch(75% 0.183 55.934);
   --color-warning-hover-background-color: oklch(70.5% 0.213 47.604);
   --color-warning-text: oklch(0.15 0.01 250);
-  --surface-background-color: oklch(0.15 0.01 250);
-  --surface-page-background-color: oklch(0.15 0.01 250);
+  --surface-page-background-color: oklch(0.12 0.01 250);
+  --surface-background-color: oklch(0.19 0.015 250);
   --surface-content-color: oklch(0.95 0.01 250);
-  --surface-muted-background-color: oklch(0.22 0.02 250);
-  --surface-hover-background-color: oklch(0.22 0.02 250);
-  --surface-active-background-color: oklch(0.28 0.02 250);
-  --surface-muted-content-color: oklch(0.65 0.01 250);
-  --surface-border-color: oklch(0.30 0.02 250);
-  --surface-border-hover-color: oklch(0.40 0.03 250);
+  --surface-muted-background-color: oklch(0.26 0.02 250);
+  --surface-hover-background-color: oklch(0.26 0.02 250);
+  --surface-active-background-color: oklch(0.32 0.02 250);
+  --surface-muted-content-color: oklch(0.70 0.01 250);
+  --surface-border-color: oklch(0.34 0.02 250);
+  --surface-border-hover-color: oklch(0.44 0.03 250);
   --card-style-gradient-background: linear-gradient(145deg, color-mix(in oklab, var(--color-primary) 78%, white) 0%, var(--color-primary) 100%);
   --overlay-backdrop-color: rgb(0 0 0 / 0.65);
   --overlay-scrim-color: rgb(15 20 36 / 0.72);
-  --bottom-nav-background-color: oklch(0.11 0.01 250);
+  --bottom-nav-background-color: oklch(0.08 0.01 250);
   --bottom-nav-border-color: oklch(0.29 0.02 250);
   --bottom-nav-item-active-color: oklch(0.72 0.15 250);
   --bottom-nav-item-color: oklch(0.76 0.01 250);
@@ -1942,18 +1957,18 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --shadow-button: 0 0 15px 0px rgba(142, 142, 142, 0.15);
   --shadow-button-active: 0 0 8px 4px rgba(142, 142, 142, 0.15);
   --modal-backdrop-blur: 3px;
-  --sidebar-background-color: oklch(0.17 0.01 250);
-  --sidebar-float-background-color: oklch(0.22 0.02 250);
+  --sidebar-background-color: oklch(0.14 0.012 250);
+  --sidebar-float-background-color: oklch(0.23 0.02 250);
   --backdrop-tint-opacity: 0.78;
-  --top-nav-background-color: oklch(0.18 0.01 250);
+  --top-nav-background-color: oklch(0.15 0.012 250);
   --inline-edit-cue-color: color-mix(in oklab, var(--surface-content-color) 38%, transparent);
   --inline-edit-focus-color: var(--color-primary);
   --inline-edit-error-color: var(--color-error);
   --inline-edit-placeholder-color: var(--surface-muted-content-color);
   --inline-edit-placeholder-hover-color: color-mix(in oklab, var(--surface-content-color) 48%, var(--surface-muted-content-color));
   --inline-edit-hover-bg: color-mix(in oklab, var(--surface-content-color) 9%, transparent);
-  /* Hover and muted share one lightness, so the sent bubble would match incoming. */
-  --chat-message-outgoing-background-color: oklch(0.32 0.015 250);
+  /* Hover and muted share one lightness, so the sent bubble sits a step above them. */
+  --chat-message-outgoing-background-color: oklch(0.36 0.015 250);
 }
 
 /* Ocean theme — overrides only. Black mix target so a dark ocean stack presses toward black. */
@@ -1966,8 +1981,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --color-secondary-text: oklch(0.25 0.02 220);
   --color-ghost-hover: oklch(0.94 0.02 220);
   --color-ghost-text: oklch(0.35 0.02 220);
-  --surface-background-color: oklch(0.98 0.01 220);
-  --surface-page-background-color: oklch(0.98 0.01 220);
+  --surface-page-background-color: oklch(0.96 0.018 220);
+  --surface-background-color: #fff;
   --surface-content-color: oklch(0.20 0.02 220);
   --surface-muted-background-color: oklch(0.94 0.02 220);
   --surface-muted-content-color: oklch(0.45 0.02 220);
@@ -1985,7 +2000,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   /* Hover sits on the muted fill. A slightly deeper neutral keeps the sent bubble apart. */
   --chat-message-outgoing-background-color: oklch(0.90 0.025 220);
   --sidebar-group-item-indent: 0.875rem;
-  --avatar-status-ring-color: var(--surface-background-color);
+  --avatar-status-ring-color: var(--surface-page-background-color);
   --modal-backdrop-blur: 5px;
   --sidebar-background-color: oklch(0.96 0.02 220);
   --top-nav-background-color: oklch(0.97 0.01 220);
@@ -2020,6 +2035,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --badge-radius: var(--radius-full);
   --tabs-pill-corner-radius: var(--radius-full);
   --chat-composer-radius: var(--radius-full);
+  --card-border-width: 0;
+  --card-shadow: var(--shadow-sm);
   --card-radius: var(--radius-xl);
   --menu-radius: var(--radius-xl);
   --popover-radius: var(--radius-xl);

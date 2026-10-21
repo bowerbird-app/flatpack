@@ -57,8 +57,9 @@ module FlatPack
 
     test "cards do not rebind button or badge colours" do
       refute_includes @application, ".fp-card[data-tone="
-      refute_includes @application, '.fp-card[data-style="brand"]'
       refute_includes @application, "--button-primary-text-color: var(--color-primary);"
+      refute_match(/\.fp-card\[data-style="brand"\][^{]*\{[^}]*--(?:button|badge)-/, @application)
+      assert_includes @application, '.fp-card[data-style="brand"] { --flat-pack-surface-fill: var(--card-style-brand-background); }'
     end
   end
 end

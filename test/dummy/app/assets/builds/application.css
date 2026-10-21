@@ -2018,6 +2018,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-\[length\:var\(--card-border-width\)\] {
+    border-style: var(--tw-border-style);
+    border-width: var(--card-border-width);
+  }
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
@@ -2045,6 +2049,10 @@
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
+  }
+  .border-solid {
+    --tw-border-style: solid;
+    border-style: solid;
   }
   .border-\(--surface-border-color\) {
     border-color: var(--surface-border-color);
@@ -3951,6 +3959,10 @@
     --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
+  .shadow-\[var\(--card-shadow\)\] {
+    --tw-shadow: var(--card-shadow);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
   .shadow-\[var\(--color-swatch-shadow\)\] {
     --tw-shadow: var(--color-swatch-shadow);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -5098,9 +5110,9 @@
       --tw-ring-offset-shadow: var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
     }
   }
-  .focus\:ring-offset-\[var\(--surface-background-color\)\] {
+  .focus\:ring-offset-\[var\(--button-focus-ring-offset-color\)\] {
     &:focus {
-      --tw-ring-offset-color: var(--surface-background-color);
+      --tw-ring-offset-color: var(--button-focus-ring-offset-color);
     }
   }
   .focus\:outline-none {
@@ -5359,11 +5371,6 @@
   .has-\[\:focus-visible\]\:ring-offset-\[var\(--button-focus-ring-offset-color\)\] {
     &:has(*:is(:focus-visible)) {
       --tw-ring-offset-color: var(--button-focus-ring-offset-color);
-    }
-  }
-  .has-\[\:focus-visible\]\:ring-offset-\[var\(--surface-background-color\)\] {
-    &:has(*:is(:focus-visible)) {
-      --tw-ring-offset-color: var(--surface-background-color);
     }
   }
   .has-\[\:focus-visible\]\:outline-none {

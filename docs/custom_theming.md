@@ -12,7 +12,7 @@ FlatPack's theming surface has three layers:
 
 - `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
 - `:root, [data-theme] {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.). Repeating the wiring on `[data-theme]` re-resolves those aliases when `data-theme` is on `<body>` or another descendant, not only on `<html>`.
-- `[data-theme~="rounded"]` shifts `--space-2`…`--space-6`, a few menu shells, and component radii (buttons, inputs, badges, tabs, and the chat composer become `--radius-full`; chips, sidebar items, and menu items stay `--radius-md`; cards, menus, popovers, modals, alerts, and toasts become `--radius-xl`). It does not restate colour or the global `--radius-*` steps. Dark and ocean inherit the compact scale and the moderate shape.
+- `[data-theme~="rounded"]` shifts `--space-2`…`--space-6`, a few menu shells, and component radii (buttons, inputs, badges, tabs, and the chat composer become `--radius-full`; chips, sidebar items, and menu items stay `--radius-md`; cards, menus, popovers, modals, alerts, and toasts become `--radius-xl`). It sets `--card-border-width: 0` and `--card-shadow: var(--shadow-sm)`. It does not restate colour or the global `--radius-*` steps. Dark and ocean inherit the compact scale and the moderate shape. The default card is a 1px border and `--card-shadow: none`.
 - `[data-theme~="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
 - `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
@@ -152,8 +152,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --color-error-border: var(--color-danger-border-color);
   --color-info-border: var(--surface-border-color);
 
-  --surface-background-color: oklch(1.0 0 0);
-  --surface-page-background-color: oklch(1.0 0 0);
+  --surface-background-color: #fff;
+  --surface-page-background-color: #f8f9fa;
   --surface-content-color: oklch(0.20 0.01 250);
 
   --surface-muted-background-color: oklch(0.96 0.01 250);
@@ -202,7 +202,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --fab-shadow-active: var(--shadow-button-active);
   --fab-action-shadow: var(--shadow-md);
   --fab-focus-ring-color: var(--color-ring);
-  --fab-focus-ring-offset-color: var(--surface-background-color);
+  --fab-focus-ring-offset-color: var(--surface-page-background-color);
   --fab-size: 3.5rem;
   --fab-size-sm: 2.5rem;
   --fab-size-lg: 4rem;
@@ -223,7 +223,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --timeline-marker-success-background-color: var(--color-success-background-color);
   --timeline-marker-warning-background-color: var(--color-warning-background-color);
   --timeline-marker-danger-background-color: var(--color-danger-background-color);
-  --timeline-marker-icon-color: var(--surface-background-color);
+  --timeline-marker-icon-color: var(--surface-page-background-color);
   --timeline-line-color: var(--surface-border-color);
   --timeline-title-color: var(--surface-content-color);
   --timeline-timestamp-color: var(--surface-muted-content-color);
@@ -256,7 +256,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --switch-track-checked-background-color: var(--color-primary);
   --switch-focus-ring-color: var(--color-ring);
   --switch-label-color: var(--surface-content-color);
-  --switch-thumb-background-color: var(--surface-background-color);
+  --switch-thumb-background-color: var(--surface-page-background-color);
   --switch-thumb-shadow: var(--shadow-sm);
   --switch-error-color: var(--color-error);
   --skeleton-background-color: var(--surface-muted-background-color);
@@ -347,6 +347,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --card-background-color: var(--surface-background-color);
   --card-background-muted-color: var(--surface-muted-background-color);
   --card-border-color: var(--surface-border-color);
+  --card-border-width: 1px;
+  --card-shadow: none;
   --card-style-default-background: var(--card-background-color);
   --card-style-default-text-color: var(--surface-content-color);
   --card-style-default-muted-text-color: var(--surface-muted-content-color);
@@ -498,7 +500,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --range-track-color: var(--surface-muted-background-color);
   --range-fill-color: var(--color-primary);
   --range-thumb-color: var(--color-primary);
-  --range-thumb-border-color: var(--surface-background-color);
+  --range-thumb-border-color: var(--surface-page-background-color);
   --range-thumb-shadow: var(--shadow-md);
   --range-thumb-size: 1.25rem;
   --range-track-height: 0.375rem;
@@ -689,7 +691,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --button-border-radius: var(--radius-md);
   --button-round-border-radius: var(--radius-full);
   --button-focus-ring-color: var(--color-ring);
-  --button-focus-ring-offset-color: var(--surface-background-color);
+  --button-focus-ring-offset-color: var(--surface-page-background-color);
   --button-disabled-opacity: 0.5;
   --button-shadow: var(--shadow-sm);
   --button-shadow-hover: var(--shadow-button);
@@ -775,7 +777,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --avatar-group-overlap-sm: -0.25rem;
   --avatar-group-overlap-md: -0.5rem;
   --avatar-group-overlap-lg: -0.75rem;
-  --avatar-group-ring-color: var(--surface-background-color);
+  --avatar-group-ring-color: var(--surface-page-background-color);
   --top-nav-background-color: oklch(1.0 0 0);
   --top-nav-border-color: transparent;
   --top-nav-item-text-color: oklch(0.45 0.01 250);

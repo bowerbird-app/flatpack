@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.291] - 2026-10-21
+
+### Changed
+- `--surface-page-background-color` is the tinted canvas and `--surface-background-color` is the raised layer. They no longer match. Default page stays `#f8f9fa` and the surface is `#fff`. Dark page is `oklch(0.12 0.01 250)` and the surface is `oklch(0.19 0.015 250)`. Ocean page is `oklch(0.96 0.018 220)` and the surface is `#fff`. Rounded keeps whichever light or dark palette it is paired with.
+- Cards use `--card-border-width` and `--card-shadow`. The default is a 1px border and no shadow. Rounded is no border and `--shadow-sm`. Omit `border:` and `shadow:` to take those tokens. Pass `:none`, `:default`, or `:strong`, and `:none`, `:sm`, or `:md`, to override one card.
+- Focus ring offsets, the avatar group ring, swatch ring gaps, the range thumb border, the timeline marker dot, and the switch thumb follow the page. A card, modal, popover, menu, table, accordion, collapse, or chat resets the ring, gap, and marker dot to its own fill. Skip-link text stays the surface colour, because that chip uses it as inverse ink.
+
+### Upgrade notes
+- Hosts that painted a card with no border and no shadow now get the theme edge. On the default palette that is still a 1px border. On rounded it is a soft shadow and no border.
+- New tokens: `--card-border-width`, `--card-shadow`. Set them on a host theme when the card edge should differ. Do not restate them on a nested `[data-theme]` colour block, or a dark region inside rounded snaps back to a 1px border.
+- Dark muted, hover, active, border, and muted text moved up with the surface so secondary, ghost hover, and alerts still read. Reload kit CSS. Do not rebuild Tailwind for the colour tokens. A Tailwind rebuild is needed only if the host scans `shadow-[var(--card-shadow)]` and `border-[length:var(--card-border-width)]` itself. The gem classes are in the component source.
+- Redeploy so `meta.gem_version` shows `0.1.291`.
+
 ## [0.1.290] - 2026-10-21
 
 ### Added
