@@ -20,6 +20,7 @@ Use Card to group related content in a consistent surface with optional hover an
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
+| `inset` | Symbol, nil | `nil` | no | Sets `--card-inset` without adding padding. `nil` follows `padding:` exactly. `:sm`, `:md`, and `:lg` map to `--card-padding-sm`, `--card-padding-md`, and `--card-padding-lg` through `data-fp-card-inset`. Unknown values raise `ArgumentError`. |
 | `radius` | Symbol | `:default` | no | `:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`, `:xxxl`. `:default` keeps the theme `--card-radius` and adds no markup. Other values set inline `--card-radius`. Independent of `padding:`. Invalid values raise `ArgumentError`. The inline value carries through to `--media-radius` and `--card-inner-radius`. `FlatPack::Card::Stat::Component` does not take `radius:`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
@@ -30,7 +31,7 @@ Behavior note:
 - The root sets `data-fp-card-padding` to the card's `padding:` step (`none`, `sm`, `md`, or `lg`), including when slots move the padding utility onto the header, footer, or media slot. `FlatPack::Card::Stat::Component` publishes `md`, which is the padding it already uses.
 
 ## Inner radius
-Kit CSS sets `--card-inset` from `data-fp-card-padding` (`0px`, or the matching `--card-padding-*` token) and computes this on `.fp-card`:
+Kit CSS sets `--card-inset` from `data-fp-card-padding` (`0px`, or the matching `--card-padding-*` token). `inset:` writes `data-fp-card-inset` and those rules come after the padding rules, so they replace `--card-inset` only. Omit `inset:` and the attribute is absent. The radius is computed on `.fp-card`:
 
 ```css
 --card-inner-radius: max(0px, calc(var(--card-radius) - var(--card-inset)));
@@ -43,6 +44,22 @@ Children inherit that length. A nested card sets its own step, so its children u
 The media slot stays on the card corner. The shell's `overflow-hidden` and `rounded-[var(--card-radius)]` clip it. The slot has no radius argument.
 
 At a 16px root the default card radius is 12px. Padding sm, md, and lg is 12px, 16px, and 24px, so the inner radius is 0. The rounded theme uses a 20px card radius and padding of 16px, 20px, and 28px, so only small padding leaves a 4px curve. Padding none keeps the full card radius.
+
+A photo with its own inset uses `padding: :none` and `inset:` so `radius: :card_inner` follows that inset. Pad the inner wrapper with the same token. `inset:` adds no padding of its own.
+
+```erb
+<%= render FlatPack::Card::Component.new(padding: :none, inset: :sm) do %>
+  <div class="p-[var(--card-padding-sm)]">
+    <%= render FlatPack::Media::Component.new(
+      src: photo_path,
+      alt: "Packaging",
+      width: 800,
+      height: 320,
+      radius: :card_inner
+    ) %>
+  </div>
+<% end %>
+```
 
 ```erb
 <%= render FlatPack::Card::Component.new(padding: :md) do %>

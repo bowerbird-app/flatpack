@@ -937,6 +937,18 @@
   --card-inset: var(--card-padding-lg);
 }
 
+.fp-card[data-fp-card-inset="sm"] {
+  --card-inset: var(--card-padding-sm);
+}
+
+.fp-card[data-fp-card-inset="md"] {
+  --card-inset: var(--card-padding-md);
+}
+
+.fp-card[data-fp-card-inset="lg"] {
+  --card-inset: var(--card-padding-lg);
+}
+
 .fp-card-inner-radius {
   border-radius: var(--card-inner-radius);
 }

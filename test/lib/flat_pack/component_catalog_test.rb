@@ -73,7 +73,9 @@ module FlatPack
       refute_includes style.fetch(:enum), "partner"
       assert_equal "string", style.fetch(:type)
       assert_equal false, style.fetch(:required)
-      assert_equal FlatPack::Button::Component::SIZES.keys.map(&:to_s), size.fetch(:enum)
+      assert_equal FlatPack::Button::Component::PUBLIC_SIZES.map(&:to_s), size.fetch(:enum)
+      assert_equal %w[sm md lg xs], size.fetch(:enum)
+      refute_includes FlatPack::Button::Component::SIZES.keys.map(&:to_s), "xs"
       refute(payload.fetch(:parameters).any? { |parameter| parameter.fetch(:name) =~ /icon_only_size/i })
     end
 
@@ -321,6 +323,21 @@ module FlatPack
         slots
       )
       refute(slots.any? { |slot| slot.fetch(:name).end_with?("_slot") })
+    end
+
+    test "show Card binds INSETS to inset and leaves the default unset" do
+      payload = FlatPack::ComponentCatalog.show("Card::Component")
+      inset = parameter_named(payload, "inset")
+
+      assert_equal %w[sm md lg], inset.fetch(:enum)
+      assert_nil inset.fetch(:default)
+    end
+
+    test "show Button Dropdown advertises icon-only xs" do
+      payload = FlatPack::ComponentCatalog.show("Button::Dropdown::Component")
+      size = parameter_named(payload, "size")
+
+      assert_equal %w[sm md lg xs], size.fetch(:enum)
     end
 
     test "show Button advertises the trailing slot and Avatar has none" do

@@ -608,6 +608,43 @@ module FlatPack
         assert_equal "color: red; --card-radius: var(--radius-lg)", style
       end
 
+      def test_default_card_omits_inset
+        render_inline(Component.new) { "Hi" }
+
+        html = page.native.to_html
+        assert_equal "md", page.find(".fp-card")["data-fp-card-padding"]
+        refute_includes html, "data-fp-card-inset"
+        assert_includes html, "p-[var(--card-padding-md)]"
+      end
+
+      def test_inset_sets_the_data_attribute_without_padding
+        render_inline(Component.new(padding: :none, inset: :sm)) { "Hi" }
+
+        card = page.find(".fp-card")
+        html = page.native.to_html
+        assert_equal "none", card["data-fp-card-padding"]
+        assert_equal "sm", card["data-fp-card-inset"]
+        refute_includes html, "p-[var(--card-padding"
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        padding_rule = css.index('.fp-card[data-fp-card-padding="lg"]')
+        inset_rule = css.index('.fp-card[data-fp-card-inset="sm"]')
+        assert padding_rule < inset_rule
+        assert_includes css, '.fp-card[data-fp-card-inset="sm"]'
+        assert_includes css, "--card-inset: var(--card-padding-sm);"
+        assert_includes css, '.fp-card[data-fp-card-inset="md"]'
+        assert_includes css, "--card-inset: var(--card-padding-md);"
+        assert_includes css, '.fp-card[data-fp-card-inset="lg"]'
+        assert_includes css, "--card-inset: var(--card-padding-lg);"
+      end
+
+      def test_rejects_unknown_inset
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(inset: :none)) { "Hi" }
+        end
+
+        assert_match(/Invalid inset: none/, error.message)
+      end
+
       def test_rejects_unknown_radius
         error = assert_raises(ArgumentError) do
           render_inline(Component.new(radius: :bogus))
