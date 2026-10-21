@@ -20,12 +20,12 @@ module FlatPack
 
       # Style Tests
       def test_renders_with_style_default
-        render_inline(Component.new(style: :default))
+        render_inline(Component.new(background: :default))
         html = page.native.to_html
-        assert_includes html, "[background:var(--card-style-default-background)]"
+        assert_includes html, "[background:var(--card-background-default)]"
         assert_includes html, "border-solid border-[length:var(--card-border-width)] border-[var(--card-border-color)]"
         assert_includes html, "shadow-[var(--card-shadow)]"
-        assert_includes html, 'data-style="default"'
+        assert_includes html, 'data-background="default"'
         refute_includes html, "shadow-[var(--shadow-md)]"
         refute_includes html, "border-2"
         refute_includes html, "fp-card-hover-"
@@ -33,33 +33,33 @@ module FlatPack
       end
 
       def test_renders_shaded_brand_and_gradient_styles
-        render_inline(Component.new(style: :shaded))
+        render_inline(Component.new(background: :shaded))
         shaded = page.native.to_html
-        assert_includes shaded, "[background:var(--card-style-shaded-background)]"
-        assert_includes shaded, "[--surface-content-color:var(--card-style-shaded-text-color)]"
-        assert_includes shaded, "[--surface-muted-content-color:var(--card-style-shaded-muted-text-color)]"
-        assert_includes shaded, "[--card-border-color:var(--card-style-shaded-border-color)]"
-        assert_includes shaded, 'data-style="shaded"'
+        assert_includes shaded, "[background:var(--card-background-shaded)]"
+        assert_includes shaded, "[--surface-content-color:var(--card-background-shaded-text-color)]"
+        assert_includes shaded, "[--surface-muted-content-color:var(--card-background-shaded-muted-text-color)]"
+        assert_includes shaded, "[--card-border-color:var(--card-background-shaded-border-color)]"
+        assert_includes shaded, 'data-background="shaded"'
 
-        render_inline(Component.new(style: :brand, shadow: :md))
+        render_inline(Component.new(background: :brand, shadow: :md))
         brand = page.native.to_html
-        assert_includes brand, "[background:var(--card-style-brand-background)]"
-        assert_includes brand, "[--surface-content-color:var(--card-style-brand-text-color)]"
-        assert_includes brand, "[--surface-border-color:var(--card-style-brand-border-color)]"
+        assert_includes brand, "[background:var(--card-background-brand)]"
+        assert_includes brand, "[--surface-content-color:var(--card-background-brand-text-color)]"
+        assert_includes brand, "[--surface-border-color:var(--card-background-brand-border-color)]"
         assert_includes brand, "shadow-[var(--shadow-md)]"
-        assert_includes brand, 'data-style="brand"'
+        assert_includes brand, 'data-background="brand"'
         refute_includes brand, "bg-[var(--card-background-color)]"
 
-        render_inline(Component.new(style: :gradient))
+        render_inline(Component.new(background: :gradient))
         gradient = page.native.to_html
-        assert_includes gradient, "[background:var(--card-style-gradient-background)]"
-        assert_includes gradient, 'data-style="gradient"'
+        assert_includes gradient, "[background:var(--card-background-gradient)]"
+        assert_includes gradient, 'data-background="gradient"'
 
-        render_inline(Component.new(style: :brand_subtle, border: :strong))
+        render_inline(Component.new(background: :brand_subtle, border: :strong))
         subtle = page.native.to_html
-        assert_includes subtle, "[background:var(--card-style-brand-subtle-background)]"
+        assert_includes subtle, "[background:var(--card-background-brand-subtle)]"
         assert_includes subtle, "border-2"
-        assert_includes subtle, 'data-style="brand_subtle"'
+        assert_includes subtle, 'data-background="brand_subtle"'
       end
 
       def test_shadow_and_border_are_independent_of_style
@@ -107,17 +107,33 @@ module FlatPack
       def test_rejects_removed_structural_styles
         %i[flat elevated outlined interactive list].each do |style|
           error = assert_raises(ArgumentError) do
-            render_inline(Component.new(style: style))
+            render_inline(Component.new(background: style))
           end
-          assert_includes error.message, "Invalid style"
+          assert_includes error.message, "Invalid background"
         end
       end
 
-      def test_validates_style
+      def test_rejects_removed_style_keyword
         error = assert_raises(ArgumentError) do
-          render_inline(Component.new(style: :invalid))
+          render_inline(Component.new(style: :brand))
         end
-        assert_includes error.message, "Invalid style"
+        assert_includes error.message, "unknown keyword: :style"
+      end
+
+      def test_validates_background
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(background: :invalid))
+        end
+        assert_includes error.message, "Invalid background"
+      end
+
+      def test_none_background_is_transparent_and_inherits_text
+        render_inline(Component.new(background: :none))
+        html = page.native.to_html
+        assert_includes html, "[background:var(--card-background-none)]"
+        assert_includes html, 'data-background="none"'
+        refute_includes html, "--surface-content-color:var(--card-background-none"
+        refute_includes html, "--card-border-color:var(--card-background-none"
       end
 
       def test_validates_hover
@@ -163,7 +179,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "background-color: transparent"
-        assert_includes html, "[background:var(--card-style-default-background)]"
+        assert_includes html, "[background:var(--card-background-default)]"
         refute_includes html, "--card-background-color:"
       end
 
@@ -176,7 +192,7 @@ module FlatPack
       end
 
       def test_brand_style_rescopes_surface_tokens
-        render_inline(Component.new(style: :brand)) do |card|
+        render_inline(Component.new(background: :brand)) do |card|
           card.footer do
             <<~HTML.html_safe
               <button class="bg-[var(--button-primary-background-color)] text-[var(--button-primary-text-color)]">
@@ -187,9 +203,9 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "[--surface-content-color:var(--card-style-brand-text-color)]"
-        assert_includes html, "[--surface-muted-content-color:var(--card-style-brand-muted-text-color)]"
-        assert_includes html, "[--surface-border-color:var(--card-style-brand-border-color)]"
+        assert_includes html, "[--surface-content-color:var(--card-background-brand-text-color)]"
+        assert_includes html, "[--surface-muted-content-color:var(--card-background-brand-muted-text-color)]"
+        assert_includes html, "[--surface-border-color:var(--card-background-brand-border-color)]"
         assert_includes html, "bg-[var(--button-primary-background-color)]"
         refute_includes html, "#101820"
       end
@@ -516,13 +532,13 @@ module FlatPack
           label: "Monthly revenue",
           trend: "+4%",
           trend_direction: :up,
-          style: :brand
+          background: :brand
         ))
 
         html = page.native.to_html
-        assert_includes html, "[background:var(--card-style-brand-background)]"
-        assert_includes html, "[--surface-content-color:var(--card-style-brand-text-color)]"
-        assert_includes html, 'data-style="brand"'
+        assert_includes html, "[background:var(--card-background-brand)]"
+        assert_includes html, "[--surface-content-color:var(--card-background-brand-text-color)]"
+        assert_includes html, 'data-background="brand"'
         assert_includes html, "fp-card"
       end
 
@@ -533,10 +549,10 @@ module FlatPack
             label: "Count",
             trend: "0",
             trend_direction: :up,
-            style: :flat
+            background: :flat
           ))
         end
-        assert_includes error.message, "Invalid style"
+        assert_includes error.message, "Invalid background"
       end
 
       # System Arguments Tests
@@ -802,8 +818,8 @@ module FlatPack
       end
 
       def test_multiple_style_variants_apply_correctly
-        [:default, :shaded, :brand, :brand_subtle, :gradient].each do |style|
-          render_inline(Component.new(style: style))
+        [:default, :none, :shaded, :brand, :brand_subtle, :gradient].each do |style|
+          render_inline(Component.new(background: style))
           # Each style should render without errors
           assert_selector "div"
         end

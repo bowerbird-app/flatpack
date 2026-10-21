@@ -4,7 +4,7 @@
 Render a flexible content container with optional structured header, body, footer, and media sections.
 
 ## When to use
-Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Colour fill is `style:`. Shadow, border, and hover are separate. Do not pass raw colours.
+Use Card to group related content in a consistent surface with optional hover and clickable behavior. Keep labels in sentence case. Colour fill is `background:`. Shadow, border, and hover are separate. Do not pass raw colours.
 
 ## Class
 - Primary: `FlatPack::Card::Component`
@@ -13,9 +13,9 @@ Use Card to group related content in a consistent surface with optional hover an
 ## Props
 | name | type | default | required | description |
 |---|---|---|---|---|
-| `style` | Symbol | `:default` | no | Colour fill: `:default` (surface), `:shaded` (soft grey), `:brand` (solid brand colour and contrasting text), `:brand_subtle` (light brand tint and normal text), `:gradient` (brand gradient and contrasting text). Sets background, text, muted text, and border colour only. Invalid values raise `ArgumentError`. |
+| `background` | Symbol | `:default` | no | Colour fill: `:default` (theme surface), `:none` (transparent, so the page, a Backdrop, or a parent surface shows through), `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Each fill sets its text and muted text. `:none` leaves those colours to inherit. Unknown values raise `ArgumentError`. `style:` is not accepted. |
 | `shadow` | Symbol, nil | `nil` | no | Omitted uses `--card-shadow`. `:none`, `:sm`, and `:md` override that token. `:sm` and `:md` use `--shadow-sm` and `--shadow-md`, which dark themes already draw larger. Invalid values raise `ArgumentError`. |
-| `border` | Symbol, nil | `nil` | no | Omitted uses `--card-border-width` and `--card-border-color`. `:none` (0), `:default` (1px), and `:strong` (2px) override the width. The colour comes from the style. Invalid values raise `ArgumentError`. |
+| `border` | Symbol, nil | `nil` | no | Omitted uses `--card-border-width` and `--card-border-color`. `:none` (0), `:default` (1px), and `:strong` (2px) override the width. The colour comes from the background. Invalid values raise `ArgumentError`. |
 | `hover` | Symbol | `:none` | no | `:none`, `:subtle`, `:strong`. Subtle washes the fill. Strong lifts the shadow and shifts the border colour. Invalid values raise `ArgumentError`. |
 | `clickable` | Boolean | `false` | no | When true and `href` is present, wraps card in a link element. |
 | `href` | String | `nil` | no | Link target for clickable cards. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
@@ -100,29 +100,30 @@ Slot props:
 | `media.padding` | Symbol | `:md` | no | Media inset spacing: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 
 ## Variants
-- Style variants: `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`.
+- Background: `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`.
 - Shadow variants: `:none`, `:sm`, `:md`.
 - Border variants: `:none`, `:default`, `:strong`.
 - Hover variants: `:none`, `:subtle`, `:strong`.
 
-## Styles
-Each style is four theme tokens. `background` is a `background` value so a gradient can live there. Host themes set the colours. The card does not take a raw colour.
+## Backgrounds
+Each background is four theme tokens. The fill token is a CSS `background`, so a gradient can live there. Host themes set the colours. The card does not take a raw colour.
 
-The card writes those tokens back onto `--surface-content-color`, `--surface-muted-content-color`, `--surface-border-color`, and `--card-border-color` for its subtree. Nested text and icons that read those tokens stay with the style. Button and badge colours stay the host's choice.
+Filled backgrounds write text, muted text, and border colour back onto `--surface-content-color`, `--surface-muted-content-color`, `--surface-border-color`, and `--card-border-color` for the subtree. Nested text and icons that read those tokens stay with the fill. Button and badge colours stay the host's choice. `:none` paints `--card-background-none` (`transparent`) and does not rebind text, so the surrounding colours show through.
 
-| style | background | text | muted text | border |
+| background | fill | text | muted text | border |
 |---|---|---|---|---|
-| `:default` | `--card-style-default-background` | `--card-style-default-text-color` | `--card-style-default-muted-text-color` | `--card-style-default-border-color` |
-| `:shaded` | `--card-style-shaded-background` | `--card-style-shaded-text-color` | `--card-style-shaded-muted-text-color` | `--card-style-shaded-border-color` |
-| `:brand` | `--card-style-brand-background` | `--card-style-brand-text-color` | `--card-style-brand-muted-text-color` | `--card-style-brand-border-color` |
-| `:brand_subtle` | `--card-style-brand-subtle-background` | `--card-style-brand-subtle-text-color` | `--card-style-brand-subtle-muted-text-color` | `--card-style-brand-subtle-border-color` |
-| `:gradient` | `--card-style-gradient-background` | `--card-style-gradient-text-color` | `--card-style-gradient-muted-text-color` | `--card-style-gradient-border-color` |
+| `:default` | `--card-background-default` | `--card-background-default-text-color` | `--card-background-default-muted-text-color` | `--card-background-default-border-color` |
+| `:none` | `--card-background-none` | inherits | inherits | `--card-background-none-border-color` |
+| `:shaded` | `--card-background-shaded` | `--card-background-shaded-text-color` | `--card-background-shaded-muted-text-color` | `--card-background-shaded-border-color` |
+| `:brand` | `--card-background-brand` | `--card-background-brand-text-color` | `--card-background-brand-muted-text-color` | `--card-background-brand-border-color` |
+| `:brand_subtle` | `--card-background-brand-subtle` | `--card-background-brand-subtle-text-color` | `--card-background-brand-subtle-muted-text-color` | `--card-background-brand-subtle-border-color` |
+| `:gradient` | `--card-background-gradient` | `--card-background-gradient-text-color` | `--card-background-gradient-muted-text-color` | `--card-background-gradient-border-color` |
 
-Light mode defines every colour token on `:root, [data-theme]`. Default follows `--card-background-color`, which is the raised surface (`#fff` on the default palette). Shaded follows `--card-background-muted-color`. Brand follows `--color-primary` and `--color-primary-text`. Soft brand mixes the primary into the surface. The gradient runs from `--color-primary` toward a darker mix so contrasting text stays readable. Dark mode overrides only `--card-style-gradient-background`, lifting the gradient toward white so dark primary text still reads. The other styles follow the dark semantic tokens.
+Light mode defines every colour token on `:root, [data-theme]`. Default follows `--card-background-color`, which is the raised surface (`#fff` on the default palette). Shaded follows `--card-background-muted-color`. Brand follows `--color-primary` and `--color-primary-text`. Soft brand mixes the primary into the surface. The gradient runs from `--color-primary` toward a darker mix so contrasting text stays readable. Dark mode overrides only `--card-background-gradient`, lifting the gradient toward white so dark primary text still reads. `:none` is `transparent`. The other fills follow the dark semantic tokens.
 
-The default edge is `--card-border-width` and `--card-shadow`. Those live on bare `:root` (`1px` and `none`) and on `[data-theme~="rounded"]` (`0` and `var(--shadow-sm)`). Dark and ocean do not set them. Omit `border:` and `shadow:` to use the theme. Pass either argument to override that one card.
+The default edge is `--card-border-width` and `--card-shadow`. Those live on bare `:root` (`1px` and `none`) and on `[data-theme~="rounded"]` (`0` and `var(--shadow-sm)`). Dark and ocean do not set them. Omit `border:` and `shadow:` to use the theme. Pass either argument to override that one card. A border-only card is `background: :none`. On rounded, pass `border: :default` as well, because the theme width is `0`.
 
-`FlatPack::Card::Stat::Component` takes the same `style:` and paints that fill on itself. It does not take `radius:`.
+`FlatPack::Card::Stat::Component` takes the same `background:` and paints that fill on itself. It does not take `radius:`.
 
 ## Example
 ```erb
@@ -138,7 +139,7 @@ The default edge is `--card-border-width` and `--card-shadow`. Those live on bar
 ```
 
 ```erb
-<%= render FlatPack::Card::Component.new(style: :brand, shadow: :md) do |card| %>
+<%= render FlatPack::Card::Component.new(background: :brand, shadow: :md) do |card| %>
   <% card.body do %>
     <h3 class="text-lg font-semibold">Paid plan</h3>
     <p class="text-sm text-[var(--surface-muted-content-color)]">Renews on the first.</p>
@@ -183,7 +184,7 @@ The default edge is `--card-border-width` and `--card-shadow`. Those live on bar
   label: "Monthly revenue",
   trend: "+4%",
   trend_direction: :up,
-  style: :shaded
+  background: :shaded
 ) %>
 ```
 

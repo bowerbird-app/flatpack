@@ -7,7 +7,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Concept | Param | Use for |
 | --- | --- | --- |
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
-| Card colour fill | `style` | Card and Card Stat. `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. Card `shadow`, `border`, and `hover` are separate. |
+| Card colour fill | `background` | Card and Card Stat. `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. `:none` is transparent and inherits text. Card `shadow`, `border`, and `hover` are separate. |
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
@@ -34,7 +34,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Table column floor and cap | `min_width` / `max_width` | On a column, CSS lengths such as `"8rem"`. Table `min_width:` stays the scroll floor (`:none`, `:sm`, `:md`, `:lg`, or a `min-w-*` class). |
 | Table column wrapping | `wrap` | `FlatPack::Table::Column` only. `:wrap` (default), `:nowrap`, `:truncate`. Truncated cells expose the full text in `title`. |
 | Table column visibility | `hide_below` | `FlatPack::Table::Column` only. `:sm`, `:md`, `:lg`, `:xl`. Hides that header and its cells below the breakpoint. The column stays in `colspan`. |
-| Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param as Button, Badge, and Card. |
+| Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param name as Button and Badge. Card fill is `background`. |
 | Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
 | Media frame ratio | `aspect_ratio` | Card media, Carousel, and Video preview. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview defaults to `"16/9"`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
@@ -130,7 +130,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 
 ## Do not mix
 
-- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
+- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.

@@ -5,7 +5,7 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <% GalleryEditorDemo.images.each do |image| %>
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3", padding: :none) do %>
           <%= image_tag image.fetch(:src), alt: image.fetch(:alt), class: "w-full h-full object-cover" %>
         <% end %>

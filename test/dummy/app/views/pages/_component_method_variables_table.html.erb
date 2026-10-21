@@ -255,9 +255,9 @@
     },
     card: {
       label: "Card",
-      method_call: "render FlatPack::Card::Component.new(style: :default, padding: :md) do |card| ... end",
+      method_call: "render FlatPack::Card::Component.new(background: :default, padding: :md) do |card| ... end",
       variables: [
-        { variable: "style", accepts: ":default, :shaded, :brand, :brand_subtle, :gradient", example: "style: :brand" },
+        { variable: "background", accepts: ":default, :none, :shaded, :brand, :brand_subtle, :gradient", example: "background: :brand" },
         { variable: "shadow", accepts: ":none, :sm, :md", example: "shadow: :md" },
         { variable: "border", accepts: ":none, :default, :strong", example: "border: :strong" },
         { variable: "hover", accepts: ":none, :subtle, :strong", example: "hover: :subtle" },

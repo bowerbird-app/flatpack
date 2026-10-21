@@ -104,7 +104,7 @@ module FlatPack
       }.freeze
 
       def initialize(
-        style: :default,
+        background: :default,
         shadow: nil,
         border: nil,
         hover: :none,
@@ -117,7 +117,7 @@ module FlatPack
       )
         reject_removed_theme!(system_arguments)
         super(**system_arguments)
-        @style = style.to_sym
+        @background = background.to_sym
         @shadow = shadow&.to_sym
         @border = border&.to_sym
         @hover = (hover || :none).to_sym
@@ -134,7 +134,7 @@ module FlatPack
           @href = nil
         end
 
-        validate_style!
+        validate_background!
         validate_shadow!
         validate_border!
         validate_hover!
@@ -188,7 +188,7 @@ module FlatPack
           "flex",
           "flex-col",
           "text-[var(--surface-content-color)]",
-          style_classes,
+          background_classes,
           shadow_classes,
           border_classes,
           hover_classes,
@@ -241,8 +241,8 @@ module FlatPack
         {padding: @padding}.merge(args)
       end
 
-      def style_classes
-        Style.classes_for(@style)
+      def background_classes
+        Background.classes_for(@background)
       end
 
       def shadow_classes
@@ -265,10 +265,10 @@ module FlatPack
         HOVERS.fetch(@hover)
       end
 
-      def validate_style!
-        return if Style::CLASSES.key?(@style)
+      def validate_background!
+        return if Background::CLASSES.key?(@background)
 
-        raise ArgumentError, "Invalid style: #{@style}. Must be one of: #{Style::NAMES.join(", ")}"
+        raise ArgumentError, "Invalid background: #{@background}. Must be one of: #{Background::NAMES.join(", ")}"
       end
 
       def validate_shadow!
@@ -284,7 +284,7 @@ module FlatPack
       end
 
       def card_data
-        data = {style: @style.to_s, fp_card_padding: @padding.to_s}
+        data = {background: @background.to_s, fp_card_padding: @padding.to_s}
         data[:fp_card_inset] = @inset.to_s if @inset
         data
       end
@@ -313,12 +313,11 @@ module FlatPack
       end
 
       def reject_removed_theme!(system_arguments)
-        if system_arguments.key?(:theme)
-          raise ArgumentError, "unknown keyword: :theme"
-        end
-        return unless system_arguments.key?(:tone)
+        %i[style theme tone].each do |removed|
+          next unless system_arguments.key?(removed)
 
-        raise ArgumentError, "unknown keyword: :tone"
+          raise ArgumentError, "unknown keyword: :#{removed}"
+        end
       end
 
       def validate_href!(original_href)

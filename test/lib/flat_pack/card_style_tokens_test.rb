@@ -4,7 +4,7 @@ require "test_helper"
 
 module FlatPack
   class CardStyleTokensTest < ActiveSupport::TestCase
-    STYLES = %w[default shaded brand brand-subtle gradient].freeze
+    STYLES = %w[default none shaded brand brand-subtle gradient].freeze
     PARTS = %w[background text-color muted-text-color border-color].freeze
 
     setup do
@@ -17,7 +17,7 @@ module FlatPack
       root_block = @css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
       STYLES.product(PARTS).each do |style, part|
-        token = "--card-style-#{style}-#{part}"
+        token = (part == "background") ? "--card-background-#{style}" : "--card-background-#{style}-#{part}"
         assert_includes theme_block, "#{token}: var(#{token});", token
         assert_includes root_block, "#{token}:", token
       end
@@ -26,27 +26,30 @@ module FlatPack
     test "style fills follow theme tokens and gradient uses background" do
       root_block = @css[/^:root(?:,\s*\[data-theme\])?\s*\{.*?^\}/m]
 
-      assert_match(/--card-style-default-background:\s*var\(--card-background-color\)/, root_block)
-      assert_match(/--card-style-shaded-background:\s*var\(--card-background-muted-color\)/, root_block)
-      assert_match(/--card-style-brand-background:\s*var\(--color-primary\)/, root_block)
-      assert_match(/--card-style-brand-text-color:\s*var\(--color-primary-text\)/, root_block)
-      assert_match(/--card-style-brand-subtle-text-color:\s*var\(--surface-content-color\)/, root_block)
-      assert_match(/--card-style-gradient-background:\s*linear-gradient\(/, root_block)
-      refute_match(/--card-style-brand-background:\s*#/, root_block)
+      assert_match(/--card-background-default:\s*var\(--card-background-color\)/, root_block)
+      assert_match(/--card-background-shaded:\s*var\(--card-background-muted-color\)/, root_block)
+      assert_match(/--card-background-brand:\s*var\(--color-primary\)/, root_block)
+      assert_match(/--card-background-brand-text-color:\s*var\(--color-primary-text\)/, root_block)
+      assert_match(/--card-background-brand-subtle-text-color:\s*var\(--surface-content-color\)/, root_block)
+      assert_match(/--card-background-none:\s*transparent/, root_block)
+      assert_match(/--card-background-none-text-color:\s*inherit/, root_block)
+      assert_match(/--card-background-none-muted-text-color:\s*inherit/, root_block)
+      assert_match(/--card-background-gradient:\s*linear-gradient\(/, root_block)
+      refute_match(/--card-background-brand:\s*#/, root_block)
       refute_includes root_block, "--card-tone-"
     end
 
     test "dark mode keeps gradient text on the light side of the brand colour" do
       dark_block = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
 
-      assert_match(/--card-style-gradient-background:\s*linear-gradient\(/, dark_block)
-      refute_includes dark_block, "--card-style-brand-background:"
-      refute_includes dark_block, "--card-style-default-background:"
+      assert_match(/--card-background-gradient:\s*linear-gradient\(/, dark_block)
+      refute_includes dark_block, "--card-background-brand:"
+      refute_includes dark_block, "--card-background-default:"
       refute_includes dark_block, "--button-primary-background-color"
     end
 
     test "card hover paints outside the component layer" do
-      layered, unlayered = @application.split("/* Unlayered so a style fill", 2)
+      layered, unlayered = @application.split("/* Unlayered so a background fill", 2)
 
       refute_includes layered, ".fp-card-hover-subtle:hover"
       refute_includes layered, ".fp-card-hover-strong:hover"
@@ -58,8 +61,9 @@ module FlatPack
     test "cards do not rebind button or badge colours" do
       refute_includes @application, ".fp-card[data-tone="
       refute_includes @application, "--button-primary-text-color: var(--color-primary);"
-      refute_match(/\.fp-card\[data-style="brand"\][^{]*\{[^}]*--(?:button|badge)-/, @application)
-      assert_includes @application, '.fp-card[data-style="brand"] { --flat-pack-surface-fill: var(--card-style-brand-background); }'
+      refute_match(/\.fp-card\[data-background="brand"\][^{]*\{[^}]*--(?:button|badge)-/, @application)
+      assert_includes @application, '.fp-card[data-background="brand"] { --flat-pack-surface-fill: var(--card-background-brand); }'
+      refute_includes @application, '.fp-card[data-background="none"]'
     end
   end
 end

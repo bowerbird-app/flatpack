@@ -29,7 +29,7 @@
     <div class="mb-4 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
       <% gallery_cards.each do |image| %>
         <%= render FlatPack::Card::Component.new(
-          style: :shaded,
+          background: :shaded,
           border: :none,
           hover: :subtle,
           "style" => "background-color: transparent",
@@ -95,7 +95,7 @@
         &lt;div class=&quot;grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4&quot;&gt;
           &lt;% gallery_cards.each do |image| %&gt;
             &lt;%= render FlatPack::Card::Component.new(
-              style: :shaded,
+              background: :shaded,
               border: :none,
               hover: :subtle,
               &quot;style&quot; =&gt; &quot;background-color: transparent&quot;,
@@ -153,7 +153,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Media Slot", anchor_link: true, subtitle: "Examples for Media Slot.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
           <%= image_tag "https://picsum.photos/800/450?random=11", class: "w-full h-full object-cover", alt: "Sample media" %>
         <% end %>
@@ -163,7 +163,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "16/9", padding: :none) do %>
           <%= image_tag "https://picsum.photos/800/450?random=12", class: "w-full h-full object-cover", alt: "Edge to edge media" %>
         <% end %>
@@ -175,7 +175,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
             &lt;%= image_tag "https://picsum.photos/800/450?random=12", class: "w-full h-full object-cover", alt: "Edge to edge media" %&gt;
           &lt;% end %&gt;
@@ -194,7 +194,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Media Aspect Ratios", anchor_link: true, subtitle: "Examples for Media Aspect Ratios.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
             16:9 Aspect Ratio
@@ -205,7 +205,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "4/3") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
             4:3 Aspect Ratio
@@ -216,7 +216,7 @@
         <% end %>
       <% end %>
 
-      <%= render FlatPack::Card::Component.new(style: :default) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default) do |card| %>
         <% card.media(aspect_ratio: "1/1") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
             1:1 Square
@@ -229,7 +229,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.media(aspect_ratio: "16/9") do %&gt;
             <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center font-bold">
               16:9 Aspect Ratio

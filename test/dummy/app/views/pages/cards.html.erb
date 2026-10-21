@@ -10,12 +10,12 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Overview", anchor_link: true) %>
   <p class="text-[var(--surface-muted-content-color)] mb-6">
-    Cards combine media, header, body, and footer slots. Style is the colour. Shadow, border, and hover are separate.
+    Cards combine media, header, body, and footer slots. Background is the colour. Shadow, border, and hover are separate.
     Explore colour, slots, media, and composed examples below.
   </p>
 
   <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Styles &amp; Slots</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Border, shadow, padding, clickable cards, and slot dividers.</p>
@@ -23,15 +23,15 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(style: :brand, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :brand, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Colour</h3>
-        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Surface, shaded, brand, soft brand, and gradient fills.</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Surface, transparent, shaded, brand, soft brand, and gradient fills.</p>
         <%= render FlatPack::Button::Component.new(text: "View colour", style: :default, size: :sm, href: demo_cards_tones_path) %>
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Media</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Gallery grids, media slots, and aspect ratios.</p>
@@ -39,7 +39,7 @@
       <% end %>
     <% end %>
 
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
       <% card.body do %>
         <h3 class="text-lg font-semibold mb-2">Composed Examples</h3>
         <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Product, stat, profile, pricing, and list cards.</p>
@@ -171,7 +171,7 @@
     Recommended default for grid layouts: edge-to-edge top media, subtle hover interaction, and icon actions at the bottom.
   </p>
   <div class="max-w-sm mb-4">
-    <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, shadow: :md) do |card| %>
+    <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle, shadow: :md) do |card| %>
       <% card.media(aspect_ratio: "16/9", padding: :none) do %>
         <%= image_tag "https://picsum.photos/800/450?random=21", class: "w-full h-full object-cover", alt: "Grid default card media" %>
       <% end %>
@@ -193,7 +193,7 @@
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
-      &lt;%= render FlatPack::Card::Component.new(style: :default, hover: :subtle, shadow: :md) do |card| %&gt;
+      &lt;%= render FlatPack::Card::Component.new(background: :default, hover: :subtle, shadow: :md) do |card| %&gt;
         &lt;% card.media(aspect_ratio: "16/9", padding: :none) do %&gt;
           &lt;%= image_tag "https://picsum.photos/800/450?random=21", class: "w-full h-full object-cover", alt: "Grid default card media" %&gt;
         &lt;% end %&gt;

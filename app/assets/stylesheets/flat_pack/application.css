@@ -987,7 +987,7 @@
   grid-template-rows: minmax(0, 1fr);
 }
 
-/* Unlayered so a style fill or shadow utility cannot cover the hover.
+/* Unlayered so a background fill or shadow utility cannot cover the hover.
  * Those utilities live in the host Tailwind layer, which beats @layer components.
  */
 .fp-card-hover-subtle:hover {
@@ -1044,11 +1044,11 @@
  * rings, range thumb borders, and timeline marker dots. A raised surface
  * resets those tokens to its own fill. --flat-pack-surface-fill is local.
  */
-.fp-card[data-style="default"] { --flat-pack-surface-fill: var(--card-style-default-background); }
-.fp-card[data-style="shaded"] { --flat-pack-surface-fill: var(--card-style-shaded-background); }
-.fp-card[data-style="brand"] { --flat-pack-surface-fill: var(--card-style-brand-background); }
-.fp-card[data-style="brand_subtle"] { --flat-pack-surface-fill: var(--card-style-brand-subtle-background); }
-.fp-card[data-style="gradient"] { --flat-pack-surface-fill: var(--color-primary); }
+.fp-card[data-background="default"] { --flat-pack-surface-fill: var(--card-background-default); }
+.fp-card[data-background="shaded"] { --flat-pack-surface-fill: var(--card-background-shaded); }
+.fp-card[data-background="brand"] { --flat-pack-surface-fill: var(--card-background-brand); }
+.fp-card[data-background="brand_subtle"] { --flat-pack-surface-fill: var(--card-background-brand-subtle); }
+.fp-card[data-background="gradient"] { --flat-pack-surface-fill: var(--color-primary); }
 
 [data-flat-pack--modal-target="dialog"] { --flat-pack-surface-fill: var(--modal-surface-color); }
 [data-controller~="flat-pack--popover"] { --flat-pack-surface-fill: var(--popover-background-color); }

@@ -12,7 +12,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Shadow, border, and hover", anchor_link: true, subtitle: "Colour fill is on the colour page. These options stack with it.") %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
         <% card.header do %>
           <h3 class="text-lg font-semibold">Default Card</h3>
         <% end %>
@@ -50,7 +50,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.header do %&gt;
             <h3 class="text-lg font-semibold">Default Card</h3>
           &lt;% end %&gt;
@@ -95,7 +95,7 @@
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Card with All Slots", anchor_link: true, subtitle: "Examples for Card with All Slots.") %>
     <div class="max-w-sm mb-4">
-      <%= render FlatPack::Card::Component.new(style: :default, hover: :subtle) do |card| %>
+      <%= render FlatPack::Card::Component.new(background: :default, hover: :subtle) do |card| %>
         <% card.media(aspect_ratio: "16/9") do %>
           <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-2xl font-semibold">
             Media Slot
@@ -118,7 +118,7 @@
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
-        &lt;%= render FlatPack::Card::Component.new(style: :default) do |card| %&gt;
+        &lt;%= render FlatPack::Card::Component.new(background: :default) do |card| %&gt;
           &lt;% card.media(aspect_ratio: "16/9") do %&gt;
             <div class="w-full h-full bg-[var(--surface-muted-background-color)] text-[var(--surface-muted-content-color)] flex items-center justify-center text-2xl font-semibold">
               Media Slot
@@ -147,7 +147,7 @@
     <%= render FlatPack::SectionTitle::Component.new(title: "Clickable Cards", anchor_link: true, subtitle: "Examples for Clickable Cards.") %>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <%= render FlatPack::Card::Component.new(
-        style: :default,
+        background: :default,
         clickable: true,
         href: "#card-1"
       ) do |card| %>
@@ -160,7 +160,7 @@
       <% end %>
 
       <%= render FlatPack::Card::Component.new(
-        style: :default,
+        background: :default,
         clickable: true,
         href: "#card-2"
       ) do |card| %>
@@ -173,7 +173,7 @@
       <% end %>
 
       <%= render FlatPack::Card::Component.new(
-        style: :default,
+        background: :default,
         clickable: true,
         href: "#card-3"
       ) do |card| %>
@@ -188,7 +188,7 @@
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Card::Component.new(
-          style: :default,
+          background: :default,
           clickable: true,
           href: "#card-1"
         ) do |card| %&gt;

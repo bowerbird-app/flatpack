@@ -716,7 +716,7 @@ module FlatPack
 
       application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
       assert_includes application, "--button-focus-ring-offset-color: var(--flat-pack-surface-fill);"
-      assert_includes application, ".fp-card[data-style=\"default\"]"
+      assert_includes application, ".fp-card[data-background=\"default\"]"
       assert_includes application, "[data-flat-pack--modal-target=\"dialog\"]"
     end
 
