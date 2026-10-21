@@ -42,6 +42,7 @@ function loadController({ reducedMotion = false, motionMs = 200, extras = {} } =
     MutationObserver: extras.MutationObserver,
     ResizeObserver: extras.ResizeObserver,
     document: extras.document,
+    CustomEvent,
     ...(extras.globalThis || {})
   }
 
@@ -58,6 +59,7 @@ function buildItem({
   tagName = 'BUTTON',
   selected = false,
   current = false,
+  pressed = null,
   href = '',
   target = '',
   classNames = [],
@@ -67,6 +69,7 @@ function buildItem({
   const attributes = {}
   if (selected) attributes['aria-selected'] = 'true'
   if (current) attributes['aria-current'] = 'page'
+  if (pressed != null) attributes['aria-pressed'] = pressed ? 'true' : 'false'
   const dataset = {
     flatPackSlideIndicatorActiveClasses: activeClasses,
     flatPackSlideIndicatorInactiveClasses: inactiveClasses
@@ -215,6 +218,99 @@ test('measure includes list scroll offsets', () => {
 
   assert.equal(box.left, 18)
   assert.equal(box.top, 8)
+})
+
+test('pressed click moves, updates aria-pressed, and dispatches change', () => {
+  const day = buildItem({
+    tagName: 'BUTTON',
+    role: null,
+    pressed: true,
+    left: 8,
+    width: 60,
+    activeClasses: 'text-active',
+    inactiveClasses: 'text-idle',
+    classNames: ['text-active']
+  })
+  const week = buildItem({
+    tagName: 'BUTTON',
+    role: null,
+    pressed: false,
+    left: 76,
+    width: 90,
+    activeClasses: 'text-active',
+    inactiveClasses: 'text-idle',
+    classNames: ['text-idle']
+  })
+  const { controller, indicator, element } = buildController({ items: [day, week], kind: 'pill' })
+  const events = []
+  element.dispatchEvent = (event) => {
+    events.push(event)
+    return true
+  }
+  controller.sync({ animate: false })
+
+  let prevented = false
+  controller.onClick({
+    target: week,
+    composedPath() { return [week] },
+    preventDefault() { prevented = true },
+    button: 0
+  })
+
+  assert.equal(prevented, false)
+  assert.equal(week.getAttribute('aria-pressed'), 'true')
+  assert.equal(day.getAttribute('aria-pressed'), 'false')
+  assert.equal(week.classList.contains('text-active'), true)
+  assert.equal(day.classList.contains('text-idle'), true)
+  assert.equal(indicator.style.transform, 'translate(76px, 4px)')
+  assert.equal(events.length, 1)
+  assert.equal(events[0].type, 'flat-pack--segmented-buttons:change')
+  assert.equal(events[0].cancelable, true)
+  assert.equal(events[0].bubbles, true)
+  assert.equal(events[0].detail.index, 1)
+  assert.equal(events[0].detail.button, week)
+})
+
+test('a cancelled change leaves the indicator on the previous option', () => {
+  const day = buildItem({
+    tagName: 'BUTTON',
+    role: null,
+    pressed: true,
+    left: 8,
+    width: 60,
+    activeClasses: 'text-active',
+    inactiveClasses: 'text-idle',
+    classNames: ['text-active']
+  })
+  const week = buildItem({
+    tagName: 'BUTTON',
+    role: null,
+    pressed: false,
+    left: 76,
+    width: 90,
+    activeClasses: 'text-active',
+    inactiveClasses: 'text-idle',
+    classNames: ['text-idle']
+  })
+  const { controller, indicator, element } = buildController({ items: [day, week], kind: 'pill' })
+  element.dispatchEvent = (event) => {
+    event.preventDefault()
+    return false
+  }
+  controller.sync({ animate: false })
+  controller.onClick({
+    target: week,
+    composedPath() { return [week] },
+    preventDefault() {},
+    button: 0
+  })
+
+  assert.equal(week.getAttribute('aria-pressed'), 'false')
+  assert.equal(day.getAttribute('aria-pressed'), 'true')
+  assert.equal(day.classList.contains('text-active'), true)
+  assert.equal(week.classList.contains('text-idle'), true)
+  assert.equal(indicator.style.transform, 'translate(8px, 4px)')
+  assert.equal(indicator.style.transition, 'none')
 })
 
 test('tab clicks move the indicator and do not intercept', () => {

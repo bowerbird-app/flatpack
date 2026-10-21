@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.283] - 2026-10-20
+
+### Added
+- `FlatPack::SegmentedButtons::Component` accepts `indicator:`. Omit it, or pass `nil`, and the joined group is unchanged. `indicator: :slide` uses the pill track and `FlatPack::Shared::SlideIndicator` already used by Tabs `variant: :pills`. One indicator slides behind the labels. Each option stays a `FlatPack::Button::Component`, so `href:`, submits, Stimulus actions, and ARIA stay. `style:` and `size:` still apply. Omit `style:` for the neutral grey indicator. A named Button style, including `:primary`, paints the indicator that colour. Unknown `indicator` values raise `ArgumentError`.
+- A click moves the indicator, sets `aria-pressed`, then dispatches cancelable `flat-pack--segmented-buttons:change` with `{ index, button }`. `preventDefault()` leaves the indicator on the previous option. The button action still runs. `selected: true` sets the first position. The indicator re-syncs on resize and on `turbo:render` / `turbo:load`. `prefers-reduced-motion` snaps. Motion uses `--duration-base` and `--easing-standard`.
+- Bumped the gem version to `0.1.283`.
+
+### Upgrade notes
+- Additive. The default is `indicator: nil`. Existing segmented button markup and look stay the same. Tabs and Button::Pill markup stay the same.
+- Hosts reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. `flat-pack--slide-indicator` is already registered with the other controllers. Do not rebuild Tailwind. No new tokens.
+- Redeploy so `meta.gem_version` shows `0.1.283`.
+
 ## [0.1.280] - 2026-10-20
 
 ### Changed

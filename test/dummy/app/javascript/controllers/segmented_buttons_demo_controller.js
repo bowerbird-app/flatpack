@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["button"]
+  static targets = ["button", "label"]
   static values = {
     activeStyle: String,
     inactiveStyle: { type: String, default: "secondary" },
@@ -15,6 +15,12 @@ export default class extends Controller {
 
   activate(event) {
     this.setActiveButton(event.currentTarget)
+  }
+
+  choose(event) {
+    if (!this.hasLabelTarget) return
+
+    this.labelTarget.textContent = event.currentTarget.textContent.trim()
   }
 
   setActiveButton(activeButton) {

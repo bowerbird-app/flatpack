@@ -421,6 +421,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, 'data-controller="segmented-buttons-demo"'
     assert_includes response.body, 'data-action="segmented-buttons-demo#activate"'
+    assert_includes response.body, "indicator: :slide"
+    assert_includes response.body, "flat-pack--slide-indicator"
+    assert_includes response.body, 'data-action="segmented-buttons-demo#choose"'
+    assert_includes response.body, "Showing"
     assert_includes response.body, 'aria-pressed="true"'
     assert_includes response.body, "The selected button uses the primary colour."
     assert_includes response.body, "The selected button matches a default button."
