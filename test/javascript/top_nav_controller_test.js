@@ -210,28 +210,271 @@ function buildFitController({clientWidth, scrollWidth, viewportNarrow = false}) 
   }
 }
 
-test('a wide viewport collapses the bar when its content overflows', () => {
-  const {controller, panelChildren, sectionChildren, child, bar} = buildFitController({
+test('a wide window keeps the row even when the bar is narrow', () => {
+  const {controller, panelChildren, sectionChildren, child} = buildFitController({
     clientWidth: 400,
     scrollWidth: 640
   })
 
   controller.applyLayout()
 
-  assert.equal(panelChildren.length, 1)
-  assert.equal(sectionChildren.includes(child), false)
-
-  bar.clientWidth = 800
-  controller.applyLayout()
-
   assert.equal(panelChildren.length, 0)
   assert.equal(sectionChildren[0], child)
 })
 
-test('a bar that fits keeps its sections inline', () => {
-  const {controller, panelChildren} = buildFitController({clientWidth: 800, scrollWidth: 640})
+test('a phone folds a collapsible section into the menu', () => {
+  const {controller, panelChildren, sectionChildren, child} = buildFitController({
+    clientWidth: 390,
+    scrollWidth: 640,
+    viewportNarrow: true
+  })
+
+  controller.applyLayout()
+
+  assert.equal(panelChildren.length, 1)
+  assert.equal(panelChildren[0], child)
+  assert.equal(sectionChildren.includes(child), false)
+})
+
+test('a phone discloses a dropdown in place and restores it', () => {
+  const {controller, doc, sectionChildren, publish, publishTrigger, publishMenu, moreMenu, publishNow, duplicate} = buildMenuTree()
+
+  controller.applyLayout()
+
+  assert.equal(publish.dataset.flatPackTopNavDisclosure, 'true')
+  assert.equal(publish.dataset.flatPackTopNavExpanded, 'false')
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'false')
+  assert.equal(publishTrigger.getAttribute('aria-controls'), publishMenu.id)
+  assert.equal(publishMenu.getAttribute('role'), 'group')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishMenu.children.includes(publishNow), true)
+  assert.equal(moreMenu.children.includes(duplicate), true)
+
+  publishTrigger.click()
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'true')
+  assert.equal(publish.dataset.flatPackTopNavExpanded, 'true')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'false')
+  assert.equal(publishMenu.children.includes(publishNow), true)
+
+  doc.activeElement = publishNow
+  publishTrigger.click()
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'false')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishTrigger.focused, true)
+
+  publishTrigger.click()
+  controller.closeMenu()
+  assert.equal(publish.dataset.flatPackTopNavExpanded, 'false')
+
+  controller.mediaQuery.matches = false
+  controller.applyLayout()
+
+  assert.equal(publish.dataset.flatPackTopNavDisclosure, undefined)
+  assert.equal(publishMenu.getAttribute('role'), 'menu')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishTrigger.getAttribute('aria-controls'), null)
+  assert.equal(publishTrigger.listeners.length, 0)
+  assert.deepEqual(publishMenu.children.map((node) => node.text), ['Publish now', 'Schedule'])
+  assert.equal(sectionChildren[0].nodeName, 'page-nav')
+})
+
+function element(name, {dataset = {}, text = ''} = {}) {
+  const node = {
+    nodeType: 1,
+    nodeName: name,
+    text,
+    textContent: text,
+    hidden: false,
+    id: '',
+    dataset,
+    attributes: {},
+    listeners: [],
+    childNodes: [],
+    getAttribute(name) {
+      return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null
+    },
+    setAttribute(name, value) {
+      this.attributes[name] = String(value)
+    },
+    removeAttribute(name) {
+      delete this.attributes[name]
+    },
+    addEventListener(type, fn, capture) {
+      this.listeners.push({type, fn, capture: !!capture})
+    },
+    removeEventListener(type, fn) {
+      this.listeners = this.listeners.filter((listener) => listener.fn !== fn || listener.type !== type)
+    },
+    click() {
+      const event = {
+        preventDefault() {},
+        stopPropagation() {},
+        stopImmediatePropagation() {}
+      }
+      this.listeners.filter((listener) => listener.type === 'click' && listener.capture).forEach((listener) => listener.fn(event))
+    },
+    contains(other) {
+      if (!other) return false
+      if (other === this) return true
+      return this.children.some((child) => typeof child.contains === 'function' && child.contains(other))
+    },
+    focus() {
+      this.focused = true
+    },
+    get children() {
+      return this.childNodes.filter((child) => child.nodeType === 1)
+    },
+    appendChild(child) {
+      if (child.parentNode && child.parentNode.removeChild) child.parentNode.removeChild(child)
+      child.parentNode = this
+      this.childNodes.push(child)
+      return child
+    },
+    insertBefore(child, before) {
+      if (child.parentNode && child.parentNode.removeChild) child.parentNode.removeChild(child)
+      child.parentNode = this
+      const index = this.childNodes.indexOf(before)
+      this.childNodes.splice(index < 0 ? this.childNodes.length : index, 0, child)
+      return child
+    },
+    removeChild(child) {
+      const index = this.childNodes.indexOf(child)
+      if (index >= 0) this.childNodes.splice(index, 1)
+      if (child.parentNode === this) child.parentNode = null
+      return child
+    },
+    querySelector(selector) {
+      return this.querySelectorAll(selector)[0] || null
+    },
+    querySelectorAll(selector) {
+      const matches = []
+      const walk = (current) => {
+        current.children.forEach((child) => {
+          if (selectorMatches(child, selector)) matches.push(child)
+          walk(child)
+        })
+      }
+      walk(this)
+      return matches
+    }
+  }
+  return node
+}
+
+function selectorMatches(node, selector) {
+  if (selector === "[data-controller~='flat-pack--button-dropdown']") {
+    return (node.dataset.controller || '').split(/\s+/).includes('flat-pack--button-dropdown')
+  }
+  if (selector === "[data-flat-pack--button-dropdown-target='trigger']") {
+    return node.dataset.flatPackButtonDropdownTarget === 'trigger'
+  }
+
+  return node.dataset.flatPackButtonDropdownTarget === 'menu'
+}
+
+function buildMenuTree() {
+  const sectionButton = element('button', {text: 'Section'})
+  const publishNow = element('button', {text: 'Publish now'})
+  const schedule = element('button', {text: 'Schedule'})
+  const duplicate = element('button', {text: 'Duplicate'})
+  const archive = element('button', {text: 'Archive'})
+  const publishMenu = element('div', {dataset: {flatPackButtonDropdownTarget: 'menu'}})
+  publishMenu.setAttribute('role', 'menu')
+  publishMenu.setAttribute('aria-hidden', 'true')
+  publishMenu.appendChild(publishNow)
+  publishMenu.appendChild(schedule)
+  const publishTrigger = element('button', {text: 'Publish', dataset: {flatPackButtonDropdownTarget: 'trigger'}})
+  const publish = element('div', {dataset: {controller: 'flat-pack--button-dropdown'}})
+  publish.appendChild(publishTrigger)
+  publish.appendChild(publishMenu)
+  const moreMenu = element('div', {dataset: {flatPackButtonDropdownTarget: 'menu'}})
+  moreMenu.setAttribute('role', 'menu')
+  moreMenu.setAttribute('aria-hidden', 'true')
+  moreMenu.appendChild(duplicate)
+  moreMenu.appendChild(archive)
+  const moreTrigger = element('button', {text: 'More', dataset: {flatPackButtonDropdownTarget: 'trigger'}})
+  const more = element('div', {dataset: {controller: 'flat-pack--button-dropdown'}})
+  more.appendChild(moreTrigger)
+  more.appendChild(moreMenu)
+  const row = element('div')
+  row.appendChild(sectionButton)
+  row.appendChild(publish)
+  row.appendChild(more)
+  const pageNav = element('page-nav')
+  pageNav.appendChild(row)
+
+  const sectionChildren = [pageNav]
+  const section = {
+    dataset: {flatPackTopNavCollapsible: 'true'},
+    childNodes: sectionChildren,
+    classList: {toggle() {}, remove() {}},
+    insertBefore(node, before) {
+      node.parentNode = section
+      sectionChildren.splice(sectionChildren.indexOf(before), 0, node)
+    },
+    replaceChild(node, placeholder) {
+      if (node.parentNode && node.parentNode.removeChild) node.parentNode.removeChild(node)
+      sectionChildren.splice(sectionChildren.indexOf(placeholder), 1, node)
+      node.parentNode = section
+    }
+  }
+  const panelChildren = []
+  const panel = element('div')
+  panel.childrenPush = panel.appendChild
+  panel.appendChild = (node) => {
+    const index = sectionChildren.indexOf(node)
+    if (index >= 0) sectionChildren.splice(index, 1)
+    return panel.childrenPush(node)
+  }
+  const menu = {classList: {toggle() {}}}
+  const doc = {createComment() { return {nodeType: 8, parentNode: null} }, activeElement: null}
+  const TopNavController = loadTopNavController({
+    window: {},
+    document: doc,
+    Node: {TEXT_NODE: 3, ELEMENT_NODE: 1}
+  })
+
+  return {
+    panel,
+    doc,
+    sectionChildren,
+    publish,
+    publishTrigger,
+    more,
+    publishMenu,
+    moreMenu,
+    publishNow,
+    schedule,
+    duplicate,
+    archive,
+    controller: Object.assign(new TopNavController(), {
+      element: {dataset: {}},
+      mediaQuery: {matches: true},
+      hasPanelTarget: true,
+      hasMenuTarget: true,
+      hasToggleTarget: false,
+      sectionTargets: [section],
+      panelTarget: panel,
+      menuTarget: menu,
+      movedNodes: [],
+      breakpointValue: 768,
+      fitting: false,
+      menuOpen: false
+    })
+  }
+}
+
+test('a phone leaves the sidebar toggle in the bar', () => {
+  const {controller, panelChildren, sectionChildren} = buildFitController({
+    clientWidth: 390,
+    scrollWidth: 640,
+    viewportNarrow: true
+  })
+  const toggle = sectionChildren[0]
+  toggle.matches = (selector) => selector.includes('mobileToggle')
 
   controller.applyLayout()
 
   assert.equal(panelChildren.length, 0)
+  assert.equal(sectionChildren[0], toggle)
 })

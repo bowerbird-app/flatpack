@@ -8,6 +8,10 @@ function loadSidebarLayoutController({ prefersReduced = false, extras = {} } = {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'sidebar_layout_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
+    .replace(
+      'import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"\n',
+      'function prefersReducedMotion() { const media = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)"); return Boolean(media && media.matches) }\n'
+    )
     .replace('import { Controller } from "@hotwired/stimulus"', `class Controller {
       dispatch(name, options = {}) {
         const event = {
@@ -550,7 +554,8 @@ function buildShell({
   asideOpen = true,
   storageKey = 'app-shell:aside',
   stored,
-  withSidebar = false
+  withSidebar = false,
+  prefersReduced = false
 } = {}) {
   const seed = stored === undefined || !storageKey ? {} : { [storageKey]: stored }
   const localStorage = storageStub(seed)
@@ -579,7 +584,8 @@ function buildShell({
   const windowStub = {
     innerWidth: mobile ? 390 : 1280,
     addEventListener() {},
-    removeEventListener() {}
+    removeEventListener() {},
+    matchMedia() { return { matches: prefersReduced } }
   }
   const { Controller } = loadSidebarLayoutController({
     extras: { localStorage, document: doc, window: windowStub }
@@ -817,3 +823,70 @@ test('a resize collapse uses the rail collapse path and leaves width storage alo
   controller.collapseRailFromResize()
   assert.equal(controller.collapsed, false)
 })
+
+test('mobile menu toggle exposes expanded and controls', () => {
+  const { controller, sidebar } = buildShell({ mobile: true, withSidebar: true })
+  const menu = buttonStub()
+  controller.hasMobileToggleTarget = true
+  controller.mobileToggleTargets = [menu]
+  sidebar.id = 'flat-pack-rail-test'
+
+  controller.connect()
+
+  assert.equal(menu.attrs['aria-expanded'], 'false')
+  assert.equal(menu.attrs['aria-controls'], 'flat-pack-rail-test')
+
+  controller.openMobile()
+  assert.equal(menu.attrs['aria-expanded'], 'true')
+  assert.equal(menu.attrs['aria-controls'], 'flat-pack-rail-test')
+
+  controller.closeMobile()
+  assert.equal(menu.attrs['aria-expanded'], 'false')
+})
+
+test('mobile drawer transitions translate and transform', () => {
+  const { controller, sidebar, aside } = buildShell({ mobile: true, withSidebar: true })
+
+  controller.connect()
+
+  assert.equal(sidebar.style.transitionProperty, 'translate, transform')
+  assert.equal(aside.style.transitionProperty, 'translate, transform')
+})
+
+test('reduced motion snaps the mobile drawer', () => {
+  const { controller, sidebar, aside } = buildShell({
+    mobile: true,
+    withSidebar: true,
+    prefersReduced: true
+  })
+
+  controller.connect()
+
+  assert.equal(sidebar.style.transitionProperty, 'none')
+  assert.equal(aside.style.transitionProperty, 'none')
+})
+
+test('stacked aside stays in flow on a phone', () => {
+  const { controller, aside, toggle, localStorage } = buildShell({ mobile: true, asideOpen: true })
+  controller.asideMobileValue = 'stack'
+
+  controller.connect()
+
+  assert.equal(aside.classList.contains('translate-x-full'), false)
+  assert.equal(aside.attrs.inert, undefined)
+  assert.equal(aside.style.pointerEvents, '')
+  assert.equal(toggle.attrs['aria-expanded'], 'true')
+  assert.equal(toggle.attrs['aria-controls'], aside.id)
+
+  controller.toggleAside()
+  controller.openAside()
+  controller.closeAside()
+
+  assert.equal(localStorage.writes.length, 0)
+  assert.equal(aside.classList.contains('translate-x-full'), false)
+  assert.equal(docOpen(controller), false)
+})
+
+function docOpen(controller) {
+  return controller.openDrawers.includes(controller.asideTarget)
+}

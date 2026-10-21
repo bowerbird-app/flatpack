@@ -1,3 +1,11 @@
+<% if params[:editor].in?(%w[1 true]) %>
+  <section class="max-w-xl">
+    <h1 class="text-2xl font-semibold text-[var(--surface-content-color)]">Summer drop</h1>
+    <p class="mt-3 text-sm leading-6 text-[var(--surface-content-color)]">
+      Lead photo, a short line, and the quotes. On a phone, Details sits under this column.
+    </p>
+  </section>
+<% else %>
 <%= render FlatPack::PageTitle::Component.new(
   title: "Sidebar Layout",
   subtitle: "Layout shell examples for placing the sidebar on the left or right."
@@ -33,6 +41,7 @@
 <% notes_query = cards_query.merge("notes" => "1") %>
 <% collapsed_query = cards_query.merge("collapsed" => "1") %>
 <% press_kit_query = { "floating" => "1", "background" => "1", "floating_top_nav" => "1", "aside" => "1", "height" => "content" } %>
+<% editor_query = press_kit_query.merge("aside_mobile" => "stack", "editor" => "1") %>
 <% bars_on = params[:scrollbar] == "visible" %>
 
 <div class="mb-8 flex flex-wrap items-center gap-3">
@@ -116,6 +125,12 @@
     size: :sm
   ) %>
   <%= render FlatPack::Button::Component.new(
+    text: "Press kit editor",
+    href: demo_sidebar_layout_path(editor_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <%= render FlatPack::Button::Component.new(
     text: bars_on ? "Hide bars" : "Show bars",
     href: demo_sidebar_layout_path(bars_on ? request.query_parameters.except("scrollbar") : request.query_parameters.merge("scrollbar" => "visible")),
     style: :secondary,
@@ -144,6 +159,7 @@
     <code>?scroll=page</code> scrolls the window.
     <code>?scrollbar=visible</code> shows the browser bar on the page and the aside.
     Press kit is <code>?floating=1&amp;background=1&amp;floating_top_nav=1&amp;aside=1&amp;height=content</code>. Add <code>scrollbar=visible</code> for the bars.
+    Press kit editor adds <code>aside_mobile=stack&amp;editor=1</code>. On a phone the row folds into the menu button. The sidebar button and the bell stay in the bar. Details sits under the column.
     <code>?height=content</code> with <code>?floating=1</code> sizes the desktop rail to its items.
     <code>?width=content</code> sizes the open desktop rail to its widest item.
     <code>?aside=1</code> opens Details. <code>?aside=closed</code> starts it shut.
@@ -225,4 +241,5 @@
   <p class="mb-8 text-sm leading-6 text-[var(--surface-content-color)]">
     This heading is the anchor. A focused link should clear the cards.
   </p>
+<% end %>
 <% end %>

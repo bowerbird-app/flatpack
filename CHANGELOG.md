@@ -16,15 +16,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.293] - 2026-10-21
 
 ### Added
-- `page_action` nominates a page-level action for the current request: label, path, `role:` (`:primary`, `:secondary`, or `:destructive`), `icon:`, and pass-through `data:` / `aria:`. The view decides which actions exist and what they mean. It does not pass a CSS class, a button style, or a placement.
-- `FlatPack::PageActionRegistry` collects those actions in source order. The helper stores one registry on `request.env["flat_pack.page_actions"]`. A new request starts empty.
-- `page_actions` turns that list and a context into buttons. `:header` uses a solid primary (`:primary`), a subtle secondary (`:secondary`), and `:danger`. `:top_nav` uses a subtle primary (`:secondary`), a ghost secondary (`:ghost`), and `:danger`. `:mobile` uses the same tokens as `:header` on the first action and puts the rest in the ⋯ menu (`Button::Dropdown`, icon `ellipsis-horizontal`). Header and top nav render a `ButtonGroup`. `styles:` replaces any role's button style for that call.
-- Sidebar Layout renders `:top_nav` in a bar under the top nav and `:mobile` fixed at the bottom-right. Page Layout renders `:header` at the top of the column and the same mobile cluster. An empty registry adds no markup.
+- `aside(mobile: :stack)` lays the aside under main below `md`. `:drawer` stays the off-canvas panel. Anything else raises `ArgumentError`.
+- `layout.aside_trigger("Details")` is the aside button. The label, `aria-expanded`, and `aria-controls` are on the control.
+
+### Fixed
+- The menu button gets `aria-expanded` and `aria-controls` when the rail drawer opens, closes, and on connect.
+- On a phone, the Top Nav row folds into one hamburger menu labelled "Menu". The open menu is one column of full-width rows. A nested dropdown stays a parent row and discloses its items in place, indented under that row. A wide window keeps the row. The sidebar's mobile toggle stays in the bar and is only that button. A notification bell stays in the bar when its section passes `always_display: true`. Page Nav stays one row.
+- An open phone drawer paints `--drawer-backdrop-color` on the shell scrim, above the page and below the drawer.
+- Phone drawers animate `translate` and `transform`. `prefers-reduced-motion: reduce` snaps the slide.
+- A stacked aside below `md` uses the floating panel fill, border, radius, and shadow. A close control and an aside trigger stay hidden there. The gap under main is `--stack-gap-md`.
+- On the rounded theme, a phone drawer rounds its inner edge with `--sidebar-float-radius`. The outer edge stays flush. The rail and the aside share that corner and one backdrop.
 
 ### Upgrade notes
-- Call `page_action` in the view. Sidebar Layout and Page Layout place the buttons. A custom layout calls `page_actions(:header)`, `page_actions(:top_nav)`, or `page_actions(:mobile)` and puts the HTML where it wants. Pass `styles: { primary: :ghost }` to replace a role's button style.
-- New copy key: `flatpack.page_actions.more` (`More`). The ⋯ trigger uses it as its accessible name.
-- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- `mobile:` on `aside` defaults to `:drawer`. Pass `:stack` to drop the phone drawer. There is no alias.
+- Replace a hand-wired `asideToggle` button with `layout.aside_trigger("Details")` where the control should sit. A hand-wired button still works. The controller now also sets `aria-controls`.
+- Reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Page Nav is one row. On a phone the Top Nav row folds into the hamburger menu, one action per row. A nested dropdown in that menu discloses in place. `left` folds too. Pass `always_display: true` on a section that should stay in the bar, such as the notification bell.
+- Load `flat_pack/application.css` after Tailwind. Keep `transform`, `filter`, `will-change`, and `contain` off ancestors of the shell. Those pin the fixed drawers to the ancestor.
 - Redeploy so `meta.gem_version` shows `0.1.293`.
 
 ## [0.1.292] - 2026-10-21

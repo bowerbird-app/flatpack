@@ -106,7 +106,7 @@ module FlatPack
             refute I18n.exists?("flatpack.page_nav.previous", :ms)
 
             assert_equal "Host pages", FlatPack::Copy.t("page_nav.label")
-            assert_equal "More navigation items", FlatPack::Copy.t("top_nav.more")
+            assert_equal "Menu", FlatPack::Copy.t("top_nav.more")
             assert_equal "Previous page", FlatPack::Copy.t("page_nav.previous")
             assert_equal "Page 4", FlatPack::Copy.t("pagination.page", number: 4)
             refute_match(/translation missing/i, FlatPack::Copy.t("page_nav.label"))
