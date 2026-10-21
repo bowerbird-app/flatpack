@@ -679,6 +679,11 @@ module FlatPack
       refute_includes after, "opacity: 0"
     end
 
+    test "pill track background defaults to transparent" do
+      assert_match(/--tabs-pill-list-background-color:\s*transparent/, root_block)
+      assert_includes @css, "--tabs-pill-list-background-color: var(--tabs-pill-list-background-color);"
+    end
+
     private
 
     def token_names(block)

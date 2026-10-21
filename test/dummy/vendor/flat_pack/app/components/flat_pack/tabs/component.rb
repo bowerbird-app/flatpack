@@ -14,7 +14,7 @@ module FlatPack
           inactive: "text-[var(--surface-muted-content-color)] hover:text-[var(--surface-content-color)] hover:bg-[var(--surface-muted-background-color)]"
         },
         pills: {
-          tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)] p-[var(--pill-padding)]",
+          tab_list: "inline-flex gap-1 [border-radius:var(--tabs-pill-corner-radius)]",
           tab_base: "border border-transparent font-medium [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-2",
           active: FlatPack::Button::PillStyle::ACTIVE_CLASSES,
           inactive: FlatPack::Button::PillStyle::INACTIVE_CLASSES
@@ -36,6 +36,7 @@ module FlatPack
         size: :md,
         style: FlatPack::Button::PillStyle::DEFAULT,
         indicator: nil,
+        track: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -44,10 +45,12 @@ module FlatPack
         @size = FlatPack::Shared::PadTextSizes.normalize!(size)
         @pill_style = FlatPack::Button::PillStyle.resolve(style)
         @indicator = FlatPack::Shared::SlideIndicator.normalize(indicator)
+        @track = track
         @tabs = []
         @panels = []
 
         validate_variant!
+        validate_track!
       end
 
       def tab(label:, id:, **tab_args, &block)
@@ -152,7 +155,14 @@ module FlatPack
       end
 
       def tab_list_classes
-        variant_classes.fetch(:tab_list)
+        list = variant_classes.fetch(:tab_list)
+        return list unless pill_track?
+
+        "#{list} #{FlatPack::Button::Pill::Component::TRACK_CLASSES}"
+      end
+
+      def pill_track?
+        @track && @variant == :pills
       end
 
       def tab_list_attributes
@@ -276,6 +286,12 @@ module FlatPack
         return if VARIANTS.key?(@variant)
 
         raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.keys.join(", ")}"
+      end
+
+      def validate_track!
+        return if @track == true || @track == false
+
+        raise ArgumentError, "track must be true or false"
       end
     end
   end

@@ -127,6 +127,9 @@ components:
     tokens:
       - --button-icon-only-padding-xs
       - --button-round-size-xs
+      - --pill-padding
+      - --tabs-pill-list-background-color
+      - --tabs-pill-list-border-color
     classes:
       - fp-hit-slop
       - fp-hit-target
@@ -769,6 +772,13 @@ components:
     title: Tabs
     doc: docs/components/tabs.md
     primary_class: FlatPack::Tabs::Component
+    args:
+      - "track: true"
+    tokens:
+      - --pill-padding
+      - --tabs-pill-corner-radius
+      - --tabs-pill-list-background-color
+      - --tabs-pill-list-border-color
     status: documented
 
   - key: text_stream

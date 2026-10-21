@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.289] - 2026-10-21
+
+### Changed
+- Trackless pill rows on `FlatPack::Button::Pill::Component` and Tabs `variant: :pills` no longer add group padding. The first pill lines up with the surrounding content. The row shifts left by about 8px. Consumers don't need to change anything.
+- `track: true` (default `false`) opts a pill row into a bordered track. The border uses `--tabs-pill-list-border-color`. The fill uses new `--tabs-pill-list-background-color`, which defaults to `transparent`. The inset reuses `--pill-padding`. The corner stays `--tabs-pill-corner-radius`. Stacked tabs are unchanged. Underline tabs ignore `track`.
+
+### Upgrade notes
+- The default is `track: false`. Existing pill markup stays valid and sits flush.
+- New token: `--tabs-pill-list-background-color`, default `transparent`.
+- The sliding indicator measures from inside the group border, so a track still lines the marker up with the active pill.
+- Hosts reload kit CSS and JS. Rebuild host Tailwind so it emits `bg-[var(--tabs-pill-list-background-color)]`. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.289`.
+
 ## [0.1.288] - 2026-10-21
 
 ### Added

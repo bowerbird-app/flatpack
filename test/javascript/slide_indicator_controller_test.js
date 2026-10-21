@@ -125,6 +125,8 @@ function buildController(options = {}) {
     classList: classListStub(),
     scrollLeft: options.scrollLeft || 0,
     scrollTop: options.scrollTop || 0,
+    clientLeft: options.clientLeft || 0,
+    clientTop: options.clientTop || 0,
     getBoundingClientRect() {
       return options.listRect || { left: 0, top: 0, width: 200, height: 40, right: 200, bottom: 40 }
     },
@@ -218,6 +220,19 @@ test('measure includes list scroll offsets', () => {
 
   assert.equal(box.left, 18)
   assert.equal(box.top, 8)
+})
+
+test('measure starts inside the list border', () => {
+  const { controller } = buildController({
+    kind: 'pill',
+    clientLeft: 1,
+    clientTop: 1,
+    listRect: { left: 0, top: 0, width: 200, height: 40 }
+  })
+  const box = controller.measure(controller.itemTargets[0])
+
+  assert.equal(box.left, 7)
+  assert.equal(box.top, 3)
 })
 
 test('pressed click moves, updates aria-pressed, and dispatches change', () => {

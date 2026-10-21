@@ -339,6 +339,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --tabs-pill-active-border-color: var(--surface-active-border-color);
   --tabs-pill-active-text-color: var(--surface-active-text-color);
   --tabs-pill-active-shadow: none;
+  --tabs-pill-list-background-color: transparent;
+  --tabs-pill-list-border-color: var(--surface-border-color);
   --tabs-pill-inactive-text-color: var(--surface-muted-content-color);
   --tabs-pill-inactive-hover-background-color: var(--surface-hover-background-color);
   --tabs-pill-inactive-hover-text-color: var(--surface-content-color);

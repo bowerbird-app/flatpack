@@ -95,6 +95,7 @@ Use `FlatPack::Button::Pill::Component` when you need the rounded pills styling 
 | `size` | Symbol | `:md` | no | Padding/text density: `:sm`, `:md`, `:lg` (shared with Tabs via Button size tokens). |
 | `style` | Symbol | omitted | no | Active pill colour. Same names as Button `style` above. Omit it for the neutral active surface. `:primary` and every other name use that button colour on the active pill. |
 | `indicator` | Symbol | `nil` | no | Omit for today’s instant active swap. `:slide` renders one filled marker that follows the active pill, then follows the link. Unknown names raise `ArgumentError`. |
+| `track` | Boolean | `false` | no | `true` draws a group border (`--tabs-pill-list-border-color`), a track fill (`--tabs-pill-list-background-color`, transparent), and inner padding (`--pill-padding`). The corner stays `--tabs-pill-corner-radius`. Omit it and the row is flush with the content. Anything other than `true` or `false` raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes/classes/data/aria for the outer group wrapper. |
 
 ```erb
@@ -118,10 +119,23 @@ The active pill is the neutral active surface until you pass `style:`. Pass `sty
 ) %>
 ```
 
-Pass `indicator: :slide` for a sliding fill. Items keep text colour. A normal left click slides first (~200ms), then visits with `Turbo.visit` when Turbo is present. Modifier clicks, middle-click, and `target: :_blank` go straight to the link. `prefers-reduced-motion` skips the wait.
+Pass `indicator: :slide` for a sliding fill. Items keep text colour. A normal left click slides first (~200ms), then visits with `Turbo.visit` when Turbo is present. Modifier clicks, middle-click, and `target: :_blank` go straight to the link. `prefers-reduced-motion` skips the wait. The marker measures from inside the group border, so it still sits on the active pill when `track: true`.
+
+Pass `track: true` when the row should read as a bordered group. The default is flush: no group padding, no border, and no track fill.
 
 ```erb
 <%= render FlatPack::Button::Pill::Component.new(
+  indicator: :slide,
+  items: [
+    {text: "All products", href: products_path, active: true},
+    {text: "On sale", href: sale_products_path}
+  ]
+) %>
+```
+
+```erb
+<%= render FlatPack::Button::Pill::Component.new(
+  track: true,
   indicator: :slide,
   items: [
     {text: "All products", href: products_path, active: true},

@@ -74,7 +74,10 @@ module FlatPack
 
         {
           class: classes(
-            "#{FlatPack::Button::Pill::Component::GROUP_CLASSES} #{pill.group_class} #{FlatPack::Shared::SlideIndicator::LIST_CLASS}"
+            FlatPack::Button::Pill::Component::GROUP_CLASSES,
+            "p-[var(--pill-padding)]",
+            pill.group_class,
+            FlatPack::Shared::SlideIndicator::LIST_CLASS
           ),
           data: merge_data_attributes(data_attributes, slide_data),
           aria: aria_attributes

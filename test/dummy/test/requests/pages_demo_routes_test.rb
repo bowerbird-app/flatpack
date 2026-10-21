@@ -415,6 +415,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "/demo/tabs/pills#account"
     assert_includes response.body, "Team Members"
     assert_includes response.body, 'aria-current="page"'
+    assert_includes response.body, "Flush or a track"
+    assert_includes response.body, "track: true"
+
+    get "/demo/tabs/pills"
+    assert_response :success
+    assert_includes response.body, "id=\"tabs-pill-flush\""
+    assert_includes response.body, "id=\"tabs-pill-track-row\""
+    assert_includes response.body, "track: true"
   end
 
   test "segmented and grouped button demos render examples" do
