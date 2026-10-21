@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.282] - 2026-10-20
+
+### Added
+- `FlatPack::SidebarLayout` accepts `scroll:`. The default is `:pane`, and that markup is unchanged. `:page` scrolls the window. `:page` with `content_scroll: :below` raises `ArgumentError`.
+
+### Upgrade notes
+- `scroll:` is additive. Hosts that omit it keep `:pane`.
+- No new tokens. Do not rebuild Tailwind. The new rules are kit CSS. `md:sticky` is not a new utility.
+- The layout generator writes `class="h-full"` on `html` and `body`. It does not write `overflow-hidden`. Leave `h-full`. It does not lock the window. Remove `overflow-hidden` from `html` and `body` when the host added that class. The generator does not. `:pane` hosts leave their lock in place.
+- Do not rerun `bin/rails generate flat_pack:install`. Reload kit CSS and JS.
+- Redeploy so `meta.gem_version` shows `0.1.282`.
+
 ## [0.1.281] - 2026-10-20
 
 ### Changed

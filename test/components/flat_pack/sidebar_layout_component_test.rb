@@ -5,6 +5,15 @@ require "test_helper"
 module FlatPack
   module SidebarLayout
     class ComponentTest < ViewComponent::TestCase
+      def layout_html(**kwargs)
+        render_inline(Component.new(**kwargs)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+        page.native.to_html
+      end
+
       def test_renders_basic_layout
         render_inline(Component.new)
         assert_selector "div[data-controller='flat-pack--sidebar-layout']"
@@ -416,6 +425,80 @@ module FlatPack
         end
 
         assert_selector "[data-flat-pack-top-nav-floating='below']"
+      end
+
+      def test_omitted_scroll_matches_pane
+        assert_equal layout_html, layout_html(scroll: :pane)
+        assert_equal layout_html(floating_top_nav: true), layout_html(floating_top_nav: true, scroll: :pane)
+      end
+
+      def test_page_scroll_unlocks_the_shell
+        render_inline(Component.new(scroll: :page)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        shell = page.native.at_css("[data-controller='flat-pack--sidebar-layout']")
+        assert_equal "page", shell["data-flat-pack-layout-scroll"]
+        shell_classes = shell["class"].to_s.split
+        refute_includes shell_classes, "h-screen"
+        refute_includes shell_classes, "overflow-hidden"
+
+        pane = page.native.at_css("div.flex-1.min-h-0")
+        pane_classes = pane["class"].to_s.split
+        refute_includes pane_classes, "overflow-y-auto"
+        refute_includes pane_classes, "overscroll-y-contain"
+
+        column = page.native.at_css("div.flex.flex-col.min-w-0")
+        refute_includes column["class"].to_s.split, "overflow-hidden"
+      end
+
+      def test_page_scroll_behind_floating_cards_paints_a_surface
+        render_inline(Component.new(scroll: :page, floating_top_nav: true)) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        assert_selector ".fp-layout-scroll", text: "Main"
+        assert_selector ".fp-layout-page"
+        assert_selector ".fp-layout-page-surface[aria-hidden='true']"
+      end
+
+      def test_page_scroll_with_a_background_omits_the_surface
+        render_inline(Component.new(scroll: :page, floating_top_nav: true)) do |layout|
+          layout.background { "Photo" }
+          layout.sidebar { "Sidebar" }
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
+        end
+
+        refute_selector ".fp-layout-page-surface"
+      end
+
+      def test_page_scroll_rejects_content_below
+        error = assert_raises(ArgumentError) do
+          Component.new(scroll: :page, content_scroll: :below)
+        end
+
+        assert_equal "scroll: :page cannot be combined with content_scroll: :below", error.message
+      end
+
+      def test_scroll_rejects_unknown_values
+        error = assert_raises(ArgumentError) do
+          Component.new(scroll: :window)
+        end
+
+        assert_equal "scroll must be :pane or :page", error.message
+      end
+
+      def test_scroll_accepts_the_string_form
+        render_inline(Component.new(scroll: "page")) do |layout|
+          layout.main { "Main" }
+        end
+
+        assert_selector "[data-flat-pack-layout-scroll='page']"
       end
 
       def test_background_slot_is_absent_by_default

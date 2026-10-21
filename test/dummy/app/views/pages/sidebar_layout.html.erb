@@ -107,7 +107,7 @@
     style: :secondary,
     size: :sm
   ) %>
-  <% if top_nav_floating %>
+  <% if top_nav_floating && params[:scroll] != "page" %>
     <%= render FlatPack::Button::Component.new(
       text: content_below ? "Scroll under" : "Start below",
       href: demo_sidebar_layout_path(scroll_query),
@@ -127,6 +127,7 @@
     This page focuses only on the layout shell. The detailed sidebar component demos now live under the Sidebar menu group.
     Photo background uses <code>?background=1</code>. Add <code>?floating=1</code> for the detached rail. Rounded uses a 40px corner. The flush rail is <code>?background=1</code> alone.
     <code>?floating_top_nav=1</code> turns the bar into cards. <code>content_scroll=below</code> parks those cards above the page.
+    <code>?scroll=page</code> scrolls the window.
     <code>?height=content</code> with <code>?floating=1</code> sizes the desktop rail to its items.
     <code>?width=content</code> sizes the open desktop rail to its widest item.
     <code>?aside=1</code> opens Details. <code>?aside=closed</code> starts it shut.
@@ -188,3 +189,24 @@
   <% end %>
   <p class="text-sm font-medium" id="scroll-end">You reached the end.</p>
 </section>
+
+<% if params[:scroll] == "page" %>
+  <% [
+    ["Field notes", "The window moves. The rail stays."],
+    ["Packing list", "The cards stay up here while this copy keeps going."],
+    ["Route card", "A long page is the point of this mode."]
+  ].each do |title, line| %>
+    <section class="mb-16">
+      <%= render FlatPack::SectionTitle::Component.new(title: title, subtitle: line) %>
+      <% 3.times do |index| %>
+        <p class="mb-8 text-sm leading-6 text-[var(--surface-content-color)]">
+          <%= title %> <%= index + 1 %>. Keep scrolling. The window should move, and the rail should stay put.
+        </p>
+      <% end %>
+    </section>
+  <% end %>
+  <h2 id="page-scroll-anchor" class="mb-8 text-lg font-semibold text-[var(--surface-content-color)]">Jump target</h2>
+  <p class="mb-8 text-sm leading-6 text-[var(--surface-content-color)]">
+    This heading is the anchor. A focused link should clear the cards.
+  </p>
+<% end %>
