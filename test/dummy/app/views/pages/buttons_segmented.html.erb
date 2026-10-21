@@ -8,6 +8,7 @@
   <%= render FlatPack::SectionTitle::Component.new(title: "Primary", anchor_link: true, subtitle: "The selected button uses the primary colour.") %>
   <div class="mb-4">
     <%= render FlatPack::SegmentedButtons::Component.new(
+      style: :primary,
       data: {
         controller: "segmented-buttons-demo",
         segmented_buttons_demo_active_style_value: "primary",
@@ -45,6 +46,7 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::SegmentedButtons::Component.new(
+        style: :primary,
         data: {
           controller: "segmented-buttons-demo",
           segmented_buttons_demo_active_style_value: "primary",
@@ -75,6 +77,30 @@
       &lt;% end %&gt;
     CODE
   ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sliding", anchor_link: true, subtitle: "One track. The shaded option slides behind the label.") %>
+  <div class="space-y-6 mb-4">
+    <div data-controller="segmented-buttons-demo">
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Neutral</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(indicator: :slide) do |group| %>
+        <% group.button(text: "Day", selected: true, data: { action: "segmented-buttons-demo#choose" }) %>
+        <% group.button(text: "Week", data: { action: "segmented-buttons-demo#choose" }) %>
+        <% group.button(text: "Month", data: { action: "segmented-buttons-demo#choose" }) %>
+      <% end %>
+      <p class="mt-2 text-sm text-[var(--surface-content-color)]">Showing <span data-segmented-buttons-demo-target="label">Day</span></p>
+    </div>
+    <div data-controller="segmented-buttons-demo">
+      <p class="text-sm text-[var(--surface-muted-content-color)] mb-2">Primary</p>
+      <%= render FlatPack::SegmentedButtons::Component.new(indicator: :slide, style: :primary) do |group| %>
+        <% group.button(text: "List", selected: true, data: { action: "segmented-buttons-demo#choose" }) %>
+        <% group.button(text: "Grid", data: { action: "segmented-buttons-demo#choose" }) %>
+        <% group.button(text: "Table", data: { action: "segmented-buttons-demo#choose" }) %>
+      <% end %>
+      <p class="mt-2 text-sm text-[var(--surface-content-color)]">Showing <span data-segmented-buttons-demo-target="label">List</span></p>
+    </div>
+  </div>
 </section>
 
 <section class="mb-12">

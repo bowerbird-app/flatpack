@@ -3891,7 +3891,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
-/* Sliding active indicator (Tabs + Button::Pill, opt-in `indicator: :slide`) */
+/* Sliding active indicator (Tabs, Button::Pill, Segmented Buttons; opt-in `indicator: :slide`) */
 .fp-slide-indicator-list {
   position: relative;
 }
@@ -3937,6 +3937,27 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: transparent;
 }
 
+/* Button fill is unlayered, so a real button inside the track would cover the indicator. */
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item,
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item:hover:not(:disabled),
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item:active:not(:disabled) {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  color: var(--tabs-pill-inactive-text-color);
+}
+
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item:hover:not(:disabled):not([aria-pressed="true"]) {
+  color: var(--tabs-pill-inactive-hover-text-color);
+}
+
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item[aria-pressed="true"],
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item[aria-pressed="true"]:hover:not(:disabled),
+.fp-slide-indicator-list .fp-button.fp-slide-indicator__item[aria-pressed="true"]:active:not(:disabled) {
+  color: var(--tabs-pill-active-text-color);
+}
+
 .fp-slide-indicator-list:not(.is-ready)[data-flat-pack--slide-indicator-kind-value="underline"] .fp-slide-indicator__item[aria-selected="true"]::after {
   content: "";
   position: absolute;
@@ -3947,7 +3968,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-slide-indicator-list:not(.is-ready)[data-flat-pack--slide-indicator-kind-value="pill"] .fp-slide-indicator__item[aria-selected="true"],
-.fp-slide-indicator-list:not(.is-ready)[data-flat-pack--slide-indicator-kind-value="pill"] .fp-slide-indicator__item[aria-current="page"] {
+.fp-slide-indicator-list:not(.is-ready)[data-flat-pack--slide-indicator-kind-value="pill"] .fp-slide-indicator__item[aria-current="page"],
+.fp-slide-indicator-list:not(.is-ready)[data-flat-pack--slide-indicator-kind-value="pill"] .fp-slide-indicator__item[aria-pressed="true"] {
   background-color: var(--tabs-pill-active-background-color);
   border-color: var(--tabs-pill-active-border-color);
   box-shadow: var(--tabs-pill-active-shadow);

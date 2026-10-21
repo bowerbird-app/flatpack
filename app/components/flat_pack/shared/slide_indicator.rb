@@ -2,7 +2,7 @@
 
 module FlatPack
   module Shared
-    # Opt-in sliding active marker for Tabs, Button::Pill, and later Segmented Buttons.
+    # Opt-in sliding active marker for Tabs, Button::Pill, and Segmented Buttons.
     module SlideIndicator
       CONTROLLER = "flat-pack--slide-indicator"
       LIST_CLASS = "fp-slide-indicator-list"

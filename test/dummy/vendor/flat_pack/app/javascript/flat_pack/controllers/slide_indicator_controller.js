@@ -1,5 +1,5 @@
 // FlatPack Slide Indicator Stimulus Controller
-// Shared by Tabs and Button::Pill (and ready for Segmented Buttons later).
+// Shared by Tabs, Button::Pill, and Segmented Buttons.
 // Positions one indicator to the active item and moves it on --duration-base.
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
@@ -21,7 +21,9 @@ export default class extends Controller {
     this.frame = null
     this.hasPositioned = false
 
+    this.boundTurboSync = () => this.sync({ animate: false })
     this.element.addEventListener("click", this.boundOnClick)
+    this.observeTurbo()
     this.observeMutations()
     this.observeResize()
     this.observeFonts()
@@ -33,6 +35,7 @@ export default class extends Controller {
   disconnect() {
     this.element.removeEventListener("click", this.boundOnClick)
     this.element.removeEventListener("scroll", this.boundSyncInstant)
+    this.releaseTurbo()
     this.mutationObserver?.disconnect()
     this.resizeObserver?.disconnect()
     this.clearVisitTimer()
@@ -47,7 +50,7 @@ export default class extends Controller {
     this.resizeObserver?.observe(item)
     this.mutationObserver?.observe(item, {
       attributes: true,
-      attributeFilter: ["aria-selected", "aria-current", "class"]
+      attributeFilter: ["aria-selected", "aria-current", "aria-pressed", "class"]
     })
     this.scheduleSync(false)
   }
@@ -62,6 +65,11 @@ export default class extends Controller {
 
     if (item.getAttribute("role") === "tab") {
       this.sync({ animate: true, item })
+      return
+    }
+
+    if (item.hasAttribute("aria-pressed")) {
+      this.selectPressedItem(item)
       return
     }
 
@@ -83,6 +91,36 @@ export default class extends Controller {
 
     const href = item.getAttribute("href")
     return href != null && href !== ""
+  }
+
+  selectPressedItem(item) {
+    const prior = this.itemTargets.map((el) => [el, el.getAttribute("aria-pressed")])
+    const anchor = this.pressedItem() || this.activeItem()
+
+    this.itemTargets.forEach((el) => {
+      const isSelected = el === item
+      this.applyClasses(el, isSelected)
+      el.setAttribute("aria-pressed", isSelected ? "true" : "false")
+    })
+    this.sync({ animate: true, item })
+
+    const change = new CustomEvent("flat-pack--segmented-buttons:change", {
+      bubbles: true,
+      cancelable: true,
+      detail: { index: this.itemTargets.indexOf(item), button: item }
+    })
+    if (this.element.dispatchEvent(change)) return
+
+    prior.forEach(([el, pressed]) => {
+      if (pressed == null) el.removeAttribute("aria-pressed")
+      else el.setAttribute("aria-pressed", pressed)
+      this.applyClasses(el, pressed === "true")
+    })
+    this.sync({ animate: false, item: anchor })
+  }
+
+  pressedItem() {
+    return this.itemTargets.find((el) => el.getAttribute("aria-pressed") === "true") || null
   }
 
   selectLinkItem(item) {
@@ -163,6 +201,7 @@ export default class extends Controller {
     return (
       this.itemTargets.find((el) => el.getAttribute("aria-selected") === "true") ||
       this.itemTargets.find((el) => el.getAttribute("aria-current") === "page") ||
+      this.itemTargets.find((el) => el.getAttribute("aria-pressed") === "true") ||
       this.itemTargets[0]
     )
   }
@@ -213,7 +252,7 @@ export default class extends Controller {
     this.itemTargets.forEach((item) => {
       this.mutationObserver.observe(item, {
         attributes: true,
-        attributeFilter: ["aria-selected", "aria-current"]
+        attributeFilter: ["aria-selected", "aria-current", "aria-pressed"]
       })
     })
   }
@@ -235,6 +274,22 @@ export default class extends Controller {
 
   observeScroll() {
     this.element.addEventListener("scroll", this.boundSyncInstant, { passive: true })
+  }
+
+  observeTurbo() {
+    const doc = globalThis.document
+    if (!this.boundTurboSync || typeof doc?.addEventListener !== "function") return
+
+    doc.addEventListener("turbo:render", this.boundTurboSync)
+    doc.addEventListener("turbo:load", this.boundTurboSync)
+  }
+
+  releaseTurbo() {
+    const doc = globalThis.document
+    if (!this.boundTurboSync || typeof doc?.removeEventListener !== "function") return
+
+    doc.removeEventListener("turbo:render", this.boundTurboSync)
+    doc.removeEventListener("turbo:load", this.boundTurboSync)
   }
 
   scheduleSync(animate) {
