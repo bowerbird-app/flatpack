@@ -1153,6 +1153,7 @@
         { variable: "id", accepts: "String (required)", example: "id: \"edit-profile-modal\"" },
         { variable: "size", accepts: ":sm, :md, :lg, :xl, :\"2xl\"", example: "size: :lg" },
         { variable: "scroll", accepts: ":body, :page", example: "scroll: :page" },
+        { variable: "scrollbar", accepts: ":hidden, :visible", example: "scrollbar: :visible" },
         { variable: "sticky_footer", accepts: "true, false", example: "sticky_footer: true" },
         { variable: "close_on_escape", accepts: "true, false", example: "close_on_escape: true" },
         { variable: "navigable", accepts: "true, false", example: "navigable: true" },
@@ -1170,6 +1171,7 @@
         { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" },
         { variable: "close_on_backdrop", accepts: "true, false", example: "close_on_backdrop: true" },
         { variable: "close_on_escape", accepts: "true, false", example: "close_on_escape: true" },
+        { variable: "scrollbar", accepts: ":hidden, :visible", example: "scrollbar: :visible" },
         { variable: "header", accepts: "slot block", example: "drawer.header { \"Filters\" }" },
         { variable: "body", accepts: "slot block", example: "drawer.body { \"Filter fields\" }" },
         { variable: "footer", accepts: "slot block", example: "drawer.footer { render FlatPack::Button::Component.new(text: \"Apply\") }" }
@@ -1443,6 +1445,7 @@
         { variable: "floating_top_nav", accepts: "true, false", example: "floating_top_nav: true" },
         { variable: "content_scroll", accepts: ":behind, :below", example: "content_scroll: :below" },
         { variable: "scroll", accepts: ":pane, :page", example: "scroll: :page" },
+        { variable: "scrollbar", accepts: ":hidden, :visible", example: "scrollbar: :visible" },
         { variable: "height", accepts: ":full, :content", example: "height: :content" },
         { variable: "width", accepts: ":fixed, :content", example: "width: :content" },
         { variable: "resizable", accepts: "true, false", example: "resizable: true" },

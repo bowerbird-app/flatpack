@@ -108,6 +108,20 @@ module FlatPack
         render_inline(Component.new(class: "custom-sidebar"))
         assert_includes page.native.to_html, "custom-sidebar"
       end
+
+      def test_items_scroller_hides_the_bar_and_stays_in_tab_order
+        render_inline(Component.new) do |sidebar|
+          sidebar.items { "Links" }
+        end
+
+        scroller = page.find(".fp-sidebar-scroll")
+        assert_includes scroller[:class], "fp-pane-scroll"
+        refute_includes scroller[:class], "scrollbar-none"
+        assert_equal "0", scroller["tabindex"]
+        assert_equal "Sidebar", scroller["aria-label"]
+        assert_nil scroller["role"]
+        assert_equal "scrollContainer", scroller["data-flat-pack--sidebar-layout-target"]
+      end
     end
   end
 end

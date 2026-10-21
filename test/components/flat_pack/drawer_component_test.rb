@@ -45,6 +45,37 @@ module FlatPack
 
         assert_equal "id is required", error.message
       end
+
+      def test_body_hides_the_bar_and_is_a_named_region
+        render_inline(Component.new(id: "filters-drawer", title: "Filters")) do |drawer|
+          drawer.body { "Narrow the list." }
+        end
+
+        body = page.find(".fp-drawer-body")
+        assert_includes body[:class], "fp-pane-scroll"
+        assert_equal "region", body["role"]
+        assert_equal "0", body["tabindex"]
+        assert_equal "Drawer", body["aria-label"]
+        assert_nil body["data-pane-scrollbar"]
+        assert_selector "[role='dialog']"
+      end
+
+      def test_visible_scrollbar_uses_the_browser_bar
+        render_inline(Component.new(id: "filters-drawer", scrollbar: :visible)) do |drawer|
+          drawer.body { "Narrow the list." }
+        end
+
+        body = page.find(".fp-drawer-body")
+        assert_equal "visible", body["data-pane-scrollbar"]
+        assert_nil body["tabindex"]
+        assert_nil body["role"]
+      end
+
+      def test_scrollbar_rejects_unknown_values
+        error = assert_raises(ArgumentError) { Component.new(id: "filters-drawer", scrollbar: :thin) }
+
+        assert_equal "scrollbar must be :hidden or :visible", error.message
+      end
     end
   end
 end

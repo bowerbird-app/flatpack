@@ -196,6 +196,13 @@ fr:
       close: Fermer
       previous: Page précédente
       label: Navigation de page
+    pane_scroll:
+      main: Contenu
+      aside: Panneau latéral
+      sidebar: Barre latérale
+      drawer: Tiroir
+      modal: Dialogue
+      messages: Messages
     pagination:
       loading_more: Chargement…
       label: Pagination

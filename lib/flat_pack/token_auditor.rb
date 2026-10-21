@@ -66,6 +66,8 @@ module FlatPack
       --carousel-bleed
       --card-inset
       --card-inner-radius
+      --fp-pane-fade-top
+      --fp-pane-fade-bottom
     ].freeze
 
     Result = Struct.new(:defined, :referenced, :missing, keyword_init: true) do

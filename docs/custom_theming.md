@@ -823,6 +823,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --stack-gap-lg: 1.5rem;
   --overflow-row-gap: var(--stack-gap-md);
   --overflow-row-fade-size: 2rem;
+  --pane-scrollbar-width: none;
+  --pane-scroll-fade-size: 2.5rem;
   --form-control-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --form-control-padding-y: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --table-padding-x: round(nearest, calc(var(--space-4) * var(--density)), 1px);

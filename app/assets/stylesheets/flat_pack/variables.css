@@ -355,6 +355,8 @@
   --aside-width: var(--aside-width);
   --aside-min-width: var(--aside-min-width);
   --aside-max-width: var(--aside-max-width);
+  --pane-scrollbar-width: var(--pane-scrollbar-width);
+  --pane-scroll-fade-size: var(--pane-scroll-fade-size);
   --resize-handle-color: var(--resize-handle-color);
   --resize-handle-active-color: var(--resize-handle-active-color);
   --sidebar-background-color: var(--sidebar-background-color);
@@ -1333,6 +1335,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --aside-width: 20rem;
   --aside-min-width: 16rem;
   --aside-max-width: 32rem;
+  /* none hides pane bars. A theme may set thin or auto. The fade length is the edge hint. */
+  --pane-scrollbar-width: none;
+  --pane-scroll-fade-size: 2.5rem;
   --resize-handle-color: var(--surface-border-color);
   --resize-handle-active-color: var(--surface-muted-content-color);
   --sidebar-background-color: var(--surface-page-background-color);

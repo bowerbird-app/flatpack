@@ -95,7 +95,7 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
 
 `floating_top_nav: true` paints the same cards as [Sidebar Layout](sidebar_layout.md). `TopNav` `left` and `center` are each one card. Each direct child of `right` is its own card. The fill, shadow, gap, and corner come from `--sidebar-float-background-color`, `--sidebar-float-shadow`, `--sidebar-float-inset`, and `--top-nav-float-radius`. The page sets `--layout-content-max-width` from the `width:` token and `--layout-content-inset` from `--page-layout-padding-inline`, so the cards share the column's edges.
 
-The shell scrolls with the window. It does not lock a pane, store state, or read a cookie. The first paint is the finished page. Sidebar Layout's wrap measurement is not part of this shell.
+The shell scrolls with the window. It does not lock a pane, store state, or read a cookie. The first paint is the finished page. Sidebar Layout's wrap measurement is not part of this shell. The window keeps its scrollbar. `--pane-scrollbar-width` does not apply here.
 
 ## Accessibility
 The bar is a `<header>` (or the `<header>` from `TopNav`). The column is `<main>`. The footer slot is `<footer>`. The photo is decorative. `FlatPack::Backdrop::Component` marks it `aria-hidden="true"`. Pass `alt=""` on the image. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is unavailable, the photo is hidden and the tint becomes solid.

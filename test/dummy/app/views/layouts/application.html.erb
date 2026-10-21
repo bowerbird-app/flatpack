@@ -111,6 +111,7 @@
     <% panels_resizable = params[:resizable].in?(%w[1 true]) %>
     <% sidebar_collapsed = params[:collapsed].in?(%w[1 true]) %>
     <% notes_panel = params[:notes].in?(%w[1 true]) %>
+    <% pane_scrollbar = (params[:scrollbar] == "visible") ? :visible : :hidden %>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: sidebar_side,
       open: !sidebar_collapsed,
@@ -119,6 +120,7 @@
       floating_top_nav: floating_top_nav,
       content_scroll: content_scroll,
       scroll: (page_scroll ? :page : :pane),
+      scrollbar: pane_scrollbar,
       height: sidebar_height,
       width: sidebar_width,
       resizable: panels_resizable
@@ -210,9 +212,16 @@
               data: { action: "click->flat-pack--sidebar-layout#closeAside" }
             ) %>
           </div>
-          <div class="space-y-3 p-4 text-sm leading-6">
-            <p>Notes for this page stay here.</p>
-            <p>The panel scrolls on its own. The page column does not move with it.</p>
+          <div class="space-y-4 p-4 text-sm leading-6">
+            <% if controller.action_name == "sidebar_layout" %>
+              <% 16.times do |index| %>
+                <p>Note <%= index + 1 %>. This panel keeps its own place. The page column does not move with it.</p>
+              <% end %>
+              <p id="aside-end">End of the notes.</p>
+            <% else %>
+              <p>Notes for this page stay here.</p>
+              <p>The panel scrolls on its own. The page column does not move with it.</p>
+            <% end %>
           </div>
         <% end %>
       <% end %>

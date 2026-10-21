@@ -24,6 +24,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 | `body_height` | String | `nil` | conditional | Required when `body_height_mode` is `:fixed` or `:min`; validated for safe CSS-length/expression characters. In `:page` mode these still size the body; they do not add a viewport cap. |
 | `close_on_backdrop` | Boolean | `true` | no | Allow closing when clicking backdrop. |
 | `close_on_escape` | Boolean | `true` | no | Allow closing on Escape. |
+| `scrollbar` | Symbol | `:hidden` | no | `:hidden` hides the body bar when the body scrolls. `:visible` uses the browser bar. Anything else raises `ArgumentError`. `scroll: :page` leaves the overlay bar alone unless the body itself scrolls (`body_height_mode: :fixed`). |
 | `navigable` | Boolean | `false` | no | Opt-in multi-screen navigation. Off keeps today’s markup and behaviour. |
 | `src` | String | `nil` | with `navigable` | Turbo Frame URL loaded lazily on open. Required when `navigable: true`. Relative, `http`, and `https` only. Not a clickable `href`. |
 | `origin` | Symbol | `:center` | no | Enter/exit origin. `:center` is today’s fade and scale (markup unchanged). `:trigger` grows the panel out of the control that opened it and shrinks back on close. Not a shape morph. |
@@ -33,7 +34,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 | name | type | required | description |
 |---|---|---|---|
 | `header` | method/slot | no | Provides custom header content (replaces title text area). |
-| `body` | method/slot | no | Provides main dialog body content. Scrolls inside the card when `scroll: :body`. |
+| `body` | method/slot | no | Provides main dialog body content. Scrolls inside the card when `scroll: :body`. A hidden bar is a named region ("Dialog") in the tab order. The width is `--pane-scrollbar-width`. A fade on `--pane-scroll-fade-size` marks the edge that has more content. |
 | `footer` | method/slot | no | Provides footer action row content. |
 
 ## Variants

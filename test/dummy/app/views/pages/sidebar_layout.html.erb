@@ -32,6 +32,8 @@
 <% flush_query = { "aside" => "1", "resizable" => "1" } %>
 <% notes_query = cards_query.merge("notes" => "1") %>
 <% collapsed_query = cards_query.merge("collapsed" => "1") %>
+<% press_kit_query = { "floating" => "1", "background" => "1", "floating_top_nav" => "1", "aside" => "1", "height" => "content" } %>
+<% bars_on = params[:scrollbar] == "visible" %>
 
 <div class="mb-8 flex flex-wrap items-center gap-3">
   <%= link_to(
@@ -107,6 +109,18 @@
     style: :secondary,
     size: :sm
   ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: "Press kit",
+    href: demo_sidebar_layout_path(press_kit_query),
+    style: :secondary,
+    size: :sm
+  ) %>
+  <%= render FlatPack::Button::Component.new(
+    text: bars_on ? "Hide bars" : "Show bars",
+    href: demo_sidebar_layout_path(bars_on ? request.query_parameters.except("scrollbar") : request.query_parameters.merge("scrollbar" => "visible")),
+    style: :secondary,
+    size: :sm
+  ) %>
   <% if top_nav_floating && params[:scroll] != "page" %>
     <%= render FlatPack::Button::Component.new(
       text: content_below ? "Scroll under" : "Start below",
@@ -128,6 +142,8 @@
     Photo background uses <code>?background=1</code>. Add <code>?floating=1</code> for the detached rail. Rounded uses a 40px corner. The flush rail is <code>?background=1</code> alone.
     <code>?floating_top_nav=1</code> turns the bar into cards. <code>content_scroll=below</code> parks those cards above the page.
     <code>?scroll=page</code> scrolls the window.
+    <code>?scrollbar=visible</code> shows the browser bar on the page and the aside.
+    Press kit is <code>?floating=1&amp;background=1&amp;floating_top_nav=1&amp;aside=1&amp;height=content</code>. Add <code>scrollbar=visible</code> for the bars.
     <code>?height=content</code> with <code>?floating=1</code> sizes the desktop rail to its items.
     <code>?width=content</code> sizes the open desktop rail to its widest item.
     <code>?aside=1</code> opens Details. <code>?aside=closed</code> starts it shut.
@@ -180,7 +196,7 @@
     anchor_link: true,
     subtitle: "The rail and the top nav stay put. This copy is long so you can see the page move under the cards."
   ) %>
-  <% 12.times do |index| %>
+  <% 18.times do |index| %>
     <p class="mb-8 text-sm leading-6 text-[var(--surface-content-color)]">
       Block <%= index + 1 %>. The shell keeps the viewport. Only this column scrolls.
       A floating top nav sits on the photo, and the first lines start below the cards.

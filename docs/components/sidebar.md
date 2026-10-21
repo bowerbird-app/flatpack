@@ -120,7 +120,7 @@ Pass `logo:` as a URL when the host has a square mark. Header shows that mark an
 
 `flat-pack--sidebar` sets `aria-expanded` on the collapse and expand controls. Collapsed is `"false"`. Expanded is `"true"`. On connect it reads the nearest `[data-flat-pack-sidebar-collapsed]`, or the aside itself. It then listens on the column for `flat-pack--sidebar-layout:collapse`. A menu used alone has no column, so connect uses the aside attribute. The header starts with the collapse button at `aria-expanded="true"` (`Collapse sidebar`) and the expand button at `aria-expanded="false"` (`Open sidebar`). The controller corrects both after connect. `CollapseToggle` keeps `aria-expanded` from its `collapsed:` argument until connect.
 
-A Header `logo:` mark is decorative when `title` is present (`alt=""`, `aria-hidden`). The title names the brand. The brand wrapper is `.fp-sidebar-brand`. The footer is `.fp-sidebar-footer`. The items scroller is `.fp-sidebar-scroll`.
+A Header `logo:` mark is decorative when `title` is present (`alt=""`, `aria-hidden`). The title names the brand. The brand wrapper is `.fp-sidebar-brand`. The footer is `.fp-sidebar-footer`. The items scroller is `.fp-sidebar-scroll`. It uses `.fp-pane-scroll`, so the bar follows `--pane-scrollbar-width`. The scroller is in the tab order with the name "Sidebar". It is not a second landmark inside the nav.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
