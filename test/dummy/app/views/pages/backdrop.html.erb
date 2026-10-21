@@ -1,0 +1,89 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Backdrop",
+  subtitle: "A blurred photo behind a hero, a card, or the whole window."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :backdrop %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="backdrop-hero-example">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Hero",
+    anchor_link: true,
+    subtitle: "A tall section. The words stay yours."
+  ) %>
+
+  <div id="backdrop-hero" class="overflow-hidden rounded-[var(--card-radius)]">
+    <%= render FlatPack::Backdrop::Component.new(class: "flex min-h-96 w-full items-end") do |backdrop| %>
+      <% backdrop.with_media do %>
+        <%= image_tag "/images/hero-packaging.jpg", alt: "" %>
+      <% end %>
+      <div class="m-6 max-w-md rounded-[var(--card-radius)] bg-[var(--surface-background-color)] p-6 text-[var(--surface-content-color)] shadow-[var(--shadow-md)]">
+        <h2 class="text-2xl font-semibold">Pack the morning</h2>
+        <p class="mt-2 text-sm">The photo is blurred. These words are yours.</p>
+        <%= render FlatPack::Button::Component.new(text: "See the card", style: :primary, href: "#backdrop-card-example", class: "mt-4") %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Backdrop::Component.new(class: "flex min-h-96 w-full items-end") do |backdrop| #{erb_tag_close}
+        #{erb_output_open} backdrop.with_media do #{erb_tag_close}
+          #{erb_output_open} image_tag photo_path, alt: "" #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+        <h2>Pack the morning</h2>
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="backdrop-card-example">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Card",
+    anchor_link: true,
+    subtitle: "The photo follows the card's corner."
+  ) %>
+
+  <div id="backdrop-card" class="max-w-sm">
+    <%= render FlatPack::Card::Component.new(padding: :none) do %>
+      <%= render FlatPack::Backdrop::Component.new(class: "flex min-h-96 items-end") do |backdrop| %>
+        <% backdrop.with_media do %>
+          <%= image_tag "/images/hero-stool.jpg", alt: "" %>
+        <% end %>
+        <div class="p-6 text-[var(--surface-content-color)]">
+          <h2 class="text-xl font-semibold">On the bench</h2>
+          <p class="mt-2 text-sm">Same wash. Smaller frame.</p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="backdrop-page-example">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Full page",
+    anchor_link: true,
+    subtitle: "No sidebar. The photo fills the window."
+  ) %>
+
+  <div id="backdrop-page" class="overflow-hidden rounded-[var(--card-radius)]">
+    <%= render FlatPack::Backdrop::Component.new(class: "flex min-h-screen w-full items-center justify-center") do |backdrop| %>
+      <% backdrop.with_media do %>
+        <%= image_tag "/images/hero-subscription-box.webp", alt: "" %>
+      <% end %>
+      <div class="mx-6 max-w-md rounded-[var(--card-radius)] bg-[var(--surface-background-color)] p-6 text-center text-[var(--surface-content-color)] shadow-[var(--shadow-md)]">
+        <h2 class="text-2xl font-semibold">The whole window</h2>
+        <p class="mt-2 text-sm">Open it on its own page.</p>
+        <%= render FlatPack::Button::Component.new(text: "Open the full page", style: :primary, href: demo_backdrop_full_path, class: "mt-4") %>
+      </div>
+    <% end %>
+  </div>
+</section>

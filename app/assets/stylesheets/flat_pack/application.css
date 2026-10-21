@@ -826,37 +826,41 @@
   );
 }
 
-/* isolation holds z-index: -1 above the body paint and under the shell.
- * Unlayered so a host page-background utility still sees the cleared token.
+/* Fills its container and clips to that container's radius.
+ * isolation keeps z-index: -1 under the host content and above the page.
+ * Unlayered so a host utility cannot uncover the photo or square the clip.
  */
-[data-flat-pack-layout-background] {
+.fp-backdrop {
+  position: relative;
   isolation: isolate;
+  overflow: hidden;
+  border-radius: inherit;
+  min-width: 0;
 }
 
-[data-flat-pack-layout-background] .fp-layout-main {
-  --surface-page-background-color: transparent;
-  background-color: transparent;
+.fp-backdrop[aria-hidden="true"] {
+  pointer-events: none;
 }
 
-.fp-layout-background {
-  position: fixed;
+.fp-backdrop-layers {
+  position: absolute;
   inset: 0;
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
-  background-color: var(--layout-background-color);
+  background-color: var(--backdrop-color);
 }
 
-.fp-layout-background-media {
+.fp-backdrop-media {
   position: absolute;
   inset: -12%;
-  filter: blur(var(--layout-background-blur)) var(--layout-background-filter);
-  -webkit-filter: blur(var(--layout-background-blur)) var(--layout-background-filter);
+  filter: blur(var(--backdrop-blur)) var(--backdrop-filter);
+  -webkit-filter: blur(var(--backdrop-blur)) var(--backdrop-filter);
 }
 
-.fp-layout-background-media img,
-.fp-layout-background-media picture,
-.fp-layout-background-media video {
+.fp-backdrop-media img,
+.fp-backdrop-media picture,
+.fp-backdrop-media video {
   display: block;
   width: 100%;
   height: 100%;
@@ -864,37 +868,56 @@
   object-fit: cover;
 }
 
-.fp-layout-background-media picture img {
+.fp-backdrop-media picture img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.fp-layout-background-tint {
+.fp-backdrop-tint {
   position: absolute;
   inset: 0;
-  background-color: var(--layout-background-tint-color);
-  opacity: var(--layout-background-tint-opacity);
+  background-color: var(--backdrop-tint-color);
+  opacity: var(--backdrop-tint-opacity);
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .fp-layout-background-media {
+  .fp-backdrop-media {
     visibility: hidden;
   }
 
-  .fp-layout-background-tint {
+  .fp-backdrop-tint {
     opacity: 1;
   }
 }
 
 @supports not ((filter: blur(1px)) or (-webkit-filter: blur(1px))) {
-  .fp-layout-background-media {
+  .fp-backdrop-media {
     visibility: hidden;
   }
 
-  .fp-layout-background-tint {
+  .fp-backdrop-tint {
     opacity: 1;
   }
+}
+
+/* The shell pins Backdrop to the viewport. The component itself stays in its container.
+ * Unlayered so a host page-background utility still sees the cleared token.
+ */
+[data-flat-pack-layout-background] {
+  isolation: isolate;
+}
+
+[data-flat-pack-layout-background] > .fp-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  border-radius: 0;
+}
+
+[data-flat-pack-layout-background] .fp-layout-main {
+  --surface-page-background-color: transparent;
+  background-color: transparent;
 }
 
 /* Unlayered so a style fill or shadow utility cannot cover the hover.

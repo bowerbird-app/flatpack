@@ -109,6 +109,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/masonry
     /demo/collage
     /demo/motion
+    /demo/backdrop
+    /demo/backdrop/full
     /demo/overlay
     /demo/video_preview
     /demo/fab

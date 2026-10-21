@@ -47,9 +47,9 @@ A named host theme should set semantic tokens, not component aliases. Component 
 - Exact hex: `--color-primary` (and `--color-primary-text` if the fill is light)
 - Surfaces, if they should differ from the kit greys: `--surface-page-background-color`, `--surface-background-color`, `--surface-muted-background-color`, `--surface-border-color`, `--surface-content-color`, `--surface-muted-content-color`
 
-**Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`, `--layout-background-color`, `--layout-background-filter`, `--layout-background-tint-opacity`.
+**Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`, `--backdrop-color`, `--backdrop-filter`, `--backdrop-tint-opacity`.
 
-Stack the brand on rounded. The attribute is a list, base first. Rounded still supplies spacing, shape, and the layout-background wash (`#2f2f2f`, black tint at `0.18`). That wash follows the dark block in the kit, so `rounded dark` keeps `0.18` instead of `0.78`. The brand block overrides only the tokens it sets. Load that block after `flat_pack/variables`. Both selectors have the same specificity, so source order decides the winner.
+Stack the brand on rounded. The attribute is a list, base first. Rounded still supplies spacing, shape, and the backdrop wash (`#2f2f2f`, black tint at `0.18`). That wash follows the dark block in the kit, so `rounded dark` keeps `0.18` instead of `0.78`. The brand block overrides only the tokens it sets. Load that block after `flat_pack/variables`. Both selectors have the same specificity, so source order decides the winner.
 
 ```html
 <html data-theme="rounded featured-in">
@@ -528,11 +528,11 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --top-nav-float-gap: 0.75rem;
   /* --layout-content-inset stays on the kit: 1rem, then 2rem from 640px. Set it here only to change that page padding. */
   /* --layout-content-max-width stays 100% (the padded column). Set a length here to center a measure; the floating bar follows it. */
-  --layout-background-blur: 40px;
-  --layout-background-color: transparent;
-  --layout-background-filter: saturate(1);
-  --layout-background-tint-color: var(--surface-page-background-color);
-  --layout-background-tint-opacity: 0.55;
+  --backdrop-blur: 40px;
+  --backdrop-color: transparent;
+  --backdrop-filter: saturate(1);
+  --backdrop-tint-color: var(--surface-page-background-color);
+  --backdrop-tint-opacity: 0.55;
   --sidebar-border-color: oklch(0.89 0.01 250);
   --sidebar-divider-color: oklch(0.89 0.01 250);
   --sidebar-item-text-color: oklch(0.45 0.01 250);

@@ -507,6 +507,7 @@ module FlatPack
           layout.main { "Main" }
         end
 
+        refute_selector ".fp-backdrop"
         refute_selector ".fp-layout-background"
         refute_selector ".fp-layout-main"
         refute_includes page.native.to_html, "data-flat-pack-layout-background"
@@ -520,14 +521,15 @@ module FlatPack
         end
 
         assert_selector "[data-flat-pack-layout-background='true']"
-        assert_selector ".fp-layout-background[aria-hidden='true']"
-        assert_selector ".fp-layout-background-media img[alt=''][src='/images/hero-packaging.jpg']"
-        assert_selector ".fp-layout-background-tint"
+        assert_selector ".fp-backdrop[aria-hidden='true']"
+        assert_selector ".fp-backdrop-media img[alt=''][src='/images/hero-packaging.jpg']"
+        assert_selector ".fp-backdrop-tint"
         assert_selector ".fp-layout-main"
-        refute_selector ".fp-layout-background img[alt]:not([alt=''])"
+        refute_selector ".fp-layout-background"
+        refute_selector ".fp-backdrop img[alt]:not([alt=''])"
 
         html = page.native.to_html
-        assert_operator html.index("fp-layout-background"), :<, html.index("Sidebar")
+        assert_operator html.index("fp-backdrop"), :<, html.index("Sidebar")
       end
 
       def test_background_image_is_hidden_from_assistive_tech
@@ -535,7 +537,7 @@ module FlatPack
           layout.background { %(<img src="/images/hero-packaging.jpg" alt="">).html_safe }
         end
 
-        layer = page.find(".fp-layout-background")
+        layer = page.find(".fp-backdrop")
         assert_equal "true", layer["aria-hidden"]
         assert_equal "", layer.find("img")["alt"]
         refute layer.has_selector?("[tabindex]")

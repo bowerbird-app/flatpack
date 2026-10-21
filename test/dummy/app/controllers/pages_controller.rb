@@ -703,6 +703,13 @@ class PagesController < ApplicationController
     render layout: "fullpage" if @motion_clip
   end
 
+  def backdrop
+  end
+
+  def backdrop_full
+    render layout: "fullpage"
+  end
+
   def overlay
   end
 

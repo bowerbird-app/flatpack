@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-10-20
+updated_at: 2026-10-21
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -37,6 +37,18 @@ components:
     title: Avatar Group
     doc: docs/components/avatar-group.md
     primary_class: FlatPack::AvatarGroup::Component
+    status: documented
+
+  - key: backdrop
+    title: Backdrop
+    doc: docs/components/backdrop.md
+    primary_class: FlatPack::Backdrop::Component
+    tokens:
+      - --backdrop-blur
+      - --backdrop-color
+      - --backdrop-filter
+      - --backdrop-tint-color
+      - --backdrop-tint-opacity
     status: documented
 
   - key: badge
@@ -682,8 +694,6 @@ components:
     tokens:
       - --layout-content-inset
       - --layout-content-max-width
-      - --layout-background-color
-      - --layout-background-filter
       - --top-nav-float-offset
       - --top-nav-float-radius
       - --top-nav-float-clearance

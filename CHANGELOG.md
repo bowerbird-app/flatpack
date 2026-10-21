@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.288] - 2026-10-21
+
+### Added
+- `FlatPack::Backdrop::Component` puts a blurred photo, a tint, and an edge fill behind any content. The `media` slot takes the host's `img`, `picture`, or `video`. The component clips to its container and follows that container's corner. Content styling stays with the host.
+- `SidebarLayout`'s `background` slot renders Backdrop and still pins that layer to the viewport. The slot name is unchanged.
+
+### Changed
+- Backdrop owns `--backdrop-blur` (`40px`), `--backdrop-color` (`transparent`), `--backdrop-filter` (`saturate(1)`), `--backdrop-tint-color` (the page colour), and `--backdrop-tint-opacity` (`0.55`). Dark alone still sets the opacity to `0.78`. `[data-theme~="rounded"]` still sets the edge to `#2f2f2f`, the tint to `#000`, and the opacity to `0.18`, including on `rounded dark`.
+- Removed `--layout-background-*` and `.fp-layout-background*`. There is no alias.
+
+### Upgrade notes
+- Rename host overrides from `--layout-background-*` to `--backdrop-*`. Same defaults. Same rounded wash.
+- `layout.background` still takes the host's `img`, `picture`, or `video`. The shell still looks the same.
+- Use Backdrop on a hero, a card, a modal, or a page that has no sidebar. Hero and Carousel are unchanged.
+- Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is missing, the photo hides and the tint is solid.
+- Reload kit CSS. Do not rebuild Tailwind for the component. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.288`.
+
 ## [0.1.287] - 2026-10-21
 
 ### Added

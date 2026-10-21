@@ -1340,6 +1340,15 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-xl\", data: { testid: \"search\" }" }
       ]
     },
+    backdrop: {
+      label: "Backdrop",
+      method_call: "render FlatPack::Backdrop::Component.new(class: \"flex min-h-96 w-full items-end\") do |backdrop| backdrop.with_media { image_tag photo_path, alt: \"\" }; end",
+      variables: [
+        { variable: "with_media", accepts: "slot block", example: "backdrop.with_media { image_tag photo_path, alt: \"\" }" },
+        { variable: "content", accepts: "block", example: "<h2>Pack the morning</h2>" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"flex min-h-96 w-full items-end\", id: \"morning\"" }
+      ]
+    },
     overlay: {
       label: "Overlay",
       method_call: "render FlatPack::Overlay::Component.new do |overlay| overlay.with_media { image_tag photo_path, alt: \"Stool in a box\" }; overlay.with_item(placement: :top_left, inset: :md) { render FlatPack::Badge::Component.new(text: \"New\") } end",
