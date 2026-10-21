@@ -297,7 +297,8 @@
                 round: true,
                 style: :ghost,
                 size: :md,
-                aria: { label: "Notifications" }
+                aria: { label: "Notifications" },
+                data: (editor_toolbar ? { flat_pack_unread: "true" } : {})
               ) %>
             <% else %>
             <div

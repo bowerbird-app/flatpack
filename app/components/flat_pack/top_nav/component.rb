@@ -21,8 +21,6 @@ module FlatPack
         "right" => false
       }.freeze
 
-      TOGGLE_OPEN_CLASS = "[&>svg]:rotate-180"
-
       def initialize(
         mobile_menu: true,
         mobile_menu_label: FlatPack::Copy::OMITTED,
@@ -131,7 +129,7 @@ module FlatPack
 
       def render_mobile_menu_toggle
         render FlatPack::Button::Component.new(
-          icon: "chevron-down",
+          icon: "ellipsis-horizontal",
           icon_only: true,
           style: :ghost,
           size: :md,
@@ -140,7 +138,7 @@ module FlatPack
             "flat-pack--top-nav-target": "toggle",
             action: "click->flat-pack--top-nav#toggle"
           },
-          class: "border-0 shadow-none text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors [&>svg]:transition-transform [&>svg]:duration-[var(--duration-base)]"
+          class: "border-0 shadow-none text-[var(--top-nav-item-icon-color)] hover:bg-[var(--top-nav-item-hover-background-color)] hover:text-[var(--top-nav-item-hover-text-color)] transition-colors"
         )
       end
 
@@ -151,6 +149,7 @@ module FlatPack
           id: @menu_id,
           hidden: true,
           class: mobile_menu_panel_classes,
+          role: "menu",
           aria: {label: @mobile_menu_label},
           data: {"flat-pack--top-nav-target": "panel"}
         )
@@ -160,9 +159,9 @@ module FlatPack
         [
           "absolute right-0 top-full z-20 mt-2",
           "w-[min(20rem,calc(100vw-2rem))]",
-          "flex flex-col items-stretch gap-3",
+          "flex flex-col items-stretch gap-0.5",
           "rounded-[var(--radius-lg)] border border-[var(--surface-border-color)]",
-          "bg-[var(--surface-background-color)] p-[var(--top-nav-mobile-padding)] shadow-lg"
+          "bg-[var(--surface-background-color)] p-1 shadow-lg"
         ].join(" ")
       end
 
@@ -178,7 +177,6 @@ module FlatPack
 
         if @mobile_menu
           data["flat-pack--top-nav-breakpoint-value"] = @mobile_breakpoint
-          data["flat-pack--top-nav-toggle-open-class"] = TOGGLE_OPEN_CLASS
         end
 
         attrs[:data] = merge_data_attributes(attrs[:data], data)

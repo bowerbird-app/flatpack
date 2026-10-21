@@ -18,8 +18,8 @@ module FlatPack
         render_inline(Component.new) { |nav| nav.with_back }
 
         assert_selector "nav[data-controller='flat-pack--page-nav']"
-        assert_selector "nav > div.flex.min-w-0.flex-wrap.items-center.gap-2.md\\:flex-nowrap"
-        assert_selector "button[data-action='click->flat-pack--page-nav#back']"
+        assert_selector "nav > div.flex.items-center.gap-2"
+        assert_selector "button[data-action='click->flat-pack--page-nav#back'][data-flat-pack-page-nav='back']"
         assert_selector "button[aria-label='Go back']"
         assert_selector "button svg[data-flat-pack--icon-name-value='chevron-left']"
         refute_selector "nav[data-flat-pack--page-nav-fallback-url-value]"
@@ -38,7 +38,7 @@ module FlatPack
       def test_renders_back_href_as_a_link_without_history_action
         render_inline(Component.new) { |nav| nav.with_back(href: "/studio") }
 
-        assert_selector "a[href='/studio'][aria-label='Go back']"
+        assert_selector "a[href='/studio'][aria-label='Go back'][data-flat-pack-page-nav='back']"
         refute_selector "[data-action='click->flat-pack--page-nav#back']"
         refute_selector "[data-controller='flat-pack--page-nav']"
       end
@@ -51,7 +51,7 @@ module FlatPack
 
         assert_selector "nav[data-controller='flat-pack--page-nav'][data-flat-pack--page-nav-fallback-url-value='/demo']"
         assert_selector "button[data-action='click->flat-pack--page-nav#back']"
-        assert_selector "a[href='/demo'][aria-label='Close']"
+        assert_selector "a[href='/demo'][aria-label='Close'][data-flat-pack-page-nav='close']"
       end
 
       def test_renders_close_link_and_action

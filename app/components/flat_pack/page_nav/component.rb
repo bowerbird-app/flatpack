@@ -43,6 +43,8 @@ module FlatPack
         label = tooltip.presence || fp_t("page_nav.back")
         link = href.presence
         record_history(link, fallback_url)
+        data = {flat_pack_page_nav: "back"}
+        data[:action] = "click->flat-pack--page-nav#back" if link.blank?
         remember do
           icon_control(
             icon: icon.presence || "chevron-left",
@@ -50,7 +52,7 @@ module FlatPack
             style: style,
             size: size,
             href: link,
-            data: link.present? ? nil : {action: "click->flat-pack--page-nav#back"}
+            data: data
           )
         end
       end
@@ -65,7 +67,8 @@ module FlatPack
             label: label,
             style: style,
             size: size,
-            href: href
+            href: href,
+            data: {flat_pack_page_nav: "close"}
           )
         end
       end
@@ -94,7 +97,7 @@ module FlatPack
       def call
         content
         content_tag(:nav, **nav_attributes) do
-          content_tag(:div, class: "flex min-w-0 flex-wrap items-center gap-2 md:flex-nowrap") do
+          content_tag(:div, class: "flex items-center gap-2") do
             safe_join(@items.map(&:call))
           end
         end
@@ -116,7 +119,7 @@ module FlatPack
 
       def nav_attributes
         attributes = {
-          class: "flat-pack-page-nav min-w-0 max-w-full",
+          class: "flat-pack-page-nav",
           aria: {label: fp_t("page_nav.label")}
         }
         attributes[:data] = history_nav_data if @history_back

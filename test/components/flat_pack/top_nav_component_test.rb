@@ -207,16 +207,17 @@ module FlatPack
         assert_equal "false", section_for("right")["data-flat-pack-top-nav-collapsible"]
       end
 
-      def test_mobile_menu_toggle_icon_rotates_while_open
+      def test_mobile_menu_toggle_is_an_ellipsis
         render_inline(Component.new)
 
         toggle = page.native.at_css("[data-flat-pack--top-nav-target='toggle']")
 
-        assert_includes toggle["class"], "[&>svg]:transition-transform"
-        assert_includes toggle["class"], "[&>svg]:duration-[var(--duration-base)]"
-        refute_includes toggle["class"], "[&>svg]:rotate-180"
-
-        assert_selector "header[data-flat-pack--top-nav-toggle-open-class='[&>svg]:rotate-180']"
+        assert_equal "More actions", toggle["aria-label"]
+        assert_equal "false", toggle["aria-expanded"]
+        assert_selector "[data-flat-pack--top-nav-target='toggle'] svg[data-flat-pack--icon-name-value='ellipsis-horizontal']", visible: :all
+        assert_selector "[data-flat-pack--top-nav-target='panel'][role='menu']", visible: :all
+        refute_selector "svg[data-flat-pack--icon-name-value='chevron-down']", visible: :all
+        refute_selector "header[data-flat-pack--top-nav-toggle-open-class]"
       end
 
       def test_mobile_menu_can_be_disabled
