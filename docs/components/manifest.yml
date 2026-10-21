@@ -679,6 +679,9 @@ components:
       - --top-nav-float-offset
       - --top-nav-float-radius
       - --top-nav-float-clearance
+      - --top-nav-float-padding-block
+      - --top-nav-float-padding-inline
+      - --top-nav-float-gap
       - --sidebar-float-inset
       - --sidebar-float-radius
       - --sidebar-item-radius

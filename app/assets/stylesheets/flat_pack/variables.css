@@ -351,6 +351,9 @@
   --top-nav-float-radius: var(--top-nav-float-radius);
   --top-nav-float-clearance: var(--top-nav-float-clearance);
   --top-nav-float-offset: var(--top-nav-float-offset);
+  --top-nav-float-padding-block: var(--top-nav-float-padding-block);
+  --top-nav-float-padding-inline: var(--top-nav-float-padding-inline);
+  --top-nav-float-gap: var(--top-nav-float-gap);
   --layout-content-inset: var(--layout-content-inset);
   --layout-content-max-width: var(--layout-content-max-width);
   --layout-background-blur: var(--layout-background-blur);
@@ -1308,6 +1311,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --top-nav-float-radius: var(--sidebar-float-radius);
   --top-nav-float-clearance: calc(max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px)) + 3.25rem);
   --top-nav-float-offset: 0px;
+  --top-nav-float-padding-block: 0.25rem;
+  --top-nav-float-padding-inline: max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))));
+  --top-nav-float-gap: 0.75rem;
   /* Horizontal page padding: 1rem (p-4, default --space-4). The sm step is below. */
   --layout-content-inset: 1rem;
   /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
