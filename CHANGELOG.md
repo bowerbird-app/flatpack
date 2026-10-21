@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Upgrade notes
 - New shell. Hosts that do not render it are unchanged. Sidebar Layout markup is unchanged.
 - `width:` accepts only `:narrow`, `:default`, `:wide`, or `:full`. There is no length and no class override.
-- New tokens: `--page-layout-width-narrow` (`40rem`), `--page-layout-width-default` (`56rem`), `--page-layout-width-wide` (`72rem`), `--page-layout-width-full` (`100%`), `--page-layout-padding-inline` (`var(--space-4)`, then `var(--space-6)` from `640px`), `--page-layout-padding-block` (`var(--space-6)`), `--page-layout-gap` (`var(--space-6)`). Rounded does not restate them. Its larger spacing steps make the padding generous.
+- New tokens: `--page-layout-width-narrow` (`40rem`), `--page-layout-width-default` (`56rem`), `--page-layout-width-wide` (`72rem`), `--page-layout-width-full` (`100%`), `--page-layout-padding-inline` (`var(--space-4)`, then `var(--space-6)` from `640px`), `--page-layout-padding-block` (`var(--space-6)`), `--page-layout-gap` (`var(--space-6)`). Rounded does not restate them. Its larger spacing steps make the padding generous. `--page-layout-width` is the width the shell writes on the page. It is not a theme token. Do not set it on `:root`.
 - The `background` slot renders Backdrop and pins it, the same way Sidebar Layout does.
 - The shell has no controller, no storage, and no cookie. It renders complete on the server.
 - Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.

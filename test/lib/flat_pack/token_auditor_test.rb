@@ -52,6 +52,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-measured-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-collapsed-frame"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-panel-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--page-layout-width"
     end
 
     test "brand primitives and transition aliases are defined" do

@@ -41,6 +41,7 @@ module FlatPack
     test "rounded padding follows the spacing scale and sets no photo colour" do
       refute_match(/--page-layout-/, @rounded)
       refute_match(/--page-layout-[^;]*(?:#|oklch|rgb)/, @root)
+      refute_includes @root, "--page-layout-width:"
     end
   end
 end
