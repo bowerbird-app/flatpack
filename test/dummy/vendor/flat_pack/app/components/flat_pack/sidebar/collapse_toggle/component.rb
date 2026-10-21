@@ -66,7 +66,8 @@ module FlatPack
 
         def button_data
           {
-            "flat-pack--sidebar-layout-target": "desktopToggle",
+            "flat-pack-sidebar-toggle": "collapse",
+            "flat-pack--sidebar-target": "collapse",
             action: "click->flat-pack--sidebar-layout#toggleDesktop"
           }
         end
@@ -82,6 +83,7 @@ module FlatPack
 
         def label_classes
           classes(
+            "fp-sidebar-label",
             "flex-1",
             "text-left",
             (@collapsed ? "sr-only" : "")

@@ -12,25 +12,19 @@ module FlatPack
 
         def footer_attributes
           merge_attributes(
-            class: footer_classes,
-            data: footer_data_attributes
+            class: footer_classes
           )
         end
 
         def footer_classes
           classes(
+            "fp-sidebar-footer",
             "shrink-0",
             "p-[var(--sidebar-padding)]",
             "border-t",
             "border-[var(--sidebar-border-color)]",
             "text-[var(--sidebar-footer-text-color)]"
           )
-        end
-
-        def footer_data_attributes
-          {
-            "flat-pack--sidebar-layout-target": "footer"
-          }
         end
       end
     end

@@ -65,7 +65,7 @@ module FlatPack
         private
 
         def render_default_header_content
-          content_tag(:div, class: "flex items-center gap-3", data: {"flat-pack--sidebar-layout-target": "headerRow"}) do
+          content_tag(:div, class: "flex items-center gap-3") do
             safe_join([
               render_brand,
               (@collapsible ? render_collapsed_toggle : nil),
@@ -75,10 +75,10 @@ module FlatPack
         end
 
         def render_brand
-          content_tag(:div, class: "flex items-center gap-3", data: brand_data_attributes) do
+          content_tag(:div, class: "fp-sidebar-brand flex items-center gap-3") do
             safe_join([
               render_badge,
-              content_tag(:div, class: "flex items-center h-8 fp-sidebar-label", data: header_label_data_attributes) do
+              content_tag(:div, class: "flex items-center h-8 fp-sidebar-label") do
                 safe_join([
                   content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]"),
                   (@show_version ? content_tag(:span, sidebar_version_label, class: sidebar_version_badge_classes) : nil)
@@ -127,7 +127,7 @@ module FlatPack
 
         def render_desktop_toggle
           content_tag(:button, type: "button", class: desktop_toggle_classes, data: desktop_toggle_data_attributes, aria: desktop_toggle_aria_attributes) do
-            content_tag(:span, class: "flex-shrink-0 transition-transform duration-[var(--duration-slow)]", data: chevron_data_attributes) do
+            content_tag(:span, class: "flex-shrink-0 transition-transform duration-[var(--duration-slow)]") do
               render FlatPack::Shared::IconComponent.new(name: :chevron_left, size: :md)
             end
           end
@@ -138,42 +138,26 @@ module FlatPack
         end
 
         def collapsed_toggle_classes
-          "hidden items-center justify-center p-2 rounded-[var(--radius-lg)] text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
+          "items-center justify-center p-2 rounded-[var(--radius-lg)] text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
         end
 
         def desktop_toggle_classes
-          "hidden ml-auto p-2 rounded-[var(--radius-lg)] text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
-        end
-
-        def brand_data_attributes
-          {
-            "flat-pack--sidebar-layout-target": "headerBrand"
-          }
-        end
-
-        def header_label_data_attributes
-          {
-            "flat-pack--sidebar-layout-target": "headerLabel"
-          }
+          "ml-auto p-2 rounded-[var(--radius-lg)] text-[var(--sidebar-header-icon-color)] hover:bg-[var(--sidebar-header-icon-hover-background-color)] hover:text-[var(--sidebar-header-icon-hover-color)] transition-colors"
         end
 
         def collapsed_toggle_data_attributes
           {
-            "flat-pack--sidebar-layout-target": "collapsedToggle",
+            "flat-pack-sidebar-toggle": "expand",
+            "flat-pack--sidebar-target": "expand",
             action: "click->flat-pack--sidebar-layout#toggleDesktop"
           }
         end
 
         def desktop_toggle_data_attributes
           {
-            "flat-pack--sidebar-layout-target": "desktopToggle",
+            "flat-pack-sidebar-toggle": "collapse",
+            "flat-pack--sidebar-target": "collapse",
             action: "click->flat-pack--sidebar-layout#toggleDesktop click->flat-pack--sidebar-layout#toggleMobile"
-          }
-        end
-
-        def chevron_data_attributes
-          {
-            "flat-pack--sidebar-layout-target": "chevron"
           }
         end
 

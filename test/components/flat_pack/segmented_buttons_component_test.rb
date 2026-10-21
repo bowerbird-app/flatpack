@@ -119,6 +119,15 @@ module FlatPack
         assert_includes html, FlatPack::Button::Component::SIZES.fetch(:sm)
       end
 
+      def test_xs_does_not_leak_into_the_group
+        error = assert_raises(ArgumentError) do
+          Component.new(size: :xs)
+        end
+
+        assert_includes error.message, "Invalid size"
+        refute_includes FlatPack::SegmentedButtons::Component::SIZES.keys, :xs
+      end
+
       def test_raises_error_for_invalid_size
         error = assert_raises(ArgumentError) do
           Component.new(size: :xl)

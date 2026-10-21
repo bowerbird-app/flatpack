@@ -298,12 +298,12 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 ## Components
 
 ### Layout & Structure
-- **Card** - Flexible content containers with header, body, footer, and media slots
+- **Card** - Flexible content containers with header, body, footer, and media slots. `inset:` sets the inner photo radius without adding padding.
 - **Grid** - Responsive CSS grid layout with configurable columns and gaps
 - **Masonry** - Mixed-ratio photos and tiles stacked without empty holes
 - **Collage** - A tilted grid, or a brick such as five over four. On a phone, a short overlapping row. Cards can rise, deal, or drift
 - **Overflow Row** - One-row layout that scrolls sideways when same-size items do not fit
-- **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content. Optional `background` slot for a blurred page photo. `floating: true` makes each desktop column the card (fill, border, radius, shadow) and insets all four sides with `--sidebar-float-inset`. Optional `floating_top_nav:` turns the top bar into cards that share the floating rail tokens. Optional `height: :content` sizes a floating desktop rail to its items. Optional `width: :content` sizes the open desktop rail to its widest item. Optional `aside` slot sits on the opposite edge. `resizable: true` drags the rail, and the same flag on `aside` drags that panel. A floating drag handle is the card's inner edge. A flush handle stays the full-height line. `--sidebar-width` and `--sidebar-collapsed-width` set the fixed and collapsed rail widths. `--aside-width` (`20rem`) is the aside start width.
+- **SidebarLayout** - Full-height application shell with sidebar, top nav, and main content. Optional `background` slot for a blurred page photo. `floating: true` makes each desktop column the card (fill, border, radius, shadow) and insets all four sides with `--sidebar-float-inset`. Optional `floating_top_nav:` turns the top bar into cards that share the floating rail tokens. Optional `scroll: :page` scrolls the window, and `scroll: :pane` is the default. Optional `height: :content` sizes a floating desktop rail to its items. Optional `width: :content` sizes the open desktop rail to its widest item. Optional `aside` slot sits on the opposite edge. `resizable: true` drags the rail, and the same flag on `aside` drags that panel. A floating drag handle is the card's inner edge. A flush handle stays the full-height line. `--sidebar-width` and `--sidebar-collapsed-width` set the fixed and collapsed rail widths. `--aside-width` (`20rem`) is the aside start width.
 - **Hero** - Full-width landing-page hero with seven layout variants
 - **PageHeader** - Page-level header with title, subtitle, and action slots
 - **PageTitle** - Lightweight semantic heading block with optional subtitle
@@ -336,7 +336,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Animated character** - A hash-drawn mascot with named moods, plus icon wiggle, pop, draw, spin, and nudge
 
 ### Interactive
-- **Button** - Buttons and links with multiple styles and loading states
+- **Button** - Buttons and links with multiple styles, loading states, and an icon-only `:xs` size
 - **ButtonDropdown** - Button with an attached dropdown menu
 - **ButtonGroup** - Grouped button layouts
 - **SegmentedButtons** - Segmented control / toggle group. `indicator: :slide` uses the pill-tab slider.

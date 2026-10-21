@@ -432,6 +432,33 @@ module FlatPack
         end
       end
 
+      def test_xs_icon_only_trigger_uses_button_slop
+        render_inline(Dropdown::Component.new(
+          text: "Share",
+          icon: "share",
+          icon_only: true,
+          round: true,
+          size: :xs
+        ))
+
+        html = page.native.to_html
+        assert_selector "button[aria-label='Share']"
+        assert_includes html, "p-[var(--button-icon-only-padding-xs)]"
+        assert_includes html, "h-[var(--button-round-size-xs)]"
+        assert_includes html, "fp-hit-slop"
+        assert_includes html, "w-4 h-4"
+        refute_includes html, "fp-hit-target"
+        refute_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+      end
+
+      def test_xs_without_icon_only_raises
+        error = assert_raises(ArgumentError) do
+          Dropdown::Component.new(text: "Share", size: :xs)
+        end
+
+        assert_equal FlatPack::Button::Component::XS_REQUIRES_ICON_ONLY, error.message
+      end
+
       def test_round_icon_only_uses_button_circle_sizes
         %i[sm md lg].each do |size|
           render_inline(Dropdown::Component.new(

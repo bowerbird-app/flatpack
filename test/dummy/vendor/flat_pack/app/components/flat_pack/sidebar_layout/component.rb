@@ -10,6 +10,7 @@ module FlatPack
       renders_one :aside_slot
 
       CONTENT_SCROLLS = %i[behind below].freeze
+      SCROLLS = %i[pane page].freeze
       HEIGHTS = %i[full content].freeze
       WIDTHS = %i[fixed content].freeze
 
@@ -20,6 +21,7 @@ module FlatPack
         floating: false,
         floating_top_nav: false,
         content_scroll: :behind,
+        scroll: :pane,
         height: :full,
         width: :fixed,
         resizable: false,
@@ -32,6 +34,7 @@ module FlatPack
         @floating = floating
         @floating_top_nav = floating_top_nav
         @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
+        @scroll = scroll.is_a?(String) ? scroll.to_sym : scroll
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
         @resizable = resizable
@@ -42,6 +45,7 @@ module FlatPack
         validate_floating!
         validate_floating_top_nav!
         validate_content_scroll!
+        validate_scroll!
         validate_height!
         validate_width!
         validate_resizable!(@resizable)
@@ -105,6 +109,7 @@ module FlatPack
         content_tag(:div, **container_attributes) do
           safe_join([
             render_background,
+            render_page_surface,
             render_columns,
             render_backdrop
           ].compact)
@@ -155,7 +160,7 @@ module FlatPack
         # rail <aside> is parsed. CSS then sizes the column before first paint.
         content_tag(
           :div,
-          safe_join([preamble(panel), body, collapsed_menu_script(panel), resize_handle(panel)].compact),
+          safe_join([preamble(panel), body, resize_handle(panel)].compact),
           **panel_tag_attributes(panel)
         )
       end
@@ -172,22 +177,6 @@ module FlatPack
         attributes[:style] = panel.column_style if panel.column_style
         attributes[:inert] = true if panel.role == :aside && panel.open == false
         attributes
-      end
-
-      def collapsed_menu_script(panel)
-        return unless panel.role == :rail
-
-        js = <<~JS.strip
-          (function(){
-            var column=document.currentScript.parentElement;
-            var menu=column.querySelector(".fp-sidebar");
-            if(!menu) return;
-            var collapsed=column.getAttribute("data-flat-pack-sidebar-collapsed");
-            if(!collapsed) return;
-            menu.setAttribute("data-flat-pack-sidebar-collapsed", collapsed);
-          })();
-        JS
-        content_tag(:script, js.html_safe)
       end
 
       def preamble(panel)
@@ -350,6 +339,12 @@ module FlatPack
         }
       end
 
+      def render_page_surface
+        return unless page_scroll? && @content_scroll == :behind && floating_top_nav_active? && !background?
+
+        content_tag(:div, "", class: "fp-layout-page-surface", aria: {hidden: true})
+      end
+
       def render_background
         return unless background?
 
@@ -381,7 +376,8 @@ module FlatPack
           "flat-pack--sidebar-layout-side-value": @side.to_s,
           "flat-pack--sidebar-layout-open-value": @open,
           "flat-pack--sidebar-layout-storage-key-value": @storage_key,
-          "flat-pack-layout-background": ("true" if background?)
+          "flat-pack-layout-background": ("true" if background?),
+          "flat-pack-layout-scroll": ("page" if page_scroll?)
         }
         if aside?
           data["flat-pack-layout-columns"] = layout_columns
@@ -395,8 +391,8 @@ module FlatPack
       def container_classes
         classes(
           "grid",
-          "h-screen",
-          "overflow-hidden",
+          ("h-screen" unless page_scroll?),
+          ("overflow-hidden" unless page_scroll?),
           grid_columns_classes
         )
       end
@@ -421,17 +417,22 @@ module FlatPack
           "flex-col",
           "min-w-0",
           "min-h-0",
-          "overflow-hidden",
+          ("overflow-hidden" unless page_scroll?),
           ("relative" if floating_top_nav_active?),
-          ("fp-layout-main" if background?)
+          ("fp-layout-main" if background?),
+          ("fp-layout-page" if page_scroll? && floating_top_nav_active? && @content_scroll == :behind)
         )
       end
 
       def main_content_classes
         classes(
-          "flex-1 min-h-0 overflow-y-auto overscroll-y-contain",
+          page_scroll? ? "flex-1 min-h-0" : "flex-1 min-h-0 overflow-y-auto overscroll-y-contain",
           ("fp-layout-scroll" if floating_top_nav_active? && @content_scroll == :behind)
         )
+      end
+
+      def page_scroll?
+        @scroll == :page
       end
 
       def floating_top_nav_active?
@@ -480,6 +481,16 @@ module FlatPack
         return if CONTENT_SCROLLS.include?(@content_scroll)
 
         raise ArgumentError, "content_scroll must be :behind or :below"
+      end
+
+      def validate_scroll!
+        unless SCROLLS.include?(@scroll)
+          raise ArgumentError, "scroll must be :pane or :page"
+        end
+
+        return unless page_scroll? && @content_scroll == :below
+
+        raise ArgumentError, "scroll: :page cannot be combined with content_scroll: :below"
       end
 
       def validate_height!

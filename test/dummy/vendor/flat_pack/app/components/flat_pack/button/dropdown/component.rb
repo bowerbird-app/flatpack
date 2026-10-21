@@ -14,6 +14,7 @@ module FlatPack
 
         ICON_VARIANTS = IconOptions::VARIANTS
         ICON_STYLES = IconOptions::STYLES
+        PUBLIC_SIZES = FlatPack::Button::Component::PUBLIC_SIZES
 
         PLACEMENTS = {
           bottom_right: "top-full right-0 mt-2",
@@ -56,6 +57,7 @@ module FlatPack
           validate_style!
           validate_placement!
           validate_round!
+          validate_size!
           validate_icon_only!
         end
 
@@ -138,17 +140,7 @@ module FlatPack
         end
 
         def icon_only_classes
-          [
-            FlatPack::Button::Component::ICON_ONLY_SIZES.fetch(@size),
-            round_icon_only_size_class,
-            "fp-hit-target"
-          ].compact.join(" ")
-        end
-
-        def round_icon_only_size_class
-          return unless @round
-
-          FlatPack::Button::Component::ROUND_ICON_ONLY_SIZES.fetch(@size)
+          FlatPack::Button::Component.icon_only_classes_for(@size, round: @round)
         end
 
         def button_content
@@ -157,7 +149,7 @@ module FlatPack
             content << render(FlatPack::Shared::IconComponent.new(
               **IconOptions.component_arguments(
                 name: @icon,
-                size: @size,
+                size: FlatPack::Button::Component.painted_icon_size(@size),
                 icon_variant: @icon_variant,
                 icon_style: @icon_style
               )
@@ -250,6 +242,10 @@ module FlatPack
           return if @round == true || @round == false
 
           raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
+        end
+
+        def validate_size!
+          FlatPack::Button::Component.validate_size!(@size, icon_only: @icon_only)
         end
 
         def validate_icon_only!

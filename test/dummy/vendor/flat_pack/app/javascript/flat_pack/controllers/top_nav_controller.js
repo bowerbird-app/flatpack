@@ -83,6 +83,10 @@ export default class extends Controller {
   }
 
   collectScrollports() {
+    if (this.element.closest?.("[data-flat-pack-layout-scroll]")?.dataset?.flatPackLayoutScroll === "page") {
+      return [window]
+    }
+
     const ports = new Set()
     ports.add(window)
 

@@ -298,7 +298,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 ## Components
 
 ### Layout & Structure
-- **Card** - Flexible content containers with header, body, footer, and media slots
+- **Card** - Flexible content containers with header, body, footer, and media slots. `inset:` sets the inner photo radius without adding padding.
 - **Grid** - Responsive CSS grid layout with configurable columns and gaps
 - **Masonry** - Mixed-ratio photos and tiles stacked without empty holes
 - **Collage** - A tilted grid, or a brick such as five over four. On a phone, a short overlapping row. Cards can rise, deal, or drift
@@ -336,7 +336,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **Animated character** - A hash-drawn mascot with named moods, plus icon wiggle, pop, draw, spin, and nudge
 
 ### Interactive
-- **Button** - Buttons and links with multiple styles and loading states
+- **Button** - Buttons and links with multiple styles, loading states, and an icon-only `:xs` size
 - **ButtonDropdown** - Button with an attached dropdown menu
 - **ButtonGroup** - Grouped button layouts
 - **SegmentedButtons** - Segmented control / toggle group. `indicator: :slide` uses the pill-tab slider.

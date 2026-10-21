@@ -274,6 +274,9 @@ module FlatPack
       assert_match(/--button-round-size-sm:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-sm\) \* 2\) \+ 1rem \+ 2px\)\)/, root_block)
       assert_match(/--button-round-size-md:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-md\) \* 2\) \+ 1\.25rem \+ 2px\)\)/, root_block)
       assert_match(/--button-round-size-lg:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-lg\) \* 2\) \+ 1\.5rem \+ 2px\)\)/, root_block)
+      assert_match(/--button-icon-only-padding-xs:\s*round\(nearest, calc\(\(2rem - 1rem - 2px\) \/ 2\), 1px\)/, root_block)
+      assert_match(/--button-round-size-xs:\s*2rem/, root_block)
+      refute_match(/--button-round-size-xs:\s*max\(var\(--hit-target-min\)/, root_block)
     end
 
     test "rounded shifts spacing and does not restate the default palette" do

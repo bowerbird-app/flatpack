@@ -13,6 +13,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.285] - 2026-10-21
+
+### Added
+- `FlatPack::Button::Component` and `FlatPack::Button::Dropdown::Component` accept `size: :xs` on icon-only controls. The painted control is about 32px (`--button-icon-only-padding-xs`, and `--button-round-size-xs: 2rem` with no hit-target floor). The 44px tap stays on `.fp-hit-slop`. `size: :xs` without `icon_only: true` raises `ArgumentError`. `:sm`, `:md`, and `:lg` are unchanged. `:xs` is not in `SIZES`.
+- `FlatPack::Card::Component` accepts `inset:` (`nil`, `:sm`, `:md`, `:lg`). `nil` keeps `--card-inset` tied to `padding:`. The other values set `data-fp-card-inset` and `--card-inset` from the existing `--card-padding-*` tokens, and add no padding.
+
+### Upgrade notes
+- Additive. Existing markup is unchanged when the new options are omitted.
+- New tokens: `--button-icon-only-padding-xs` and `--button-round-size-xs`. No new card tokens.
+- Do not rerun `bin/rails generate flat_pack:install`.
+- Reload kit CSS for the tokens, `.fp-hit-slop`, and the card inset rules. Rebuild host Tailwind so it emits `p-[var(--button-icon-only-padding-xs)]`, `h-[var(--button-round-size-xs)]`, and `w-[var(--button-round-size-xs)]`. `inset:` does not add utilities.
+- Pass an `aria-label` on `:xs`. Leave about 12px between adjacent `:xs` buttons so the 44px tap areas do not overlap.
+
+## [0.1.284] - 2026-10-21
+
+### Added
+- Floating top nav cards read `--top-nav-float-padding-block`, `--top-nav-float-padding-inline`, and `--top-nav-float-gap`. The block padding defaults to `0.25rem`. The inline padding defaults to `max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))))`. The row gap defaults to `0.75rem`. Below `768px` the inline padding stays `0.25rem`, the row gap stays `0.5rem`, and the gap inside `left` and `center` stays `0.25rem`.
+- Bumped the gem version to `0.1.284`.
+
+### Upgrade notes
+- Additive. The three defaults match the previous hard-coded padding and row gap, including on `[data-theme~="rounded"]`. No visual change until a host sets one of the tokens.
+- `--top-nav-float-padding-block` defaults to `0.25rem`. `--top-nav-float-padding-inline` defaults to `max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))))`. `--top-nav-float-gap` defaults to `0.75rem`. Set the inline token to a plain length when the padding should ignore the radius.
+- The full-width bar is unchanged. It still uses `--top-nav-padding-inline`.
+- Hosts reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.284`.
+
 ## [0.1.283] - 2026-10-20
 
 ### Added
@@ -24,6 +50,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additive. The default is `indicator: nil`. Existing segmented button markup and look stay the same. Tabs and Button::Pill markup stay the same.
 - Hosts reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. `flat-pack--slide-indicator` is already registered with the other controllers. Do not rebuild Tailwind. No new tokens.
 - Redeploy so `meta.gem_version` shows `0.1.283`.
+
+## [0.1.282] - 2026-10-20
+
+### Added
+- `FlatPack::SidebarLayout` accepts `scroll:`. The default is `:pane`, and that markup is unchanged. `:page` scrolls the window. `:page` with `content_scroll: :below` raises `ArgumentError`.
+
+### Upgrade notes
+- `scroll:` is additive. Hosts that omit it keep `:pane`.
+- No new tokens. Do not rebuild Tailwind. The new rules are kit CSS. `md:sticky` is not a new utility.
+- The layout generator writes `class="h-full"` on `html` and `body`. It does not write `overflow-hidden`. Leave `h-full`. It does not lock the window. Remove `overflow-hidden` from `html` and `body` when the host added that class. The generator does not. `:pane` hosts leave their lock in place.
+- Do not rerun `bin/rails generate flat_pack:install`. Reload kit CSS and JS.
+- Redeploy so `meta.gem_version` shows `0.1.282`.
+
+## [0.1.281] - 2026-10-20
+
+### Changed
+- Column collapse is one boolean, `data-flat-pack-sidebar-collapsed`, written only by `FlatPack::SidebarLayout` on the column it owns. The menu reads that ancestor attribute. A menu used alone with `collapsed: true` writes the same attribute on its own `<aside class="fp-sidebar">`. `collapsed: false` does not write it.
+- The layout still changes column width, persists `localStorage` (`"true"` collapses), honors `open:`, keeps the first-paint script on the column, and still collapses from resize. Each desktop apply dispatches `flat-pack--sidebar-layout:collapse` with `{ collapsed }` from the column.
+- The menu owns the collapsed look in CSS, for the ancestor column and for a menu that carries the attribute. `flat-pack--sidebar` sets `aria-expanded` on the collapse and expand controls.
+- Bumped the gem version to `0.1.281`.
+
+### Upgrade notes
+- There is no alias. Hosts reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Controllers stay `pin_all_from` the directory. Do not rebuild Tailwind. No new tokens.
+- Removed `SidebarLayoutController` methods: `labelNodes`, `itemNodes`, `isSectionTitleLabel`, `sectionTitleNodes`, `groupPanelNodes`, `groupChevronNodes`, `footerNodes`, `headerRowNodes`, `headerBrandNodes`, `clearCollapsedRestState`, `applyCollapsedHeaderChrome`, `setCollapsedToggleButtons`, `syncToggleAria`, `updateCollapsedScrollContainerState`.
+- Removed `SidebarController#toggleSection`. The menu controller now sets `aria-expanded` from the column.
+- Removed layout targets `desktopToggle`, `collapsedToggle`, `headerLabel`, `headerBrand`, `headerRow`, `footer`, and the chevron query `[data-flat-pack--sidebar-layout-target="chevron"]`.
+- Removed `collapsed_menu_script`. The layout no longer copies `data-flat-pack-sidebar-collapsed` onto `aside`.
+- Removed selectors that hide the footer or labels from a layout target. Those rules are under `.fp-sidebar`. Drop `[data-flat-pack--sidebar-layout-target="footer"]` and `[data-flat-pack-sidebar-collapsed="true"] [data-flat-pack--sidebar-layout-target="scrollContainer"]`.
+- New hooks: `flat-pack--sidebar`, `data-flat-pack-sidebar-toggle`, `fp-sidebar-brand`, `fp-sidebar-footer`, `fp-sidebar-scroll`, and the event `flat-pack--sidebar-layout:collapse`.
+- Header buttons drop the `hidden` utility. Kit CSS shows the collapse chevron when the rail is open and the menu icon when it is collapsed, at `min-width: 768px`. Below that, both stay hidden.
+- Redeploy so `meta.gem_version` shows `0.1.281`.
 
 ## [0.1.280] - 2026-10-20
 

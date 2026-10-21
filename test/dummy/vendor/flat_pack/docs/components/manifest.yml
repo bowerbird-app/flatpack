@@ -112,6 +112,12 @@ components:
     title: Button
     doc: docs/components/button.md
     primary_class: FlatPack::Button::Component
+    tokens:
+      - --button-icon-only-padding-xs
+      - --button-round-size-xs
+    classes:
+      - fp-hit-slop
+      - fp-hit-target
     status: documented
 
   - key: button_dropdown
@@ -679,6 +685,9 @@ components:
       - --top-nav-float-offset
       - --top-nav-float-radius
       - --top-nav-float-clearance
+      - --top-nav-float-padding-block
+      - --top-nav-float-padding-inline
+      - --top-nav-float-gap
       - --sidebar-float-inset
       - --sidebar-float-radius
       - --sidebar-item-radius

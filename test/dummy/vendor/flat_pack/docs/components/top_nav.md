@@ -28,7 +28,7 @@ Use TopNav in app shells for page context, global actions, and optional search o
 
 TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. The center wrapper shrinks. Left and right keep their content width.
 
-Each section carries `data-flat-pack-top-nav-section` (`left`, `center`, or `right`) even when `mobile_menu: false`. [Sidebar Layout](sidebar_layout.md) `floating_top_nav: true` uses that hook to turn the bar into cards. The `<header>` landmark stays on this component.
+Each section carries `data-flat-pack-top-nav-section` (`left`, `center`, or `right`) even when `mobile_menu: false`. [Sidebar Layout](sidebar_layout.md) `floating_top_nav: true` uses that hook to turn the bar into cards. Card padding and the row gap then come from `--top-nav-float-padding-block` (`0.25rem`), `--top-nav-float-padding-inline` (the radius difference, clamped between `0.25rem` and `0.75rem`), and `--top-nav-float-gap` (`0.75rem`). The `<header>` landmark stays on this component.
 
 The bar is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
 

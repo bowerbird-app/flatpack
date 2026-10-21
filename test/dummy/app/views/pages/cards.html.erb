@@ -105,6 +105,27 @@
   <% end %>
 </section>
 
+<section class="mb-12" id="hand-inset">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Hand inset",
+    anchor_link: true,
+    subtitle: "Padding none, inset small. The photo corner stays parallel to the card."
+  ) %>
+  <div class="max-w-sm">
+    <%= render FlatPack::Card::Component.new(padding: :none, inset: :sm) do %>
+      <div class="p-[var(--card-padding-sm)]">
+        <%= render FlatPack::Media::Component.new(
+          src: "/images/hero-packaging.jpg",
+          alt: "Packaging",
+          width: 800,
+          height: 320,
+          radius: :card_inner
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Radius",

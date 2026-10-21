@@ -38,6 +38,31 @@
     ) %>
   </section>
 
+  <section class="mb-12" id="xs-overlay">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Extra small",
+      anchor_link: true,
+      subtitle: "About 32px on the photo. Leave 12px so the 44px taps do not overlap."
+    ) %>
+    <div class="relative mb-4 max-w-sm overflow-hidden rounded-[var(--radius-lg)]">
+      <%= image_tag "/images/hero-stool.jpg", alt: "Stool", class: "block h-56 w-full object-cover" %>
+      <div class="absolute end-3 top-3 flex gap-3">
+        <%= render FlatPack::Button::Component.new(icon: "heart", icon_only: true, round: true, size: :xs, style: :default, aria: { label: "Save" }) %>
+        <%= render FlatPack::Button::Component.new(icon: "share", icon_only: true, round: true, size: :xs, style: :default, aria: { label: "Share" }) %>
+        <%= render FlatPack::Button::Dropdown::Component.new(
+          text: "More",
+          icon: "ellipsis-horizontal",
+          icon_only: true,
+          round: true,
+          size: :xs,
+          style: :default,
+          trigger_attributes: { aria: { label: "More" } }
+        ) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+        <% end %>
+      </div>
+    </div>
+  </section>
 
   <!-- Basic Buttons -->
   <section class="mb-12">

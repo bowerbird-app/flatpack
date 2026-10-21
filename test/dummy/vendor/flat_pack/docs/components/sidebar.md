@@ -18,7 +18,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `collapsed` | Boolean | `false` | No | Sidebar collapsed state flag (used by composition patterns; parent layout/controller decides behavior). |
+| `collapsed` | Boolean | `false` | No | `true` sets `data-flat-pack-sidebar-collapsed="true"` on the aside. `false` omits the attribute so a parent column can own it. The aside always has `data-controller="flat-pack--sidebar"`. |
 | `collapsible` | Boolean | `true` | No | Signals whether collapse controls should be shown by composed header/toggle components. |
 | `side` | Symbol | `:left` | No | Border side for the shell. Allowed: `:left`, `:right`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the `<aside>` wrapper. |
@@ -31,7 +31,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `href` | String | — | Yes | Link destination URL. |
 | `icon` | Symbol or nil | `nil` | No | Heroicons v2 icon name. |
 | `active` | Boolean | `false` | No | Marks the item as the current page (`aria-current="page"`). |
-| `collapsed` | Boolean | `false` | No | Renders the item in icon-only mode: applies compact padding (`px-1`) and centered alignment (`justify-center`). Used for static collapsed demos. Live collapse fades labels with the rail width, then applies this compact rest state after the width transition ends. |
+| `collapsed` | Boolean | `false` | No | Static icon-only markup: compact padding (`px-1`) and centered alignment (`justify-center`). A live rail does not add those classes. The menu CSS fades the label from the column attribute, or from the menu's own attribute. |
 | `badge` | String or nil | `nil` | No | Optional badge value rendered beside the label. |
 
 `FlatPack::Sidebar::Header::Component`:
@@ -118,9 +118,12 @@ Pass `logo:` as a URL when the host has a square mark. Header shows that mark an
 ## Accessibility
 `FlatPack::Sidebar::Item::Component` sets `aria-current="page"` for active links and sets `aria-label` when rendered in collapsed mode.
 
-A Header `logo:` mark is decorative when `title` is present (`alt=""`, `aria-hidden`). The title names the brand.
+`flat-pack--sidebar` sets `aria-expanded` on the collapse and expand controls. Collapsed is `"false"`. Expanded is `"true"`. On connect it reads the nearest `[data-flat-pack-sidebar-collapsed]`, or the aside itself. It then listens on the column for `flat-pack--sidebar-layout:collapse`. A menu used alone has no column, so connect uses the aside attribute. The header starts with the collapse button at `aria-expanded="true"` (`Collapse sidebar`) and the expand button at `aria-expanded="false"` (`Open sidebar`). The controller corrects both after connect. `CollapseToggle` keeps `aria-expanded` from its `collapsed:` argument until connect.
+
+A Header `logo:` mark is decorative when `title` is present (`alt=""`, `aria-hidden`). The title names the brand. The brand wrapper is `.fp-sidebar-brand`. The footer is `.fp-sidebar-footer`. The items scroller is `.fp-sidebar-scroll`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
+- The menu controller is `flat-pack--sidebar`, pinned with the other controllers. Do not rerun `bin/rails generate flat_pack:install`.
 - `FlatPack::Sidebar::Group::Component` interactive expand/collapse requires Stimulus controller `flat-pack--sidebar-group`.
 - `FlatPack::Sidebar::Item::Component` collapsed tooltip behavior requires Stimulus controller `flat-pack--tooltip`.
