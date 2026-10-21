@@ -94,7 +94,7 @@ module FlatPack
       def call
         content
         content_tag(:nav, **nav_attributes) do
-          content_tag(:div, class: "flex items-center gap-2") do
+          content_tag(:div, class: "flex min-w-0 flex-wrap items-center gap-2 md:flex-nowrap") do
             safe_join(@items.map(&:call))
           end
         end
@@ -116,7 +116,7 @@ module FlatPack
 
       def nav_attributes
         attributes = {
-          class: "flat-pack-page-nav",
+          class: "flat-pack-page-nav min-w-0 max-w-full",
           aria: {label: fp_t("page_nav.label")}
         }
         attributes[:data] = history_nav_data if @history_back

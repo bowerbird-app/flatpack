@@ -18,7 +18,7 @@ module FlatPack
         render_inline(Component.new) { |nav| nav.with_back }
 
         assert_selector "nav[data-controller='flat-pack--page-nav']"
-        assert_selector "nav > div.flex.items-center.gap-2"
+        assert_selector "nav > div.flex.min-w-0.flex-wrap.items-center.gap-2.md\\:flex-nowrap"
         assert_selector "button[data-action='click->flat-pack--page-nav#back']"
         assert_selector "button[aria-label='Go back']"
         assert_selector "button svg[data-flat-pack--icon-name-value='chevron-left']"

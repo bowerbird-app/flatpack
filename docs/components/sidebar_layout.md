@@ -35,7 +35,8 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `top_nav` | block slot | No | Optional top-nav area above main content. |
 | `main` | block slot | No | Main content area. If omitted, component block content is used. |
 | `background` | block slot | No | Decorative page photo (`img` or `picture`) behind the shell. Omit it and the shell matches a layout with no photo. |
-| `aside` | block slot | No | Column opposite `side:`. `open:` (`true` or `false`, default `true`) and `resizable:` (`true` or `false`, default `false`). Omit it and the shell matches a layout with no aside. |
+| `aside` | block slot | No | Column opposite `side:`. `open:` (`true` or `false`, default `true`), `resizable:` (`true` or `false`, default `false`), and `mobile:` (`:drawer` or `:stack`, default `:drawer`). Omit it and the shell matches a layout with no aside. |
+| `aside_trigger` | method | No | `layout.aside_trigger("Details")` returns the aside button. Place it where the control should sit. The string is the label. |
 
 ## Variants
 
@@ -49,7 +50,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `width: :fixed` | Open desktop rail is `--sidebar-width`. This is the default. |
 | `width: :content` | Open desktop rail hugs its widest item, between `--sidebar-content-min-width` and `--sidebar-content-max-width`. |
 | `resizable: true` | Separator on the rail. Drag, arrow keys, and double-click reset are desktop only. |
-| `aside` | Second column on the opposite edge. `open: false` starts it closed on desktop. Below `md` it is a drawer from that edge. |
+| `aside` | Second column on the opposite edge. `open: false` starts it closed on desktop. `mobile: :drawer` (the default) is a drawer from that edge below `md`. `mobile: :stack` lays the panel under main below `md`. |
 | `floating_top_nav: true` | The full-width bar is gone. `TopNav` `left` and `center` each become one card sized to their contents. `right` lays its children out as separate cards. Content scrolls under the cards. |
 | `content_scroll: :below` | Same cards, in flow above the scroll pane. Content does not slide under them. |
 | `scroll: :page` | The window scrolls. `:pane` is the default and keeps the locked shell. |
@@ -121,10 +122,21 @@ Float the top nav on its own, or with the rail. Put a toolbar in `left` and sepa
 
 The mobile drawer (below the `md` breakpoint) is `.fp-sidebar-drawer` with `data-mobile-drawer-side`. It pads `env(safe-area-inset-*)` on the top, bottom, and opening edge so the panel clears the notch. Desktop sidebar is in the grid and does not add that pad. TopNav lives in the main column, so drawer padding does not double-pad the bar. Hosts need `viewport-fit=cover` for insets to apply. See [Installation](../installation.md).
 
+## Mobile
+
+Check these when the shell is on a phone, or in a narrow main column.
+
+- The menu button uses `data-flat-pack--sidebar-layout-target="mobileToggle"` and `click->flat-pack--sidebar-layout#toggleMobile`. The controller sets `aria-expanded` and `aria-controls` on connect, and again when the drawer opens or closes. `aria-controls` is the rail column id.
+- Open the aside with `layout.aside_trigger("Details")`, or pass `mobile: :stack` and skip the toggle. `:stack` is in flow under main below `md`. `:drawer` is the off-canvas panel.
+- `TopNav` `left` stays on the bar. `center` and `right` fold into `mobile_menu` unless the slot passes `always_display: true`. The fold listens to the bar's own width, `mobile_breakpoint` (768). A narrow main column between the rail and the aside crosses that width on a desktop window too, so those slots fold before the viewport does.
+- Load `flat_pack/application.css` after Tailwind. The drawer slide, the stacked aside, and the page-nav wrap live in that sheet. A Tailwind utility loaded later, inside a layer, does not override them.
+- Tailwind `@source` has to include the gem's `app/components`. That scan emits the classes on the columns and on Page Nav (`flex-wrap`, `min-w-0`, `md:flex-nowrap`).
+- Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
+
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.
 
-The resize handle is a vertical `separator` with `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`. Arrow keys move it. Double-click resets it. The name is "Resize sidebar" or "Resize aside". An `asideToggle` control gets `aria-expanded`.
+The resize handle is a vertical `separator` with `aria-valuenow`, `aria-valuemin`, and `aria-valuemax`. Arrow keys move it. Double-click resets it. The name is "Resize sidebar" or "Resize aside". An `asideToggle` control and the menu `mobileToggle` get `aria-expanded` and `aria-controls`.
 
 A hidden main pane is in the tab order (`tabindex="0"`, name "Content"). It is not a landmark, so it does not sit beside `<main>`. The aside keeps its landmark and takes the name "Side panel". Arrow keys and Page Down scroll a pane that has no focusable children. `:visible` drops that tab stop. Focus uses the `--color-ring` outline.
 
@@ -191,7 +203,11 @@ Dummy chrome accepts `?width=content`. `/demo/sidebar_layout?width=content` hugs
 
 `layout.aside` is a column on the opposite edge from `side:`. Leave the slot out and the shell matches a layout with no aside. Same grid, same rail column, one backdrop.
 
-`open:` defaults to `true`. Desktop state is `data-flat-pack-aside-open`. A closed aside has no width and is `inert`. Below `768px` the aside starts off-canvas either way. Desktop `open:` does not open the phone drawer.
+`open:` defaults to `true`. Desktop state is `data-flat-pack-aside-open`. A closed aside has no width and is `inert`. `mobile:` defaults to `:drawer`. Below `768px` a drawer aside starts off-canvas either way. Desktop `open:` does not open the phone drawer. Anything other than `:drawer` or `:stack` raises `ArgumentError`.
+
+`mobile: :stack` paints the aside in normal flow under main below `md`. There is no drawer, no translate, and no toggle. Desktop is the same column as `:drawer`. The shell drops the locked viewport height below `md` so the stacked panel is on the page. A host `overflow: hidden` on `html` or `body` still clips it.
+
+`layout.aside_trigger("Details")` returns the toggle. Put the call where the button should appear, usually `TopNav` `left`. The string is the visible label. The button sets `data-flat-pack--sidebar-layout-target="asideToggle"`, `click->flat-pack--sidebar-layout#toggleAside`, `aria-expanded`, and `aria-controls` (the aside column id). A blank label raises `ArgumentError`. `:stack` does not need the trigger. A hand-wired `asideToggle` button still gets `aria-expanded` and `aria-controls` from the controller.
 
 The column owns the width and, when floating, the card. The scrollport is `<aside class="fp-aside">`, so the landmark fills the column instead of taking `--sidebar-width`. The main pane still scrolls on its own. `floating:` and `height: :content` reuse the rail attributes. Content height keeps this landmark as a scrollport (`display: block`, `overflow-y: auto`). A floating aside column uses `--sidebar-float-radius`. On the rounded theme that token is `--radius-xxxl` (2.5rem), the same corner as the rail. The landmark inside does not draw a second border.
 
@@ -203,9 +219,25 @@ With a `storage_key`, the aside key is `storage_key:aside`. `"true"` means open.
 <% layout.aside(open: true) do %>
   <h2>Details</h2>
 <% end %>
+
+<% layout.top_nav do %>
+  <%= render FlatPack::TopNav::Component.new do |nav| %>
+    <% nav.left do %>
+      <%= layout.aside_trigger("Details") %>
+    <% end %>
+  <% end %>
+<% end %>
 ```
 
-`flat-pack--sidebar-layout` actions are `toggleAside`, `openAside`, and `closeAside`. `openAside` and `closeAside` do nothing when the panel is already in that state. A control with `data-flat-pack--sidebar-layout-target="asideToggle"` gets `aria-expanded`. On a small screen those actions open and close the drawer and do not write the aside key.
+Stack the aside under the page on a phone:
+
+```erb
+<% layout.aside(mobile: :stack) do %>
+  <h2>Details</h2>
+<% end %>
+```
+
+`flat-pack--sidebar-layout` actions are `toggleAside`, `openAside`, and `closeAside`. `openAside` and `closeAside` do nothing when the panel is already in that state. A control with `data-flat-pack--sidebar-layout-target="asideToggle"` gets `aria-expanded` and `aria-controls`. On a small screen those actions open and close the drawer and do not write the aside key. `:stack` ignores them below `md`.
 
 The drawer reuses `.fp-sidebar-drawer` and the one backdrop, and it enters from its own edge. Opening the rail drawer closes the aside, and the reverse. Focus moves into the panel and back to the opener. Escape closes the open drawer. The shell joins `document.body.dataset.flatPackModalLockCount`, the same count `Drawer` uses. One shell holds that count once.
 

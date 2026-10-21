@@ -684,6 +684,73 @@ module FlatPack
         refute_selector "[data-flat-pack--sidebar-layout-aside-storage-key-value]"
       end
 
+      def test_aside_mobile_defaults_to_a_drawer
+        render_inline(Component.new(side: :left)) do |layout|
+          layout.main { "Main" }
+          layout.aside { "Details" }
+        end
+
+        aside = page.find("[data-flat-pack-panel='aside']")
+        assert_equal "drawer", aside["data-flat-pack-aside-mobile"]
+        assert_includes aside[:class].to_s.split, "translate-x-full"
+        assert_includes aside[:class].to_s.split, "fixed"
+        assert_equal "drawer", page.find("[data-flat-pack-layout-columns]")["data-flat-pack-aside-mobile"]
+        assert_equal "drawer", page.find("[data-controller='flat-pack--sidebar-layout']")["data-flat-pack--sidebar-layout-aside-mobile-value"]
+      end
+
+      def test_aside_mobile_stack_renders_in_flow_under_main
+        render_inline(Component.new(side: :left, storage_key: "app-shell")) do |layout|
+          layout.sidebar { "Sidebar" }
+          layout.main { "Main" }
+          layout.aside(mobile: :stack, open: false) { "Details" }
+        end
+
+        html = page.native.to_html
+        aside = page.find("[data-flat-pack-panel='aside']")
+        assert_equal "stack", aside["data-flat-pack-aside-mobile"]
+        refute_includes aside[:class].to_s.split, "fixed"
+        refute_includes aside[:class].to_s.split, "translate-x-full"
+        refute_includes aside[:class].to_s.split, "-translate-x-full"
+        assert_includes aside[:class].to_s.split, "fp-aside-stack"
+        assert_nil aside["inert"]
+        assert_includes html, 'if(open||!window.matchMedia("(min-width: 768px)").matches)'
+        assert_equal "stack", page.find("[data-flat-pack-layout-columns]")["data-flat-pack-aside-mobile"]
+        assert_selector "[data-flat-pack-layout-main='true']", text: "Main"
+      end
+
+      def test_aside_mobile_accepts_the_string_form_and_rejects_anything_else
+        render_inline(Component.new) do |layout|
+          layout.aside(mobile: "stack") { "Details" }
+        end
+
+        assert_equal "stack", page.find("[data-flat-pack-panel='aside']")["data-flat-pack-aside-mobile"]
+
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |layout|
+            layout.aside(mobile: :side) { "Details" }
+          end
+        end
+        assert_equal "mobile must be :drawer or :stack", error.message
+      end
+
+      def test_aside_trigger_names_the_panel
+        render_inline(Component.new) do |layout|
+          layout.aside(open: true) { "Notes" }
+          layout.top_nav { layout.aside_trigger("Details") }
+        end
+
+        button = page.find("button", text: "Details")
+        aside = page.find("[data-flat-pack-panel='aside']")
+        assert_equal "asideToggle", button["data-flat-pack--sidebar-layout-target"]
+        assert_equal "click->flat-pack--sidebar-layout#toggleAside", button["data-action"]
+        assert_equal "true", button["aria-expanded"]
+        assert_equal "flat-pack-aside", aside["id"]
+        assert_equal aside["id"], button["aria-controls"]
+
+        closed = assert_raises(ArgumentError) { Component.new.aside_trigger(" ") }
+        assert_equal "Aside trigger needs a label.", closed.message
+      end
+
       def test_resizable_rejects_non_booleans
         error = assert_raises(ArgumentError) do
           Component.new(resizable: "yes")

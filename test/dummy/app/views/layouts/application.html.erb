@@ -1,6 +1,8 @@
 <% page_scroll = controller.action_name == "sidebar_layout" && params[:scroll] == "page" %>
+<% aside_stacks = controller.action_name == "sidebar_layout" && params[:aside_mobile] == "stack" %>
+<% lock_shell = !page_scroll && !aside_stacks %>
 <!DOCTYPE html>
-<html <%= tag.attributes(flat_pack_html_attributes(class: (page_scroll ? "min-h-full" : "h-full overflow-hidden overscroll-none"), data: {theme: "rounded"})) %>>
+<html <%= tag.attributes(flat_pack_html_attributes(class: (lock_shell ? "h-full overflow-hidden overscroll-none" : "min-h-full"), data: {theme: "rounded"})) %>>
   <head>
     <title>FlatPack Demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -93,7 +95,7 @@
     </script>
   </head>
 
-  <body class="m-0<%= page_scroll ? "" : " h-full overflow-hidden overscroll-none" %> bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode"<% if @body_theme.present? %> data-theme="<%= @body_theme %>"<% end %>>
+  <body class="m-0<%= lock_shell ? " h-full overflow-hidden overscroll-none" : "" %> bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]" data-controller="dark-mode"<% if @body_theme.present? %> data-theme="<%= @body_theme %>"<% end %>>
     <%= render FlatPack::SkipLink::Component.new(href: "#main") %>
     <%= render "layouts/icon_sprite" %>
 
@@ -108,6 +110,8 @@
     <% aside_state = params[:aside].to_s %>
     <% show_aside = aside_state.in?(%w[1 true closed]) %>
     <% aside_open = aside_state != "closed" %>
+    <% aside_mobile = (params[:aside_mobile] == "stack") ? :stack : :drawer %>
+    <% editor_toolbar = params[:editor].in?(%w[1 true]) %>
     <% panels_resizable = params[:resizable].in?(%w[1 true]) %>
     <% sidebar_collapsed = params[:collapsed].in?(%w[1 true]) %>
     <% notes_panel = params[:notes].in?(%w[1 true]) %>
@@ -200,7 +204,7 @@
       <% end %>
 
       <% if show_aside %>
-        <% layout.aside(open: aside_open, resizable: panels_resizable) do %>
+        <% layout.aside(open: aside_open, resizable: panels_resizable, mobile: aside_mobile) do %>
           <div class="flex items-center justify-between gap-3 border-b border-(--surface-border-color) px-4 py-3">
             <h2 class="text-sm font-medium">Details</h2>
             <%= render FlatPack::Button::Component.new(
@@ -213,7 +217,10 @@
             ) %>
           </div>
           <div class="space-y-4 p-4 text-sm leading-6">
-            <% if controller.action_name == "sidebar_layout" %>
+            <% if editor_toolbar %>
+              <p>Summer drop. Lead photo and two quotes.</p>
+              <p>Contacts live in this panel.</p>
+            <% elsif controller.action_name == "sidebar_layout" %>
               <% 16.times do |index| %>
                 <p>Note <%= index + 1 %>. This panel keeps its own place. The page column does not move with it.</p>
               <% end %>
@@ -241,19 +248,27 @@
               },
               class: "md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
             ) %>
-            <% if show_aside %>
-              <%= render FlatPack::Button::Component.new(
-                text: "Details",
-                style: :ghost,
-                size: :sm,
-                aria: { expanded: aside_open },
-                data: {
-                  "flat-pack--sidebar-layout-target": "asideToggle",
-                  action: "click->flat-pack--sidebar-layout#toggleAside"
-                }
-              ) %>
+            <% if show_aside && aside_mobile != :stack %>
+              <%= layout.aside_trigger("Details") %>
             <% end %>
-            <% if floating_top_nav %>
+            <% if editor_toolbar %>
+              <%= render FlatPack::PageNav::Component.new(size: :sm) do |page_nav| %>
+                <% page_nav.with_back(href: demo_sidebar_layout_path, size: :sm) %>
+                <% page_nav.with_action(text: "Section", icon: "plus", style: :secondary, size: :sm) %>
+                <% page_nav.with_item do %>
+                  <%= render FlatPack::Button::Dropdown::Component.new(text: "Publish", style: :primary, size: :sm, placement: :bottom_left) do |dropdown| %>
+                    <% dropdown.menu_item(text: "Publish now") %>
+                    <% dropdown.menu_item(text: "Schedule") %>
+                  <% end %>
+                <% end %>
+                <% page_nav.with_item do %>
+                  <%= render FlatPack::Button::Dropdown::Component.new(text: "More", style: :ghost, size: :sm, placement: :bottom_right) do |dropdown| %>
+                    <% dropdown.menu_item(text: "Duplicate") %>
+                    <% dropdown.menu_item(text: "Archive") %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            <% elsif floating_top_nav %>
               <%= render FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm) %>
               <%= render FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm) %>
               <%= render FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm) %>
@@ -364,7 +379,8 @@
 
             <%= yield %>
 
-            <% if @demo_theme_token_rows.present? %>
+            <% editor_page = controller.action_name == "sidebar_layout" && params[:editor].in?(%w[1 true]) %>
+            <% if @demo_theme_token_rows.present? && !editor_page %>
               <%= render "pages/theme_token_reference", title: @demo_theme_token_title, rows: @demo_theme_token_rows %>
             <% end %>
 

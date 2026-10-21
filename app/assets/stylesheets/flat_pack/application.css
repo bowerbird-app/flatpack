@@ -762,6 +762,114 @@
       var(--sidebar-float-shadow) !important;
   }
 
+  /* Important width lives in this layer. Unlayered !important loses to it,
+     so the stacked phone card has to opt out here. */
+  @media (max-width: 767px) {
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
+      width: calc(100% - (var(--layout-content-inset, 1rem) * 2)) !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      height: auto !important;
+    }
+
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > aside {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+    }
+  }
+
+}
+
+/* Phone drawers slide on the translate property Tailwind 4 uses for
+   translate-x utilities. transform alone does not run that slide.
+   Reduced motion snaps. Stacked asides stay in flow and do not translate. */
+@media (max-width: 767px) {
+  .fp-sidebar-drawer:not([data-flat-pack-aside-mobile="stack"]) {
+    transition-property: translate, transform;
+    transition-duration: var(--duration-slow);
+    transition-timing-function: var(--easing-standard);
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .fp-sidebar-drawer:not([data-flat-pack-aside-mobile="stack"]) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}
+
+/* Stacked aside sits under main on small screens. The shell grows with
+   the page so the panel is not clipped by the locked desktop grid. */
+@media (max-width: 767px) {
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > .fp-backdrop,
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack--sidebar-layout-target="sidebar"],
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack--sidebar-layout-target="backdrop"],
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack-layout-main] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  /* Beats a host restatement of aside width. The card shares the page inset
+     with the floating top nav. min-height stays on the shell, not this panel. */
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
+    position: relative;
+    inset: auto;
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: start;
+    width: calc(100% - (var(--layout-content-inset, 1rem) * 2)) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin-inline: var(--layout-content-inset, 1rem) !important;
+    margin-block: var(--sidebar-float-inset, 1rem) !important;
+    z-index: auto;
+    transform: none;
+    translate: none;
+    transition-property: none;
+  }
+
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > .fp-aside {
+    height: auto !important;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* Page nav row wraps below md so a toolbar fits a floating top-nav card.
+   min-width: 0 lets that row shrink instead of spilling past the viewport. */
+.flat-pack-page-nav {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.flat-pack-page-nav > div {
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .flat-pack-page-nav > div {
+    flex-wrap: wrap;
+  }
+}
+
+@media (min-width: 768px) {
+  .flat-pack-page-nav > div {
+    flex-wrap: nowrap;
+  }
 }
 
 /* Pane bars follow --pane-scrollbar-width (none, thin, or auto).

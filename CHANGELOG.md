@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.293] - 2026-10-21
+
+### Added
+- `aside(mobile: :stack)` lays the aside under main below `md`. `:drawer` stays the off-canvas panel. Anything else raises `ArgumentError`.
+- `layout.aside_trigger("Details")` is the aside button. The label, `aria-expanded`, and `aria-controls` are on the control.
+
+### Fixed
+- The menu button gets `aria-expanded` and `aria-controls` when the rail drawer opens, closes, and on connect.
+- Page Nav wraps below `md` and can shrink, so a toolbar fits the floating top-nav card.
+- Phone drawers animate `translate` and `transform`. `prefers-reduced-motion: reduce` snaps the slide.
+
+### Upgrade notes
+- `mobile:` on `aside` defaults to `:drawer`. Pass `:stack` to drop the phone drawer. There is no alias.
+- Replace a hand-wired `asideToggle` button with `layout.aside_trigger("Details")` where the control should sit. A hand-wired button still works. The controller now also sets `aria-controls`.
+- Reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Rebuild host Tailwind so it emits `flex-wrap`, `min-w-0`, and `md:flex-nowrap` on Page Nav. The wrap also lives in `flat_pack/application.css`.
+- Load `flat_pack/application.css` after Tailwind. Keep `transform`, `filter`, `will-change`, and `contain` off ancestors of the shell. Those pin the fixed drawers to the ancestor.
+- Redeploy so `meta.gem_version` shows `0.1.293`.
+
 ## [0.1.292] - 2026-10-21
 
 ### Changed

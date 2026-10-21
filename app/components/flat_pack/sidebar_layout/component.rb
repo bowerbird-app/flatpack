@@ -17,6 +17,7 @@ module FlatPack
       SCROLLS = %i[pane page].freeze
       HEIGHTS = %i[full content].freeze
       WIDTHS = %i[fixed content].freeze
+      ASIDE_MOBILES = %i[drawer stack].freeze
 
       def initialize(
         side: :left,
@@ -46,6 +47,9 @@ module FlatPack
         @resizable = resizable
         @aside_open = true
         @aside_resizable = false
+        @aside_mobile = :drawer
+        @rail_id = "flat-pack-sidebar"
+        @aside_id = "flat-pack-aside"
 
         validate_side!
         validate_floating!
@@ -97,14 +101,34 @@ module FlatPack
         background_slot?
       end
 
-      def aside(open: true, resizable: false, **args, &block)
+      def aside(open: true, resizable: false, mobile: :drawer, **args, &block)
         return aside_slot unless block
 
         validate_boolean!(open, "open")
         validate_resizable!(resizable)
         @aside_open = open
         @aside_resizable = resizable
+        @aside_mobile = normalize_aside_mobile(mobile)
         with_aside_slot(**args, &block)
+      end
+
+      # A button the host places (usually in the top nav). The label is the
+      # accessible name. The control targets the aside and carries
+      # aria-expanded and aria-controls, so the host does not wire those.
+      def aside_trigger(label = nil)
+        name = label.to_s
+        raise ArgumentError, "Aside trigger needs a label." if name.blank?
+
+        render FlatPack::Button::Component.new(
+          text: name,
+          style: :ghost,
+          size: :sm,
+          aria: {expanded: (@aside_open ? "true" : "false"), controls: @aside_id},
+          data: {
+            "flat-pack--sidebar-layout-target": "asideToggle",
+            action: "click->flat-pack--sidebar-layout#toggleAside"
+          }
+        )
       end
 
       def aside?
@@ -185,11 +209,12 @@ module FlatPack
 
       def panel_tag_attributes(panel)
         attributes = {
+          id: ((panel.role == :aside) ? @aside_id : @rail_id),
           class: classes(*panel.column_classes),
           data: panel.column_data
         }
         attributes[:style] = panel.column_style if panel.column_style
-        attributes[:inert] = true if panel.role == :aside && panel.open == false
+        attributes[:inert] = true if panel.role == :aside && panel.open == false && panel.mobile != :stack
         attributes
       end
 
@@ -241,7 +266,8 @@ module FlatPack
           resizable: @aside_resizable,
           floating: @floating,
           content_height: content_height?,
-          storage_key: @storage_key
+          storage_key: @storage_key,
+          mobile: @aside_mobile
         )
       end
 
@@ -256,7 +282,7 @@ module FlatPack
               var stored=localStorage.getItem(#{open_key.to_json});
               var open=stored===null?#{panel.open ? "true" : "false"}:stored==="true";
               column.setAttribute("data-flat-pack-aside-open",open?"true":"false");
-              if(open){column.removeAttribute("inert");}else{column.setAttribute("inert","");}
+              #{aside_inert_js(panel)}
               #{width_apply_js(panel.resizable ? panel.width_storage_key : nil)}
             }catch(e){}
           })();
@@ -279,6 +305,14 @@ module FlatPack
           })();
         JS
         content_tag(:script, js.html_safe)
+      end
+
+      def aside_inert_js(panel)
+        if panel.mobile == :stack
+          'if(open||!window.matchMedia("(min-width: 768px)").matches){column.removeAttribute("inert");}else{column.setAttribute("inert","");}'
+        else
+          'if(open){column.removeAttribute("inert");}else{column.setAttribute("inert","");}'
+        end
       end
 
       def width_apply_js(key)
@@ -329,7 +363,7 @@ module FlatPack
       end
 
       def render_main_column
-        content_tag(:div, class: main_column_classes) do
+        content_tag(:div, class: main_column_classes, data: {"flat-pack-layout-main": "true"}) do
           safe_join([
             render_top_nav,
             content_tag(:div, **main_pane_attributes) do
@@ -379,7 +413,9 @@ module FlatPack
         }
         if aside?
           data["flat-pack-layout-columns"] = layout_columns
+          data["flat-pack-aside-mobile"] = @aside_mobile.to_s
           data["flat-pack--sidebar-layout-aside-open-value"] = @aside_open
+          data["flat-pack--sidebar-layout-aside-mobile-value"] = @aside_mobile.to_s
           aside_key = aside_panel.open_storage_key
           data["flat-pack--sidebar-layout-aside-storage-key-value"] = aside_key if aside_key
         end
@@ -523,6 +559,13 @@ module FlatPack
         return if value == true || value == false
 
         raise ArgumentError, "#{name} must be true or false"
+      end
+
+      def normalize_aside_mobile(mobile)
+        value = mobile.is_a?(String) ? mobile.to_sym : mobile
+        return value if ASIDE_MOBILES.include?(value)
+
+        raise ArgumentError, "mobile must be :drawer or :stack"
       end
     end
   end
