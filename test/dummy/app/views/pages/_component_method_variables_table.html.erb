@@ -1449,7 +1449,8 @@
         { variable: "height", accepts: ":full, :content", example: "height: :content" },
         { variable: "width", accepts: ":fixed, :content", example: "width: :content" },
         { variable: "resizable", accepts: "true, false", example: "resizable: true" },
-        { variable: "aside", accepts: "slot. open: true or false. resizable: true or false", example: "layout.aside(open: true, resizable: true)" }
+        { variable: "aside", accepts: "slot. open: true or false. resizable: true or false. mobile: :drawer or :stack", example: "layout.aside(open: true, mobile: :stack)" },
+        { variable: "aside_trigger", accepts: "label String", example: "layout.aside_trigger(\"Details\")" }
       ]
     },
     table: {

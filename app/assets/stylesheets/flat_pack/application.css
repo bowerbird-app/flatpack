@@ -762,6 +762,149 @@
       var(--sidebar-float-shadow) !important;
   }
 
+  /* Important width lives in this layer. Unlayered !important loses to it,
+     so the stacked phone card has to opt out here. */
+  @media (max-width: 767px) {
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
+      width: calc(100% - (var(--layout-content-inset, 1rem) * 2)) !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      height: auto !important;
+    }
+
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > aside {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+    }
+  }
+
+}
+
+/* Phone drawers slide on the translate property Tailwind 4 uses for
+   translate-x utilities. transform alone does not run that slide.
+   Reduced motion snaps. Stacked asides stay in flow and do not translate. */
+@media (max-width: 767px) {
+  .fp-sidebar-drawer:not([data-flat-pack-aside-mobile="stack"]) {
+    transition-property: translate, transform;
+    transition-duration: var(--duration-slow);
+    transition-timing-function: var(--easing-standard);
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .fp-sidebar-drawer:not([data-flat-pack-aside-mobile="stack"]) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}
+
+/* Stacked aside sits under main on small screens. The shell grows with
+   the page so the panel is not clipped by the locked desktop grid.
+   The card uses the same surface as the desktop floating aside. The gap
+   under main is --stack-gap-md. A close control and an aside trigger
+   stay hidden, because the panel cannot be dismissed. */
+@media (max-width: 767px) {
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > .fp-backdrop,
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack--sidebar-layout-target="sidebar"],
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack--sidebar-layout-target="backdrop"],
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack-layout-main] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] .fp-layout-content,
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] .fp-layout-column {
+    padding-bottom: 0;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] [data-flat-pack--sidebar-layout-target="asideToggle"],
+  .fp-sidebar-drawer[data-flat-pack-aside-mobile="stack"] [data-action*="closeAside"] {
+    display: none;
+  }
+
+  /* Beats a host restatement of aside width. The card shares the page inset
+     with the floating top nav. min-height stays on the shell, not this panel. */
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
+    position: relative;
+    inset: auto;
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: start;
+    width: calc(100% - (var(--layout-content-inset, 1rem) * 2)) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin-inline: var(--layout-content-inset, 1rem) !important;
+    margin-top: var(--stack-gap-md) !important;
+    margin-bottom: var(--stack-gap-md) !important;
+    z-index: auto;
+    transform: none;
+    translate: none;
+    transition-property: none;
+  }
+
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"][data-flat-pack-sidebar-floating="true"] {
+    background-color: var(--sidebar-float-background-color);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--sidebar-border-color);
+    border-radius: var(--sidebar-float-radius);
+    box-shadow: var(--sidebar-float-shadow);
+    overflow: hidden;
+  }
+
+  html[data-theme]:not([data-theme~="rounded"]) .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"][data-flat-pack-sidebar-floating="true"] {
+    border-radius: 0;
+  }
+
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > .fp-aside {
+    height: auto !important;
+    max-height: none;
+    overflow: visible;
+    border-radius: inherit;
+  }
+}
+
+/* Phone drawers stay full height. On the rounded theme the inner edge
+   uses the floating panel radius. The outer edge stays flush. The rail
+   and the aside share that corner so they match. One backdrop covers both. */
+@media (max-width: 767px) {
+  html[data-theme~="rounded"] .fp-sidebar-drawer[data-mobile-drawer-side="left"]:not([data-flat-pack-aside-mobile="stack"]) {
+    border-top-right-radius: var(--sidebar-float-radius);
+    border-bottom-right-radius: var(--sidebar-float-radius);
+    overflow: hidden;
+  }
+
+  html[data-theme~="rounded"] .fp-sidebar-drawer[data-mobile-drawer-side="right"]:not([data-flat-pack-aside-mobile="stack"]) {
+    border-top-left-radius: var(--sidebar-float-radius);
+    border-bottom-left-radius: var(--sidebar-float-radius);
+    overflow: hidden;
+  }
+}
+
+/* The open drawer scrim is a sibling of the drawers, not a child of the
+   translated panel. opacity-100 wins even if a utility still sets opacity 0. */
+[data-controller~="flat-pack--sidebar-layout"] > [data-flat-pack--sidebar-layout-target="backdrop"] {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+[data-controller~="flat-pack--sidebar-layout"] > [data-flat-pack--sidebar-layout-target="backdrop"].opacity-100 {
+  opacity: 1;
 }
 
 /* Pane bars follow --pane-scrollbar-width (none, thin, or auto).
@@ -1356,16 +1499,22 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   box-shadow: var(--sidebar-float-shadow);
 }
 
-/* Below md the pill's corner padding is wider than the row. Tighten the
- * card and the gap so a toolbar and one trailing card stay on one line.
- * Labels may shrink; the row still wraps when the trailing cards cannot. */
+/* Below md the bar stays one row. Collapsed actions live in the hamburger menu.
+ * The right section already carries margin-left: auto, so the menu drops its
+ * own auto margin and sits against that section (the bell) instead of centering it. */
 @media (max-width: 767px) {
+  [data-flat-pack-top-nav-section="right"]:has(*) ~ [data-flat-pack--top-nav-target="menu"] {
+    margin-left: 0;
+  }
+
   [data-flat-pack-top-nav-floating] .fp-top-nav > div {
+    flex-wrap: nowrap;
     gap: 0.5rem;
   }
 
   [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
   [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] {
+    flex-wrap: nowrap;
     gap: 0.25rem;
     padding-inline: 0.25rem;
   }
@@ -1402,6 +1551,69 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
 
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="menu"] {
   pointer-events: auto;
+}
+
+/* The open hamburger menu is one column of full-width rows. */
+[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav,
+[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav > div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 0.125rem;
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(a, button) {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--surface-content-color);
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(a, button):hover {
+  background-color: var(--surface-muted-background-color);
+}
+
+/* A dropdown in the phone menu discloses in place. The trigger stays a row. */
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] > [data-flat-pack--button-dropdown-target="trigger"] {
+  justify-content: space-between;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] > [data-flat-pack--button-dropdown-target="menu"] {
+  display: none;
+  position: static;
+  opacity: 1;
+  transform: none;
+  z-index: auto;
+  width: 100%;
+  min-width: 0;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0.125rem 0 0.125rem 0.75rem;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure][data-flat-pack-top-nav-expanded="true"] > [data-flat-pack--button-dropdown-target="menu"] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure][data-flat-pack-top-nav-expanded="true"] [data-flat-pack--button-dropdown-target="chevron"] {
+  transform: rotate(180deg);
 }
 
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {

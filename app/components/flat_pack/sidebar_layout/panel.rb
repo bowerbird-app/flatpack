@@ -7,7 +7,7 @@ module FlatPack
     # invent a second suffix.
     class Panel
       attr_reader :role, :edge, :open, :resizable, :width_mode, :collapses,
-        :floating, :content_height, :storage_key
+        :floating, :content_height, :storage_key, :mobile
 
       def self.rail(edge:, open:, resizable:, width_mode:, floating:, content_height:, storage_key:)
         new(
@@ -23,7 +23,7 @@ module FlatPack
         )
       end
 
-      def self.aside(edge:, open:, resizable:, floating:, content_height:, storage_key:)
+      def self.aside(edge:, open:, resizable:, floating:, content_height:, storage_key:, mobile: :drawer)
         new(
           role: :aside,
           edge: edge,
@@ -33,11 +33,12 @@ module FlatPack
           collapses: false,
           floating: floating,
           content_height: content_height,
-          storage_key: storage_key
+          storage_key: storage_key,
+          mobile: mobile
         )
       end
 
-      def initialize(role:, edge:, open:, resizable:, width_mode:, collapses:, floating:, content_height:, storage_key:)
+      def initialize(role:, edge:, open:, resizable:, width_mode:, collapses:, floating:, content_height:, storage_key:, mobile: :drawer)
         @role = role
         @edge = edge
         @open = open
@@ -47,6 +48,7 @@ module FlatPack
         @floating = floating
         @content_height = content_height
         @storage_key = storage_key
+        @mobile = mobile
       end
 
       def width_storage_key
@@ -68,12 +70,14 @@ module FlatPack
       end
 
       def column_classes
+        return stacked_column_classes if role == :aside && mobile == :stack
+
         [
           "h-full",
           "md:h-screen",
           "md:self-start",
           "min-h-0",
-          "transition-transform",
+          "transition-[translate,transform]",
           "md:transition-[width,transform]",
           "duration-[var(--duration-slow)]",
           "ease-[var(--easing-standard)]",
@@ -93,6 +97,27 @@ module FlatPack
         ]
       end
 
+      # In flow under main below md. Desktop still uses the drawer column rules
+      # from the md: breakpoint, so the phone does not need a translate or a toggle.
+      def stacked_column_classes
+        [
+          "h-auto",
+          "md:h-screen",
+          "md:self-start",
+          "min-h-0",
+          "min-w-0",
+          "w-full",
+          "md:w-auto",
+          "md:transition-[width,transform]",
+          "duration-[var(--duration-slow)]",
+          "ease-[var(--easing-standard)]",
+          "block",
+          "relative",
+          "fp-sidebar-drawer",
+          "fp-aside-stack"
+        ]
+      end
+
       def column_data
         data = if role == :rail
           {
@@ -108,6 +133,7 @@ module FlatPack
             "mobile-drawer-side": edge.to_s,
             "flat-pack-panel": "aside",
             "flat-pack-aside-open": open ? "true" : "false",
+            "flat-pack-aside-mobile": mobile.to_s,
             "flat-pack-sidebar-floating": ("true" if floating),
             "flat-pack-sidebar-height": ("content" if content_height)
           }

@@ -140,5 +140,27 @@ module FlatPack
       refute_includes controller, 'querySelector("aside")'
       refute_includes controller, "clearCollapsedRestState"
     end
+
+    test "phone stack uses the floating surface and drawers share the inner corner" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+      assert_includes css, "margin-top: var(--stack-gap-md) !important;"
+      assert_includes css, "margin-bottom: var(--stack-gap-md) !important;"
+      refute_includes css, "margin-block: var(--sidebar-float-inset, 1rem) !important;"
+      assert_includes css, "[data-controller~=\"flat-pack--sidebar-layout\"][data-flat-pack-aside-mobile=\"stack\"] .fp-layout-column"
+      assert_includes css, "padding-bottom: 0;"
+      assert_includes css, "[data-flat-pack--sidebar-layout-target=\"asideToggle\"]"
+      assert_includes css, "[data-action*=\"closeAside\"]"
+      assert_includes css, ".fp-sidebar-drawer[data-flat-pack-panel=\"aside\"][data-flat-pack-aside-mobile=\"stack\"][data-flat-pack-sidebar-floating=\"true\"]"
+      assert_includes css, "background-color: var(--sidebar-float-background-color);"
+      assert_includes css, "box-shadow: var(--sidebar-float-shadow);"
+      assert_includes css, "html[data-theme]:not([data-theme~=\"rounded\"]) .fp-sidebar-drawer[data-flat-pack-panel=\"aside\"][data-flat-pack-aside-mobile=\"stack\"][data-flat-pack-sidebar-floating=\"true\"]"
+      assert_includes css, "html[data-theme~=\"rounded\"] .fp-sidebar-drawer[data-mobile-drawer-side=\"left\"]:not([data-flat-pack-aside-mobile=\"stack\"])"
+      assert_includes css, "border-top-right-radius: var(--sidebar-float-radius);"
+      assert_includes css, "border-bottom-right-radius: var(--sidebar-float-radius);"
+      assert_includes css, "html[data-theme~=\"rounded\"] .fp-sidebar-drawer[data-mobile-drawer-side=\"right\"]:not([data-flat-pack-aside-mobile=\"stack\"])"
+      assert_includes css, "border-top-left-radius: var(--sidebar-float-radius);"
+      assert_includes css, "border-bottom-left-radius: var(--sidebar-float-radius);"
+    end
   end
 end
