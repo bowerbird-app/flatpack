@@ -8,7 +8,7 @@ Use Backdrop when a hero, a page section, a card, a modal, or a full page should
 
 ## Class
 - Primary: `FlatPack::Backdrop::Component`
-- Related classes: `FlatPack::SidebarLayout::Component`
+- Related classes: `FlatPack::SidebarLayout::Component`, `FlatPack::PageLayout::Component`
 
 ## Props
 
@@ -42,7 +42,7 @@ None.
 
 The root fills its container, clips with `overflow: hidden`, and uses `border-radius: inherit`, so a rounded card or section keeps its corner. Set the corner on the container. A decorative photo with no content is `aria-hidden="true"` and ignores pointer events.
 
-`SidebarLayout` `background` renders this component and fixes that one instance to the viewport. See [Sidebar Layout](sidebar_layout.md).
+`SidebarLayout` and `PageLayout` `background` render this component and fix that one instance to the viewport. See [Sidebar Layout](sidebar_layout.md) and [Page Layout](page_layout.md).
 
 ## Accessibility
 The photo, tint, and fill are `aria-hidden="true"`. Pass `alt=""` when the photo is decorative, or a real `alt` when the media slot is the only description. Content in the block stays available. A backdrop with no content marks the root `aria-hidden="true"` and does not take clicks. Under `prefers-reduced-transparency: reduce`, or when `filter: blur()` is unavailable, the photo is hidden and the tint becomes solid.

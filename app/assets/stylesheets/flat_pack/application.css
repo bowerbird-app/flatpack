@@ -920,6 +920,73 @@
   background-color: transparent;
 }
 
+/* Public page shell. Arrangement only. The floating bar rules below are shared
+ * with SidebarLayout. Unlayered so host preflight cannot zero the column padding.
+ */
+.fp-page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-width: 0;
+  --page-layout-width: var(--page-layout-width-default);
+  --layout-content-max-width: var(--page-layout-width);
+  --layout-content-inset: var(--page-layout-padding-inline);
+}
+
+.fp-page-layout[data-fp-page-layout-width="narrow"] {
+  --page-layout-width: var(--page-layout-width-narrow);
+}
+
+.fp-page-layout[data-fp-page-layout-width="default"] {
+  --page-layout-width: var(--page-layout-width-default);
+}
+
+.fp-page-layout[data-fp-page-layout-width="wide"] {
+  --page-layout-width: var(--page-layout-width-wide);
+}
+
+.fp-page-layout[data-fp-page-layout-width="full"] {
+  --page-layout-width: var(--page-layout-width-full);
+}
+
+.fp-page-layout-frame {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--page-layout-gap);
+  min-width: 0;
+  width: 100%;
+}
+
+.fp-page-layout-frame:has([data-flat-pack-top-nav-floating]) {
+  gap: 0;
+}
+
+.fp-page-layout-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-bottom: var(--page-layout-padding-block);
+}
+
+.fp-page-layout-main:not(.fp-layout-scroll) {
+  padding-top: var(--page-layout-padding-block);
+}
+
+.fp-page-layout-footer {
+  flex: none;
+  padding-bottom: var(--page-layout-padding-block);
+}
+
+.fp-page-layout[data-fp-page-layout-align="center"] .fp-page-layout-main {
+  display: grid;
+  align-content: center;
+}
+
+.fp-page-layout[data-fp-page-layout-align="center"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) {
+  align-items: stretch;
+  grid-template-rows: minmax(0, 1fr);
+}
+
 /* Unlayered so a style fill or shadow utility cannot cover the hover.
  * Those utilities live in the host Tailwind layer, which beats @layer components.
  */
@@ -1028,7 +1095,8 @@
   }
 }
 
-/* Floating top nav. Unlayered so it wins over .fp-top-nav and Tailwind utilities.
+/* Floating top nav. Shared by SidebarLayout and PageLayout.
+ * Unlayered so it wins over .fp-top-nav and Tailwind utilities.
  * The wrapper covers the top band. pointer-events stay on the cards so the gaps
  * still hit the page. Empty TopNav sections are always in the DOM.
  */

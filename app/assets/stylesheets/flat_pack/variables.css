@@ -358,6 +358,13 @@
   --top-nav-float-gap: var(--top-nav-float-gap);
   --layout-content-inset: var(--layout-content-inset);
   --layout-content-max-width: var(--layout-content-max-width);
+  --page-layout-width-narrow: var(--page-layout-width-narrow);
+  --page-layout-width-default: var(--page-layout-width-default);
+  --page-layout-width-wide: var(--page-layout-width-wide);
+  --page-layout-width-full: var(--page-layout-width-full);
+  --page-layout-padding-inline: var(--page-layout-padding-inline);
+  --page-layout-padding-block: var(--page-layout-padding-block);
+  --page-layout-gap: var(--page-layout-gap);
   --backdrop-blur: var(--backdrop-blur);
   --backdrop-color: var(--backdrop-color);
   --backdrop-filter: var(--backdrop-filter);
@@ -1325,6 +1332,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --layout-content-inset: 1rem;
   /* 100% fills the padded column. A length centers that measure; the floating bar follows it. */
   --layout-content-max-width: 100%;
+  --page-layout-width-narrow: 40rem;
+  --page-layout-width-default: 56rem;
+  --page-layout-width-wide: 72rem;
+  --page-layout-width-full: 100%;
+  --page-layout-padding-inline: var(--space-4);
+  --page-layout-padding-block: var(--space-6);
+  --page-layout-gap: var(--space-6);
   --backdrop-blur: 40px;
   --backdrop-color: transparent;
   --backdrop-filter: saturate(1);
@@ -1883,6 +1897,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   :root,
   [data-theme] {
     --layout-content-inset: 2rem;
+    --page-layout-padding-inline: var(--space-6);
   }
 }
 

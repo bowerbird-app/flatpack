@@ -3,6 +3,10 @@
 module FlatPack
   module SidebarLayout
     class Component < FlatPack::BaseComponent
+      include FlatPack::Layout::Shell
+
+      private :layout_top_nav, :layout_background
+
       renders_one :sidebar_slot
       renders_one :top_nav_slot
       renders_one :main_slot
@@ -327,16 +331,8 @@ module FlatPack
 
       def render_top_nav
         return unless top_nav?
-        return top_nav unless @floating_top_nav
 
-        content_tag(:div, top_nav.to_s, **top_nav_float_attributes)
-      end
-
-      def top_nav_float_attributes
-        {
-          class: "fp-layout-top-nav",
-          data: {"flat-pack-top-nav-floating": @content_scroll.to_s}
-        }
+        layout_top_nav(top_nav, floating: @floating_top_nav, content_scroll: @content_scroll)
       end
 
       def render_page_surface
@@ -348,9 +344,7 @@ module FlatPack
       def render_background
         return unless background?
 
-        backdrop = FlatPack::Backdrop::Component.new
-        backdrop.with_media { background.to_s }
-        render(backdrop)
+        layout_background(background)
       end
 
       def render_backdrop

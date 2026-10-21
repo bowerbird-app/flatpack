@@ -59,6 +59,7 @@ module FlatPack
       --sidebar-measured-width
       --sidebar-collapsed-frame
       --fp-panel-width
+      --page-layout-width
       --read-more-lines
       --spacing
       --carousel-bleed

@@ -28,6 +28,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Panel resize | `resizable` | `FlatPack::SidebarLayout::Component`, and the same argument on its `aside` slot. `true` or `false`. Default `false`. Desktop only. The rail uses the sidebar content min and max. The aside uses `--aside-min-width` and `--aside-max-width`. |
 | Aside column | `aside` | `FlatPack::SidebarLayout::Component` slot, opposite `side:`. `open:` defaults to `true`. `resizable:` defaults to `false`. Both are booleans. |
 | Empty state measure | `width` | `FlatPack::EmptyState::Component` only. `:sm`, `:md`, `:lg`, or `:full`. Caps the text block (and a `media` image) with `--empty-state-measure-*`. The root still fills its container. `:full` is `max-width: none`. |
+| Page column | `width` | `FlatPack::PageLayout::Component` only. `:narrow`, `:default`, `:wide`, or `:full`. Sets `--page-layout-width-*`. Unknown values raise `ArgumentError`. Not a CSS length and not a class. |
+| Page alignment | `align` | `FlatPack::PageLayout::Component` only. `:top` (default) or `:center`. `:center` centers the column in the viewport. Not Hero, Email, Button, Table, or Grid `align`. |
 | Table column track | `width` | `FlatPack::Table::Column` only. `:fit` (shrink to content), `:fill` (remaining space), or a CSS length such as `"12rem"`. A length uses `table-layout: fixed` unless a sibling is `:fit`. The length stays a `max-width` cap on the header and cells. |
 | Table column floor and cap | `min_width` / `max_width` | On a column, CSS lengths such as `"8rem"`. Table `min_width:` stays the scroll floor (`:none`, `:sm`, `:md`, `:lg`, or a `min-w-*` class). |
 | Table column wrapping | `wrap` | `FlatPack::Table::Column` only. `:wrap` (default), `:nowrap`, `:truncate`. Truncated cells expose the full text in `title`. |
@@ -136,7 +138,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Keep `type` only for native HTML control types such as button `type: "submit"`. Carousel slides and lightbox items are the exception: `type` is `:image`, `:video`, or (carousel only) `:html`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`. Table columns use `:start`, `:center`, and `:end`.
-- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor. Do not pass EmptyState `:sm` / `:md` / `:lg` / `:full` to Media or a Table column, or a Media integer to EmptyState `width`.
+- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor. Do not pass EmptyState `:sm` / `:md` / `:lg` / `:full` to Media or a Table column, or a Media integer to EmptyState `width`. Do not pass Page Layout `:narrow`, `:default`, `:wide`, or `:full` to EmptyState, Media, or a Table column. Do not pass a CSS length or a class to Page Layout `width`. Do not pass Page Layout `:top` to Hero, Email, Button, Table, or Grid `align`.
 - Do not use `divider` on Table. The param is `dividers`.
 - Do not add a per-column `class` or raw `style` string. Width, min width, max width, align, wrap, and `hide_below` are the column controls.
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.

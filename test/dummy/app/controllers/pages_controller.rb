@@ -35,6 +35,9 @@ class PagesController < ApplicationController
     }
   }.freeze
 
+  PAGE_LAYOUT_VARIANTS = %w[plain float article login].freeze
+  PAGE_LAYOUT_THEMES = {"light" => nil, "dark" => "dark", "rounded" => "rounded"}.freeze
+
   DEMO_THEME_TOKEN_MAPPINGS = [
     {action: /\Abuttons(_.*)?\z/, title: "Buttons", patterns: [/\A--button-/]},
     {action: /\Alinks\z/, title: "Links", patterns: [/\A--button-/]},
@@ -707,6 +710,13 @@ class PagesController < ApplicationController
   end
 
   def backdrop_full
+    render layout: "fullpage"
+  end
+
+  def page_layout
+    requested = params[:variant].to_s
+    @page_layout_variant = PAGE_LAYOUT_VARIANTS.include?(requested) ? requested : "plain"
+    @page_layout_theme = PAGE_LAYOUT_THEMES.fetch(params[:theme].to_s, "rounded")
     render layout: "fullpage"
   end
 
