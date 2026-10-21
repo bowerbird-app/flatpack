@@ -236,25 +236,45 @@ test('a phone folds a collapsible section into the menu', () => {
   assert.equal(sectionChildren.includes(child), false)
 })
 
-test('a phone lists dropdown items in one column and restores them', () => {
-  const {controller, panel, sectionChildren, publish, more, publishMenu, moreMenu, publishNow, schedule, duplicate, archive} = buildMenuTree()
+test('a phone discloses a dropdown in place and restores it', () => {
+  const {controller, doc, sectionChildren, publish, publishTrigger, publishMenu, moreMenu, publishNow, duplicate} = buildMenuTree()
 
   controller.applyLayout()
 
-  const visible = visibleText(panel)
-  assert.deepEqual(visible, ['Section', 'Publish now', 'Schedule', 'Duplicate', 'Archive'])
-  assert.equal(publish.hidden, true)
-  assert.equal(more.hidden, true)
-  assert.equal(publishMenu.children.includes(publishNow), false)
-  assert.equal(moreMenu.children.includes(duplicate), false)
+  assert.equal(publish.dataset.flatPackTopNavDisclosure, 'true')
+  assert.equal(publish.dataset.flatPackTopNavExpanded, 'false')
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'false')
+  assert.equal(publishTrigger.getAttribute('aria-controls'), publishMenu.id)
+  assert.equal(publishMenu.getAttribute('role'), 'group')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishMenu.children.includes(publishNow), true)
+  assert.equal(moreMenu.children.includes(duplicate), true)
+
+  publishTrigger.click()
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'true')
+  assert.equal(publish.dataset.flatPackTopNavExpanded, 'true')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'false')
+  assert.equal(publishMenu.children.includes(publishNow), true)
+
+  doc.activeElement = publishNow
+  publishTrigger.click()
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'false')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishTrigger.focused, true)
+
+  publishTrigger.click()
+  controller.closeMenu()
+  assert.equal(publish.dataset.flatPackTopNavExpanded, 'false')
 
   controller.mediaQuery.matches = false
   controller.applyLayout()
 
-  assert.equal(publish.hidden, false)
-  assert.equal(more.hidden, false)
+  assert.equal(publish.dataset.flatPackTopNavDisclosure, undefined)
+  assert.equal(publishMenu.getAttribute('role'), 'menu')
+  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishTrigger.getAttribute('aria-controls'), null)
+  assert.equal(publishTrigger.listeners.length, 0)
   assert.deepEqual(publishMenu.children.map((node) => node.text), ['Publish now', 'Schedule'])
-  assert.deepEqual(moreMenu.children.map((node) => node.text), ['Duplicate', 'Archive'])
   assert.equal(sectionChildren[0].nodeName, 'page-nav')
 })
 
@@ -263,9 +283,44 @@ function element(name, {dataset = {}, text = ''} = {}) {
     nodeType: 1,
     nodeName: name,
     text,
+    textContent: text,
     hidden: false,
+    id: '',
     dataset,
+    attributes: {},
+    listeners: [],
     childNodes: [],
+    getAttribute(name) {
+      return Object.prototype.hasOwnProperty.call(this.attributes, name) ? this.attributes[name] : null
+    },
+    setAttribute(name, value) {
+      this.attributes[name] = String(value)
+    },
+    removeAttribute(name) {
+      delete this.attributes[name]
+    },
+    addEventListener(type, fn, capture) {
+      this.listeners.push({type, fn, capture: !!capture})
+    },
+    removeEventListener(type, fn) {
+      this.listeners = this.listeners.filter((listener) => listener.fn !== fn || listener.type !== type)
+    },
+    click() {
+      const event = {
+        preventDefault() {},
+        stopPropagation() {},
+        stopImmediatePropagation() {}
+      }
+      this.listeners.filter((listener) => listener.type === 'click' && listener.capture).forEach((listener) => listener.fn(event))
+    },
+    contains(other) {
+      if (!other) return false
+      if (other === this) return true
+      return this.children.some((child) => typeof child.contains === 'function' && child.contains(other))
+    },
+    focus() {
+      this.focused = true
+    },
     get children() {
       return this.childNodes.filter((child) => child.nodeType === 1)
     },
@@ -310,19 +365,11 @@ function selectorMatches(node, selector) {
   if (selector === "[data-controller~='flat-pack--button-dropdown']") {
     return (node.dataset.controller || '').split(/\s+/).includes('flat-pack--button-dropdown')
   }
+  if (selector === "[data-flat-pack--button-dropdown-target='trigger']") {
+    return node.dataset.flatPackButtonDropdownTarget === 'trigger'
+  }
 
   return node.dataset.flatPackButtonDropdownTarget === 'menu'
-}
-
-function visibleText(root) {
-  const labels = []
-  const walk = (node) => {
-    if (node.hidden) return
-    if (node.text) labels.push(node.text)
-    node.children.forEach(walk)
-  }
-  walk(root)
-  return labels
 }
 
 function buildMenuTree() {
@@ -332,16 +379,22 @@ function buildMenuTree() {
   const duplicate = element('button', {text: 'Duplicate'})
   const archive = element('button', {text: 'Archive'})
   const publishMenu = element('div', {dataset: {flatPackButtonDropdownTarget: 'menu'}})
+  publishMenu.setAttribute('role', 'menu')
+  publishMenu.setAttribute('aria-hidden', 'true')
   publishMenu.appendChild(publishNow)
   publishMenu.appendChild(schedule)
+  const publishTrigger = element('button', {text: 'Publish', dataset: {flatPackButtonDropdownTarget: 'trigger'}})
   const publish = element('div', {dataset: {controller: 'flat-pack--button-dropdown'}})
-  publish.appendChild(element('button', {text: 'Publish'}))
+  publish.appendChild(publishTrigger)
   publish.appendChild(publishMenu)
   const moreMenu = element('div', {dataset: {flatPackButtonDropdownTarget: 'menu'}})
+  moreMenu.setAttribute('role', 'menu')
+  moreMenu.setAttribute('aria-hidden', 'true')
   moreMenu.appendChild(duplicate)
   moreMenu.appendChild(archive)
+  const moreTrigger = element('button', {text: 'More', dataset: {flatPackButtonDropdownTarget: 'trigger'}})
   const more = element('div', {dataset: {controller: 'flat-pack--button-dropdown'}})
-  more.appendChild(element('button', {text: 'More'}))
+  more.appendChild(moreTrigger)
   more.appendChild(moreMenu)
   const row = element('div')
   row.appendChild(sectionButton)
@@ -374,16 +427,19 @@ function buildMenuTree() {
     return panel.childrenPush(node)
   }
   const menu = {classList: {toggle() {}}}
+  const doc = {createComment() { return {nodeType: 8, parentNode: null} }, activeElement: null}
   const TopNavController = loadTopNavController({
     window: {},
-    document: {createComment() { return {nodeType: 8, parentNode: null} }},
+    document: doc,
     Node: {TEXT_NODE: 3, ELEMENT_NODE: 1}
   })
 
   return {
     panel,
+    doc,
     sectionChildren,
     publish,
+    publishTrigger,
     more,
     publishMenu,
     moreMenu,

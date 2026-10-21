@@ -20,7 +20,7 @@ Use Page Nav when the layout needs a short row of icon actions at the top of a p
 `show_back:`, `right_slot`, `back_href:`, `anchor_href:`, `back_label`, `anchor_label`, and `secondary_anchor_*` are not component arguments. Passing one raises `ArgumentError` (`unknown keyword: :name`). There is no alias.
 
 ## Items
-Call these on the component, in the order they should appear. The row is one `flex items-center gap-2` container. It stays one line. Gap uses the existing `gap-2` utility. There is no trailing zone and no `ml-auto`. Inside a Top Nav, the row folds into the hamburger menu with the rest of that bar on a phone. The open menu lists each action on its own row. A dropdown's items join that column, and the dropdown trigger is not a row.
+Call these on the component, in the order they should appear. The row is one `flex items-center gap-2` container. It stays one line. Gap uses the existing `gap-2` utility. There is no trailing zone and no `ml-auto`. Inside a Top Nav, the row folds into the hamburger menu with the rest of that bar on a phone. The open menu lists each action on its own row. A dropdown stays a parent row and discloses its items, indented, under that row.
 
 - `with_item { ... }`: Arbitrary content at this position. `round:` does not restyle it.
 - `with_back(href: nil, icon: nil, tooltip: nil, fallback_url: nil, style: nil, size: nil)`: History button when `href` is blank. The nav then carries `data-controller="flat-pack--page-nav"`. `fallback_url` sets `data-flat-pack--page-nav-fallback-url-value` for that history button. A present `href` renders a link and does not attach the controller. `FlatPack::Button::Component` sanitizes `href`. The default icon is `chevron-left`. The default tooltip is `flatpack.page_nav.back` ("Go back").

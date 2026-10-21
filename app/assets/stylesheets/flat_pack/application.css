@@ -1578,6 +1578,44 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   background-color: var(--surface-muted-background-color);
 }
 
+/* A dropdown in the phone menu discloses in place. The trigger stays a row. */
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] > [data-flat-pack--button-dropdown-target="trigger"] {
+  justify-content: space-between;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] > [data-flat-pack--button-dropdown-target="menu"] {
+  display: none;
+  position: static;
+  opacity: 1;
+  transform: none;
+  z-index: auto;
+  width: 100%;
+  min-width: 0;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0.125rem 0 0.125rem 0.75rem;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure][data-flat-pack-top-nav-expanded="true"] > [data-flat-pack--button-dropdown-target="menu"] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure][data-flat-pack-top-nav-expanded="true"] [data-flat-pack--button-dropdown-target="chevron"] {
+  transform: rotate(180deg);
+}
+
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
   overflow: visible;
   background-color: var(--sidebar-float-background-color);
