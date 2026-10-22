@@ -4,7 +4,7 @@
 Render a row of page actions in the order the host calls them. The component has no zones and no default order. `flat_pack_page_nav` and the generated sidebar layout supply the usual back control so a view with no items still looks the same.
 
 ## When to use
-Use Page Nav when the layout needs a short row of icon actions at the top of a page. Go back, jump to another section, close, or run a custom action. Put them in the order that page needs.
+Use Page Nav when the layout needs a short row of icon actions at the top of a page. Go back, jump to another section, close, or run a custom action. Put them in the order that page needs. Registered page buttons use `register_page_nav` and `render_page_nav`. See [Page nav registry](page-nav-registry.md).
 
 ## Class
 - `FlatPack::PageNav::Component`
@@ -20,7 +20,7 @@ Use Page Nav when the layout needs a short row of icon actions at the top of a p
 `show_back:`, `right_slot`, `back_href:`, `anchor_href:`, `back_label`, `anchor_label`, and `secondary_anchor_*` are not component arguments. Passing one raises `ArgumentError` (`unknown keyword: :name`). There is no alias.
 
 ## Items
-Call these on the component, in the order they should appear. The row is one `flex items-center gap-2` container. Gap uses the existing `gap-2` utility. There is no trailing zone and no `ml-auto`.
+Call these on the component, in the order they should appear. The row is one `flex items-center gap-2` container. It stays one line. Gap uses the existing `gap-2` utility. There is no trailing zone and no `ml-auto`. Inside a Top Nav, the row folds into the hamburger menu with the rest of that bar on a phone. The open menu lists each action on its own row. A dropdown stays a parent row and discloses its items, indented, under that row.
 
 - `with_item { ... }`: Arbitrary content at this position. `round:` does not restyle it.
 - `with_back(href: nil, icon: nil, tooltip: nil, fallback_url: nil, style: nil, size: nil)`: History button when `href` is blank. The nav then carries `data-controller="flat-pack--page-nav"`. `fallback_url` sets `data-flat-pack--page-nav-fallback-url-value` for that history button. A present `href` renders a link and does not attach the controller. `FlatPack::Button::Component` sanitizes `href`. The default icon is `chevron-left`. The default tooltip is `flatpack.page_nav.back` ("Go back").

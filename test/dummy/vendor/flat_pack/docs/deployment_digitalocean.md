@@ -94,7 +94,10 @@ The checked-in app spec also sets:
 
 ## Production notes
 
-- The public FlatPack demo (`/` and `/demo`) can run without managed Postgres. Set `DATABASE_URL` when you also host login, `/studio`, Admin, MCP, or OAuth. Do not rely on a SQLite file in the app container. The checked-in app spec still runs `db:prepare` and binds Postgres because it also hosts those paths.
+- The public FlatPack catalog (`/` and most `/demo` pages) can render without managed Postgres. Collection editor, comments, chat, articles, draggable tables, movable cards, and `/users/sign_in` need Postgres to save and to sign in. Without it they render an in-memory or unavailable state instead of an empty 500.
+- `db:prepare` creates a new database, loads the schema, and seeds it. On a database that already exists it only migrates. The run command does not call `db:seed`. Seeding on every boot resets the demo admin password, site names, and OAuth rows, and a seed failure would stop Puma from booting.
+- Set `DATABASE_URL` to the managed Postgres URL before deploy. Do not rely on a SQLite file in the app container. The checked-in app spec binds Postgres because it hosts login, `/studio`, Admin, MCP, and OAuth.
+- Seed once, from the dummy app root, when you mean to load demo rows and the sign-in user: `bundle exec rails db:seed`. `db:prepare` already does that the first time it creates the database. An optional App Platform pre-deploy job can run `bundle exec rails db:seed` instead of putting it in the run command. That job needs the owner's approval before it is added. Do not point either command at production unless you mean to.
 - Active Storage defaults to local disk, which is ephemeral on App Platform. Uploads do not persist across rebuilds unless you move them to Spaces or another external store.
 - Keep the demo on a single web service unless Postgres and Redis are shared external services.
 - If you need Sidekiq or multiple services, set `ACTIVE_JOB_QUEUE_ADAPTER=sidekiq` plus `REDIS_URL` against the managed Redis cluster.

@@ -4,7 +4,12 @@ class ArticlesController < ApplicationController
   before_action :set_article, only: [:show, :edit, :update]
 
   def index
-    @articles = Article.order(created_at: :desc)
+    @articles_available = DemoDatabase.table_ready?(Article)
+    @articles = @articles_available ? Article.order(created_at: :desc).to_a : []
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+    @articles_available = false
+    @articles = []
   end
 
   def new

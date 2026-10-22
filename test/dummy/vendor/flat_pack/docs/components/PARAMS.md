@@ -7,7 +7,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Concept | Param | Use for |
 | --- | --- | --- |
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
-| Card colour fill | `style` | Card and Card Stat. `:default`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. Card `shadow`, `border`, and `hover` are separate. |
+| Card colour fill | `background` | Card and Card Stat. `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. `:none` is transparent and inherits text. Card `shadow`, `border`, and `hover` are separate. |
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
@@ -26,13 +26,16 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Corner | `radius` | Card and Media both use `radius`. Media stays omit or `:card_inner`, and Card uses `:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`, or `:xxxl`. |
 | Floating rail height | `height` | `FlatPack::SidebarLayout::Component` only. `:full` (default) or `:content`. Content height applies only while `floating: true`, and only from the `md` breakpoint up. Not the image `height` attribute. |
 | Panel resize | `resizable` | `FlatPack::SidebarLayout::Component`, and the same argument on its `aside` slot. `true` or `false`. Default `false`. Desktop only. The rail uses the sidebar content min and max. The aside uses `--aside-min-width` and `--aside-max-width`. |
-| Aside column | `aside` | `FlatPack::SidebarLayout::Component` slot, opposite `side:`. `open:` defaults to `true`. `resizable:` defaults to `false`. Both are booleans. |
+| Aside column | `aside` | `FlatPack::SidebarLayout::Component` slot, opposite `side:`. `open:` defaults to `true`. `resizable:` defaults to `false`. Both are booleans. `mobile:` is `:drawer` (default) or `:stack`. `layout.aside_trigger("Details")` is the toggle. |
+| Pane scrollbar | `scrollbar` | Sidebar Layout (main pane and aside), Drawer, and Modal. `:hidden` (default) or `:visible`. Anything else raises `ArgumentError`. `:visible` uses the browser bar. The width for a hidden pane is the theme token `--pane-scrollbar-width`, not a Ruby setting. |
 | Empty state measure | `width` | `FlatPack::EmptyState::Component` only. `:sm`, `:md`, `:lg`, or `:full`. Caps the text block (and a `media` image) with `--empty-state-measure-*`. The root still fills its container. `:full` is `max-width: none`. |
+| Page column | `width` | `FlatPack::PageLayout::Component` only. `:narrow`, `:default`, `:wide`, or `:full`. Sets `--page-layout-width-*`. Unknown values raise `ArgumentError`. Not a CSS length and not a class. |
+| Page alignment | `align` | `FlatPack::PageLayout::Component` only. `:top` (default) or `:center`. `:center` centers the column in the viewport. Not Hero, Email, Button, Table, or Grid `align`. |
 | Table column track | `width` | `FlatPack::Table::Column` only. `:fit` (shrink to content), `:fill` (remaining space), or a CSS length such as `"12rem"`. A length uses `table-layout: fixed` unless a sibling is `:fit`. The length stays a `max-width` cap on the header and cells. |
 | Table column floor and cap | `min_width` / `max_width` | On a column, CSS lengths such as `"8rem"`. Table `min_width:` stays the scroll floor (`:none`, `:sm`, `:md`, `:lg`, or a `min-w-*` class). |
 | Table column wrapping | `wrap` | `FlatPack::Table::Column` only. `:wrap` (default), `:nowrap`, `:truncate`. Truncated cells expose the full text in `title`. |
 | Table column visibility | `hide_below` | `FlatPack::Table::Column` only. `:sm`, `:md`, `:lg`, `:xl`. Hides that header and its cells below the breakpoint. The column stays in `colspan`. |
-| Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param as Button, Badge, and Card. |
+| Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param name as Button and Badge. Card fill is `background`. |
 | Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
 | Media frame ratio | `aspect_ratio` | Card media, Carousel, and Video preview. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview defaults to `"16/9"`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
@@ -128,7 +131,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 
 ## Do not mix
 
-- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
+- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
@@ -136,7 +139,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Keep `type` only for native HTML control types such as button `type: "submit"`. Carousel slides and lightbox items are the exception: `type` is `:image`, `:video`, or (carousel only) `:html`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.
 - Do not pass Grid's `:start` or `:stretch` to Hero or Email `align`. Hero accepts `:left` and `:center`. Email also accepts `:right`. Table columns use `:start`, `:center`, and `:end`.
-- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor. Do not pass EmptyState `:sm` / `:md` / `:lg` / `:full` to Media or a Table column, or a Media integer to EmptyState `width`.
+- Do not pass a Table column `width:` length to Media `width`, or a Media integer to a column. Column `min_width:` is a CSS length. Table `min_width:` is the scroll floor. Do not pass EmptyState `:sm` / `:md` / `:lg` / `:full` to Media or a Table column, or a Media integer to EmptyState `width`. Do not pass Page Layout `:narrow`, `:default`, `:wide`, or `:full` to EmptyState, Media, or a Table column. Do not pass a CSS length or a class to Page Layout `width`. Do not pass Page Layout `:top` to Hero, Email, Button, Table, or Grid `align`.
 - Do not use `divider` on Table. The param is `dividers`.
 - Do not add a per-column `class` or raw `style` string. Width, min width, max width, align, wrap, and `hide_below` are the column controls.
 - Do not add a count or badge param to Section Title. Pass that content through `with_trailing`.

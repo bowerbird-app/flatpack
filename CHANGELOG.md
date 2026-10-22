@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.297] - 2026-10-22
+
+### Fixed
+- The dummy demo pages that read Postgres render when the connection is refused or their tables are missing. Collection editor, modal filter, the data tables, infinite pagination, movable cards, comments, chat, articles, and sign-in no longer answer with an empty 500. Other database errors still raise. Sorting, filtering, dragging, chat, comments, the collection editor, and sign-in still use Postgres when it is up.
+- The dummy app serves `public/406-unsupported-browser.html` when `allow_browser` blocks an old browser, instead of raising because that file was missing.
+- Comments say when Postgres is down, and a different warning when the comments table is missing. Chat shows a warning when the inbox cannot load.
+- Seeded demo table rows take a category from the filter list, in row order, so technology, business, marketing, and design each return rows.
+
+### Upgrade notes
+- Dummy App Platform keeps `bundle exec rails db:prepare && bundle exec puma -C config/puma.rb`. Do not add `db:seed` to that run command. `db:prepare` seeds a database only when it creates it. Load demo rows later with `bundle exec rails db:seed`, or with an App Platform pre-deploy job that the owner approves first.
+- Redeploy so `meta.gem_version` shows `0.1.297`. Hosts that do not run the dummy app are unchanged.
+
 ## [0.1.296] - 2026-10-22
 
 ### Changed

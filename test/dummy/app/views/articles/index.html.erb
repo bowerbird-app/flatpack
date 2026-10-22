@@ -13,6 +13,13 @@
     ) %>
   <% end %>
 
+  <% if @articles_available == false %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Articles need the database",
+      description: "Run bin/rails db:prepare db:seed in test/dummy, then reload.",
+      style: :warning
+    ) %>
+  <% else %>
   <div class="flex justify-end mb-6">
     <%= render FlatPack::Button::Component.new(
       text: "New Article",
@@ -65,5 +72,6 @@
         ) %>
       <% end %>
     <% end %>
+  <% end %>
   <% end %>
 </div>

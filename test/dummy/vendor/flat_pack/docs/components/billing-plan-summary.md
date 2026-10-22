@@ -41,7 +41,7 @@ Use Plan Summary as the primary “current plan” card on a billing overview. P
 | `footer` | slot | no | Optional footer region below the body. |
 
 ## Variants
-None. Visual container uses `FlatPack::Card::Component` with `style: :default` (implementation detail).
+None. Visual container uses `FlatPack::Card::Component` with `background: :default` (implementation detail).
 
 ## Example
 ```erb

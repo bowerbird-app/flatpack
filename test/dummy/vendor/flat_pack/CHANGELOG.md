@@ -13,6 +13,125 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.297] - 2026-10-22
+
+### Fixed
+- The dummy demo pages that read Postgres render when the connection is refused or their tables are missing. Collection editor, modal filter, the data tables, infinite pagination, movable cards, comments, chat, articles, and sign-in no longer answer with an empty 500. Other database errors still raise. Sorting, filtering, dragging, chat, comments, the collection editor, and sign-in still use Postgres when it is up.
+- The dummy app serves `public/406-unsupported-browser.html` when `allow_browser` blocks an old browser, instead of raising because that file was missing.
+- Comments say when Postgres is down, and a different warning when the comments table is missing. Chat shows a warning when the inbox cannot load.
+- Seeded demo table rows take a category from the filter list, in row order, so technology, business, marketing, and design each return rows.
+
+### Upgrade notes
+- Dummy App Platform keeps `bundle exec rails db:prepare && bundle exec puma -C config/puma.rb`. Do not add `db:seed` to that run command. `db:prepare` seeds a database only when it creates it. Load demo rows later with `bundle exec rails db:seed`, or with an App Platform pre-deploy job that the owner approves first.
+- Redeploy so `meta.gem_version` shows `0.1.297`. Hosts that do not run the dummy app are unchanged.
+
+## [0.1.296] - 2026-10-22
+
+### Changed
+- Page actions are page nav. `register_page_nav` registers an item for the current request. `FlatPack::PageNavItem` is one item. `FlatPack::PageNavRegistry` keeps them, in source order, on `request.env["flat_pack.page_nav_registry"]`. `render_page_nav` is the only renderer.
+- Two forms. A semantic item is `register_page_nav "Label", path, role:, icon:, data:, aria:`. A pre-built component is `register_page_nav component:, role:`. `role:` is required (`:primary`, `:secondary`, or `:destructive`). A component renders as the gem built it. Its role places and orders it. The style map does not restyle it.
+- The role map is host-owned and lives on `FlatPack::PageNavStyles`, apart from `FlatPack::PageNav::Component` (the back and close row). Set `FlatPack.configuration.page_nav_styles` once in an initializer. A layout passes `styles:` to `render_page_nav`. Resolution is that map, then `page_nav_styles`, then `FlatPack::PageNavStyles::DEFAULT_STYLES`. A gem emits roles. It does not write the map.
+- A registered component is one DOM node. It stays in the page nav bar on desktop and on a phone. It is not copied into the phone menu, so a Turbo Stream can target its wrapper id. Semantic buttons still render in the desktop group and fold into the phone menu. `mobile_actions: :floating` still pins the primary button.
+
+### Upgrade notes
+- Replace `page_action` with `register_page_nav` and pass `role:` every time. Replace `page_actions` with `render_page_nav`. There is no alias. `register_page_nav` is not `flat_pack_page_nav`.
+- Set `config.page_nav_styles` inside `FlatPack.configure` to change button style and size. The default matches the previous `:header` and `:top_nav` maps. Read it from `FlatPack::PageNavStyles`, not from `FlatPack::PageNav`.
+- A component registered with `register_page_nav component:` renders once. Do not expect a second copy in the phone menu.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.296`.
+
+## [0.1.294] - 2026-10-21
+
+### Added
+- `page_action` nominates a page-level action for the current request: label, path, `role:` (`:primary`, `:secondary`, or `:destructive`), `icon:`, and pass-through `data:` / `aria:`. The view decides which actions exist and what they mean. It does not pass a CSS class, a button style, or a placement.
+- `FlatPack::PageActionRegistry` collects those actions in source order. The helper stores one registry on `request.env["flat_pack.page_actions"]`. A new request starts empty.
+- `FlatPack::PageActions` maps a role to a button style and size. `:header` is a solid primary (`:primary`), a subtle secondary (`:secondary`), and `:danger`, at `:sm`. `:top_nav` is a subtle primary (`:secondary`), a ghost secondary (`:ghost`), and `:danger`, at `:sm`. `styles:` replaces any role's button style for that call.
+- `page_actions` renders that map as a `ButtonGroup` for `:header` and `:top_nav`.
+- Sidebar Layout places the `:top_nav` group in a bar under the top nav from the `md` breakpoint up. Page Layout places the `:header` group at the top of the column. Below `md`, both shells put the actions in the Top Nav hamburger as full-width rows, using the `:top_nav` map. An empty registry adds no markup.
+- `mobile_actions: :floating` on either shell pins the primary action to the bottom-right on a phone. The default is `:menu`.
+
+### Fixed
+- The Top Nav phone menu stays inside the viewport when a shell ancestor is the fixed containing block. Page-action rows in that menu are not clipped off the left edge.
+- A horizontal cluster in that menu becomes one full-width row per control, including a search field and a dropdown. The dropdown still discloses in place. A control with `data-flat-pack-top-nav-always-display="true"` stays in the bar. The demo notification bell uses it and stays beside the hamburger.
+
+### Upgrade notes
+- Call `page_action` in the view. Sidebar Layout and Page Layout place the buttons. A custom layout calls `page_actions(:header)` or `page_actions(:top_nav)` and puts the group where it wants. Pass `styles: { primary: :ghost }` to replace a role's button style.
+- On a phone the actions join the Top Nav menu. The host Top Nav needs its mobile menu (the default). A shell with no top nav renders one for that menu, hidden from `md` up.
+- Pass `mobile_actions: :floating` to pin the primary action to the bottom-right instead of the menu. Other actions stay in the desktop group.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.294`.
+
+## [0.1.293] - 2026-10-21
+
+### Added
+- `aside(mobile: :stack)` lays the aside under main below `md`. `:drawer` stays the off-canvas panel. Anything else raises `ArgumentError`.
+- `layout.aside_trigger("Details")` is the aside button. The label, `aria-expanded`, and `aria-controls` are on the control.
+
+### Fixed
+- The menu button gets `aria-expanded` and `aria-controls` when the rail drawer opens, closes, and on connect.
+- On a phone, the Top Nav row folds into one hamburger menu labelled "Menu". The open menu is one column of full-width rows. A nested dropdown stays a parent row and discloses its items in place, indented under that row. A wide window keeps the row. The sidebar's mobile toggle stays in the bar and is only that button. A notification bell stays in the bar when its section passes `always_display: true`. Page Nav stays one row.
+- An open phone drawer paints `--drawer-backdrop-color` on the shell scrim, above the page and below the drawer.
+- Phone drawers animate `translate` and `transform`. `prefers-reduced-motion: reduce` snaps the slide.
+- A stacked aside below `md` uses the floating panel fill, border, radius, and shadow. A close control and an aside trigger stay hidden there. The gap under main is `--stack-gap-md`.
+- On the rounded theme, a phone drawer rounds its inner edge with `--sidebar-float-radius`. The outer edge stays flush. The rail and the aside share that corner and one backdrop.
+
+### Upgrade notes
+- `mobile:` on `aside` defaults to `:drawer`. Pass `:stack` to drop the phone drawer. There is no alias.
+- Replace a hand-wired `asideToggle` button with `layout.aside_trigger("Details")` where the control should sit. A hand-wired button still works. The controller now also sets `aria-controls`.
+- Reload kit CSS and JS. Do not rerun `bin/rails generate flat_pack:install`. Page Nav is one row. On a phone the Top Nav row folds into the hamburger menu, one action per row. A nested dropdown in that menu discloses in place. `left` folds too. Pass `always_display: true` on a section that should stay in the bar, such as the notification bell.
+- Load `flat_pack/application.css` after Tailwind. Keep `transform`, `filter`, `will-change`, and `contain` off ancestors of the shell. Those pin the fixed drawers to the ancestor.
+- Redeploy so `meta.gem_version` shows `0.1.293`.
+
+## [0.1.292] - 2026-10-21
+
+### Changed
+- Layout and panel scrollers hide the bar. `--pane-scrollbar-width` defaults to `none` and is applied as `scrollbar-width`. A theme may set `thin` or `auto`. Older Safari hides the WebKit bar when `scrollbar-width` is unsupported, unless the pane opts into the browser bar.
+- `scrollbar: :hidden` (default) or `:visible` on Sidebar Layout (the main pane and the aside), Drawer, and Modal. Other values raise `ArgumentError`. `:visible` uses the browser bar.
+- A hidden pane is in the tab order (`tabindex="0"`) with an accessible name, so arrow keys and Page Down scroll it when nothing inside can take focus. The main pane is not a second landmark. The aside keeps its landmark. Drawer, Modal, and the chat message list use `role="region"`. Focus uses `--color-ring`.
+- A soft edge fade marks the side that still has content. It uses `animation-timeline: scroll(self)` and `--pane-scroll-fade-size` (`2.5rem`). Browsers without scroll-driven animations skip the fade. `prefers-reduced-motion: reduce` skips it too.
+- The sidebar nav and the chat message list follow the theme token. Tables, code blocks, horizontal scrollers, and menu listboxes keep a visible bar. Page Layout still scrolls the window. `.fp-scrollbar-hidden` stays on Overflow Row.
+
+### Upgrade notes
+- New tokens: `--pane-scrollbar-width` (`none`) and `--pane-scroll-fade-size` (`2.5rem`). Set them on a theme. There is no Ruby setting for the width.
+- `scrollbar: :visible` on Sidebar Layout, Drawer, or Modal shows the browser bar on that pane. The default is hidden.
+- Hidden panes are a new tab stop.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.292`.
+
+## [0.1.291] - 2026-10-21
+
+### Changed
+- `--surface-page-background-color` is the tinted canvas and `--surface-background-color` is the raised layer. They no longer match. Default page stays `#f8f9fa` and the surface is `#fff`. Dark page is `oklch(0.12 0.01 250)` and the surface is `oklch(0.19 0.015 250)`. Ocean page is `oklch(0.96 0.018 220)` and the surface is `#fff`. Rounded keeps whichever light or dark palette it is paired with.
+- Cards use `--card-border-width` and `--card-shadow`. The default is a 1px border and no shadow. Rounded is no border and `--shadow-sm`. Omit `border:` and `shadow:` to take those tokens. Pass `:none`, `:default`, or `:strong`, and `:none`, `:sm`, or `:md`, to override one card.
+- Focus ring offsets, the avatar group ring, swatch ring gaps, the range thumb border, the timeline marker dot, and the switch thumb follow the page. A card, modal, popover, menu, table, accordion, collapse, or chat resets the ring, gap, and marker dot to its own fill. Skip-link text stays the surface colour, because that chip uses it as inverse ink.
+- `FlatPack::Card::Component` and `FlatPack::Card::Stat::Component` take `background:` (`:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`). `style:` is removed. `:none` is transparent and inherits the surrounding text. The other fills still set matching text and muted text. Unknown values raise `ArgumentError`.
+- Card fill tokens are `--card-background-{name}`, `--card-background-{name}-text-color`, `--card-background-{name}-muted-text-color`, and `--card-background-{name}-border-color`. The fill drops the extra `-background` suffix, so the brand fill is `--card-background-brand`. `:none` adds `--card-background-none` (`transparent`), `--card-background-none-text-color` (`inherit`), `--card-background-none-muted-text-color` (`inherit`), and `--card-background-none-border-color`.
+
+### Upgrade notes
+- Hosts that painted a card with no border and no shadow now get the theme edge. On the default palette that is still a 1px border. On rounded it is a soft shadow and no border.
+- Replace Card and Card Stat `style:` with `background:`. There is no alias. `style:` raises `ArgumentError`.
+- Rename host overrides from `--card-style-{name}-background` to `--card-background-{name}`, and from `--card-style-{name}-text-color` (and the muted and border parts) to `--card-background-{name}-text-color`. Dark mode overrides `--card-background-gradient`.
+- A border-only card is `background: :none`. On rounded, also pass `border: :default`, because `--card-border-width` is `0`.
+- Rebuild host Tailwind so the renamed background classes are generated, including `[background:var(--card-background-brand)]` and `[background:var(--card-background-none)]`.
+- New tokens: `--card-border-width`, `--card-shadow`. Set them on a host theme when the card edge should differ. Do not restate them on a nested `[data-theme]` colour block, or a dark region inside rounded snaps back to a 1px border.
+- Dark muted, hover, active, border, and muted text moved up with the surface so secondary, ghost hover, and alerts still read. Reload kit CSS. Do not rebuild Tailwind for the colour tokens. A Tailwind rebuild is needed only if the host scans `shadow-[var(--card-shadow)]` and `border-[length:var(--card-border-width)]` itself. The gem classes are in the component source.
+- Redeploy so `meta.gem_version` shows `0.1.291`.
+
+## [0.1.290] - 2026-10-21
+
+### Added
+- `FlatPack::PageLayout::Component` arranges a public page: optional top nav, one column, optional footer, and an optional `background` photo. `width:` is `:narrow`, `:default`, `:wide`, or `:full`. `align: :center` centers the column in the viewport. `:top` is the default.
+- The floating top bar is one implementation. Sidebar Layout and Page Layout both use it. The markup and the card styles are unchanged.
+
+### Upgrade notes
+- New shell. Hosts that do not render it are unchanged. Sidebar Layout markup is unchanged.
+- `width:` accepts only `:narrow`, `:default`, `:wide`, or `:full`. There is no length and no class override.
+- New tokens: `--page-layout-width-narrow` (`40rem`), `--page-layout-width-default` (`56rem`), `--page-layout-width-wide` (`72rem`), `--page-layout-width-full` (`100%`), `--page-layout-padding-inline` (`var(--space-4)`, then `var(--space-6)` from `640px`), `--page-layout-padding-block` (`var(--space-6)`), `--page-layout-gap` (`var(--space-6)`). Rounded does not restate them. Its larger spacing steps make the padding generous. `--page-layout-width` is the width the shell writes on the page. It is not a theme token. Do not set it on `:root`.
+- The `background` slot renders Backdrop and pins it, the same way Sidebar Layout does.
+- The shell has no controller, no storage, and no cookie. It renders complete on the server.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.290`.
+
 ## [0.1.289] - 2026-10-21
 
 ### Changed

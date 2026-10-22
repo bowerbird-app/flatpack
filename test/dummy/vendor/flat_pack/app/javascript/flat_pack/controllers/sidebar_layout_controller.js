@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
 const BODY_LOCK = "flatPackModalLockCount"
 
@@ -9,7 +10,8 @@ export default class extends Controller {
     open: Boolean,
     storageKey: String,
     asideOpen: Boolean,
-    asideStorageKey: String
+    asideStorageKey: String,
+    asideMobile: { type: String, default: "drawer" }
   }
 
   connect() {
@@ -48,10 +50,17 @@ export default class extends Controller {
 
     if (this.hasAsideTarget) {
       this.asideOpen = this.readAsideOpen()
-      if (this.isMobile) this.parkAsideOffCanvas()
-      else this.applyAsideOpen({ persist: false })
+      if (this.isMobile) {
+        if (this.asideStacks()) this.presentStackedAside()
+        else this.parkAsideOffCanvas()
+      } else {
+        this.applyAsideOpen({ persist: false })
+      }
+      this.applyMobileDrawerMotion(this.asideTarget)
       this.syncAsideToggleAria()
     }
+
+    this.syncMobileToggleAria()
 
     this.boundCollapseRail = (event) => this.collapseRailFromResize(event)
     this.element.addEventListener("flat-pack:collapse-rail", this.boundCollapseRail)
@@ -116,7 +125,9 @@ export default class extends Controller {
     if (this.isMobile) {
       if (this.hasSidebarTarget) this.applySidebarPresentationMode()
       this.closeMobile()
-      this.parkAsideOffCanvas()
+      if (this.asideStacks()) this.presentStackedAside()
+      else this.parkAsideOffCanvas()
+      if (this.hasAsideTarget) this.applyMobileDrawerMotion(this.asideTarget)
       return
     }
 
@@ -160,6 +171,8 @@ export default class extends Controller {
       this.mobileOpen = false
       this.syncBackdrop()
       this.unbindEscape()
+      this.syncMobileToggleAria()
+      this.syncAsideToggleAria()
       return
     }
 
@@ -176,6 +189,7 @@ export default class extends Controller {
     if (!this.hasAsideTarget) return
 
     if (this.isMobile) {
+      if (this.asideStacks()) return
       if (this.openDrawers.includes(this.asideTarget)) this.closeDrawer(this.asideTarget)
       else this.openDrawer(this.asideTarget)
       return
@@ -190,6 +204,7 @@ export default class extends Controller {
     if (!this.hasAsideTarget) return
 
     if (this.isMobile) {
+      if (this.asideStacks()) return
       this.closeDrawer(this.asideTarget)
       return
     }
@@ -204,6 +219,7 @@ export default class extends Controller {
     if (!this.hasAsideTarget) return
 
     if (this.isMobile) {
+      if (this.asideStacks()) return
       this.openDrawer(this.asideTarget)
       return
     }
@@ -233,6 +249,7 @@ export default class extends Controller {
     this.bindEscape()
     if (this.hasSidebarTarget && panel === this.sidebarTarget) this.mobileOpen = true
     this.syncAsideToggleAria()
+    this.syncMobileToggleAria()
   }
 
   closeDrawer(panel) {
@@ -247,6 +264,7 @@ export default class extends Controller {
     if (this.openDrawers.length === 0) this.unbindEscape()
     if (this.hasSidebarTarget && panel === this.sidebarTarget) this.mobileOpen = false
     this.syncAsideToggleAria()
+    this.syncMobileToggleAria()
   }
 
   slideIn(panel) {
@@ -356,15 +374,32 @@ export default class extends Controller {
     this.syncBackdrop()
     this.syncBodyLock()
     this.unbindEscape()
+    this.syncMobileToggleAria()
+    this.syncAsideToggleAria()
   }
 
   parkAsideOffCanvas() {
-    if (!this.hasAsideTarget) return
+    if (!this.hasAsideTarget || this.asideStacks()) return
     this.asideTarget.setAttribute("inert", "")
     this.asideTarget.style.pointerEvents = "none"
     const side = this.drawerSide(this.asideTarget)
     if (side === "right") this.asideTarget.classList.add("translate-x-full")
     else this.asideTarget.classList.add("-translate-x-full")
+  }
+
+  presentStackedAside() {
+    if (!this.hasAsideTarget) return
+    const panel = this.asideTarget
+    panel.classList.remove("translate-x-full", "-translate-x-full")
+    panel.style.pointerEvents = ""
+    panel.style.zIndex = ""
+    panel.style.transform = ""
+    panel.style.translate = ""
+    panel.removeAttribute("inert")
+  }
+
+  asideStacks() {
+    return this.asideMobileValue === "stack"
   }
 
   readAsideOpen() {
@@ -402,12 +437,35 @@ export default class extends Controller {
 
   syncAsideToggleAria() {
     if (!this.hasAsideToggleTarget) return
-    const expanded = this.isMobile
+    const expanded = this.isMobile && !this.asideStacks()
       ? this.hasAsideTarget && this.openDrawers.includes(this.asideTarget)
       : !!this.asideOpen
+    const controls = this.hasAsideTarget ? this.panelId(this.asideTarget) : null
     this.asideToggleTargets.forEach((node) => {
       node.setAttribute("aria-expanded", expanded ? "true" : "false")
+      if (controls) node.setAttribute("aria-controls", controls)
     })
+  }
+
+  syncMobileToggleAria() {
+    if (!this.hasMobileToggleTarget) return
+    const expanded = !!(this.hasSidebarTarget && this.openDrawers && this.openDrawers.includes(this.sidebarTarget))
+    const controls = this.hasSidebarTarget ? this.panelId(this.sidebarTarget) : null
+    this.mobileToggleTargets.forEach((node) => {
+      node.setAttribute("aria-expanded", expanded ? "true" : "false")
+      if (controls) node.setAttribute("aria-controls", controls)
+    })
+  }
+
+  panelId(panel) {
+    if (!panel) return null
+    const existing = panel.id || (typeof panel.getAttribute === "function" ? panel.getAttribute("id") : null)
+    if (existing) return existing
+
+    const id = this.isAsidePanel(panel) ? "flat-pack-aside" : "flat-pack-sidebar"
+    if (typeof panel.setAttribute === "function") panel.setAttribute("id", id)
+    panel.id = id
+    return id
   }
 
   collapseRailFromResize() {
@@ -513,12 +571,26 @@ export default class extends Controller {
 
     if (this.isMobile) {
       this.sidebarTarget.style.zIndex = "50"
-      this.sidebarTarget.style.transitionProperty = "transform"
+      this.sidebarTarget.style.transitionProperty = this.mobileDrawerTransitionProperty()
       return
     }
 
     this.sidebarTarget.style.zIndex = "auto"
     this.sidebarTarget.style.transitionProperty = "width, transform"
+  }
+
+  applyMobileDrawerMotion(panel) {
+    if (!panel?.style || !this.isMobile) return
+    if (this.asideStacks() && this.isAsidePanel(panel)) return
+
+    panel.style.zIndex = "50"
+    panel.style.transitionDuration = this.transitionDuration
+    panel.style.transitionTimingFunction = this.transitionEasing
+    panel.style.transitionProperty = this.mobileDrawerTransitionProperty()
+  }
+
+  mobileDrawerTransitionProperty() {
+    return prefersReducedMotion() ? "none" : "translate, transform"
   }
 
   saveDesktopState() {

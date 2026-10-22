@@ -8,6 +8,14 @@
     subtitle: "A complete chat panel with message bubbles and composer input."
   ) %>
 
+  <% if @chat_unavailable %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Chat needs the database",
+      description: "The inbox stays empty until Postgres is reachable and the chat tables exist. Run bin/rails db:prepare in test/dummy, then reload.",
+      style: :warning
+    ) %>
+  <% end %>
+
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Demo", anchor_link: true, subtitle: "End-to-end chat panel composition.") %>
 

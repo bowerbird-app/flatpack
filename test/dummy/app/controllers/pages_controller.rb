@@ -683,8 +683,12 @@ class PagesController < ApplicationController
   def grid_movable_cards
     ensure_demo_movable_cards!
 
-    @movable_cards = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: movable_cards_list_key).ordered : []
-    @movable_cards_version = demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
+    @movable_cards = with_demo_database([]) {
+      demo_table_rows_table_exists? ? DemoTableRow.where(list_key: movable_cards_list_key).ordered.to_a : []
+    }
+    @movable_cards_version = with_demo_database("0") {
+      demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
+    }
   end
 
   def masonry
@@ -801,20 +805,25 @@ class PagesController < ApplicationController
   def comments
     @reply_target_id = params[:reply_to].presence&.to_i
 
-    if comments_table_available?
+    case DemoDatabase.availability(DemoComment)
+    when :ready
       @comments_table_available = true
+      @comments_database_down = false
       ensure_comments_demo_data!
 
       all_comments = DemoComment.order(:created_at, :id).to_a
       @comments_by_parent_id = all_comments.group_by(&:parent_comment_id)
       @root_comments = @comments_by_parent_id[nil] || []
       @comments_count = all_comments.length
+    when :down
+      assign_comments_unavailable(database_down: true)
     else
-      @comments_table_available = false
-      @comments_by_parent_id = {}
-      @root_comments = []
-      @comments_count = 0
+      assign_comments_unavailable(database_down: false)
     end
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
+    assign_comments_unavailable(database_down: !error.is_a?(ActiveRecord::StatementInvalid))
   end
 
   def chat_demo
@@ -839,6 +848,17 @@ class PagesController < ApplicationController
       @chat_history_url = nil
     end
     @chat_history_limit = history_limit
+    @chat_unavailable = @chat_group.nil?
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
+    @chat_group = nil
+    @chat_group_summaries = []
+    @chat_items = []
+    @chat_history_has_more = false
+    @chat_history_url = nil
+    @chat_history_limit = history_limit
+    @chat_unavailable = true
   end
 
   def chat_layout
@@ -1095,11 +1115,13 @@ class PagesController < ApplicationController
   def paginated_infinite_records
     if dummy_data_available?
       records = DummyDatum.recent
-      return pagy(records, items: 10) if records.count > 10
+      return pagy(records, items: 10) if records.exists?
     end
 
     pagy_array(infinite_demo_records, items: 10)
-  rescue ActiveRecord::StatementInvalid
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
     pagy_array(infinite_demo_records, items: 10)
   end
 
@@ -1122,9 +1144,7 @@ class PagesController < ApplicationController
   end
 
   def dummy_data_available?
-    DummyDatum.table_exists?
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
-    false
+    DemoDatabase.table_ready?(DummyDatum)
   end
 
   def infinite_demo_records
@@ -1288,6 +1308,14 @@ class PagesController < ApplicationController
     }
   end
 
+  def with_demo_database(fallback)
+    yield
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
+    fallback
+  end
+
   def ensure_demo_table_rows!
     return unless demo_table_rows_table_exists?
     return if DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).exists?
@@ -1314,6 +1342,10 @@ class PagesController < ApplicationController
     end
 
     DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
+    nil
   end
 
   def demo_table_version(scope = {list_key: DemoTableRow::DEFAULT_LIST_KEY})
@@ -1321,19 +1353,23 @@ class PagesController < ApplicationController
   end
 
   def demo_table_rows_table_exists?
-    DemoTableRow.table_exists?
+    DemoDatabase.table_ready?(DemoTableRow)
   end
 
   def chat_tables_available?
-    ChatGroup.table_exists? && ChatItem.table_exists?
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
-    false
+    DemoDatabase.table_ready?(ChatGroup) && DemoDatabase.table_ready?(ChatItem) && DemoDatabase.table_ready?(ChatItemAttachment)
   end
 
   def comments_table_available?
-    DemoComment.table_exists?
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
-    false
+    DemoDatabase.table_ready?(DemoComment)
+  end
+
+  def assign_comments_unavailable(database_down:)
+    @comments_table_available = false
+    @comments_database_down = database_down
+    @comments_by_parent_id = {}
+    @root_comments = []
+    @comments_count = 0
   end
 
   def ensure_comments_demo_data!
@@ -1362,6 +1398,10 @@ class PagesController < ApplicationController
       author_name: "Diana Prince",
       body: "Good call. I can draft the first pass this week."
     )
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
+    nil
   end
 
   def ensure_chat_demo_items!
@@ -1759,6 +1799,10 @@ class PagesController < ApplicationController
     end
 
     DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
+  rescue ActiveRecord::ActiveRecordError => error
+    raise unless DemoDatabase.suppress(error)
+
+    nil
   end
 
   def load_charts_composition_demo!
@@ -1907,10 +1951,8 @@ class PagesController < ApplicationController
     DemoCatalog.searchable_items
   end
 
-  def load_table_demo_data
-    ensure_demo_table_rows!
-
-    @users = Array.new(20) do |i|
+  def in_memory_table_demo_users
+    Array.new(20) do |i|
       OpenStruct.new(
         id: i + 1,
         name: "User #{i + 1}",
@@ -1922,12 +1964,44 @@ class PagesController < ApplicationController
         published_at: rand(60).days.ago
       )
     end
+  end
+
+  def table_demo_category_for(row)
+    keys = table_category_values.keys - ["all"]
+    keys[(row.position.to_i - 1) % keys.length]
+  end
+
+  def table_demo_user_from_row(row)
+    OpenStruct.new(
+      id: row.id,
+      name: row.name,
+      email: "row#{row.id}@example.com",
+      status: row.status,
+      created_at: row.updated_at,
+      category: table_demo_category_for(row),
+      views_count: row.position,
+      published_at: row.updated_at
+    )
+  end
+
+  def load_table_demo_data
+    ensure_demo_table_rows!
+
+    @demo_table_rows = with_demo_database([]) {
+      demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered.to_a : []
+    }
+    @users = if @demo_table_rows.any?
+      @demo_table_rows.map { |row| table_demo_user_from_row(row) }
+    else
+      in_memory_table_demo_users
+    end
 
     @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
     load_table_generic_filter_demo_data
     load_table_multi_controls_demo_data
-    @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
-    @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
+    @demo_table_version = with_demo_database("0") {
+      demo_table_rows_table_exists? ? demo_table_version : "0"
+    }
   end
 
   def load_table_generic_filter_demo_data

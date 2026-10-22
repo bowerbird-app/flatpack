@@ -41,7 +41,7 @@ module FlatPack
           card_classes << "border-[var(--color-primary)]" if item[:highlighted] || item[:current]
 
           render FlatPack::Card::Component.new(
-            style: :default,
+            background: :default,
             class: classes(*card_classes)
           ) do |card|
             card.body do

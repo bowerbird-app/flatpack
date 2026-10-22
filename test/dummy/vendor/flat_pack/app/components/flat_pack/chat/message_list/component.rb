@@ -104,14 +104,17 @@ module FlatPack
         end
 
         def messages_attributes
-          {
-            class: messages_classes,
+          FlatPack::PaneScroll.attributes(
+            messages_classes,
+            label: fp_t("pane_scroll.messages"),
+            region: true
+          ).merge(
             data: {
               controller: "flat-pack--chat-grouping",
               flat_pack__chat_scroll_target: "messages",
               action: "scroll->flat-pack--chat-scroll#checkScroll"
             }
-          }
+          )
         end
 
         def messages_classes
