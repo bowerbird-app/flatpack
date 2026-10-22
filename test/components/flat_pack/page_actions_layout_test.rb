@@ -2,6 +2,12 @@
 
 require "test_helper"
 
+class PageActionProbeComponent < ViewComponent::Base
+  def call
+    helpers.tag.div("Publish", id: "publishable_quick_actions_7")
+  end
+end
+
 module FlatPack
   class PageActionsLayoutTest < ViewComponent::TestCase
     test "sidebar layout keeps the desktop group and feeds the menu" do
@@ -82,6 +88,52 @@ module FlatPack
       refute_selector "[data-fp-page-actions=menu]"
     end
 
+    test "a component action renders once in the action bar" do
+      nominate_component
+      render_inline(SidebarLayout::Component.new) do |layout|
+        layout.main { "Story" }
+      end
+
+      assert_selector "#publishable_quick_actions_7", count: 1, text: "Publish"
+      assert_selector "[data-fp-page-actions=top_nav].fp-page-actions--desktop .fp-page-actions-component #publishable_quick_actions_7"
+      assert_selector "[data-fp-page-actions=top_nav] a[data-fp-style=secondary]", text: "New press kit"
+      assert_selector "[data-fp-page-actions=menu] a[data-fp-style=ghost]", text: "Share"
+      refute_selector "[data-fp-page-actions=menu] #publishable_quick_actions_7"
+      refute_selector "[data-fp-page-actions=floating] #publishable_quick_actions_7"
+      assert_equal 1, rendered_content.scan("publishable_quick_actions_7").size
+
+      nominate_component
+      render_inline(PageLayout::Component.new(id: "notes")) { "Story" }
+
+      assert_selector "#notes [data-fp-page-actions=header] .fp-page-actions-component #publishable_quick_actions_7", count: 1
+      refute_selector "[data-fp-page-actions=menu] #publishable_quick_actions_7"
+      assert_equal 1, rendered_content.scan("publishable_quick_actions_7").size
+    end
+
+    test "a component action is not the floating primary" do
+      nominate_component
+      render_inline(SidebarLayout::Component.new(mobile_actions: :floating)) do |layout|
+        layout.main { "Story" }
+      end
+
+      assert_selector "#publishable_quick_actions_7", count: 1
+      assert_selector "[data-fp-page-actions=floating] a[data-fp-style=primary]", text: "New press kit"
+      refute_selector "[data-fp-page-actions=floating] #publishable_quick_actions_7"
+      refute_selector "[data-fp-page-actions=menu]"
+    end
+
+    test "a component alone does not feed the phone menu" do
+      vc_test_controller.request.env.delete(PageActionHelper::REQUEST_KEY)
+      vc_test_controller.view_context.page_action component: PageActionProbeComponent.new
+
+      render_inline(SidebarLayout::Component.new) { |layout| layout.main { "Story" } }
+
+      assert_selector "#publishable_quick_actions_7", count: 1
+      refute_selector "[data-fp-page-actions=menu]"
+      refute_selector ".fp-page-actions-nav"
+      refute_selector "[data-fp-page-actions=floating]"
+    end
+
     test "shells add no markup when the view nominates nothing" do
       vc_test_controller.request.env.delete(PageActionHelper::REQUEST_KEY)
 
@@ -112,6 +164,11 @@ module FlatPack
       view.page_action "New press kit", "/press-kits/new", role: :primary, icon: :plus
       view.page_action "Share", "/press-kits/share", role: :secondary, icon: :share
       view.page_action "Delete", "/press-kits/delete", role: :destructive, icon: :trash
+    end
+
+    def nominate_component
+      nominate
+      vc_test_controller.view_context.page_action component: PageActionProbeComponent.new
     end
   end
 end

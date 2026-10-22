@@ -1407,6 +1407,16 @@
   .fp-page-actions--desktop {
     display: none;
   }
+
+  /* A component action is one node in this bar. Show the bar for that node
+     and keep the link buttons hidden. Those links already live in the menu. */
+  .fp-page-actions--desktop:has(.fp-page-actions-component) {
+    display: flex;
+  }
+
+  .fp-page-actions--desktop:has(.fp-page-actions-component) > :not(.fp-page-actions-component) {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {
