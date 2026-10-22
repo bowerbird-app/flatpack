@@ -5225,7 +5225,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   max-width: min(20rem, calc(100vw - var(--space-6)));
   margin: 0;
   padding: var(--dropdown-padding);
-  border: 1px solid var(--surface-border-color);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--surface-border-color);
   border-radius: var(--menu-radius);
   background: var(--surface-background-color);
   box-shadow: var(--shadow-lg);
