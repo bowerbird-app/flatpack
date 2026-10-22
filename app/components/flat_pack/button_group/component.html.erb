@@ -1,5 +1,13 @@
-<div <%= tag.attributes(group_attributes) %>>
-  <% buttons.each do |button| %>
-    <%= button %>
-  <% end %>
-</div>
+<% if collapse_menu? %>
+  <%= collapse_stylesheet %>
+  <div <%= tag.attributes(menu_root_attributes) %>>
+    <%= menu_trigger %>
+    <div <%= tag.attributes(panel_attributes) %>><% buttons.each do |button| %><%= panel_child(button) %><% end %></div>
+  </div>
+<% else %>
+  <div <%= tag.attributes(group_attributes) %>>
+    <% buttons.each do |button| %>
+      <%= button %>
+    <% end %>
+  </div>
+<% end %>

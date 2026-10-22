@@ -249,6 +249,11 @@ export default class extends Controller {
   }
 
   ensureMenuInBody() {
+    if (!this.element.id) {
+      this.element.id = `flat-pack-dropdown-${Math.random().toString(36).slice(2, 10)}`
+    }
+    this.menuElement.setAttribute("data-flat-pack-dropdown-owner", this.element.id)
+
     if (this.menuElement.parentElement === document.body) return
 
     document.body.appendChild(this.menuElement)

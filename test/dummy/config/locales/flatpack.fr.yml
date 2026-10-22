@@ -29,6 +29,8 @@ fr:
       home: Accueil
     button:
       loading: Chargement
+    button_group:
+      menu: Menu
     trash_button:
       trash: Corbeille
       confirm: Confirmer

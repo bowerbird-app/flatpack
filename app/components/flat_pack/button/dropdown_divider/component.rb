@@ -4,6 +4,10 @@ module FlatPack
   module Button
     module DropdownDivider
       class Component < FlatPack::BaseComponent
+        def menu_row
+          {divider: true}
+        end
+
         def call
           content_tag(:div, nil, **divider_attributes)
         end

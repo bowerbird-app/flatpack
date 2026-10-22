@@ -29,6 +29,8 @@ en:
       home: Home
     button:
       loading: Loading
+    button_group:
+      menu: Menu
     trash_button:
       trash: Trash
       confirm: Confirm

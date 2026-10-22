@@ -13,6 +13,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.302] - 2026-10-22
+
+### Added
+- `FlatPack::Menu::Collapse::Component` is a labelled menu row that opens the next rows in place. `title:` is required. `icon:` and `open:` are optional. The `items` slot is the row content.
+
+### Fixed
+- A dropdown inside a collapsing button group opens in the phone panel as that inline section. The wide row still uses the floating dropdown, joined into the segment.
+
+### Upgrade notes
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.302`.
+
+## [0.1.301] - 2026-10-22
+
+### Fixed
+- The open phone panel of a collapsing button group reads as a menu. Rows are flat and full width. A `data-fp-style="danger"` row is red text. A dropdown trigger in that panel uses the same row. The joined desktop row is unchanged.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.301`.
+
+## [0.1.300] - 2026-10-22
+
+### Fixed
+- A dropdown inside a button group joins the row. The segment rules reach the dropdown trigger, including when another element wraps the dropdown. This applies to the plain group and to `collapse: :menu` from `collapse_at` up. The stacked phone menu is unchanged. A dropdown outside a button group keeps its own radius.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.300`.
+
+## [0.1.299] - 2026-10-22
+
+### Fixed
+- A collapsing button group stays open when the pointer goes down in a child dropdown menu. Opening a dropdown stamps `data-flat-pack-dropdown-owner` on the menu with the dropdown root's id. The group ignores that press when the root is inside the group. A press outside both still closes the group.
+
+### Upgrade notes
+- Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.299`.
+
+## [0.1.298] - 2026-10-22
+
+### Added
+- `FlatPack::ButtonGroup::Component` accepts `collapse: :menu`. From `collapse_at:` up (768px) the group is the joined row. Below that, a hamburger trigger opens the same panel as a vertical menu. Each button is rendered once.
+
+### Upgrade notes
+- `collapse:` defaults to `false`. Groups that omit it stay a joined row.
+- Opt in with `collapse: :menu`. `menu_label:` is the trigger text and the group's accessible name. Omit it for an icon-only trigger labelled "Menu". `menu_icon:` defaults to `"menu"` (the bars glyph). `collapse_at:` is a positive pixel width.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.298`.
+
 ## [0.1.297] - 2026-10-22
 
 ### Fixed

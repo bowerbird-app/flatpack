@@ -60,6 +60,7 @@ module FlatPack
         table_controller.js
         accordion_controller.js
         collapse_controller.js
+        menu_collapse_controller.js
         carousel_controller.js
         lightbox_controller.js
         chat_image_deck_controller.js
@@ -125,6 +126,7 @@ module FlatPack
         badge_controller.js
         table_controller.js
         sidebar_group_controller.js
+        menu_collapse_controller.js
         sidebar_layout_controller.js
         trash_button_controller.js
       ]
