@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
 
   def index
     @articles_available = DemoDatabase.table_ready?(Article)
-    @articles = @articles_available ? Article.order(created_at: :desc) : []
+    @articles = @articles_available ? Article.order(created_at: :desc).to_a : []
   rescue *DemoDatabase::ERRORS
     @articles_available = false
     @articles = []
