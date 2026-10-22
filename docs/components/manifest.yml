@@ -538,6 +538,12 @@ components:
       - FlatPack::Media::Component
     status: documented
 
+  - key: menu_collapse
+    title: Menu Collapse
+    doc: docs/components/menu-collapse.md
+    primary_class: FlatPack::Menu::Collapse::Component
+    status: documented
+
   - key: modal
     title: Modal
     doc: docs/components/modal.md

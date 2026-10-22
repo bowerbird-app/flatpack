@@ -168,6 +168,22 @@ module FlatPack
             }
 
             #{dropdown_trigger_css(".fp-button-group-menu[data-collapse-at=\"#{pixels}\"] > .fp-button-group-menu__panel")}
+            #{inline_switch_css(".fp-button-group-menu[data-collapse-at=\"#{pixels}\"] > .fp-button-group-menu__panel")}
+          }
+        CSS
+      end
+
+      # The phone panel shows the inline section. From collapse_at up, the
+      # dropdown is the segment and the inline section is not in the row.
+      def inline_switch_css(scope)
+        <<~CSS
+          #{scope} .fp-button-group-menu__choice,
+          #{scope} .fp-button-group-menu__dropdown {
+            display: contents;
+          }
+
+          #{scope} .fp-button-group-menu__inline {
+            display: none;
           }
         CSS
       end
@@ -198,6 +214,60 @@ module FlatPack
             border-right-width: 1px;
           }
         CSS
+      end
+
+      def panel_child(slot)
+        return slot unless dropdown_slot?(slot)
+
+        # The dropdown's menu block runs when the slot renders. Read the rows after that.
+        rendered_dropdown = slot.to_s
+        content_tag(:div, class: "fp-button-group-menu__choice") do
+          safe_join([
+            content_tag(:div, rendered_dropdown, class: "fp-button-group-menu__dropdown"),
+            content_tag(:div, inline_section(slot), class: "fp-button-group-menu__inline")
+          ])
+        end
+      end
+
+      def dropdown_slot?(slot)
+        slot.respond_to?(:menu_rows) && slot.respond_to?(:trigger_label)
+      end
+
+      def inline_section(slot)
+        render(FlatPack::Menu::Collapse::Component.new(title: slot.trigger_label, icon: slot.trigger_icon)) do |section|
+          section.items do
+            safe_join(slot.menu_rows.map { |row| menu_row_tag(row) })
+          end
+        end
+      end
+
+      def menu_row_tag(row)
+        return inline_divider if row[:divider]
+        return link_to(row_body(row), row[:href], **row_attributes(row)) if row[:href].present? && !row[:disabled]
+
+        button_tag(row_body(row), **row_attributes(row, type: "button"))
+      end
+
+      def inline_divider
+        content_tag(:div, "", class: "fp-menu-collapse__divider", role: "separator")
+      end
+
+      def row_body(row)
+        label = content_tag(:span, row[:label].to_s)
+        return label if row[:icon].blank?
+
+        safe_join([
+          render(FlatPack::Shared::IconComponent.new(name: row[:icon], size: :sm)),
+          label
+        ])
+      end
+
+      def row_attributes(row, type: nil)
+        attributes = {class: "fp-menu-collapse__item"}
+        attributes[:type] = type if type
+        attributes[:disabled] = true if type && row[:disabled]
+        attributes[:data] = {fp_style: "danger"} if row[:destructive]
+        attributes
       end
 
       def normalize_collapse!(value)

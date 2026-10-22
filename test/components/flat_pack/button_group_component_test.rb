@@ -180,6 +180,48 @@ module FlatPack
         assert_selector "[data-fp-style='danger']", text: "Archive"
       end
 
+      def test_collapse_menu_renders_a_dropdown_as_an_inline_section
+        render_inline(Component.new(collapse: :menu, menu_label: "More")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary, icon: "pencil")) do |dropdown|
+            dropdown.menu_item(text: "Copy link", href: "/copy", icon: "pencil")
+            dropdown.menu_divider
+            dropdown.menu_item(text: "Remove", destructive: true)
+          end
+          group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger))
+        end
+
+        assert_selector ".fp-button-group-menu__panel > button", text: "Rename"
+        assert_selector ".fp-button-group-menu__panel > button", text: "Archive"
+        assert_selector ".fp-button-group-menu__choice", count: 1
+        assert_selector ".fp-button-group-menu__dropdown [data-controller='flat-pack--button-dropdown']", count: 1
+        assert_selector ".fp-button-group-menu__inline .fp-menu-collapse", count: 1
+        assert_selector ".fp-menu-collapse__button", text: "Share"
+        assert_equal "false", page.find(".fp-menu-collapse__button")["aria-expanded"]
+        assert_selector ".fp-menu-collapse__items a", text: "Copy link", visible: :all
+        assert_selector ".fp-menu-collapse__items a svg", visible: :all
+        assert_selector ".fp-menu-collapse__divider[role='separator']", visible: :all
+        assert_selector ".fp-menu-collapse__items button[data-fp-style='danger']", text: "Remove", visible: :all
+        assert_match(/\.fp-button-group-menu__dropdown \{\s*display: contents;/, rendered_content)
+        assert_match(/\.fp-button-group-menu__inline \{\s*display: none;/, rendered_content)
+
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        phone = css[css.index("Phone menu rows")...css.index("Plain button group")]
+        assert_includes phone, ".fp-button-group-menu__panel .fp-button-group-menu__dropdown"
+      end
+
+      def test_plain_group_leaves_a_dropdown_floating
+        render_inline(Component.new) do |group|
+          group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown|
+            dropdown.menu_item(text: "Copy link", href: "/copy")
+          end
+        end
+
+        assert_selector "[data-controller='flat-pack--button-dropdown']", count: 1
+        assert_no_selector ".fp-menu-collapse"
+        assert_no_selector ".fp-button-group-menu__inline"
+      end
+
       def test_portaled_child_dropdown_menu_is_not_an_outside_click
         test_file = FlatPack::Engine.root.join("test/javascript/button_group_menu_controller_test.js")
         stdout, status = Open3.capture2e("node", "--test", test_file.to_s)

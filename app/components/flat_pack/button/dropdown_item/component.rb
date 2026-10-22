@@ -49,6 +49,17 @@ module FlatPack
           validate_badge_style! if @badge
         end
 
+        def menu_row
+          {
+            divider: false,
+            label: @text,
+            href: @href,
+            icon: @icon,
+            destructive: @destructive,
+            disabled: @disabled
+          }
+        end
+
         def call
           if @href && !@disabled
             render_link

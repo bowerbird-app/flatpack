@@ -80,6 +80,7 @@ lightbox | FlatPack::Lightbox::Component | docs/components/lightbox.md
 list | FlatPack::List::Component | docs/components/list.md
 media | FlatPack::Media::Component | docs/components/media.md
 masonry | FlatPack::Masonry::Component | docs/components/masonry.md
+menu_collapse | FlatPack::Menu::Collapse::Component | docs/components/menu-collapse.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
 notification | FlatPack::Notification::Component | docs/components/notification.md

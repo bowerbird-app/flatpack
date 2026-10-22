@@ -60,7 +60,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Collapses on a phone",
     anchor_link: true,
-    subtitle: "Same buttons. A row when the window is wide, one menu when it is narrow."
+    subtitle: "Same buttons. A row when the window is wide, one menu when it is narrow. Share opens inside that menu."
   ) %>
   <div id="collapsing-menu-preview" class="mb-4 flex min-h-72 items-start justify-end">
     <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %>
@@ -167,6 +167,38 @@
       <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
     <% end %>
   </div>
+</section>
+
+<section class="mb-12" id="menu-collapse">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Menu collapse",
+    anchor_link: true,
+    subtitle: "A labelled row that opens the next rows in place. The same piece the phone menu uses for Share."
+  ) %>
+  <div id="menu-collapse-preview" class="mb-4 max-w-xs">
+    <%= render FlatPack::Menu::Collapse::Component.new(title: "Share", icon: "pencil") do |section| %>
+      <% section.items do %>
+        <%= link_to "Copy link", "#" %>
+        <%= link_to "Email", "#" %>
+      <% end %>
+    <% end %>
+    <%= render FlatPack::Menu::Collapse::Component.new(title: "More", open: true) do |section| %>
+      <% section.items do %>
+        <%= link_to "Duplicate", "#" %>
+        <%= button_tag "Archive", type: "button", data: {fp_style: "danger"} %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Menu::Collapse::Component.new(title: "Share", icon: "pencil") do |section| %&gt;
+        &lt;% section.items do %&gt;
+          &lt;%= link_to "Copy link", "#" %&gt;
+          &lt;%= link_to "Email", "#" %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <%= render "shared/related_demos",

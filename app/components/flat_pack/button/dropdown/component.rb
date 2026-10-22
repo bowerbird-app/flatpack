@@ -69,6 +69,18 @@ module FlatPack
           set_polymorphic_slot(:menu, :divider, **kwargs, &block)
         end
 
+        def trigger_label
+          @text
+        end
+
+        def trigger_icon
+          @icon
+        end
+
+        def menu_rows
+          menu.map(&:menu_row)
+        end
+
         private
 
         def wrapper_attributes

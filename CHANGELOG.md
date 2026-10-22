@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.302] - 2026-10-22
+
+### Added
+- `FlatPack::Menu::Collapse::Component` is a labelled menu row that opens the next rows in place. `title:` is required. `icon:` and `open:` are optional. The `items` slot is the row content.
+
+### Fixed
+- A dropdown inside a collapsing button group opens in the phone panel as that inline section. The wide row still uses the floating dropdown, joined into the segment.
+
+### Upgrade notes
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.302`.
+
 ## [0.1.301] - 2026-10-22
 
 ### Fixed
