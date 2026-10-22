@@ -62,7 +62,7 @@ Roles are meaning. Button styles belong to the caller. `FlatPack::PageNavRoleSty
 
 A caller can pass any map of role → `{style:, size:}`. An unknown role, style, size, or key raises `ArgumentError`. An entry needs both `style` and `size`. `button_for` raises for a component descriptor. Render `item.component` yourself.
 
-`PageLayout` draws the default bucket with `SOLID`. `SidebarLayout` draws it with `QUIET`. Both fold the links in `FlatPack::ButtonGroup::Component` with `collapse: :menu`, so the wide layout is the joined row and the narrow layout is one menu. A component sits beside that group, rendered once, as the gem built it. `mobile_actions: :floating` draws a plain row and pins the primary link with `PIN`. A named bucket is left for the view.
+`PageLayout` draws the default bucket with `SOLID`. `SidebarLayout` draws it with `QUIET`. Both put links and components in one `FlatPack::ButtonGroup::Component` with `collapse: :menu`, in registration order. The wide layout is the joined row. The narrow layout is that same group as a menu. A component is passed through as the gem built it. The role on a component is metadata. The shell does not restyle it. `mobile_actions: :floating` draws a plain row and pins the primary link with `PIN`. A component stays in the row and is not pinned. A named bucket is left for the view.
 
 There is no `FlatPack.configuration.page_nav_styles`.
 
@@ -85,8 +85,8 @@ Draw a bucket yourself when it should not sit in the shell. This group is the jo
 <% items = page_nav_items(from: :share) %>
 <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "Share") do |group| %>
   <% items.each do |item| %>
-    <% next if item.component? %>
-    <% group.button FlatPack::PageNavRoleStyles.button_for(item, styles: FlatPack::PageNavRoleStyles::QUIET) %>
+    <% child = item.component? ? item.component : FlatPack::PageNavRoleStyles.button_for(item, styles: FlatPack::PageNavRoleStyles::QUIET) %>
+    <% group.button child %>
   <% end %>
 <% end %>
 ```
@@ -105,7 +105,7 @@ A stack of rows uses `FlatPack::Menu::Collapse::Component` the same way. Read th
 
 The registry is `FlatPack::PageNavRegistry`, stored at `request.env["flat_pack.page_nav_registry"]`. `page_nav_registry` returns it. Another request does not see it. Do not store the registry on the class.
 
-A component is one DOM node when the caller renders it once. Components such as a publish control replace themselves with a Turbo Stream that targets a fixed wrapper id (`publishable_quick_actions_<id>`). Rendering that descriptor twice puts two nodes with that id on the page. The shells render it once, beside the button group, so it stays on screen at both widths.
+A component is one DOM node when the caller renders it once. Components such as a publish control replace themselves with a Turbo Stream that targets a fixed wrapper id (`publishable_quick_actions_<id>`). Rendering that descriptor twice puts two nodes with that id on the page. The shells pass the component through once, as a child of the button group, in registration order. With `collapse: :menu` it is in the joined row from 768px up and in that group's menu below that. `mobile_actions: :floating` does not pin it.
 
 ## Accessibility
 The registry has no elements. The caller gives each link its label. `aria:` is on the descriptor for the caller to forward. On a phone the shell's button group trigger is named "Menu". The panel is `role="group"`. The pinned primary is one link, fixed to the bottom-right, and is hidden from `md` up. A component keeps the accessible name the gem gave it.
@@ -113,5 +113,5 @@ The registry has no elements. The caller gives each link its label. `aria:` is o
 ## Dependencies
 - `FlatPack::PageNavRegistryHelper`, included by the engine on Action View and controllers that respond to `helper`.
 - Callers compose `FlatPack::Button::Component`, `FlatPack::ButtonGroup::Component`, or `FlatPack::Menu::Collapse::Component`. The registry does not.
-- Shell placement uses `.fp-page-nav`, `.fp-page-nav--desktop`, `.fp-page-nav--bar`, `.fp-page-nav-buttons`, `.fp-page-nav-components`, `.fp-page-nav--pin-row`, and `.fp-page-nav--floating` in `flat_pack/application.css`. Spacing uses `--space-2`, `--space-3`, and `--space-4`. The bar inset uses `--layout-content-inset` when the shell sets it. `.fp-page-nav--floating` is the opt-in bottom button. Below `md`, `.fp-page-nav--pin-row` hides when it has no `.fp-page-nav-components`. When it has components, only `.fp-page-nav-buttons` hides. The folding menu is the button group's own CSS.
+- Shell placement uses `.fp-page-nav`, `.fp-page-nav--desktop`, `.fp-page-nav--bar`, `.fp-page-nav--pin-row`, and `.fp-page-nav--floating` in `flat_pack/application.css`. Spacing uses `--space-2`, `--space-3`, and `--space-4`. The bar inset uses `--layout-content-inset` when the shell sets it. `.fp-page-nav--floating` is the opt-in bottom button. Below `md`, `.fp-page-nav--pin-row` is hidden. The folding menu is the button group's own CSS.
 - Dummy: `/demo/page_nav_registry` (Sidebar Layout) and `/demo/page_nav_registry?shell=page` (Page Layout). Both leave `mobile_actions` at `:menu`. The demo registers three links and `PublishableQuickActionsComponent` in the default bucket.

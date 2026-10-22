@@ -1375,9 +1375,9 @@
 }
 
 /* Page nav the shell drew from the default bucket.
-   Links sit in a button group. With mobile_actions :menu that group folds.
-   A registered component is one node beside the group.
-   :floating hides the link row below md and pins the primary link. */
+   Links and registered components sit in one button group, in registration order.
+   With mobile_actions :menu that group folds.
+   :floating hides the row below md and pins the primary link. */
 .fp-page-nav {
   display: flex;
   align-items: center;
@@ -1393,13 +1393,6 @@
   padding-inline: var(--layout-content-inset, var(--space-4));
 }
 
-.fp-page-nav-buttons,
-.fp-page-nav-components {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
 .fp-page-nav--floating {
   position: fixed;
   z-index: 30;
@@ -1408,11 +1401,7 @@
 }
 
 @media (max-width: 767px) {
-  .fp-page-nav--pin-row:not(:has(.fp-page-nav-components)) {
-    display: none;
-  }
-
-  .fp-page-nav--pin-row .fp-page-nav-buttons {
+  .fp-page-nav--pin-row {
     display: none;
   }
 }

@@ -27,8 +27,8 @@ module FlatPack
 
       # The default page-nav bucket, drawn by this shell.
       # `styles` is a role map from `PageNavRoleStyles`. `bar` insets the row.
-      # `:menu` folds the links in a button group. `:floating` keeps a row and
-      # pins the primary link. A component renders once, beside the links.
+      # Links and components are one button group, in registration order.
+      # `:menu` folds that group. `:floating` keeps the row and pins the primary link.
       def layout_page_nav(styles:, bar: false)
         return unless helpers.respond_to?(:page_nav_items)
 
@@ -70,34 +70,21 @@ module FlatPack
       end
 
       def page_nav_body(items, styles)
-        safe_join([
-          page_nav_links(items.reject(&:component?), styles),
-          page_nav_components(items.select(&:component?))
-        ].compact)
+        render(FlatPack::ButtonGroup::Component.new(**page_nav_group_arguments)) do |row|
+          items.each { |item| row.button(page_nav_child(item, styles)) }
+        end
       end
 
-      def page_nav_links(links, styles)
-        return if links.empty?
+      def page_nav_child(item, styles)
+        return item.component if item.component?
 
-        group = render(FlatPack::ButtonGroup::Component.new(**page_nav_group_arguments)) do |row|
-          links.each { |item| row.button(PageNavRoleStyles.button_for(item, styles: styles)) }
-        end
-        return group unless pin_page_nav?
-
-        content_tag(:div, group, class: "fp-page-nav-buttons")
+        PageNavRoleStyles.button_for(item, styles: styles)
       end
 
       def page_nav_group_arguments
         return {collapse: :menu} if menu_page_nav?
 
         {}
-      end
-
-      def page_nav_components(components)
-        return if components.empty?
-
-        rendered = safe_join(components.map { |item| render(item.component) })
-        content_tag(:div, rendered, class: "fp-page-nav-components")
       end
 
       def page_nav_data

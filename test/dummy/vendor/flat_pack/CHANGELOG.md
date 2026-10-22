@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - The page nav registry is data only. `register_page_nav` records a link (`label`, path, `role:`, `icon:`, `data:`, `aria:`) or a component (`component:`, `role:`). `into:` names the bucket and defaults to `:default`. `page_nav_items(from:)` returns those descriptors in registration order. The registry does not render, place, or style.
 - `FlatPack::PageNavRoleStyles` maps a role to a button style and size. `SOLID`, `QUIET`, and `PIN` are the maps the shells use. A caller can pass its own role → `{style:, size:}` map. Roles stay `:primary`, `:secondary`, and `:destructive`.
-- `PageLayout` draws the default bucket with `SOLID`. `SidebarLayout` draws it with `QUIET`. Links go in `ButtonGroup` with `collapse: :menu`, so the wide layout is the joined row and the narrow layout is that same group as a menu. A component renders once, beside the group. `mobile_actions: :floating` still pins the primary link.
+- `PageLayout` draws the default bucket with `SOLID`. `SidebarLayout` draws it with `QUIET`. Links and registered components go in one `ButtonGroup` with `collapse: :menu`, in registration order. A component is passed through as the gem built it. The wide layout is the joined row and the narrow layout is that same group as a menu. `mobile_actions: :floating` still pins the primary link. A component is not pinned.
 
 ### Removed
 - `render_page_nav`, `place:` (`:group`, `:menu`, `:floating`), and the `:header` / `:top_nav` context. `FlatPack::PageNavStyles` and `FlatPack.configuration.page_nav_styles` are gone.

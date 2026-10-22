@@ -65,22 +65,33 @@ module FlatPack
       refute_selector ".fp-page-nav-nav"
     end
 
-    test "a registered component renders once beside the group" do
+    test "a registered component is a group child in registration order" do
       nominate_with_component
       render_inline(SidebarLayout::Component.new) do |layout|
         layout.main { "Story" }
       end
 
       assert_selector "#publishable_quick_actions_demo", count: 1
-      assert_selector ".fp-page-nav-components #publishable_quick_actions_demo", count: 1
-      assert_selector ".fp-button-group-menu #publishable_quick_actions_demo", count: 0
-      refute_selector "#publishable_quick_actions_demo[data-fp-style]"
+      assert_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo[data-fp-style=primary]", text: "Publish"
+      refute_selector ".fp-page-nav-components"
+      assert_equal ["New press kit", "Share", "Delete", "Publish"], menu_panel_labels
 
       nominate_with_component
       render_inline(PageLayout::Component.new) { "Story" }
 
-      assert_selector "#publishable_quick_actions_demo", count: 1
-      assert_selector ".fp-button-group-menu #publishable_quick_actions_demo", count: 0
+      assert_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo[data-fp-style=primary]", text: "Publish", count: 1
+      assert_equal ["New press kit", "Share", "Delete", "Publish"], menu_panel_labels
+    end
+
+    test "a component with no links is the group" do
+      vc_test_controller.request.env.delete(PageNavRegistryHelper::REQUEST_KEY)
+      vc_test_controller.view_context.register_page_nav component: PublishableQuickActionsComponent.new, role: :secondary
+
+      render_inline(SidebarLayout::Component.new) { |layout| layout.main { "Story" } }
+
+      assert_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo", count: 1
+      assert_selector "[data-fp-page-nav=default] a", count: 0
+      refute_selector ".fp-page-nav-components"
     end
 
     test "a registration inside the main slot is on the bar" do
@@ -129,6 +140,20 @@ module FlatPack
       refute_selector ".fp-button-group-menu"
     end
 
+    test "floating keeps a component in the row and pins only the primary link" do
+      nominate_with_component
+      render_inline(SidebarLayout::Component.new(mobile_actions: :floating)) do |layout|
+        layout.main { "Story" }
+      end
+
+      assert_selector "[data-fp-page-nav=floating] a[data-fp-style=primary]", text: "New press kit"
+      refute_selector "[data-fp-page-nav=floating] #publishable_quick_actions_demo"
+      refute_selector ".fp-button-group-menu"
+      refute_selector ".fp-page-nav-components"
+      assert_selector "[data-fp-page-nav=default].fp-page-nav--pin-row .fp-button-group #publishable_quick_actions_demo", count: 1
+      assert_equal ["New press kit", "Share", "Delete", "Publish"], plain_group_labels
+    end
+
     test "shells add no markup when the view registers nothing" do
       vc_test_controller.request.env.delete(PageNavRegistryHelper::REQUEST_KEY)
 
@@ -164,6 +189,14 @@ module FlatPack
     def nominate_with_component
       nominate
       vc_test_controller.view_context.register_page_nav component: PublishableQuickActionsComponent.new, role: :secondary
+    end
+
+    def menu_panel_labels
+      page.all("[data-fp-page-nav=default] .fp-button-group-menu__panel > *").map { |node| node.text.squish }
+    end
+
+    def plain_group_labels
+      page.all("[data-fp-page-nav=default] .fp-button-group > *").map { |node| node.text.squish }
     end
   end
 end

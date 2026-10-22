@@ -17,8 +17,10 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select ".fp-page-nav-menu", count: 0
     assert_select ".fp-page-nav-nav", count: 0
     assert_select "button[aria-label=More]", count: 0
-    assert_select "#publishable_quick_actions_demo", count: 1
-    assert_select ".fp-button-group-menu #publishable_quick_actions_demo", count: 0
+    assert_select "#publishable_quick_actions_demo", text: "Publish", count: 1
+    assert_select ".fp-button-group-menu__panel #publishable_quick_actions_demo", count: 1
+    assert_select ".fp-page-nav-components", count: 0
+    assert_equal ["New press kit", "Share", "Delete", "Publish"], page_nav_labels
   end
 
   test "the page shell shows solid header nav" do
@@ -34,7 +36,16 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select ".fp-page-nav-nav", count: 0
     assert_select ".fp-page-nav--floating", count: 0
     assert_select ".fp-page-nav-menu", count: 0
-    assert_select "#publishable_quick_actions_demo", count: 1
+    assert_select ".fp-button-group-menu__panel #publishable_quick_actions_demo", text: "Publish", count: 1
+    assert_select ".fp-page-nav-components", count: 0
+    assert_equal ["New press kit", "Share", "Delete", "Publish"], page_nav_labels
     refute_includes response.body, "flat-pack--sidebar-layout"
+  end
+
+  private
+
+  def page_nav_labels
+    panel = css_select("[data-fp-page-nav=default] .fp-button-group-menu__panel").first
+    panel.css("> *").map { |node| node.text.squish }
   end
 end
