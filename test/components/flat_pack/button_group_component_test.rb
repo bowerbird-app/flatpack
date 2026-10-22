@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "open3"
 
 module FlatPack
   module ButtonGroup
@@ -105,6 +106,13 @@ module FlatPack
       def test_invalid_collapse_at_raises
         assert_raises(ArgumentError) { Component.new(collapse: :menu, collapse_at: 0) }
         assert_raises(ArgumentError) { Component.new(collapse: :menu, collapse_at: "768px") }
+      end
+
+      def test_portaled_child_dropdown_menu_is_not_an_outside_click
+        test_file = FlatPack::Engine.root.join("test/javascript/button_group_menu_controller_test.js")
+        stdout, status = Open3.capture2e("node", "--test", test_file.to_s)
+
+        assert status.success?, stdout
       end
     end
   end

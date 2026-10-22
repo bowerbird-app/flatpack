@@ -25,7 +25,7 @@ Use Button Group when a compact row of related actions should look visually conn
 
 ## Variants
 - Joined row (`collapse: false`, the default).
-- Collapsing menu (`collapse: :menu`). Wide viewport: joined row, trigger hidden. Narrow viewport: trigger visible, panel hidden until opened, then stacked in a menu. Escape and a click outside close it.
+- Collapsing menu (`collapse: :menu`). Wide viewport: joined row, trigger hidden. Narrow viewport: trigger visible, panel hidden until opened, then stacked in a menu. Escape and a click outside close it. A press inside a child dropdown's menu does not. That menu is moved to `document.body` and carries `data-flat-pack-dropdown-owner`, the id of the dropdown root. The group stays open only when that root sits inside the group.
 
 ## Example — collapsing menu
 ```erb

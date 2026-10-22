@@ -65,7 +65,10 @@
   <div id="collapsing-menu-preview" class="mb-4 flex min-h-72 items-start justify-end">
     <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %>
       <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
-      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary)) %>
+      <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+        <% dropdown.menu_item(text: "Copy link", href: "#") %>
+        <% dropdown.menu_item(text: "Email", href: "#") %>
+      <% end %>
       <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
     <% end %>
   </div>
@@ -73,7 +76,10 @@
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %&gt;
-        &lt;% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary)) %&gt;
+        &lt;% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %&gt;
+          &lt;% dropdown.menu_item(text: "Copy link", href: "#") %&gt;
+          &lt;% dropdown.menu_item(text: "Email", href: "#") %&gt;
+        &lt;% end %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %&gt;
       &lt;% end %&gt;
     CODE

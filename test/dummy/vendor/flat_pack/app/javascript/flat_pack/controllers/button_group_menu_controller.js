@@ -43,8 +43,21 @@ export default class extends Controller {
 
   onPointerDown(event) {
     if (this.element.contains(event.target)) return
+    if (this.pointerInChildMenu(event.target)) return
 
     this.close()
+  }
+
+  // A child dropdown moves its menu to document.body and stamps the dropdown id.
+  pointerInChildMenu(target) {
+    const menu = target.closest?.("[data-flat-pack--button-dropdown-target='menu']")
+    if (!menu) return false
+
+    const ownerId = menu.getAttribute("data-flat-pack-dropdown-owner")
+    if (!ownerId) return false
+
+    const owner = document.getElementById(ownerId)
+    return Boolean(owner && this.element.contains(owner))
   }
 
   onKeyDown(event) {

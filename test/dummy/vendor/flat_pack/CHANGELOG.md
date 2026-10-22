@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.299] - 2026-10-22
+
+### Fixed
+- A collapsing button group stays open when the pointer goes down in a child dropdown menu. Opening a dropdown stamps `data-flat-pack-dropdown-owner` on the menu with the dropdown root's id. The group ignores that press when the root is inside the group. A press outside both still closes the group.
+
+### Upgrade notes
+- Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.299`.
+
 ## [0.1.298] - 2026-10-22
 
 ### Added
