@@ -1374,29 +1374,38 @@
   margin-inline: auto;
 }
 
-/* Page actions. The shell places the desktop group. Phone rows live in the top nav menu. */
-.fp-page-actions {
+/* Page nav. The shell places the desktop group. Phone rows for semantic buttons
+ * live in the top nav menu. A registered component is one node in this bar, so
+ * it stays on screen at both breakpoints and is not copied into the menu. */
+.fp-page-nav {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: var(--space-2);
 }
 
-.fp-page-actions--desktop {
+.fp-page-nav--desktop {
   padding-block: var(--space-3);
 }
 
-.fp-page-actions--bar {
+.fp-page-nav--bar {
   padding-inline: var(--layout-content-inset, var(--space-4));
+}
+
+.fp-page-nav-buttons,
+.fp-page-nav-components {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
 /* Source rows for the hamburger. The controller moves the buttons into the panel
    and strips a `hidden` class on restore, so this rule keeps the source out of the bar. */
-.fp-page-actions-menu {
+.fp-page-nav-menu {
   display: none;
 }
 
-.fp-page-actions--floating {
+.fp-page-nav--floating {
   position: fixed;
   z-index: 30;
   right: max(var(--space-4), env(safe-area-inset-right, 0px));
@@ -1404,14 +1413,18 @@
 }
 
 @media (max-width: 767px) {
-  .fp-page-actions--desktop {
+  .fp-page-nav--desktop:not(:has(.fp-page-nav-components)) {
+    display: none;
+  }
+
+  .fp-page-nav--desktop .fp-page-nav-buttons {
     display: none;
   }
 }
 
 @media (min-width: 768px) {
-  .fp-page-actions-nav,
-  .fp-page-actions--floating {
+  .fp-page-nav-nav,
+  .fp-page-nav--floating {
     display: none;
   }
 }

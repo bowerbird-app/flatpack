@@ -7,7 +7,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_page_actions, :page_actions_classes
+      private :layout_top_nav, :layout_background, :layout_page_nav, :page_nav_classes
 
       renders_one :top_nav_slot
       renders_one :footer_slot
@@ -75,7 +75,7 @@ module FlatPack
             render_page_surface,
             render_frame,
             render_footer,
-            render_floating_page_action
+            render_floating_page_nav
           ].compact)
         end
       end
@@ -93,7 +93,7 @@ module FlatPack
 
       def render_top_nav
         html = top_nav? ? top_nav.to_s : nil
-        html = with_menu_page_actions(html)
+        html = with_menu_page_nav(html)
         return if html.blank?
 
         layout_top_nav(top_nav_landmark(html), floating: @floating_top_nav, content_scroll: @content_scroll)
@@ -108,7 +108,7 @@ module FlatPack
       def main_column
         content_tag(:div, class: "fp-layout-column") do
           safe_join([
-            layout_page_actions(:header, place: :desktop),
+            layout_page_nav(:header, place: :desktop),
             content
           ].compact)
         end

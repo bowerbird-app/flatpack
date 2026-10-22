@@ -720,7 +720,7 @@ class PagesController < ApplicationController
     render layout: "fullpage"
   end
 
-  def page_actions
+  def page_nav_registry
     render layout: "fullpage" if params[:shell] == "page"
   end
 
