@@ -13,6 +13,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.294] - 2026-10-21
+
+### Added
+- `page_action` nominates a page-level action for the current request: label, path, `role:` (`:primary`, `:secondary`, or `:destructive`), `icon:`, and pass-through `data:` / `aria:`. The view decides which actions exist and what they mean. It does not pass a CSS class, a button style, or a placement.
+- `FlatPack::PageActionRegistry` collects those actions in source order. The helper stores one registry on `request.env["flat_pack.page_actions"]`. A new request starts empty.
+- `FlatPack::PageActions` maps a role to a button style and size. `:header` is a solid primary (`:primary`), a subtle secondary (`:secondary`), and `:danger`, at `:sm`. `:top_nav` is a subtle primary (`:secondary`), a ghost secondary (`:ghost`), and `:danger`, at `:sm`. `styles:` replaces any role's button style for that call.
+- `page_actions` renders that map as a `ButtonGroup` for `:header` and `:top_nav`.
+- Sidebar Layout places the `:top_nav` group in a bar under the top nav from the `md` breakpoint up. Page Layout places the `:header` group at the top of the column. Below `md`, both shells put the actions in the Top Nav hamburger as full-width rows, using the `:top_nav` map. An empty registry adds no markup.
+- `mobile_actions: :floating` on either shell pins the primary action to the bottom-right on a phone. The default is `:menu`.
+
+### Fixed
+- The Top Nav phone menu stays inside the viewport when a shell ancestor is the fixed containing block. Page-action rows in that menu are not clipped off the left edge.
+- A horizontal cluster in that menu becomes one full-width row per control, including a search field and a dropdown. The dropdown still discloses in place. A control with `data-flat-pack-top-nav-always-display="true"` stays in the bar. The demo notification bell uses it and stays beside the hamburger.
+
+### Upgrade notes
+- Call `page_action` in the view. Sidebar Layout and Page Layout place the buttons. A custom layout calls `page_actions(:header)` or `page_actions(:top_nav)` and puts the group where it wants. Pass `styles: { primary: :ghost }` to replace a role's button style.
+- On a phone the actions join the Top Nav menu. The host Top Nav needs its mobile menu (the default). A shell with no top nav renders one for that menu, hidden from `md` up.
+- Pass `mobile_actions: :floating` to pin the primary action to the bottom-right instead of the menu. Other actions stay in the desktop group.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.294`.
+
 ## [0.1.293] - 2026-10-21
 
 ### Added

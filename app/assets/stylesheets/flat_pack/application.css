@@ -1374,6 +1374,48 @@
   margin-inline: auto;
 }
 
+/* Page actions. The shell places the desktop group. Phone rows live in the top nav menu. */
+.fp-page-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.fp-page-actions--desktop {
+  padding-block: var(--space-3);
+}
+
+.fp-page-actions--bar {
+  padding-inline: var(--layout-content-inset, var(--space-4));
+}
+
+/* Source rows for the hamburger. The controller moves the buttons into the panel
+   and strips a `hidden` class on restore, so this rule keeps the source out of the bar. */
+.fp-page-actions-menu {
+  display: none;
+}
+
+.fp-page-actions--floating {
+  position: fixed;
+  z-index: 30;
+  right: max(var(--space-4), env(safe-area-inset-right, 0px));
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 767px) {
+  .fp-page-actions--desktop {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .fp-page-actions-nav,
+  .fp-page-actions--floating {
+    display: none;
+  }
+}
+
 [data-flat-pack-top-nav-floating="behind"] {
   position: absolute;
   top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
@@ -1553,7 +1595,42 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   pointer-events: auto;
 }
 
-/* The open hamburger menu is one column of full-width rows. */
+/* The open hamburger menu is one column of full-width rows.
+   A horizontal cluster that moved in as one node becomes that column too. */
+[data-flat-pack--top-nav-target="panel"] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  max-width: calc(100vw - 1rem);
+  overflow-x: hidden;
+}
+
+[data-flat-pack--top-nav-target="panel"] > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: 0;
+}
+
+[data-flat-pack--top-nav-target="panel"] > .flex {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+[data-flat-pack--top-nav-target="panel"] > .flex > :not(.absolute) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(input, select, textarea) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
 [data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav,
 [data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav > div {
   display: flex;
@@ -1564,7 +1641,7 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   gap: 0.125rem;
 }
 
-[data-flat-pack--top-nav-target="panel"] :is(a, button) {
+[data-flat-pack--top-nav-target="panel"] :is(a, button):not(.absolute) {
   width: 100%;
   justify-content: flex-start;
   text-align: left;
@@ -1574,7 +1651,7 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   color: var(--surface-content-color);
 }
 
-[data-flat-pack--top-nav-target="panel"] :is(a, button):hover {
+[data-flat-pack--top-nav-target="panel"] :is(a, button):not(.absolute):hover {
   background-color: var(--surface-muted-background-color);
 }
 

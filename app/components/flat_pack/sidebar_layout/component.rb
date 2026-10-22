@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background
+      private :layout_top_nav, :layout_background, :layout_page_actions, :page_actions_classes
 
       renders_one :sidebar_slot
       renders_one :top_nav_slot
@@ -31,6 +31,7 @@ module FlatPack
         height: :full,
         width: :fixed,
         resizable: false,
+        mobile_actions: :menu,
         **system_arguments
       )
         super(**system_arguments)
@@ -45,6 +46,7 @@ module FlatPack
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
         @resizable = resizable
+        assign_mobile_actions!(mobile_actions)
         @aside_open = true
         @aside_resizable = false
         @aside_mobile = :drawer
@@ -141,7 +143,8 @@ module FlatPack
             render_background,
             render_page_surface,
             render_columns,
-            render_backdrop
+            render_backdrop,
+            render_floating_page_action
           ].compact)
         end
       end
@@ -366,6 +369,7 @@ module FlatPack
         content_tag(:div, class: main_column_classes, data: {"flat-pack-layout-main": "true"}) do
           safe_join([
             render_top_nav,
+            layout_page_actions(:top_nav, place: :desktop, bar: true),
             content_tag(:div, **main_pane_attributes) do
               main? ? main.to_s : content
             end
@@ -374,9 +378,11 @@ module FlatPack
       end
 
       def render_top_nav
-        return unless top_nav?
+        body = top_nav? ? top_nav.to_s : nil
+        body = with_menu_page_actions(body)
+        return if body.blank?
 
-        layout_top_nav(top_nav, floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(body, floating: @floating_top_nav, content_scroll: @content_scroll)
       end
 
       def render_page_surface

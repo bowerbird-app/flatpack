@@ -7,7 +7,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background
+      private :layout_top_nav, :layout_background, :layout_page_actions, :page_actions_classes
 
       renders_one :top_nav_slot
       renders_one :footer_slot
@@ -22,6 +22,7 @@ module FlatPack
         align: :top,
         floating_top_nav: false,
         content_scroll: :behind,
+        mobile_actions: :menu,
         **system_arguments
       )
         super(**system_arguments)
@@ -29,6 +30,7 @@ module FlatPack
         @align = symbolize(align)
         @floating_top_nav = floating_top_nav
         @content_scroll = symbolize(content_scroll)
+        assign_mobile_actions!(mobile_actions)
 
         validate_width!
         validate_align!
@@ -72,7 +74,8 @@ module FlatPack
             render_background,
             render_page_surface,
             render_frame,
-            render_footer
+            render_footer,
+            render_floating_page_action
           ].compact)
         end
       end
@@ -89,20 +92,26 @@ module FlatPack
       end
 
       def render_top_nav
-        return unless top_nav?
+        html = top_nav? ? top_nav.to_s : nil
+        html = with_menu_page_actions(html)
+        return if html.blank?
 
-        layout_top_nav(top_nav_landmark, floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(top_nav_landmark(html), floating: @floating_top_nav, content_scroll: @content_scroll)
       end
 
-      def top_nav_landmark
-        html = top_nav.to_s
+      def top_nav_landmark(html)
         return html if html.match?(/<(header|nav)\b/i)
 
         content_tag(:header, html)
       end
 
       def main_column
-        content_tag(:div, content, class: "fp-layout-column")
+        content_tag(:div, class: "fp-layout-column") do
+          safe_join([
+            layout_page_actions(:header, place: :desktop),
+            content
+          ].compact)
+        end
       end
 
       def render_footer

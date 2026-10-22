@@ -215,6 +215,7 @@ Rails.application.routes.draw do
   get "demo/backdrop", to: "pages#backdrop"
   get "demo/backdrop/full", to: "pages#backdrop_full"
   get "demo/page_layout", to: "pages#page_layout"
+  get "demo/page_actions", to: "pages#page_actions"
   get "demo/overlay", to: "pages#overlay"
   get "demo/video_preview", to: "pages#video_preview"
   get "demo/fab", to: "pages#fab"

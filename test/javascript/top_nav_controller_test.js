@@ -478,3 +478,132 @@ test('a phone leaves the sidebar toggle in the bar', () => {
   assert.equal(panelChildren.length, 0)
   assert.equal(sectionChildren[0], toggle)
 })
+
+test('the open menu stays inside the viewport when an ancestor pins fixed positioning', () => {
+  const style = {}
+  const panel = {
+    hidden: false,
+    style,
+    getBoundingClientRect() {
+      const left = Number.parseFloat(style.left || '0')
+      return {left: left - 96, width: 320, right: left - 96 + 320, top: 66, bottom: 290, height: 224}
+    }
+  }
+  const toggle = {
+    getBoundingClientRect() {
+      return {bottom: 58, right: 278, left: 234, top: 14, width: 44, height: 44}
+    }
+  }
+  const TopNavController = loadTopNavController({window: {innerWidth: 390}, document: {}})
+  const controller = Object.assign(new TopNavController(), {
+    menuOpen: true,
+    hasPanelTarget: true,
+    hasToggleTarget: true,
+    panelTarget: panel,
+    toggleTarget: toggle
+  })
+
+  controller.placeMenu()
+
+  const viewportLeft = Number.parseFloat(style.left) - 96
+  assert.equal(style.position, 'fixed')
+  assert.equal(style.right, 'auto')
+  assert.ok(viewportLeft >= 8)
+  assert.ok(viewportLeft + 320 <= 382)
+})
+
+function menuElement({dataset = {}, children = []} = {}) {
+  const node = {
+    nodeType: 1,
+    dataset,
+    childNodes: [],
+    classList: {toggle() {}, remove() {}},
+    parentNode: null,
+    insertBefore(child, before) {
+      if (child.parentNode && child.parentNode.removeChild) child.parentNode.removeChild(child)
+      child.parentNode = node
+      const index = node.childNodes.indexOf(before)
+      node.childNodes.splice(index < 0 ? node.childNodes.length : index, 0, child)
+    },
+    appendChild(child) {
+      if (child.parentNode && child.parentNode.removeChild) child.parentNode.removeChild(child)
+      child.parentNode = node
+      node.childNodes.push(child)
+      return child
+    },
+    removeChild(child) {
+      const index = node.childNodes.indexOf(child)
+      if (index >= 0) node.childNodes.splice(index, 1)
+      if (child.parentNode === node) child.parentNode = null
+      return child
+    },
+    replaceChild(next, previous) {
+      const index = node.childNodes.indexOf(previous)
+      if (next.parentNode && next.parentNode.removeChild) next.parentNode.removeChild(next)
+      next.parentNode = node
+      node.childNodes.splice(index, 1, next)
+      return previous
+    },
+    querySelectorAll(selector) {
+      const found = []
+      const walk = (current) => {
+        current.childNodes.forEach((child) => {
+          if (child.nodeType !== 1) return
+          if (selector.includes('always-display') && child.dataset.flatPackTopNavAlwaysDisplay === 'true') found.push(child)
+          walk(child)
+        })
+      }
+      walk(node)
+      return found
+    }
+  }
+  children.forEach((child) => node.appendChild(child))
+  return node
+}
+
+test('a phone keeps an always-display bell in the bar and folds the rest of its row', () => {
+  const bell = menuElement({dataset: {flatPackTopNavAlwaysDisplay: 'true'}})
+  const dropdown = menuElement({dataset: {controller: 'flat-pack--button-dropdown'}})
+  const row = menuElement({children: [dropdown, bell]})
+  const section = menuElement({
+    dataset: {flatPackTopNavCollapsible: 'true'},
+    children: [row]
+  })
+  const panel = menuElement()
+  panel.children = panel.childNodes
+  const menu = menuElement()
+  const TopNavController = loadTopNavController({
+    window: {},
+    document: {createComment() { return {nodeType: 8, parentNode: null} }},
+    Node: {TEXT_NODE: 3, ELEMENT_NODE: 1}
+  })
+  const controller = Object.assign(new TopNavController(), {
+    element: {dataset: {}},
+    mediaQuery: {matches: true},
+    hasPanelTarget: true,
+    hasMenuTarget: true,
+    hasToggleTarget: false,
+    sectionTargets: [section],
+    panelTarget: panel,
+    menuTarget: menu,
+    movedNodes: [],
+    breakpointValue: 768,
+    fitting: false,
+    menuOpen: false
+  })
+
+  controller.applyLayout()
+
+  assert.equal(menu.childNodes.includes(bell), true)
+  assert.equal(panel.childNodes.includes(bell), false)
+  assert.equal(panel.childNodes.includes(row), true)
+  assert.equal(row.childNodes.includes(dropdown), true)
+  assert.equal(row.childNodes.includes(bell), false)
+
+  controller.restoreCollapsedNodes()
+
+  assert.equal(section.childNodes.includes(row), true)
+  assert.equal(row.childNodes.includes(bell), true)
+  assert.equal(row.childNodes.includes(dropdown), true)
+  assert.equal(panel.childNodes.includes(row), false)
+})
