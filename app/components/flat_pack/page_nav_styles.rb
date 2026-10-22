@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 module FlatPack
-  # Role to button style and size. Layouts and hosts own the map.
-  # A gem emits a role. It does not write the map.
+  # Role to button style and size for the page nav registry.
+  # Layouts and hosts own the map. A gem emits a role. It does not write the map.
+  #
+  # This is not FlatPack::PageNav, the back and close row.
   #
   # Resolution for one context is the map passed to `render_page_nav`, then
   # `FlatPack.configuration.page_nav_styles`, then `DEFAULT_STYLES`.
-  module PageNav
+  module PageNavStyles
     CONTEXTS = %i[header top_nav].freeze
 
     DEFAULT_STYLES = {

@@ -13,20 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.295] - 2026-10-22
+## [0.1.296] - 2026-10-22
 
 ### Changed
-- Page actions are page nav. `page_nav` registers an item for the current request. `FlatPack::PageNavItem` is one item. `FlatPack::PageNavRegistry` keeps them, in source order, on `request.env["flat_pack.page_nav_registry"]`. `render_page_nav` is the only renderer.
-- Two forms. A semantic item is `page_nav "Label", path, role:, icon:, data:, aria:`. A pre-built component is `page_nav component:, role:`. `role:` is required (`:primary`, `:secondary`, or `:destructive`). A component renders as the gem built it. Its role places and orders it. The style map does not restyle it.
-- The role map is host-owned. Set `FlatPack.configuration.page_nav_styles` once in an initializer. A layout passes `styles:` to `render_page_nav`. Resolution is that map, then `page_nav_styles`, then `FlatPack::PageNav::DEFAULT_STYLES`. A gem emits roles. It does not write the map.
+- Page actions are page nav. `register_page_nav` registers an item for the current request. `FlatPack::PageNavItem` is one item. `FlatPack::PageNavRegistry` keeps them, in source order, on `request.env["flat_pack.page_nav_registry"]`. `render_page_nav` is the only renderer.
+- Two forms. A semantic item is `register_page_nav "Label", path, role:, icon:, data:, aria:`. A pre-built component is `register_page_nav component:, role:`. `role:` is required (`:primary`, `:secondary`, or `:destructive`). A component renders as the gem built it. Its role places and orders it. The style map does not restyle it.
+- The role map is host-owned and lives on `FlatPack::PageNavStyles`, apart from `FlatPack::PageNav::Component` (the back and close row). Set `FlatPack.configuration.page_nav_styles` once in an initializer. A layout passes `styles:` to `render_page_nav`. Resolution is that map, then `page_nav_styles`, then `FlatPack::PageNavStyles::DEFAULT_STYLES`. A gem emits roles. It does not write the map.
 - A registered component is one DOM node. It stays in the page nav bar on desktop and on a phone. It is not copied into the phone menu, so a Turbo Stream can target its wrapper id. Semantic buttons still render in the desktop group and fold into the phone menu. `mobile_actions: :floating` still pins the primary button.
 
 ### Upgrade notes
-- Replace `page_action` with `page_nav` and pass `role:` every time. Replace `page_actions` with `render_page_nav`. There is no alias.
-- Set `config.page_nav_styles` inside `FlatPack.configure` to change button style and size. The default matches the previous `:header` and `:top_nav` maps.
-- A component registered with `page_nav component:` renders once. Do not expect a second copy in the phone menu.
+- Replace `page_action` with `register_page_nav` and pass `role:` every time. Replace `page_actions` with `render_page_nav`. There is no alias. `register_page_nav` is not `flat_pack_page_nav`.
+- Set `config.page_nav_styles` inside `FlatPack.configure` to change button style and size. The default matches the previous `:header` and `:top_nav` maps. Read it from `FlatPack::PageNavStyles`, not from `FlatPack::PageNav`.
+- A component registered with `register_page_nav component:` renders once. Do not expect a second copy in the phone menu.
 - Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
-- Redeploy so `meta.gem_version` shows `0.1.295`.
+- Redeploy so `meta.gem_version` shows `0.1.296`.
 
 ## [0.1.294] - 2026-10-21
 

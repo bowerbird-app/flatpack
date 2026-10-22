@@ -9,14 +9,14 @@ Use this when a screen has nav that belongs to the page, such as creating a reco
 A gem emits a role. It does not write the style map.
 
 ## Class
-- `page_nav` and `render_page_nav` on `FlatPack::PageNavRegistryHelper`
+- `register_page_nav` and `render_page_nav` on `FlatPack::PageNavRegistryHelper`
 - Registry: `FlatPack::PageNavRegistry`
 - One entry: `FlatPack::PageNavItem`
-- Role map: `FlatPack::PageNav`
+- Role map: `FlatPack::PageNavStyles`
 - Related classes: `FlatPack::Button::Component`, `FlatPack::ButtonGroup::Component`, `FlatPack::TopNav::Component`, `FlatPack::SidebarLayout::Component`, `FlatPack::PageLayout::Component`
 
 ## Props
-`page_nav` registers one entry. It returns nil. `role:` is required in both forms.
+`register_page_nav` registers one entry. It returns nil. `role:` is required in both forms. The name keeps it apart from `flat_pack_page_nav`, which draws the back and close row.
 
 Semantic item:
 
@@ -59,7 +59,7 @@ Anything else raises `ArgumentError`.
 None on the helper. `:group` renders semantic items as `FlatPack::ButtonGroup::Component`. A component entry is rendered beside that group, not inside it. `:menu` renders one `FlatPack::Button::Component` per semantic item. `:floating` renders the primary semantic item as one button. Components are left out of `:menu` and `:floating`.
 
 ## Variants
-Roles are meaning. Button styles are the host's choice. `FlatPack::PageNav::DEFAULT_STYLES` is the default map. Values are Button `style:` and `size:` tokens.
+Roles are meaning. Button styles are the host's choice. `FlatPack::PageNavStyles::DEFAULT_STYLES` is the default map. Values are Button `style:` and `size:` tokens.
 
 | context | `:primary` | `:secondary` | `:destructive` | size |
 | --- | --- | --- | --- | --- |
@@ -70,7 +70,7 @@ Resolution order for one context:
 
 1. The `styles:` map passed to `render_page_nav`.
 2. `FlatPack.configuration.page_nav_styles`, set once in an initializer.
-3. `FlatPack::PageNav::DEFAULT_STYLES`.
+3. `FlatPack::PageNavStyles::DEFAULT_STYLES`.
 
 A partial map replaces only the roles and keys it names. Omitted roles keep the layer below. A gem does not set `page_nav_styles`.
 
@@ -92,10 +92,10 @@ The floating button uses the `:header` map for the primary role and renders at `
 Register in the view. Call this before the shell renders. In a normal layout the view runs first, so a call in the template is enough.
 
 ```erb
-<% page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
-<% page_nav "Share", share_press_kit_path, role: :secondary, icon: :share %>
-<% page_nav "Delete", press_kit_path, role: :destructive, icon: :trash %>
-<% page_nav component: publishable_quick_actions, role: :secondary %>
+<% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
+<% register_page_nav "Share", share_press_kit_path, role: :secondary, icon: :share %>
+<% register_page_nav "Delete", press_kit_path, role: :destructive, icon: :trash %>
+<% register_page_nav component: publishable_quick_actions, role: :secondary %>
 ```
 
 `render_page_nav` reads the registry. Semantic items become buttons for the context. Component items render as they are, in role order (`:primary`, then `:secondary`, then `:destructive`), and only on the first `:group` call.
@@ -109,7 +109,7 @@ The host Top Nav keeps its mobile menu (the default). The shell inserts the sema
 ```erb
 <%= render FlatPack::SidebarLayout::Component.new(mobile_actions: :floating) do |layout| %>
   <% layout.main do %>
-    <% page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
+    <% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
   <% end %>
 <% end %>
 ```

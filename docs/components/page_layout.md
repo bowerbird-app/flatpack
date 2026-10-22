@@ -98,7 +98,7 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
 The shell scrolls with the window. It does not lock a pane, store state, or read a cookie. The first paint is the finished page. Sidebar Layout's wrap measurement is not part of this shell. The window keeps its scrollbar. `--pane-scrollbar-width` does not apply here.
 
 ## Page nav
-A view registers nav with `page_nav`. This shell reads the request registry. From the `md` breakpoint up, the top of the column is `render_page_nav(:header)` (solid primary). Below that, the semantic buttons are rows in the Top Nav hamburger, using the `:top_nav` map (subtle primary, ghost secondary, danger). They join the menu the rest of the bar folds into. A shell with no top nav renders one for that menu, and that bar is hidden from `md` up. A registered component stays in the column bar at both breakpoints and is not copied into the menu. No registered nav means no extra markup.
+A view registers nav with `register_page_nav`. This shell reads the request registry. From the `md` breakpoint up, the top of the column is `render_page_nav(:header)` (solid primary). Below that, the semantic buttons are rows in the Top Nav hamburger, using the `:top_nav` map (subtle primary, ghost secondary, danger). They join the menu the rest of the bar folds into. A shell with no top nav renders one for that menu, and that bar is hidden from `md` up. A registered component stays in the column bar at both breakpoints and is not copied into the menu. No registered nav means no extra markup.
 
 `mobile_actions: :floating` pins the primary semantic button to the bottom-right on a phone instead. The default is `:menu`. The dummy leaves the floating button off. See [Page nav registry](page-nav-registry.md).
 

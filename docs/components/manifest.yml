@@ -572,7 +572,7 @@ components:
     primary_class: FlatPack::PageNavRegistry
     related_classes:
       - FlatPack::PageNavItem
-      - FlatPack::PageNav
+      - FlatPack::PageNavStyles
       - FlatPack::PageNavRegistryHelper
     status: documented
 

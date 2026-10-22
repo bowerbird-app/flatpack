@@ -145,14 +145,14 @@ module FlatPack
     def nominate
       vc_test_controller.request.env.delete(PageNavRegistryHelper::REQUEST_KEY)
       view = vc_test_controller.view_context
-      view.page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
-      view.page_nav "Share", "/press-kits/share", role: :secondary, icon: :share
-      view.page_nav "Delete", "/press-kits/delete", role: :destructive, icon: :trash
+      view.register_page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
+      view.register_page_nav "Share", "/press-kits/share", role: :secondary, icon: :share
+      view.register_page_nav "Delete", "/press-kits/delete", role: :destructive, icon: :trash
     end
 
     def nominate_with_component
       nominate
-      vc_test_controller.view_context.page_nav component: PublishableQuickActionsComponent.new, role: :secondary
+      vc_test_controller.view_context.register_page_nav component: PublishableQuickActionsComponent.new, role: :secondary
     end
   end
 end

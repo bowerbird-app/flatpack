@@ -1,8 +1,8 @@
 <%
-  page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
-  page_nav "Share", "/press-kits/share", role: :secondary, icon: :share
-  page_nav "Delete", "/press-kits/delete", role: :destructive, icon: :trash
-  page_nav component: PublishableQuickActionsComponent.new, role: :secondary
+  register_page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
+  register_page_nav "Share", "/press-kits/share", role: :secondary, icon: :share
+  register_page_nav "Delete", "/press-kits/delete", role: :destructive, icon: :trash
+  register_page_nav component: PublishableQuickActionsComponent.new, role: :secondary
 %>
 
 <% if params[:shell] == "page" %>

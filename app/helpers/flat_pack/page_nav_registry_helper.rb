@@ -7,10 +7,10 @@ module FlatPack
 
     # Register one page nav entry. Returns nil.
     #
-    # Semantic: `page_nav "Label", path, role:, icon:, data:, aria:`
-    # Component: `page_nav component:, role:`
+    # Semantic: `register_page_nav "Label", path, role:, icon:, data:, aria:`
+    # Component: `register_page_nav component:, role:`
     # `role:` is required. `:primary`, `:secondary`, or `:destructive`.
-    def page_nav(label = nil, href = nil, role: nil, icon: nil, data: nil, aria: nil, component: nil)
+    def register_page_nav(label = nil, href = nil, role: nil, icon: nil, data: nil, aria: nil, component: nil)
       require_role!(role)
       item = if component
         if label || href || icon || data || aria
@@ -107,7 +107,7 @@ module FlatPack
     end
 
     def page_nav_button(item, context, styles: nil, size: nil)
-      entry = PageNav.resolve(context, styles).fetch(item.role)
+      entry = PageNavStyles.resolve(context, styles).fetch(item.role)
       arguments = {
         text: item.label,
         href: item.href,

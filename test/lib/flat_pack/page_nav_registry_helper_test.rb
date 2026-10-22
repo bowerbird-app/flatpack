@@ -4,9 +4,9 @@ require "test_helper"
 
 class PageNavRegistryHelperProbesController < ApplicationController
   def nominate
-    helpers.page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
-    helpers.page_nav "Share", "/press-kits/share", role: :secondary
-    helpers.page_nav "Delete", "/press-kits/delete", role: :destructive
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive
     labels = helpers.page_nav_registry.items.map { |item| "#{item.label}:#{item.role}" }
     render plain: labels.join(",")
   end
@@ -27,38 +27,38 @@ class PageNavRegistryHelperProbesController < ApplicationController
   end
 
   def render_inline_twice
-    helpers.page_nav "New press kit", "/press-kits/new", role: :primary
-    helpers.page_nav component: PublishableQuickActionsComponent.new(dom_id: "publishable_quick_actions_late"), role: :destructive
-    helpers.page_nav component: PublishableQuickActionsComponent.new(dom_id: "publishable_quick_actions_early"), role: :primary
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.register_page_nav component: PublishableQuickActionsComponent.new(dom_id: "publishable_quick_actions_late"), role: :destructive
+    helpers.register_page_nav component: PublishableQuickActionsComponent.new(dom_id: "publishable_quick_actions_early"), role: :primary
     render inline: "<%= render_page_nav(:header) %><%= render_page_nav(:top_nav, place: :menu) %><%= render_page_nav(:header) %>", layout: false
   end
 
   def rejected_class
-    helpers.page_nav "New", "/new", role: :primary, class: "btn"
+    helpers.register_page_nav "New", "/new", role: :primary, class: "btn"
     head :ok
   end
 
   def rejected_style
-    helpers.page_nav "New", "/new", role: :primary, style: :primary
+    helpers.register_page_nav "New", "/new", role: :primary, style: :primary
     head :ok
   end
 
   def rejected_role
-    helpers.page_nav "New", "/new"
+    helpers.register_page_nav "New", "/new"
     head :ok
   end
 
   def rejected_component_label
-    helpers.page_nav "New", "/new", component: PublishableQuickActionsComponent.new, role: :primary
+    helpers.register_page_nav "New", "/new", component: PublishableQuickActionsComponent.new, role: :primary
     head :ok
   end
 
   private
 
   def nominate_items
-    helpers.page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
-    helpers.page_nav "Share", "/press-kits/share", role: :secondary, icon: :share
-    helpers.page_nav "Delete", "/press-kits/delete", role: :destructive, icon: :trash
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary, icon: :share
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, icon: :trash
   end
 end
 
