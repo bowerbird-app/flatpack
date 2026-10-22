@@ -86,6 +86,89 @@
   ) %>
 </section>
 
+<section class="mb-12" id="joined-dropdown">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A dropdown joins the row",
+    anchor_link: true,
+    subtitle: "The trigger takes the segment. First, middle, last, and on its own."
+  ) %>
+  <div id="joined-dropdown-plain" class="mb-6 flex flex-wrap items-start gap-6">
+    <div id="joined-plain-first">
+      <%= render FlatPack::ButtonGroup::Component.new do |group| %>
+        <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+          <% dropdown.menu_item(text: "Email", href: "#") %>
+        <% end %>
+        <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
+      <% end %>
+    </div>
+    <div id="joined-plain-middle">
+      <%= render FlatPack::ButtonGroup::Component.new do |group| %>
+        <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+          <% dropdown.menu_item(text: "Email", href: "#") %>
+        <% end %>
+        <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
+      <% end %>
+    </div>
+    <div id="joined-plain-last">
+      <%= render FlatPack::ButtonGroup::Component.new do |group| %>
+        <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+          <% dropdown.menu_item(text: "Email", href: "#") %>
+        <% end %>
+      <% end %>
+    </div>
+    <div id="joined-plain-only">
+      <%= render FlatPack::ButtonGroup::Component.new do |group| %>
+        <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+          <% dropdown.menu_item(text: "Email", href: "#") %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div id="joined-dropdown-collapse" class="mb-6 flex flex-wrap items-start gap-6">
+    <div id="joined-collapse-middle">
+      <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %>
+        <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+        <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+          <% dropdown.menu_item(text: "Email", href: "#") %>
+        <% end %>
+        <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
+      <% end %>
+    </div>
+    <div id="joined-collapse-only">
+      <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %>
+        <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown| %>
+          <% dropdown.menu_item(text: "Copy link", href: "#") %>
+          <% dropdown.menu_item(text: "Email", href: "#") %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div id="joined-dropdown-nested" class="mb-4">
+    <%= render FlatPack::ButtonGroup::Component.new do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+      <% group.button(capture do %>
+        <div class="publishable-quick-actions">
+          <div hidden>Queued</div>
+          <%= render FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary) do |dropdown| %>
+            <% dropdown.menu_item(text: "Copy link", href: "#") %>
+            <% dropdown.menu_item(text: "Email", href: "#") %>
+          <% end %>
+        </div>
+      <% end) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
+    <% end %>
+  </div>
+</section>
+
 <%= render "shared/related_demos",
   links: [
     {text: "Buttons", href: demo_buttons_path},

@@ -5257,3 +5257,25 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+/* Plain button group (collapse: false). Same trigger reach-through as the
+   wide collapse style tag. Scoped to .fp-button-group so a dropdown elsewhere
+   keeps its own radius. */
+.fp-button-group [data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"] {
+  border-radius: 0;
+  box-shadow: none;
+  border-right-width: 0;
+}
+
+.fp-button-group > :first-child[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"],
+.fp-button-group > :first-child [data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"] {
+  border-top-left-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-md);
+}
+
+.fp-button-group > :last-child[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"],
+.fp-button-group > :last-child [data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"] {
+  border-top-right-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  border-right-width: 1px;
+}
+

@@ -108,11 +108,66 @@ module FlatPack
         assert_raises(ArgumentError) { Component.new(collapse: :menu, collapse_at: "768px") }
       end
 
+      def test_collapse_menu_reaches_through_a_dropdown_wrapper
+        render_inline(Component.new(collapse: :menu)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+        end
+
+        scope = '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__panel'
+        assert_dropdown_segment_selectors rendered_content, scope
+        rendered_content.each_line do |line|
+          next unless line.include?('data-flat-pack--button-dropdown-target="trigger"')
+
+          assert_includes line, ".fp-button-group-menu[data-collapse-at=", line
+        end
+      end
+
+      def test_plain_group_reaches_through_a_dropdown_wrapper
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        group_css = css[css.index("Plain button group")..]
+
+        assert_dropdown_segment_selectors group_css, ".fp-button-group"
+        group_css.each_line do |line|
+          next unless line.include?('data-flat-pack--button-dropdown-target="trigger"')
+
+          assert_match(/\A\.fp-button-group\b/, line.lstrip)
+        end
+
+        render_inline(Component.new) do |group|
+          group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown|
+            dropdown.menu_item(text: "Copy link", href: "#")
+          end
+        end
+
+        assert_selector ".fp-button-group > [data-controller~='flat-pack--button-dropdown'] [data-flat-pack--button-dropdown-target='trigger']", text: "Share"
+        assert_no_selector ".fp-button-group > [data-flat-pack--button-dropdown-target='trigger']"
+
+        render_inline(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown|
+          dropdown.menu_item(text: "Copy link", href: "#")
+        end
+
+        assert_no_selector ".fp-button-group"
+        assert_no_selector ".fp-button-group-menu"
+      end
+
       def test_portaled_child_dropdown_menu_is_not_an_outside_click
         test_file = FlatPack::Engine.root.join("test/javascript/button_group_menu_controller_test.js")
         stdout, status = Open3.capture2e("node", "--test", test_file.to_s)
 
         assert status.success?, stdout
+      end
+
+      private
+
+      def assert_dropdown_segment_selectors(css, scope)
+        trigger = '[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"]'
+        direct = '[data-flat-pack--button-dropdown-target="trigger"]'
+
+        assert_includes css, "#{scope} #{trigger}"
+        assert_includes css, "#{scope} > :first-child[data-controller~=\"flat-pack--button-dropdown\"] #{direct}"
+        assert_includes css, "#{scope} > :first-child #{trigger}"
+        assert_includes css, "#{scope} > :last-child[data-controller~=\"flat-pack--button-dropdown\"] #{direct}"
+        assert_includes css, "#{scope} > :last-child #{trigger}"
       end
     end
   end

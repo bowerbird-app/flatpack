@@ -39,6 +39,7 @@ module FlatPack
 
       def group_classes
         classes(
+          "fp-button-group",
           "inline-flex",
           "rounded-[var(--radius-md)]",
           "shadow-sm",
@@ -165,6 +166,36 @@ module FlatPack
               border-bottom-right-radius: var(--radius-md);
               border-right-width: 1px;
             }
+
+            #{dropdown_trigger_css(".fp-button-group-menu[data-collapse-at=\"#{pixels}\"] > .fp-button-group-menu__panel")}
+          }
+        CSS
+      end
+
+      # The joined row styles each direct child. A dropdown's direct child is a
+      # wrapper, and a host control may wrap that again, so the trigger is what
+      # has to take the segment shape. Menu items are not triggers, and an open
+      # menu is on document.body, outside this selector.
+      def dropdown_trigger_css(scope)
+        trigger = '[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"]'
+        <<~CSS
+          #{scope} #{trigger} {
+            border-radius: 0;
+            box-shadow: none;
+            border-right-width: 0;
+          }
+
+          #{scope} > :first-child[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"],
+          #{scope} > :first-child #{trigger} {
+            border-top-left-radius: var(--radius-md);
+            border-bottom-left-radius: var(--radius-md);
+          }
+
+          #{scope} > :last-child[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"],
+          #{scope} > :last-child #{trigger} {
+            border-top-right-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+            border-right-width: 1px;
           }
         CSS
       end

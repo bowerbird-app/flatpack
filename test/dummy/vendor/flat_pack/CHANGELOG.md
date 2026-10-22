@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.300] - 2026-10-22
+
+### Fixed
+- A dropdown inside a button group joins the row. The segment rules reach the dropdown trigger, including when another element wraps the dropdown. This applies to the plain group and to `collapse: :menu` from `collapse_at` up. The stacked phone menu is unchanged. A dropdown outside a button group keeps its own radius.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.300`.
+
 ## [0.1.299] - 2026-10-22
 
 ### Fixed
