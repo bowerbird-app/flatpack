@@ -236,46 +236,40 @@ test('a phone folds a collapsible section into the menu', () => {
   assert.equal(sectionChildren.includes(child), false)
 })
 
-test('a phone discloses a dropdown in place and restores it', () => {
-  const {controller, doc, sectionChildren, publish, publishTrigger, publishMenu, moreMenu, publishNow, duplicate} = buildMenuTree()
+test('a phone folds a dropdown as itself and restores it', () => {
+  const {controller, panel, sectionChildren, publish, publishTrigger, publishMenu, moreMenu, publishNow, duplicate} = buildMenuTree()
+  const pageNav = sectionChildren[0]
 
   controller.applyLayout()
 
-  assert.equal(publish.dataset.flatPackTopNavDisclosure, 'true')
-  assert.equal(publish.dataset.flatPackTopNavExpanded, 'false')
-  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'false')
-  assert.equal(publishTrigger.getAttribute('aria-controls'), publishMenu.id)
-  assert.equal(publishMenu.getAttribute('role'), 'group')
+  assert.equal(panel.children.includes(pageNav), true)
+  assert.equal(sectionChildren.includes(pageNav), false)
+  assert.equal(publish.parentNode.parentNode, pageNav)
+  assert.equal(publish.dataset.flatPackTopNavDisclosure, undefined)
+  assert.equal(publish.dataset.flatPackTopNavExpanded, undefined)
+  assert.equal(publishTrigger.getAttribute('aria-expanded'), null)
+  assert.equal(publishTrigger.getAttribute('aria-controls'), null)
+  assert.equal(publishTrigger.listeners.length, 0)
+  assert.equal(publishMenu.getAttribute('role'), 'menu')
   assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
+  assert.equal(publishMenu.id, '')
   assert.equal(publishMenu.children.includes(publishNow), true)
   assert.equal(moreMenu.children.includes(duplicate), true)
 
   publishTrigger.click()
-  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'true')
-  assert.equal(publish.dataset.flatPackTopNavExpanded, 'true')
-  assert.equal(publishMenu.getAttribute('aria-hidden'), 'false')
-  assert.equal(publishMenu.children.includes(publishNow), true)
-
-  doc.activeElement = publishNow
-  publishTrigger.click()
-  assert.equal(publishTrigger.getAttribute('aria-expanded'), 'false')
-  assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
-  assert.equal(publishTrigger.focused, true)
-
-  publishTrigger.click()
-  controller.closeMenu()
-  assert.equal(publish.dataset.flatPackTopNavExpanded, 'false')
+  assert.equal(publishTrigger.listeners.length, 0)
+  assert.equal(publish.dataset.flatPackTopNavExpanded, undefined)
+  assert.equal(publishMenu.getAttribute('role'), 'menu')
 
   controller.mediaQuery.matches = false
   controller.applyLayout()
 
+  assert.equal(sectionChildren[0], pageNav)
   assert.equal(publish.dataset.flatPackTopNavDisclosure, undefined)
   assert.equal(publishMenu.getAttribute('role'), 'menu')
   assert.equal(publishMenu.getAttribute('aria-hidden'), 'true')
   assert.equal(publishTrigger.getAttribute('aria-controls'), null)
-  assert.equal(publishTrigger.listeners.length, 0)
   assert.deepEqual(publishMenu.children.map((node) => node.text), ['Publish now', 'Schedule'])
-  assert.equal(sectionChildren[0].nodeName, 'page-nav')
 })
 
 function element(name, {dataset = {}, text = ''} = {}) {
@@ -486,7 +480,8 @@ test('the open menu stays inside the viewport when an ancestor pins fixed positi
     style,
     getBoundingClientRect() {
       const left = Number.parseFloat(style.left || '0')
-      return {left: left - 96, width: 320, right: left - 96 + 320, top: 66, bottom: 290, height: 224}
+      const top = Number.parseFloat(style.top || '0')
+      return {left: left - 96, width: 320, right: left - 96 + 320, top: top + 400, bottom: top + 624, height: 224}
     }
   }
   const toggle = {
@@ -506,8 +501,10 @@ test('the open menu stays inside the viewport when an ancestor pins fixed positi
   controller.placeMenu()
 
   const viewportLeft = Number.parseFloat(style.left) - 96
+  const viewportTop = Number.parseFloat(style.top) + 400
   assert.equal(style.position, 'fixed')
   assert.equal(style.right, 'auto')
+  assert.equal(viewportTop, 66)
   assert.ok(viewportLeft >= 8)
   assert.ok(viewportLeft + 320 <= 382)
 })

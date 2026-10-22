@@ -60,7 +60,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Collapses on a phone",
     anchor_link: true,
-    subtitle: "Same buttons. A row when the window is wide, one menu when it is narrow. Share opens inside that menu."
+    subtitle: "Same buttons. A row when the window is wide, one menu when it is narrow. Share opens its items in that menu."
   ) %>
   <div id="collapsing-menu-preview" class="mb-4 flex min-h-72 items-start justify-end">
     <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %>
@@ -90,7 +90,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "A dropdown joins the row",
     anchor_link: true,
-    subtitle: "The trigger takes the segment. First, middle, last, and on its own."
+    subtitle: "The direct child takes the segment. First, middle, last, and on its own. A wrapper around a dropdown keeps that dropdown's own shape."
   ) %>
   <div id="joined-dropdown-plain" class="mb-6 flex flex-wrap items-start gap-6">
     <div id="joined-plain-first">

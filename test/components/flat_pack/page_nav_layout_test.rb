@@ -13,7 +13,8 @@ module FlatPack
       assert_selector "[data-fp-page-nav=default].fp-page-nav--desktop.fp-page-nav--bar a[data-fp-style=secondary]", text: "New press kit"
       assert_selector "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "Share"
       assert_selector "[data-fp-page-nav=default] a[data-fp-style=danger]", text: "Delete"
-      assert_selector "[data-fp-page-nav=default] .fp-button-group-menu a", count: 3
+      assert_selector "[data-fp-page-nav=default] .fp-button-group-menu__row a", count: 3
+      assert_selector "[data-fp-page-nav=default] .fp-button-group-menu__panel .fp-menu-row", count: 3
       assert_selector "[data-fp-page-nav=default] .fp-button-group-menu__trigger[aria-label=Menu]"
       refute_selector ".fp-page-nav-menu"
       refute_selector ".fp-page-nav-nav"
@@ -43,7 +44,8 @@ module FlatPack
       assert_selector "#notes [data-fp-page-nav=default].fp-page-nav--desktop a[data-fp-style=primary]", text: "New press kit"
       assert_selector "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "Share"
       assert_selector "[data-fp-page-nav=default] a[data-fp-style=danger]", text: "Delete"
-      assert_selector "[data-fp-page-nav=default] .fp-button-group-menu a", count: 3
+      assert_selector "[data-fp-page-nav=default] .fp-button-group-menu__row a", count: 3
+      assert_selector "[data-fp-page-nav=default] .fp-button-group-menu__panel .fp-menu-row", count: 3
       assert_selector "main .fp-layout-column", text: "Story"
       refute_selector "header.fp-top-nav"
       refute_selector ".fp-page-nav-nav"
@@ -72,14 +74,17 @@ module FlatPack
       end
 
       assert_selector "#publishable_quick_actions_demo", count: 1
-      assert_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo[data-fp-style=primary]", text: "Publish"
+      assert_selector ".fp-button-group-menu__row #publishable_quick_actions_demo[data-fp-style=primary]", text: "Publish"
+      assert_selector ".fp-button-group-menu__panel .fp-menu-row", text: "Publish"
       refute_selector ".fp-page-nav-components"
       assert_equal ["New press kit", "Share", "Delete", "Publish"], menu_panel_labels
 
       nominate_with_component
       render_inline(PageLayout::Component.new) { "Story" }
 
-      assert_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo[data-fp-style=primary]", text: "Publish", count: 1
+      assert_selector ".fp-button-group-menu__row #publishable_quick_actions_demo[data-fp-style=primary]", text: "Publish", count: 1
+      assert_selector ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
+      assert_no_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo"
       assert_equal ["New press kit", "Share", "Delete", "Publish"], menu_panel_labels
     end
 
@@ -89,7 +94,8 @@ module FlatPack
 
       render_inline(SidebarLayout::Component.new) { |layout| layout.main { "Story" } }
 
-      assert_selector ".fp-button-group-menu__panel #publishable_quick_actions_demo", count: 1
+      assert_selector ".fp-button-group-menu__row #publishable_quick_actions_demo", count: 1
+      assert_selector ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
       assert_selector "[data-fp-page-nav=default] a", count: 0
       refute_selector ".fp-page-nav-components"
     end

@@ -140,6 +140,9 @@ Square icon trigger. Omit `round` and the theme corner stays.
 <% end %>
 ```
 
+## Collapsing button group
+`menu_row` is the phone form used by [Button Group](button-group.md) when `collapse: :menu`. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
+
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.

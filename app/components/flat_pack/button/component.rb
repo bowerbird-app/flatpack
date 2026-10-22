@@ -135,6 +135,18 @@ module FlatPack
         end
       end
 
+      # Plain row for a collapsing button group. Label, href, and icon stay.
+      # Danger is red text. The wide control keeps id, class, and button chrome.
+      def menu_row
+        validate_trailing!
+
+        if @href
+          link_to(@href, **menu_row_attributes(link: true)) { menu_row_content }
+        else
+          button_tag(**menu_row_attributes(link: false)) { menu_row_content }
+        end
+      end
+
       def self.painted_icon_size(size)
         (size.to_sym == :xs) ? :sm : size
       end
@@ -169,6 +181,62 @@ module FlatPack
         button_tag(**button_attributes) do
           button_content
         end
+      end
+
+      def menu_row_content
+        content = []
+
+        if @loading
+          content << render(FlatPack::Spinner::Component.new(size: icon_size, label: nil))
+        elsif @icon
+          content << render_leading_icon
+        end
+
+        label = menu_row_label
+        content << content_tag(:span, label) if label.present?
+        safe_join(content)
+      end
+
+      def menu_row_label
+        return fp_t("button.loading") if @loading
+
+        @text.presence || explicit_aria_label
+      end
+
+      def menu_row_attributes(link:)
+        attrs = html_attributes.except(:id, "id")
+        attrs[:class] = "fp-menu-row"
+        attrs[:title] = @title if @title.present?
+        data = menu_row_data
+        attrs[:data] = data if data.present?
+        aria = menu_row_aria(link)
+        attrs[:aria] = aria if aria.present?
+
+        if link
+          attrs[:method] = @method if @method
+          attrs[:target] = @target if @target
+          attrs[:rel] = "noopener noreferrer" if @target == "_blank"
+        else
+          attrs[:type] = @type
+          attrs[:disabled] = true if @loading
+        end
+
+        attrs
+      end
+
+      def menu_row_data
+        data = data_attributes.dup
+        data.delete(:fp_style)
+        data.delete("fp_style")
+        data[:fp_style] = "danger" if @style.to_sym == :danger
+        data.presence
+      end
+
+      def menu_row_aria(link)
+        aria = aria_attributes.dup
+        aria[:current] = "page" if link && @current
+        aria[:busy] = "true" if @loading
+        aria.presence
       end
 
       def button_content

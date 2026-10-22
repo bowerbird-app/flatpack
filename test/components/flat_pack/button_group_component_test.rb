@@ -43,10 +43,13 @@ module FlatPack
         end
 
         assert_selector ".fp-button-group-menu__trigger", count: 1
+        assert_selector ".fp-button-group-menu__row", count: 1
         assert_selector ".fp-button-group-menu__panel", count: 1
-        assert_selector ".fp-button-group-menu__panel button", count: 2
-        assert_selector "button", text: "Rename", count: 1
-        assert_selector "button", text: "Archive", count: 1
+        assert_selector ".fp-button-group-menu__row .fp-button", text: "Rename", count: 1
+        assert_selector ".fp-button-group-menu__row .fp-button", text: "Archive", count: 1
+        assert_selector ".fp-button-group-menu__panel .fp-menu-row", text: "Rename", count: 1
+        assert_selector ".fp-button-group-menu__panel .fp-menu-row[data-fp-style=danger]", text: "Archive", count: 1
+        assert_no_selector ".fp-button-group-menu__panel .fp-button"
         assert_selector "button", text: "More", count: 1
         assert_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='bars-3']"
         assert_equal "false", page.find(".fp-button-group-menu")["data-open"]
@@ -108,79 +111,61 @@ module FlatPack
         assert_raises(ArgumentError) { Component.new(collapse: :menu, collapse_at: "768px") }
       end
 
-      def test_collapse_menu_reaches_through_a_dropdown_wrapper
+      def test_wide_row_styles_direct_children_only
         render_inline(Component.new(collapse: :menu)) do |group|
-          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary, href: "/rename", icon: "pencil"))
+          group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger, id: "archive-button"))
         end
 
-        scope = '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__panel'
-        assert_dropdown_segment_selectors rendered_content, scope
-        rendered_content.each_line do |line|
-          next unless line.include?('data-flat-pack--button-dropdown-target="trigger"')
+        refute_includes rendered_content, "button-dropdown-target"
+        assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > *'
+        assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > :first-child'
+        assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > :last-child'
 
-          assert_includes line, ".fp-button-group-menu[data-collapse-at=", line
-        end
+        assert_selector ".fp-button-group-menu__row a.fp-button[href='/rename']", text: "Rename"
+        assert_selector ".fp-button-group-menu__panel a.fp-menu-row[href='/rename']", text: "Rename"
+        assert_selector ".fp-button-group-menu__panel a.fp-menu-row svg"
+        assert_selector ".fp-button-group-menu__row #archive-button.fp-button[data-fp-style=danger]", text: "Archive"
+        assert_selector ".fp-button-group-menu__panel .fp-menu-row[data-fp-style=danger]", text: "Archive", count: 1
+        assert_no_selector ".fp-button-group-menu__panel #archive-button"
+
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        refute_includes css, 'data-flat-pack--button-dropdown-target="trigger"'
+        assert_includes css, ".fp-button-group > .fp-button-dropdown > .fp-button-dropdown__trigger"
+        assert_includes css, "border-radius: inherit"
       end
 
-      def test_plain_group_reaches_through_a_dropdown_wrapper
-        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-        group_css = css[css.index("Plain button group")..]
-
-        assert_dropdown_segment_selectors group_css, ".fp-button-group"
-        group_css.each_line do |line|
-          next unless line.include?('data-flat-pack--button-dropdown-target="trigger"')
-
-          assert_match(/\A\.fp-button-group\b/, line.lstrip)
-        end
-
+      def test_plain_group_joins_a_dropdown_on_its_root
         render_inline(Component.new) do |group|
           group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown|
             dropdown.menu_item(text: "Copy link", href: "#")
           end
         end
 
-        assert_selector ".fp-button-group > [data-controller~='flat-pack--button-dropdown'] [data-flat-pack--button-dropdown-target='trigger']", text: "Share"
-        assert_no_selector ".fp-button-group > [data-flat-pack--button-dropdown-target='trigger']"
+        assert_selector ".fp-button-group > .fp-button-dropdown", count: 1
+        assert_selector ".fp-button-group > .fp-button-dropdown > .fp-button-dropdown__trigger", text: "Share"
+        assert_no_selector ".fp-menu-collapse"
+        assert_no_selector ".fp-button-group-menu"
 
         render_inline(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary)) do |dropdown|
           dropdown.menu_item(text: "Copy link", href: "#")
         end
 
+        assert_selector ".fp-button-dropdown", count: 1
         assert_no_selector ".fp-button-group"
-        assert_no_selector ".fp-button-group-menu"
+        assert_no_selector ".fp-menu-collapse"
       end
 
-      def test_phone_menu_rows_are_scoped_to_the_open_panel
-        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-        menu = css[css.index("Phone menu rows")...css.index("Plain button group")]
-        plain = css[css.index("Plain button group")..]
-        scope = '.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel'
-
-        assert_includes menu, "#{scope} :is(button, a)"
-        assert_includes menu, "#{scope} [data-flat-pack--button-dropdown-target=\"trigger\"]"
-        assert_includes menu, "#{scope} :is(button, a)[data-fp-style=\"danger\"]"
-        assert_includes menu, "prefers-reduced-motion"
-        assert_includes menu, "transition: none"
-
-        menu.each_line do |line|
-          next unless line.include?(":is(button, a)") || line.include?("button-dropdown-target") || line.include?('data-fp-style="danger"')
-
-          assert_includes line, scope, line
+      def test_plain_group_does_not_restyle_a_wrapped_dropdown
+        render_inline(Component.new) do |group|
+          group.button('<div class="host-wrap"><button type="button" class="inner">Share</button></div>'.html_safe)
         end
 
-        refute_includes plain, 'data-fp-style="danger"'
-        refute_includes plain, "Phone menu rows"
-
-        render_inline(Component.new(collapse: :menu)) do |group|
-          group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger))
-        end
-
-        refute_includes rendered_content, 'data-fp-style="danger"]'
-        refute_includes rendered_content, "Phone menu rows"
-        assert_selector "[data-fp-style='danger']", text: "Archive"
+        assert_selector ".fp-button-group > .host-wrap > .inner", text: "Share"
+        refute_includes rendered_content, "button-dropdown-target"
       end
 
-      def test_collapse_menu_renders_a_dropdown_as_an_inline_section
+      def test_collapse_menu_renders_a_dropdown_as_its_own_menu_row
         render_inline(Component.new(collapse: :menu, menu_label: "More")) do |group|
           group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
           group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary, icon: "pencil")) do |dropdown|
@@ -191,23 +176,30 @@ module FlatPack
           group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger))
         end
 
-        assert_selector ".fp-button-group-menu__panel > button", text: "Rename"
-        assert_selector ".fp-button-group-menu__panel > button", text: "Archive"
-        assert_selector ".fp-button-group-menu__choice", count: 1
-        assert_selector ".fp-button-group-menu__dropdown [data-controller='flat-pack--button-dropdown']", count: 1
-        assert_selector ".fp-button-group-menu__inline .fp-menu-collapse", count: 1
+        assert_selector ".fp-button-group-menu__row .fp-button-dropdown", count: 1
+        assert_selector ".fp-button-group-menu__row .fp-button-dropdown__trigger", text: "Share"
+        assert_no_selector ".fp-button-group-menu__panel .fp-button-dropdown"
+        assert_no_selector ".fp-button-group-menu__dropdown"
+        assert_no_selector ".fp-button-group-menu__inline"
+        assert_selector ".fp-button-group-menu__panel > .fp-menu-collapse", count: 1
         assert_selector ".fp-menu-collapse__button", text: "Share"
         assert_equal "false", page.find(".fp-menu-collapse__button")["aria-expanded"]
         assert_selector ".fp-menu-collapse__items a", text: "Copy link", visible: :all
         assert_selector ".fp-menu-collapse__items a svg", visible: :all
         assert_selector ".fp-menu-collapse__divider[role='separator']", visible: :all
         assert_selector ".fp-menu-collapse__items button[data-fp-style='danger']", text: "Remove", visible: :all
-        assert_match(/\.fp-button-group-menu__dropdown \{\s*display: contents;/, rendered_content)
-        assert_match(/\.fp-button-group-menu__inline \{\s*display: none;/, rendered_content)
+        refute_match(/display:\s*contents/, rendered_content)
+      end
 
-        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-        phone = css[css.index("Phone menu rows")...css.index("Plain button group")]
-        assert_includes phone, ".fp-button-group-menu__panel .fp-button-group-menu__dropdown"
+      def test_collapse_menu_repeats_a_child_without_menu_row
+        render_inline(Component.new(collapse: :menu)) do |group|
+          group.button('<span class="raw-child">Raw</span>'.html_safe)
+        end
+
+        assert_selector ".fp-button-group-menu__row > .raw-child", text: "Raw", count: 1
+        assert_selector ".fp-button-group-menu__panel > .raw-child", text: "Raw", count: 1
+        assert_no_selector ".fp-menu-row"
+        assert_no_selector ".fp-menu-collapse"
       end
 
       def test_plain_group_leaves_a_dropdown_floating
@@ -227,19 +219,6 @@ module FlatPack
         stdout, status = Open3.capture2e("node", "--test", test_file.to_s)
 
         assert status.success?, stdout
-      end
-
-      private
-
-      def assert_dropdown_segment_selectors(css, scope)
-        trigger = '[data-controller~="flat-pack--button-dropdown"] [data-flat-pack--button-dropdown-target="trigger"]'
-        direct = '[data-flat-pack--button-dropdown-target="trigger"]'
-
-        assert_includes css, "#{scope} #{trigger}"
-        assert_includes css, "#{scope} > :first-child[data-controller~=\"flat-pack--button-dropdown\"] #{direct}"
-        assert_includes css, "#{scope} > :first-child #{trigger}"
-        assert_includes css, "#{scope} > :last-child[data-controller~=\"flat-pack--button-dropdown\"] #{direct}"
-        assert_includes css, "#{scope} > :last-child #{trigger}"
       end
     end
   end

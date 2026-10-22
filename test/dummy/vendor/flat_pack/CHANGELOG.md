@@ -13,6 +13,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.304] - 2026-10-22
+
+### Fixed
+- The open phone panel measures its vertical offset the same way it measures the horizontal one. A transformed shell ancestor no longer places the panel below the toggle.
+
+### Changed
+- A collapsing button group asks each child for `menu_row`. `Button::Component#menu_row` is a plain row (label, href, icon; danger is red text). `Button::Dropdown#menu_row` is a `Menu::Collapse` of that dropdown. A host component can implement the same method. A child that does not return HTML from `menu_row` is shown as itself in the wide row and again in the phone menu.
+
+### Removed
+- Top Nav no longer turns a dropdown inside the phone menu into an in-place disclosure. The controller no longer stamps `data-flat-pack-top-nav-disclosure` or `data-flat-pack-top-nav-expanded`, and it no longer captures the trigger click. The panel CSS for that disclosure is gone. A dropdown that folds into the hamburger stays a normal `Button::Dropdown` and opens its own menu on `document.body`.
+- The unlayered rule `.fp-top-nav [data-flat-pack-top-nav-section="center"] input { min-width: 0 }` is gone. The center section still has `min-w-0`.
+- The button group no longer reads `menu_rows` or `trigger_label`, no longer renders a hidden dropdown beside a cloned menu collapse, and no longer styles `[data-flat-pack--button-dropdown-target="trigger"]`.
+- The button group script no longer treats a portaled dropdown menu as inside the group. `data-flat-pack-dropdown-owner` is removed. Opening a dropdown no longer assigns an id for that stamp.
+
+### Upgrade notes
+- `data-flat-pack-top-nav-disclosure` is removed. Stop reading or styling that hook, and stop reading `data-flat-pack-top-nav-expanded`.
+- A dropdown inside the phone menu is the dropdown's own menu. It is not a nested disclosure.
+- Implement `menu_row` on a component you put in a collapsing button group when the phone menu should not be a second copy of the wide control. Return HTML. Do not repeat an `id` that `call` already renders.
+- Stop reading `data-flat-pack-dropdown-owner`. Stop styling `.fp-button-group-menu__dropdown`, `.fp-button-group-menu__inline`, and `.fp-button-group-menu__choice`.
+- A dropdown joins a button group only as the direct child. A wrapper around it keeps the dropdown's own shape.
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.304`.
+
 ## [0.1.303] - 2026-10-22
 
 ### Changed

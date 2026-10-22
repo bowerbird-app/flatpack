@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
 // On a narrow viewport, moves the top nav row into one hamburger menu. The
-// open menu is a single column. A nested dropdown stays a parent row and
-// discloses its items in place. A wide viewport keeps the row. Nodes are
-// relocated rather than duplicated so ids, event listeners and Stimulus
+// open menu is a single column. A nested dropdown stays the dropdown it
+// already is, and opens its own menu. A wide viewport keeps the row. Nodes
+// are relocated rather than duplicated so ids, event listeners and Stimulus
 // controllers inside slot content keep working. The sidebar's own mobile
 // toggle stays in the bar.
 export default class extends Controller {
@@ -173,96 +173,7 @@ export default class extends Controller {
       this.updateSectionVisibility(section)
     })
 
-    this.prepareDisclosures()
     this.updateMenuVisibility()
-  }
-
-  // A dropdown inside the phone menu is a disclosure. Its items stay in its
-  // own group and are not lifted into the column.
-  prepareDisclosures() {
-    const panel = this.panelTarget
-    if (!panel || typeof panel.querySelectorAll !== "function") return
-
-    this.disclosures = []
-    panel.querySelectorAll("[data-controller~='flat-pack--button-dropdown']").forEach((dropdown) => {
-      const trigger = dropdown.querySelector("[data-flat-pack--button-dropdown-target='trigger']")
-      const menu = dropdown.querySelector("[data-flat-pack--button-dropdown-target='menu']")
-      if (!trigger || !menu || typeof trigger.addEventListener !== "function") return
-
-      const record = {
-        dropdown,
-        trigger,
-        menu,
-        expanded: trigger.getAttribute("aria-expanded"),
-        controls: trigger.getAttribute("aria-controls"),
-        menuRole: menu.getAttribute("role"),
-        menuHidden: menu.getAttribute("aria-hidden"),
-        menuLabel: menu.getAttribute("aria-label"),
-        menuId: menu.id || ""
-      }
-
-      if (!menu.id) {
-        this.disclosureIndex = (this.disclosureIndex || 0) + 1
-        menu.id = `flat-pack-top-nav-disclosure-${this.disclosureIndex}`
-      }
-
-      dropdown.dataset.flatPackTopNavDisclosure = "true"
-      const label = (trigger.getAttribute("aria-label") || trigger.textContent || "").trim()
-      if (label) menu.setAttribute("aria-label", label)
-      menu.setAttribute("role", "group")
-      trigger.setAttribute("aria-controls", menu.id)
-
-      record.onClick = (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation()
-        const open = dropdown.dataset.flatPackTopNavExpanded === "true"
-        this.setDisclosure(record, !open)
-      }
-      trigger.addEventListener("click", record.onClick, true)
-      this.setDisclosure(record, false)
-      this.disclosures.push(record)
-    })
-  }
-
-  setDisclosure(record, open, {focus = true} = {}) {
-    const {dropdown, trigger, menu} = record
-    dropdown.dataset.flatPackTopNavExpanded = open ? "true" : "false"
-    trigger.setAttribute("aria-expanded", open ? "true" : "false")
-    menu.setAttribute("aria-hidden", open ? "false" : "true")
-
-    if (focus && !open && typeof menu.contains === "function" && menu.contains(document.activeElement) && typeof trigger.focus === "function") {
-      trigger.focus()
-    }
-  }
-
-  collapseDisclosures() {
-    if (!this.disclosures) return
-
-    this.disclosures.forEach((record) => this.setDisclosure(record, false, {focus: false}))
-  }
-
-  restoreDisclosures() {
-    if (!this.disclosures) return
-
-    while (this.disclosures.length > 0) {
-      const record = this.disclosures.pop()
-      const {dropdown, trigger, menu, onClick} = record
-      trigger.removeEventListener("click", onClick, true)
-      this.writeAttribute(trigger, "aria-expanded", record.expanded)
-      this.writeAttribute(trigger, "aria-controls", record.controls)
-      this.writeAttribute(menu, "role", record.menuRole)
-      this.writeAttribute(menu, "aria-hidden", record.menuHidden)
-      this.writeAttribute(menu, "aria-label", record.menuLabel)
-      if (!record.menuId) menu.id = ""
-      delete dropdown.dataset.flatPackTopNavDisclosure
-      delete dropdown.dataset.flatPackTopNavExpanded
-    }
-  }
-
-  writeAttribute(element, name, value) {
-    if (value == null || value === "") element.removeAttribute(name)
-    else element.setAttribute(name, value)
   }
 
   isSidebarToggle(node) {
@@ -273,8 +184,6 @@ export default class extends Controller {
   }
 
   restoreCollapsedNodes() {
-    this.restoreDisclosures()
-
     while (this.movedNodes.length > 0) {
       const { node, placeholder } = this.movedNodes.pop()
 
@@ -368,14 +277,18 @@ export default class extends Controller {
     const margin = 8
 
     panel.style.position = "fixed"
-    panel.style.top = `${top}px`
+    panel.style.top = "0px"
     panel.style.right = "auto"
     panel.style.left = "0px"
     panel.style.zIndex = "30"
     panel.style.maxHeight = `calc(100vh - ${top + 8}px)`
     panel.style.overflowY = "auto"
 
+    // A transformed shell ancestor is the fixed containing block. Measure
+    // that offset instead of assuming the viewport.
     const placed = panel.getBoundingClientRect()
+    panel.style.top = `${Math.round(top - placed.top)}px`
+
     const viewportWidth = window.innerWidth || 0
     const width = placed.width
     let desired = rect.right - width
@@ -400,7 +313,6 @@ export default class extends Controller {
   closeMenu() {
     if (!this.hasPanelTarget) return
 
-    this.collapseDisclosures()
     this.panelTarget.hidden = true
     this.menuOpen = false
     this.setToggleExpanded(false)

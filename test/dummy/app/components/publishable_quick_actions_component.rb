@@ -7,6 +7,17 @@ class PublishableQuickActionsComponent < ViewComponent::Base
   end
 
   def call
-    render(FlatPack::Button::Component.new(text: "Publish", id: @dom_id, style: :primary, size: :sm))
+    render(publish_button)
+  end
+
+  # Same contract as FlatPack::Button::Component#menu_row. The id stays on the wide button.
+  def menu_row
+    publish_button.menu_row
+  end
+
+  private
+
+  def publish_button
+    @publish_button ||= FlatPack::Button::Component.new(text: "Publish", id: @dom_id, style: :primary, size: :sm)
   end
 end

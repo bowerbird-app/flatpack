@@ -583,6 +583,7 @@ module FlatPack
 
       def labeled_trigger_class
         TailwindMerge::Merger.new.merge([
+          "fp-button-dropdown__trigger",
           "inline-flex items-center justify-center gap-2",
           "rounded-[var(--button-border-radius)]",
           "font-medium",
