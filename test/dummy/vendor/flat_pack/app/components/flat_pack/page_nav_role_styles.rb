@@ -13,10 +13,10 @@ module FlatPack
       destructive: {style: :danger, size: :sm}.freeze
     }.freeze
 
-    # Subtle primary, ghost secondary, danger. Small buttons.
+    # Subtle primary, bordered subtle secondary, danger. Small buttons.
     QUIET = {
       primary: {style: :secondary, size: :sm}.freeze,
-      secondary: {style: :ghost, size: :sm}.freeze,
+      secondary: {style: :secondary, size: :sm}.freeze,
       destructive: {style: :danger, size: :sm}.freeze
     }.freeze
 

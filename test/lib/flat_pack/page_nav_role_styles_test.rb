@@ -10,7 +10,9 @@ module FlatPack
       assert_equal :danger, PageNavRoleStyles.entry(PageNavRoleStyles::SOLID, :destructive)[:style]
 
       assert_equal :secondary, PageNavRoleStyles.entry(PageNavRoleStyles::QUIET, :primary)[:style]
-      assert_equal :ghost, PageNavRoleStyles.entry(PageNavRoleStyles::QUIET, :secondary)[:style]
+      assert_equal :secondary, PageNavRoleStyles.entry(PageNavRoleStyles::QUIET, :secondary)[:style]
+      assert_equal :sm, PageNavRoleStyles.entry(PageNavRoleStyles::QUIET, :secondary)[:size]
+      assert_equal :danger, PageNavRoleStyles.entry(PageNavRoleStyles::QUIET, :destructive)[:style]
       assert_equal :md, PageNavRoleStyles.entry(PageNavRoleStyles::PIN, :primary)[:size]
     end
 

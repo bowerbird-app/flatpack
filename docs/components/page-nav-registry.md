@@ -57,7 +57,7 @@ Roles are meaning. Button styles belong to the caller. `FlatPack::PageNavRoleSty
 | map | `:primary` | `:secondary` | `:destructive` | size |
 | --- | --- | --- | --- | --- |
 | `SOLID` | `:primary` (solid) | `:secondary` (subtle) | `:danger` | `:sm` |
-| `QUIET` | `:secondary` (subtle) | `:ghost` | `:danger` | `:sm` |
+| `QUIET` | `:secondary` (subtle) | `:secondary` (bordered subtle) | `:danger` | `:sm` |
 | `PIN` | `:primary` (solid) |  |  | `:md` |
 
 A caller can pass any map of role → `{style:, size:}`. An unknown role, style, size, or key raises `ArgumentError`. An entry needs both `style` and `size`. `button_for` raises for a component descriptor. Render `item.component` yourself.

@@ -9,7 +9,7 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "h1", text: "Press kit"
     assert_select "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "New press kit"
-    assert_select "[data-fp-page-nav=default] a[data-fp-style=ghost]", text: "Share"
+    assert_select "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "Share"
     assert_select "[data-fp-page-nav=default] a[data-fp-style=danger]", text: "Delete"
     assert_select "[data-fp-page-nav=default] .fp-button-group-menu a", count: 3
     assert_select "[data-fp-page-nav=default] .fp-button-group-menu__trigger[aria-label=Menu]"

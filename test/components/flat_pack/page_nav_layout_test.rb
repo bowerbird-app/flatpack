@@ -11,7 +11,7 @@ module FlatPack
       end
 
       assert_selector "[data-fp-page-nav=default].fp-page-nav--desktop.fp-page-nav--bar a[data-fp-style=secondary]", text: "New press kit"
-      assert_selector "[data-fp-page-nav=default] a[data-fp-style=ghost]", text: "Share"
+      assert_selector "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "Share"
       assert_selector "[data-fp-page-nav=default] a[data-fp-style=danger]", text: "Delete"
       assert_selector "[data-fp-page-nav=default] .fp-button-group-menu a", count: 3
       assert_selector "[data-fp-page-nav=default] .fp-button-group-menu__trigger[aria-label=Menu]"
