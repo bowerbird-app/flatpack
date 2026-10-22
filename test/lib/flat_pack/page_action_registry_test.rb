@@ -44,6 +44,24 @@ module FlatPack
       assert_equal "role must be :primary, :secondary, or :destructive", error.message
     end
 
+    test "a component action keeps the component and has no role" do
+      component = Class.new(ViewComponent::Base).new
+      action = PageAction.new("Publish", "/publish", role: :primary, icon: :plus, component: component)
+
+      assert_same component, action.component
+      assert_predicate action, :component?
+      assert_nil action.role
+      assert_nil action.label
+      assert_nil action.href
+      assert_nil action.icon
+    end
+
+    test "a component action rejects something that is not a component" do
+      error = assert_raises(ArgumentError) { PageAction.new(component: "Publish") }
+
+      assert_equal "page action component must be a component", error.message
+    end
+
     test "keeps data and aria and defaults the role to secondary" do
       action = PageAction.new(
         "Share",

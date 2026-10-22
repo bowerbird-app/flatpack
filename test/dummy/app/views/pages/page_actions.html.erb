@@ -2,6 +2,7 @@
   page_action "New press kit", "/press-kits/new", role: :primary, icon: :plus
   page_action "Share", "/press-kits/share", role: :secondary, icon: :share
   page_action "Delete", "/press-kits/delete", role: :destructive, icon: :trash
+  page_action component: PressKitQuickActions::Component.new
 %>
 
 <% if params[:shell] == "page" %>

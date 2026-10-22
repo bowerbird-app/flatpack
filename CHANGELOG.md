@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.295] - 2026-10-22
+
+### Added
+- `page_action component:` registers a pre-built component as a page action. Label, path, role, icon, `data:`, and `aria:` are unused. The component has no role.
+- The layout renders that component once, as-is, beside the link button group. Desktop, the phone menu, and the floating slot all go through `page_action_button`. The menu and the floating slot skip component actions.
+- Below the `md` breakpoint the action bar stays visible for that one node, and the link buttons in the same bar stay hidden. The phone menu does not get a second copy. A Turbo Stream that targets one wrapper id, such as `publishable_quick_actions_<id>`, keeps a single match.
+
+### Upgrade notes
+- Pass `page_action component: some_component` for a control that is not a link button. It renders once in the action bar, on a wide window and on a phone. It does not float, and it is not split into menu rows.
+- Link actions are unchanged. They still render in the desktop group and in the phone menu.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.295`.
+
 ## [0.1.294] - 2026-10-21
 
 ### Added

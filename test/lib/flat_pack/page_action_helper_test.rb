@@ -2,6 +2,12 @@
 
 require "test_helper"
 
+class PageActionProbeComponent < ViewComponent::Base
+  def call
+    helpers.tag.div("Publish", id: "publishable_quick_actions_7")
+  end
+end
+
 class PageActionHelperProbesController < ApplicationController
   def nominate
     helpers.page_action "New press kit", "/press-kits/new", role: :primary, icon: :plus
@@ -34,6 +40,12 @@ class PageActionHelperProbesController < ApplicationController
   def rejected_style
     helpers.page_action "New", "/new", style: :primary
     head :ok
+  end
+
+  def render_component
+    helpers.page_action "Share", "/press-kits/share", role: :secondary
+    helpers.page_action component: PageActionProbeComponent.new
+    render inline: "<%= page_actions(:top_nav) %><%= page_actions_menu_section %>", layout: false
   end
 
   private
@@ -76,6 +88,19 @@ class PageActionHelperTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "a component action renders once and stays out of the menu" do
+    with_page_action_routes do
+      get "/demo/page_action_helper/render_component"
+
+      assert_response :success
+      assert_select "#publishable_quick_actions_7", count: 1, text: "Publish"
+      assert_select ".fp-page-actions-component #publishable_quick_actions_7", count: 1
+      assert_select "[data-fp-page-actions=menu] #publishable_quick_actions_7", count: 0
+      assert_select "a", text: "Share", count: 2
+      assert_select "[data-fp-page-actions=menu] a[data-fp-style=ghost]", text: "Share"
+    end
+  end
+
   test "a view cannot pass a class or a button style" do
     with_page_action_routes do
       assert_raises(ArgumentError) { get "/demo/page_action_helper/rejected_class" }
@@ -94,6 +119,7 @@ class PageActionHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_action_helper/render_override", to: "page_action_helper_probes#render_override"
         get "/demo/page_action_helper/rejected_class", to: "page_action_helper_probes#rejected_class"
         get "/demo/page_action_helper/rejected_style", to: "page_action_helper_probes#rejected_style"
+        get "/demo/page_action_helper/render_component", to: "page_action_helper_probes#render_component"
       end
 
       yield

@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 module FlatPack
-  # One nominated page action. The view chooses the label, the path, the icon,
-  # and the role. It does not choose placement or a button style.
+  # One nominated page action. A link carries the label, the path, the icon,
+  # and the role. A component action carries a pre-built component and no role.
+  # The view does not choose placement or a button style.
   class PageAction
     ROLES = %i[primary secondary destructive].freeze
 
-    attr_reader :label, :href, :role, :icon, :data, :aria
+    attr_reader :label, :href, :role, :icon, :data, :aria, :component
 
-    def initialize(label, href, role: :secondary, icon: nil, data: nil, aria: nil)
+    def initialize(label = nil, href = nil, role: :secondary, icon: nil, data: nil, aria: nil, component: nil)
+      if component
+        assign_component!(component)
+        return
+      end
+
       @label = label.to_s
       @role = role.to_sym
       @icon = icon
@@ -20,7 +26,20 @@ module FlatPack
       validate_role!
     end
 
+    def component?
+      !@component.nil?
+    end
+
     private
+
+    # Leave role unset so the floating primary slot cannot select this action.
+    def assign_component!(component)
+      unless component.respond_to?(:render_in)
+        raise ArgumentError, "page action component must be a component"
+      end
+
+      @component = component
+    end
 
     def safe_href!(href)
       raise ArgumentError, "page action needs a path" if href.blank?
