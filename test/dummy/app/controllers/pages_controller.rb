@@ -1966,6 +1966,11 @@ class PagesController < ApplicationController
     end
   end
 
+  def table_demo_category_for(row)
+    keys = table_category_values.keys - ["all"]
+    keys[(row.position.to_i - 1) % keys.length]
+  end
+
   def table_demo_user_from_row(row)
     OpenStruct.new(
       id: row.id,
@@ -1973,7 +1978,7 @@ class PagesController < ApplicationController
       email: "row#{row.id}@example.com",
       status: row.status,
       created_at: row.updated_at,
-      category: "technology",
+      category: table_demo_category_for(row),
       views_count: row.position,
       published_at: row.updated_at
     )

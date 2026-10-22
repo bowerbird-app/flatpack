@@ -108,7 +108,11 @@ jobs:
         working-directory: test/dummy
         run: |
           bin/refresh_flat_pack_vendor
-          git diff --exit-code -- vendor/flat_pack
+          status="$(git status --porcelain -- vendor/flat_pack)"
+          if [ -n "$status" ]; then
+            printf '%s\n' "$status"
+            exit 1
+          fi
 
       - name: Install dummy app dependencies
         working-directory: test/dummy

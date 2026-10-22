@@ -66,6 +66,24 @@ class DemoDatabasePagesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Continue with email"
   end
 
+  test "modal filter returns rows for a category other than technology" do
+    expectations = {
+      "business" => "Design QA",
+      "marketing" => "API integration",
+      "design" => "Release checklist"
+    }
+
+    expectations.each do |category, name|
+      get "/demo/modal_filter", params: {modal_category: category}
+
+      assert_response :success
+      frame = response.body[/<turbo-frame[^>]*id="modal-filter-table-frame"[\s\S]*?<\/turbo-frame>/]
+      assert_includes frame, name
+      assert_includes frame, category.titleize
+      assert_not_includes frame, "Backlog grooming"
+    end
+  end
+
   test "table demos fall back when the demo tables are missing" do
     original_rows = DemoTableRow.method(:table_exists?)
     original_data = DummyDatum.method(:table_exists?)
