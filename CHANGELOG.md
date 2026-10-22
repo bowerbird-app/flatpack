@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - The Top Nav phone menu stays inside the viewport when a shell ancestor is the fixed containing block. Page-action rows in that menu are not clipped off the left edge.
+- A horizontal cluster in that menu becomes one full-width row per control, including a search field and a dropdown. The dropdown still discloses in place. A control with `data-flat-pack-top-nav-always-display="true"` stays in the bar. The demo notification bell uses it and stays beside the hamburger.
 
 ### Upgrade notes
 - Call `page_action` in the view. Sidebar Layout and Page Layout place the buttons. A custom layout calls `page_actions(:header)` or `page_actions(:top_nav)` and puts the group where it wants. Pass `styles: { primary: :ghost }` to replace a role's button style.

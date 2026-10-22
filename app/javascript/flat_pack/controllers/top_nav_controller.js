@@ -156,11 +156,16 @@ export default class extends Controller {
     this.sectionTargets.forEach((section) => {
       if (section.dataset.flatPackTopNavCollapsible !== "true") return
 
+      // A bell can sit inside a row with other controls. Lift it out so the
+      // row folds and the bell stays in the bar.
+      this.hoistAlwaysDisplay(section)
+
       Array.from(section.childNodes).forEach((node) => {
         if (this.keepsInlinePlacement(node) || this.isSidebarToggle(node)) return
 
         const placeholder = document.createComment("flat-pack-top-nav-placeholder")
-        section.insertBefore(placeholder, node)
+        const parent = node.parentNode || section
+        parent.insertBefore(placeholder, node)
         this.panelTarget.appendChild(node)
         this.movedNodes.push({ node, placeholder })
       })
@@ -282,6 +287,23 @@ export default class extends Controller {
 
     this.sectionTargets.forEach((section) => section.classList.remove("hidden"))
     this.updateMenuVisibility()
+  }
+
+  hoistAlwaysDisplay(section) {
+    if (typeof section.querySelectorAll !== "function") return
+
+    const pinned = Array.from(section.querySelectorAll("[data-flat-pack-top-nav-always-display='true']"))
+    pinned.forEach((node) => {
+      if (!node.parentNode || node.parentNode === section) return
+
+      const placeholder = document.createComment("flat-pack-top-nav-placeholder")
+      node.parentNode.insertBefore(placeholder, node)
+      // Sit beside the hamburger. The menu cluster is the right-hand group in the bar.
+      const home = this.hasMenuTarget ? this.menuTarget : section
+      if (home.firstChild) home.insertBefore(node, home.firstChild)
+      else home.appendChild(node)
+      this.movedNodes.push({ node, placeholder })
+    })
   }
 
   keepsInlinePlacement(node) {
