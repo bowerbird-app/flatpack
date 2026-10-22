@@ -105,7 +105,7 @@ A stack of rows uses `FlatPack::Menu::Collapse::Component` the same way. Read th
 
 The registry is `FlatPack::PageNavRegistry`, stored at `request.env["flat_pack.page_nav_registry"]`. `page_nav_registry` returns it. Another request does not see it. Do not store the registry on the class.
 
-A component is one DOM node when the caller renders it once. Components such as a publish control replace themselves with a Turbo Stream that targets a fixed wrapper id (`publishable_quick_actions_<id>`). Rendering that descriptor twice puts two nodes with that id on the page. The shells pass the component through once, as a child of the button group, in registration order. With `collapse: :menu` it is in the joined row from 768px up and in that group's menu below that. `mobile_actions: :floating` does not pin it.
+The shells pass a component through once, as a child of the button group, in registration order. With `collapse: :menu`, `call` is the joined control from 768px up and `menu_row` is the phone row below that. Put the Turbo id on `call` (`publishable_quick_actions_<id>`). `menu_row` must not repeat it, or a stream that replaces that id matches two nodes. `mobile_actions: :floating` does not pin a component.
 
 ## Accessibility
 The registry has no elements. The caller gives each link its label. `aria:` is on the descriptor for the caller to forward. On a phone the shell's button group trigger is named "Menu". The panel is `role="group"`. The pinned primary is one link, fixed to the bottom-right, and is hidden from `md` up. A component keeps the accessible name the gem gave it.

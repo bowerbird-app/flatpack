@@ -11,14 +11,16 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "New press kit"
     assert_select "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "Share"
     assert_select "[data-fp-page-nav=default] a[data-fp-style=danger]", text: "Delete"
-    assert_select "[data-fp-page-nav=default] .fp-button-group-menu a", count: 3
+    assert_select "[data-fp-page-nav=default] .fp-button-group-menu__row a", count: 3
+    assert_select "[data-fp-page-nav=default] .fp-button-group-menu__panel a.fp-menu-row", count: 3
     assert_select "[data-fp-page-nav=default] .fp-button-group-menu__trigger[aria-label=Menu]"
     assert_select "header.fp-top-nav [data-fp-page-nav]", count: 0
     assert_select ".fp-page-nav-menu", count: 0
     assert_select ".fp-page-nav-nav", count: 0
     assert_select "button[aria-label=More]", count: 0
     assert_select "#publishable_quick_actions_demo", text: "Publish", count: 1
-    assert_select ".fp-button-group-menu__panel #publishable_quick_actions_demo", count: 1
+    assert_select ".fp-button-group-menu__row #publishable_quick_actions_demo", count: 1
+    assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
     assert_select ".fp-page-nav-components", count: 0
     assert_equal ["New press kit", "Share", "Delete", "Publish"], page_nav_labels
   end
@@ -31,12 +33,14 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select "[data-fp-page-nav=default] a[data-fp-style=primary]", text: "New press kit"
     assert_select "[data-fp-page-nav=default] a[data-fp-style=secondary]", text: "Share"
     assert_select "[data-fp-page-nav=default] a[data-fp-style=danger]", text: "Delete"
-    assert_select "[data-fp-page-nav=default] .fp-button-group-menu a", count: 3
+    assert_select "[data-fp-page-nav=default] .fp-button-group-menu__row a", count: 3
+    assert_select "[data-fp-page-nav=default] .fp-button-group-menu__panel a.fp-menu-row", count: 3
     assert_select "header.fp-top-nav [data-fp-page-nav]", count: 0
     assert_select ".fp-page-nav-nav", count: 0
     assert_select ".fp-page-nav--floating", count: 0
     assert_select ".fp-page-nav-menu", count: 0
-    assert_select ".fp-button-group-menu__panel #publishable_quick_actions_demo", text: "Publish", count: 1
+    assert_select ".fp-button-group-menu__row #publishable_quick_actions_demo", text: "Publish", count: 1
+    assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
     assert_select ".fp-page-nav-components", count: 0
     assert_equal ["New press kit", "Share", "Delete", "Publish"], page_nav_labels
     refute_includes response.body, "flat-pack--sidebar-layout"

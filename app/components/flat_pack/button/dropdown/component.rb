@@ -69,16 +69,13 @@ module FlatPack
           set_polymorphic_slot(:menu, :divider, **kwargs, &block)
         end
 
-        def trigger_label
-          @text
-        end
-
-        def trigger_icon
-          @icon
-        end
-
-        def menu_rows
-          menu.map(&:menu_row)
+        # Phone row for a collapsing button group. The wide control stays a dropdown.
+        def menu_row
+          render(FlatPack::Menu::Collapse::Component.new(title: @text, icon: @icon)) do |section|
+            section.items do
+              safe_join(menu.map { |item| menu_collapse_item(item.menu_row) })
+            end
+          end
         end
 
         private
@@ -91,7 +88,7 @@ module FlatPack
         end
 
         def wrapper_classes
-          classes("relative inline-block")
+          classes("fp-button-dropdown", "relative inline-block")
         end
 
         def dropdown_data_attributes
@@ -118,6 +115,7 @@ module FlatPack
 
         def button_classes
           base_classes = [
+            "fp-button-dropdown__trigger",
             "inline-flex items-center justify-center gap-2",
             trigger_radius_class,
             "font-medium",
@@ -275,6 +273,29 @@ module FlatPack
 
         def icon_only_accessible_name
           explicit_aria_label.presence || @text.presence
+        end
+
+        def menu_collapse_item(row)
+          return content_tag(:div, "", class: "fp-menu-collapse__divider", role: "separator") if row[:divider]
+
+          body = menu_collapse_body(row)
+          attributes = {class: "fp-menu-collapse__item"}
+          attributes[:data] = {fp_style: "danger"} if row[:destructive]
+          return link_to(body, row[:href], **attributes) if row[:href].present? && !row[:disabled]
+
+          attributes[:type] = "button"
+          attributes[:disabled] = true if row[:disabled]
+          button_tag(body, **attributes)
+        end
+
+        def menu_collapse_body(row)
+          label = content_tag(:span, row[:label].to_s)
+          return label if row[:icon].blank?
+
+          safe_join([
+            render(FlatPack::Shared::IconComponent.new(name: row[:icon], size: :sm)),
+            label
+          ])
         end
 
         def extract_nested_attributes(attrs, key)

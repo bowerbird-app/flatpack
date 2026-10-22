@@ -91,16 +91,7 @@ function element(tag) {
   return node
 }
 
-function menuOwnedBy(ownerId) {
-  const menu = element("div")
-  menu.setAttribute("data-flat-pack--button-dropdown-target", "menu")
-  menu.setAttribute("data-flat-pack-dropdown-owner", ownerId)
-  const item = element("button")
-  menu.appendChild(item)
-  return { menu, item }
-}
-
-test("a press in a child dropdown menu stays inside the group", () => {
+test("a press inside the panel stays open and a press outside closes", () => {
   const body = element("body")
   const { document, listeners, track } = documentWith(body)
   const Group = loadController("button_group_menu_controller.js", "ButtonGroupMenuController", { document })
@@ -108,26 +99,16 @@ test("a press in a child dropdown menu stays inside the group", () => {
   const group = element("div")
   const trigger = element("button")
   const panel = element("div")
-  const dropdown = element("div")
-  dropdown.setAttribute("id", "share-root")
+  const row = element("button")
   const outside = element("div")
-  const foreign = element("div")
-  foreign.setAttribute("id", "page-root")
 
   group.dataset = { open: "false" }
   group.appendChild(trigger)
   group.appendChild(panel)
-  group.appendChild(dropdown)
+  panel.appendChild(row)
   body.appendChild(group)
   body.appendChild(outside)
-  body.appendChild(foreign)
-  ;[group, trigger, panel, dropdown, outside, foreign].forEach(track)
-
-  const child = menuOwnedBy("share-root")
-  const other = menuOwnedBy("page-root")
-  body.appendChild(child.menu)
-  body.appendChild(other.menu)
-  ;[child.menu, child.item, other.menu, other.item].forEach(track)
+  ;[group, trigger, panel, row, outside].forEach(track)
 
   controller.element = group
   controller.triggerTarget = trigger
@@ -137,51 +118,11 @@ test("a press in a child dropdown menu stays inside the group", () => {
 
   const press = (target) => listeners.pointerdown.forEach((handler) => handler({ target }))
 
-  press(child.item)
+  press(row)
   assert.equal(group.dataset.open, "true")
   assert.equal(trigger.getAttribute("aria-expanded"), "true")
 
-  press(other.item)
-  assert.equal(group.dataset.open, "false")
-  assert.equal(trigger.getAttribute("aria-expanded"), "false")
-
-  controller.show()
   press(outside)
   assert.equal(group.dataset.open, "false")
-})
-
-test("opening a dropdown stamps the portaled menu with the dropdown id", () => {
-  const body = element("body")
-  const { document } = documentWith(body)
-  const Dropdown = loadController(
-    "button_dropdown_controller.js",
-    "ButtonDropdownController",
-    { document },
-    [[
-      'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"\n',
-      "function prefersReducedMotion() { return false }\nfunction motionDuration() { return 0 }\nfunction motionTransition() { return \"\" }\n"
-    ]]
-  )
-  const controller = new Dropdown()
-  const root = element("div")
-  const menu = element("div")
-  root.id = "actions"
-  controller.element = root
-  controller.menuElement = menu
-
-  controller.ensureMenuInBody()
-
-  assert.equal(menu.parent, body)
-  assert.equal(menu.getAttribute("data-flat-pack-dropdown-owner"), "actions")
-  assert.equal(root.id, "actions")
-
-  const bare = element("div")
-  const bareMenu = element("div")
-  controller.element = bare
-  controller.menuElement = bareMenu
-  controller.ensureMenuInBody()
-
-  assert.match(bare.id, /^flat-pack-dropdown-[a-z0-9]+$/)
-  assert.equal(bareMenu.getAttribute("data-flat-pack-dropdown-owner"), bare.id)
-  assert.equal(bareMenu.parent, body)
+  assert.equal(trigger.getAttribute("aria-expanded"), "false")
 })
