@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.301] - 2026-10-22
+
+### Fixed
+- The open phone panel of a collapsing button group reads as a menu. Rows are flat and full width. A `data-fp-style="danger"` row is red text. A dropdown trigger in that panel uses the same row. The joined desktop row is unchanged.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.301`.
+
 ## [0.1.300] - 2026-10-22
 
 ### Fixed

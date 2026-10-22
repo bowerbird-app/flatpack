@@ -150,6 +150,36 @@ module FlatPack
         assert_no_selector ".fp-button-group-menu"
       end
 
+      def test_phone_menu_rows_are_scoped_to_the_open_panel
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        menu = css[css.index("Phone menu rows")...css.index("Plain button group")]
+        plain = css[css.index("Plain button group")..]
+        scope = '.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel'
+
+        assert_includes menu, "#{scope} :is(button, a)"
+        assert_includes menu, "#{scope} [data-flat-pack--button-dropdown-target=\"trigger\"]"
+        assert_includes menu, "#{scope} :is(button, a)[data-fp-style=\"danger\"]"
+        assert_includes menu, "prefers-reduced-motion"
+        assert_includes menu, "transition: none"
+
+        menu.each_line do |line|
+          next unless line.include?(":is(button, a)") || line.include?("button-dropdown-target") || line.include?('data-fp-style="danger"')
+
+          assert_includes line, scope, line
+        end
+
+        refute_includes plain, 'data-fp-style="danger"'
+        refute_includes plain, "Phone menu rows"
+
+        render_inline(Component.new(collapse: :menu)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger))
+        end
+
+        refute_includes rendered_content, 'data-fp-style="danger"]'
+        refute_includes rendered_content, "Phone menu rows"
+        assert_selector "[data-fp-style='danger']", text: "Archive"
+      end
+
       def test_portaled_child_dropdown_menu_is_not_an_outside_click
         test_file = FlatPack::Engine.root.join("test/javascript/button_group_menu_controller_test.js")
         stdout, status = Open3.capture2e("node", "--test", test_file.to_s)

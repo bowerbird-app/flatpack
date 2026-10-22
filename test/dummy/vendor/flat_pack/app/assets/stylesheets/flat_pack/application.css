@@ -5257,6 +5257,76 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+/* Phone menu rows. Only the open collapsed panel. The wide row is the style
+   tag on the component, and it does not use these selectors. */
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel {
+  gap: 0;
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel > * {
+  width: 100%;
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a),
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"] {
+  justify-content: flex-start;
+  width: 100%;
+  margin: 0;
+  padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x);
+  gap: var(--dropdown-item-gap);
+  border-width: 0;
+  border-radius: var(--dropdown-item-radius);
+  background-color: transparent;
+  box-shadow: none;
+  color: var(--surface-content-color);
+  text-align: start;
+  transition-property: background-color, color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-standard);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a):hover,
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"]:hover {
+  background-color: var(--surface-muted-background-color);
+  color: var(--surface-content-color);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a):active,
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"]:active {
+  background-color: color-mix(in oklab, var(--surface-content-color) 8%, transparent);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a):focus-visible,
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"]:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--button-focus-ring-color);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a)[data-fp-style="danger"],
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"][data-fp-style="danger"] {
+  background-color: transparent;
+  color: var(--color-danger-background-color);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a)[data-fp-style="danger"]:hover,
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"][data-fp-style="danger"]:hover,
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a)[data-fp-style="danger"]:active,
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"][data-fp-style="danger"]:active {
+  background-color: color-mix(in oklab, var(--color-danger-background-color) 10%, transparent);
+  color: var(--color-danger-background-color);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-fp-style="danger"] .fp-button-icon {
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel :is(button, a),
+  .fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel [data-flat-pack--button-dropdown-target="trigger"] {
+    transition: none;
+  }
+}
+
 /* Plain button group (collapse: false). Same trigger reach-through as the
    wide collapse style tag. Scoped to .fp-button-group so a dropdown elsewhere
    keeps its own radius. */
