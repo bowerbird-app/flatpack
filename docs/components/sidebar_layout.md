@@ -134,9 +134,9 @@ Check these when the shell is on a phone, or in a narrow main column.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
 
 ## Page nav
-A view registers nav with `register_page_nav`. This shell reads the request registry. From the `md` breakpoint up, the bar under the top nav is `render_page_nav(:top_nav)` (subtle primary). Below that, the same semantic buttons are rows in the Top Nav hamburger, using that same `:top_nav` map. They join the menu the rest of the bar folds into. A registered component stays in the bar at both breakpoints and is not copied into the menu. No registered nav means no extra markup.
+A view registers nav with `register_page_nav`. This shell reads the `:default` bucket with `page_nav_items` and draws it in the bar under the top nav. Links use `FlatPack::PageNavRoleStyles::QUIET` (subtle primary, ghost secondary, danger) inside `FlatPack::ButtonGroup::Component` with `collapse: :menu`. From 768px up that is the joined row. Below that, the same nodes are the menu behind one trigger. A registered component renders once, beside the group, at both widths. A named bucket is not drawn here. No registered nav means no extra markup. The host Top Nav is left as the view passed it.
 
-`mobile_actions: :floating` pins the primary semantic button to the bottom-right on a phone instead. The default is `:menu`. The dummy leaves the floating button off. See [Page nav registry](page-nav-registry.md).
+`mobile_actions: :floating` draws that row as a plain group and pins the primary link to the bottom-right on a phone, using `FlatPack::PageNavRoleStyles::PIN`. The default is `:menu`. The dummy leaves the floating button off. See [Page nav registry](page-nav-registry.md).
 
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.

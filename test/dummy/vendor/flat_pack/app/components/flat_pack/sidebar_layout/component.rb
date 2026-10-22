@@ -366,23 +366,21 @@ module FlatPack
       end
 
       def render_main_column
+        # The view may register while the main slot renders. Read the registry after that.
+        body = main? ? main.to_s : content
         content_tag(:div, class: main_column_classes, data: {"flat-pack-layout-main": "true"}) do
           safe_join([
             render_top_nav,
-            layout_page_nav(:top_nav, place: :desktop, bar: true),
-            content_tag(:div, **main_pane_attributes) do
-              main? ? main.to_s : content
-            end
+            layout_page_nav(styles: FlatPack::PageNavRoleStyles::QUIET, bar: true),
+            content_tag(:div, body, **main_pane_attributes)
           ].compact)
         end
       end
 
       def render_top_nav
-        body = top_nav? ? top_nav.to_s : nil
-        body = with_menu_page_nav(body)
-        return if body.blank?
+        return unless top_nav?
 
-        layout_top_nav(body, floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(top_nav.to_s, floating: @floating_top_nav, content_scroll: @content_scroll)
       end
 
       def render_page_surface

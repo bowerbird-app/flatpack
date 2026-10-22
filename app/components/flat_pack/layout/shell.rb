@@ -25,23 +25,25 @@ module FlatPack
         render(backdrop)
       end
 
-      # Desktop group for page nav the view registered.
-      # `context` picks the role map. `place` picks the shell position.
-      # `styles:` is merged over the host map for this render.
-      def layout_page_nav(context, place:, bar: false, styles: nil)
-        return unless helpers.respond_to?(:render_page_nav)
+      # The default page-nav bucket, drawn by this shell.
+      # `styles` is a role map from `PageNavRoleStyles`. `bar` insets the row.
+      # `:menu` folds the links in a button group. `:floating` keeps a row and
+      # pins the primary link. A component renders once, beside the links.
+      def layout_page_nav(styles:, bar: false)
+        return unless helpers.respond_to?(:page_nav_items)
 
-        markup = helpers.render_page_nav(context, styles: styles)
-        return if markup.blank?
+        items = helpers.page_nav_items
+        return if items.empty?
 
-        content_tag(:div, markup, class: page_nav_classes(place, bar), data: {fp_page_nav: context.to_s})
+        content_tag(:div, page_nav_body(items, styles), class: page_nav_classes(bar), data: page_nav_data)
       end
 
-      def page_nav_classes(place, bar)
+      def page_nav_classes(bar)
         [
           "fp-page-nav",
-          "fp-page-nav--#{place}",
-          ("fp-page-nav--bar" if bar)
+          "fp-page-nav--desktop",
+          ("fp-page-nav--bar" if bar),
+          ("fp-page-nav--pin-row" if pin_page_nav?)
         ].compact.join(" ")
       end
 
@@ -56,56 +58,58 @@ module FlatPack
         @mobile_actions = name
       end
 
-      # Phone rows join the top nav hamburger. A shell with no top nav renders
-      # one, and that bar is hidden from the md breakpoint up.
-      def with_menu_page_nav(html)
-        return html unless menu_page_nav?
+      def render_floating_page_nav
+        return unless pin_page_nav?
+        return unless helpers.respond_to?(:page_nav_items)
 
-        section = helpers.render_page_nav(:top_nav, place: :menu)
-        return html if section.blank?
+        item = helpers.page_nav_items.find { |entry| entry.role == :primary && !entry.component? }
+        return if item.nil?
 
-        markup = html.to_s
-        if markup.include?('data-flat-pack--top-nav-target="menu"')
-          insert_page_nav_section(markup, section)
-        elsif markup.present?
-          safe_join([markup.html_safe, shell_page_nav_nav(section)])
-        else
-          shell_page_nav_nav(section)
-        end
+        button = render(PageNavRoleStyles.button_for(item, styles: PageNavRoleStyles::PIN))
+        content_tag(:div, button, class: "fp-page-nav fp-page-nav--floating", data: {fp_page_nav: "floating"})
       end
 
-      def render_floating_page_nav
-        return unless @mobile_actions == :floating
-        return unless helpers.respond_to?(:render_page_nav)
+      def page_nav_body(items, styles)
+        safe_join([
+          page_nav_links(items.reject(&:component?), styles),
+          page_nav_components(items.select(&:component?))
+        ].compact)
+      end
 
-        button = helpers.render_page_nav(:header, place: :floating)
-        return if button.blank?
+      def page_nav_links(links, styles)
+        return if links.empty?
 
-        content_tag(
-          :div,
-          button,
-          class: "fp-page-nav fp-page-nav--floating",
-          data: {fp_page_nav: "floating"}
-        )
+        group = render(FlatPack::ButtonGroup::Component.new(**page_nav_group_arguments)) do |row|
+          links.each { |item| row.button(PageNavRoleStyles.button_for(item, styles: styles)) }
+        end
+        return group unless pin_page_nav?
+
+        content_tag(:div, group, class: "fp-page-nav-buttons")
+      end
+
+      def page_nav_group_arguments
+        return {collapse: :menu} if menu_page_nav?
+
+        {}
+      end
+
+      def page_nav_components(components)
+        return if components.empty?
+
+        rendered = safe_join(components.map { |item| render(item.component) })
+        content_tag(:div, rendered, class: "fp-page-nav-components")
+      end
+
+      def page_nav_data
+        {fp_page_nav: PageNavRegistry::DEFAULT_BUCKET.to_s}
       end
 
       def menu_page_nav?
-        return false unless @mobile_actions == :menu
-        return false unless helpers.respond_to?(:page_nav_registry)
-
-        helpers.page_nav_registry.items.any? { |item| !item.component? }
+        @mobile_actions == :menu
       end
 
-      def insert_page_nav_section(html, section)
-        updated = html.sub(/(<[^>]*data-flat-pack--top-nav-target="menu")/) do
-          "#{section}#{Regexp.last_match(1)}"
-        end
-        updated.html_safe
-      end
-
-      def shell_page_nav_nav(section)
-        nav = render(FlatPack::TopNav::Component.new).to_s
-        content_tag(:div, insert_page_nav_section(nav, section), class: "fp-page-nav-nav")
+      def pin_page_nav?
+        @mobile_actions == :floating
       end
     end
   end
