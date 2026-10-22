@@ -85,7 +85,7 @@ modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.m
 notification | FlatPack::Notification::Component | docs/components/notification.md
 number | FlatPack::Number::Component | docs/components/number.md
 overlay | FlatPack::Overlay::Component | docs/components/overlay.md
-page_actions | FlatPack::PageActionRegistry | docs/components/page-actions.md
+page_nav_registry | FlatPack::PageNavRegistry | docs/components/page-nav-registry.md
 page_header | FlatPack::PageHeader::Component | docs/components/page-header.md
 page_layout | FlatPack::PageLayout::Component | docs/components/page_layout.md
 page_nav | FlatPack::PageNav::Component | docs/components/page-nav.md

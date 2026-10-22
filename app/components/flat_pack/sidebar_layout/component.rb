@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_page_actions, :page_actions_classes
+      private :layout_top_nav, :layout_background, :layout_page_nav, :page_nav_classes
 
       renders_one :sidebar_slot
       renders_one :top_nav_slot
@@ -144,7 +144,7 @@ module FlatPack
             render_page_surface,
             render_columns,
             render_backdrop,
-            render_floating_page_action
+            render_floating_page_nav
           ].compact)
         end
       end
@@ -369,7 +369,7 @@ module FlatPack
         content_tag(:div, class: main_column_classes, data: {"flat-pack-layout-main": "true"}) do
           safe_join([
             render_top_nav,
-            layout_page_actions(:top_nav, place: :desktop, bar: true),
+            layout_page_nav(:top_nav, place: :desktop, bar: true),
             content_tag(:div, **main_pane_attributes) do
               main? ? main.to_s : content
             end
@@ -379,7 +379,7 @@ module FlatPack
 
       def render_top_nav
         body = top_nav? ? top_nav.to_s : nil
-        body = with_menu_page_actions(body)
+        body = with_menu_page_nav(body)
         return if body.blank?
 
         layout_top_nav(body, floating: @floating_top_nav, content_scroll: @content_scroll)

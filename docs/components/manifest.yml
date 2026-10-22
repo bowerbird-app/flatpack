@@ -566,14 +566,14 @@ components:
       - FlatPack::Overlay::Item
     status: documented
 
-  - key: page_actions
-    title: Page actions
-    doc: docs/components/page-actions.md
-    primary_class: FlatPack::PageActionRegistry
+  - key: page_nav_registry
+    title: Page nav registry
+    doc: docs/components/page-nav-registry.md
+    primary_class: FlatPack::PageNavRegistry
     related_classes:
-      - FlatPack::PageAction
-      - FlatPack::PageActions
-      - FlatPack::PageActionHelper
+      - FlatPack::PageNavItem
+      - FlatPack::PageNavStyles
+      - FlatPack::PageNavRegistryHelper
     status: documented
 
   - key: page_header

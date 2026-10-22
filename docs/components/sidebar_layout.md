@@ -133,10 +133,10 @@ Check these when the shell is on a phone, or in a narrow main column.
 - Tailwind `@source` has to include the gem's `app/components`. That scan emits the classes on the columns.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
 
-## Page actions
-A view nominates actions with `page_action`. This shell reads the request registry. From the `md` breakpoint up, the bar under the top nav is `page_actions(:top_nav)` (subtle primary). Below that, the same actions are rows in the Top Nav hamburger, using that same `:top_nav` map. They join the menu the rest of the bar folds into. No nominated actions means no extra markup.
+## Page nav
+A view registers nav with `register_page_nav`. This shell reads the request registry. From the `md` breakpoint up, the bar under the top nav is `render_page_nav(:top_nav)` (subtle primary). Below that, the same semantic buttons are rows in the Top Nav hamburger, using that same `:top_nav` map. They join the menu the rest of the bar folds into. A registered component stays in the bar at both breakpoints and is not copied into the menu. No registered nav means no extra markup.
 
-`mobile_actions: :floating` pins the primary action to the bottom-right on a phone instead. The default is `:menu`. The dummy leaves the floating button off. See [Page actions](page-actions.md).
+`mobile_actions: :floating` pins the primary semantic button to the bottom-right on a phone instead. The default is `:menu`. The dummy leaves the floating button off. See [Page nav registry](page-nav-registry.md).
 
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.

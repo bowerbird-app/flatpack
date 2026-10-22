@@ -33,11 +33,18 @@ module FlatPack
 
   class Configuration
     attr_accessor :default_theme
-    attr_reader :default_icon_variant
+    attr_reader :default_icon_variant, :page_nav_styles
 
     def initialize
       @default_theme = :light
       @default_icon_variant = :outline
+      @page_nav_styles = nil
+    end
+
+    # Host override for the page nav role map. A gem emits roles. It does not set this.
+    # Shape: context → role → {style:, size:}. Nil clears the override.
+    def page_nav_styles=(map)
+      @page_nav_styles = FlatPack::PageNavStyles.normalize_styles!(map)
     end
 
     def default_icon_variant=(variant)

@@ -48,7 +48,7 @@ module FlatPack
           helper FlatPack::ModalHelper
           helper FlatPack::LightboxHelper
           helper FlatPack::PageNavHelper
-          helper FlatPack::PageActionHelper
+          helper FlatPack::PageNavRegistryHelper
         end
       end
 
@@ -57,7 +57,7 @@ module FlatPack
         include FlatPack::ModalHelper
         include FlatPack::LightboxHelper
         include FlatPack::PageNavHelper
-        include FlatPack::PageActionHelper
+        include FlatPack::PageNavRegistryHelper
       end
     end
 
