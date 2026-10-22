@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.303] - 2026-10-22
+
+### Changed
+- The page nav registry is data only. `register_page_nav` records a link (`label`, path, `role:`, `icon:`, `data:`, `aria:`) or a component (`component:`, `role:`). `into:` names the bucket and defaults to `:default`. `page_nav_items(from:)` returns those descriptors in registration order. The registry does not render, place, or style.
+- `FlatPack::PageNavRoleStyles` maps a role to a button style and size. `SOLID`, `QUIET`, and `PIN` are the maps the shells use. A caller can pass its own role → `{style:, size:}` map. Roles stay `:primary`, `:secondary`, and `:destructive`. `QUIET` `:secondary` is the bordered subtle button (`:secondary`, small). `QUIET` `:primary` stays subtle and `QUIET` `:destructive` stays danger. `SOLID` and `PIN` are unchanged.
+- `PageLayout` draws the default bucket with `SOLID`. `SidebarLayout` draws it with `QUIET`. Links and registered components go in one `ButtonGroup` with `collapse: :menu`, in registration order. A component is passed through as the gem built it. The wide layout is the joined row and the narrow layout is that same group as a menu. `mobile_actions: :floating` still pins the primary link. A component is not pinned.
+
+### Removed
+- `render_page_nav`, `place:` (`:group`, `:menu`, `:floating`), and the `:header` / `:top_nav` context. `FlatPack::PageNavStyles` and `FlatPack.configuration.page_nav_styles` are gone.
+- The shell no longer injects page nav into Top Nav, and it no longer renders a fallback Top Nav for that menu. `.fp-page-nav-menu` and `.fp-page-nav-nav` are gone.
+
+### Upgrade notes
+- Delete `config.page_nav_styles`. Delete `render_page_nav`. Read `page_nav_items` and render the buttons, a `collapse: :menu` button group, or `Menu::Collapse` yourself. `FlatPack::PageNav` (the back and close row) is unchanged.
+- `into:` is the bucket. Omit it for `:default`, which is the bucket the shells draw. A named bucket stays out of the shell.
+- Page nav on a phone is the button group's menu, in the page nav bar. It is not a row inside the Top Nav hamburger.
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.303`.
+
 ## [0.1.302] - 2026-10-22
 
 ### Added

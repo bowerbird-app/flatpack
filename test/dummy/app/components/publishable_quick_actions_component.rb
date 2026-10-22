@@ -7,6 +7,6 @@ class PublishableQuickActionsComponent < ViewComponent::Base
   end
 
   def call
-    tag.div("Publish", id: @dom_id)
+    render(FlatPack::Button::Component.new(text: "Publish", id: @dom_id, style: :primary, size: :sm))
   end
 end

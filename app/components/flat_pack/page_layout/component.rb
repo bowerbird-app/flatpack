@@ -92,11 +92,9 @@ module FlatPack
       end
 
       def render_top_nav
-        html = top_nav? ? top_nav.to_s : nil
-        html = with_menu_page_nav(html)
-        return if html.blank?
+        return unless top_nav?
 
-        layout_top_nav(top_nav_landmark(html), floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(top_nav_landmark(top_nav.to_s), floating: @floating_top_nav, content_scroll: @content_scroll)
       end
 
       def top_nav_landmark(html)
@@ -106,10 +104,12 @@ module FlatPack
       end
 
       def main_column
+        # The view may register while this block renders. Read the registry after that.
+        body = content
         content_tag(:div, class: "fp-layout-column") do
           safe_join([
-            layout_page_nav(:header, place: :desktop),
-            content
+            layout_page_nav(styles: FlatPack::PageNavRoleStyles::SOLID),
+            body
           ].compact)
         end
       end
