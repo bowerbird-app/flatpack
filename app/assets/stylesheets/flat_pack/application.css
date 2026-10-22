@@ -5198,3 +5198,60 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
+/* Button group collapse: :menu. One panel is the desktop row and the phone menu.
+   The wide layout is a style tag on the component, because collapse_at is a pixel width. */
+.fp-button-group-menu {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.fp-button-group-menu__panel {
+  display: none;
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel {
+  position: absolute;
+  z-index: 50;
+  inset-inline-end: 0;
+  top: calc(100% + var(--space-2));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-1);
+  width: max-content;
+  min-width: max(12rem, 100%);
+  max-width: min(20rem, calc(100vw - var(--space-6)));
+  margin: 0;
+  padding: var(--dropdown-padding);
+  border: 1px solid var(--surface-border-color);
+  border-radius: var(--menu-radius);
+  background: var(--surface-background-color);
+  box-shadow: var(--shadow-lg);
+  transform-origin: top center;
+  animation: fp-button-group-menu-in var(--duration-base) var(--easing-enter);
+}
+
+.fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel > * {
+  align-self: stretch;
+}
+
+@keyframes fp-button-group-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fp-button-group-menu[data-open="true"] > .fp-button-group-menu__panel {
+    animation: none;
+  }
+}
+

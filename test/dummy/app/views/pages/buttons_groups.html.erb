@@ -56,6 +56,30 @@
   ) %>
 </section>
 
+<section class="mb-12" id="collapsing-menu">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Collapses on a phone",
+    anchor_link: true,
+    subtitle: "Same buttons. A row when the window is wide, one menu when it is narrow."
+  ) %>
+  <div id="collapsing-menu-preview" class="mb-4 flex min-h-72 items-start justify-end">
+    <%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::ButtonGroup::Component.new(collapse: :menu, menu_label: "More") do |group| %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger)) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <%= render "shared/related_demos",
   links: [
     {text: "Buttons", href: demo_buttons_path},

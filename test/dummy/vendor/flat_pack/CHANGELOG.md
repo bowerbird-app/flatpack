@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.298] - 2026-10-22
+
+### Added
+- `FlatPack::ButtonGroup::Component` accepts `collapse: :menu`. From `collapse_at:` up (768px) the group is the joined row. Below that, a hamburger trigger opens the same panel as a vertical menu. Each button is rendered once.
+
+### Upgrade notes
+- `collapse:` defaults to `false`. Groups that omit it stay a joined row.
+- Opt in with `collapse: :menu`. `menu_label:` is the trigger text and the group's accessible name. Omit it for an icon-only trigger labelled "Menu". `menu_icon:` defaults to `"menu"` (the bars glyph). `collapse_at:` is a positive pixel width.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.298`.
+
 ## [0.1.297] - 2026-10-22
 
 ### Fixed
