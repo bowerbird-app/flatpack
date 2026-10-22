@@ -84,7 +84,7 @@ bundle install && bundle exec rails assets:precompile
 Web run command:
 
 ```bash
-bundle exec rails db:prepare && bundle exec puma -C config/puma.rb
+bundle exec rails db:prepare db:seed && bundle exec puma -C config/puma.rb
 ```
 
 The checked-in app spec also sets:
@@ -94,7 +94,10 @@ The checked-in app spec also sets:
 
 ## Production notes
 
-- The public FlatPack demo (`/` and `/demo`) can run without managed Postgres. Set `DATABASE_URL` when you also host login, `/studio`, Admin, MCP, or OAuth. Do not rely on a SQLite file in the app container. The checked-in app spec still runs `db:prepare` and binds Postgres because it also hosts those paths.
+- The public FlatPack catalog (`/` and most `/demo` pages) can render without managed Postgres. Collection editor, comments, chat, articles, draggable tables, movable cards, and `/users/sign_in` need Postgres to save and to sign in. Without it they render an in-memory or unavailable state instead of an empty 500.
+- `db:prepare` creates a new database, loads the schema, and seeds it. On a database that already exists it only migrates. The run command also runs `db:seed`, which is safe to repeat, so an older database still gets the demo rows and the sign-in user.
+- Set `DATABASE_URL` to the managed Postgres URL before deploy. Do not rely on a SQLite file in the app container. The checked-in app spec binds Postgres because it hosts login, `/studio`, Admin, MCP, and OAuth.
+- One-off, from the dummy app root, when you need to repair an already-running database yourself: `bundle exec rails db:prepare db:seed`. Do not point that command at production unless you mean to.
 - Active Storage defaults to local disk, which is ephemeral on App Platform. Uploads do not persist across rebuilds unless you move them to Spaces or another external store.
 - Keep the demo on a single web service unless Postgres and Redis are shared external services.
 - If you need Sidekiq or multiple services, set `ACTIVE_JOB_QUEUE_ADAPTER=sidekiq` plus `REDIS_URL` against the managed Redis cluster.

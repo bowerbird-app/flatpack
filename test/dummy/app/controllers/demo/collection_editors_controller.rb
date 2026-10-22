@@ -6,6 +6,12 @@ module Demo
     before_action :load_previews, only: [:show, :update, :update_gallery]
 
     def show
+      unless @collection_editor_ready
+        @project = nil
+        @empty_project = nil
+        return
+      end
+
       @project = CollectionEditorDemo.launch
       @empty_project = CollectionEditorDemo.empty
     end
@@ -145,6 +151,9 @@ module Demo
 
     def ensure_demo
       CollectionEditorDemo.ensure!
+      @collection_editor_ready = true
+    rescue *DemoDatabase::ERRORS
+      @collection_editor_ready = false
     end
 
     def load_previews

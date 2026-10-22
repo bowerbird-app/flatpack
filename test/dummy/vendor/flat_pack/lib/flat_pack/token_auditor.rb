@@ -14,6 +14,7 @@ module FlatPack
 
     RUNTIME_TOKENS = %w[
       --collection-editor-columns
+      --flat-pack-surface-fill
       --flatpack-modal-body-height
       --flatpack-picker-items-height
       --fp-masonry-gap
@@ -59,11 +60,14 @@ module FlatPack
       --sidebar-measured-width
       --sidebar-collapsed-frame
       --fp-panel-width
+      --page-layout-width
       --read-more-lines
       --spacing
       --carousel-bleed
       --card-inset
       --card-inner-radius
+      --fp-pane-fade-top
+      --fp-pane-fade-bottom
     ].freeze
 
     Result = Struct.new(:defined, :referenced, :missing, keyword_init: true) do

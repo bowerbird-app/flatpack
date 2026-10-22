@@ -18,12 +18,11 @@ module FlatPack
           }
         }.freeze
 
-        def initialize(value:, label:, trend:, trend_direction:, value_class: nil, style: :default, **system_arguments)
-          if system_arguments.key?(:theme)
-            raise ArgumentError, "unknown keyword: :theme"
-          end
-          if system_arguments.key?(:tone)
-            raise ArgumentError, "unknown keyword: :tone"
+        def initialize(value:, label:, trend:, trend_direction:, value_class: nil, background: :default, **system_arguments)
+          %i[style theme tone].each do |removed|
+            next unless system_arguments.key?(removed)
+
+            raise ArgumentError, "unknown keyword: :#{removed}"
           end
 
           @value = value
@@ -31,11 +30,11 @@ module FlatPack
           @trend = trend
           @trend_direction = trend_direction.to_sym
           @value_class = value_class
-          @style = style&.to_sym
+          @background = background&.to_sym
           @system_arguments = system_arguments
 
           validate_trend_direction!
-          validate_style!
+          validate_background!
         end
 
         def call
@@ -59,7 +58,7 @@ module FlatPack
 
           {
             class: [container_classes, extra_class].compact.join(" "),
-            data: extra_data.merge(style: @style.to_s, fp_card_padding: "md")
+            data: extra_data.merge(background: @background.to_s, fp_card_padding: "md")
           }.merge(arguments)
         end
 
@@ -70,7 +69,7 @@ module FlatPack
             "p-[var(--card-padding-md)]",
             "text-center",
             "text-[var(--surface-content-color)]",
-            Style.classes_for(@style)
+            Background.classes_for(@background)
           ].join(" ")
         end
 
@@ -97,10 +96,10 @@ module FlatPack
             "Invalid trend_direction: #{@trend_direction}. Must be one of: #{TREND_DIRECTIONS.keys.join(", ")}"
         end
 
-        def validate_style!
-          return if Style::CLASSES.key?(@style)
+        def validate_background!
+          return if Background::CLASSES.key?(@background)
 
-          raise ArgumentError, "Invalid style: #{@style.inspect}. Must be one of: #{Style::NAMES.join(", ")}"
+          raise ArgumentError, "Invalid background: #{@background.inspect}. Must be one of: #{Background::NAMES.join(", ")}"
         end
       end
     end

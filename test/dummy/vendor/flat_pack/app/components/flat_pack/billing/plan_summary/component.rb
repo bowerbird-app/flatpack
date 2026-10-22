@@ -53,7 +53,7 @@ module FlatPack
 
         def call
           content_tag(:div, **merge_attributes(class: classes("w-full"))) do
-            render FlatPack::Card::Component.new(style: :default) do |card|
+            render FlatPack::Card::Component.new(background: :default) do |card|
               card.body do
                 safe_join([
                   render_heading_row,

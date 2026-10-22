@@ -42,6 +42,7 @@ module FlatPack
         size: :md,
         close_on_backdrop: true,
         close_on_escape: true,
+        scrollbar: :hidden,
         **system_arguments
       )
         super(**system_arguments)
@@ -51,6 +52,7 @@ module FlatPack
         @size = size.to_sym
         @close_on_backdrop = close_on_backdrop
         @close_on_escape = close_on_escape
+        @scrollbar = FlatPack::PaneScroll.normalize!(scrollbar)
 
         validate_id!
         validate_side!
@@ -203,7 +205,16 @@ module FlatPack
       def render_body_content
         return nil unless body?
 
-        content_tag(:div, body.to_s.html_safe, class: "fp-drawer-body min-h-0 flex-1 overflow-y-auto px-[var(--drawer-padding)] sm:px-[var(--drawer-padding-wide)] pb-[var(--drawer-padding)] text-sm text-[var(--drawer-body-color)]")
+        content_tag(:div, body.to_s.html_safe, **drawer_body_attributes)
+      end
+
+      def drawer_body_attributes
+        FlatPack::PaneScroll.attributes(
+          "fp-drawer-body min-h-0 flex-1 overflow-y-auto px-[var(--drawer-padding)] sm:px-[var(--drawer-padding-wide)] pb-[var(--drawer-padding)] text-sm text-[var(--drawer-body-color)]",
+          label: fp_t("pane_scroll.drawer"),
+          region: true,
+          scrollbar: @scrollbar
+        )
       end
 
       def render_footer_content

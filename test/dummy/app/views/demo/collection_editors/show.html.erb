@@ -5,6 +5,7 @@
 
 <%= render "pages/component_method_variables_table", components: [:collection_editor, :collection_editor_row, :collection_editor_entity, :collection_editor_image] %>
 
+<% if @project.present? && @empty_project.present? %>
 <section class="mb-12 space-y-4">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Project collaborators",
@@ -50,6 +51,22 @@
 
 <section class="mb-12 space-y-4">
   <%= render FlatPack::SectionTitle::Component.new(
+    title: "Empty collection",
+    subtitle: "A project with no collaborators yet.",
+    anchor_link: true
+  ) %>
+  <%= render "demo/collection_editors/form", project: @empty_project, title: "Collaborators" %>
+</section>
+<% else %>
+  <%= render FlatPack::Alert::Component.new(
+    title: "Saved collections need the database",
+    description: "Run bin/rails db:prepare db:seed in test/dummy, then reload. The samples below still show the editor.",
+    style: :warning
+  ) %>
+<% end %>
+
+<section class="mb-12 space-y-4">
+  <%= render FlatPack::SectionTitle::Component.new(
     title: "Text fields",
     subtitle: "Single-line text in each cell. No person picker and no dropdown.",
     anchor_link: true
@@ -61,15 +78,6 @@
     These rows are unsaved, so dragging them stays on the page.
   </p>
   <%= render "demo/collection_editors/text_fields" %>
-</section>
-
-<section class="mb-12 space-y-4">
-  <%= render FlatPack::SectionTitle::Component.new(
-    title: "Empty collection",
-    subtitle: "A project with no collaborators yet.",
-    anchor_link: true
-  ) %>
-  <%= render "demo/collection_editors/form", project: @empty_project, title: "Collaborators" %>
 </section>
 
 <section id="theme" class="mb-12 space-y-6">

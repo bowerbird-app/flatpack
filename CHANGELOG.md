@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.297] - 2026-10-22
+
+### Fixed
+- The dummy demo pages that read Postgres render when the database is unreachable or their tables are missing. Collection editor, modal filter, the data tables, infinite pagination, movable cards, comments, chat, articles, and sign-in no longer answer with an empty 500. Sorting, filtering, dragging, chat, comments, the collection editor, and sign-in still use Postgres after `db:prepare db:seed`.
+- The dummy App Platform run command runs `db:seed` on boot. `db:prepare` seeds a brand-new database and only migrates a database that already exists.
+
+### Upgrade notes
+- Dummy deploys should use `bundle exec rails db:prepare db:seed && bundle exec puma -C config/puma.rb` with `DATABASE_URL` set to managed Postgres. An existing database needs that seed so the sign-in user and demo rows are present. Hosts that do not run the dummy app are unchanged.
+- Redeploy so `meta.gem_version` shows `0.1.297`.
+
 ## [0.1.296] - 2026-10-22
 
 ### Changed

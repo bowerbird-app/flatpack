@@ -78,7 +78,12 @@ module FlatPack
       def render_items_container
         return unless items?
 
-        content_tag(:div, items.to_s, class: items_container_classes, data: {"flat-pack--sidebar-layout-target": "scrollContainer"})
+        attributes = FlatPack::PaneScroll.attributes(
+          items_container_classes,
+          label: fp_t("pane_scroll.sidebar")
+        )
+        attributes[:data] = {"flat-pack--sidebar-layout-target": "scrollContainer"}
+        content_tag(:div, items.to_s, **attributes)
       end
 
       def sidebar_attributes
@@ -122,7 +127,7 @@ module FlatPack
       end
 
       def items_container_classes
-        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain scrollbar-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden fp-sidebar-scroll"
+        "flex-1 min-h-0 overflow-y-auto overscroll-y-contain fp-sidebar-scroll"
       end
     end
   end

@@ -762,19 +762,237 @@
       var(--sidebar-float-shadow) !important;
   }
 
-  [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar .fp-sidebar-scroll,
-  .fp-sidebar[data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-scroll {
-    scrollbar-width: none;
+  /* Important width lives in this layer. Unlayered !important loses to it,
+     so the stacked phone card has to opt out here. */
+  @media (max-width: 767px) {
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
+      width: calc(100% - (var(--layout-content-inset, 1rem) * 2)) !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      height: auto !important;
+    }
+
+    .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > aside {
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+    }
+  }
+
+}
+
+/* Phone drawers slide on the translate property Tailwind 4 uses for
+   translate-x utilities. transform alone does not run that slide.
+   Reduced motion snaps. Stacked asides stay in flow and do not translate. */
+@media (max-width: 767px) {
+  .fp-sidebar-drawer:not([data-flat-pack-aside-mobile="stack"]) {
+    transition-property: translate, transform;
+    transition-duration: var(--duration-slow);
+    transition-timing-function: var(--easing-standard);
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .fp-sidebar-drawer:not([data-flat-pack-aside-mobile="stack"]) {
+    transition-property: none;
+    transition-duration: 0s;
+  }
+}
+
+/* Stacked aside sits under main on small screens. The shell grows with
+   the page so the panel is not clipped by the locked desktop grid.
+   The card uses the same surface as the desktop floating aside. The gap
+   under main is --stack-gap-md. A close control and an aside trigger
+   stay hidden, because the panel cannot be dismissed. */
+@media (max-width: 767px) {
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > .fp-backdrop,
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack--sidebar-layout-target="sidebar"],
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack--sidebar-layout-target="backdrop"],
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] > [data-flat-pack-layout-main] {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] .fp-layout-content,
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] .fp-layout-column {
+    padding-bottom: 0;
+  }
+
+  [data-controller~="flat-pack--sidebar-layout"][data-flat-pack-aside-mobile="stack"] [data-flat-pack--sidebar-layout-target="asideToggle"],
+  .fp-sidebar-drawer[data-flat-pack-aside-mobile="stack"] [data-action*="closeAside"] {
+    display: none;
+  }
+
+  /* Beats a host restatement of aside width. The card shares the page inset
+     with the floating top nav. min-height stays on the shell, not this panel. */
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] {
+    position: relative;
+    inset: auto;
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: start;
+    width: calc(100% - (var(--layout-content-inset, 1rem) * 2)) !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin-inline: var(--layout-content-inset, 1rem) !important;
+    margin-top: var(--stack-gap-md) !important;
+    margin-bottom: var(--stack-gap-md) !important;
+    z-index: auto;
+    transform: none;
+    translate: none;
+    transition-property: none;
+  }
+
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"][data-flat-pack-sidebar-floating="true"] {
+    background-color: var(--sidebar-float-background-color);
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--sidebar-border-color);
+    border-radius: var(--sidebar-float-radius);
+    box-shadow: var(--sidebar-float-shadow);
+    overflow: hidden;
+  }
+
+  html[data-theme]:not([data-theme~="rounded"]) .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"][data-flat-pack-sidebar-floating="true"] {
+    border-radius: 0;
+  }
+
+  .fp-sidebar-drawer[data-flat-pack-panel="aside"][data-flat-pack-aside-mobile="stack"] > .fp-aside {
+    height: auto !important;
+    max-height: none;
+    overflow: visible;
+    border-radius: inherit;
+  }
+}
+
+/* Phone drawers stay full height. On the rounded theme the inner edge
+   uses the floating panel radius. The outer edge stays flush. The rail
+   and the aside share that corner so they match. One backdrop covers both. */
+@media (max-width: 767px) {
+  html[data-theme~="rounded"] .fp-sidebar-drawer[data-mobile-drawer-side="left"]:not([data-flat-pack-aside-mobile="stack"]) {
+    border-top-right-radius: var(--sidebar-float-radius);
+    border-bottom-right-radius: var(--sidebar-float-radius);
+    overflow: hidden;
+  }
+
+  html[data-theme~="rounded"] .fp-sidebar-drawer[data-mobile-drawer-side="right"]:not([data-flat-pack-aside-mobile="stack"]) {
+    border-top-left-radius: var(--sidebar-float-radius);
+    border-bottom-left-radius: var(--sidebar-float-radius);
+    overflow: hidden;
+  }
+}
+
+/* The open drawer scrim is a sibling of the drawers, not a child of the
+   translated panel. opacity-100 wins even if a utility still sets opacity 0. */
+[data-controller~="flat-pack--sidebar-layout"] > [data-flat-pack--sidebar-layout-target="backdrop"] {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+[data-controller~="flat-pack--sidebar-layout"] > [data-flat-pack--sidebar-layout-target="backdrop"].opacity-100 {
+  opacity: 1;
+}
+
+/* Pane bars follow --pane-scrollbar-width (none, thin, or auto).
+   Older Safari ignores scrollbar-width, so the WebKit bar is hidden to match
+   none. scrollbar: :visible sets data-pane-scrollbar="visible" and the browser bar.
+   The edge fade tracks this pane's own scroll(). Unsupported browsers skip it. */
+.fp-pane-scroll {
+  scrollbar-width: var(--pane-scrollbar-width);
+}
+
+.fp-pane-scroll[data-pane-scrollbar="visible"] {
+  scrollbar-width: auto;
+}
+
+.fp-pane-scroll:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: -2px;
+}
+
+@supports not (scrollbar-width: none) {
+  .fp-pane-scroll:not([data-pane-scrollbar="visible"]) {
     -ms-overflow-style: none;
   }
 
-  [data-flat-pack-sidebar-collapsed="true"] .fp-sidebar .fp-sidebar-scroll::-webkit-scrollbar,
-  .fp-sidebar[data-flat-pack-sidebar-collapsed="true"] .fp-sidebar-scroll::-webkit-scrollbar {
+  .fp-pane-scroll:not([data-pane-scrollbar="visible"])::-webkit-scrollbar {
     display: none;
     width: 0;
     height: 0;
   }
+}
 
+@property --fp-pane-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fp-pane-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fp-pane-fade-top {
+  from { --fp-pane-fade-top: 0px; }
+  to { --fp-pane-fade-top: var(--pane-scroll-fade-size); }
+}
+
+@keyframes fp-pane-fade-bottom {
+  from { --fp-pane-fade-bottom: var(--pane-scroll-fade-size); }
+  to { --fp-pane-fade-bottom: 0px; }
+}
+
+@supports (animation-timeline: scroll()) {
+  .fp-pane-scroll {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--fp-pane-fade-top),
+      #000 calc(100% - var(--fp-pane-fade-bottom)),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--fp-pane-fade-top),
+      #000 calc(100% - var(--fp-pane-fade-bottom)),
+      transparent 100%
+    );
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    animation-name: fp-pane-fade-top, fp-pane-fade-bottom;
+    animation-duration: auto, auto;
+    animation-timing-function: linear, linear;
+    animation-fill-mode: both, both;
+    animation-timeline: scroll(self), scroll(self);
+    animation-range: 0px var(--pane-scroll-fade-size), calc(100% - var(--pane-scroll-fade-size)) 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fp-pane-scroll {
+      animation: none;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+  }
 }
 
 .fp-read-more {
@@ -920,7 +1138,74 @@
   background-color: transparent;
 }
 
-/* Unlayered so a style fill or shadow utility cannot cover the hover.
+/* Public page shell. Arrangement only. The floating bar rules below are shared
+ * with SidebarLayout. Unlayered so host preflight cannot zero the column padding.
+ */
+.fp-page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  min-width: 0;
+  --page-layout-width: var(--page-layout-width-default);
+  --layout-content-max-width: var(--page-layout-width);
+  --layout-content-inset: var(--page-layout-padding-inline);
+}
+
+.fp-page-layout[data-fp-page-layout-width="narrow"] {
+  --page-layout-width: var(--page-layout-width-narrow);
+}
+
+.fp-page-layout[data-fp-page-layout-width="default"] {
+  --page-layout-width: var(--page-layout-width-default);
+}
+
+.fp-page-layout[data-fp-page-layout-width="wide"] {
+  --page-layout-width: var(--page-layout-width-wide);
+}
+
+.fp-page-layout[data-fp-page-layout-width="full"] {
+  --page-layout-width: var(--page-layout-width-full);
+}
+
+.fp-page-layout-frame {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--page-layout-gap);
+  min-width: 0;
+  width: 100%;
+}
+
+.fp-page-layout-frame:has([data-flat-pack-top-nav-floating]) {
+  gap: 0;
+}
+
+.fp-page-layout-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-bottom: var(--page-layout-padding-block);
+}
+
+.fp-page-layout-main:not(.fp-layout-scroll) {
+  padding-top: var(--page-layout-padding-block);
+}
+
+.fp-page-layout-footer {
+  flex: none;
+  padding-bottom: var(--page-layout-padding-block);
+}
+
+.fp-page-layout[data-fp-page-layout-align="center"] .fp-page-layout-main {
+  display: grid;
+  align-content: center;
+}
+
+.fp-page-layout[data-fp-page-layout-align="center"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) {
+  align-items: stretch;
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* Unlayered so a background fill or shadow utility cannot cover the hover.
  * Those utilities live in the host Tailwind layer, which beats @layer components.
  */
 .fp-card-hover-subtle:hover {
@@ -971,6 +1256,44 @@
 
 .fp-card[data-fp-card-inset="lg"] {
   --card-inset: var(--card-padding-lg);
+}
+
+/* The page token is the default colour behind focus rings, swatch gaps, avatar
+ * rings, range thumb borders, and timeline marker dots. A raised surface
+ * resets those tokens to its own fill. --flat-pack-surface-fill is local.
+ */
+.fp-card[data-background="default"] { --flat-pack-surface-fill: var(--card-background-default); }
+.fp-card[data-background="shaded"] { --flat-pack-surface-fill: var(--card-background-shaded); }
+.fp-card[data-background="brand"] { --flat-pack-surface-fill: var(--card-background-brand); }
+.fp-card[data-background="brand_subtle"] { --flat-pack-surface-fill: var(--card-background-brand-subtle); }
+.fp-card[data-background="gradient"] { --flat-pack-surface-fill: var(--color-primary); }
+
+[data-flat-pack--modal-target="dialog"] { --flat-pack-surface-fill: var(--modal-surface-color); }
+[data-controller~="flat-pack--popover"] { --flat-pack-surface-fill: var(--popover-background-color); }
+[data-controller~="flat-pack--accordion"] { --flat-pack-surface-fill: var(--accordion-background-color); }
+[data-controller~="flat-pack--collapse"] { --flat-pack-surface-fill: var(--collapse-background-color); }
+[data-controller~="flat-pack--chat-layout"] { --flat-pack-surface-fill: var(--chat-background-color); }
+.fp-table { --flat-pack-surface-fill: var(--table-background-color); }
+.fp-menu-surface,
+[data-flat-pack--button-dropdown-target="menu"],
+[data-flat-pack--combobox-target="list"] { --flat-pack-surface-fill: var(--surface-background-color); }
+
+.fp-card,
+[data-flat-pack--modal-target="dialog"],
+[data-controller~="flat-pack--popover"],
+[data-controller~="flat-pack--accordion"],
+[data-controller~="flat-pack--collapse"],
+[data-controller~="flat-pack--chat-layout"],
+.fp-table,
+.fp-menu-surface,
+[data-flat-pack--button-dropdown-target="menu"],
+[data-flat-pack--combobox-target="list"] {
+  --button-focus-ring-offset-color: var(--flat-pack-surface-fill);
+  --avatar-group-ring-color: var(--flat-pack-surface-fill);
+  --color-swatch-ring-offset-color: var(--flat-pack-surface-fill);
+  --font-swatch-ring-offset-color: var(--flat-pack-surface-fill);
+  --range-thumb-border-color: var(--flat-pack-surface-fill);
+  --timeline-marker-icon-color: var(--flat-pack-surface-fill);
 }
 
 .fp-card-inner-radius {
@@ -1028,7 +1351,8 @@
   }
 }
 
-/* Floating top nav. Unlayered so it wins over .fp-top-nav and Tailwind utilities.
+/* Floating top nav. Shared by SidebarLayout and PageLayout.
+ * Unlayered so it wins over .fp-top-nav and Tailwind utilities.
  * The wrapper covers the top band. pointer-events stay on the cards so the gaps
  * still hit the page. Empty TopNav sections are always in the DOM.
  */
@@ -1048,6 +1372,61 @@
   width: 100%;
   max-width: var(--layout-content-max-width);
   margin-inline: auto;
+}
+
+/* Page nav. The shell places the desktop group. Phone rows for semantic buttons
+ * live in the top nav menu. A registered component is one node in this bar, so
+ * it stays on screen at both breakpoints and is not copied into the menu. */
+.fp-page-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.fp-page-nav--desktop {
+  padding-block: var(--space-3);
+}
+
+.fp-page-nav--bar {
+  padding-inline: var(--layout-content-inset, var(--space-4));
+}
+
+.fp-page-nav-buttons,
+.fp-page-nav-components {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Source rows for the hamburger. The controller moves the buttons into the panel
+   and strips a `hidden` class on restore, so this rule keeps the source out of the bar. */
+.fp-page-nav-menu {
+  display: none;
+}
+
+.fp-page-nav--floating {
+  position: fixed;
+  z-index: 30;
+  right: max(var(--space-4), env(safe-area-inset-right, 0px));
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 767px) {
+  .fp-page-nav--desktop:not(:has(.fp-page-nav-components)) {
+    display: none;
+  }
+
+  .fp-page-nav--desktop .fp-page-nav-buttons {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .fp-page-nav-nav,
+  .fp-page-nav--floating {
+    display: none;
+  }
 }
 
 [data-flat-pack-top-nav-floating="behind"] {
@@ -1175,16 +1554,22 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   box-shadow: var(--sidebar-float-shadow);
 }
 
-/* Below md the pill's corner padding is wider than the row. Tighten the
- * card and the gap so a toolbar and one trailing card stay on one line.
- * Labels may shrink; the row still wraps when the trailing cards cannot. */
+/* Below md the bar stays one row. Collapsed actions live in the hamburger menu.
+ * The right section already carries margin-left: auto, so the menu drops its
+ * own auto margin and sits against that section (the bell) instead of centering it. */
 @media (max-width: 767px) {
+  [data-flat-pack-top-nav-section="right"]:has(*) ~ [data-flat-pack--top-nav-target="menu"] {
+    margin-left: 0;
+  }
+
   [data-flat-pack-top-nav-floating] .fp-top-nav > div {
+    flex-wrap: nowrap;
     gap: 0.5rem;
   }
 
   [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
   [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] {
+    flex-wrap: nowrap;
     gap: 0.25rem;
     padding-inline: 0.25rem;
   }
@@ -1221,6 +1606,104 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
 
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="menu"] {
   pointer-events: auto;
+}
+
+/* The open hamburger menu is one column of full-width rows.
+   A horizontal cluster that moved in as one node becomes that column too. */
+[data-flat-pack--top-nav-target="panel"] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-sizing: border-box;
+  max-width: calc(100vw - 1rem);
+  overflow-x: hidden;
+}
+
+[data-flat-pack--top-nav-target="panel"] > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: 0;
+}
+
+[data-flat-pack--top-nav-target="panel"] > .flex {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+[data-flat-pack--top-nav-target="panel"] > .flex > :not(.absolute) {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(input, select, textarea) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav,
+[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav > div {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  gap: 0.125rem;
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(a, button):not(.absolute) {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--surface-content-color);
+}
+
+[data-flat-pack--top-nav-target="panel"] :is(a, button):not(.absolute):hover {
+  background-color: var(--surface-muted-background-color);
+}
+
+/* A dropdown in the phone menu discloses in place. The trigger stays a row. */
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] > [data-flat-pack--button-dropdown-target="trigger"] {
+  justify-content: space-between;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure] > [data-flat-pack--button-dropdown-target="menu"] {
+  display: none;
+  position: static;
+  opacity: 1;
+  transform: none;
+  z-index: auto;
+  width: 100%;
+  min-width: 0;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0.125rem 0 0.125rem 0.75rem;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure][data-flat-pack-top-nav-expanded="true"] > [data-flat-pack--button-dropdown-target="menu"] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+[data-flat-pack--top-nav-target="panel"] [data-flat-pack-top-nav-disclosure][data-flat-pack-top-nav-expanded="true"] [data-flat-pack--button-dropdown-target="chevron"] {
+  transform: rotate(180deg);
 }
 
 [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {

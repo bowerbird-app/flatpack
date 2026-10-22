@@ -18,13 +18,14 @@ Use Drawer when the work stays on the current page but needs more room than a po
 | `size` | Symbol | `:md` | no | Width for left/right (`:sm` / `:md` / `:lg`) or height for bottom. |
 | `close_on_backdrop` | Boolean | `true` | no | Close when the dimmed backdrop is clicked. |
 | `close_on_escape` | Boolean | `true` | no | Close on Escape. |
+| `scrollbar` | Symbol | `:hidden` | no | `:hidden` hides the body bar. `:visible` uses the browser bar. Anything else raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the overlay root. |
 
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
 | `header` | method/slot | no | Replaces the title text area. |
-| `body` | method/slot | no | Scrollable panel body. |
+| `body` | method/slot | no | Scrollable panel body. A hidden bar is a named region ("Drawer") in the tab order, so the body scrolls from the keyboard. The width is `--pane-scrollbar-width`. A fade on `--pane-scroll-fade-size` marks the edge that has more content. |
 | `footer` | method/slot | no | Action row. |
 
 Use `drawer.header` / `drawer.body` / `drawer.footer`. There is no `with_` prefix.

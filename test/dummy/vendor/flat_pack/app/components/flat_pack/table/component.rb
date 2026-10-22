@@ -161,6 +161,7 @@ module FlatPack
             "w-full",
             @min_width,
             (FIXED_LAYOUT if fixed_layout?),
+            "fp-table",
             "border-collapse",
             "bg-[var(--table-background-color)]"
           )

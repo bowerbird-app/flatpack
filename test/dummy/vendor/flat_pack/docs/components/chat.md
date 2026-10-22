@@ -141,7 +141,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - **Message bubbles** — Incoming uses `--chat-message-incoming-background-color` (`--surface-muted-background-color`) and `--surface-content-color`. Outgoing uses `--chat-message-outgoing-background-color` (`--surface-hover-background-color` on the default palette, `#f0f0f0`) and the same foreground. Dark and ocean set their own outgoing fill so the bubbles stay apart. Timestamps and read receipts use `--surface-muted-content-color` under the bubble. Attachment icons use the attachment tokens on the attachment card. Links inside a bubble inherit the bubble text colour.
 - **Message states** — Opacity changes for `:sending`, error indicators for `:failed`, read receipts for `:read`.
 - **Auto-growing textarea** — Expands as the user types up to a max height with smooth transitions.
-- **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up.
+- **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up. The message list hides its bar with `--pane-scrollbar-width`. It is a region named "Messages" and sits in the tab order, so a list with no links still scrolls from the keyboard. The fade uses `--pane-scroll-fade-size`.
 - **Avatar integration** — Seamless use of `FlatPack::Avatar::Component` and `FlatPack::AvatarGroup::Component`.
 - **Attachments** — File attachments with icons, image attachments with thumbnails, download/view links.
 - **Inbox rows** — Name, preview, time, and unread count. Unread uses the primary badge. The row does not clip the count against its corner radius.

@@ -683,8 +683,12 @@ class PagesController < ApplicationController
   def grid_movable_cards
     ensure_demo_movable_cards!
 
-    @movable_cards = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: movable_cards_list_key).ordered : []
-    @movable_cards_version = demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
+    @movable_cards = with_demo_database([]) {
+      demo_table_rows_table_exists? ? DemoTableRow.where(list_key: movable_cards_list_key).ordered.to_a : []
+    }
+    @movable_cards_version = with_demo_database("0") {
+      demo_table_rows_table_exists? ? demo_table_version(list_key: movable_cards_list_key) : "0"
+    }
   end
 
   def masonry
@@ -815,6 +819,11 @@ class PagesController < ApplicationController
       @root_comments = []
       @comments_count = 0
     end
+  rescue *DemoDatabase::ERRORS
+    @comments_table_available = false
+    @comments_by_parent_id = {}
+    @root_comments = []
+    @comments_count = 0
   end
 
   def chat_demo
@@ -838,6 +847,13 @@ class PagesController < ApplicationController
       @chat_history_has_more = false
       @chat_history_url = nil
     end
+    @chat_history_limit = history_limit
+  rescue *DemoDatabase::ERRORS
+    @chat_group = nil
+    @chat_group_summaries = []
+    @chat_items = []
+    @chat_history_has_more = false
+    @chat_history_url = nil
     @chat_history_limit = history_limit
   end
 
@@ -1099,7 +1115,7 @@ class PagesController < ApplicationController
     end
 
     pagy_array(infinite_demo_records, items: 10)
-  rescue ActiveRecord::StatementInvalid
+  rescue *DemoDatabase::ERRORS
     pagy_array(infinite_demo_records, items: 10)
   end
 
@@ -1122,9 +1138,7 @@ class PagesController < ApplicationController
   end
 
   def dummy_data_available?
-    DummyDatum.table_exists?
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
-    false
+    DemoDatabase.table_ready?(DummyDatum)
   end
 
   def infinite_demo_records
@@ -1288,6 +1302,12 @@ class PagesController < ApplicationController
     }
   end
 
+  def with_demo_database(fallback)
+    yield
+  rescue *DemoDatabase::ERRORS
+    fallback
+  end
+
   def ensure_demo_table_rows!
     return unless demo_table_rows_table_exists?
     return if DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).exists?
@@ -1314,6 +1334,8 @@ class PagesController < ApplicationController
     end
 
     DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
+  rescue *DemoDatabase::ERRORS
+    nil
   end
 
   def demo_table_version(scope = {list_key: DemoTableRow::DEFAULT_LIST_KEY})
@@ -1321,19 +1343,15 @@ class PagesController < ApplicationController
   end
 
   def demo_table_rows_table_exists?
-    DemoTableRow.table_exists?
+    DemoDatabase.table_ready?(DemoTableRow)
   end
 
   def chat_tables_available?
-    ChatGroup.table_exists? && ChatItem.table_exists?
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
-    false
+    DemoDatabase.table_ready?(ChatGroup) && DemoDatabase.table_ready?(ChatItem) && DemoDatabase.table_ready?(ChatItemAttachment)
   end
 
   def comments_table_available?
-    DemoComment.table_exists?
-  rescue ActiveRecord::NoDatabaseError, ActiveRecord::StatementInvalid
-    false
+    DemoDatabase.table_ready?(DemoComment)
   end
 
   def ensure_comments_demo_data!
@@ -1362,6 +1380,8 @@ class PagesController < ApplicationController
       author_name: "Diana Prince",
       body: "Good call. I can draft the first pass this week."
     )
+  rescue *DemoDatabase::ERRORS
+    nil
   end
 
   def ensure_chat_demo_items!
@@ -1759,6 +1779,8 @@ class PagesController < ApplicationController
     end
 
     DemoTableRow.insert_all(rows_to_insert, unique_by: :index_demo_table_rows_on_list_key_and_position)
+  rescue *DemoDatabase::ERRORS
+    nil
   end
 
   def load_charts_composition_demo!
@@ -1926,8 +1948,12 @@ class PagesController < ApplicationController
     @sorted_users = sort_users(@users.dup, params[:sort], params[:direction])
     load_table_generic_filter_demo_data
     load_table_multi_controls_demo_data
-    @demo_table_rows = demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered : []
-    @demo_table_version = demo_table_rows_table_exists? ? demo_table_version : "0"
+    @demo_table_rows = with_demo_database([]) {
+      demo_table_rows_table_exists? ? DemoTableRow.where(list_key: DemoTableRow::DEFAULT_LIST_KEY).ordered.to_a : []
+    }
+    @demo_table_version = with_demo_database("0") {
+      demo_table_rows_table_exists? ? demo_table_version : "0"
+    }
   end
 
   def load_table_generic_filter_demo_data
