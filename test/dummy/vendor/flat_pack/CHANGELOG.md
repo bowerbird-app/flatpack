@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.304] - 2026-10-22
+
+### Fixed
+- The open phone panel measures its vertical offset the same way it measures the horizontal one. A transformed shell ancestor no longer places the panel below the toggle.
+
+### Removed
+- Top Nav no longer turns a dropdown inside the phone menu into an in-place disclosure. The controller no longer stamps `data-flat-pack-top-nav-disclosure` or `data-flat-pack-top-nav-expanded`, and it no longer captures the trigger click. The panel CSS for that disclosure is gone. A dropdown that folds into the hamburger stays a normal `Button::Dropdown` and opens its own menu on `document.body`.
+- The unlayered rule `.fp-top-nav [data-flat-pack-top-nav-section="center"] input { min-width: 0 }` is gone. The center section still has `min-w-0`.
+
+### Upgrade notes
+- `data-flat-pack-top-nav-disclosure` is removed. Stop reading or styling that hook, and stop reading `data-flat-pack-top-nav-expanded`.
+- A dropdown inside the phone menu is the dropdown's own menu. It is not a nested disclosure.
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.304`.
+
 ## [0.1.303] - 2026-10-22
 
 ### Changed
