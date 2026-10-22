@@ -16,12 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.297] - 2026-10-22
 
 ### Fixed
-- The dummy demo pages that read Postgres render when the database is unreachable or their tables are missing. Collection editor, modal filter, the data tables, infinite pagination, movable cards, comments, chat, articles, and sign-in no longer answer with an empty 500. Sorting, filtering, dragging, chat, comments, the collection editor, and sign-in still use Postgres after `db:prepare db:seed`.
-- The dummy App Platform run command runs `db:seed` on boot. `db:prepare` seeds a brand-new database and only migrates a database that already exists.
+- The dummy demo pages that read Postgres render when the connection is refused or their tables are missing. Collection editor, modal filter, the data tables, infinite pagination, movable cards, comments, chat, articles, and sign-in no longer answer with an empty 500. Other database errors still raise. Sorting, filtering, dragging, chat, comments, the collection editor, and sign-in still use Postgres when it is up.
+- The dummy app serves `public/406-unsupported-browser.html` when `allow_browser` blocks an old browser, instead of raising because that file was missing.
+- Comments say when Postgres is down, and a different warning when the comments table is missing. Chat shows a warning when the inbox cannot load.
 
 ### Upgrade notes
-- Dummy deploys should use `bundle exec rails db:prepare db:seed && bundle exec puma -C config/puma.rb` with `DATABASE_URL` set to managed Postgres. An existing database needs that seed so the sign-in user and demo rows are present. Hosts that do not run the dummy app are unchanged.
-- Redeploy so `meta.gem_version` shows `0.1.297`.
+- Dummy App Platform keeps `bundle exec rails db:prepare && bundle exec puma -C config/puma.rb`. Do not add `db:seed` to that run command. `db:prepare` seeds a database only when it creates it. Load demo rows later with `bundle exec rails db:seed`, or with an App Platform pre-deploy job that the owner approves first.
+- Redeploy so `meta.gem_version` shows `0.1.297`. Hosts that do not run the dummy app are unchanged.
 
 ## [0.1.296] - 2026-10-22
 

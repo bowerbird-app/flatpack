@@ -53,8 +53,8 @@ class PublicCatalogWithoutDbTest < ActionDispatch::IntegrationTest
       "/demo/tables/draggable" => "Draggable Rows",
       "/demo/pagination_infinite" => "Infinite Scroll",
       "/demo/grid/movable_cards" => "Movable cards data unavailable",
-      "/demo/comments" => "Comments table is missing",
-      "/demo/chat/demo" => "Chat Demo",
+      "/demo/comments" => "Comments need the database",
+      "/demo/chat/demo" => "Chat needs the database",
       "/demo/articles" => "Articles need the database",
       "/users/sign_in" => "Continue with email"
     }

@@ -24,10 +24,16 @@
     ) %>
   <% end %>
 
-  <% unless @comments_table_available %>
+  <% if @comments_database_down %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Comments need the database",
+      description: "Postgres is unreachable, so this thread cannot load. Start the database and reload.",
+      style: :warning
+    ) %>
+  <% elsif !@comments_table_available %>
     <%= render FlatPack::Alert::Component.new(
       title: "Comments table is missing",
-      description: "Run `cd test/dummy && bin/rails db:migrate` to enable persisted comments.",
+      description: "Run `cd test/dummy && bin/rails db:prepare` to create demo_comments.",
       style: :warning
     ) %>
   <% end %>

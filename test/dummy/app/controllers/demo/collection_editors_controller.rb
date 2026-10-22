@@ -152,7 +152,8 @@ module Demo
     def ensure_demo
       CollectionEditorDemo.ensure!
       @collection_editor_ready = true
-    rescue *DemoDatabase::ERRORS
+    rescue ActiveRecord::ActiveRecordError => error
+      raise unless DemoDatabase.suppress(error)
       @collection_editor_ready = false
     end
 
