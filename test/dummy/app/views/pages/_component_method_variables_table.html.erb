@@ -1344,13 +1344,13 @@
     },
     page_layout: {
       label: "Page layout",
-      method_call: "render FlatPack::PageLayout::Component.new(width: :default) do |layout| layout.top_nav { render FlatPack::TopNav::Component.new(mobile_menu: false) }; layout.footer { \"Field notes\" }; end",
+      method_call: "render FlatPack::PageLayout::Component.new(width: :default) do |layout| layout.top_nav { render FlatPack::TopNav::Component.new }; layout.footer { \"Field notes\" }; end",
       variables: [
         { variable: "width", accepts: ":narrow, :default, :wide, :full", example: "width: :narrow" },
         { variable: "align", accepts: ":top, :center", example: "align: :center" },
         { variable: "floating_top_nav", accepts: "true, false", example: "floating_top_nav: true" },
         { variable: "content_scroll", accepts: ":behind, :below", example: "content_scroll: :below" },
-        { variable: "top_nav", accepts: "slot block", example: "layout.top_nav { render FlatPack::TopNav::Component.new(mobile_menu: false) }" },
+        { variable: "top_nav", accepts: "slot block", example: "layout.top_nav { render FlatPack::TopNav::Component.new }" },
         { variable: "footer", accepts: "slot block", example: "layout.footer { \"Field notes\" }" },
         { variable: "background", accepts: "slot block", example: "layout.background { image_tag photo_path, alt: \"\" }" },
         { variable: "content", accepts: "block", example: "<h1>Packing notes</h1>" },

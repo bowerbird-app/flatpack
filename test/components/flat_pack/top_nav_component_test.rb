@@ -145,102 +145,54 @@ module FlatPack
         assert_selector "header[data-testid='top-nav']"
       end
 
-      def test_registers_mobile_menu_controller_by_default
+      def test_registers_the_frost_controller
         render_inline(Component.new)
 
         assert_selector "header[data-controller~='flat-pack--top-nav']"
-        assert_selector "header[data-flat-pack--top-nav-breakpoint-value='768']"
+        assert_selector "header[data-scrolled='false']"
+        refute_selector "header[data-flat-pack--top-nav-breakpoint-value]", visible: :all
       end
 
-      def test_mobile_menu_controller_preserves_host_controllers
+      def test_frost_controller_preserves_host_controllers
         render_inline(Component.new(data: {controller: "host--analytics"}))
 
         assert_selector "header[data-controller~='host--analytics']"
         assert_selector "header[data-controller~='flat-pack--top-nav']"
       end
 
-      def test_accepts_custom_mobile_breakpoint
-        render_inline(Component.new(mobile_breakpoint: 1024))
-
-        assert_selector "header[data-flat-pack--top-nav-breakpoint-value='1024']"
-      end
-
-      def test_renders_mobile_menu_toggle_and_panel
-        render_inline(Component.new(mobile_menu_label: "Open navigation"))
-
-        assert_selector "[data-flat-pack--top-nav-target='menu']", visible: :all
-        assert_selector "[data-flat-pack--top-nav-target='toggle'][aria-label='Open navigation']", visible: :all
-        assert_selector "[data-flat-pack--top-nav-target='panel'][hidden]", visible: :all
-      end
-
-      def test_mobile_menu_toggle_controls_panel
-        render_inline(Component.new)
-
-        toggle = page.native.at_css("[data-flat-pack--top-nav-target='toggle']")
-        panel = page.native.at_css("[data-flat-pack--top-nav-target='panel']")
-
-        assert_equal panel["id"], toggle["aria-controls"]
-        assert_equal "false", toggle["aria-expanded"]
-      end
-
-      def test_sections_fold_into_the_menu_by_default
+      def test_is_a_row_with_no_menu_of_its_own
         render_inline(Component.new) do |nav|
           nav.left { "Brand" }
           nav.center { "Search" }
-          nav.right { "Actions" }
-        end
-
-        assert_equal "true", section_for("left")["data-flat-pack-top-nav-collapsible"]
-        assert_equal "true", section_for("center")["data-flat-pack-top-nav-collapsible"]
-        assert_equal "true", section_for("right")["data-flat-pack-top-nav-collapsible"]
-      end
-
-      def test_always_display_opts_sections_out_of_the_mobile_menu
-        render_inline(Component.new) do |nav|
-          nav.left(always_display: false) { "Brand" }
-          nav.center(always_display: true) { "Search" }
-          nav.right(always_display: true) { "Actions" }
-        end
-
-        assert_equal "true", section_for("left")["data-flat-pack-top-nav-collapsible"]
-        assert_equal "false", section_for("center")["data-flat-pack-top-nav-collapsible"]
-        assert_equal "false", section_for("right")["data-flat-pack-top-nav-collapsible"]
-      end
-
-      def test_mobile_menu_toggle_is_a_hamburger
-        render_inline(Component.new)
-
-        toggle = page.native.at_css("[data-flat-pack--top-nav-target='toggle']")
-
-        assert_equal "Menu", toggle["aria-label"]
-        assert_equal "false", toggle["aria-expanded"]
-        assert_selector "[data-flat-pack--top-nav-target='toggle'] svg[data-flat-pack--icon-name-value='bars-3']", visible: :all
-        assert_selector "[data-flat-pack--top-nav-target='panel'][role='menu']", visible: :all
-        refute_selector "svg[data-flat-pack--icon-name-value='chevron-down']", visible: :all
-        refute_selector "svg[data-flat-pack--icon-name-value='ellipsis-horizontal']", visible: :all
-        refute_selector "header[data-flat-pack--top-nav-toggle-open-class]"
-      end
-
-      def test_mobile_menu_can_be_disabled
-        render_inline(Component.new(mobile_menu: false)) do |nav|
-          nav.center { "Search" }
-        end
-
-        refute_selector "[data-flat-pack--top-nav-target='menu']", visible: :all
-        refute_includes page.native.to_html, "flat-pack--top-nav-target"
-        assert_selector "header[data-controller~='flat-pack--top-nav']"
-        assert_text "Search"
-      end
-
-      def test_sections_keep_their_names_when_the_mobile_menu_is_off
-        render_inline(Component.new(mobile_menu: false)) do |nav|
-          nav.left { "Brand" }
           nav.right { "Bell" }
         end
 
+        html = page.native.to_html
+
         assert_selector "[data-flat-pack-top-nav-section='left']", text: "Brand"
+        assert_selector "[data-flat-pack-top-nav-section='center']", text: "Search"
         assert_selector "[data-flat-pack-top-nav-section='right']", text: "Bell"
-        refute_selector "[data-flat-pack--top-nav-target='section']", visible: :all
+        assert_includes section_for("left")["class"], "min-w-0"
+        assert_includes section_for("center")["class"], "min-w-0"
+        assert_includes section_for("right")["class"], "min-w-0"
+        refute_includes html, "flat-pack--top-nav-target"
+        refute_includes html, "data-flat-pack-top-nav-collapsible"
+        refute_includes html, "data-flat-pack-top-nav-always-display"
+        refute_selector "[role='menu']", visible: :all
+      end
+
+      def test_rejects_the_removed_menu_options
+        error = assert_raises(ArgumentError) { Component.new(mobile_menu: false) }
+
+        assert_match(/unknown keyword: :?mobile_menu/, error.message)
+        assert_raises(ArgumentError) { Component.new(mobile_menu_label: "Menu") }
+        assert_raises(ArgumentError) { Component.new(mobile_breakpoint: 1024) }
+      end
+
+      def test_slots_reject_always_display
+        render_inline(Component.new) do |nav|
+          assert_raises(ArgumentError) { nav.left(always_display: true) { "Brand" } }
+        end
       end
 
       private

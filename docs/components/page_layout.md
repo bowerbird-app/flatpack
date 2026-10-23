@@ -48,7 +48,7 @@ Use Page Layout for a page with no sidebar: a press kit, an article, a landing p
 ```erb
 <%= render FlatPack::PageLayout::Component.new(width: :default) do |layout| %>
   <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new(mobile_menu: false) do |nav| %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left { "Field notes" } %>
     <% end %>
   <% end %>
@@ -66,7 +66,7 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
 ```erb
 <%= render FlatPack::PageLayout::Component.new(width: :narrow, align: :center) do |layout| %>
   <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new(mobile_menu: false) do |nav| %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left { "Field notes" } %>
     <% end %>
   <% end %>
@@ -84,7 +84,7 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
   <% end %>
 
   <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new(mobile_menu: false) do |nav| %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left { "Field notes" } %>
     <% end %>
   <% end %>

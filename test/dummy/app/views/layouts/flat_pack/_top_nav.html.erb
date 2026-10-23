@@ -10,7 +10,7 @@
         "flat-pack--sidebar-layout-target": "mobileToggle",
         action: "click->flat-pack--sidebar-layout#toggleMobile"
       },
-      class: "md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
+      class: "shrink-0 md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
     ) %>
   <% end %>
 
@@ -19,7 +19,7 @@
   <% end %>
 
   <% nav.right do %>
-    <div class="flex items-center gap-3">
+    <div class="flex min-w-0 items-center justify-end gap-2">
       <%= render "layouts/flat_pack/language_selector" %>
       <% if user_signed_in? %>
         <% if defined?(RecordingStudioRootSwitchable) %>

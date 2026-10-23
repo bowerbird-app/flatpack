@@ -1,10 +1,10 @@
 # Top Nav
 
 ## Purpose
-Render a sticky top navigation bar with composable left, center, and right content regions.
+Render a sticky top bar with a left slot, a center slot, and a right slot.
 
 ## When to use
-Use TopNav in app shells for page context, global actions, and optional search or controls. Pair it with `SidebarLayout` and `Sidebar`. Dummy `/demo/navbar` is this component.
+Use TopNav in app shells for a title, search, or a short set of controls. Pair it with `SidebarLayout` and `Sidebar`. Dummy `/demo/navbar` is this component. `/demo/navbar?example=header` is the header row: page nav on the left, a collapsing button group on the right.
 
 ## Class
 - Primary: `FlatPack::TopNav::Component`
@@ -13,54 +13,49 @@ Use TopNav in app shells for page context, global actions, and optional search o
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `mobile_menu` | Boolean | `true` | No | On a phone viewport, fold the row into one hamburger menu. |
-| `mobile_menu_label` | String | `"Menu"` | No | Accessible label for the hamburger toggle and the menu panel. |
-| `mobile_breakpoint` | Integer | `768` | No | Viewport width (px). Below this, the row folds into the menu. A wide window keeps the row. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the `<header>` element (`class`, `id`, `data`, `aria`, `style`). |
+
+TopNav does not fold. It has no phone menu, no breakpoint, and no flag that pins a child in the bar. A group of actions that should become one menu on a phone is `FlatPack::ButtonGroup::Component` with `collapse: :menu`, usually in `right`. A notification bell, an avatar, and the sidebar's mobile toggle stay plain children beside that group.
 
 ## Slots
 
 | name | type | required | description |
 |------|------|----------|-------------|
-| `left` | block slot | No | Left-aligned content wrapper (`h-full flex items-center gap-2`). Accepts `always_display:` (default `false`). |
-| `center` | block slot | No | Center wrapper (`h-full min-w-0 flex-1 flex items-center justify-center`). Accepts `always_display:` (default `false`). |
-| `right` | block slot | No | Right-aligned content wrapper (`h-full flex items-center justify-end gap-2`). Accepts `always_display:` (default `false`). |
+| `left` | block slot | No | Left-aligned content (`h-full min-w-0 flex items-center gap-2`). |
+| `center` | block slot | No | Center wrapper (`h-full min-w-0 flex-1 flex items-center justify-center`). It grows, then shrinks. |
+| `right` | block slot | No | Right-aligned content (`h-full min-w-0 flex items-center justify-end gap-2`). |
 
-TopNav always renders all three wrappers (`left`, `center`, `right`) even if one slot is blank or uninitialized. The center wrapper shrinks. Left and right keep their content width.
+TopNav always renders all three wrappers, even when a slot is blank. `left` and `right` use `min-w-0`, so a long title can shrink instead of pushing the bar sideways. A field in a slot uses `min-width: 0` and stays inside that column. The slots do not hide their children. A child that should disappear into a menu owns that collapse.
 
-Each section carries `data-flat-pack-top-nav-section` (`left`, `center`, or `right`) even when `mobile_menu: false`. [Sidebar Layout](sidebar_layout.md) `floating_top_nav: true` uses that hook to turn the bar into cards. Card padding and the row gap then come from `--top-nav-float-padding-block` (`0.25rem`), `--top-nav-float-padding-inline` (the radius difference, clamped between `0.25rem` and `0.75rem`), and `--top-nav-float-gap` (`0.75rem`). The `<header>` landmark stays on this component.
+Each section carries `data-flat-pack-top-nav-section` (`left`, `center`, or `right`). [Sidebar Layout](sidebar_layout.md) `floating_top_nav: true` uses that hook to turn the bar into cards. Card padding and the row gap then come from `--top-nav-float-padding-block` (`0.25rem`), `--top-nav-float-padding-inline` (the radius difference, clamped between `0.25rem` and `0.75rem`), and `--top-nav-float-gap` (`0.75rem`). The `<header>` landmark stays on this component.
 
-The bar is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+The bar is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. `min-width: 0` and `max-width: 100%` keep the row inside its column. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
 
-At rest the bar does not frost the page (`backdrop-filter: blur(0)`). After the page has scrolled, it uses `--top-nav-backdrop-blur` (default `16px`, same pattern as `--modal-backdrop-blur`). `--top-nav-background-color` stays the fill; do not add a second TopNav variant. The `flat-pack--top-nav` Stimulus controller sets `data-scrolled` and listens to the window plus the nearest overflow pane (including SidebarLayout’s main column). Hosts do not attach a window scroll listener. The controller stays on when `mobile_menu: false`.
+At rest the bar does not frost the page (`backdrop-filter: blur(0)`). After the page has scrolled, it uses `--top-nav-backdrop-blur` (default `16px`, same pattern as `--modal-backdrop-blur`). `--top-nav-background-color` stays the fill. The `flat-pack--top-nav` Stimulus controller sets `data-scrolled` and listens to the window plus the nearest overflow pane (including SidebarLayout's main column). Hosts do not attach a window scroll listener. The controller does not move nodes and does not open a menu.
 
-## Mobile menu
+## Header row
 
-A wide viewport keeps the horizontal row, even when the bar itself is a narrow column between a rail and an aside. Below a phone viewport (`max-width: mobile_breakpoint - 1`), that row moves into one menu opened by a hamburger button (`icon: "menu"`, `aria-label` "Menu"). The open menu is one column: each action is a full-width row. A nested button dropdown stays that dropdown. Opening it uses the dropdown's own menu, portaled to the document body. Top Nav does not restyle the menu or take over the click. The sidebar's mobile toggle (`data-flat-pack--sidebar-layout-target="mobileToggle"`) is not part of the row, so it stays in the bar and opens the sidebar drawer. A notification bell is not part of the row either: put it in a section with `always_display: true`, or set `data-flat-pack-top-nav-always-display="true"` on the bell when it shares a row with other controls. The row folds and the bell stays beside the hamburger. A folded row is a column, so a search field and a dropdown each take a full-width line. The dropdown opens its own menu. The open panel is `position: fixed` under the toggle, so a short overflow-hidden column does not clip it. It sits at `z-index: 30`, above the page and below a drawer scrim. Content is relocated rather than duplicated, so ids, event listeners, and Stimulus controllers keep working.
+Put the back and close controls on the left with `flat_pack_page_nav_tag`. Put the page actions on the right with `page_nav_button_group(styles:, collapse: :menu, visible: 2)`. On a wide screen the first two actions stay in the row and the rest sit under More. On a phone the group is one menu. The bar does not add a second one.
 
 ```erb
+<% flat_pack_page_nav(anchor_href: demo_path, anchor_tooltip: "Close") %>
+<% register_page_nav "Edit", edit_press_kit_path, role: :primary, icon: :pencil %>
+<% register_page_nav "Share", share_press_kit_path, role: :secondary, icon: :share %>
+<% register_page_nav "Duplicate", duplicate_press_kit_path, role: :secondary, icon: :"document-duplicate" %>
+<% register_page_nav "Delete", press_kit_path, role: :destructive, icon: :trash, overflow: true %>
+
 <%= render FlatPack::TopNav::Component.new do |nav| %>
   <% nav.left do %>
-    <h1 class="text-lg font-semibold">Dashboard</h1>
+    <%= flat_pack_page_nav_tag %>
   <% end %>
 
-  <% nav.center do %>
-    <%= render FlatPack::Search::Component.new(
-      items: [{title: "Buttons", description: "Button styles", url: "/demo/buttons"}],
-      placeholder: "Search..."
-    ) %>
-  <% end %>
-
-  <%# Stays in the bar. Not part of the row that folds. %>
-  <% nav.right(always_display: true) do %>
-    <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, aria: { label: "Notifications" }) %>
+  <% nav.right do %>
+    <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu, visible: 2) %>
   <% end %>
 <% end %>
 ```
 
-Set `mobile_menu: false` to keep the row at every width.
-
-The hamburger is rendered hidden and revealed by the `flat-pack--top-nav` Stimulus controller only when the menu has rows, so no toggle appears without JavaScript or when every section stays inline.
+A bell or an avatar sits next to that group, as its own child. See [Button group](button-group.md) and [Page nav registry](page-nav-registry.md).
 
 ## Variants
 None.
@@ -70,18 +65,19 @@ None.
 ```erb
 <%= render FlatPack::TopNav::Component.new do |nav| %>
   <% nav.left do %>
-    <h1 class="text-lg font-semibold">Dashboard</h1>
+    <h1 class="min-w-0 truncate text-lg font-semibold">Dashboard</h1>
   <% end %>
 
   <% nav.center do %>
     <%= render FlatPack::Search::Component.new(
       items: [{title: "Buttons", description: "Button styles", url: "/demo/buttons"}],
-      placeholder: "Search..."
+      placeholder: "Search...",
+      class: "min-w-0 max-w-xl"
     ) %>
   <% end %>
 
   <% nav.right do %>
-    <button type="button" class="p-2 rounded-lg">Alerts</button>
+    <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, aria: { label: "Notifications" }) %>
   <% end %>
 <% end %>
 ```
@@ -131,11 +127,9 @@ None.
 ```
 
 ## Accessibility
-TopNav itself is structural (`<header>`). Accessibility depends on controls rendered inside slots (buttons/links/search inputs) and their labels.
-
-The hamburger is a labelled button with `aria-expanded` and `aria-controls` pointing at the menu panel. The menu closes on `Escape` (returning focus to the toggle), on outside click, and when a link inside it is followed.
+TopNav itself is structural (`<header>`). Accessibility depends on the controls inside the slots. The frost controller does not move focus and does not add a menu.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- `flat-pack--top-nav` Stimulus controller (shipped with the engine importmap) for the hamburger menu and scroll frost.
-- Optional companion components commonly used inside slots: `FlatPack::Search::Component`, `FlatPack::SidebarLayout::Component`.
+- `flat-pack--top-nav` Stimulus controller (shipped with the engine importmap) for scroll frost.
+- Optional companion components commonly used inside slots: `FlatPack::Search::Component`, `FlatPack::ButtonGroup::Component`, `FlatPack::SidebarLayout::Component`.

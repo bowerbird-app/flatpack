@@ -1,0 +1,61 @@
+<%
+  flat_pack_page_nav(anchor_href: demo_path, anchor_tooltip: "Close")
+  @page_nav_in_demo = true
+  register_page_nav "Edit", demo_buttons_path, role: :primary, icon: :pencil
+  register_page_nav "Share", demo_buttons_path, role: :secondary, icon: :share
+  register_page_nav "Duplicate", demo_forms_path, role: :secondary, icon: :"document-duplicate"
+  register_page_nav "Delete", demo_buttons_path, role: :destructive, icon: :trash, overflow: true
+
+  nav_options = {id: "header-row"}
+  nav_options[:class] = "relative rounded-lg border border-[var(--surface-border-color)]" unless framed
+%>
+
+<% unless framed %>
+<section id="header-row-example" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Header row", anchor_link: true, subtitle: "Back on the left. One menu on a phone.") %>
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">
+    The bar is only a row. The button group folds. Edit and Share stay out on a wide screen. Delete sits under More.
+  </p>
+<% end %>
+
+<%= render FlatPack::TopNav::Component.new(**nav_options) do |nav| %>
+  <% nav.left do %>
+    <%= flat_pack_page_nav_tag %>
+  <% end %>
+  <% nav.right do %>
+    <%= page_nav_button_group(
+      styles: FlatPack::PageNavRoleStyles::QUIET,
+      collapse: :menu,
+      visible: 2
+    ) %>
+  <% end %>
+<% end %>
+
+<% if framed %>
+  <div class="fp-layout-content py-8">
+    <div class="fp-layout-column">
+      <h1 class="text-2xl font-semibold">Press kit</h1>
+      <p class="mt-3 text-[var(--surface-muted-content-color)]">Logos, photos, and the short story.</p>
+    </div>
+  </div>
+<% else %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;% flat_pack_page_nav(anchor_href: demo_path, anchor_tooltip: &quot;Close&quot;) %&gt;
+      &lt;% register_page_nav &quot;Edit&quot;, edit_press_kit_path, role: :primary, icon: :pencil %&gt;
+      &lt;% register_page_nav &quot;Share&quot;, share_press_kit_path, role: :secondary, icon: :share %&gt;
+      &lt;% register_page_nav &quot;Duplicate&quot;, duplicate_press_kit_path, role: :secondary, icon: :&quot;document-duplicate&quot; %&gt;
+      &lt;% register_page_nav &quot;Delete&quot;, press_kit_path, role: :destructive, icon: :trash, overflow: true %&gt;
+
+      &lt;%= render FlatPack::TopNav::Component.new do |nav| %&gt;
+        &lt;% nav.left do %&gt;
+          &lt;%= flat_pack_page_nav_tag %&gt;
+        &lt;% end %&gt;
+        &lt;% nav.right do %&gt;
+          &lt;%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu, visible: 2) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+<% end %>
