@@ -106,6 +106,32 @@ class PageNavRegistryHelperProbesController < ApplicationController
     helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, collapse: :overflow)
     head :ok
   end
+
+  def render_overflow
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
+    helpers.register_page_nav "Notes", "/notes", role: :secondary
+    helpers.register_page_nav component: PublishableQuickActionsComponent.new, role: :secondary, overflow: false
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu, visible: 2) %>", layout: false
+  end
+
+  def rejected_overflow
+    helpers.register_page_nav "New", "/new", role: :primary, overflow: "yes"
+    head :ok
+  end
+
+  def render_bad_visible
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, visible: -1)
+    head :ok
+  end
+
+  def render_overflow_label
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_label: \"Extras\") %>", layout: false
+  end
 end
 
 class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
@@ -195,6 +221,37 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_missing_role" }
       error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_collapse" }
       assert_match(/collapse must be false or :menu/, error.message)
+      assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/rejected_overflow" }
+      assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_visible" }
+    end
+  end
+
+  test "page_nav_button_group forwards visible and per-item overflow" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_overflow"
+
+      assert_response :success
+      assert_equal ["New press kit", "Share", "Publish"], nav_row_labels
+      assert_equal ["Delete", "Notes"], nav_overflow_labels
+      assert_select ".fp-button-group__overflow a.fp-menu-row[data-fp-style=danger][href='/press-kits/delete']", text: "Delete"
+      assert_select ".fp-button-group-menu__row > a[href='/press-kits/delete']", count: 0
+      assert_select ".fp-button-group-menu__row #publishable_quick_actions_demo", text: "Publish", count: 1
+      assert_select ".fp-button-group__overflow #publishable_quick_actions_demo", count: 0
+      assert_equal ["New press kit", "Share", "Delete", "Notes", "Publish"], group_labels
+      assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Delete", count: 1
+      assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "More"
+    end
+  end
+
+  test "page_nav_button_group forwards overflow_label" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_overflow_label"
+
+      assert_response :success
+      assert_select ".fp-button-group > a", text: "Share"
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "Extras"
+      assert_select ".fp-button-group__overflow .fp-menu-row", text: "Delete"
     end
   end
 
@@ -215,6 +272,16 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
     panel.css("> *").map { |node| node.text.squish }
   end
 
+  def nav_row_labels
+    row = css_select(".fp-button-group-menu__row").first
+    row.element_children.reject { |node| node["class"].to_s.include?("fp-button-group__overflow") }.map { |node| node.text.squish }
+  end
+
+  def nav_overflow_labels
+    menu = css_select(".fp-button-group__overflow [data-flat-pack--button-dropdown-target=menu]").first
+    menu.element_children.map { |node| node.text.squish }
+  end
+
   def with_page_nav_routes
     with_routing do |set|
       set.draw do
@@ -233,6 +300,10 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_nav_registry_helper/render_empty", to: "page_nav_registry_helper_probes#render_empty"
         get "/demo/page_nav_registry_helper/render_missing_role", to: "page_nav_registry_helper_probes#render_missing_role"
         get "/demo/page_nav_registry_helper/render_bad_collapse", to: "page_nav_registry_helper_probes#render_bad_collapse"
+        get "/demo/page_nav_registry_helper/render_overflow", to: "page_nav_registry_helper_probes#render_overflow"
+        get "/demo/page_nav_registry_helper/rejected_overflow", to: "page_nav_registry_helper_probes#rejected_overflow"
+        get "/demo/page_nav_registry_helper/render_bad_visible", to: "page_nav_registry_helper_probes#render_bad_visible"
+        get "/demo/page_nav_registry_helper/render_overflow_label", to: "page_nav_registry_helper_probes#render_overflow_label"
       end
 
       yield

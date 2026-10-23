@@ -16,27 +16,42 @@ Use Button Group when a compact row of related actions should look visually conn
 | `menu_label` | String, nil | `nil` | no | Visible trigger text when `collapse: :menu`. Also the accessible name of the group. Omit it for an icon-only trigger labelled "Menu". Ignored when `collapse` is `false`. |
 | `menu_icon` | String | `"menu"` | no | Heroicon name on the trigger. `"menu"` is the bars glyph. Ignored when `collapse` is `false`. |
 | `collapse_at` | Integer | `768` | no | Viewport width, in pixels, where the row replaces the menu. Ignored when `collapse` is `false`. |
+| `visible` | Integer, nil | `nil` | no | How many children stay in the joined row, counting from the first. The rest go in the overflow menu. `nil` keeps every child that did not pass `overflow: true`. `0` parks every child that did not pass `overflow: false`. A negative number, or anything that is not a whole number, raises `ArgumentError`. |
+| `overflow_label` | String, nil | `nil` | no | Visible label on the overflow trigger. `nil` uses the locale string "More". The trigger also shows an ellipsis icon and hides the chevron. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the group wrapper. |
 
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `button` | slot | no | Add rendered button-like content (typically `FlatPack::Button::Component`). |
+| `button` | slot | no | Add rendered button-like content (typically `FlatPack::Button::Component`). `overflow: true` forces that child into the overflow menu. `overflow: false` keeps it in the row. Omit it and `visible` decides. Anything other than `true`, `false`, or omitted raises `ArgumentError`. |
 
 ## Variants
 - Joined row (`collapse: false`, the default). The group rounds the outer corners and drops the shared edge on each direct child.
 - Collapsing menu (`collapse: :menu`). Wide viewport: the joined row, trigger hidden. Narrow viewport: trigger visible, panel hidden until opened, then one menu. Escape and a click outside close it. A click inside the panel does not.
+- Overflow menu. The first `visible` children stay in the joined row. The rest sit in a trailing dropdown. `overflow: true` on a child puts it in that menu even when it is among the first `visible`. `overflow: false` keeps it in the row even when it comes later. Visible children keep their order. Overflow children keep theirs. With `collapse: :menu`, the phone menu still lists every child once, in the order they were added. The overflow dropdown is part of the wide row, so it is hidden on a phone. Without `collapse: :menu`, the overflow dropdown stays in the row.
 
 ## Menu row
-`collapse: :menu` asks each direct child for `menu_row`. The method returns HTML for the phone menu. The wide row is the child itself.
+`collapse: :menu` asks each direct child for `menu_row`. The overflow menu asks the same method. The method returns HTML for that menu. The wide row is the child itself.
 
 - `FlatPack::Button::Component#menu_row` is a plain row: the label, `href`, and icon, left aligned, with no button chrome. `style: :danger` is red text (`data-fp-style="danger"`), not a red fill. The wide control keeps `id`, `class`, and the button chrome. `menu_row` does not repeat `id`.
 - `FlatPack::Button::Dropdown::Component#menu_row` renders that dropdown as `FlatPack::Menu::Collapse::Component`. The label and icon are the header. The items sit underneath. The wide row is still the floating dropdown. A dropdown outside a button group is unchanged.
 - A host component implements the same method. Call it on the same button instance `call` rendered, so the row can use that button's `menu_row`.
 
-A child with no `menu_row`, or whose `menu_row` does not return HTML, is rendered once and that HTML is placed in the row and again in the menu. It keeps its own chrome. The group only shapes the direct child (joined borders, outer corners, spacing). It does not read another component's targets, and it does not build a second copy of a child.
+A child with no `menu_row`, or whose `menu_row` does not return HTML, is rendered once. That HTML is the wide control when the child stays in the row, and the overflow body when it does not. With `collapse: :menu` the same HTML is also the phone row. It keeps its own chrome. The group only shapes the direct child (joined borders, outer corners, spacing). It does not read another component's targets, and it does not build a second copy of a child.
 
-A dropdown joins the row when it is the direct child. Its root takes the segment shape, and its trigger copies that box. A wrapper around the dropdown is the direct child instead. The group does not restyle the trigger inside that wrapper.
+A dropdown joins the row when it is the direct child. Its root takes the segment's outer radius and does not paint a border. The trigger copies that radius and draws the edge, in the button's own border color. A wrapper around the dropdown is the direct child instead. The group does not restyle the trigger inside that wrapper.
+
+## Example — overflow
+```erb
+<%= render FlatPack::ButtonGroup::Component.new(visible: 2, collapse: :menu) do |group| %>
+  <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary)) %>
+  <% group.button(FlatPack::Button::Component.new(text: "Delete", style: :danger), overflow: true) %>
+  <% group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary)) %>
+  <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary), overflow: false) %>
+<% end %>
+```
+
+Rename and Duplicate stay in the row. Delete and Share sit under More. On a phone, the single menu is Rename, Delete, Share, Duplicate.
 
 ## Example — collapsing menu
 ```erb
@@ -60,6 +75,7 @@ A dropdown joins the row when it is the direct child. Its root takes the segment
 - Use descriptive button labels because grouping is visual by default.
 - Forward `aria-*` attributes via `system_arguments` when needed.
 - With `collapse: :menu`, the trigger has `aria-expanded`, `aria-controls`, and `aria-haspopup`. The wide row and the panel are each `role="group"`. One is hidden at a time. Opening, Escape, and an outside click update `aria-expanded`. Ids stay on the wide controls.
+- The overflow trigger is a button labelled "More" (or `overflow_label`) with an ellipsis icon. It uses the dropdown's `aria-haspopup` and `aria-expanded`. Choosing a row closes that menu. A nested dropdown is a `Menu::Collapse` section, so its header stays open while it expands. Rows are links and buttons, so Tab reaches them. `style: :danger` is red text.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

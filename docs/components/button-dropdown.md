@@ -36,6 +36,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 |---|---|---|---|
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
+| `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item` and `menu_divider`. Button Group uses it for each overflow child's `menu_row`. |
 
 `menu_item` props:
 
@@ -141,7 +142,7 @@ Square icon trigger. Omit `round` and the theme corner stays.
 ```
 
 ## Collapsing button group
-`menu_row` is the phone form used by [Button Group](button-group.md) when `collapse: :menu`. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
+`menu_row` is the menu form used by [Button Group](button-group.md). `collapse: :menu` uses it in the phone menu. An overflow menu uses it when this dropdown did not stay in the row. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
 
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.

@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.306] - 2026-10-23
+
+### Added
+- `FlatPack::ButtonGroup::Component` takes `visible:`. The first that many children stay in the joined row. The rest sit in a trailing More menu. `overflow_label:` sets that trigger's text. The default is "More", with an ellipsis icon.
+- `group.button(child, overflow: true)` forces that child into the More menu. `overflow: false` keeps it in the row. Those flags win over `visible:`. Visible children keep their order. Overflow children keep theirs. Each overflow row is that child's `menu_row`. A nested dropdown is a `Menu::Collapse`. A danger row is red text.
+- With `collapse: :menu`, the phone menu still lists every child once, in the order they were added. Without `collapse: :menu`, the More menu stays on the row.
+- `register_page_nav` accepts `overflow:` on a link or a component and passes it to that child. `page_nav_button_group` accepts `visible:` and `overflow_label:` and passes both to the group.
+- `FlatPack::Button::Dropdown::Component#menu_html` places already-rendered HTML in the menu.
+
+### Fixed
+- A dropdown at the end of a button group, including the More trigger, no longer paints a dark right edge. The segment's outer corner and border match the other children.
+
+### Upgrade notes
+- Pass `visible:` when a wide row should keep a fixed number of actions. Pass `overflow: true` on a child that should always sit under More, such as Delete.
+- `register_page_nav "Delete", path, role: :destructive, overflow: true` then `page_nav_button_group(styles:, collapse: :menu, visible: 2, overflow_label: "More")`.
+- A host component in that menu still implements `menu_row` and returns HTML. Do not repeat an `id` that `call` already renders.
+- Reload kit JavaScript so choosing a More row closes the menu. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.306`.
+
 ## [0.1.305] - 2026-10-22
 
 ### Added

@@ -31,6 +31,7 @@ en:
       loading: Loading
     button_group:
       menu: Menu
+      overflow: More
     trash_button:
       trash: Trash
       confirm: Confirm

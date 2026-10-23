@@ -121,6 +121,7 @@ module FlatPack
         assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > *'
         assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > :first-child'
         assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > :last-child'
+        assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > .fp-button-dropdown'
 
         assert_selector ".fp-button-group-menu__row a.fp-button[href='/rename']", text: "Rename"
         assert_selector ".fp-button-group-menu__panel a.fp-menu-row[href='/rename']", text: "Rename"
@@ -133,6 +134,8 @@ module FlatPack
         refute_includes css, 'data-flat-pack--button-dropdown-target="trigger"'
         assert_includes css, ".fp-button-group > .fp-button-dropdown > .fp-button-dropdown__trigger"
         assert_includes css, "border-radius: inherit"
+        assert_includes css, ".fp-button-group > .fp-button-dropdown:last-child > .fp-button-dropdown__trigger"
+        assert_includes css, ".fp-button-group > .fp-button-dropdown,\n.fp-button-group-menu__row > .fp-button-dropdown {\n  border-width: 0;\n}"
       end
 
       def test_plain_group_joins_a_dropdown_on_its_root
@@ -220,6 +223,160 @@ module FlatPack
 
         assert status.success?, stdout
       end
+
+      def test_visible_keeps_the_first_children_and_parks_the_rest
+        render_inline(Component.new(visible: 2)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary, href: "/share"))
+          group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger))
+        end
+
+        assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group")
+        assert_equal ["Share", "Archive"], overflow_labels
+        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "More"
+        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
+        assert_no_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value='chevron-down']"
+        assert_selector ".fp-button-group__overflow .fp-menu-row[href='/share']", text: "Share"
+        assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Archive"
+        assert_no_selector ".fp-button-group > .fp-button", text: "Archive"
+        assert_no_selector ".fp-button-group-menu"
+      end
+
+      def test_overflow_flag_beats_the_visible_count_and_keeps_order
+        render_inline(Component.new(visible: 2, overflow_label: "Extras")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Delete", style: :danger), overflow: true)
+          group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary), overflow: false)
+          group.button(FlatPack::Button::Component.new(text: "Move", style: :secondary))
+        end
+
+        assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group")
+        assert_equal ["Delete", "Share", "Move"], overflow_labels
+        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "Extras"
+        assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
+        assert_no_selector ".fp-button-group > .fp-button", text: "Delete"
+      end
+
+      def test_overflow_true_without_a_count_still_opens_the_menu
+        render_inline(Component.new) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Delete", style: :danger), overflow: true)
+        end
+
+        assert_equal ["Rename"], row_labels(".fp-button-group")
+        assert_equal ["Delete"], overflow_labels
+        assert_no_selector ".fp-button-group__overflow", text: "Rename"
+      end
+
+      def test_a_full_row_has_no_overflow_menu
+        render_inline(Component.new(visible: 4, overflow_label: "Extras")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary))
+        end
+
+        assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group")
+        assert_no_selector ".fp-button-group__overflow"
+        assert_no_text "Extras"
+      end
+
+      def test_collapse_menu_puts_every_child_in_the_phone_menu_once
+        render_inline(Component.new(collapse: :menu, visible: 2)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+          group.button(FlatPack::Button::Component.new(text: "Delete", style: :danger), overflow: true)
+          group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary, icon: "pencil")) do |dropdown|
+            dropdown.menu_item(text: "Copy link", href: "/copy")
+            dropdown.menu_item(text: "Remove", destructive: true)
+          end
+          group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary), overflow: false)
+          group.button(ButtonGroupOverflowHost.new)
+        end
+
+        assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group-menu__row")
+        assert_equal ["Delete", "Share", "Publish"], overflow_labels
+        assert_no_selector ".fp-button-group-menu__row .fp-button-dropdown .fp-button-dropdown"
+        assert_no_selector ".fp-button-group__overflow .fp-button-dropdown"
+        assert_selector ".fp-button-group__overflow > .fp-menu-collapse", count: 0
+        assert_selector ".fp-button-group__overflow .fp-menu-collapse", count: 1
+        assert_selector ".fp-button-group__overflow .fp-menu-collapse__button", text: "Share"
+        assert_selector ".fp-button-group__overflow .fp-menu-collapse__items a", text: "Copy link", visible: :all
+        assert_selector ".fp-button-group__overflow .fp-menu-collapse__items button[data-fp-style='danger']", text: "Remove", visible: :all
+        assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
+        assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Publish"
+        assert_no_selector "#publish-wide"
+
+        assert_equal ["Rename", "Delete", "Share", "Duplicate", "Publish"], panel_labels
+        assert_selector ".fp-button-group-menu__panel > .fp-menu-row", text: "Rename", count: 1
+        assert_selector ".fp-button-group-menu__panel > .fp-menu-row[data-fp-style=danger]", text: "Delete", count: 1
+        assert_selector ".fp-button-group-menu__panel > .fp-menu-collapse", count: 1
+        assert_selector ".fp-button-group-menu__panel > .fp-menu-row", text: "Duplicate", count: 1
+        assert_selector ".fp-button-group-menu__panel > .fp-menu-row[data-fp-style=danger]", text: "Publish", count: 1
+        assert_no_selector ".fp-button-group-menu__panel .fp-button-group__overflow"
+        assert_no_selector ".fp-button-group-menu__panel .fp-button-dropdown"
+        assert_selector ".fp-button-group-menu__trigger", text: "Menu", count: 0
+        assert_selector ".fp-button-group-menu__trigger[aria-label=Menu]", count: 1
+      end
+
+      def test_overflow_renders_a_child_without_menu_row_as_itself
+        render_inline(Component.new(visible: 0, collapse: :menu)) do |group|
+          group.button('<span class="raw-child">Raw</span>'.html_safe)
+        end
+
+        assert_selector ".fp-button-group-menu__row > .fp-button-group__overflow .raw-child", text: "Raw", count: 1
+        assert_no_selector ".fp-button-group-menu__row > .raw-child"
+        assert_selector ".fp-button-group-menu__panel > .raw-child", text: "Raw", count: 1
+        assert_equal 2, page.all(".raw-child", visible: :all).size
+      end
+
+      def test_invalid_visible_and_overflow_raise
+        assert_raises(ArgumentError) { Component.new(visible: -1) }
+        assert_raises(ArgumentError) { Component.new(visible: 1.5) }
+        assert_raises(ArgumentError) { Component.new(visible: "2") }
+
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(visible: 1)) do |group|
+            group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary), overflow: "yes")
+          end
+        end
+        assert_equal "overflow must be true or false", error.message
+      end
+
+      private
+
+      def row_labels(row_selector)
+        page.all("#{row_selector} > :not(.fp-button-group__overflow)", visible: :all).map { |node| entry_label(node) }
+      end
+
+      def overflow_labels
+        page.all(".fp-button-group__overflow [data-flat-pack--button-dropdown-target='menu'] > *", visible: :all).map { |node| entry_label(node) }
+      end
+
+      def panel_labels
+        page.all(".fp-button-group-menu__panel > *", visible: :all).map { |node| entry_label(node) }
+      end
+
+      def entry_label(node)
+        return node.find(".fp-menu-collapse__button", visible: :all).text.squish if node[:class].to_s.split.include?("fp-menu-collapse")
+
+        node.text.squish
+      end
     end
+  end
+end
+
+class ButtonGroupOverflowHost < ViewComponent::Base
+  def call
+    render(wide_button)
+  end
+
+  def menu_row
+    wide_button.menu_row
+  end
+
+  private
+
+  def wide_button
+    @wide_button ||= FlatPack::Button::Component.new(text: "Publish", id: "publish-wide", style: :danger)
   end
 end
