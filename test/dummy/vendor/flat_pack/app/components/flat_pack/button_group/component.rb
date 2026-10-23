@@ -3,7 +3,7 @@
 module FlatPack
   module ButtonGroup
     class Component < FlatPack::BaseComponent
-      renders_many :buttons, ->(component) { component }
+      renders_many :buttons, ->(component = nil, overflow: nil) { record_child(component, overflow) }
 
       undef_method :with_button, :with_button_content
 
@@ -12,17 +12,29 @@ module FlatPack
       COLLAPSES = [false, :menu].freeze
       DEFAULT_COLLAPSE_AT = 768
       DEFAULT_MENU_ICON = "menu"
+      OVERFLOW_ICON = "ellipsis-horizontal"
 
-      def initialize(collapse: false, menu_label: nil, menu_icon: DEFAULT_MENU_ICON, collapse_at: DEFAULT_COLLAPSE_AT, **system_arguments)
+      def initialize(
+        collapse: false,
+        menu_label: nil,
+        menu_icon: DEFAULT_MENU_ICON,
+        collapse_at: DEFAULT_COLLAPSE_AT,
+        visible: nil,
+        overflow_label: nil,
+        **system_arguments
+      )
         @collapse = normalize_collapse!(collapse)
         @menu_label = normalize_menu_label!(menu_label)
         @menu_icon = normalize_menu_icon!(menu_icon)
         @collapse_at = normalize_collapse_at!(collapse_at)
+        @visible = normalize_visible!(visible)
+        @overflow_label = normalize_overflow_label!(overflow_label)
+        @child_overflow = []
         super(**system_arguments)
       end
 
-      def button(*args, &block)
-        set_slot(:buttons, nil, *args, &block)
+      def button(component = nil, overflow: nil, &block)
+        set_slot(:buttons, nil, component, overflow: overflow, &block)
       end
 
       private
@@ -167,20 +179,83 @@ module FlatPack
         CSS
       end
 
-      # The wide row renders the child. The phone menu renders menu_row when
-      # that method returns HTML. Anything else is the same render again.
+      # First `visible` children stay in the row. `overflow: true` and
+      # `overflow: false` win over that count. Relative order is kept.
+      def row_slots
+        partition.fetch(:row)
+      end
+
+      def overflow_slots
+        partition.fetch(:overflow)
+      end
+
+      def partition
+        @partition ||= begin
+          row = []
+          overflow = []
+          buttons.each_with_index do |slot, index|
+            if show_in_row?(index)
+              row << slot
+            else
+              overflow << slot
+            end
+          end
+          {row: row, overflow: overflow}
+        end
+      end
+
+      def show_in_row?(index)
+        case @child_overflow[index]
+        when true then false
+        when false then true
+        else @visible.nil? || index < @visible
+        end
+      end
+
+      def overflow_dropdown
+        slots = overflow_slots
+        return if slots.empty?
+
+        dropdown = FlatPack::Button::Dropdown::Component.new(
+          text: overflow_label,
+          icon: OVERFLOW_ICON,
+          show_chevron: false,
+          style: :secondary,
+          size: :sm,
+          class: "fp-button-group__overflow"
+        )
+        slots.each { |slot| dropdown.menu_html(menu_entry(slot)) }
+        render(dropdown)
+      end
+
+      def overflow_label
+        @overflow_label.nil? ? fp_t("button_group.overflow") : @overflow_label
+      end
+
+      # Rendering the child once gives it a view context and runs its own slot
+      # block. The wide row uses that HTML. A menu uses menu_row when it returns
+      # HTML, and the same render otherwise.
       def rendered_child(slot)
         @rendered_children ||= {}
         @rendered_children[slot] ||= slot.to_s
       end
 
       def menu_entry(slot)
+        rendered_child(slot)
+
         if slot.respond_to?(:menu_row)
           row = slot.menu_row
           return row if row.respond_to?(:to_str)
         end
 
         rendered_child(slot)
+      end
+
+      def record_child(component, overflow)
+        raise ArgumentError, "button group needs a child" if component.nil?
+
+        @child_overflow << normalize_overflow!(overflow)
+        component
       end
 
       def normalize_collapse!(value)
@@ -207,6 +282,25 @@ module FlatPack
         return text.to_i if text.match?(/\A[1-9]\d*\z/)
 
         raise ArgumentError, "collapse_at must be a positive number of pixels"
+      end
+
+      def normalize_visible!(value)
+        return if value.nil?
+        return value if value.is_a?(Integer) && value >= 0
+
+        raise ArgumentError, "visible must be a whole number"
+      end
+
+      def normalize_overflow_label!(label)
+        validate_text_option!(label, name: :overflow_label)
+        label.presence
+      end
+
+      def normalize_overflow!(value)
+        return if value.nil?
+        return value if value == true || value == false
+
+        raise ArgumentError, "overflow must be true or false"
       end
     end
   end

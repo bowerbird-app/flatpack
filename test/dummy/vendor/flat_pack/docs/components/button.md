@@ -206,7 +206,7 @@ A menu row leaves the label at the start, clamps it to two lines, and parks a co
 ```
 
 ## Collapsing button group
-`menu_row` is the phone form used by [Button Group](button-group.md) when `collapse: :menu`. It is a plain left-aligned row with the label, `href`, and icon. `style: :danger` is red text, not a red fill. Other styles drop their fill. The wide control is still `call`, and it keeps `id` and `class`. `menu_row` forwards other attributes, including `data` and `aria`, and omits `id`.
+`menu_row` is the menu form used by [Button Group](button-group.md). `collapse: :menu` uses it in the phone menu. An overflow menu uses it for each child that did not stay in the row. It is a plain left-aligned row with the label, `href`, and icon. `style: :danger` is red text, not a red fill. Other styles drop their fill. The wide control is still `call`, and it keeps `id` and `class`. `menu_row` forwards other attributes, including `data` and `aria`, and omits `id`.
 
 ## Touch
 Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulation` (`touch-action: manipulation`) so taps are not delayed by double-tap zoom. Icon-only controls also get that from `.fp-hit-target`. Kit CSS does not set a host-wide `button {}` rule.

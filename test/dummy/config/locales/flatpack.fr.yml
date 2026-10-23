@@ -31,6 +31,7 @@ fr:
       loading: Chargement
     button_group:
       menu: Menu
+      overflow: Plus
     trash_button:
       trash: Corbeille
       confirm: Confirmer

@@ -6,10 +6,11 @@ module FlatPack
   class PageNavItem
     ROLES = %i[primary secondary destructive].freeze
 
-    attr_reader :label, :href, :role, :icon, :data, :aria, :component
+    attr_reader :label, :href, :role, :icon, :data, :aria, :component, :overflow
 
-    def initialize(label = nil, href = nil, role:, icon: nil, data: nil, aria: nil, component: nil)
+    def initialize(label = nil, href = nil, role:, icon: nil, data: nil, aria: nil, component: nil, overflow: nil)
       @role = normalize_role!(role)
+      @overflow = normalize_overflow!(overflow)
       if component
         reject_semantic!(label, href, icon, data, aria)
         @component = component
@@ -39,7 +40,14 @@ module FlatPack
     def reject_semantic!(label, href, icon, data, aria)
       return if label.nil? && href.nil? && icon.nil? && data.nil? && aria.nil?
 
-      raise ArgumentError, "page nav component takes role: only"
+      raise ArgumentError, "page nav component takes role: and overflow: only"
+    end
+
+    def normalize_overflow!(value)
+      return if value.nil?
+      return value if value == true || value == false
+
+      raise ArgumentError, "overflow must be true or false"
     end
 
     def safe_href!(href)

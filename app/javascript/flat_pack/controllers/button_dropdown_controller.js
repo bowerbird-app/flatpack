@@ -164,18 +164,30 @@ export default class extends Controller {
 
   handleMenuItemClick(event) {
     const menuItem = event.target.closest('[role="menuitem"]')
-    if (!menuItem || !this.menuElement.contains(menuItem) || menuItem.matches("[disabled], [aria-disabled='true']")) {
+    if (menuItem && this.menuElement.contains(menuItem)) {
+      if (menuItem.matches("[disabled], [aria-disabled='true']")) return
+
+      this.dispatchDetachedActions(menuItem, event)
+      this.closeAfterAction()
       return
     }
 
-    this.dispatchDetachedActions(menuItem, event)
+    // A disclosure inside the menu calls preventDefault on its header.
+    // An action row does not, so choosing it closes this menu.
+    if (event.defaultPrevented) return
 
+    const action = event.target.closest("a, button")
+    if (!action || !this.menuElement.contains(action)) return
+    if (action.matches("[disabled], [aria-disabled='true']")) return
+
+    this.closeAfterAction()
+  }
+
+  closeAfterAction() {
     if (!this.isOpen) return
 
     requestAnimationFrame(() => {
-      if (this.isOpen) {
-        this.close({ returnFocus: false })
-      }
+      if (this.isOpen) this.close({ returnFocus: false })
     })
   }
 
@@ -198,9 +210,13 @@ export default class extends Controller {
 
   // Focus management methods
   getFocusableItems() {
-    return Array.from(
-      this.menuElement.querySelectorAll('[role="menuitem"]:not([tabindex="-1"])')
-    )
+    return Array.from(this.menuElement.querySelectorAll("a[href], button:not([disabled])")).filter((item) => {
+      if (item.closest("[hidden]")) return false
+      if (item.getAttribute("tabindex") === "-1") return false
+      if (item.getAttribute("aria-disabled") === "true") return false
+
+      return true
+    })
   }
 
   focusFirstItem() {

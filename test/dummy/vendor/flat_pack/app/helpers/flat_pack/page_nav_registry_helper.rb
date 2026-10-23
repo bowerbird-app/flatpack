@@ -8,10 +8,11 @@ module FlatPack
 
     # Register one page nav entry. Returns nil.
     #
-    # Link: `register_page_nav "Label", path, role:, icon:, data:, aria:, into:`
-    # Component: `register_page_nav component:, role:, into:`
+    # Link: `register_page_nav "Label", path, role:, icon:, data:, aria:, into:, overflow:`
+    # Component: `register_page_nav component:, role:, into:, overflow:`
     # `role:` is required. `:primary`, `:secondary`, or `:destructive`.
     # `into:` is a caller-named bucket. Omit it to use `:default`.
+    # `overflow: true` puts that child in the button group's overflow menu.
     def register_page_nav(
       label = nil,
       href = nil,
@@ -20,17 +21,18 @@ module FlatPack
       data: nil,
       aria: nil,
       component: nil,
-      into: PageNavRegistry::DEFAULT_BUCKET
+      into: PageNavRegistry::DEFAULT_BUCKET,
+      overflow: nil
     )
       require_role!(role)
       item = if component
         if label || href || icon || data || aria
-          raise ArgumentError, "page nav component takes role: only"
+          raise ArgumentError, "page nav component takes role: and overflow: only"
         end
 
-        PageNavItem.new(role: role, component: component)
+        PageNavItem.new(role: role, component: component, overflow: overflow)
       else
-        PageNavItem.new(label, href, role: role, icon: icon, data: data, aria: aria)
+        PageNavItem.new(label, href, role: role, icon: icon, data: data, aria: aria, overflow: overflow)
       end
       page_nav_registry.add(item, into: into)
     end
@@ -44,20 +46,21 @@ module FlatPack
 
     # One FlatPack::ButtonGroup::Component for a bucket, in registration order.
     # A link becomes a button through `styles` (a PageNavRoleStyles map).
-    # A component is passed through. `collapse` is passed to the group.
+    # A component is passed through. `collapse` and `visible` are passed to the
+    # group. `overflow` on an item is passed to that child.
     # Returns nil when the bucket is empty.
-    def page_nav_button_group(styles:, from: PageNavRegistry::DEFAULT_BUCKET, collapse: false)
+    def page_nav_button_group(styles:, from: PageNavRegistry::DEFAULT_BUCKET, collapse: false, visible: nil)
       items = page_nav_items(from: from)
       return if items.empty?
 
-      render(FlatPack::ButtonGroup::Component.new(collapse: collapse)) do |row|
+      render(FlatPack::ButtonGroup::Component.new(collapse: collapse, visible: visible)) do |row|
         items.each do |item|
           child = if item.component?
             item.component
           else
             PageNavRoleStyles.button_for(item, styles: styles)
           end
-          row.button(child)
+          row.button(child, overflow: item.overflow)
         end
       end
     end

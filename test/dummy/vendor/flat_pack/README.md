@@ -339,7 +339,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 ### Interactive
 - **Button** - Buttons and links with multiple styles, loading states, and an icon-only `:xs` size
 - **ButtonDropdown** - Button with an attached dropdown menu
-- **ButtonGroup** - Grouped button layouts
+- **ButtonGroup** - Grouped button layouts. `visible:` keeps the first children in the row and puts the rest in a More menu. `overflow:` on a child overrides that count.
 - **SegmentedButtons** - Segmented control / toggle group. `indicator: :slide` uses the pill-tab slider.
 - **Accordion** - Collapsible content sections
 - **Collapse** - Single-panel show/hide toggler

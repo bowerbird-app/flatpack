@@ -10,9 +10,12 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select "#page-nav-registry-header h1", text: "Press kit"
     assert_select "#page-nav-registry-header .fp-button-group-menu a[data-fp-style=secondary]", text: "New press kit"
     assert_select "#page-nav-registry-header a[data-fp-style=secondary]", text: "Share"
-    assert_select "#page-nav-registry-header a[data-fp-style=danger]", text: "Delete"
-    assert_select "#page-nav-registry-header .fp-button-group-menu__row a", count: 3
+    assert_select "#page-nav-registry-header .fp-button-group__overflow a.fp-menu-row[data-fp-style=danger]", text: "Delete", count: 1
+    assert_select "#page-nav-registry-header .fp-button-group-menu__panel a.fp-menu-row[data-fp-style=danger]", text: "Delete", count: 1
+    assert_select "#page-nav-registry-header .fp-button-group-menu__row > a[data-fp-style=danger]", count: 0
+    assert_select "#page-nav-registry-header .fp-button-group-menu__row > a", count: 2
     assert_select "#page-nav-registry-header .fp-button-group-menu__panel a.fp-menu-row", count: 3
+    assert_equal ["New press kit", "Share", "Publish", "More"], page_nav_row_labels
     assert_select "#page-nav-registry-header .fp-button-group-menu__trigger[aria-label=Menu]"
     assert_select "header.fp-top-nav .fp-button-group-menu", count: 0
     assert_select ".fp-page-nav", count: 0
@@ -31,9 +34,10 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select "#page-nav-registry-header h1", text: "Press kit"
     assert_select "#page-nav-registry-shell .fp-layout-column #page-nav-registry-header .fp-button-group-menu a[data-fp-style=primary]", text: "New press kit"
     assert_select "#page-nav-registry-header a[data-fp-style=secondary]", text: "Share"
-    assert_select "#page-nav-registry-header a[data-fp-style=danger]", text: "Delete"
-    assert_select "#page-nav-registry-header .fp-button-group-menu__row a", count: 3
+    assert_select "#page-nav-registry-header .fp-button-group__overflow a.fp-menu-row[data-fp-style=danger]", text: "Delete", count: 1
+    assert_select "#page-nav-registry-header .fp-button-group-menu__row > a", count: 2
     assert_select "#page-nav-registry-header .fp-button-group-menu__panel a.fp-menu-row", count: 3
+    assert_equal ["New press kit", "Share", "Publish", "More"], page_nav_row_labels
     assert_select "header.fp-top-nav .fp-button-group-menu", count: 0
     assert_select ".fp-page-nav", count: 0
     assert_select ".fp-button-group-menu__row #publishable_quick_actions_demo", text: "Publish", count: 1
@@ -47,5 +51,16 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
   def page_nav_labels
     panel = css_select("#page-nav-registry-header .fp-button-group-menu__panel").first
     panel.css("> *").map { |node| node.text.squish }
+  end
+
+  def page_nav_row_labels
+    row = css_select("#page-nav-registry-header .fp-button-group-menu__row").first
+    row.element_children.map do |node|
+      if node["class"].to_s.include?("fp-button-group__overflow")
+        node.at_css(".fp-button-dropdown__trigger").text.squish
+      else
+        node.text.squish
+      end
+    end
   end
 end

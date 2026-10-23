@@ -6,11 +6,12 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         renders_many :menu, types: {
           item: FlatPack::Button::DropdownItem::Component,
-          divider: FlatPack::Button::DropdownDivider::Component
+          divider: FlatPack::Button::DropdownDivider::Component,
+          html: ->(body) { body }
         }
 
-        undef_method :with_menu_item, :with_menu_divider
-        undef_method :with_menu_item_content, :with_menu_divider_content
+        undef_method :with_menu_item, :with_menu_divider, :with_menu_html
+        undef_method :with_menu_item_content, :with_menu_divider_content, :with_menu_html_content
 
         ICON_VARIANTS = IconOptions::VARIANTS
         ICON_STYLES = IconOptions::STYLES
@@ -67,6 +68,12 @@ module FlatPack
 
         def menu_divider(**kwargs, &block)
           set_polymorphic_slot(:menu, :divider, **kwargs, &block)
+        end
+
+        # Already-rendered menu body. Button Group uses this for each overflow
+        # child's menu_row. The string is placed in the menu as given.
+        def menu_html(body)
+          set_polymorphic_slot(:menu, :html, body)
         end
 
         # Phone row for a collapsing button group. The wide control stays a dropdown.

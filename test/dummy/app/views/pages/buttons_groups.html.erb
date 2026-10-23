@@ -86,6 +86,43 @@
   ) %>
 </section>
 
+<section class="mb-12" id="overflow">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "More on a wide screen",
+    anchor_link: true,
+    subtitle: "Two stay in the row. The rest sit under More. Delete can be sent there on purpose, and Duplicate can stay."
+  ) %>
+  <div id="overflow-count" class="mb-8 flex min-h-72 items-start justify-end">
+    <%= render FlatPack::ButtonGroup::Component.new(visible: 2, collapse: :menu) do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary, size: :sm)) %>
+      <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Share", style: :secondary, size: :sm)) do |dropdown| %>
+        <% dropdown.menu_item(text: "Copy link", href: "#") %>
+        <% dropdown.menu_item(text: "Email", href: "#") %>
+      <% end %>
+      <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :danger, size: :sm)) %>
+    <% end %>
+  </div>
+  <div id="overflow-override" class="mb-4 flex min-h-72 items-start justify-end">
+    <%= render FlatPack::ButtonGroup::Component.new(visible: 2, collapse: :menu) do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Delete", style: :danger, size: :sm), overflow: true) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm, href: "#")) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary, size: :sm), overflow: false) %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::ButtonGroup::Component.new(visible: 2, collapse: :menu) do |group| %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Delete", style: :danger, size: :sm), overflow: true) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm, href: "#")) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :secondary, size: :sm), overflow: false) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12" id="joined-dropdown">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "A dropdown joins the row",
