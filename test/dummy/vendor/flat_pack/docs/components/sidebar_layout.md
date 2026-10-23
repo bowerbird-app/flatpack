@@ -134,9 +134,17 @@ Check these when the shell is on a phone, or in a narrow main column.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
 
 ## Page nav
-A view registers nav with `register_page_nav`. This shell reads the `:default` bucket with `page_nav_items` and draws it in the bar under the top nav. Links and a registered component go in one `FlatPack::ButtonGroup::Component` with `collapse: :menu`, in registration order. Links use `FlatPack::PageNavRoleStyles::QUIET` (subtle primary, bordered subtle secondary, danger). The component is rendered as the gem built it. From 768px up that is the joined row. Below that, the same children are the menu behind one trigger. A named bucket is not drawn here. No registered nav means no extra markup. The host Top Nav is left as the view passed it.
+This shell does not read the page nav registry and does not place the buttons. Register the items, then call `page_nav_button_group` inside `main` where the row should sit. `QUIET` is the map for an application page (subtle primary, bordered subtle secondary, danger). `collapse: :menu` is the joined row from 768px up and a menu below that. A named bucket stays out unless `from:` names it. See [Page nav registry](page-nav-registry.md).
 
-`mobile_actions: :floating` draws that row as a plain group and pins the primary link to the bottom-right on a phone, using `FlatPack::PageNavRoleStyles::PIN`. A component stays in the row and is not pinned. The default is `:menu`. The dummy leaves the floating button off. See [Page nav registry](page-nav-registry.md).
+```erb
+<% layout.main do %>
+  <% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
+  <div class="flex items-center justify-between gap-4">
+    <h1 class="m-0">Press kit</h1>
+    <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
+  </div>
+<% end %>
+```
 
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.

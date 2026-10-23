@@ -7,7 +7,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_page_nav, :page_nav_classes
+      private :layout_top_nav, :layout_background
 
       renders_one :top_nav_slot
       renders_one :footer_slot
@@ -22,7 +22,6 @@ module FlatPack
         align: :top,
         floating_top_nav: false,
         content_scroll: :behind,
-        mobile_actions: :menu,
         **system_arguments
       )
         super(**system_arguments)
@@ -30,7 +29,6 @@ module FlatPack
         @align = symbolize(align)
         @floating_top_nav = floating_top_nav
         @content_scroll = symbolize(content_scroll)
-        assign_mobile_actions!(mobile_actions)
 
         validate_width!
         validate_align!
@@ -74,8 +72,7 @@ module FlatPack
             render_background,
             render_page_surface,
             render_frame,
-            render_footer,
-            render_floating_page_nav
+            render_footer
           ].compact)
         end
       end
@@ -104,14 +101,7 @@ module FlatPack
       end
 
       def main_column
-        # The view may register while this block renders. Read the registry after that.
-        body = content
-        content_tag(:div, class: "fp-layout-column") do
-          safe_join([
-            layout_page_nav(styles: FlatPack::PageNavRoleStyles::SOLID),
-            body
-          ].compact)
-        end
+        content_tag(:div, content, class: "fp-layout-column")
       end
 
       def render_footer

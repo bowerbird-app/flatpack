@@ -4,7 +4,7 @@
 Render a row of page actions in the order the host calls them. The component has no zones and no default order. `flat_pack_page_nav` and the generated sidebar layout supply the usual back control so a view with no items still looks the same.
 
 ## When to use
-Use Page Nav when the layout needs a short row of icon actions at the top of a page. Go back, jump to another section, close, or run a custom action. Put them in the order that page needs. Registered page items use `register_page_nav` and `page_nav_items`. See [Page nav registry](page-nav-registry.md).
+Use Page Nav when the layout needs a short row of icon actions at the top of a page. Go back, jump to another section, close, or run a custom action. Put them in the order that page needs. Registered page items use `register_page_nav` and `page_nav_button_group`. See [Page nav registry](page-nav-registry.md).
 
 ## Class
 - `FlatPack::PageNav::Component`

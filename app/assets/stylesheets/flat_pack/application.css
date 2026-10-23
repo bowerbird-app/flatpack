@@ -1370,44 +1370,6 @@
   margin-inline: auto;
 }
 
-/* Page nav the shell drew from the default bucket.
-   Links and registered components sit in one button group, in registration order.
-   With mobile_actions :menu that group folds.
-   :floating hides the row below md and pins the primary link. */
-.fp-page-nav {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-2);
-}
-
-.fp-page-nav--desktop {
-  padding-block: var(--space-3);
-}
-
-.fp-page-nav--bar {
-  padding-inline: var(--layout-content-inset, var(--space-4));
-}
-
-.fp-page-nav--floating {
-  position: fixed;
-  z-index: 30;
-  right: max(var(--space-4), env(safe-area-inset-right, 0px));
-  bottom: calc(var(--space-4) + env(safe-area-inset-bottom, 0px));
-}
-
-@media (max-width: 767px) {
-  .fp-page-nav--pin-row {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .fp-page-nav--floating {
-    display: none;
-  }
-}
-
 [data-flat-pack-top-nav-floating="behind"] {
   position: absolute;
   top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));

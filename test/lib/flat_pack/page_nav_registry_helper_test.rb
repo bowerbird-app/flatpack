@@ -62,6 +62,50 @@ class PageNavRegistryHelperProbesController < ApplicationController
     helpers.register_page_nav "New", "/new", role: :primary, into: ""
     head :ok
   end
+
+  def render_group
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary, icon: :plus, data: {controller: "press-kit"}, aria: {label: "Create a press kit"}
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive
+    helpers.register_page_nav component: PublishableQuickActionsComponent.new, role: :secondary
+    helpers.register_page_nav "Notes", "/notes", role: :secondary, into: :notes
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>", layout: false
+  end
+
+  def render_solid
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, collapse: :menu) %>", layout: false
+  end
+
+  def render_plain
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET) %>", layout: false
+  end
+
+  def render_bucket
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.register_page_nav "Notes", "/notes", role: :secondary, into: :notes
+    render inline: "<%= page_nav_button_group(from: :notes, styles: FlatPack::PageNavRoleStyles::QUIET) %>", layout: false
+  end
+
+  def render_empty
+    html = helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, collapse: :menu)
+    render plain: html.to_s
+  end
+
+  def render_missing_role
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.page_nav_button_group(styles: {secondary: {style: :secondary, size: :sm}})
+    head :ok
+  end
+
+  def render_bad_collapse
+    helpers.register_page_nav "New press kit", "/press-kits/new", role: :primary
+    helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, collapse: :overflow)
+    head :ok
+  end
 end
 
 class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
@@ -93,9 +137,65 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "the helper records data and does not render" do
+  test "register_page_nav records data and the old renderer is gone" do
     refute_includes FlatPack::PageNavRegistryHelper.instance_methods, :render_page_nav
     refute_respond_to FlatPack.configuration, :page_nav_styles
+  end
+
+  test "page_nav_button_group renders the bucket in order with the role map" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_group"
+
+      assert_response :success
+      assert_select ".fp-button-group-menu a[href='/press-kits/new'][data-fp-style=secondary][data-controller=press-kit][aria-label='Create a press kit']", text: "New press kit"
+      assert_select ".fp-button-group-menu a[href='/press-kits/share'][data-fp-style=secondary]", text: "Share"
+      assert_select ".fp-button-group-menu a[href='/press-kits/delete'][data-fp-style=danger]", text: "Delete"
+      assert_select ".fp-button-group-menu__row a", count: 3
+      assert_select ".fp-button-group-menu__row #publishable_quick_actions_demo", text: "Publish", count: 1
+      assert_select ".fp-button-group-menu__panel .fp-menu-row", count: 4
+      assert_select ".fp-button-group-menu__panel #publishable_quick_actions_demo", count: 0
+      assert_select ".fp-button-group-menu__trigger[aria-label=Menu]"
+      assert_select "a", text: "Notes", count: 0
+      assert_equal ["New press kit", "Share", "Delete", "Publish"], group_labels
+    end
+  end
+
+  test "page_nav_button_group uses the styles map and passes collapse through" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_solid"
+
+      assert_select ".fp-button-group-menu a[data-fp-style=primary]", text: "New press kit"
+      assert_select ".fp-button-group-menu a[data-fp-style=secondary]", text: "Share"
+      assert_select ".fp-button-group-menu__panel .fp-menu-row", count: 2
+
+      get "/demo/page_nav_registry_helper/render_plain"
+
+      assert_select ".fp-button-group > a", count: 2
+      assert_select ".fp-button-group-menu", count: 0
+      assert_equal ["Share", "Delete"], css_select(".fp-button-group > a").map { |node| node.text.squish }
+    end
+  end
+
+  test "page_nav_button_group reads the named bucket and returns nothing when it is empty" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_bucket"
+
+      assert_select "a", text: "Notes"
+      assert_select "a", text: "New press kit", count: 0
+
+      get "/demo/page_nav_registry_helper/render_empty"
+
+      assert_response :success
+      assert_equal "", response.body
+    end
+  end
+
+  test "page_nav_button_group raises when the map misses a role or collapse is unknown" do
+    with_page_nav_routes do
+      assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_missing_role" }
+      error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_collapse" }
+      assert_match(/collapse must be false or :menu/, error.message)
+    end
   end
 
   test "a view cannot pass a class, a button style, a missing role, a label with a component, or a blank bucket" do
@@ -110,6 +210,11 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
 
   private
 
+  def group_labels
+    panel = css_select(".fp-button-group-menu__panel").first
+    panel.css("> *").map { |node| node.text.squish }
+  end
+
   def with_page_nav_routes
     with_routing do |set|
       set.draw do
@@ -121,6 +226,13 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_nav_registry_helper/rejected_role", to: "page_nav_registry_helper_probes#rejected_role"
         get "/demo/page_nav_registry_helper/rejected_component_label", to: "page_nav_registry_helper_probes#rejected_component_label"
         get "/demo/page_nav_registry_helper/rejected_bucket", to: "page_nav_registry_helper_probes#rejected_bucket"
+        get "/demo/page_nav_registry_helper/render_group", to: "page_nav_registry_helper_probes#render_group"
+        get "/demo/page_nav_registry_helper/render_solid", to: "page_nav_registry_helper_probes#render_solid"
+        get "/demo/page_nav_registry_helper/render_plain", to: "page_nav_registry_helper_probes#render_plain"
+        get "/demo/page_nav_registry_helper/render_bucket", to: "page_nav_registry_helper_probes#render_bucket"
+        get "/demo/page_nav_registry_helper/render_empty", to: "page_nav_registry_helper_probes#render_empty"
+        get "/demo/page_nav_registry_helper/render_missing_role", to: "page_nav_registry_helper_probes#render_missing_role"
+        get "/demo/page_nav_registry_helper/render_bad_collapse", to: "page_nav_registry_helper_probes#render_bad_collapse"
       end
 
       yield

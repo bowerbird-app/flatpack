@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.305] - 2026-10-22
+
+### Added
+- `page_nav_button_group(styles:, from: :default, collapse: false)` on `FlatPack::PageNavRegistryHelper`. It reads one bucket and renders `FlatPack::ButtonGroup::Component`, in registration order. A link becomes a button through the `styles:` role map. A registered component is passed through. `collapse:` is passed to the button group. An empty bucket returns nil.
+
+### Changed
+- `PageLayout` and `SidebarLayout` do not read the page nav registry and do not place the buttons. The view registers items, then calls `page_nav_button_group` in its own markup. The page-nav registry demo puts the title on the left and the group on the right (`QUIET` in the sidebar shell, `SOLID` in Page Layout), with `collapse: :menu`.
+
+### Removed
+- `mobile_actions` on both shells. The shells no longer fold a button group or pin a primary link. `.fp-page-nav`, `.fp-page-nav--desktop`, `.fp-page-nav--bar`, `.fp-page-nav--floating`, and `.fp-page-nav--pin-row` are gone. `PageNavRoleStyles::PIN` remains a style map.
+- The `actions` slot on both shells.
+
+### Upgrade notes
+- Stop passing `mobile_actions` and `layout.actions`. Register, then draw the group in the page: `page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu)`. Page Layout uses `SOLID`. A call before `register_page_nav` returns nil.
+- The pinned phone button is not drawn. `PageNavRoleStyles::PIN` is still the medium solid primary map if a host renders that link.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`. Delete an `actions` block from a layout you already generated. `rails generate flat_pack:layout` no longer writes one.
+- Redeploy so `meta.gem_version` shows `0.1.305`.
+
 ## [0.1.304] - 2026-10-22
 
 ### Fixed
