@@ -5312,7 +5312,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1);
-  border: 1px solid var(--surface-border-color);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--surface-border-color);
   border-radius: var(--button-group-radius);
   background-color: transparent;
   box-shadow: none;

@@ -359,10 +359,20 @@ module FlatPack
         assert_includes page.find("a", text: "Share")[:class], "rounded-[var(--button-border-radius)]"
 
         css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-        assert_includes css, ".fp-button-group--outlined"
-        assert_includes css, "border-radius: var(--button-group-radius);"
-        assert_includes css, "border: 1px solid var(--surface-border-color);"
-        assert_includes css, "gap: var(--space-1);"
+        outlined = [
+          ".fp-button-group--outlined {",
+          "  align-items: center;",
+          "  gap: var(--space-1);",
+          "  padding: var(--space-1);",
+          "  border-width: 1px;",
+          "  border-style: solid;",
+          "  border-color: var(--surface-border-color);",
+          "  border-radius: var(--button-group-radius);",
+          "  background-color: transparent;",
+          "  box-shadow: none;",
+          "}"
+        ].join("\n")
+        assert_includes css, outlined
         refute_includes css, ".fp-button-group--outlined .fp-button"
         refute_includes css, ".fp-button-group--outlined > .fp-button"
       end
