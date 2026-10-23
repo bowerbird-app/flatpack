@@ -33,6 +33,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 |------|------|----------|-------------|
 | `sidebar` | block slot | No | Sidebar column content (typically `FlatPack::Sidebar::Component`). |
 | `top_nav` | block slot | No | Optional top-nav area above main content. |
+| `actions` | block slot | No | Optional row under the top nav. The shell renders the page body first, then this slot, and places the slot above the body. Empty content adds no markup. The row is `.fp-page-nav.fp-page-nav--desktop.fp-page-nav--bar`. |
 | `main` | block slot | No | Main content area. If omitted, component block content is used. |
 | `background` | block slot | No | Decorative page photo (`img` or `picture`) behind the shell. Omit it and the shell matches a layout with no photo. |
 | `aside` | block slot | No | Column opposite `side:`. `open:` (`true` or `false`, default `true`), `resizable:` (`true` or `false`, default `false`), and `mobile:` (`:drawer` or `:stack`, default `:drawer`). Omit it and the shell matches a layout with no aside. |
@@ -134,9 +135,13 @@ Check these when the shell is on a phone, or in a narrow main column.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
 
 ## Page nav
-A view registers nav with `register_page_nav`. This shell reads the `:default` bucket with `page_nav_items` and draws it in the bar under the top nav. Links and a registered component go in one `FlatPack::ButtonGroup::Component` with `collapse: :menu`, in registration order. Links use `FlatPack::PageNavRoleStyles::QUIET` (subtle primary, bordered subtle secondary, danger). The component is rendered as the gem built it. From 768px up that is the joined row. Below that, the same children are the menu behind one trigger. A named bucket is not drawn here. No registered nav means no extra markup. The host Top Nav is left as the view passed it.
+This shell does not read the page nav registry. Pass `page_nav_button_group` into `actions` when the bar should show a bucket. `QUIET` is the map for this shell (subtle primary, bordered subtle secondary, danger). `collapse: :menu` is the joined row from 768px up and a menu below that. A named bucket stays out unless `from:` names it. The dummy sidebar layout and `rails generate flat_pack:layout` fill `actions` that way for the default bucket. See [Page nav registry](page-nav-registry.md).
 
-`mobile_actions: :floating` draws that row as a plain group and pins the primary link to the bottom-right on a phone, using `FlatPack::PageNavRoleStyles::PIN`. A component stays in the row and is not pinned. The default is `:menu`. The dummy leaves the floating button off. See [Page nav registry](page-nav-registry.md).
+```erb
+<% layout.actions do %>
+  <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
+<% end %>
+```
 
 ## Accessibility
 Mobile drawer backdrop uses `aria-hidden` and supports Escape to close via controller behavior. Focus is moved to the open panel and returned to the previous control on close. Backdrop fill is `--drawer-backdrop-color` (aliases `--modal-backdrop-color`). One backdrop serves the rail drawer and the aside drawer. Opening one closes the other. `closeMobile` closes whichever shell drawer is open.

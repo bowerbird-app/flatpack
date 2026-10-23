@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module FlatPack
-  # Records page nav for the request. It does not render.
+  # Records page nav for the request, and draws one bucket as a button group.
   # This is not FlatPack::PageNavHelper (`flat_pack_page_nav`), the back and close row.
   module PageNavRegistryHelper
     REQUEST_KEY = "flat_pack.page_nav_registry"
@@ -40,6 +40,26 @@ module FlatPack
     # A component has `role` and `component`.
     def page_nav_items(from: PageNavRegistry::DEFAULT_BUCKET)
       page_nav_registry.items(from: from)
+    end
+
+    # One FlatPack::ButtonGroup::Component for a bucket, in registration order.
+    # A link becomes a button through `styles` (a PageNavRoleStyles map).
+    # A component is passed through. `collapse` is passed to the group.
+    # Returns nil when the bucket is empty.
+    def page_nav_button_group(styles:, from: PageNavRegistry::DEFAULT_BUCKET, collapse: false)
+      items = page_nav_items(from: from)
+      return if items.empty?
+
+      render(FlatPack::ButtonGroup::Component.new(collapse: collapse)) do |row|
+        items.each do |item|
+          child = if item.component?
+            item.component
+          else
+            PageNavRoleStyles.button_for(item, styles: styles)
+          end
+          row.button(child)
+        end
+      end
     end
 
     def page_nav_registry

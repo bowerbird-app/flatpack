@@ -7,9 +7,10 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_page_nav, :page_nav_classes
+      private :layout_top_nav, :layout_background, :layout_actions, :layout_actions_classes
 
       renders_one :top_nav_slot
+      renders_one :actions_slot
       renders_one :footer_slot
       renders_one :background_slot
 
@@ -22,7 +23,6 @@ module FlatPack
         align: :top,
         floating_top_nav: false,
         content_scroll: :behind,
-        mobile_actions: :menu,
         **system_arguments
       )
         super(**system_arguments)
@@ -30,7 +30,6 @@ module FlatPack
         @align = symbolize(align)
         @floating_top_nav = floating_top_nav
         @content_scroll = symbolize(content_scroll)
-        assign_mobile_actions!(mobile_actions)
 
         validate_width!
         validate_align!
@@ -42,6 +41,12 @@ module FlatPack
         return top_nav_slot unless block
 
         with_top_nav_slot(**args, &block)
+      end
+
+      def actions(**args, &block)
+        return actions_slot unless block
+
+        with_actions_slot(**args, &block)
       end
 
       def footer(**args, &block)
@@ -60,6 +65,10 @@ module FlatPack
         top_nav_slot?
       end
 
+      def actions?
+        actions_slot?
+      end
+
       def footer?
         footer_slot?
       end
@@ -74,8 +83,7 @@ module FlatPack
             render_background,
             render_page_surface,
             render_frame,
-            render_footer,
-            render_floating_page_nav
+            render_footer
           ].compact)
         end
       end
@@ -104,11 +112,11 @@ module FlatPack
       end
 
       def main_column
-        # The view may register while this block renders. Read the registry after that.
+        # The column renders first so the actions slot sees what the view recorded.
         body = content
         content_tag(:div, class: "fp-layout-column") do
           safe_join([
-            layout_page_nav(styles: FlatPack::PageNavRoleStyles::SOLID),
+            layout_actions,
             body
           ].compact)
         end

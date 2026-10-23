@@ -5,10 +5,11 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_page_nav, :page_nav_classes
+      private :layout_top_nav, :layout_background, :layout_actions, :layout_actions_classes
 
       renders_one :sidebar_slot
       renders_one :top_nav_slot
+      renders_one :actions_slot
       renders_one :main_slot
       renders_one :background_slot
       renders_one :aside_slot
@@ -31,7 +32,6 @@ module FlatPack
         height: :full,
         width: :fixed,
         resizable: false,
-        mobile_actions: :menu,
         **system_arguments
       )
         super(**system_arguments)
@@ -46,7 +46,6 @@ module FlatPack
         @height = height.is_a?(String) ? height.to_sym : height
         @width = width.is_a?(String) ? width.to_sym : width
         @resizable = resizable
-        assign_mobile_actions!(mobile_actions)
         @aside_open = true
         @aside_resizable = false
         @aside_mobile = :drawer
@@ -75,6 +74,12 @@ module FlatPack
         with_top_nav_slot(**args, &block)
       end
 
+      def actions(**args, &block)
+        return actions_slot unless block
+
+        with_actions_slot(**args, &block)
+      end
+
       def main(**args, &block)
         return main_slot unless block
 
@@ -93,6 +98,10 @@ module FlatPack
 
       def top_nav?
         top_nav_slot?
+      end
+
+      def actions?
+        actions_slot?
       end
 
       def main?
@@ -143,8 +152,7 @@ module FlatPack
             render_background,
             render_page_surface,
             render_columns,
-            render_backdrop,
-            render_floating_page_nav
+            render_backdrop
           ].compact)
         end
       end
@@ -366,12 +374,12 @@ module FlatPack
       end
 
       def render_main_column
-        # The view may register while the main slot renders. Read the registry after that.
+        # The page renders first so the actions slot sees what the view recorded.
         body = main? ? main.to_s : content
         content_tag(:div, class: main_column_classes, data: {"flat-pack-layout-main": "true"}) do
           safe_join([
             render_top_nav,
-            layout_page_nav(styles: FlatPack::PageNavRoleStyles::QUIET, bar: true),
+            layout_actions(bar: true),
             content_tag(:div, body, **main_pane_attributes)
           ].compact)
         end

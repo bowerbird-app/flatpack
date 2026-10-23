@@ -42,6 +42,10 @@
       <%% end %>
 <% end %>
 
+      <%% layout.actions do %>
+        <%%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
+      <%% end %>
+
       <%% layout.main do %>
         <main id="main" tabindex="-1" class="fp-layout-content py-6">
           <div class="fp-layout-column">

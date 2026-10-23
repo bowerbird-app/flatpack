@@ -5,8 +5,6 @@ module FlatPack
     # Internal. SidebarLayout and PageLayout both render the floating top bar
     # and the page photo through here, so the markup stays one implementation.
     module Shell
-      MOBILE_PAGE_NAV = %i[menu floating].freeze
-
       def layout_top_nav(body, floating:, content_scroll:)
         return if body.nil?
         return body unless floating
@@ -25,78 +23,23 @@ module FlatPack
         render(backdrop)
       end
 
-      # The default page-nav bucket, drawn by this shell.
-      # `styles` is a role map from `PageNavRoleStyles`. `bar` insets the row.
-      # Links and components are one button group, in registration order.
-      # `:menu` folds that group. `:floating` keeps the row and pins the primary link.
-      def layout_page_nav(styles:, bar: false)
-        return unless helpers.respond_to?(:page_nav_items)
+      # The actions slot, in the bar. Empty content adds no markup.
+      # `bar` insets the row to the content edge.
+      def layout_actions(bar: false)
+        return unless actions?
 
-        items = helpers.page_nav_items
-        return if items.empty?
+        html = actions.to_s
+        return if html.blank?
 
-        content_tag(:div, page_nav_body(items, styles), class: page_nav_classes(bar), data: page_nav_data)
+        content_tag(:div, html, class: layout_actions_classes(bar))
       end
 
-      def page_nav_classes(bar)
+      def layout_actions_classes(bar)
         [
           "fp-page-nav",
           "fp-page-nav--desktop",
-          ("fp-page-nav--bar" if bar),
-          ("fp-page-nav--pin-row" if pin_page_nav?)
+          ("fp-page-nav--bar" if bar)
         ].compact.join(" ")
-      end
-
-      private
-
-      def assign_mobile_actions!(value)
-        name = value.is_a?(String) ? value.to_sym : value
-        unless MOBILE_PAGE_NAV.include?(name)
-          raise ArgumentError, "mobile_actions must be :menu or :floating"
-        end
-
-        @mobile_actions = name
-      end
-
-      def render_floating_page_nav
-        return unless pin_page_nav?
-        return unless helpers.respond_to?(:page_nav_items)
-
-        item = helpers.page_nav_items.find { |entry| entry.role == :primary && !entry.component? }
-        return if item.nil?
-
-        button = render(PageNavRoleStyles.button_for(item, styles: PageNavRoleStyles::PIN))
-        content_tag(:div, button, class: "fp-page-nav fp-page-nav--floating", data: {fp_page_nav: "floating"})
-      end
-
-      def page_nav_body(items, styles)
-        render(FlatPack::ButtonGroup::Component.new(**page_nav_group_arguments)) do |row|
-          items.each { |item| row.button(page_nav_child(item, styles)) }
-        end
-      end
-
-      def page_nav_child(item, styles)
-        return item.component if item.component?
-
-        PageNavRoleStyles.button_for(item, styles: styles)
-      end
-
-      def page_nav_group_arguments
-        return {collapse: :menu} if menu_page_nav?
-
-        {}
-      end
-
-      def page_nav_data
-        {fp_page_nav: PageNavRegistry::DEFAULT_BUCKET.to_s}
-      end
-
-      def menu_page_nav?
-        @mobile_actions == :menu
-      end
-
-      def pin_page_nav?
-        @mobile_actions == :floating
       end
     end
   end

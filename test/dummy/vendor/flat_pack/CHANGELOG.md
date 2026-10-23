@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.305] - 2026-10-22
+
+### Added
+- `page_nav_button_group(styles:, from: :default, collapse: false)` on `FlatPack::PageNavRegistryHelper`. It reads one bucket and renders `FlatPack::ButtonGroup::Component`, in registration order. A link becomes a button through the `styles:` role map. A registered component is passed through. `collapse:` is passed to the button group. An empty bucket returns nil.
+
+### Changed
+- `PageLayout` and `SidebarLayout` place an `actions` slot and do not read the page nav registry. The shell renders the page body first, then the slot, and puts the slot above the body. Sidebar Layout puts it under the top nav (`.fp-page-nav--bar`). Page Layout puts it at the top of the column. The dummy layouts and `rails generate flat_pack:layout` fill the slot with `page_nav_button_group` for the default bucket (`QUIET` on the sidebar shell, `SOLID` on the page-nav registry Page Layout) and `collapse: :menu`.
+
+### Removed
+- `mobile_actions` on both shells. The shells no longer fold a button group or pin a primary link. `.fp-page-nav--floating` and `.fp-page-nav--pin-row` are gone. `PageNavRoleStyles::PIN` remains a style map.
+
+### Upgrade notes
+- Stop passing `mobile_actions`. Draw the default bucket in the layout: `layout.actions { page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) }`. Page Layout uses `SOLID`.
+- The shell renders `main` (or the column) before `actions`, so a `register_page_nav` inside the page is visible to the helper.
+- The pinned phone button is not drawn. `PageNavRoleStyles::PIN` is still the medium solid primary map if a host renders that link.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`. An existing generated layout needs the `actions` slot added by hand. `rails generate flat_pack:layout` writes it for a new layout.
+- Redeploy so `meta.gem_version` shows `0.1.305`.
+
 ## [0.1.304] - 2026-10-22
 
 ### Fixed
