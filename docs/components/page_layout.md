@@ -25,7 +25,6 @@ Use Page Layout for a page with no sidebar: a press kit, an article, a landing p
 | name | type | required | description |
 |------|------|----------|-------------|
 | `top_nav` | block slot | No | Optional bar. A `TopNav` keeps its `<header>`. Other markup is wrapped in `<header>`. |
-| `actions` | block slot | No | Optional row at the top of the column, under the bar. The shell renders the column body first, then this slot, and places the slot above the body. The row is a stacking context (`z-index: 1`) so an open menu paints over the column. Empty content adds no markup. |
 | content | block | No | The column. Rendered in `<main>`. |
 | `footer` | block slot | No | Optional footer. Wrapped in `<footer>`. |
 | `background` | block slot | No | Decorative photo (`img`, `picture`, or `video`) behind the page. Renders `FlatPack::Backdrop::Component` and pins it to the viewport, the same way Sidebar Layout does. |
@@ -99,12 +98,14 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
 The shell scrolls with the window. It does not lock a pane, store state, or read a cookie. The first paint is the finished page. Sidebar Layout's wrap measurement is not part of this shell. The window keeps its scrollbar. `--pane-scrollbar-width` does not apply here.
 
 ## Page nav
-This shell does not read the page nav registry. Pass `page_nav_button_group` into `actions` when the column should show a bucket. `SOLID` is the map for this shell (solid primary, subtle secondary, danger). `collapse: :menu` is the joined row from 768px up and a menu below that. A named bucket stays out unless `from:` names it. See [Page nav registry](page-nav-registry.md).
+This shell does not read the page nav registry and does not place the buttons. Register the items, then call `page_nav_button_group` in the column where the row should sit. `SOLID` is the map for a public page (solid primary, subtle secondary, danger). `collapse: :menu` is the joined row from 768px up and a menu below that. A named bucket stays out unless `from:` names it. See [Page nav registry](page-nav-registry.md).
 
 ```erb
-<% layout.actions do %>
+<% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
+<div class="flex items-center justify-between gap-4">
+  <h1 class="m-0">Press kit</h1>
   <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, collapse: :menu) %>
-<% end %>
+</div>
 ```
 
 ## Accessibility
@@ -112,7 +113,7 @@ The bar is a `<header>` (or the `<header>` from `TopNav`). The column is `<main>
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- No Stimulus controller on this shell. A button group in `actions` with `collapse: :menu` uses `flat-pack--button-group-menu`.
+- No Stimulus controller on this shell. A button group in the column with `collapse: :menu` uses `flat-pack--button-group-menu`.
 - The floating bar is the shared Sidebar Layout top nav. It needs no extra controller to render.
 - The `background` slot renders `FlatPack::Backdrop::Component`.
 - Tokens: `--page-layout-width-narrow`, `--page-layout-width-default`, `--page-layout-width-wide`, `--page-layout-width-full`, `--page-layout-padding-inline` (`var(--space-4)`, then `var(--space-6)` from `640px`), `--page-layout-padding-block` (`var(--space-6)`), `--page-layout-gap` (`var(--space-6)`). The shell copies the chosen width onto `--page-layout-width`. That token is not in the theme file. Do not set it on `:root`. `[data-theme~="rounded"]` does not restate them. The larger `--space-*` steps on that theme make the padding generous. No token is tied to a photo colour. Floating cards also use `--top-nav-float-*` and `--sidebar-float-*`. The photo uses `--backdrop-*`.

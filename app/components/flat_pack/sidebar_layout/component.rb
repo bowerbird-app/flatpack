@@ -5,11 +5,10 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_actions, :layout_actions_classes
+      private :layout_top_nav, :layout_background
 
       renders_one :sidebar_slot
       renders_one :top_nav_slot
-      renders_one :actions_slot
       renders_one :main_slot
       renders_one :background_slot
       renders_one :aside_slot
@@ -74,12 +73,6 @@ module FlatPack
         with_top_nav_slot(**args, &block)
       end
 
-      def actions(**args, &block)
-        return actions_slot unless block
-
-        with_actions_slot(**args, &block)
-      end
-
       def main(**args, &block)
         return main_slot unless block
 
@@ -98,10 +91,6 @@ module FlatPack
 
       def top_nav?
         top_nav_slot?
-      end
-
-      def actions?
-        actions_slot?
       end
 
       def main?
@@ -374,12 +363,10 @@ module FlatPack
       end
 
       def render_main_column
-        # The page renders first so the actions slot sees what the view recorded.
         body = main? ? main.to_s : content
         content_tag(:div, class: main_column_classes, data: {"flat-pack-layout-main": "true"}) do
           safe_join([
             render_top_nav,
-            layout_actions(bar: true),
             content_tag(:div, body, **main_pane_attributes)
           ].compact)
         end

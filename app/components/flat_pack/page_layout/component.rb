@@ -7,10 +7,9 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::Layout::Shell
 
-      private :layout_top_nav, :layout_background, :layout_actions, :layout_actions_classes
+      private :layout_top_nav, :layout_background
 
       renders_one :top_nav_slot
-      renders_one :actions_slot
       renders_one :footer_slot
       renders_one :background_slot
 
@@ -43,12 +42,6 @@ module FlatPack
         with_top_nav_slot(**args, &block)
       end
 
-      def actions(**args, &block)
-        return actions_slot unless block
-
-        with_actions_slot(**args, &block)
-      end
-
       def footer(**args, &block)
         return footer_slot unless block
 
@@ -63,10 +56,6 @@ module FlatPack
 
       def top_nav?
         top_nav_slot?
-      end
-
-      def actions?
-        actions_slot?
       end
 
       def footer?
@@ -112,14 +101,7 @@ module FlatPack
       end
 
       def main_column
-        # The column renders first so the actions slot sees what the view recorded.
-        body = content
-        content_tag(:div, class: "fp-layout-column") do
-          safe_join([
-            layout_actions,
-            body
-          ].compact)
-        end
+        content_tag(:div, content, class: "fp-layout-column")
       end
 
       def render_footer

@@ -15,14 +15,8 @@
       <% end %>
     <% end %>
 
-    <% layout.actions do %>
-      <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, collapse: :menu) %>
-    <% end %>
-
-    <h1>Press kit</h1>
-    <p>Logos, photos, and the short story.</p>
+    <%= render "pages/page_nav_registry_header", styles: FlatPack::PageNavRoleStyles::SOLID %>
   <% end %>
 <% else %>
-  <h1>Press kit</h1>
-  <p>Logos, photos, and the short story.</p>
+  <%= render "pages/page_nav_registry_header", styles: FlatPack::PageNavRoleStyles::QUIET %>
 <% end %>

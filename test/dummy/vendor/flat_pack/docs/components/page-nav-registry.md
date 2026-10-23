@@ -72,38 +72,30 @@ A caller can pass any map of role → `{style:, size:}`. An unknown role, style,
 
 `page_nav_button_group` puts links and components in one group, in registration order. A component is passed through as the gem built it. The role on a component is metadata. The helper does not restyle it. `collapse: :menu` is the joined row from 768px up and that same group as a menu below that.
 
-`SidebarLayout` and `PageLayout` do not read the registry. Each has an `actions` slot. The shell renders the page body first, then the slot, and places the slot above the body. Sidebar Layout puts it under the top nav. Page Layout puts it at the top of the column. An empty slot adds no markup. The host Top Nav is left as the view passed it.
+`SidebarLayout` and `PageLayout` do not read the registry and do not place the buttons. Register the items, then call `page_nav_button_group` in the page markup. A call before any `register_page_nav` for that bucket returns nil. The host chooses where the group sits. A flex row with the title on the left and the group on the right is one layout. The shells do not assume another.
 
-The sidebar layouts in the dummy and in `rails generate flat_pack:layout` fill that slot with the default bucket, `QUIET`, and `collapse: :menu`. The page-nav registry demo's Page Layout uses `SOLID` and `collapse: :menu`. A named bucket stays out of that call. Pass `from:`.
+The page-nav registry demo does that. Sidebar Layout uses `QUIET`. Page Layout uses `SOLID`. Both pass `collapse: :menu`. A named bucket stays out of that call. Pass `from:`.
 
-`PIN` is the medium solid primary map. The shells do not pin a button. A host that wants that link renders it with `button_for` and `PIN`.
+`PIN` is the medium solid primary map. Nothing in the shells pins a button. A host that wants that link renders it with `button_for` and `PIN`.
 
 There is no `FlatPack.configuration.page_nav_styles`.
 
 ## Example
-Register in the view. Call this before the shell reads the bucket. In a normal layout the view runs inside the main slot, and the shell reads after that slot.
+Register before calling the helper. The helper reads whatever is already in the bucket.
 
 ```erb
 <% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
 <% register_page_nav "Share", share_press_kit_path, role: :secondary, icon: :share %>
 <% register_page_nav "Delete", press_kit_path, role: :destructive, icon: :trash %>
 <% register_page_nav component: publishable_quick_actions, role: :secondary %>
+
+<div class="flex items-center justify-between gap-4">
+  <h1 class="m-0">Press kit</h1>
+  <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
+</div>
 ```
 
-Put the group in the shell's `actions` slot. The shell renders `main` before `actions`, so a `register_page_nav` inside the page is visible here.
-
-```erb
-<%= render FlatPack::SidebarLayout::Component.new do |layout| %>
-  <% layout.actions do %>
-    <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
-  <% end %>
-  <% layout.main do %>
-    <% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
-  <% end %>
-<% end %>
-```
-
-Page Layout uses `FlatPack::PageNavRoleStyles::SOLID` in that same slot.
+Page Layout uses `FlatPack::PageNavRoleStyles::SOLID` in that same kind of row.
 
 Draw another bucket anywhere. This is the joined row from 768px up, and a menu below that. Each link is in the DOM once.
 
@@ -124,5 +116,5 @@ The registry has no elements. The caller gives each link its label. `aria:` is o
 ## Dependencies
 - `FlatPack::PageNavRegistryHelper`, included by the engine on Action View and controllers that respond to `helper`.
 - `page_nav_button_group` renders `FlatPack::ButtonGroup::Component`. A stack of rows still composes `FlatPack::Menu::Collapse::Component` from `page_nav_items`. The registry does not render.
-- The actions slot uses `.fp-page-nav`, `.fp-page-nav--desktop`, and `.fp-page-nav--bar` in `flat_pack/application.css`. The slot is `position: relative` with `z-index: 1`, so an open menu paints above the page body. The top nav stays above the slot. Spacing uses `--space-2`, `--space-3`, and `--space-4`. The bar inset uses `--layout-content-inset` when the sidebar shell sets it. The folding menu is the button group's own CSS.
+- The folding menu is the button group's own CSS. The open panel is `position: absolute` with `z-index: 50` on `.fp-button-group-menu__panel`, so it paints above the page content around the group.
 - Dummy: `/demo/page_nav_registry` (Sidebar Layout, `QUIET`) and `/demo/page_nav_registry?shell=page` (Page Layout, `SOLID`). Both pass `collapse: :menu`. The demo registers three links and `PublishableQuickActionsComponent` in the default bucket.

@@ -33,7 +33,6 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 |------|------|----------|-------------|
 | `sidebar` | block slot | No | Sidebar column content (typically `FlatPack::Sidebar::Component`). |
 | `top_nav` | block slot | No | Optional top-nav area above main content. |
-| `actions` | block slot | No | Optional row under the top nav. The shell renders the page body first, then this slot, and places the slot above the body. The row is a stacking context (`z-index: 1`) so an open menu paints over the pane. Empty content adds no markup. The row is `.fp-page-nav.fp-page-nav--desktop.fp-page-nav--bar`. |
 | `main` | block slot | No | Main content area. If omitted, component block content is used. |
 | `background` | block slot | No | Decorative page photo (`img` or `picture`) behind the shell. Omit it and the shell matches a layout with no photo. |
 | `aside` | block slot | No | Column opposite `side:`. `open:` (`true` or `false`, default `true`), `resizable:` (`true` or `false`, default `false`), and `mobile:` (`:drawer` or `:stack`, default `:drawer`). Omit it and the shell matches a layout with no aside. |
@@ -135,11 +134,15 @@ Check these when the shell is on a phone, or in a narrow main column.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
 
 ## Page nav
-This shell does not read the page nav registry. Pass `page_nav_button_group` into `actions` when the bar should show a bucket. `QUIET` is the map for this shell (subtle primary, bordered subtle secondary, danger). `collapse: :menu` is the joined row from 768px up and a menu below that. A named bucket stays out unless `from:` names it. The dummy sidebar layout and `rails generate flat_pack:layout` fill `actions` that way for the default bucket. See [Page nav registry](page-nav-registry.md).
+This shell does not read the page nav registry and does not place the buttons. Register the items, then call `page_nav_button_group` inside `main` where the row should sit. `QUIET` is the map for an application page (subtle primary, bordered subtle secondary, danger). `collapse: :menu` is the joined row from 768px up and a menu below that. A named bucket stays out unless `from:` names it. See [Page nav registry](page-nav-registry.md).
 
 ```erb
-<% layout.actions do %>
-  <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
+<% layout.main do %>
+  <% register_page_nav "New press kit", new_press_kit_path, role: :primary, icon: :plus %>
+  <div class="flex items-center justify-between gap-4">
+    <h1 class="m-0">Press kit</h1>
+    <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) %>
+  </div>
 <% end %>
 ```
 

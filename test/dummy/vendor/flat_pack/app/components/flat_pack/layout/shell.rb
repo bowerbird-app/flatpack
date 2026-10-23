@@ -22,25 +22,6 @@ module FlatPack
         backdrop.with_media { slot.to_s }
         render(backdrop)
       end
-
-      # The actions slot, in the bar. Empty content adds no markup.
-      # `bar` insets the row to the content edge.
-      def layout_actions(bar: false)
-        return unless actions?
-
-        html = actions.to_s
-        return if html.blank?
-
-        content_tag(:div, html, class: layout_actions_classes(bar))
-      end
-
-      def layout_actions_classes(bar)
-        [
-          "fp-page-nav",
-          "fp-page-nav--desktop",
-          ("fp-page-nav--bar" if bar)
-        ].compact.join(" ")
-      end
     end
   end
 end
