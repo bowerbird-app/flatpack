@@ -16,23 +16,22 @@ module FlatPack
       WIDTHS = %i[narrow default wide full].freeze
       ALIGNS = %i[top center].freeze
       CONTENT_SCROLLS = %i[behind below].freeze
+      REMOVED_KEYWORDS = %i[floating_top_nav].freeze
 
       def initialize(
         width: :default,
         align: :top,
-        floating_top_nav: false,
-        content_scroll: :behind,
+        content_scroll: :below,
         **system_arguments
       )
+        reject_removed!(system_arguments)
         super(**system_arguments)
         @width = symbolize(width)
         @align = symbolize(align)
-        @floating_top_nav = floating_top_nav
         @content_scroll = symbolize(content_scroll)
 
         validate_width!
         validate_align!
-        validate_floating_top_nav!
         validate_content_scroll!
       end
 
@@ -91,7 +90,7 @@ module FlatPack
       def render_top_nav
         return unless top_nav?
 
-        layout_top_nav(top_nav_landmark(top_nav.to_s), floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(top_nav_landmark(top_nav.to_s), content_scroll: @content_scroll)
       end
 
       def top_nav_landmark(html)
@@ -119,7 +118,7 @@ module FlatPack
       end
 
       def render_page_surface
-        return unless floating_behind? && !background?
+        return unless content_scroll_behind? && !background?
 
         content_tag(:div, "", class: "fp-layout-page-surface", aria: {hidden: true})
       end
@@ -137,28 +136,24 @@ module FlatPack
           "fp-page-layout-width": @width.to_s,
           "fp-page-layout-align": @align.to_s,
           "flat-pack-layout-background": ("true" if background?),
-          "flat-pack-layout-scroll": ("page" if floating_behind?)
+          "flat-pack-layout-scroll": ("page" if content_scroll_behind?)
         }.compact
       end
 
       def frame_classes
-        ["fp-page-layout-frame", ("fp-layout-page" if floating_behind?)].compact.join(" ")
+        ["fp-page-layout-frame", ("fp-layout-page" if content_scroll_behind?)].compact.join(" ")
       end
 
       def main_classes
         [
           "fp-page-layout-main",
           "fp-layout-content",
-          ("fp-layout-scroll" if floating_behind?)
+          ("fp-layout-scroll" if content_scroll_behind?)
         ].compact.join(" ")
       end
 
-      def floating_top_nav_active?
-        @floating_top_nav && top_nav?
-      end
-
-      def floating_behind?
-        floating_top_nav_active? && @content_scroll == :behind
+      def content_scroll_behind?
+        @content_scroll == :behind && top_nav?
       end
 
       def symbolize(value)
@@ -177,10 +172,11 @@ module FlatPack
         raise ArgumentError, "align must be :top or :center"
       end
 
-      def validate_floating_top_nav!
-        return if @floating_top_nav == true || @floating_top_nav == false
+      def reject_removed!(arguments)
+        removed = arguments.keys & REMOVED_KEYWORDS
+        return if removed.empty?
 
-        raise ArgumentError, "floating_top_nav must be true or false"
+        raise ArgumentError, "unknown keyword: :#{removed.first}"
       end
 
       def validate_content_scroll!

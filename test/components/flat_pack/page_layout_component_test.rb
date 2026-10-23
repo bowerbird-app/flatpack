@@ -16,10 +16,11 @@ module FlatPack
         assert_selector "header", text: "Field notes"
         assert_selector "main.fp-page-layout-main.fp-layout-content .fp-layout-column", text: "Story"
         assert_selector "footer.fp-page-layout-footer", text: "End"
+        assert_selector ".fp-layout-top-nav[data-flat-pack-content-scroll='below'][data-controller='flat-pack--top-nav']", text: "Field notes"
         refute_selector "[data-flat-pack-top-nav-floating]"
-        refute_selector ".fp-layout-top-nav"
+        refute_selector ".fp-layout-scroll"
         refute_selector ".fp-backdrop"
-        refute_selector "[data-controller]"
+        refute_selector "[data-controller='flat-pack--sidebar-layout']"
         refute_includes page.native.to_html, "<script"
         refute_includes page.native.to_html, "localStorage"
         refute_includes page.native.to_html, "style="
@@ -74,36 +75,36 @@ module FlatPack
         assert_equal "align must be :top or :center", error.message
       end
 
-      def test_floating_top_nav_uses_the_shared_bar
-        render_inline(Component.new(floating_top_nav: true)) do |layout|
+      def test_content_scroll_behind_overlays_the_page
+        render_inline(Component.new(content_scroll: :behind)) do |layout|
           layout.top_nav { "Field notes" }
           "Story"
         end
 
-        assert_selector ".fp-layout-top-nav[data-flat-pack-top-nav-floating='behind'] header", text: "Field notes"
+        assert_selector ".fp-layout-top-nav[data-flat-pack-content-scroll='behind'] header", text: "Field notes"
         assert_selector "[data-flat-pack-layout-scroll='page'] .fp-layout-page"
         assert_selector "main.fp-layout-scroll", text: "Story"
         assert_selector ".fp-layout-page-surface[aria-hidden='true']"
         assert_selector "header", count: 1
       end
 
-      def test_floating_top_nav_can_sit_above_the_page
-        render_inline(Component.new(floating_top_nav: true, content_scroll: :below)) do |layout|
+      def test_default_bar_sits_above_the_page
+        render_inline(Component.new) do |layout|
           layout.top_nav { "Field notes" }
           "Story"
         end
 
-        assert_selector "[data-flat-pack-top-nav-floating='below']", text: "Field notes"
+        assert_selector "[data-flat-pack-content-scroll='below']", text: "Field notes"
         refute_selector ".fp-layout-scroll"
         refute_selector "[data-flat-pack-layout-scroll]"
         refute_selector ".fp-layout-page-surface"
       end
 
-      def test_floating_top_nav_keeps_one_header_landmark
+      def test_top_nav_keeps_one_header_landmark
         nav = FlatPack::TopNav::Component.new
         nav.left { "Field notes" }
 
-        render_inline(Component.new(floating_top_nav: true)) do |layout|
+        render_inline(Component.new(content_scroll: :behind)) do |layout|
           layout.top_nav { nav.render_in(vc_test_controller.view_context).to_s.html_safe }
           "Story"
         end
@@ -112,18 +113,18 @@ module FlatPack
         assert_selector "header", count: 1
       end
 
-      def test_floating_top_nav_without_a_slot_stays_flush
-        render_inline(Component.new(floating_top_nav: true)) { "Story" }
+      def test_content_scroll_behind_without_a_slot_stays_flush
+        render_inline(Component.new(content_scroll: :behind)) { "Story" }
 
-        refute_selector "[data-flat-pack-top-nav-floating]"
+        refute_selector "[data-flat-pack-content-scroll]"
         refute_selector ".fp-layout-scroll"
         refute_selector ".fp-layout-page-surface"
       end
 
-      def test_floating_top_nav_rejects_non_boolean
+      def test_floating_top_nav_is_an_unknown_keyword
         error = assert_raises(ArgumentError) { Component.new(floating_top_nav: "yes") }
 
-        assert_equal "floating_top_nav must be true or false", error.message
+        assert_match(/unknown keyword: :?floating_top_nav/, error.message)
       end
 
       def test_content_scroll_rejects_unknown_values
@@ -133,7 +134,7 @@ module FlatPack
       end
 
       def test_background_renders_backdrop_behind_the_page
-        render_inline(Component.new(floating_top_nav: true)) do |layout|
+        render_inline(Component.new(content_scroll: :behind)) do |layout|
           layout.background { %(<img src="/images/hero-packaging.jpg" alt="">).html_safe }
           layout.top_nav { "Field notes" }
           "Story"

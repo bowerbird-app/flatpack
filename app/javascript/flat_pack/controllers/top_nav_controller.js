@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Frosts the bar after the page or the nearest overflow pane has scrolled.
-// The row itself does not fold. A child that collapses owns that.
+// Frosts the shell's top bar after the page or the nearest overflow pane has scrolled.
+// The row inside the bar does not fold. A child that collapses owns that.
 export default class extends Controller {
   connect() {
     this.boundHandleScroll = this.handleScroll.bind(this)

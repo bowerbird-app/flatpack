@@ -14,6 +14,7 @@ module FlatPack
       renders_one :aside_slot
 
       CONTENT_SCROLLS = %i[behind below].freeze
+      REMOVED_KEYWORDS = %i[floating_top_nav].freeze
       SCROLLS = %i[pane page].freeze
       HEIGHTS = %i[full content].freeze
       WIDTHS = %i[fixed content].freeze
@@ -24,8 +25,7 @@ module FlatPack
         open: true,
         storage_key: nil,
         floating: false,
-        floating_top_nav: false,
-        content_scroll: :behind,
+        content_scroll: :below,
         scroll: :pane,
         scrollbar: :hidden,
         height: :full,
@@ -33,12 +33,12 @@ module FlatPack
         resizable: false,
         **system_arguments
       )
+        reject_removed!(system_arguments)
         super(**system_arguments)
         @side = side.to_sym
         @open = open
         @storage_key = storage_key
         @floating = floating
-        @floating_top_nav = floating_top_nav
         @content_scroll = content_scroll.is_a?(String) ? content_scroll.to_sym : content_scroll
         @scroll = scroll.is_a?(String) ? scroll.to_sym : scroll
         @scrollbar = FlatPack::PaneScroll.normalize!(scrollbar)
@@ -53,7 +53,6 @@ module FlatPack
 
         validate_side!
         validate_floating!
-        validate_floating_top_nav!
         validate_content_scroll!
         validate_scroll!
         validate_height!
@@ -375,11 +374,11 @@ module FlatPack
       def render_top_nav
         return unless top_nav?
 
-        layout_top_nav(top_nav.to_s, floating: @floating_top_nav, content_scroll: @content_scroll)
+        layout_top_nav(top_nav.to_s, content_scroll: @content_scroll)
       end
 
       def render_page_surface
-        return unless page_scroll? && @content_scroll == :behind && floating_top_nav_active? && !background?
+        return unless page_scroll? && content_scroll_behind? && !background?
 
         content_tag(:div, "", class: "fp-layout-page-surface", aria: {hidden: true})
       end
@@ -451,16 +450,16 @@ module FlatPack
           "min-w-0",
           "min-h-0",
           ("overflow-hidden" unless page_scroll?),
-          ("relative" if floating_top_nav_active?),
+          ("relative" if content_scroll_behind?),
           ("fp-layout-main" if background?),
-          ("fp-layout-page" if page_scroll? && floating_top_nav_active? && @content_scroll == :behind)
+          ("fp-layout-page" if page_scroll? && content_scroll_behind?)
         )
       end
 
       def main_content_classes
         classes(
           page_scroll? ? "flex-1 min-h-0" : "flex-1 min-h-0 overflow-y-auto overscroll-y-contain",
-          ("fp-layout-scroll" if floating_top_nav_active? && @content_scroll == :behind)
+          ("fp-layout-scroll" if content_scroll_behind?)
         )
       end
 
@@ -478,8 +477,8 @@ module FlatPack
         @scroll == :page
       end
 
-      def floating_top_nav_active?
-        @floating_top_nav && top_nav?
+      def content_scroll_behind?
+        @content_scroll == :behind && top_nav?
       end
 
       def content_height?
@@ -514,12 +513,6 @@ module FlatPack
         raise ArgumentError, "floating must be true or false"
       end
 
-      def validate_floating_top_nav!
-        return if @floating_top_nav == true || @floating_top_nav == false
-
-        raise ArgumentError, "floating_top_nav must be true or false"
-      end
-
       def validate_content_scroll!
         return if CONTENT_SCROLLS.include?(@content_scroll)
 
@@ -527,13 +520,16 @@ module FlatPack
       end
 
       def validate_scroll!
-        unless SCROLLS.include?(@scroll)
-          raise ArgumentError, "scroll must be :pane or :page"
-        end
+        return if SCROLLS.include?(@scroll)
 
-        return unless page_scroll? && @content_scroll == :below
+        raise ArgumentError, "scroll must be :pane or :page"
+      end
 
-        raise ArgumentError, "scroll: :page cannot be combined with content_scroll: :below"
+      def reject_removed!(arguments)
+        removed = arguments.keys & REMOVED_KEYWORDS
+        return if removed.empty?
+
+        raise ArgumentError, "unknown keyword: :#{removed.first}"
       end
 
       def validate_height!

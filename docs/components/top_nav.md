@@ -1,7 +1,7 @@
 # Top Nav
 
 ## Purpose
-Render a sticky top bar with a left slot, a center slot, and a right slot.
+Render a top row with a left slot, a center slot, and a right slot. The row has no fill, border, shadow, or scroll frost. [Sidebar Layout](sidebar_layout.md) and [Page Layout](page_layout.md) paint that bar on the `top_nav` slot.
 
 ## When to use
 Use TopNav in app shells for a title, search, or a short set of controls. Pair it with `SidebarLayout` and `Sidebar`. Dummy `/demo/navbar` is this component. `/demo/navbar?example=header` is the header row: page nav on the left, a collapsing button group on the right.
@@ -25,13 +25,15 @@ TopNav does not fold. It has no phone menu, no breakpoint, and no flag that pins
 | `center` | block slot | No | Center wrapper (`h-full min-w-0 flex-1 flex items-center justify-center`). It grows, then shrinks. |
 | `right` | block slot | No | Right-aligned content (`h-full min-w-0 flex items-center justify-end gap-2`). |
 
-TopNav always renders all three wrappers, even when a slot is blank. `left` and `right` use `min-w-0`, so a long title can shrink instead of pushing the bar sideways. A field in a slot uses `min-width: 0` and stays inside that column. The slots do not hide their children. A child that should disappear into a menu owns that collapse.
+TopNav always renders all three wrappers, even when a slot is blank. `left` and `right` use `min-w-0`, so a long title can shrink instead of pushing the row sideways. A field in a slot uses `min-width: 0` and stays inside that column. The slots do not hide their children. A child that should disappear into a menu owns that collapse.
 
-Each section carries `data-flat-pack-top-nav-section` (`left`, `center`, or `right`). [Sidebar Layout](sidebar_layout.md) `floating_top_nav: true` uses that hook to turn the bar into cards. Card padding and the row gap then come from `--top-nav-float-padding-block` (`0.25rem`), `--top-nav-float-padding-inline` (the radius difference, clamped between `0.25rem` and `0.75rem`), and `--top-nav-float-gap` (`0.75rem`). The `<header>` landmark stays on this component.
+The sections are `.fp-top-nav__left`, `.fp-top-nav__center`, and `.fp-top-nav__right`. They carry no `data-flat-pack-top-nav-section` hook. A parent does not style a slot's children. The `<header>` landmark stays on this component.
 
-The bar is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `1rem` and never less than the side insets. `min-width: 0` and `max-width: 100%` keep the row inside its column. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+The row is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `--top-nav-padding-inline` and never less than the side insets. `min-width: 0` and `max-width: 100%` keep the row inside its column. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
 
-At rest the bar does not frost the page (`backdrop-filter: blur(0)`). After the page has scrolled, it uses `--top-nav-backdrop-blur` (default `16px`, same pattern as `--modal-backdrop-blur`). `--top-nav-background-color` stays the fill. The `flat-pack--top-nav` Stimulus controller sets `data-scrolled` and listens to the window plus the nearest overflow pane (including SidebarLayout's main column). Hosts do not attach a window scroll listener. The controller does not move nodes and does not open a menu.
+TopNav is not sticky and does not frost. The shell's `.fp-layout-top-nav` wrapper is the bar: `--top-nav-background-color`, a hairline from `--top-nav-border-color`, and `--top-nav-backdrop-blur` after scroll. See [Sidebar Layout](sidebar_layout.md).
+
+A floating cluster is a surface the host places in a slot. `FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto")` is that surface. `radius: :xxxl` is the roundest card corner (`--radius-xxxl`, 40px). `class: "!h-auto"` overrides the card's `h-full`. Card rejects `style:` because that name was a theme. There is no separate pill component.
 
 ## Header row
 
@@ -127,9 +129,9 @@ None.
 ```
 
 ## Accessibility
-TopNav itself is structural (`<header>`). Accessibility depends on the controls inside the slots. The frost controller does not move focus and does not add a menu.
+TopNav itself is structural (`<header>`). Accessibility depends on the controls inside the slots. The row does not move focus and does not add a menu.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- `flat-pack--top-nav` Stimulus controller (shipped with the engine importmap) for scroll frost.
-- Optional companion components commonly used inside slots: `FlatPack::Search::Component`, `FlatPack::ButtonGroup::Component`, `FlatPack::SidebarLayout::Component`.
+- Optional companion components commonly used inside slots: `FlatPack::Search::Component`, `FlatPack::ButtonGroup::Component`, `FlatPack::Card::Component`, `FlatPack::SidebarLayout::Component`.
+- Scroll frost lives on the shell wrapper (`flat-pack--top-nav`), not on this row.

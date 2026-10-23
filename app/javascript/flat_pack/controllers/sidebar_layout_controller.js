@@ -83,7 +83,6 @@ export default class extends Controller {
     window.addEventListener("pagehide", this.handlePageHide)
     this.element.addEventListener("click", this.handleSidebarLinkClick, true)
     this.bindScrollPersistenceListener()
-    this.bindFloatingTopNavClearance()
     this.bindOpenWidthMemory()
     this.rememberOpenWidth()
     this.remeasureOpenWidthWhenFontsReady()
@@ -101,7 +100,6 @@ export default class extends Controller {
     window.removeEventListener("pagehide", this.handlePageHide)
     this.element.removeEventListener("click", this.handleSidebarLinkClick, true)
     this.unbindScrollPersistenceListener()
-    this.unbindFloatingTopNavClearance()
     this.unbindOpenWidthMemory()
     if (this.boundCollapseRail) {
       this.element.removeEventListener("flat-pack:collapse-rail", this.boundCollapseRail)
@@ -117,8 +115,6 @@ export default class extends Controller {
   handleResize() {
     const wasMobile = this.isMobile
     this.isMobile = window.innerWidth < 768
-
-    this.syncFloatingTopNavClearance()
 
     if (wasMobile === this.isMobile) return
 
@@ -877,71 +873,5 @@ export default class extends Controller {
 
       this.persistScrollState()
     })
-  }
-
-  bindFloatingTopNavClearance() {
-    this.syncFloatingTopNavClearance()
-    const nav = this.floatingTopNavElement()
-    if (!nav || typeof ResizeObserver === "undefined") return
-
-    this.topNavResizeObserver = new ResizeObserver(() => this.syncFloatingTopNavClearance())
-    this.topNavResizeObserver.observe(nav)
-  }
-
-  unbindFloatingTopNavClearance() {
-    if (!this.topNavResizeObserver) return
-
-    this.topNavResizeObserver.disconnect()
-    this.topNavResizeObserver = null
-  }
-
-  floatingTopNavElement() {
-    return this.element.querySelector('[data-flat-pack-top-nav-floating="behind"]')
-  }
-
-  // One toolbar is a few pixels off the token. A wrapped row is not.
-  // Raise the token only when the cards actually need more room.
-  syncFloatingTopNavClearance() {
-    const nav = this.floatingTopNavElement()
-    const column = nav && nav.parentElement
-    if (!column) return
-
-    const floor = this.floatingTopNavClearanceFloor(column)
-    const band = this.pageScrolls()
-      ? (parseFloat(getComputedStyle(nav).top) || 0) + nav.offsetHeight
-      : nav.offsetTop + nav.offsetHeight
-    this.applyFloatingTopNavClearance(column, band, floor)
-  }
-
-  pageScrolls() {
-    return this.element?.dataset?.flatPackLayoutScroll === "page"
-  }
-
-  clearanceElement(column) {
-    return this.pageScrolls() ? document.documentElement : column
-  }
-
-  floatingTopNavClearanceFloor(column) {
-    if (Number.isFinite(this.topNavClearanceFloor)) return this.topNavClearanceFloor
-
-    const scroll = column.querySelector(".fp-layout-scroll")
-    const host = this.clearanceElement(column)
-    const inline = host.style.getPropertyValue("--top-nav-float-clearance")
-    if (inline) host.style.removeProperty("--top-nav-float-clearance")
-    // Custom properties keep their calc() text. The used padding is pixels.
-    const parsed = scroll ? parseFloat(getComputedStyle(scroll).paddingTop) : NaN
-    if (inline) host.style.setProperty("--top-nav-float-clearance", inline)
-
-    this.topNavClearanceFloor = Number.isFinite(parsed) ? parsed : 0
-    return this.topNavClearanceFloor
-  }
-
-  applyFloatingTopNavClearance(column, band, floor) {
-    const host = this.clearanceElement(column)
-    if (band > floor + 8) {
-      host.style.setProperty("--top-nav-float-clearance", `${Math.ceil(band)}px`)
-    } else {
-      host.style.removeProperty("--top-nav-float-clearance")
-    }
   }
 }

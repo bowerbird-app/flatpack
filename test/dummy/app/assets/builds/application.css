@@ -761,6 +761,9 @@
     width: calc(var(--spacing) * 12);
     height: calc(var(--spacing) * 12);
   }
+  .\!h-auto {
+    height: auto !important;
+  }
   .h-1 {
     height: calc(var(--spacing) * 1);
   }
@@ -2620,9 +2623,6 @@
   }
   .bg-\[var\(--tooltip-background-color\)\] {
     background-color: var(--tooltip-background-color);
-  }
-  .bg-\[var\(--top-nav-background-color\)\] {
-    background-color: var(--top-nav-background-color);
   }
   .bg-blue-50 {
     background-color: var(--color-blue-50);

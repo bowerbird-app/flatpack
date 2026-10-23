@@ -528,14 +528,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --sidebar-float-background-color: #fff;
   --sidebar-float-shadow: var(--shadow-md);
   --sidebar-float-radius: var(--radius-lg);
-  --top-nav-float-radius: var(--sidebar-float-radius);
-  --top-nav-float-clearance: calc(max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px)) + 3.25rem);
-  --top-nav-float-offset: 0px;
-  --top-nav-float-padding-block: 0.25rem;
-  --top-nav-float-padding-inline: max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))));
-  --top-nav-float-gap: 0.75rem;
   /* --layout-content-inset stays on the kit: 1rem, then 2rem from 640px. Set it here only to change that page padding. */
-  /* --layout-content-max-width stays 100% (the padded column). Set a length here to center a measure; the floating bar follows it. */
+  /* --layout-content-max-width stays 100% (the padded column). Set a length here to center a measure. */
   --backdrop-blur: 40px;
   --backdrop-color: transparent;
   --backdrop-filter: saturate(1);

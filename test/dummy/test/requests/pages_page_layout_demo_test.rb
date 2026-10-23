@@ -24,7 +24,8 @@ class PagesPageLayoutDemoTest < ActionDispatch::IntegrationTest
     get "/demo/page_layout?variant=float"
 
     assert_response :success
-    assert_select "[data-flat-pack-top-nav-floating=behind]"
+    assert_select "[data-flat-pack-content-scroll=behind]"
+    assert_select "header.fp-top-nav .fp-card", minimum: 2
     assert_select "[data-fp-page-layout-width=wide]"
     assert_select ".fp-backdrop[aria-hidden=true]"
     assert_includes response.body, "/images/hero-packaging.jpg"

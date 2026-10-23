@@ -67,34 +67,15 @@ module FlatPack
       private
 
       def render_section(slot_content, alignment)
-        content_tag(
-          :div,
-          slot_content.to_s,
-          class: section_classes(alignment),
-          data: {"flat-pack-top-nav-section": alignment}
-        )
+        content_tag(:div, slot_content.to_s, class: section_classes(alignment))
       end
 
       def header_attributes
-        attrs = merge_attributes(class: header_classes)
-        attrs[:data] = merge_data_attributes(
-          attrs[:data],
-          {
-            controller: "flat-pack--top-nav",
-            scrolled: "false"
-          }
-        )
-        attrs
+        merge_attributes(class: header_classes)
       end
 
       def header_classes
-        classes(
-          "fp-top-nav",
-          "sticky",
-          "top-0",
-          "z-10",
-          "bg-[var(--top-nav-background-color)]"
-        )
+        "fp-top-nav"
       end
 
       def container_classes
@@ -117,11 +98,11 @@ module FlatPack
       def section_classes(alignment)
         case alignment
         when "left"
-          "h-full min-w-0 flex items-center gap-2"
+          "fp-top-nav__section fp-top-nav__left h-full min-w-0 flex items-center gap-2"
         when "center"
-          "h-full min-w-0 flex-1 flex items-center justify-center"
+          "fp-top-nav__section fp-top-nav__center h-full min-w-0 flex-1 flex items-center justify-center"
         when "right"
-          "h-full min-w-0 flex items-center justify-end gap-2"
+          "fp-top-nav__section fp-top-nav__right h-full min-w-0 flex items-center justify-end gap-2"
         end
       end
     end

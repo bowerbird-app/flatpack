@@ -1,6 +1,8 @@
 @import "tailwindcss" source(none);
 @source "../..";
 @source "../../../../../app";
+/* Card merges h-full after a plain h-auto. The top-nav demos pass !h-auto. */
+@source inline("!h-auto");
 
 /* Tokens come from flat_pack/variables. Do not fork --color-fp-* or redefine
  * --color-primary here (host CSS last wins). --color-warning is registered so

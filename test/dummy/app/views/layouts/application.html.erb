@@ -102,8 +102,7 @@
     <% sidebar_side = params[:side].in?(%w[left right]) ? params[:side].to_sym : :left %>
     <% sidebar_floating = params[:floating].in?(%w[1 true]) %>
     <% sidebar_background = params[:background].in?(%w[1 true]) %>
-    <% floating_top_nav = params[:floating_top_nav].in?(%w[1 true]) %>
-    <% content_scroll = page_scroll ? :behind : (params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :behind) %>
+    <% content_scroll = params[:content_scroll].in?(%w[behind below]) ? params[:content_scroll].to_sym : :below %>
     <% sidebar_height = params[:height].in?(%w[full content]) ? params[:height].to_sym : :full %>
     <% sidebar_width = params[:width].in?(%w[fixed content]) ? params[:width].to_sym : :fixed %>
     <% content_height = sidebar_floating && sidebar_height == :content %>
@@ -121,7 +120,6 @@
       open: !sidebar_collapsed,
       storage_key: sidebar_collapsed ? "flatpack-dummy-shell-collapsed" : "flatpack-dummy-shell",
       floating: sidebar_floating,
-      floating_top_nav: floating_top_nav,
       content_scroll: content_scroll,
       scroll: (page_scroll ? :page : :pane),
       scrollbar: pane_scrollbar,
@@ -236,45 +234,54 @@
       <% layout.top_nav do %>
         <%= render FlatPack::TopNav::Component.new do |nav| %>
           <% nav.left do %>
-            <%= render FlatPack::Button::Component.new(
-              icon: "menu",
-              icon_only: true,
-              style: :ghost,
-              size: :md,
-              aria: { label: "Toggle sidebar" },
-              data: {
-                "flat-pack--sidebar-layout-target": "mobileToggle",
-                action: "click->flat-pack--sidebar-layout#toggleMobile"
-              },
-              class: "shrink-0 md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
-            ) %>
-            <% if show_aside && aside_mobile != :stack %>
-              <%= layout.aside_trigger("Details") %>
-            <% end %>
-            <% if editor_toolbar %>
-              <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
-                <% group.button(FlatPack::Button::Component.new(text: "Section", icon: "plus", style: :secondary, size: :sm)) %>
-                <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Publish", style: :primary, size: :sm, placement: :bottom_left)) do |dropdown| %>
-                  <% dropdown.menu_item(text: "Publish now") %>
-                  <% dropdown.menu_item(text: "Schedule") %>
-                <% end %>
-                <% group.button(FlatPack::Button::Dropdown::Component.new(text: "More", style: :ghost, size: :sm, placement: :bottom_right)) do |dropdown| %>
-                  <% dropdown.menu_item(text: "Duplicate") %>
-                  <% dropdown.menu_item(text: "Archive") %>
-                <% end %>
+            <% left_row = capture do %>
+              <%= render FlatPack::Button::Component.new(
+                icon: "menu",
+                icon_only: true,
+                style: :ghost,
+                size: :md,
+                aria: { label: "Toggle sidebar" },
+                data: {
+                  "flat-pack--sidebar-layout-target": "mobileToggle",
+                  action: "click->flat-pack--sidebar-layout#toggleMobile"
+                },
+                class: "shrink-0 md:hidden border-0 shadow-none text-(--top-nav-item-icon-color) hover:bg-(--top-nav-item-hover-background-color) hover:text-(--top-nav-item-hover-text-color) transition-colors"
+              ) %>
+              <% if show_aside && aside_mobile != :stack %>
+                <%= layout.aside_trigger("Details") %>
               <% end %>
-            <% elsif floating_top_nav %>
-              <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
-                <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
-                <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
-                <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
+              <% if editor_toolbar %>
+                <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
+                  <% group.button(FlatPack::Button::Component.new(text: "Section", icon: "plus", style: :secondary, size: :sm)) %>
+                  <% group.button(FlatPack::Button::Dropdown::Component.new(text: "Publish", style: :primary, size: :sm, placement: :bottom_left)) do |dropdown| %>
+                    <% dropdown.menu_item(text: "Publish now") %>
+                    <% dropdown.menu_item(text: "Schedule") %>
+                  <% end %>
+                  <% group.button(FlatPack::Button::Dropdown::Component.new(text: "More", style: :ghost, size: :sm, placement: :bottom_right)) do |dropdown| %>
+                    <% dropdown.menu_item(text: "Duplicate") %>
+                    <% dropdown.menu_item(text: "Archive") %>
+                  <% end %>
+                <% end %>
+              <% elsif sidebar_floating %>
+                <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
+                  <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
+                  <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
+                  <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
+                <% end %>
+              <% else %>
+                <span class="hidden min-w-0 truncate text-sm font-medium text-[var(--surface-muted-content-color)] md:inline">FlatPack Demo</span>
+              <% end %>
+            <% end %>
+            <% if sidebar_floating %>
+              <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+                <div class="flex min-w-0 items-center gap-2"><%= left_row %></div>
               <% end %>
             <% else %>
-            <span class="hidden min-w-0 truncate text-sm font-medium text-[var(--surface-muted-content-color)] md:inline">FlatPack Demo</span>
+              <%= left_row %>
             <% end %>
           <% end %>
 
-          <% unless floating_top_nav %>
+          <% unless sidebar_floating %>
           <% nav.center do %>
             <%= render FlatPack::Search::Component.new(
               items: DemoCatalog.searchable_items,
@@ -287,15 +294,17 @@
           <% end %>
 
           <% nav.right do %>
-            <% if floating_top_nav %>
-              <%= render FlatPack::Button::Component.new(
-                icon: "bell",
-                icon_only: true,
-                round: true,
-                style: :ghost,
-                size: :md,
-                aria: { label: "Notifications" }
-              ) %>
+            <% if sidebar_floating %>
+              <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+                <%= render FlatPack::Button::Component.new(
+                  icon: "bell",
+                  icon_only: true,
+                  round: true,
+                  style: :ghost,
+                  size: :md,
+                  aria: { label: "Notifications" }
+                ) %>
+              <% end %>
             <% else %>
             <div
               class="flex min-w-0 items-center justify-end gap-2"

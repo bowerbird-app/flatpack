@@ -19,23 +19,41 @@
 <%= render FlatPack::PageLayout::Component.new(
   width: width,
   align: align,
-  floating_top_nav: floating,
+  content_scroll: (floating ? :behind : :below),
   id: "page-layout-demo"
 ) do |layout| %>
   <% layout.top_nav do %>
     <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left do %>
-        <%= render FlatPack::Link::Component.new(href: variant_path.call("plain")) do %>
-          Field notes
+        <% brand = capture do %>
+          <%= render FlatPack::Link::Component.new(href: variant_path.call("plain")) do %>
+            Field notes
+          <% end %>
+        <% end %>
+        <% if floating %>
+          <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+            <%= brand %>
+          <% end %>
+        <% else %>
+          <%= brand %>
         <% end %>
       <% end %>
       <% nav.right do %>
-        <%= render FlatPack::Button::Component.new(
-          text: "Sign in",
-          href: variant_path.call("login"),
-          style: (floating ? :default : :primary),
-          size: :sm
-        ) %>
+        <% sign_in = capture do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Sign in",
+            href: variant_path.call("login"),
+            style: (floating ? :default : :primary),
+            size: :sm
+          ) %>
+        <% end %>
+        <% if floating %>
+          <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+            <%= sign_in %>
+          <% end %>
+        <% else %>
+          <%= sign_in %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

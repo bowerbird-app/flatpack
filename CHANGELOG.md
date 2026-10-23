@@ -13,6 +13,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.309] - 2026-10-23
+
+### Changed
+- `FlatPack::TopNav::Component` is a layout row. It keeps the `<header>`, the three slots, the height, the gap, the inline padding, the safe-area insets, and `min-width: 0`. It has no fill, border, shadow, or scroll frost.
+- `SidebarLayout` and `PageLayout` wrap the `top_nav` slot in `.fp-layout-top-nav`. That wrapper is the bar: sticky, `--top-nav-background-color`, a hairline from `--top-nav-border-color`, and `--top-nav-backdrop-blur` after scroll. `flat-pack--top-nav` sets `data-scrolled` on the wrapper.
+- `content_scroll:` is a position on that bar. `:below` (the default) keeps the bar above the page. `:behind` lets the page scroll under it and pads with `--top-nav-height` plus the top safe area. `scroll: :page` works with both.
+
+### Removed
+- `floating_top_nav:` on `SidebarLayout` and `PageLayout`. Passing it raises `ArgumentError`.
+- The floating wrapper, `--top-nav-float-*`, and the CSS that turned Top Nav sections and right-slot children into cards.
+- `data-flat-pack-top-nav-section`.
+- The clearance measurement in `sidebar_layout_controller.js`.
+
+### Upgrade notes
+- Stop passing `floating_top_nav:`. A floating cluster is a `Card` in a Top Nav slot: `FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto")`. `radius: :xxxl` is the roundest card corner. `class: "!h-auto"` overrides the card's `h-full`. Card rejects `style:` (that name was a theme). There is no new pill component.
+- `content_scroll` now applies to the full-width bar. The default is `:below`. Pass `:behind` when the page should scroll under the bar. The old default `:behind` only applied while the top nav floated.
+- Stop reading `data-flat-pack-top-nav-section`, `data-flat-pack-top-nav-floating`, and `--top-nav-float-*`.
+- Reload kit CSS and JS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`. A generated top nav is still the plain row. The comment in that template shows the card.
+- Redeploy so `meta.gem_version` shows `0.1.309`.
+
 ## [0.1.308] - 2026-10-23
 
 ### Changed
