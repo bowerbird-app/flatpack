@@ -12,7 +12,7 @@ FlatPack's theming surface has three layers:
 
 - `@theme inline {}` in `flat_pack/variables.css` registers the Tailwind token inventory (including `--brand-hue` / `--brand-chroma` / `--brand-lightness`) without copying values.
 - `:root, [data-theme] {}` in the same file is the single source of concrete values: the default rounded / charcoal palette **and** component token wiring (`--button-primary-*` → `var(--color-primary)`, etc.). Repeating the wiring on `[data-theme]` re-resolves those aliases when `data-theme` is on `<body>` or another descendant, not only on `<html>`.
-- `[data-theme~="rounded"]` shifts `--space-2`…`--space-6`, a few menu shells, and component radii (buttons, inputs, badges, tabs, and the chat composer become `--radius-full`; chips, sidebar items, and menu items stay `--radius-md`; cards, menus, popovers, modals, alerts, and toasts become `--radius-xl`). It sets `--card-border-width: 0` and `--card-shadow: var(--shadow-sm)`. It does not restate colour or the global `--radius-*` steps. Dark and ocean inherit the compact scale and the moderate shape. The default card is a 1px border and `--card-shadow: none`.
+- `[data-theme~="rounded"]` shifts `--space-2`…`--space-6`, a few menu shells, and component radii (buttons, the outlined button group, badges, tabs, and the chat composer become `--radius-full`; chips, sidebar items, and menu items stay `--radius-md`; cards, menus, popovers, modals, alerts, and toasts become `--radius-xl`). It sets `--card-border-width: 0` and `--card-shadow: var(--shadow-sm)`. It does not restate colour or the global `--radius-*` steps. Dark and ocean inherit the compact scale and the moderate shape. The default card is a 1px border and `--card-shadow: none`.
 - `[data-theme~="..."]` selectors override **only** tokens that differ from the default (semantic / intentional exceptions). Component aliases re-resolve.
 - `--fp-button-*` are per-button paint tokens. Do not copy them onto a named theme. A host or gem registers a button style and paints those tokens on `[data-fp-style]`. `.fp-button` is still the chrome. See [Button](components/button.md).
 
@@ -693,6 +693,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --button-icon-warning-color: var(--color-warning);
   --button-icon-danger-color: var(--color-danger-background-color);
   --button-border-radius: var(--radius-md);
+  --button-group-radius: var(--radius-md);
   --button-round-border-radius: var(--radius-full);
   --button-focus-ring-color: var(--color-ring);
   --button-focus-ring-offset-color: var(--surface-page-background-color);

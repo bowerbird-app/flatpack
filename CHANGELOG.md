@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.307] - 2026-10-23
+
+### Added
+- `FlatPack::ButtonGroup::Component` takes `variant:`. `:joined` (the default) is the merged row. `:outlined` is a bordered desktop container. Children keep their own border, radius, and fill. The container radius is `--button-group-radius` (`--radius-md` on the default theme, `--radius-full` on rounded). The overflow trigger is ghost when the variant is outlined, and secondary when it is joined.
+- `page_nav_button_group` accepts `variant:` and passes it to the group.
+- `overflow_icon:` on the button group and on `page_nav_button_group`. Omit it for `ellipsis-horizontal` when `overflow_label` is omitted, and `chevron-down` when a label is set.
+
+### Changed
+- An omitted or blank `overflow_label` shows the icon alone. The accessible name stays the locale string "More" (`aria-label`). A set label shows that text, then the trailing icon. The icon is not also drawn in front of the text.
+
+### Upgrade notes
+- Pass `variant: :outlined` for a quiet desktop row. Pass `style: :ghost` on each child when those actions should read as links. The group does not restyle them.
+- Pass `overflow_label: "More"` when the overflow trigger should show that word. It is followed by a chevron. Omit the label for the ellipsis alone. Pass `overflow_icon:` to use another Heroicon in that same place.
+- `--button-group-radius` is `--radius-md` until `[data-theme~="rounded"]`, where it is `--radius-full`. Ghost hover stays on `--button-border-radius`, which is the same pill on rounded.
+- `collapse: :menu` still folds every child into the phone menu. The outline is the wide row.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.307`.
+
 ## [0.1.306] - 2026-10-23
 
 ### Added

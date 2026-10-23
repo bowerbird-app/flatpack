@@ -34,6 +34,7 @@ module FlatPack
           icon_style: nil,
           icon_only: false,
           show_chevron: nil,
+          chevron: "chevron-down",
           disabled: false,
           placement: :bottom_right,
           max_height: "384px",
@@ -49,6 +50,7 @@ module FlatPack
           @icon_variant = IconOptions.normalize_variant!(icon_variant)
           @icon_style = IconOptions.normalize_style!(icon_style)
           @icon_only = icon_only
+          @chevron = normalize_chevron!(chevron)
           @show_chevron = resolved_chevron(show_chevron)
           @disabled = disabled
           @placement = placement.to_sym
@@ -197,12 +199,24 @@ module FlatPack
         end
 
         def chevron_icon
-          render FlatPack::Shared::IconComponent.new(
-            name: "chevron-down",
-            size: :sm,
-            class: "transition-transform duration-[var(--duration-base)] ease-[var(--easing-standard)]",
-            data: {flat_pack__button_dropdown_target: "chevron"}
-          )
+          options = {name: @chevron, size: :sm}
+          if chevron_rotates?
+            options[:class] = "transition-transform duration-[var(--duration-base)] ease-[var(--easing-standard)]"
+            options[:data] = {flat_pack__button_dropdown_target: "chevron"}
+          end
+
+          render FlatPack::Shared::IconComponent.new(**options)
+        end
+
+        def chevron_rotates?
+          @chevron.tr("_", "-") == "chevron-down"
+        end
+
+        def normalize_chevron!(icon)
+          return "chevron-down" if icon.nil? || icon == ""
+          return icon.to_s if icon.is_a?(String) || icon.is_a?(Symbol)
+
+          raise ArgumentError, "chevron must be a string"
         end
 
         def menu_attributes

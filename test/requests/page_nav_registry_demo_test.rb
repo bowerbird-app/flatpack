@@ -19,7 +19,7 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     assert_select "#page-nav-registry-header .fp-button-group-menu__trigger[aria-label=Menu]"
     assert_select "header.fp-top-nav .fp-button-group-menu", count: 0
     assert_select ".fp-page-nav", count: 0
-    assert_select "button[aria-label=More]", count: 0
+    assert_select "#page-nav-registry-header .fp-button-group__overflow > .fp-button-dropdown__trigger[aria-label=More]", count: 1
     assert_select "#publishable_quick_actions_demo", text: "Publish", count: 1
     assert_select ".fp-button-group-menu__row #publishable_quick_actions_demo", count: 1
     assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
@@ -57,7 +57,8 @@ class PageNavRegistryDemoTest < ActionDispatch::IntegrationTest
     row = css_select("#page-nav-registry-header .fp-button-group-menu__row").first
     row.element_children.map do |node|
       if node["class"].to_s.include?("fp-button-group__overflow")
-        node.at_css(".fp-button-dropdown__trigger").text.squish
+        trigger = node.at_css(".fp-button-dropdown__trigger")
+        trigger.text.squish.presence || trigger["aria-label"]
       else
         node.text.squish
       end
