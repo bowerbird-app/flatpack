@@ -263,7 +263,7 @@
               <% end %>
             <% elsif sidebar_floating %>
               <div class="self-start mt-[var(--sidebar-float-inset)]">
-                <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
+                <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu, menu_label: "View") do |group| %>
                   <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
                   <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
                   <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
@@ -306,6 +306,7 @@
                 placeholder: "Search demo pages...",
                 no_results_text: "No demo pages found",
                 min_characters: 1,
+                size: :sm,
                 collapsible: true,
                 collapsed: true
               ) %>

@@ -51,7 +51,13 @@ module FlatPack
         assert_selector ".fp-button-group-menu__panel .fp-menu-row[data-fp-style=danger]", text: "Archive", count: 1
         assert_no_selector ".fp-button-group-menu__panel .fp-button"
         assert_selector "button", text: "More", count: 1
-        assert_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='bars-3']"
+        trigger = page.find(".fp-button-group-menu__trigger")
+        children = trigger.native.element_children
+        assert_equal %w[span span], children.map(&:name)
+        assert_equal "More", children.first.text
+        assert_equal "chevron-down", children.last.at_css("svg")["data-flat-pack--icon-name-value"]
+        assert_no_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='bars-3']"
+        refute trigger["aria-label"]
         assert_equal "false", page.find(".fp-button-group-menu")["data-open"]
       end
 
@@ -87,7 +93,28 @@ module FlatPack
           group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
         end
 
-        assert_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='plus']"
+        trigger = page.find(".fp-button-group-menu__trigger")
+        assert_equal ["svg"], trigger_child_names(trigger)
+        assert_equal "plus", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_equal "Menu", trigger["aria-label"]
+      end
+
+      def test_menu_label_puts_an_explicit_icon_after_the_word
+        render_inline(Component.new(collapse: :menu, menu_label: "View", menu_icon: :plus)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Rename", style: :secondary))
+        end
+
+        trigger = page.find(".fp-button-group-menu__trigger")
+        children = trigger.native.element_children
+        assert_equal %w[span span], children.map(&:name)
+        assert_equal "View", children.first.text
+        assert_equal "plus", children.last.at_css("svg")["data-flat-pack--icon-name-value"]
+        assert_no_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='chevron-down']"
+        assert_no_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='bars-3']"
+        refute trigger["aria-label"]
+
+        error = assert_raises(ArgumentError) { Component.new(menu_icon: true) }
+        assert_equal "menu_icon must be a string", error.message
       end
 
       def test_collapse_menu_keeps_a_caller_controller

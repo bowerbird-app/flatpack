@@ -59,4 +59,20 @@ class LocaleSwitchingTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "Skip to content"
     assert_select "header.fp-top-nav select[name=locale] option[value=fr][selected]"
   end
+
+  test "phone search toggle is a small collapsed control" do
+    get "/"
+
+    assert_response :success
+    assert_select "header.fp-top-nav .fp-search--collapsible[data-fp-size=sm] .fp-search__toggle", count: 1
+  end
+
+  test "floating shell uses a labeled view menu instead of a second hamburger" do
+    get "/", params: {floating: "1"}
+
+    assert_response :success
+    assert_select "header.fp-top-nav .fp-button-group-menu__trigger", text: "View", count: 1
+    assert_select "header.fp-top-nav .fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value=chevron-down]", count: 1
+    assert_select "header.fp-top-nav .fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value=bars-3]", count: 0
+  end
 end

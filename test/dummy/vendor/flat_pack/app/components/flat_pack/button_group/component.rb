@@ -8,7 +8,8 @@ module FlatPack
       undef_method :with_button, :with_button_content
 
       # false keeps the row. :menu is that row from collapse_at up and a
-      # hamburger disclosure below it. The row and the menu are separate elements.
+      # disclosure below it. No label: the bars glyph alone. A label: that
+      # word, then a trailing icon. The row and the menu are separate elements.
       COLLAPSES = [false, :menu].freeze
       # :joined merges direct children into one control. :outlined is a bordered
       # container on the wide row. The phone menu does not use the container.
@@ -22,7 +23,7 @@ module FlatPack
         variant: :joined,
         collapse: false,
         menu_label: nil,
-        menu_icon: DEFAULT_MENU_ICON,
+        menu_icon: nil,
         collapse_at: DEFAULT_COLLAPSE_AT,
         visible: nil,
         overflow_label: nil,
@@ -114,10 +115,20 @@ module FlatPack
         }
       end
 
+      # No label: the icon alone, named with the locale string. A label: that
+      # text, then the icon in the button's trailing slot. No leading icon.
       def menu_trigger
+        button = FlatPack::Button::Component.new(**menu_trigger_options)
+        if @menu_label.present?
+          button.with_trailing do
+            render FlatPack::Shared::IconComponent.new(name: menu_icon_name, size: :sm)
+          end
+        end
+        render(button)
+      end
+
+      def menu_trigger_options
         options = {
-          icon: @menu_icon,
-          icon_only: @menu_label.blank?,
           style: :secondary,
           type: "button",
           class: "fp-button-group-menu__trigger",
@@ -127,9 +138,19 @@ module FlatPack
             action: "click->flat-pack--button-group-menu#toggle"
           }
         }
-        options[:text] = @menu_label if @menu_label.present?
+        if @menu_label.present?
+          options[:text] = @menu_label
+        else
+          options[:icon] = menu_icon_name
+          options[:icon_only] = true
+        end
+        options
+      end
 
-        render(FlatPack::Button::Component.new(**options))
+      def menu_icon_name
+        return @menu_icon if @menu_icon
+
+        @menu_label.present? ? OVERFLOW_CHEVRON : DEFAULT_MENU_ICON
       end
 
       def trigger_aria
@@ -347,7 +368,7 @@ module FlatPack
       end
 
       def normalize_menu_icon!(icon)
-        return DEFAULT_MENU_ICON if icon.nil? || icon == ""
+        return if icon.nil? || icon == ""
         return icon.to_s if icon.is_a?(String) || icon.is_a?(Symbol)
 
         raise ArgumentError, "menu_icon must be a string"
