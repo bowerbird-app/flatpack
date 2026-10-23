@@ -126,6 +126,12 @@ class PageNavRegistryHelperProbesController < ApplicationController
     helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::SOLID, visible: -1)
     head :ok
   end
+
+  def render_overflow_label
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_label: \"Extras\") %>", layout: false
+  end
 end
 
 class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
@@ -238,6 +244,17 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "page_nav_button_group forwards overflow_label" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_overflow_label"
+
+      assert_response :success
+      assert_select ".fp-button-group > a", text: "Share"
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "Extras"
+      assert_select ".fp-button-group__overflow .fp-menu-row", text: "Delete"
+    end
+  end
+
   test "a view cannot pass a class, a button style, a missing role, a label with a component, or a blank bucket" do
     with_page_nav_routes do
       assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/rejected_class" }
@@ -286,6 +303,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_nav_registry_helper/render_overflow", to: "page_nav_registry_helper_probes#render_overflow"
         get "/demo/page_nav_registry_helper/rejected_overflow", to: "page_nav_registry_helper_probes#rejected_overflow"
         get "/demo/page_nav_registry_helper/render_bad_visible", to: "page_nav_registry_helper_probes#render_bad_visible"
+        get "/demo/page_nav_registry_helper/render_overflow_label", to: "page_nav_registry_helper_probes#render_overflow_label"
       end
 
       yield

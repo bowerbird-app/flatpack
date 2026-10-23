@@ -58,6 +58,7 @@ A link descriptor answers `label`, `href`, `role`, `icon`, `data`, `aria`, and `
 | `from` | Symbol, String | `:default` | no | The bucket `into:` used. |
 | `collapse` | false or Symbol | `false` | no | Passed to the button group. `false` keeps the joined row. `:menu` is that row from 768px up and a menu below it. Anything else raises `ArgumentError`. |
 | `visible` | Integer, nil | `nil` | no | Passed to the button group. The first that many children stay in the joined row. `overflow:` on an entry wins. See [Button Group](button-group.md). |
+| `overflow_label` | String, nil | `nil` | no | Passed to the button group. Visible label on the overflow trigger. `nil` uses the locale string "More". |
 
 ## Slots
 None. The registry has no markup. The caller renders the descriptors.
