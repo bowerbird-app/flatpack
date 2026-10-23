@@ -24,6 +24,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `mobile_actions` on both shells. The shells no longer fold a button group or pin a primary link. `.fp-page-nav--floating` and `.fp-page-nav--pin-row` are gone. `PageNavRoleStyles::PIN` remains a style map.
 
+### Fixed
+- `.fp-page-nav` is a stacking context (`position: relative`, `z-index: 1`). The page body is the next sibling, and the sidebar pane's scroll mask is its own stacking context, so an open menu in the actions slot paints above that body. The top nav stays above the slot.
+
 ### Upgrade notes
 - Stop passing `mobile_actions`. Draw the default bucket in the layout: `layout.actions { page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, collapse: :menu) }`. Page Layout uses `SOLID`.
 - The shell renders `main` (or the column) before `actions`, so a `register_page_nav` inside the page is visible to the helper.

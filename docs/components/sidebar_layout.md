@@ -33,7 +33,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 |------|------|----------|-------------|
 | `sidebar` | block slot | No | Sidebar column content (typically `FlatPack::Sidebar::Component`). |
 | `top_nav` | block slot | No | Optional top-nav area above main content. |
-| `actions` | block slot | No | Optional row under the top nav. The shell renders the page body first, then this slot, and places the slot above the body. Empty content adds no markup. The row is `.fp-page-nav.fp-page-nav--desktop.fp-page-nav--bar`. |
+| `actions` | block slot | No | Optional row under the top nav. The shell renders the page body first, then this slot, and places the slot above the body. The row is a stacking context (`z-index: 1`) so an open menu paints over the pane. Empty content adds no markup. The row is `.fp-page-nav.fp-page-nav--desktop.fp-page-nav--bar`. |
 | `main` | block slot | No | Main content area. If omitted, component block content is used. |
 | `background` | block slot | No | Decorative page photo (`img` or `picture`) behind the shell. Omit it and the shell matches a layout with no photo. |
 | `aside` | block slot | No | Column opposite `side:`. `open:` (`true` or `false`, default `true`), `resizable:` (`true` or `false`, default `false`), and `mobile:` (`:drawer` or `:stack`, default `:drawer`). Omit it and the shell matches a layout with no aside. |

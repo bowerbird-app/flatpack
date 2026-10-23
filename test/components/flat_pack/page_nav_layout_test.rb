@@ -4,6 +4,15 @@ require "test_helper"
 
 module FlatPack
   class PageNavLayoutTest < ViewComponent::TestCase
+    test "the actions slot stacks above the page body" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      rule = css[/\.fp-page-nav \{.*?\n\}/m]
+
+      refute_nil rule
+      assert_includes rule, "position: relative;"
+      assert_includes rule, "z-index: 1;"
+    end
+
     test "sidebar layout places the actions slot in the bar and leaves the top nav alone" do
       top_nav = host_top_nav("Library")
       render_inline(SidebarLayout::Component.new) do |layout|

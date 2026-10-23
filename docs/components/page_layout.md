@@ -25,7 +25,7 @@ Use Page Layout for a page with no sidebar: a press kit, an article, a landing p
 | name | type | required | description |
 |------|------|----------|-------------|
 | `top_nav` | block slot | No | Optional bar. A `TopNav` keeps its `<header>`. Other markup is wrapped in `<header>`. |
-| `actions` | block slot | No | Optional row at the top of the column, under the bar. The shell renders the column body first, then this slot, and places the slot above the body. Empty content adds no markup. |
+| `actions` | block slot | No | Optional row at the top of the column, under the bar. The shell renders the column body first, then this slot, and places the slot above the body. The row is a stacking context (`z-index: 1`) so an open menu paints over the column. Empty content adds no markup. |
 | content | block | No | The column. Rendered in `<main>`. |
 | `footer` | block slot | No | Optional footer. Wrapped in `<footer>`. |
 | `background` | block slot | No | Decorative photo (`img`, `picture`, or `video`) behind the page. Renders `FlatPack::Backdrop::Component` and pins it to the viewport, the same way Sidebar Layout does. |

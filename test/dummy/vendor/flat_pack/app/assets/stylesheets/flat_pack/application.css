@@ -1371,8 +1371,14 @@
 }
 
 /* Actions slot on SidebarLayout and PageLayout. The host fills it.
-   Right-aligned. --bar insets the sidebar slot, which sits outside the padded pane. */
+   The page body is the next sibling. The sidebar pane's scroll mask is its own
+   stacking context, so a menu z-index inside this slot would lose to that body
+   once any wrapper trapped it. This bar sits above the body, under the top nav
+   (z-index 10) and overlays (40+). Right-aligned. --bar insets the sidebar slot,
+   which sits outside the padded pane. */
 .fp-page-nav {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
