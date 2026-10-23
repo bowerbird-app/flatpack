@@ -139,6 +139,24 @@ class PageNavRegistryHelperProbesController < ApplicationController
     render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :outlined) %>", layout: false
   end
 
+  def render_overflow_icon
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_icon: \"archive\") %>", layout: false
+  end
+
+  def render_overflow_icon_label
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_label: \"More\", overflow_icon: \"archive\") %>", layout: false
+  end
+
+  def render_bad_overflow_icon
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_icon: true)
+    head :ok
+  end
+
   def render_bad_variant
     helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
     helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :stacked)
@@ -252,7 +270,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       assert_equal ["New press kit", "Share", "Delete", "Notes", "Publish"], group_labels
       assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Delete", count: 1
       assert_select ".fp-button-group-menu__panel .fp-menu-row", text: "Publish", count: 1
-      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "More"
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger[aria-label=More]"
     end
   end
 
@@ -263,11 +281,33 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select ".fp-button-group.fp-button-group--outlined[data-variant=outlined]"
       assert_select ".fp-button-group > a[data-fp-style=secondary]", text: "Share"
-      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]", text: "More"
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost][aria-label=More]"
       assert_select ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
 
       error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_variant" }
       assert_equal "variant must be :joined or :outlined", error.message
+    end
+  end
+
+  test "page_nav_button_group forwards overflow_icon" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_overflow_icon"
+
+      assert_response :success
+      trigger = css_select(".fp-button-group__overflow > .fp-button-dropdown__trigger").first
+      assert_equal "More", trigger["aria-label"]
+      assert_equal "archive", trigger.at_css("svg")["data-flat-pack--icon-name-value"]
+      assert_nil trigger.at_css("span")
+
+      get "/demo/page_nav_registry_helper/render_overflow_icon_label"
+
+      labeled = css_select(".fp-button-group__overflow > .fp-button-dropdown__trigger").first
+      assert_equal "More", labeled.at_css("span").text
+      assert_equal %w[span svg], labeled.element_children.map(&:name)
+      assert_equal "archive", labeled.at_css("svg")["data-flat-pack--icon-name-value"]
+
+      error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_overflow_icon" }
+      assert_equal "overflow_icon must be a string", error.message
     end
   end
 
@@ -278,6 +318,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select ".fp-button-group > a", text: "Share"
       assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "Extras"
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value=chevron-down]"
       assert_select ".fp-button-group__overflow .fp-menu-row", text: "Delete"
     end
   end
@@ -331,6 +372,9 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_nav_registry_helper/rejected_overflow", to: "page_nav_registry_helper_probes#rejected_overflow"
         get "/demo/page_nav_registry_helper/render_bad_visible", to: "page_nav_registry_helper_probes#render_bad_visible"
         get "/demo/page_nav_registry_helper/render_overflow_label", to: "page_nav_registry_helper_probes#render_overflow_label"
+        get "/demo/page_nav_registry_helper/render_overflow_icon", to: "page_nav_registry_helper_probes#render_overflow_icon"
+        get "/demo/page_nav_registry_helper/render_overflow_icon_label", to: "page_nav_registry_helper_probes#render_overflow_icon_label"
+        get "/demo/page_nav_registry_helper/render_bad_overflow_icon", to: "page_nav_registry_helper_probes#render_bad_overflow_icon"
         get "/demo/page_nav_registry_helper/render_outlined", to: "page_nav_registry_helper_probes#render_outlined"
         get "/demo/page_nav_registry_helper/render_bad_variant", to: "page_nav_registry_helper_probes#render_bad_variant"
       end
