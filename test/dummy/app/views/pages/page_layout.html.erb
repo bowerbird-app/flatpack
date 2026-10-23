@@ -23,13 +23,13 @@
   id: "page-layout-demo"
 ) do |layout| %>
   <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new(mobile_menu: false) do |nav| %>
+    <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left do %>
         <%= render FlatPack::Link::Component.new(href: variant_path.call("plain")) do %>
           Field notes
         <% end %>
       <% end %>
-      <% nav.right(always_display: true) do %>
+      <% nav.right do %>
         <%= render FlatPack::Button::Component.new(
           text: "Sign in",
           href: variant_path.call("login"),

@@ -13,6 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.308] - 2026-10-23
+
+### Changed
+- `FlatPack::TopNav::Component` is a left, center, and right row at every width. `left` and `right` use `min-w-0`, so a long title can shrink inside the column. A field in any slot uses `min-width: 0` and stays inside that column. The bar still frosts after scroll. `data-flat-pack-top-nav-section` is unchanged, so floating cards still key off it.
+
+### Removed
+- `mobile_menu`, `mobile_menu_label`, and `mobile_breakpoint`.
+- `always_display:` on the `left`, `center`, and `right` slots, and `data-flat-pack-top-nav-always-display`.
+- The hamburger toggle, the mobile panel, and the fold in `top_nav_controller.js` (`collapseIntoMenu`, the bell hoist, panel open and close, and the resize watchers used only for that fold). The controller now only frosts the bar.
+- The `flatpack.top_nav.more` locale key.
+
+### Upgrade notes
+- Stop passing `mobile_menu`, `mobile_menu_label`, `mobile_breakpoint`, and `always_display:`. Passing one raises `ArgumentError`.
+- Top Nav does not fold. Put actions that should become one phone menu in `FlatPack::ButtonGroup::Component.new(collapse: :menu)`, usually in `right`. A bell or an avatar stays a plain child beside that group.
+- The header row is `flat_pack_page_nav_tag` on the left and `page_nav_button_group(styles:, collapse: :menu, visible: 2)` on the right. That group is the only phone menu.
+- `rails generate flat_pack:layout` writes that group around the New action, with the bell beside it. Replace a generated top nav that expected the bar to fold.
+- Reload kit CSS and JS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.308`.
+
 ## [0.1.307] - 2026-10-23
 
 ### Added

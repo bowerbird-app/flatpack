@@ -20,11 +20,11 @@
           aria: { label: "Toggle sidebar" },
           class: "border-0 shadow-none hover:bg-[var(--surface-muted-background-color)] transition-colors"
         ) %>
-        <h3 class="text-base font-semibold">Dashboard</h3>
+        <h3 class="min-w-0 truncate text-base font-semibold">Dashboard</h3>
       <% end %>
 
       <% nav.center do %>
-        <div class="text-sm text-[var(--surface-muted-content-color)]">Page context</div>
+        <div class="min-w-0 truncate text-sm text-[var(--surface-muted-content-color)]">Page context</div>
       <% end %>
 
       <% nav.right do %>
@@ -240,3 +240,5 @@
     CODE
   ) %>
 </section>
+
+<%= render "pages/header_row_demo", framed: false %>

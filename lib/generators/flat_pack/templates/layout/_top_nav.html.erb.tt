@@ -10,28 +10,24 @@
         "flat-pack--sidebar-layout-target": "mobileToggle",
         action: "click->flat-pack--sidebar-layout#toggleMobile"
       },
-      class: "md:hidden"
+      class: "shrink-0 md:hidden"
     ) %>
 
-    <span class="text-sm font-medium text-[var(--surface-muted-content-color)]">Your App</span>
+    <span class="min-w-0 truncate text-sm font-medium text-[var(--surface-muted-content-color)]">Your App</span>
   <%% end %>
 
   <%% nav.center do %><%% end %>
 
   <%% nav.right do %>
-    <div class="ml-auto flex items-center gap-2">
-      <%%= render FlatPack::Button::Component.new(
-        text: "New",
-        style: :primary,
-        size: :sm
-      ) %>
-      <%%= render FlatPack::Button::Component.new(
-        icon: "bell",
-        icon_only: true,
-        style: :ghost,
-        size: :sm,
-        aria: {label: "Notifications"}
-      ) %>
-    </div>
+    <%%= render FlatPack::ButtonGroup::Component.new(collapse: :menu) do |group| %>
+      <%% group.button(FlatPack::Button::Component.new(text: "New", style: :primary, size: :sm)) %>
+    <%% end %>
+    <%%= render FlatPack::Button::Component.new(
+      icon: "bell",
+      icon_only: true,
+      style: :ghost,
+      size: :sm,
+      aria: {label: "Notifications"}
+    ) %>
   <%% end %>
 <%% end %>

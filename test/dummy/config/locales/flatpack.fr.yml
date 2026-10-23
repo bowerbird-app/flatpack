@@ -294,8 +294,6 @@ fr:
       short_mo_ago: il y a %{count} mois
     toast:
       dismiss: Ignorer
-    top_nav:
-      more: Plus d’éléments de navigation
     rich_text:
       placeholder: Commencez à écrire…
       anonymous: Anonyme

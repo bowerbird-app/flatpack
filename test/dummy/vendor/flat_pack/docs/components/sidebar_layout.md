@@ -80,17 +80,19 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 <% end %>
 ```
 
-Float the top nav on its own, or with the rail. Put a toolbar in `left` and separate actions in `right`. `TopNav` still owns the `<header>` landmark and the mobile menu.
+Float the top nav on its own, or with the rail. Put a toolbar in `left` and separate actions in `right`. `TopNav` owns the `<header>` landmark. It does not fold. A button group in a slot folds itself. A bell stays a plain child.
 
 ```erb
 <%= render FlatPack::SidebarLayout::Component.new(floating: true, floating_top_nav: true) do |layout| %>
   <% layout.top_nav do %>
     <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left do %>
-        <%= render FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm) %>
-        <%= render FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm) %>
+        <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
+          <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
+          <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
+        <% end %>
       <% end %>
-      <% nav.right(always_display: true) do %>
+      <% nav.right do %>
         <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :ghost, aria: {label: "Notifications"}) %>
       <% end %>
     <% end %>
@@ -128,7 +130,7 @@ Check these when the shell is on a phone, or in a narrow main column.
 
 - The menu button uses `data-flat-pack--sidebar-layout-target="mobileToggle"` and `click->flat-pack--sidebar-layout#toggleMobile`. The controller sets `aria-expanded` and `aria-controls` on connect, and again when the drawer opens or closes. `aria-controls` is the rail column id.
 - Open the aside with `layout.aside_trigger("Details")`, or pass `mobile: :stack` and skip the toggle. `:stack` is in flow under main below `md`. Below `md` the kit hides that trigger and any `closeAside` control.
-- On a phone, the Top Nav row folds into one hamburger menu. The open menu is one column of full-width rows and stays inside the viewport, including when a shell ancestor is the fixed containing block. A search field is one row. A nested dropdown stays a `Button::Dropdown` and opens its own menu. A wide window keeps the row, including a narrow column between the rail and the aside. `always_display: true` keeps a section in the bar. A notification bell inside a row stays in the bar when it has `data-flat-pack-top-nav-always-display="true"`. The sidebar's mobile toggle stays in the bar.
+- On a phone, Top Nav stays a row. `left` and `right` shrink (`min-w-0`) instead of folding the bar. A button group with `collapse: :menu` is the phone menu for that group. A wide window keeps the same row, including a narrow column between the rail and the aside. A notification bell stays a plain child. The sidebar's mobile toggle stays in the bar.
 - Load `flat_pack/application.css` after Tailwind. The drawer slide and the stacked aside live in that sheet. A Tailwind utility loaded later, inside a layer, does not override them.
 - Tailwind `@source` has to include the gem's `app/components`. That scan emits the classes on the columns.
 - Do not put `transform`, `filter`, `will-change`, or `contain` on an ancestor of the shell. Those make `position: fixed` drawers stick to the ancestor instead of the viewport. The drawer dim and the panel then sit in the wrong place.
@@ -290,7 +292,7 @@ Dummy chrome accepts `?resizable=1`. `/demo/sidebar_layout?aside=1&resizable=1` 
 
 The pill cards keep `overflow: visible`, so a focus ring is not clipped. `--top-nav-float-padding-block` is the block padding on the `left` and `center` cards. It defaults to `0.25rem`. `--top-nav-float-padding-inline` is their inline padding. The default is `max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))))`, so the padding grows with the corner, up to `0.75rem`, and stays `0.25rem` while `--top-nav-float-radius` equals `--sidebar-float-radius`. Set that token to a plain length when the padding should ignore the radius. `--top-nav-float-gap` is the gap between cards on the row. It defaults to `0.75rem`. Below `768px` the inline padding is `0.25rem`, the row gap is `0.5rem`, and the gap inside `left` and `center` is `0.25rem`. Those three lengths stay in the stylesheet. They do not follow the tokens. A toolbar and one trailing card then share a line at `390px`. Text buttons in `left` and `center` use `0.625rem` of inline padding there. Icon buttons keep their hit target. Any `data-theme` other than rounded keeps square corners.
 
-The cards apply at every width, including `390px`. Below `768px` the floating row does not wrap. The Top Nav row folds into one hamburger menu. The open menu is one column. A nested dropdown stays a `Button::Dropdown` and opens its own menu. The sidebar toggle stays a single button that opens the drawer. A bell in an `always_display:` section stays beside that menu. From `768px` the row can still wrap, and `left` and `center` use `flex: 1 1 0%` with `max-width: max-content`. The mobile drawer stays full height. Its scrim is a sibling of the drawers, `z-index: 40`, and paints `--drawer-backdrop-color` at full opacity while a drawer is open. The drawer itself is `z-50`. On the rounded theme the inner edge uses `--sidebar-float-radius`. The outer edge stays flush.
+The cards apply at every width, including `390px`. Below `768px` the floating row does not wrap. Top Nav stays that row. A button group with `collapse: :menu` is the phone menu for its own children. The sidebar toggle stays a single button that opens the drawer. A bell stays a plain child of `right`, its own card. From `768px` the row can still wrap, and `left` and `center` use `flex: 1 1 0%` with `max-width: max-content`. The mobile drawer stays full height. Its scrim is a sibling of the drawers, `z-index: 40`, and paints `--drawer-backdrop-color` at full opacity while a drawer is open. The drawer itself is `z-50`. On the rounded theme the inner edge uses `--sidebar-float-radius`. The outer edge stays flush.
 
 The wrapper does not cover clicks in the gaps between cards. The `<header>` landmark stays. Tab order is still the top nav, then main.
 

@@ -1322,6 +1322,8 @@
  */
 .fp-top-nav {
   box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
   height: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
   padding-top: env(safe-area-inset-top, 0px);
   padding-right: max(var(--top-nav-padding-inline), env(safe-area-inset-right, 0px));
@@ -1332,6 +1334,33 @@
   transition-property: backdrop-filter, -webkit-backdrop-filter;
   transition-duration: var(--duration-fast);
   transition-timing-function: var(--easing-standard);
+}
+
+.fp-top-nav > div {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.fp-top-nav [data-flat-pack-top-nav-section="left"],
+.fp-top-nav [data-flat-pack-top-nav-section="right"] {
+  min-width: 0;
+}
+
+/* A field's default min-width is its content. That paints over the next slot. */
+.fp-top-nav [data-flat-pack-top-nav-section] :where(input, select, textarea) {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Text beside an icon button can give up width. The icon button keeps its hit size. */
+.fp-top-nav [data-flat-pack-top-nav-section] > :not(button) {
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  .fp-top-nav > div > [data-flat-pack-top-nav-section="center"]:not(:empty) {
+    flex: 1 1 6rem;
+  }
 }
 
 .fp-top-nav[data-scrolled="true"] {
@@ -1495,14 +1524,9 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   box-shadow: var(--sidebar-float-shadow);
 }
 
-/* Below md the bar stays one row. Collapsed actions live in the hamburger menu.
- * The right section already carries margin-left: auto, so the menu drops its
- * own auto margin and sits against that section (the bell) instead of centering it. */
+/* Below md the floating bar stays one row. Slots shrink. A child that collapses
+ * brings its own menu. */
 @media (max-width: 767px) {
-  [data-flat-pack-top-nav-section="right"]:has(*) ~ [data-flat-pack--top-nav-target="menu"] {
-    margin-left: 0;
-  }
-
   [data-flat-pack-top-nav-floating] .fp-top-nav > div {
     flex-wrap: nowrap;
     gap: 0.5rem;
@@ -1523,7 +1547,8 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
 }
 
 [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   justify-content: flex-end;
   gap: 0.75rem;
   margin-left: auto;
@@ -1545,82 +1570,9 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   border-radius: var(--button-round-border-radius);
 }
 
-[data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="menu"] {
-  pointer-events: auto;
-}
-
-/* The open hamburger menu is one column of full-width rows.
-   A horizontal cluster that moved in as one node becomes that column too. */
-[data-flat-pack--top-nav-target="panel"] {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  box-sizing: border-box;
-  max-width: calc(100vw - 1rem);
-  overflow-x: hidden;
-}
-
-[data-flat-pack--top-nav-target="panel"] > * {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  margin-inline: 0;
-}
-
-[data-flat-pack--top-nav-target="panel"] > .flex {
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-}
-
-[data-flat-pack--top-nav-target="panel"] > .flex > :not(.absolute) {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-
-[data-flat-pack--top-nav-target="panel"] :is(input, select, textarea) {
-  width: 100%;
-  min-width: 0;
-  max-width: 100%;
-}
-
-[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav,
-[data-flat-pack--top-nav-target="panel"] .flat-pack-page-nav > div {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-  min-width: 0;
-  gap: 0.125rem;
-}
-
-[data-flat-pack--top-nav-target="panel"] :is(a, button):not(.absolute) {
-  width: 100%;
-  justify-content: flex-start;
-  text-align: left;
-  background-color: transparent;
-  border-color: transparent;
-  box-shadow: none;
-  color: var(--surface-content-color);
-}
-
-[data-flat-pack--top-nav-target="panel"] :is(a, button):not(.absolute):hover {
-  background-color: var(--surface-muted-background-color);
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
-  overflow: visible;
-  background-color: var(--sidebar-float-background-color);
-  border: 1px solid var(--sidebar-border-color);
-  border-radius: var(--top-nav-float-radius);
-  box-shadow: var(--sidebar-float-shadow);
-}
-
 html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
 html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"],
-html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > *,
-html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack--top-nav-target="toggle"] {
+html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > * {
   border-radius: 0;
 }
 

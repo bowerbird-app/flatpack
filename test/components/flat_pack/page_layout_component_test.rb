@@ -100,7 +100,7 @@ module FlatPack
       end
 
       def test_floating_top_nav_keeps_one_header_landmark
-        nav = FlatPack::TopNav::Component.new(mobile_menu: false)
+        nav = FlatPack::TopNav::Component.new
         nav.left { "Field notes" }
 
         render_inline(Component.new(floating_top_nav: true)) do |layout|

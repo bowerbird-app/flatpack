@@ -1,21 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
-// On a narrow viewport, moves the top nav row into one hamburger menu. The
-// open menu is a single column. A nested dropdown stays the dropdown it
-// already is, and opens its own menu. A wide viewport keeps the row. Nodes
-// are relocated rather than duplicated so ids, event listeners and Stimulus
-// controllers inside slot content keep working. The sidebar's own mobile
-// toggle stays in the bar.
+// Frosts the bar after the page or the nearest overflow pane has scrolled.
+// The row itself does not fold. A child that collapses owns that.
 export default class extends Controller {
-  static targets = ["section", "menu", "toggle", "panel"]
-  static classes = ["toggleOpen"]
-  static values = {
-    breakpoint: { type: Number, default: 768 }
-  }
-
   connect() {
-    this.movedNodes = []
-    this.menuOpen = false
     this.boundHandleScroll = this.handleScroll.bind(this)
     this.scrollports = this.collectScrollports()
 
@@ -23,30 +11,6 @@ export default class extends Controller {
       port.addEventListener("scroll", this.boundHandleScroll, {passive: true})
     })
     this.updateScrolled()
-
-    if (!this.hasMenuWiring) return
-
-    this.mediaQuery = window.matchMedia(`(max-width: ${this.breakpointValue - 1}px)`)
-    this.handleMediaChange = this.handleMediaChange.bind(this)
-    this.handleDocumentClick = this.handleDocumentClick.bind(this)
-    this.handleKeydown = this.handleKeydown.bind(this)
-
-    if (this.mediaQuery.addEventListener) {
-      this.mediaQuery.addEventListener("change", this.handleMediaChange)
-    } else {
-      this.mediaQuery.addListener(this.handleMediaChange)
-    }
-
-    document.addEventListener("click", this.handleDocumentClick)
-    document.addEventListener("keydown", this.handleKeydown)
-
-    this.fitting = false
-    if (typeof ResizeObserver !== "undefined") {
-      this.resizeObserver = new ResizeObserver(() => this.applyLayout())
-      this.resizeObserver.observe(this.element)
-    }
-
-    this.applyLayout()
   }
 
   disconnect() {
@@ -54,33 +18,6 @@ export default class extends Controller {
       port.removeEventListener("scroll", this.boundHandleScroll)
     })
     this.scrollports = []
-
-    if (!this.hasMenuWiring) return
-
-    if (this.mediaQuery) {
-      if (this.mediaQuery.removeEventListener) {
-        this.mediaQuery.removeEventListener("change", this.handleMediaChange)
-      } else {
-        this.mediaQuery.removeListener(this.handleMediaChange)
-      }
-    }
-
-    document.removeEventListener("click", this.handleDocumentClick)
-    document.removeEventListener("keydown", this.handleKeydown)
-    this.resizeObserver?.disconnect()
-
-    // Leave the markup as it was rendered so a cached Turbo snapshot never
-    // stores relocated nodes.
-    this.closeMenu()
-    this.restoreCollapsedNodes()
-  }
-
-  get hasMenuWiring() {
-    return this.hasPanelTarget
-  }
-
-  get isNarrowViewport() {
-    return this.mediaQuery ? this.mediaQuery.matches : false
   }
 
   collectScrollports() {
@@ -114,7 +51,6 @@ export default class extends Controller {
 
   handleScroll() {
     this.updateScrolled()
-    this.placeMenu()
   }
 
   pageHasScrolled() {
@@ -129,222 +65,5 @@ export default class extends Controller {
 
   updateScrolled() {
     this.element.dataset.scrolled = this.pageHasScrolled() ? "true" : "false"
-  }
-
-  handleMediaChange() {
-    this.applyLayout()
-  }
-
-  applyLayout() {
-    if (this.fitting) return
-
-    this.fitting = true
-    try {
-      if (this.isNarrowViewport) this.collapseIntoMenu()
-      else {
-        this.closeMenu()
-        this.restoreCollapsedNodes()
-      }
-    } finally {
-      this.fitting = false
-    }
-  }
-
-  collapseIntoMenu() {
-    if (!this.hasPanelTarget || this.movedNodes.length > 0) return
-
-    this.sectionTargets.forEach((section) => {
-      if (section.dataset.flatPackTopNavCollapsible !== "true") return
-
-      // A bell can sit inside a row with other controls. Lift it out so the
-      // row folds and the bell stays in the bar.
-      this.hoistAlwaysDisplay(section)
-
-      Array.from(section.childNodes).forEach((node) => {
-        if (this.keepsInlinePlacement(node) || this.isSidebarToggle(node)) return
-
-        const placeholder = document.createComment("flat-pack-top-nav-placeholder")
-        const parent = node.parentNode || section
-        parent.insertBefore(placeholder, node)
-        this.panelTarget.appendChild(node)
-        this.movedNodes.push({ node, placeholder })
-      })
-
-      this.updateSectionVisibility(section)
-    })
-
-    this.updateMenuVisibility()
-  }
-
-  isSidebarToggle(node) {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE) return false
-    if (typeof node.matches !== "function") return false
-
-    return node.matches("[data-flat-pack--sidebar-layout-target='mobileToggle']")
-  }
-
-  restoreCollapsedNodes() {
-    while (this.movedNodes.length > 0) {
-      const { node, placeholder } = this.movedNodes.pop()
-
-      if (placeholder.parentNode) {
-        placeholder.parentNode.replaceChild(node, placeholder)
-      } else if (node.parentNode) {
-        node.parentNode.removeChild(node)
-      }
-    }
-
-    this.sectionTargets.forEach((section) => section.classList.remove("hidden"))
-    this.updateMenuVisibility()
-  }
-
-  hoistAlwaysDisplay(section) {
-    if (typeof section.querySelectorAll !== "function") return
-
-    const pinned = Array.from(section.querySelectorAll("[data-flat-pack-top-nav-always-display='true']"))
-    pinned.forEach((node) => {
-      if (!node.parentNode || node.parentNode === section) return
-
-      const placeholder = document.createComment("flat-pack-top-nav-placeholder")
-      node.parentNode.insertBefore(placeholder, node)
-      // Sit beside the hamburger. The menu cluster is the right-hand group in the bar.
-      const home = this.hasMenuTarget ? this.menuTarget : section
-      if (home.firstChild) home.insertBefore(node, home.firstChild)
-      else home.appendChild(node)
-      this.movedNodes.push({ node, placeholder })
-    })
-  }
-
-  keepsInlinePlacement(node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      // Whitespace between elements can move; visible text should not vanish.
-      return node.textContent.trim().length > 0
-    }
-
-    if (node.nodeType !== Node.ELEMENT_NODE) return true
-
-    return node.dataset.flatPackTopNavAlwaysDisplay === "true"
-  }
-
-  updateSectionVisibility(section) {
-    const hasRemainingContent = Array.from(section.childNodes).some((node) => {
-      if (node.nodeType === Node.ELEMENT_NODE) return true
-
-      return node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0
-    })
-
-    section.classList.toggle("hidden", !hasRemainingContent)
-  }
-
-  updateMenuVisibility() {
-    if (!this.hasMenuTarget || !this.hasPanelTarget) return
-
-    const hasMenuContent = this.panelTarget.children.length > 0
-    this.menuTarget.classList.toggle("hidden", !hasMenuContent)
-    this.menuTarget.classList.toggle("flex", hasMenuContent)
-  }
-
-  toggle(event) {
-    if (event) event.preventDefault()
-
-    if (this.menuOpen) {
-      this.closeMenu()
-    } else {
-      this.openMenu()
-    }
-  }
-
-  openMenu() {
-    if (!this.hasPanelTarget) return
-
-    this.panelTarget.hidden = false
-    this.menuOpen = true
-    this.setToggleExpanded(true)
-    this.placeMenu()
-  }
-
-  // The bar can sit in a short overflow-hidden column. Fix the open panel to
-  // the viewport so that column does not clip it. A transformed shell ancestor
-  // becomes the fixed containing block, so the offset is measured, not assumed.
-  placeMenu() {
-    if (!this.menuOpen || !this.hasPanelTarget || !this.hasToggleTarget) return
-    if (typeof this.toggleTarget.getBoundingClientRect !== "function") return
-    if (typeof this.panelTarget.getBoundingClientRect !== "function") return
-
-    const rect = this.toggleTarget.getBoundingClientRect()
-    const top = Math.round(rect.bottom + 8)
-    const panel = this.panelTarget
-    const margin = 8
-
-    panel.style.position = "fixed"
-    panel.style.top = "0px"
-    panel.style.right = "auto"
-    panel.style.left = "0px"
-    panel.style.zIndex = "30"
-    panel.style.maxHeight = `calc(100vh - ${top + 8}px)`
-    panel.style.overflowY = "auto"
-
-    // A transformed shell ancestor is the fixed containing block. Measure
-    // that offset instead of assuming the viewport.
-    const placed = panel.getBoundingClientRect()
-    panel.style.top = `${Math.round(top - placed.top)}px`
-
-    const viewportWidth = window.innerWidth || 0
-    const width = placed.width
-    let desired = rect.right - width
-    const maxLeft = Math.max(margin, viewportWidth - width - margin)
-    desired = Math.max(margin, Math.min(desired, maxLeft))
-    panel.style.left = `${Math.round(desired - placed.left)}px`
-  }
-
-  clearMenuPlacement() {
-    if (!this.hasPanelTarget || !this.panelTarget.style) return
-
-    const panel = this.panelTarget
-    panel.style.position = ""
-    panel.style.top = ""
-    panel.style.right = ""
-    panel.style.left = ""
-    panel.style.zIndex = ""
-    panel.style.maxHeight = ""
-    panel.style.overflowY = ""
-  }
-
-  closeMenu() {
-    if (!this.hasPanelTarget) return
-
-    this.panelTarget.hidden = true
-    this.menuOpen = false
-    this.setToggleExpanded(false)
-    this.clearMenuPlacement()
-  }
-
-  setToggleExpanded(expanded) {
-    if (!this.hasToggleTarget) return
-
-    this.toggleTarget.setAttribute("aria-expanded", expanded ? "true" : "false")
-
-    this.toggleOpenClasses.forEach((className) => {
-      this.toggleTarget.classList.toggle(className, expanded)
-    })
-  }
-
-  handleDocumentClick(event) {
-    if (!this.menuOpen) return
-
-    if (this.hasMenuTarget && this.menuTarget.contains(event.target)) {
-      // Following a link inside the menu navigates away, so close it too.
-      if (event.target.closest("a[href]")) this.closeMenu()
-      return
-    }
-
-    this.closeMenu()
-  }
-
-  handleKeydown(event) {
-    if (event.key !== "Escape" || !this.menuOpen) return
-
-    this.closeMenu()
-    if (this.hasToggleTarget) this.toggleTarget.focus()
   }
 }

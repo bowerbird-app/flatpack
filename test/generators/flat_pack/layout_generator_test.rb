@@ -42,6 +42,9 @@ module FlatPack
         assert_file "app/views/layouts/flat_pack/_top_nav.html.erb" do |content|
           assert_includes content, "FlatPack::TopNav::Component"
           assert_includes content, "toggleMobile"
+          assert_includes content, "FlatPack::ButtonGroup::Component.new(collapse: :menu)"
+          refute_includes content, "mobile_menu"
+          refute_includes content, "always_display"
         end
       end
 

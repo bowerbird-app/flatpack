@@ -102,11 +102,11 @@ module FlatPack
         with_available_locale(:ms) do
           I18n.with_locale(:ms) do
             refute I18n.exists?("flatpack.page_nav.label", :ms)
-            refute I18n.exists?("flatpack.top_nav.more", :ms)
+            refute I18n.exists?("flatpack.button_group.menu", :ms)
             refute I18n.exists?("flatpack.page_nav.previous", :ms)
 
             assert_equal "Host pages", FlatPack::Copy.t("page_nav.label")
-            assert_equal "Menu", FlatPack::Copy.t("top_nav.more")
+            assert_equal "Menu", FlatPack::Copy.t("button_group.menu")
             assert_equal "Previous page", FlatPack::Copy.t("page_nav.previous")
             assert_equal "Page 4", FlatPack::Copy.t("pagination.page", number: 4)
             refute_match(/translation missing/i, FlatPack::Copy.t("page_nav.label"))

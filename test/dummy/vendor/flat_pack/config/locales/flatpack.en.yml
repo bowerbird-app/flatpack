@@ -294,8 +294,6 @@ en:
       short_mo_ago: "%{count}mo ago"
     toast:
       dismiss: Dismiss
-    top_nav:
-      more: Menu
     rich_text:
       placeholder: Start writing…
       anonymous: Anonymous

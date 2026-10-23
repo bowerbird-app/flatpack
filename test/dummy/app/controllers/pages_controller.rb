@@ -486,6 +486,7 @@ class PagesController < ApplicationController
   end
 
   def navbar
+    render template: "pages/header_row", layout: "fullpage" if params[:example] == "header"
   end
 
   def search
