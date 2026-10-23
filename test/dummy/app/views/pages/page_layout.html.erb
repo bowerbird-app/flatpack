@@ -39,7 +39,11 @@
         <% end %>
         <% nav.right do %>
           <%= page_nav_button_group(
-            styles: FlatPack::PageNavRoleStyles::QUIET,
+            styles: {
+              primary: {style: :ghost, size: :sm},
+              secondary: {style: :ghost, size: :sm},
+              destructive: {style: :danger, size: :sm}
+            },
             variant: :outlined,
             collapse: :menu,
             visible: 2

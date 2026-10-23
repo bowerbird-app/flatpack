@@ -110,7 +110,7 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
 The shell scrolls with the window. It does not lock a pane, store state, or read a cookie. The first paint is the finished page. Sidebar Layout's wrap measurement is not part of this shell. The window keeps its scrollbar. `--pane-scrollbar-width` does not apply here.
 
 ## Page nav
-This shell does not read the page nav registry and does not place the buttons. Register the items, then call `page_nav_button_group` where the row should sit. In the top bar, put the back and anchor controls on the left and the group on the right. `padding: :none` keeps that row flush with the column. `QUIET` with `variant: :outlined` is the quiet desktop row. `collapse: :menu` is that row from 768px up and a menu below that.
+This shell does not read the page nav registry and does not place the buttons. Register the items, then call `page_nav_button_group` where the row should sit. In the top bar, put the back and anchor controls on the left and the group on the right. `padding: :none` keeps that row flush with the column. `variant: :outlined` is the quiet desktop frame. Its children are `style: :ghost`, so the group border is the only chrome. `collapse: :menu` is that row from 768px up and a menu below that.
 
 ```erb
 <% flat_pack_page_nav(anchor_href: press_kits_path, anchor_tooltip: "Close") %>
@@ -125,7 +125,16 @@ This shell does not read the page nav registry and does not place the buttons. R
         <%= flat_pack_page_nav_tag %>
       <% end %>
       <% nav.right do %>
-        <%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :outlined, collapse: :menu, visible: 2) %>
+        <%= page_nav_button_group(
+          styles: {
+            primary: {style: :ghost, size: :sm},
+            secondary: {style: :ghost, size: :sm},
+            destructive: {style: :danger, size: :sm}
+          },
+          variant: :outlined,
+          collapse: :menu,
+          visible: 2
+        ) %>
       <% end %>
     <% end %>
   <% end %>

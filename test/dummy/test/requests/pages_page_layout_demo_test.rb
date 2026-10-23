@@ -11,7 +11,10 @@ class PagesPageLayoutDemoTest < ActionDispatch::IntegrationTest
     assert_select "#page-layout-demo[data-fp-page-layout-width=default][data-fp-page-layout-align=top][data-fp-page-layout-top-nav-width=content]"
     assert_select ".fp-layout-top-nav > .fp-page-layout-top-nav-column > header.fp-top-nav[data-fp-top-nav-padding=none]"
     assert_select "header .flat-pack-page-nav"
-    assert_select "header .fp-button-group-menu__row.fp-button-group--outlined"
+    assert_select "header .fp-button-group-menu__row.fp-button-group--outlined > a[data-fp-style=ghost]", text: "Edit"
+    assert_select "header .fp-button-group-menu__row.fp-button-group--outlined > a[data-fp-style=ghost]", text: "Share"
+    assert_select "header .fp-button-group-menu__row [data-fp-style=secondary]", count: 0
+    assert_select "header .fp-button-group-menu__row [data-fp-style=primary]", count: 0
     assert_select "header .fp-button-group-menu__trigger[aria-label=Menu]"
     assert_select "main .fp-button-group-menu", count: 0
     assert_select "main #page-layout-plain.fp-card", text: /Packing notes/
