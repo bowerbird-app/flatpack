@@ -81,12 +81,7 @@ module FlatPack
       assert_match(/--sidebar-float-inset:\s*1rem/, root_block)
       assert_match(/--sidebar-float-background-color:\s*#fff/, root_block)
       assert_match(/--sidebar-float-radius:\s*var\(--radius-lg\)/, root_block)
-      assert_match(/--top-nav-float-radius:\s*var\(--sidebar-float-radius\)/, root_block)
-      assert_match(/--top-nav-float-clearance:\s*calc\(max\(var\(--sidebar-float-inset\), env\(safe-area-inset-top, 0px\)\) \+ 3\.25rem\)/, root_block)
-      assert_match(/--top-nav-float-offset:\s*0px/, root_block)
-      assert_match(/--top-nav-float-padding-block:\s*0\.25rem/, root_block)
-      assert_match(/--top-nav-float-padding-inline:\s*max\(0\.25rem, min\(0\.75rem, calc\(var\(--top-nav-float-radius\) - var\(--sidebar-float-radius\)\)\)\)/, root_block)
-      assert_match(/--top-nav-float-gap:\s*0\.75rem/, root_block)
+      refute_includes root_block, "--top-nav-float-"
       assert_match(/--layout-content-inset:\s*1rem/, root_block)
       assert_match(/--layout-content-max-width:\s*100%/, root_block)
       assert_match(/@media \(min-width: 640px\) \{\s*:root,\s*\[data-theme\] \{\s*--layout-content-inset:\s*2rem;/, @css)
@@ -292,7 +287,7 @@ module FlatPack
       refute_nil rounded_block
       refute_includes rounded_block, "--color-primary"
       refute_match(/--radius-(?:xs|sm|md|lg|xl|xxl|xxxl|full)\s*:/, rounded_block)
-      assert_match(/--top-nav-float-radius:\s*var\(--radius-full\)/, rounded_block)
+      refute_includes rounded_block, "--top-nav-float-"
       assert_match(/--sidebar-float-radius:\s*var\(--radius-xxxl\)/, rounded_block)
       assert_match(/--button-border-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--button-group-radius:\s*var\(--radius-full\)/, rounded_block)

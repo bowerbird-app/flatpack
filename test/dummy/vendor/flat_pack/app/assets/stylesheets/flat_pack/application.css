@@ -52,13 +52,13 @@
     overscroll-behavior: contain;
   }
 
-  /* Tailwind: .fp-skip-link */
+  /* Resting position clears the shadow. -150% left a grey band at the top of the page. */
   .fp-skip-link {
     position: fixed;
     z-index: 100;
     top: 1rem;
     left: 1rem;
-    transform: translateY(-150%);
+    transform: translateY(calc(-100% - 2rem));
   }
 
   .fp-skip-link:focus-visible {
@@ -1138,7 +1138,7 @@
   background-color: transparent;
 }
 
-/* Public page shell. Arrangement only. The floating bar rules below are shared
+/* Public page shell. Arrangement only. The top bar rules below are shared
  * with SidebarLayout. Unlayered so host preflight cannot zero the column padding.
  */
 .fp-page-layout {
@@ -1176,7 +1176,7 @@
   width: 100%;
 }
 
-.fp-page-layout-frame:has([data-flat-pack-top-nav-floating]) {
+.fp-page-layout-frame:has([data-flat-pack-content-scroll="behind"]) {
   gap: 0;
 }
 
@@ -1200,7 +1200,7 @@
   align-content: center;
 }
 
-.fp-page-layout[data-fp-page-layout-align="center"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) {
+.fp-page-layout[data-fp-page-layout-align="center"] .fp-layout-page:has([data-flat-pack-content-scroll="behind"]) {
   align-items: stretch;
   grid-template-rows: minmax(0, 1fr);
 }
@@ -1319,6 +1319,8 @@
  * Flatpack CSS is linked first, which creates @layer components before the
  * host sheet orders @layer base after it. Preflight's * { padding: 0 } then
  * beats any padding still inside @layer components.
+ * The shell wrapper owns the bar fill, the hairline, and the scroll frost.
+ * TopNav is only the row.
  */
 .fp-top-nav {
   box-sizing: border-box;
@@ -1329,11 +1331,6 @@
   padding-right: max(var(--top-nav-padding-inline), env(safe-area-inset-right, 0px));
   padding-bottom: 0;
   padding-left: max(var(--top-nav-padding-inline), env(safe-area-inset-left, 0px));
-  -webkit-backdrop-filter: blur(0);
-  backdrop-filter: blur(0);
-  transition-property: backdrop-filter, -webkit-backdrop-filter;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--easing-standard);
 }
 
 .fp-top-nav > div {
@@ -1341,52 +1338,29 @@
   max-width: 100%;
 }
 
-.fp-top-nav [data-flat-pack-top-nav-section="left"],
-.fp-top-nav [data-flat-pack-top-nav-section="right"] {
+.fp-top-nav__left,
+.fp-top-nav__right {
   min-width: 0;
 }
 
 /* A field's default min-width is its content. That paints over the next slot. */
-.fp-top-nav [data-flat-pack-top-nav-section] :where(input, select, textarea) {
+.fp-top-nav__section :where(input, select, textarea) {
   min-width: 0;
   max-width: 100%;
 }
 
 /* Text beside an icon button can give up width. The icon button keeps its hit size. */
-.fp-top-nav [data-flat-pack-top-nav-section] > :not(button) {
+.fp-top-nav__section > :not(button) {
   min-width: 0;
 }
 
 @media (max-width: 767px) {
-  .fp-top-nav > div > [data-flat-pack-top-nav-section="center"]:not(:empty) {
+  .fp-top-nav > div > .fp-top-nav__center:not(:empty) {
     flex: 1 1 6rem;
   }
 }
 
-.fp-top-nav[data-scrolled="true"] {
-  -webkit-backdrop-filter: blur(var(--top-nav-backdrop-blur));
-  backdrop-filter: blur(var(--top-nav-backdrop-blur));
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .fp-top-nav,
-  .fp-top-nav[data-scrolled="true"] {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-}
-
-/* Floating top nav. Shared by SidebarLayout and PageLayout.
- * Unlayered so it wins over .fp-top-nav and Tailwind utilities.
- * The wrapper covers the top band. pointer-events stay on the cards so the gaps
- * still hit the page. Empty TopNav sections are always in the DOM.
- */
-[data-flat-pack-top-nav-floating] {
-  z-index: 20;
-  pointer-events: none;
-}
-
-/* Horizontal page padding. Hosts put this on the main pane so it shares an edge with the floating bar.
+/* Horizontal page padding. Hosts put this on the main pane so it shares an edge with the bar.
  * .fp-layout-column is the page column. --layout-content-max-width at 100% fills that pane.
  * A length centers the same measure under the bar. A nested max-width does not. */
 .fp-layout-content {
@@ -1399,29 +1373,49 @@
   margin-inline: auto;
 }
 
-[data-flat-pack-top-nav-floating="behind"] {
+.fp-layout-top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  background-color: var(--top-nav-background-color);
+  box-shadow: inset 0 -1px 0 var(--top-nav-border-color);
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  transition-property: backdrop-filter, -webkit-backdrop-filter;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-standard);
+}
+
+.fp-layout-top-nav[data-scrolled="true"] {
+  -webkit-backdrop-filter: blur(var(--top-nav-backdrop-blur));
+  backdrop-filter: blur(var(--top-nav-backdrop-blur));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .fp-layout-top-nav,
+  .fp-layout-top-nav[data-scrolled="true"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* :behind lays the bar over the scrolling pane. :below leaves it in flow. */
+.fp-layout-top-nav[data-flat-pack-content-scroll="behind"] {
   position: absolute;
-  top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
-  right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-right, 0px));
-  left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-left, 0px));
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
 }
 
-[data-flat-pack-top-nav-floating="below"] {
-  position: relative;
-  flex: none;
-  margin-top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
-  margin-right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-right, 0px));
-  margin-bottom: var(--sidebar-float-inset);
-  margin-left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-left, 0px));
+.fp-layout-top-nav[data-flat-pack-content-scroll="behind"] ~ .fp-layout-scroll {
+  padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
+  scroll-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
 }
 
-[data-flat-pack-top-nav-floating="behind"] ~ .fp-layout-scroll {
-  padding-top: var(--top-nav-float-clearance);
-  scroll-padding-top: var(--top-nav-float-clearance);
-}
-
-html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating="behind"]) {
-  scroll-padding-top: var(--top-nav-float-clearance);
+html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="behind"]) {
+  scroll-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px));
 }
 
 [data-flat-pack-layout-scroll="page"] {
@@ -1436,29 +1430,26 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   pointer-events: none;
 }
 
-[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) {
+[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-content-scroll="behind"]) {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: start;
 }
 
-[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) > .fp-layout-top-nav,
-[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-top-nav-floating="behind"]) > .fp-layout-scroll {
+[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-content-scroll="behind"]) > .fp-layout-top-nav,
+[data-flat-pack-layout-scroll="page"] .fp-layout-page:has([data-flat-pack-content-scroll="behind"]) > .fp-layout-scroll {
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
 }
 
-[data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating="behind"] {
+[data-flat-pack-layout-scroll="page"] .fp-layout-top-nav[data-flat-pack-content-scroll="behind"] {
   position: sticky;
-  top: max(var(--sidebar-float-inset), env(safe-area-inset-top, 0px));
+  top: 0;
   right: auto;
   left: auto;
   z-index: 20;
   align-self: start;
-  height: auto;
-  margin-right: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-right, 0px));
-  margin-left: max(calc(var(--layout-content-inset) + var(--top-nav-float-offset) + max(0px, (100% - (var(--layout-content-inset) * 2) - var(--layout-content-max-width)) / 2)), env(safe-area-inset-left, 0px));
 }
 
 @media (min-width: 768px) {
@@ -1472,108 +1463,6 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-top-nav-floating=
   [data-flat-pack-layout-scroll="page"] .fp-sidebar-drawer[data-flat-pack-sidebar-floating="true"] {
     top: var(--sidebar-float-inset);
   }
-}
-
-[data-flat-pack-top-nav-floating] .fp-top-nav,
-[data-flat-pack-top-nav-floating] .fp-top-nav[data-scrolled="true"] {
-  position: static;
-  height: auto;
-  padding: 0;
-  background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  pointer-events: none;
-}
-
-[data-flat-pack-top-nav-floating] .fp-top-nav > div {
-  width: 100%;
-  min-width: 0;
-  height: auto;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: var(--top-nav-float-gap);
-  pointer-events: none;
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section] {
-  width: auto;
-  min-width: 0;
-  height: auto;
-  flex: 0 1 auto;
-  pointer-events: auto;
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section]:not(:has(*)) {
-  display: none;
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] {
-  /* Basis 0 lets this card give up width before the row wraps. max-content
-   * keeps a short toolbar from stretching across the gap to the bell. */
-  flex: 1 1 0%;
-  max-width: max-content;
-  flex-wrap: wrap;
-  overflow: visible;
-  padding-block: var(--top-nav-float-padding-block);
-  padding-inline: var(--top-nav-float-padding-inline);
-  background-color: var(--sidebar-float-background-color);
-  border: 1px solid var(--sidebar-border-color);
-  border-radius: var(--top-nav-float-radius);
-  box-shadow: var(--sidebar-float-shadow);
-}
-
-/* Below md the floating bar stays one row. Slots shrink. A child that collapses
- * brings its own menu. */
-@media (max-width: 767px) {
-  [data-flat-pack-top-nav-floating] .fp-top-nav > div {
-    flex-wrap: nowrap;
-    gap: 0.5rem;
-  }
-
-  [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
-  [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] {
-    flex-wrap: nowrap;
-    gap: 0.25rem;
-    padding-inline: 0.25rem;
-  }
-
-  [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"] > :not(.fp-hit-target),
-  [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"] > :not(.fp-hit-target) {
-    min-width: 0;
-    padding-inline: 0.625rem;
-  }
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] {
-  flex: 0 1 auto;
-  min-width: 0;
-  justify-content: flex-end;
-  gap: 0.75rem;
-  margin-left: auto;
-  overflow: visible;
-  background: transparent;
-  pointer-events: none;
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > * {
-  pointer-events: auto;
-  overflow: visible;
-  background-color: var(--sidebar-float-background-color);
-  border: 1px solid var(--sidebar-border-color);
-  border-radius: var(--top-nav-float-radius);
-  box-shadow: var(--sidebar-float-shadow);
-}
-
-[data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > [class*="--button-round-border-radius"] {
-  border-radius: var(--button-round-border-radius);
-}
-
-html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="left"],
-html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="center"],
-html[data-theme]:not([data-theme~="rounded"]) [data-flat-pack-top-nav-floating] [data-flat-pack-top-nav-section="right"] > * {
-  border-radius: 0;
 }
 
 /* Overlay inset padding follows --overlay-padding / --overlay-padding-wide, never less than the notch.

@@ -607,6 +607,9 @@
   .mt-\[var\(--quote-cite-margin-top\)\] {
     margin-top: var(--quote-cite-margin-top);
   }
+  .mt-\[var\(--sidebar-float-inset\)\] {
+    margin-top: var(--sidebar-float-inset);
+  }
   .mt-auto {
     margin-top: auto;
   }
@@ -2620,9 +2623,6 @@
   }
   .bg-\[var\(--tooltip-background-color\)\] {
     background-color: var(--tooltip-background-color);
-  }
-  .bg-\[var\(--top-nav-background-color\)\] {
-    background-color: var(--top-nav-background-color);
   }
   .bg-blue-50 {
     background-color: var(--color-blue-50);
@@ -6408,11 +6408,6 @@
       min-height: calc(var(--spacing) * 8);
     }
   }
-  .\[\&_\.flat-pack-select\]\:min-w-0 {
-    & .flat-pack-select {
-      min-width: calc(var(--spacing) * 0);
-    }
-  }
   .\[\&_\.flat-pack-select\]\:py-1 {
     & .flat-pack-select {
       padding-block: calc(var(--spacing) * 1);
@@ -6782,6 +6777,53 @@
   --fp-button-hover-background: #0a2540;
   --fp-button-text: #ffffff;
   --fp-button-border: #635bff;
+}
+@media (max-width: 767px) {
+  .fp-top-nav__left:has([data-flat-pack--sidebar-layout-target="mobileToggle"]) {
+    flex-shrink: 0;
+    min-width: max-content;
+  }
+  header.fp-top-nav [data-flat-pack--button-dropdown-target="trigger"] > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  header.fp-top-nav [data-flat-pack--button-dropdown-target="chevron"] {
+    display: none;
+  }
+}
+.fp-top-nav__right:has(.dummy-language-selector) {
+  flex-shrink: 0;
+  min-width: max-content;
+}
+.fp-top-nav .dummy-language-selector {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
+}
+.fp-top-nav .dummy-language-selector .flat-pack-select {
+  width: auto;
+  min-width: max-content;
+  max-width: none;
+}
+header.fp-top-nav .fp-search__toggle {
+  --fp-button-background: var(--button-ghost-background-color);
+  --fp-button-hover-background: var(--button-ghost-hover-background-color);
+  --fp-button-text: var(--button-ghost-text-color);
+  --fp-button-border: var(--button-ghost-border-color);
+  box-shadow: none;
+}
+header.fp-top-nav .fp-search__toggle:hover {
+  box-shadow: none;
+}
+header.fp-top-nav .fp-search__toggle:active {
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.08);
 }
 @property --tw-translate-x {
   syntax: "*";

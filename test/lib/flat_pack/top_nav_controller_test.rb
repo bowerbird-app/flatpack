@@ -29,8 +29,10 @@ module FlatPack
       refute_includes css, "[data-flat-pack--top-nav-target=\"panel\"]"
       refute_includes css, "[data-flat-pack--top-nav-target=\"toggle\"]"
       refute_includes css, "[data-flat-pack--top-nav-target=\"menu\"]"
-      refute_includes css, ".fp-top-nav [data-flat-pack-top-nav-section=\"center\"] input"
-      assert_includes css, ".fp-top-nav [data-flat-pack-top-nav-section] :where(input, select, textarea)"
+      refute_includes css, "data-flat-pack-top-nav-section"
+      refute_includes css, ".fp-top-nav[data-scrolled=\"true\"]"
+      assert_includes css, ".fp-layout-top-nav[data-scrolled=\"true\"]"
+      assert_includes css, ".fp-top-nav__section :where(input, select, textarea)"
     end
   end
 end

@@ -252,24 +252,24 @@ module FlatPack
 
         html = page.native.to_html
         assert_operator html.index("TopNav"), :<, html.index("Main")
+        assert_selector ".fp-layout-top-nav[data-flat-pack-content-scroll='below'][data-controller='flat-pack--top-nav'][data-scrolled='false']", text: "TopNav"
         refute_includes html, "data-flat-pack-top-nav-floating"
-        refute_includes html, "fp-layout-top-nav"
         refute_includes html, "fp-layout-scroll"
         assert_selector "div.flex-1.min-h-0.overflow-y-auto", text: "Main"
         column = page.native.at_css("div.flex.flex-col.min-w-0")
         refute_includes column["class"].to_s.split, "relative"
       end
 
-      def test_floating_top_nav_scrolls_content_behind_the_cards
-        render_inline(Component.new(floating_top_nav: true)) do |layout|
+      def test_content_scroll_behind_lays_the_bar_over_the_pane
+        render_inline(Component.new(content_scroll: :behind)) do |layout|
           layout.top_nav { "TopNav" }
           layout.main { "Main" }
         end
 
-        assert_selector ".fp-layout-top-nav[data-flat-pack-top-nav-floating='behind']", text: "TopNav"
+        assert_selector ".fp-layout-top-nav[data-flat-pack-content-scroll='behind']", text: "TopNav"
         assert_selector ".fp-layout-scroll", text: "Main"
-        float = page.find(".fp-layout-top-nav")
-        assert_nil float["aria-hidden"]
+        bar = page.find(".fp-layout-top-nav")
+        assert_nil bar["aria-hidden"]
 
         html = page.native.to_html
         assert_operator html.index("TopNav"), :<, html.index("Main")
@@ -277,49 +277,51 @@ module FlatPack
         assert_includes column["class"].to_s.split, "relative"
       end
 
-      def test_floating_top_nav_can_leave_content_below_the_cards
-        render_inline(Component.new(floating_top_nav: true, content_scroll: :below)) do |layout|
+      def test_default_content_scroll_keeps_the_bar_above_the_pane
+        render_inline(Component.new) do |layout|
           layout.top_nav { "TopNav" }
           layout.main { "Main" }
         end
 
-        assert_selector "[data-flat-pack-top-nav-floating='below']", text: "TopNav"
+        assert_selector "[data-flat-pack-content-scroll='below']", text: "TopNav"
         refute_selector ".fp-layout-scroll"
         assert_selector "div.flex-1.min-h-0.overflow-y-auto", text: "Main"
       end
 
-      def test_floating_top_nav_keeps_the_header_landmark
+      def test_top_nav_keeps_the_header_landmark
         nav = FlatPack::TopNav::Component.new
         nav.left { "Preview" }
         nav.right { "Bell" }
 
-        render_inline(Component.new(floating_top_nav: true, floating: true)) do |layout|
+        render_inline(Component.new(floating: true)) do |layout|
           layout.sidebar { "Rail" }
           layout.top_nav { nav.render_in(vc_test_controller.view_context).to_s.html_safe }
           layout.main { "Main" }
         end
 
         assert_selector ".fp-layout-top-nav header.fp-top-nav", text: "Preview"
-        assert_selector "[data-flat-pack-top-nav-section='left']", text: "Preview"
-        assert_selector "[data-flat-pack-top-nav-section='right']", text: "Bell"
+        assert_selector ".fp-top-nav__left", text: "Preview"
+        assert_selector ".fp-top-nav__right", text: "Bell"
         assert_selector "[data-flat-pack-sidebar-floating='true']"
+        refute_includes page.native.to_html, "data-flat-pack-top-nav-section"
       end
 
-      def test_floating_top_nav_without_a_slot_matches_the_flush_bar
-        render_inline(Component.new(floating_top_nav: true)) do |layout|
+      def test_content_scroll_behind_without_a_slot_stays_flush
+        render_inline(Component.new(content_scroll: :behind)) do |layout|
           layout.main { "Main" }
         end
 
-        refute_includes page.native.to_html, "data-flat-pack-top-nav-floating"
+        refute_includes page.native.to_html, "data-flat-pack-content-scroll"
         refute_includes page.native.to_html, "fp-layout-scroll"
+        refute_includes page.native.to_html, "fp-layout-top-nav"
       end
 
-      def test_floating_top_nav_rejects_non_boolean
+      def test_floating_top_nav_is_an_unknown_keyword
         error = assert_raises(ArgumentError) do
-          Component.new(floating_top_nav: "yes")
+          Component.new(floating_top_nav: true)
         end
 
-        assert_includes error.message, "floating_top_nav must be true or false"
+        assert_match(/unknown keyword: :?floating_top_nav/, error.message)
       end
 
       def test_content_scroll_rejects_unknown_values
@@ -420,16 +422,16 @@ module FlatPack
       end
 
       def test_content_scroll_accepts_the_string_form
-        render_inline(Component.new(floating_top_nav: true, content_scroll: "below")) do |layout|
+        render_inline(Component.new(content_scroll: "behind")) do |layout|
           layout.top_nav { "TopNav" }
         end
 
-        assert_selector "[data-flat-pack-top-nav-floating='below']"
+        assert_selector "[data-flat-pack-content-scroll='behind']"
       end
 
       def test_omitted_scroll_matches_pane
         assert_equal layout_html, layout_html(scroll: :pane)
-        assert_equal layout_html(floating_top_nav: true), layout_html(floating_top_nav: true, scroll: :pane)
+        assert_equal layout_html(content_scroll: :behind), layout_html(content_scroll: :behind, scroll: :pane)
       end
 
       def test_page_scroll_unlocks_the_shell
@@ -454,20 +456,21 @@ module FlatPack
         refute_includes column["class"].to_s.split, "overflow-hidden"
       end
 
-      def test_page_scroll_behind_floating_cards_paints_a_surface
-        render_inline(Component.new(scroll: :page, floating_top_nav: true)) do |layout|
+      def test_page_scroll_behind_the_bar_paints_a_surface
+        render_inline(Component.new(scroll: :page, content_scroll: :behind)) do |layout|
           layout.sidebar { "Sidebar" }
           layout.top_nav { "TopNav" }
           layout.main { "Main" }
         end
 
+        assert_selector ".fp-layout-top-nav[data-flat-pack-content-scroll='behind']", text: "TopNav"
         assert_selector ".fp-layout-scroll", text: "Main"
         assert_selector ".fp-layout-page"
         assert_selector ".fp-layout-page-surface[aria-hidden='true']"
       end
 
       def test_page_scroll_with_a_background_omits_the_surface
-        render_inline(Component.new(scroll: :page, floating_top_nav: true)) do |layout|
+        render_inline(Component.new(scroll: :page, content_scroll: :behind)) do |layout|
           layout.background { "Photo" }
           layout.sidebar { "Sidebar" }
           layout.top_nav { "TopNav" }
@@ -477,12 +480,16 @@ module FlatPack
         refute_selector ".fp-layout-page-surface"
       end
 
-      def test_page_scroll_rejects_content_below
-        error = assert_raises(ArgumentError) do
-          Component.new(scroll: :page, content_scroll: :below)
+      def test_page_scroll_can_keep_the_bar_in_flow
+        render_inline(Component.new(scroll: :page, content_scroll: :below)) do |layout|
+          layout.top_nav { "TopNav" }
+          layout.main { "Main" }
         end
 
-        assert_equal "scroll: :page cannot be combined with content_scroll: :below", error.message
+        assert_selector "[data-flat-pack-content-scroll='below']", text: "TopNav"
+        refute_selector ".fp-layout-scroll"
+        refute_selector ".fp-layout-page-surface"
+        refute_selector ".fp-layout-page"
       end
 
       def test_scroll_rejects_unknown_values

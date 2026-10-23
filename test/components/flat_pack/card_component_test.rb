@@ -11,6 +11,13 @@ module FlatPack
         assert_selector "div"
       end
 
+      def test_card_does_not_force_a_height
+        render_inline(Component.new) { "Note" }
+
+        classes = page.find(".fp-card")[:class].to_s.split
+        refute_includes classes, "h-full"
+      end
+
       def test_renders_card_with_content
         render_inline(Component.new) do
           "Card content"

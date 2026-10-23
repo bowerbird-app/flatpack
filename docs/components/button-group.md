@@ -13,9 +13,9 @@ Use Button Group when a compact row of related actions belongs together. Use `:j
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `variant` | `:joined`, `:outlined` | `:joined` | no | `:joined` merges direct children into one segmented control. `:outlined` draws one bordered container on the wide row, with a small gap, and leaves each child's border, radius, and fill alone. The container radius is `--button-group-radius`. Anything else raises `ArgumentError`. |
-| `collapse` | `false`, `:menu` | `false` | no | `false` keeps the row. `:menu` keeps that row from `collapse_at` up and, below it, shows one hamburger trigger. The wide row and the phone menu are separate elements. The phone menu is the same for both variants. |
-| `menu_label` | String, nil | `nil` | no | Visible trigger text when `collapse: :menu`. Also the accessible name of the group. Omit it for an icon-only trigger labelled "Menu". Ignored when `collapse` is `false`. |
-| `menu_icon` | String | `"menu"` | no | Heroicon name on the trigger. `"menu"` is the bars glyph. Ignored when `collapse` is `false`. |
+| `collapse` | `false`, `:menu` | `false` | no | `false` keeps the row. `:menu` keeps that row from `collapse_at` up and, below it, shows one trigger. The wide row and the phone menu are separate elements. The phone menu is the same for both variants. |
+| `menu_label` | String, nil | `nil` | no | Visible trigger text when `collapse: :menu`. Also the accessible name of the group. The word is followed by a trailing icon. There is no leading icon. Omit it, or pass a blank string, and the trigger is the icon alone, labelled "Menu". Ignored when `collapse` is `false`. |
+| `menu_icon` | String, Symbol, nil | `nil` | no | Heroicon on the trigger. Omit it and the icon is `"menu"` (the bars glyph) when there is no label, and `chevron-down` when there is one. An explicit name replaces that default and keeps the same place: alone, or after the label. A symbol is accepted. Anything else raises `ArgumentError`. Ignored when `collapse` is `false`. |
 | `collapse_at` | Integer | `768` | no | Viewport width, in pixels, where the row replaces the menu. Ignored when `collapse` is `false`. |
 | `visible` | Integer, nil | `nil` | no | How many children stay in the joined row, counting from the first. The rest go in the overflow menu. `nil` keeps every child that did not pass `overflow: true`. `0` parks every child that did not pass `overflow: false`. A negative number, or anything that is not a whole number, raises `ArgumentError`. |
 | `overflow_label` | String, nil | `nil` | no | Visible text on the overflow trigger. Omit it, or pass a blank string, and the trigger is the icon alone. Its accessible name is the locale string "More" (`aria-label`). A label is followed by the trailing icon. There is no leading icon. The trigger is secondary when `variant` is `:joined`, and ghost when it is `:outlined`. |
@@ -30,7 +30,7 @@ Use Button Group when a compact row of related actions belongs together. Use `:j
 ## Variants
 - Joined (`variant: :joined`, the default). The group rounds the outer corners and drops the shared edge on each direct child. The overflow trigger is secondary.
 - Outlined (`variant: :outlined`). Desktop only. One border in `--surface-border-color`, small padding, and a small gap. No merged borders, no edge stripping, and no zeroed inner radii. The container radius is `--button-group-radius`: `--radius-md` on the default theme, `--radius-full` (a pill) on rounded. Pass `style: :ghost` on each button when they should read as links. Ghost hover follows `--button-border-radius` on the button, which is the same pill on rounded. The group does not restyle the button. The overflow trigger is ghost.
-- Collapsing menu (`collapse: :menu`). Wide viewport: the row for the chosen variant, hamburger hidden. Narrow viewport: hamburger visible, panel hidden until opened, then one menu. Escape and a click outside close it. A click inside the panel does not. The phone menu does not draw the outline.
+- Collapsing menu (`collapse: :menu`). Wide viewport: the row for the chosen variant, trigger hidden. Narrow viewport: the trigger is visible, the panel stays hidden until opened, then one menu. With `menu_label`, the trigger is that word and a trailing icon. Without it, the trigger is the icon alone. Escape and a click outside close it. A click inside the panel does not. The phone menu does not draw the outline.
 - Overflow menu. The first `visible` children stay in the row. The rest sit in a trailing dropdown. `overflow: true` on a child puts it in that menu even when it is among the first `visible`. `overflow: false` keeps it in the row even when it comes later. Visible children keep their order. Overflow children keep theirs. With `collapse: :menu`, the phone menu still lists every child once, in the order they were added. The overflow dropdown is part of the wide row, so it is hidden on a phone. Without `collapse: :menu`, the overflow dropdown stays in the row.
 
 ## Menu row
@@ -92,6 +92,8 @@ Rename and Duplicate stay in the row. Delete and Share sit under More. On a phon
 <% end %>
 ```
 
+The trigger reads More, then a chevron. Omit `menu_label` and the trigger is the bars glyph, named "Menu". Pass `menu_icon:` to use another Heroicon in that same place.
+
 ## Example
 ```erb
 <%= render FlatPack::ButtonGroup::Component.new do |group| %>
@@ -104,7 +106,7 @@ Rename and Duplicate stay in the row. Delete and Share sit under More. On a phon
 ## Accessibility
 - Use descriptive button labels because grouping is visual by default.
 - Forward `aria-*` attributes via `system_arguments` when needed.
-- With `collapse: :menu`, the trigger has `aria-expanded`, `aria-controls`, and `aria-haspopup`. The wide row and the panel are each `role="group"`. One is hidden at a time. Opening, Escape, and an outside click update `aria-expanded`. Ids stay on the wide controls.
+- With `collapse: :menu`, the trigger has `aria-expanded`, `aria-controls`, and `aria-haspopup`. The wide row and the panel are each `role="group"`. One is hidden at a time. Opening, Escape, and an outside click update `aria-expanded`. Ids stay on the wide controls. With no `menu_label`, the icon is the only visible content and `aria-label` is the locale string "Menu". With a label, that text is visible and the icon follows it.
 - The overflow trigger uses the dropdown's `aria-haspopup` and `aria-expanded`. With no `overflow_label`, the icon is the only visible content and `aria-label` is the locale string "More". With a label, that text is visible and the icon follows it. Choosing a row closes that menu. A nested dropdown is a `Menu::Collapse` section, so its header stays open while it expands. Rows are links and buttons, so Tab reaches them. `style: :danger` is red text.
 
 ## Dependencies

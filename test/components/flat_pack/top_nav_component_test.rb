@@ -113,19 +113,17 @@ module FlatPack
         assert_equal "", sections[2].text.strip
       end
 
-      def test_has_sticky_positioning
-        render_inline(Component.new)
-        assert_includes page.native.to_html, "sticky"
-        assert_includes page.native.to_html, "top-0"
-      end
-
-      def test_has_backdrop_blur_token_not_utility
+      def test_is_a_layout_row_without_bar_chrome
         render_inline(Component.new)
         html = page.native.to_html
 
         assert_includes html, "fp-top-nav"
+        refute_includes html, "sticky"
+        refute_includes html, "top-0"
+        refute_includes html, "top-nav-background-color"
         refute_includes html, "backdrop-blur"
-        assert_includes html, "data-scrolled=\"false\""
+        refute_includes html, "data-scrolled"
+        refute_includes html, "flat-pack--top-nav"
       end
 
       def test_has_no_border
@@ -145,19 +143,12 @@ module FlatPack
         assert_selector "header[data-testid='top-nav']"
       end
 
-      def test_registers_the_frost_controller
-        render_inline(Component.new)
-
-        assert_selector "header[data-controller~='flat-pack--top-nav']"
-        assert_selector "header[data-scrolled='false']"
-        refute_selector "header[data-flat-pack--top-nav-breakpoint-value]", visible: :all
-      end
-
-      def test_frost_controller_preserves_host_controllers
+      def test_keeps_a_host_controller_and_does_not_add_frost
         render_inline(Component.new(data: {controller: "host--analytics"}))
 
-        assert_selector "header[data-controller~='host--analytics']"
-        assert_selector "header[data-controller~='flat-pack--top-nav']"
+        assert_selector "header[data-controller='host--analytics']"
+        refute_selector "header[data-controller~='flat-pack--top-nav']"
+        refute_selector "header[data-scrolled]", visible: :all
       end
 
       def test_is_a_row_with_no_menu_of_its_own
@@ -169,9 +160,10 @@ module FlatPack
 
         html = page.native.to_html
 
-        assert_selector "[data-flat-pack-top-nav-section='left']", text: "Brand"
-        assert_selector "[data-flat-pack-top-nav-section='center']", text: "Search"
-        assert_selector "[data-flat-pack-top-nav-section='right']", text: "Bell"
+        assert_selector ".fp-top-nav__left", text: "Brand"
+        assert_selector ".fp-top-nav__center", text: "Search"
+        assert_selector ".fp-top-nav__right", text: "Bell"
+        refute_includes html, "data-flat-pack-top-nav-section"
         assert_includes section_for("left")["class"], "min-w-0"
         assert_includes section_for("center")["class"], "min-w-0"
         assert_includes section_for("right")["class"], "min-w-0"
@@ -198,14 +190,14 @@ module FlatPack
       private
 
       def section_for(alignment)
-        page.native.at_css("[data-flat-pack-top-nav-section='#{alignment}']")
+        page.native.at_css(".fp-top-nav__#{alignment}")
       end
 
       def rendered_section_nodes
         container = page.native.at_css("header > div")
         return [] unless container
 
-        container.xpath("./div[@data-flat-pack-top-nav-section]")
+        container.xpath("./div[contains(@class, 'fp-top-nav__section')]")
       end
     end
   end

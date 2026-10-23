@@ -18,9 +18,8 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `open` | Boolean | `true` | No | Initial desktop sidebar state (expanded when true, collapsed when false). |
 | `storage_key` | String or nil | `nil` | No | localStorage key used by controller for desktop collapsed-state persistence. |
 | `floating` | Boolean | `false` | No | Desktop-only detached panels. The column is the card. Insets all four sides with `--sidebar-float-inset`. Rounded corners follow the rounded palette (no `data-theme`, or a list that contains `rounded`, such as `data-theme="rounded harbor"`). Ignored below the `md` breakpoint. |
-| `floating_top_nav` | Boolean | `false` | No | Replaces the full-width top bar with floating cards. Uses the same `--sidebar-float-*` gap, fill, shadow, and corner as the rail. `false` leaves the bar unchanged. |
-| `content_scroll` | Symbol | `:behind` | No | Where main content sits when `floating_top_nav: true`. `:behind` scrolls the page under the cards and pads the scroll pane with `--top-nav-float-clearance`. `:below` keeps the cards above the scroll pane. Ignored when the top nav is not floating. |
-| `scroll` | Symbol | `:pane` | No | `:pane` locks the shell and scrolls the main pane. `:page` scrolls the window. The rail and the aside stick. With floating cards and `:behind`, the cards stick and a fixed `.fp-layout-page-surface` fills the page when there is no photo. `html` gets `scroll-padding-top`. `:page` with `content_scroll: :below` raises `ArgumentError`. |
+| `content_scroll` | Symbol | `:below` | No | Where main content sits relative to the top bar. `:below` keeps the bar in flow above the pane. `:behind` lays the bar over the pane and pads the pane with `--top-nav-height` plus the top safe area. Anything else raises `ArgumentError`. |
+| `scroll` | Symbol | `:pane` | No | `:pane` locks the shell and scrolls the main pane. `:page` scrolls the window. The rail and the aside stick. With `content_scroll: :behind`, the bar sticks and a fixed `.fp-layout-page-surface` fills the page when there is no photo. `html` gets `scroll-padding-top`. |
 | `scrollbar` | Symbol | `:hidden` | No | `:hidden` hides the bar on the main pane and the aside. `:visible` uses the browser bar on both. Anything else raises `ArgumentError`. The rail follows `--pane-scrollbar-width` and does not take this option. `:page` leaves the window bar alone. |
 | `height` | Symbol | `:full` | No | Height of the floating desktop rail. `:full` is today's rail (viewport minus the float insets). `:content` sizes the rail to its items and caps it at that same viewport height. The items scroll inside the cap. Ignored when `floating` is false. The mobile drawer stays full height. Not the image `height` attribute. |
 | `width` | Symbol | `:fixed` | No | Width of the open desktop rail. `:fixed` uses `--sidebar-width` (`16rem`). `:content` sizes the rail to its widest item, clamped by `--sidebar-content-min-width` (`12rem`) and `--sidebar-content-max-width` (`20rem`). Collapsed width stays `--sidebar-collapsed-width` (`4rem`). The mobile drawer stays `--sidebar-width`. Unknown values raise `ArgumentError`. |
@@ -32,7 +31,7 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | name | type | required | description |
 |------|------|----------|-------------|
 | `sidebar` | block slot | No | Sidebar column content (typically `FlatPack::Sidebar::Component`). |
-| `top_nav` | block slot | No | Optional top-nav area above main content. |
+| `top_nav` | block slot | No | Optional top bar. The shell wraps the slot in `.fp-layout-top-nav`. Put `TopNav` inside it. The wrapper does not restyle the row's children. |
 | `main` | block slot | No | Main content area. If omitted, component block content is used. |
 | `background` | block slot | No | Decorative page photo (`img` or `picture`) behind the shell. Omit it and the shell matches a layout with no photo. |
 | `aside` | block slot | No | Column opposite `side:`. `open:` (`true` or `false`, default `true`), `resizable:` (`true` or `false`, default `false`), and `mobile:` (`:drawer` or `:stack`, default `:drawer`). Omit it and the shell matches a layout with no aside. |
@@ -51,8 +50,8 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 | `width: :content` | Open desktop rail hugs its widest item, between `--sidebar-content-min-width` and `--sidebar-content-max-width`. |
 | `resizable: true` | Separator on the rail. Drag, arrow keys, and double-click reset are desktop only. |
 | `aside` | Second column on the opposite edge. `open: false` starts it closed on desktop. `mobile: :drawer` (the default) is a drawer from that edge below `md`. `mobile: :stack` lays the panel under main below `md`. |
-| `floating_top_nav: true` | The full-width bar is gone. `TopNav` `left` and `center` each become one card sized to their contents. `right` lays its children out as separate cards. Content scrolls under the cards. |
-| `content_scroll: :below` | Same cards, in flow above the scroll pane. Content does not slide under them. |
+| `content_scroll: :below` | The bar sits above the scroll pane. This is the default. |
+| `content_scroll: :behind` | The pane scrolls under the bar. The first paint keeps `--top-nav-height` plus the top safe area clear. |
 | `scroll: :page` | The window scrolls. `:pane` is the default and keeps the locked shell. |
 | `background` slot | Full-viewport photo behind the rail, the top nav, and main. Renders `FlatPack::Backdrop::Component`. Blur and tint come from `--backdrop-*`. |
 
@@ -80,20 +79,29 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 <% end %>
 ```
 
-Float the top nav on its own, or with the rail. Put a toolbar in `left` and separate actions in `right`. `TopNav` owns the `<header>` landmark. It does not fold. A button group in a slot folds itself. A bell stays a plain child.
+The shell paints the full-width bar. `TopNav` is the row inside it. Wrap a slot in a `Card` only when the content has no surface of its own. A segmented control stays in the slot. A bare icon is one card at the round control size. `radius: :xxxl` is the roundest corner the card has. The host's own margin is the inset (`--sidebar-float-inset`, `1rem`). The row does not add it.
 
 ```erb
-<%= render FlatPack::SidebarLayout::Component.new(floating: true, floating_top_nav: true) do |layout| %>
+<%= render FlatPack::SidebarLayout::Component.new(floating: true) do |layout| %>
   <% layout.top_nav do %>
     <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left do %>
-        <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
-          <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
-          <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
-        <% end %>
+        <div class="self-start mt-[var(--sidebar-float-inset)]">
+          <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
+            <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
+            <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
+          <% end %>
+        </div>
       <% end %>
       <% nav.right do %>
-        <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :ghost, aria: {label: "Notifications"}) %>
+        <%= render FlatPack::Card::Component.new(
+          padding: :none,
+          radius: :xxxl,
+          shadow: :sm,
+          class: "self-start mt-[var(--sidebar-float-inset)] h-[var(--button-round-size-md)] w-[var(--button-round-size-md)] shrink-0 items-center justify-center"
+        ) do %>
+          <%= render FlatPack::Shared::IconComponent.new(name: "bell", size: :md) %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
@@ -104,7 +112,7 @@ Float the top nav on its own, or with the rail. Put a toolbar in `left` and sepa
 <% end %>
 ```
 
-`content_scroll: :below` keeps those cards above the scroll pane. Omit `floating_top_nav` and the bar is the full-width `TopNav` from the first example.
+`content_scroll: :behind` lets the pane run under that bar. The default, `:below`, keeps the bar above the pane.
 
 `height: :content` with `floating: true` shortens the desktop rail to its items:
 
@@ -188,7 +196,7 @@ Dummy chrome accepts `?floating=1` (or `true`) on any page. Omit it for the flus
 
 A bottom-left avatar card is not part of this layout. Content height leaves the space under the rail empty: the column stays `md:self-start` and only as tall as its items, or the viewport cap. A later corner slot can pin a second card to the same outer inset and the bottom inset without stretching the rail. Keep that card out of the sidebar footer. The footer sits inside the rail and scrolls away once the list hits the cap.
 
-Dummy chrome accepts `?height=content`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&height=content` is the short rail with the floating cards. `?height=content` without `?floating=1` stays the flush full-height rail.
+Dummy chrome accepts `?height=content`. `/demo/sidebar_layout?floating=1&background=1&height=content` is the short rail. `?floating=1` also puts cards in the top row. `?height=content` without `?floating=1` stays the flush full-height rail.
 
 ## Rail width
 
@@ -198,7 +206,7 @@ Closed groups stay in the width. A closed panel uses `max-height: 0`, not `displ
 
 The width rules reach the `aside` even when the host wraps it, which the dummy shell does. The first paint uses `max-content` clamped by those tokens, so the inline collapse script can still set `data-flat-pack-sidebar-collapsed` before the aside is parsed. After layout, the controller stores that used width as `--sidebar-measured-width` on the column. It pauses the width transition while it measures, so the stored length is the content size and not a frame from the previous `16rem` rail. The next collapse eases between two lengths. `interpolate-size: allow-keywords` covers the first expand, before that length exists. `prefers-reduced-motion: reduce` still snaps, because the duration tokens are `0ms`.
 
-Collapsed width does not change with `width:`. Below `md`, the drawer stays `--sidebar-width` for both values. `width: :content` works with `floating: true`, `height: :content`, and `floating_top_nav: true`. The floating cards still align to `.fp-layout-content` through `--layout-content-inset`. The rail width does not move that inset.
+Collapsed width does not change with `width:`. Below `md`, the drawer stays `--sidebar-width` for both values. `width: :content` works with `floating: true` and `height: :content`. The page column still aligns through `--layout-content-inset`. The rail width does not move that inset.
 
 ```erb
 <%= render FlatPack::SidebarLayout::Component.new(width: :content, floating: true, height: :content) do |layout| %>
@@ -212,7 +220,7 @@ Collapsed width does not change with `width:`. Below `md`, the drawer stays `--s
 <% end %>
 ```
 
-Dummy chrome accepts `?width=content`. `/demo/sidebar_layout?width=content` hugs the labels. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&height=content&width=content` is the short floating rail with the cards.
+Dummy chrome accepts `?width=content`. `/demo/sidebar_layout?width=content` hugs the labels. `/demo/sidebar_layout?floating=1&background=1&height=content&width=content` is the short floating rail.
 
 ## Aside
 
@@ -284,33 +292,31 @@ The controller is `flat-pack--panel-resize` on the column. A drag sets `transiti
 
 Dummy chrome accepts `?resizable=1`. `/demo/sidebar_layout?aside=1&resizable=1` shows both handles.
 
-## Floating top nav
+## Top bar
 
-`floating_top_nav: true` takes the full-width bar out of the main column and paints cards on the page, including over a `background` photo. Page Layout uses this same bar. The cards share the rail's fill and shadow: `--sidebar-float-background-color` and `--sidebar-float-shadow`. The vertical gap stays `--sidebar-float-inset`. The horizontal edge is `--layout-content-inset`, the same token as the page padding, plus `--top-nav-float-offset` (`0px`). Put `.fp-layout-content` on the main pane. Its `padding-inline` is `--layout-content-inset`. Put `.fp-layout-column` around the page. That column's `max-width` is `--layout-content-max-width` (`100%` by default, so it fills the pane). A length centers that measure, and the bar uses the same centering, so the title and the cards share the bar's left and right edges. A nested `max-width` with auto margins is a second column and sits in from the bar. Override `--layout-content-inset` to move the page and the bar together. `--top-nav-float-offset` is the extra horizontal gap when the bar should sit off the content edge. The rail's corner stays `--sidebar-float-radius`. The cards use `--top-nav-float-radius`, which defaults to `var(--sidebar-float-radius)`, so a theme that does not set it matches the rail. `[data-theme~="rounded"]` sets `--top-nav-float-radius` to `var(--radius-full)`, so those cards are pills. `--top-nav-float-clearance` is the space the scroll pane keeps clear above the first content. It defaults to the float inset (or the top safe area, whichever is larger) plus `3.25rem`. `--layout-content-inset` is `1rem` (the `p-4` step, default `--space-4`) and `2rem` from `640px` (the `p-8` step, default `--space-6`). A theme that remaps `--space-*` does not move it.
+The `top_nav` slot is wrapped in `.fp-layout-top-nav`. That wrapper is the full-width bar. It is sticky, filled with `--top-nav-background-color`, edged with `--top-nav-border-color`, and frosted with `--top-nav-backdrop-blur` after the page or the pane scrolls. `flat-pack--top-nav` sets `data-scrolled` on the wrapper. The row inside is [Top Nav](top_nav.md). The wrapper does not reach into that row.
 
-`TopNav` `left` and `center` are each one card, sized to their contents. An empty section is hidden, so a host that only fills `left` and `right` does not get a blank center card. `right` is not one card. Each direct child is its own card, so a bell stays separate from the toolbar. A `Button` with `round: true` keeps `--button-round-border-radius`, so a square icon button stays a circle when the other cards are pills. Other children use `--top-nav-float-radius`. Named themes other than rounded still square every floating card, including a round button. There is no new slot. The existing `top_nav` slot and `TopNav`'s `left`, `center`, and `right` are the API.
+Put `.fp-layout-content` on the main pane. Its `padding-inline` is `--layout-content-inset` (`1rem`, then `2rem` from `640px`). Put `.fp-layout-column` around the page. That column's `max-width` is `--layout-content-max-width` (`100%` by default). A length centers that measure. A nested `max-width` with auto margins is a second column. Page Layout uses this same bar.
 
-The pill cards keep `overflow: visible`, so a focus ring is not clipped. `--top-nav-float-padding-block` is the block padding on the `left` and `center` cards. It defaults to `0.25rem`. `--top-nav-float-padding-inline` is their inline padding. The default is `max(0.25rem, min(0.75rem, calc(var(--top-nav-float-radius) - var(--sidebar-float-radius))))`, so the padding grows with the corner, up to `0.75rem`, and stays `0.25rem` while `--top-nav-float-radius` equals `--sidebar-float-radius`. Set that token to a plain length when the padding should ignore the radius. `--top-nav-float-gap` is the gap between cards on the row. It defaults to `0.75rem`. Below `768px` the inline padding is `0.25rem`, the row gap is `0.5rem`, and the gap inside `left` and `center` is `0.25rem`. Those three lengths stay in the stylesheet. They do not follow the tokens. A toolbar and one trailing card then share a line at `390px`. Text buttons in `left` and `center` use `0.625rem` of inline padding there. Icon buttons keep their hit target. Any `data-theme` other than rounded keeps square corners.
+A card in a slot is the host's surface, and only for content that has none. `radius: :xxxl` is `--radius-xxxl` (40px). The shell does not turn a slot or a child into a card. Dummy chrome with `?floating=1` puts the segmented control in the row and the bell in a control-sized card. `/demo/sidebar_layout?floating=1&background=1` is the floating photo. `/demo/sidebar_layout?floating=1&background=1&aside=1&height=content` is the press kit. Add `scrollbar=visible` to show the browser bar on the page and the aside.
 
-The cards apply at every width, including `390px`. Below `768px` the floating row does not wrap. Top Nav stays that row. A button group with `collapse: :menu` is the phone menu for its own children. The sidebar toggle stays a single button that opens the drawer. A bell stays a plain child of `right`, its own card. From `768px` the row can still wrap, and `left` and `center` use `flex: 1 1 0%` with `max-width: max-content`. The mobile drawer stays full height. Its scrim is a sibling of the drawers, `z-index: 40`, and paints `--drawer-backdrop-color` at full opacity while a drawer is open. The drawer itself is `z-50`. On the rounded theme the inner edge uses `--sidebar-float-radius`. The outer edge stays flush.
+Below `768px` the row stays one line. A button group with `collapse: :menu` is the phone menu for its own children. The sidebar toggle stays a single button that opens the drawer. The mobile drawer stays full height. Its scrim is a sibling of the drawers, `z-index: 40`, and paints `--drawer-backdrop-color` at full opacity while a drawer is open. The drawer itself is `z-50`. On the rounded theme the inner edge uses `--sidebar-float-radius`. The outer edge stays flush.
 
-The wrapper does not cover clicks in the gaps between cards. The `<header>` landmark stays. Tab order is still the top nav, then main.
-
-Dummy chrome accepts `?floating_top_nav=1`. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1` is the floating photo with the cards. Add `content_scroll=below` to park the cards above the scroll pane. `/demo/sidebar_layout?floating=1&background=1&floating_top_nav=1&aside=1&height=content` is the press kit: floating cards, a Backdrop photo, and an aside. Add `scrollbar=visible` to show the browser bar on the page and the aside.
+The `<header>` landmark stays on `TopNav`. Tab order is still the top nav, then main.
 
 ## Where content scrolls
 
 `scroll: :pane` is the default. The shell stays `h-screen overflow-hidden`, and only the main pane scrolls, so the rail and the top nav stay put. Hosts that omit `scroll:` keep that markup.
 
-With `floating_top_nav: true`, `content_scroll: :behind` (the default) lets that pane run under the cards. The pane's `padding-top` and `scroll-padding-top` use `--top-nav-float-clearance`, so the first paint and a focused control are not hidden under the cards. When the cards are more than `8px` taller than that token, the layout sets `--top-nav-float-clearance` on the main column to the bottom of the band. A wrapped row, or a toolbar that has grown a second line, then clears the title. A one-row toolbar leaves the token alone. `content_scroll: :below` puts the cards back in the flow, above the pane, still with the float gap and the card chrome. That mode does not need the measurement.
+`content_scroll: :below` (the default) keeps the bar in flow above the pane. The pane scrolls on its own, so the page does not pass under the bar.
 
-`content_scroll` does nothing while `floating_top_nav` is false. The full-width bar stays outside the pane.
+`content_scroll: :behind` lays the bar over the pane. The pane's `padding-top` and `scroll-padding-top` are `--top-nav-height` plus `env(safe-area-inset-top)`, so the first paint and a focused control stay clear of the bar. The bar height is fixed. The shell does not measure it.
 
 The main pane and the aside use `.fp-pane-scroll`. The bar width is `--pane-scrollbar-width` (`none` by default). A theme may set `thin` or `auto`. `scrollbar: :visible` sets the browser bar on the main pane and the aside. The rail scroller (`.fp-sidebar-scroll`) follows the same token. Tables, code, horizontal scrollers, and menu listboxes do not. Page Layout scrolls the window and does not use this class. `.fp-scrollbar-hidden` stays on Overflow Row.
 
 A mask fades the edge that still has content. The length is `--pane-scroll-fade-size` (`2.5rem`). It runs on `animation-timeline: scroll(self)`, so it tracks that pane. Browsers without scroll-driven animations skip the fade. `prefers-reduced-motion: reduce` skips it too. There is no script and no stored preference.
 
-`scroll: :page` lets the window scroll. The shell drops `h-screen` and `overflow-hidden`, and the main pane drops `overflow-y-auto` and `overscroll-y-contain`. From `768px`, the rail and the aside use `position: sticky`. With `floating_top_nav: true` and `content_scroll: :behind`, the cards are sticky too. `.fp-layout-scroll` still sets `padding-top` from `--top-nav-float-clearance`. `html` sets `scroll-padding-top` from that same token. When the cards wrap, page mode writes the measured token on `document.documentElement`, so the anchor offset follows the band. When that mode has no `background` photo, the shell renders a fixed `.fp-layout-page-surface` in the page color. The layout generator writes `class="h-full"` on `html` and `body`. It does not write `overflow-hidden`. Leave `h-full`. It does not lock the window. Remove `overflow-hidden` from `html` and `body` when the host added that class. The generator does not. `scroll: :page` with `content_scroll: :below` raises `ArgumentError`. The corner slot and an account item are out of scope.
+`scroll: :page` lets the window scroll. The shell drops `h-screen` and `overflow-hidden`, and the main pane drops `overflow-y-auto` and `overscroll-y-contain`. From `768px`, the rail and the aside use `position: sticky`. With `content_scroll: :behind`, the bar is sticky too. `.fp-layout-scroll` and `html` set their top padding from `--top-nav-height` plus the top safe area. When that mode has no `background` photo, the shell renders a fixed `.fp-layout-page-surface` in the page color. `content_scroll: :below` with `scroll: :page` keeps the bar in flow. The layout generator writes `class="h-full"` on `html` and `body`. It does not write `overflow-hidden`. Leave `h-full`. It does not lock the window. Remove `overflow-hidden` from `html` and `body` when the host added that class. The generator does not. The corner slot and an account item are out of scope.
 
 ## Background
 

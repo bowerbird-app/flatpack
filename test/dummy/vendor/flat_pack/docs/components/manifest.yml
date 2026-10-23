@@ -603,8 +603,10 @@ components:
       - --page-layout-padding-inline
       - --page-layout-padding-block
       - --page-layout-gap
-      - --top-nav-float-clearance
-      - --top-nav-float-radius
+      - --top-nav-height
+      - --top-nav-background-color
+      - --top-nav-border-color
+      - --top-nav-backdrop-blur
       - --layout-content-inset
       - --layout-content-max-width
     status: documented
@@ -734,12 +736,10 @@ components:
     tokens:
       - --layout-content-inset
       - --layout-content-max-width
-      - --top-nav-float-offset
-      - --top-nav-float-radius
-      - --top-nav-float-clearance
-      - --top-nav-float-padding-block
-      - --top-nav-float-padding-inline
-      - --top-nav-float-gap
+      - --top-nav-height
+      - --top-nav-background-color
+      - --top-nav-border-color
+      - --top-nav-backdrop-blur
       - --sidebar-float-inset
       - --sidebar-float-radius
       - --sidebar-item-radius
