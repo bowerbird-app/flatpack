@@ -184,7 +184,6 @@ module FlatPack
           "fp-card",
           "rounded-[var(--card-radius)]",
           overflow_class,
-          "h-full",
           "flex",
           "flex-col",
           "text-[var(--surface-content-color)]",

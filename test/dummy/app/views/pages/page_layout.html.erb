@@ -31,7 +31,12 @@
           <% end %>
         <% end %>
         <% if floating %>
-          <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+          <%= render FlatPack::Card::Component.new(
+            padding: :sm,
+            radius: :xxxl,
+            shadow: :sm,
+            class: "self-start mt-[var(--sidebar-float-inset)]"
+          ) do %>
             <%= brand %>
           <% end %>
         <% else %>
@@ -39,21 +44,13 @@
         <% end %>
       <% end %>
       <% nav.right do %>
-        <% sign_in = capture do %>
-          <%= render FlatPack::Button::Component.new(
-            text: "Sign in",
-            href: variant_path.call("login"),
-            style: (floating ? :default : :primary),
-            size: :sm
-          ) %>
-        <% end %>
-        <% if floating %>
-          <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
-            <%= sign_in %>
-          <% end %>
-        <% else %>
-          <%= sign_in %>
-        <% end %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Sign in",
+          href: variant_path.call("login"),
+          style: (floating ? :default : :primary),
+          size: :sm,
+          **(floating ? {class: "self-start mt-[var(--sidebar-float-inset)]"} : {})
+        ) %>
       <% end %>
     <% end %>
   <% end %>
@@ -97,7 +94,7 @@
       <p class="mt-4">A narrow column keeps the line short enough to read without hunting the next word.</p>
     </article>
   <% elsif variant == "float" %>
-    <%= render FlatPack::Card::Component.new(padding: :lg, shadow: :md, id: "page-layout-float") do %>
+    <%= render FlatPack::Card::Component.new(padding: :lg, shadow: :md, id: "page-layout-float", class: "mt-[var(--sidebar-float-inset)]") do %>
       <h1 class="text-3xl font-semibold">On the road</h1>
       <p class="mt-3 text-[var(--surface-muted-content-color)]">The photo stays behind the page. This card is yours.</p>
     <% end %>

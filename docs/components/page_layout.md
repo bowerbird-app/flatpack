@@ -85,18 +85,23 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
   <% layout.top_nav do %>
     <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left do %>
-        <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+        <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "self-start mt-[var(--sidebar-float-inset)]") do %>
           Field notes
         <% end %>
+      <% end %>
+      <% nav.right do %>
+        <%= render FlatPack::Button::Component.new(text: "Sign in", href: "/sign-in", style: :default, size: :sm, class: "self-start mt-[var(--sidebar-float-inset)]") %>
       <% end %>
     <% end %>
   <% end %>
 
-  <h1>On the road</h1>
+  <%= render FlatPack::Card::Component.new(padding: :lg, class: "mt-[var(--sidebar-float-inset)]") do %>
+    <h1>On the road</h1>
+  <% end %>
 <% end %>
 ```
 
-`content_scroll: :behind` lets the page scroll under the bar. The bar fill, hairline, and frost belong to `.fp-layout-top-nav`. A card in a `TopNav` slot is the host's surface. The page sets `--layout-content-max-width` from the `width:` token and `--layout-content-inset` from `--page-layout-padding-inline`.
+`content_scroll: :behind` lets the page scroll under the bar. The bar fill, hairline, and frost belong to `.fp-layout-top-nav`. A card in a `TopNav` slot is the host's surface for content that has none. A pill button stays in the slot. The host's margin (`--sidebar-float-inset`, `1rem`) is the gap above the cluster and before the page. The row's side padding is `--top-nav-padding-inline`. The page sets `--layout-content-max-width` from the `width:` token and `--layout-content-inset` from `--page-layout-padding-inline`.
 
 The shell scrolls with the window. It does not lock a pane, store state, or read a cookie. The first paint is the finished page. Sidebar Layout's wrap measurement is not part of this shell. The window keeps its scrollbar. `--pane-scrollbar-width` does not apply here.
 

@@ -33,7 +33,7 @@ The row is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `en
 
 TopNav is not sticky and does not frost. The shell's `.fp-layout-top-nav` wrapper is the bar: `--top-nav-background-color`, a hairline from `--top-nav-border-color`, and `--top-nav-backdrop-blur` after scroll. See [Sidebar Layout](sidebar_layout.md).
 
-A floating cluster is a surface the host places in a slot. `FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto")` is that surface. `radius: :xxxl` is the roundest card corner (`--radius-xxxl`, 40px). `class: "!h-auto"` overrides the card's `h-full`. Card rejects `style:` because that name was a theme. There is no separate pill component.
+A floating cluster is a surface the host places in a slot, and only around content that has no surface of its own (a wordmark, a bare icon). `FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm)` is that surface. `radius: :xxxl` is the roundest card corner (`--radius-xxxl`, 40px). A segmented control or a pill button already has a surface, so it sits in the slot directly. A bare icon is one card at `--button-round-size-md` with `padding: :none` and `radius: :xxxl`. Card does not set a height. The host supplies the gap around that cluster (`margin-top: var(--sidebar-float-inset)` on the slot content). Top Nav does not. Card rejects `style:` because that name was a theme. There is no separate pill component.
 
 ## Header row
 

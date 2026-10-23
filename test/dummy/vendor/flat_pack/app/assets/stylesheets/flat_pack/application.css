@@ -52,13 +52,13 @@
     overscroll-behavior: contain;
   }
 
-  /* Tailwind: .fp-skip-link */
+  /* Resting position clears the shadow. -150% left a grey band at the top of the page. */
   .fp-skip-link {
     position: fixed;
     z-index: 100;
     top: 1rem;
     left: 1rem;
-    transform: translateY(-150%);
+    transform: translateY(calc(-100% - 2rem));
   }
 
   .fp-skip-link:focus-visible {

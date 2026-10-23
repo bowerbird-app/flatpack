@@ -60,6 +60,7 @@ module FlatPack
       assert_includes css, "var(--range-thumb-border-color)"
       assert_includes css, ".flat-pack-list-item-icon"
       assert_includes css, ".fp-skip-link"
+      assert_includes css, "transform: translateY(calc(-100% - 2rem));"
       assert_includes css, "[data-controller~=\"flat-pack--lightbox\"]"
       assert_includes css, ".flat-pack-modal__body"
     end

@@ -1,4 +1,4 @@
-<%%# The shell paints the full-width bar. This row is layout only. A floating cluster is FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") inside a slot. %>
+<%%# The shell paints the full-width bar. This row is layout only. Plain text that should float is a Card in the slot (padding: :sm, radius: :xxxl, shadow: :sm). A control that already has a surface stays in the slot. %>
 <%%= render FlatPack::TopNav::Component.new do |nav| %>
   <%% nav.left do %>
     <%%= render FlatPack::Button::Component.new(

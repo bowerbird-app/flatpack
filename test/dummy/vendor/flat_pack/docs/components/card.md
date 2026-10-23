@@ -25,6 +25,7 @@ Use Card to group related content in a consistent surface with optional hover an
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
 Behavior note:
+- The card does not set a height. A grid stretches a card that is the cell. Pass `class: "h-full"` when the card should fill a parent that already has a height.
 - Card root uses `overflow-visible` by default so pop-out UI (for example, dropdown menus) is not clipped by the card container.
 - When the `media` slot is present, card root switches to `overflow-hidden` to preserve media edge clipping.
 - The `body` slot applies `overflow-hidden` by default to prevent inner content from overflowing the card boundaries.

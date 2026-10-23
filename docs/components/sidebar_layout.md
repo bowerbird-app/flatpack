@@ -79,23 +79,28 @@ Use Sidebar Layout as the application chrome: persistent sidebar, optional top b
 <% end %>
 ```
 
-The shell paints the full-width bar. `TopNav` is the row inside it. A cluster that should read as its own card is a `Card` in that slot. `radius: :xxxl` is the roundest corner the card has. `class: "!h-auto"` keeps the card from stretching to the bar height.
+The shell paints the full-width bar. `TopNav` is the row inside it. Wrap a slot in a `Card` only when the content has no surface of its own. A segmented control stays in the slot. A bare icon is one card at the round control size. `radius: :xxxl` is the roundest corner the card has. The host's own margin is the inset (`--sidebar-float-inset`, `1rem`). The row does not add it.
 
 ```erb
 <%= render FlatPack::SidebarLayout::Component.new(floating: true) do |layout| %>
   <% layout.top_nav do %>
     <%= render FlatPack::TopNav::Component.new do |nav| %>
       <% nav.left do %>
-        <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
+        <div class="self-start mt-[var(--sidebar-float-inset)]">
           <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, collapse: :menu) do |group| %>
             <% group.button(FlatPack::Button::Component.new(text: "Preview", style: :ghost, size: :sm)) %>
             <% group.button(FlatPack::Button::Component.new(text: "Publish", style: :primary, size: :sm)) %>
           <% end %>
-        <% end %>
+        </div>
       <% end %>
       <% nav.right do %>
-        <%= render FlatPack::Card::Component.new(padding: :sm, radius: :xxxl, shadow: :sm, class: "!h-auto") do %>
-          <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, round: true, style: :ghost, aria: {label: "Notifications"}) %>
+        <%= render FlatPack::Card::Component.new(
+          padding: :none,
+          radius: :xxxl,
+          shadow: :sm,
+          class: "self-start mt-[var(--sidebar-float-inset)] h-[var(--button-round-size-md)] w-[var(--button-round-size-md)] shrink-0 items-center justify-center"
+        ) do %>
+          <%= render FlatPack::Shared::IconComponent.new(name: "bell", size: :md) %>
         <% end %>
       <% end %>
     <% end %>
@@ -293,7 +298,7 @@ The `top_nav` slot is wrapped in `.fp-layout-top-nav`. That wrapper is the full-
 
 Put `.fp-layout-content` on the main pane. Its `padding-inline` is `--layout-content-inset` (`1rem`, then `2rem` from `640px`). Put `.fp-layout-column` around the page. That column's `max-width` is `--layout-content-max-width` (`100%` by default). A length centers that measure. A nested `max-width` with auto margins is a second column. Page Layout uses this same bar.
 
-A card in a slot is the host's surface. `Card` with `padding: :sm`, `radius: :xxxl`, `shadow: :sm`, and `class: "!h-auto"` is the floating cluster. `radius: :xxxl` is `--radius-xxxl` (40px). The shell does not turn a slot or a child into a card. Dummy chrome with `?floating=1` places those cards in the row. `/demo/sidebar_layout?floating=1&background=1` is the floating photo. `/demo/sidebar_layout?floating=1&background=1&aside=1&height=content` is the press kit. Add `scrollbar=visible` to show the browser bar on the page and the aside.
+A card in a slot is the host's surface, and only for content that has none. `radius: :xxxl` is `--radius-xxxl` (40px). The shell does not turn a slot or a child into a card. Dummy chrome with `?floating=1` puts the segmented control in the row and the bell in a control-sized card. `/demo/sidebar_layout?floating=1&background=1` is the floating photo. `/demo/sidebar_layout?floating=1&background=1&aside=1&height=content` is the press kit. Add `scrollbar=visible` to show the browser bar on the page and the aside.
 
 Below `768px` the row stays one line. A button group with `collapse: :menu` is the phone menu for its own children. The sidebar toggle stays a single button that opens the drawer. The mobile drawer stays full height. Its scrim is a sibling of the drawers, `z-index: 40`, and paints `--drawer-backdrop-color` at full opacity while a drawer is open. The drawer itself is `z-50`. On the rounded theme the inner edge uses `--sidebar-float-radius`. The outer edge stays flush.
 
