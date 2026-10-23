@@ -234,9 +234,11 @@ module FlatPack
 
         assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group")
         assert_equal ["Share", "Archive"], overflow_labels
-        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "More"
-        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
-        assert_no_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value='chevron-down']"
+        trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger")
+        assert_equal "More", trigger["aria-label"]
+        assert_equal ["svg"], trigger_child_names(trigger)
+        assert_equal "ellipsis-horizontal", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_no_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "More"
         assert_selector ".fp-button-group__overflow .fp-menu-row[href='/share']", text: "Share"
         assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Archive"
         assert_no_selector ".fp-button-group > .fp-button", text: "Archive"
@@ -254,7 +256,11 @@ module FlatPack
 
         assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group")
         assert_equal ["Delete", "Share", "Move"], overflow_labels
-        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "Extras"
+        trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger")
+        assert_equal ["span", "svg"], trigger_child_names(trigger)
+        assert_equal "Extras", trigger.find("span").text
+        assert_equal "chevron-down", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
         assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
         assert_no_selector ".fp-button-group > .fp-button", text: "Delete"
       end
@@ -397,7 +403,7 @@ module FlatPack
         end
 
         assert_selector ".fp-button-group--outlined > .fp-button[data-fp-style=ghost]", text: "Edit"
-        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]", text: "More"
+        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost][aria-label=More]"
         assert_no_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=secondary]"
 
         render_inline(Component.new(variant: :joined, visible: 1)) do |group|
@@ -405,7 +411,7 @@ module FlatPack
           group.button(FlatPack::Button::Component.new(text: "Archive", style: :secondary, size: :sm))
         end
 
-        assert_selector ".fp-button-group:not(.fp-button-group--outlined) .fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=secondary]", text: "More"
+        assert_selector ".fp-button-group:not(.fp-button-group--outlined) .fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=secondary][aria-label=More]"
         assert_no_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]"
       end
 
@@ -421,10 +427,61 @@ module FlatPack
         assert_selector ".fp-button-group-menu__panel .fp-menu-row[href='/edit']", text: "Edit"
         assert_selector ".fp-button-group-menu__panel .fp-menu-row", text: "Archive"
         assert_no_selector ".fp-button-group-menu__panel .fp-button-group__overflow"
-        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]", text: "More"
+        assert_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost][aria-label=More]"
         refute_includes rendered_content, "border-radius: 0"
         refute_includes rendered_content, "border-right-width: 0"
         assert_includes rendered_content, "> .fp-button-group-menu__row {\n    display: inline-flex;\n  }"
+      end
+
+      def test_overflow_label_is_followed_by_the_chevron
+        render_inline(Component.new(variant: :outlined, visible: 1, overflow_label: "More")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm))
+          group.button(FlatPack::Button::Component.new(text: "Archive", style: :ghost, size: :sm))
+        end
+
+        trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]")
+        assert_equal ["span", "svg"], trigger_child_names(trigger)
+        assert_equal "More", trigger.find("span").text
+        assert_equal "chevron-down", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_equal "chevron", trigger.find("svg")["data-flat-pack--button-dropdown-target"]
+        refute trigger["aria-label"]
+
+        render_inline(Component.new(variant: :joined, visible: 1, overflow_label: " ")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :secondary, size: :sm))
+          group.button(FlatPack::Button::Component.new(text: "Archive", style: :secondary, size: :sm))
+        end
+
+        blank = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger")
+        assert_equal "More", blank["aria-label"]
+        assert_equal ["svg"], trigger_child_names(blank)
+      end
+
+      def test_overflow_icon_replaces_the_default_in_both_modes
+        render_inline(Component.new(variant: :outlined, visible: 1, overflow_icon: "archive")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm))
+          group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm))
+        end
+
+        icon_only = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]")
+        assert_equal "More", icon_only["aria-label"]
+        assert_equal ["svg"], trigger_child_names(icon_only)
+        assert_equal "archive", icon_only.find("svg")["data-flat-pack--icon-name-value"]
+
+        render_inline(Component.new(variant: :joined, visible: 1, overflow_label: "More", overflow_icon: :archive)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :secondary, size: :sm))
+          group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm))
+        end
+
+        labeled = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=secondary]")
+        assert_equal ["span", "svg"], trigger_child_names(labeled)
+        assert_equal "More", labeled.find("span").text
+        assert_equal "archive", labeled.find("svg")["data-flat-pack--icon-name-value"]
+        assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='chevron-down']"
+        assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
+
+        error = assert_raises(ArgumentError) { Component.new(overflow_icon: true) }
+        assert_equal "overflow_icon must be a string", error.message
+        assert_raises(ArgumentError) { Component.new(overflow_icon: 1) }
       end
 
       def test_invalid_visible_and_overflow_raise
@@ -441,6 +498,10 @@ module FlatPack
       end
 
       private
+
+      def trigger_child_names(trigger)
+        trigger.native.element_children.map(&:name)
+      end
 
       def row_labels(row_selector)
         page.all("#{row_selector} > :not(.fp-button-group__overflow)", visible: :all).map { |node| entry_label(node) }

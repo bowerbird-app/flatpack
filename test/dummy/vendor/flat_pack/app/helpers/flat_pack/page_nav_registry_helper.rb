@@ -48,13 +48,14 @@ module FlatPack
     # A link becomes a button through `styles` (a PageNavRoleStyles map).
     # A component is passed through. `variant`, `collapse`, and `visible` are
     # passed to the group. `overflow` on an item is passed to that child.
-    # `overflow_label` is the More trigger's text.
+    # `overflow_label` is the overflow trigger's text. Omit it for an icon.
+    # `overflow_icon` replaces the default ellipsis or chevron.
     # Returns nil when the bucket is empty.
-    def page_nav_button_group(styles:, from: PageNavRegistry::DEFAULT_BUCKET, variant: :joined, collapse: false, visible: nil, overflow_label: nil)
+    def page_nav_button_group(styles:, from: PageNavRegistry::DEFAULT_BUCKET, variant: :joined, collapse: false, visible: nil, overflow_label: nil, overflow_icon: nil)
       items = page_nav_items(from: from)
       return if items.empty?
 
-      render(FlatPack::ButtonGroup::Component.new(variant: variant, collapse: collapse, visible: visible, overflow_label: overflow_label)) do |row|
+      render(FlatPack::ButtonGroup::Component.new(variant: variant, collapse: collapse, visible: visible, overflow_label: overflow_label, overflow_icon: overflow_icon)) do |row|
         items.each do |item|
           child = if item.component?
             item.component

@@ -19,6 +19,18 @@ module FlatPack
         assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
       end
 
+      def test_chevron_name_sits_after_the_label
+        render_inline(Dropdown::Component.new(text: "More", chevron: "archive"))
+
+        trigger = page.find("button")
+        assert_equal ["span", "svg"], trigger.native.element_children.map(&:name)
+        assert_equal "archive", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_nil trigger.find("svg")["data-flat-pack--button-dropdown-target"]
+
+        error = assert_raises(ArgumentError) { Dropdown::Component.new(text: "More", chevron: true) }
+        assert_equal "chevron must be a string", error.message
+      end
+
       def test_hides_chevron_when_show_chevron_is_false
         render_inline(Dropdown::Component.new(text: "Actions", show_chevron: false))
 

@@ -16,6 +16,7 @@ module FlatPack
       DEFAULT_COLLAPSE_AT = 768
       DEFAULT_MENU_ICON = "menu"
       OVERFLOW_ICON = "ellipsis-horizontal"
+      OVERFLOW_CHEVRON = "chevron-down"
 
       def initialize(
         variant: :joined,
@@ -25,6 +26,7 @@ module FlatPack
         collapse_at: DEFAULT_COLLAPSE_AT,
         visible: nil,
         overflow_label: nil,
+        overflow_icon: nil,
         **system_arguments
       )
         @variant = normalize_variant!(variant)
@@ -34,6 +36,7 @@ module FlatPack
         @collapse_at = normalize_collapse_at!(collapse_at)
         @visible = normalize_visible!(visible)
         @overflow_label = normalize_overflow_label!(overflow_label)
+        @overflow_icon = normalize_overflow_icon!(overflow_icon)
         @child_overflow = []
         super(**system_arguments)
       end
@@ -264,9 +267,7 @@ module FlatPack
         return if slots.empty?
 
         dropdown = FlatPack::Button::Dropdown::Component.new(
-          text: overflow_label,
-          icon: OVERFLOW_ICON,
-          show_chevron: false,
+          **overflow_trigger_options,
           style: overflow_trigger_style,
           size: :sm,
           class: "fp-button-group__overflow"
@@ -275,8 +276,21 @@ module FlatPack
         render(dropdown)
       end
 
-      def overflow_label
-        @overflow_label.nil? ? fp_t("button_group.overflow") : @overflow_label
+      # No label: the icon alone, named with the locale string. A label: that
+      # text, then the icon, in the dropdown's trailing slot.
+      def overflow_trigger_options
+        icon = overflow_icon_name
+        if @overflow_label.present?
+          {text: @overflow_label, show_chevron: true, chevron: icon}
+        else
+          {text: fp_t("button_group.overflow"), icon: icon, icon_only: true, show_chevron: false}
+        end
+      end
+
+      def overflow_icon_name
+        return @overflow_icon if @overflow_icon
+
+        @overflow_label.present? ? OVERFLOW_CHEVRON : OVERFLOW_ICON
       end
 
       # Rendering the child once gives it a view context and runs its own slot
@@ -356,6 +370,13 @@ module FlatPack
       def normalize_overflow_label!(label)
         validate_text_option!(label, name: :overflow_label)
         label.presence
+      end
+
+      def normalize_overflow_icon!(icon)
+        return if icon.nil? || icon == ""
+        return icon.to_s if icon.is_a?(String) || icon.is_a?(Symbol)
+
+        raise ArgumentError, "overflow_icon must be a string"
       end
 
       def normalize_overflow!(value)

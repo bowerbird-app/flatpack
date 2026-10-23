@@ -60,7 +60,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "A quiet outline",
     anchor_link: true,
-    subtitle: "Ghost actions in one border. They sit apart. More is a ghost too."
+    subtitle: "Ghost actions in one border. They sit apart. Overflow is a ghost too."
   ) %>
   <div id="outlined-plain" class="mb-8">
     <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined) do |group| %>
@@ -69,8 +69,16 @@
       <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %>
     <% end %>
   </div>
-  <div id="outlined-overflow" class="mb-4 flex min-h-72 items-start">
+  <div id="outlined-overflow-icon" class="mb-8 flex min-h-72 items-start">
     <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, visible: 2) do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :ghost, size: :sm)) %>
+    <% end %>
+  </div>
+  <div id="outlined-overflow-label" class="mb-4 flex min-h-72 items-start">
+    <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, visible: 2, overflow_label: "More") do |group| %>
       <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
       <% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %>
       <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %>
@@ -80,6 +88,13 @@
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
       &lt;%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, visible: 2) do |group| %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Archive", style: :ghost, size: :sm)) %&gt;
+      &lt;% end %&gt;
+
+      &lt;%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, visible: 2, overflow_label: "More") do |group| %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %&gt;
@@ -123,7 +138,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "More on a wide screen",
     anchor_link: true,
-    subtitle: "Two stay in the row. The rest sit under More. Delete can be sent there on purpose, and Duplicate can stay."
+    subtitle: "Two stay in the row. The rest sit under the ellipsis. Delete can be sent there on purpose, and Duplicate can stay."
   ) %>
   <div id="overflow-count" class="mb-8 flex min-h-72 items-start justify-end">
     <%= render FlatPack::ButtonGroup::Component.new(visible: 2, collapse: :menu) do |group| %>
