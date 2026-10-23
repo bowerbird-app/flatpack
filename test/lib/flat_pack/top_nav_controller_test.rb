@@ -33,6 +33,13 @@ module FlatPack
       refute_includes css, ".fp-top-nav[data-scrolled=\"true\"]"
       assert_includes css, ".fp-layout-top-nav[data-scrolled=\"true\"]"
       assert_includes css, ".fp-top-nav__section :where(input, select, textarea)"
+      none_at = css.index('.fp-top-nav[data-fp-top-nav-padding="none"]')
+      refute_nil none_at
+      assert_operator none_at, :>, css.index(".fp-top-nav {")
+      none = css[none_at, 280]
+      assert_includes none, "padding-left: env(safe-area-inset-left, 0px);"
+      assert_includes none, "padding-right: env(safe-area-inset-right, 0px);"
+      refute_includes none, "--top-nav-padding-inline"
     end
   end
 end

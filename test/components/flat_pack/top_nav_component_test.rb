@@ -181,6 +181,30 @@ module FlatPack
         assert_raises(ArgumentError) { Component.new(mobile_breakpoint: 1024) }
       end
 
+      def test_default_padding_marks_the_row
+        render_inline(Component.new)
+
+        assert_selector "header.fp-top-nav[data-fp-top-nav-padding='default']"
+      end
+
+      def test_padding_none_marks_the_row
+        render_inline(Component.new(padding: :none))
+
+        assert_selector "header.fp-top-nav[data-fp-top-nav-padding='none']"
+      end
+
+      def test_padding_accepts_the_string_form
+        render_inline(Component.new(padding: "none"))
+
+        assert_selector "[data-fp-top-nav-padding='none']"
+      end
+
+      def test_padding_rejects_unknown_values
+        error = assert_raises(ArgumentError) { Component.new(padding: :compact) }
+
+        assert_equal "padding must be :default or :none", error.message
+      end
+
       def test_slots_reject_always_display
         render_inline(Component.new) do |nav|
           assert_raises(ArgumentError) { nav.left(always_display: true) { "Brand" } }

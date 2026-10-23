@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.310] - 2026-10-23
+
+### Added
+- `FlatPack::PageLayout::Component` takes `top_nav_width:`. `:content` (the default) keeps the bar the full window and constrains `.fp-page-layout-top-nav-column` to the same measure and inline inset as the column. `:full` leaves the slot content full width. Anything else raises `ArgumentError`. The wrapper does not name Top Nav.
+- `FlatPack::TopNav::Component` takes `padding:`. `:default` keeps `--top-nav-padding-inline`. `:none` drops that inset and keeps the side safe area. Anything else raises `ArgumentError`.
+
+### Upgrade notes
+- Page Layout now aligns the top bar's content with the column. Pass `top_nav_width: :full` when the slot should span the window, including a floating cluster that uses the row's own padding.
+- Pass `padding: :none` on Top Nav when that slot already supplies the inset and the controls should meet the column edges. The side safe area stays.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.310`.
+
 ## [0.1.309] - 2026-10-23
 
 ### Changed

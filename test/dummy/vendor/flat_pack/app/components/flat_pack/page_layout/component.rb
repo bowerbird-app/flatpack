@@ -16,12 +16,14 @@ module FlatPack
       WIDTHS = %i[narrow default wide full].freeze
       ALIGNS = %i[top center].freeze
       CONTENT_SCROLLS = %i[behind below].freeze
+      TOP_NAV_WIDTHS = %i[content full].freeze
       REMOVED_KEYWORDS = %i[floating_top_nav].freeze
 
       def initialize(
         width: :default,
         align: :top,
         content_scroll: :below,
+        top_nav_width: :content,
         **system_arguments
       )
         reject_removed!(system_arguments)
@@ -29,10 +31,12 @@ module FlatPack
         @width = symbolize(width)
         @align = symbolize(align)
         @content_scroll = symbolize(content_scroll)
+        @top_nav_width = symbolize(top_nav_width)
 
         validate_width!
         validate_align!
         validate_content_scroll!
+        validate_top_nav_width!
       end
 
       def top_nav(**args, &block)
@@ -90,7 +94,14 @@ module FlatPack
       def render_top_nav
         return unless top_nav?
 
-        layout_top_nav(top_nav_landmark(top_nav.to_s), content_scroll: @content_scroll)
+        layout_top_nav(top_nav_body, content_scroll: @content_scroll)
+      end
+
+      def top_nav_body
+        html = top_nav_landmark(top_nav.to_s)
+        return html if @top_nav_width == :full
+
+        content_tag(:div, html, class: "fp-page-layout-top-nav-column")
       end
 
       def top_nav_landmark(html)
@@ -135,6 +146,7 @@ module FlatPack
         {
           "fp-page-layout-width": @width.to_s,
           "fp-page-layout-align": @align.to_s,
+          "fp-page-layout-top-nav-width": @top_nav_width.to_s,
           "flat-pack-layout-background": ("true" if background?),
           "flat-pack-layout-scroll": ("page" if content_scroll_behind?)
         }.compact
@@ -183,6 +195,12 @@ module FlatPack
         return if CONTENT_SCROLLS.include?(@content_scroll)
 
         raise ArgumentError, "content_scroll must be :behind or :below"
+      end
+
+      def validate_top_nav_width!
+        return if TOP_NAV_WIDTHS.include?(@top_nav_width)
+
+        raise ArgumentError, "top_nav_width must be :content or :full"
       end
     end
   end

@@ -12,11 +12,14 @@ module FlatPack
         :with_right_slot, :with_right_slot_content
 
       SECTIONS = %w[left center right].freeze
+      PADDINGS = %i[default none].freeze
       REMOVED_KEYWORDS = %i[mobile_menu mobile_menu_label mobile_breakpoint].freeze
 
-      def initialize(**system_arguments)
+      def initialize(padding: :default, **system_arguments)
         reject_removed!(system_arguments)
-        super
+        @padding = padding.is_a?(String) ? padding.to_sym : padding
+        validate_padding!
+        super(**system_arguments)
       end
 
       def left(**args, &block)
@@ -71,7 +74,13 @@ module FlatPack
       end
 
       def header_attributes
-        merge_attributes(class: header_classes)
+        merge_attributes(class: header_classes, data: {"fp-top-nav-padding": @padding.to_s})
+      end
+
+      def validate_padding!
+        return if PADDINGS.include?(@padding)
+
+        raise ArgumentError, "padding must be :default or :none"
       end
 
       def header_classes

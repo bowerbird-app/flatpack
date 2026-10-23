@@ -1333,6 +1333,11 @@
   padding-left: max(var(--top-nav-padding-inline), env(safe-area-inset-left, 0px));
 }
 
+.fp-top-nav[data-fp-top-nav-padding="none"] {
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
 .fp-top-nav > div {
   min-width: 0;
   max-width: 100%;
@@ -1371,6 +1376,19 @@
   width: 100%;
   max-width: var(--layout-content-max-width);
   margin-inline: auto;
+}
+
+/* PageLayout top_nav_width: :content. The band stays the full window.
+   This wrapper is the same measure and inline inset as the column.
+   It does not name a child. Side padding is never less than the safe area. */
+.fp-page-layout-top-nav-column {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: calc(var(--layout-content-max-width) + (2 * var(--layout-content-inset)));
+  margin-inline: auto;
+  padding-left: max(var(--layout-content-inset), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--layout-content-inset), env(safe-area-inset-right, 0px));
 }
 
 .fp-layout-top-nav {

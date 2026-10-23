@@ -36,6 +36,19 @@ module FlatPack
       assert_includes center, "display: grid;"
       assert_includes center, "align-content: center;"
       refute_includes @application, "justify-content: center"
+
+      column = @application[/\.fp-page-layout-top-nav-column \{.*?\}/m]
+      refute_nil column
+      assert_includes column, "box-sizing: border-box;"
+      assert_includes column, "width: 100%;"
+      assert_includes column, "min-width: 0;"
+      assert_includes column, "max-width: calc(var(--layout-content-max-width) + (2 * var(--layout-content-inset)));"
+      assert_includes column, "margin-inline: auto;"
+      assert_includes column, "padding-left: max(var(--layout-content-inset), env(safe-area-inset-left, 0px));"
+      assert_includes column, "padding-right: max(var(--layout-content-inset), env(safe-area-inset-right, 0px));"
+      refute_includes column, "fp-top-nav"
+      refute_includes column, "--top-nav-"
+      assert_operator @application.index(".fp-page-layout-top-nav-column {"), :>, @application.index(".fp-top-nav {")
     end
 
     test "rounded padding follows the spacing scale and sets no photo colour" do

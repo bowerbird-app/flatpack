@@ -12,7 +12,7 @@ module FlatPack
           "Story"
         end
 
-        assert_selector "#notes.fp-page-layout[data-fp-page-layout-width='default'][data-fp-page-layout-align='top']"
+        assert_selector "#notes.fp-page-layout[data-fp-page-layout-width='default'][data-fp-page-layout-align='top'][data-fp-page-layout-top-nav-width='content']"
         assert_selector "header", text: "Field notes"
         assert_selector "main.fp-page-layout-main.fp-layout-content .fp-layout-column", text: "Story"
         assert_selector "footer.fp-page-layout-footer", text: "End"
@@ -109,8 +109,41 @@ module FlatPack
           "Story"
         end
 
-        assert_selector ".fp-layout-top-nav > header.fp-top-nav", count: 1
+        assert_selector ".fp-layout-top-nav > .fp-page-layout-top-nav-column > header.fp-top-nav", count: 1
         assert_selector "header", count: 1
+      end
+
+      def test_content_width_constrains_the_slot_without_naming_top_nav
+        render_inline(Component.new) do |layout|
+          layout.top_nav { %(<div class="host-mark">Field notes</div>).html_safe }
+          "Story"
+        end
+
+        assert_selector "[data-fp-page-layout-top-nav-width='content'] .fp-layout-top-nav > .fp-page-layout-top-nav-column > header .host-mark", text: "Field notes"
+        refute_selector ".fp-page-layout-top-nav-column.fp-top-nav"
+        refute_includes page.native.to_html, "fp-top-nav__"
+      end
+
+      def test_full_top_nav_width_leaves_the_slot_full_bleed
+        render_inline(Component.new(top_nav_width: :full)) do |layout|
+          layout.top_nav { "Field notes" }
+          "Story"
+        end
+
+        assert_selector "[data-fp-page-layout-top-nav-width='full'] .fp-layout-top-nav > header", text: "Field notes"
+        refute_selector ".fp-page-layout-top-nav-column"
+      end
+
+      def test_top_nav_width_accepts_the_string_form
+        render_inline(Component.new(top_nav_width: "full")) { "Story" }
+
+        assert_selector "[data-fp-page-layout-top-nav-width='full']"
+      end
+
+      def test_top_nav_width_rejects_unknown_values
+        error = assert_raises(ArgumentError) { Component.new(top_nav_width: :fixed) }
+
+        assert_equal "top_nav_width must be :content or :full", error.message
       end
 
       def test_content_scroll_behind_without_a_slot_stays_flush
