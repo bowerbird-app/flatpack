@@ -121,6 +121,7 @@ module FlatPack
         assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > *'
         assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > :first-child'
         assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > :last-child'
+        assert_includes rendered_content, '.fp-button-group-menu[data-collapse-at="768"] > .fp-button-group-menu__row > .fp-button-dropdown'
 
         assert_selector ".fp-button-group-menu__row a.fp-button[href='/rename']", text: "Rename"
         assert_selector ".fp-button-group-menu__panel a.fp-menu-row[href='/rename']", text: "Rename"
@@ -133,6 +134,8 @@ module FlatPack
         refute_includes css, 'data-flat-pack--button-dropdown-target="trigger"'
         assert_includes css, ".fp-button-group > .fp-button-dropdown > .fp-button-dropdown__trigger"
         assert_includes css, "border-radius: inherit"
+        assert_includes css, ".fp-button-group > .fp-button-dropdown:last-child > .fp-button-dropdown__trigger"
+        assert_includes css, ".fp-button-group > .fp-button-dropdown,\n.fp-button-group-menu__row > .fp-button-dropdown {\n  border-width: 0;\n}"
       end
 
       def test_plain_group_joins_a_dropdown_on_its_root

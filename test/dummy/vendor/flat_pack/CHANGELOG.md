@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `register_page_nav` accepts `overflow:` on a link or a component and passes it to that child. `page_nav_button_group` accepts `visible:` and passes it to the group.
 - `FlatPack::Button::Dropdown::Component#menu_html` places already-rendered HTML in the menu.
 
+### Fixed
+- A dropdown at the end of a button group, including the More trigger, no longer paints a dark right edge. The segment's outer corner and border match the other children.
+
 ### Upgrade notes
 - Pass `visible:` when a wide row should keep a fixed number of actions. Pass `overflow: true` on a child that should always sit under More, such as Delete.
 - `register_page_nav "Delete", path, role: :destructive, overflow: true` then `page_nav_button_group(styles:, collapse: :menu, visible: 2)`.

@@ -172,6 +172,12 @@ module FlatPack
               border-right-width: 1px;
             }
 
+            /* A dropdown root has no border color of its own. Preflight would
+               paint this width in currentColor, a dark line outside the trigger. */
+            .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__row > .fp-button-dropdown {
+              border-width: 0;
+            }
+
             .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__panel {
               display: none;
             }

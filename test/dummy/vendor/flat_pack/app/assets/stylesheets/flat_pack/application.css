@@ -5305,13 +5305,25 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
-/* The dropdown root is the segment. A button group paints radius and the shared
-   edge on that direct child. The trigger copies the root. A wrapper around the
-   dropdown is a different child, and this does not reach through it. */
+/* The dropdown root is the segment. A button group paints the radius on that
+   direct child. The root must not paint a border: preflight's border color is
+   currentColor, so a last-child border width becomes a dark line outside the
+   trigger. The trigger copies the radius and draws the shared edge. A wrapper
+   around the dropdown is a different child, and this does not reach through it. */
+.fp-button-group > .fp-button-dropdown,
+.fp-button-group-menu__row > .fp-button-dropdown {
+  border-width: 0;
+}
+
 .fp-button-group > .fp-button-dropdown > .fp-button-dropdown__trigger,
 .fp-button-group-menu__row > .fp-button-dropdown > .fp-button-dropdown__trigger {
   border-radius: inherit;
-  border-right-width: inherit;
+  border-right-width: 0;
   box-shadow: none;
+}
+
+.fp-button-group > .fp-button-dropdown:last-child > .fp-button-dropdown__trigger,
+.fp-button-group-menu__row > .fp-button-dropdown:last-child > .fp-button-dropdown__trigger {
+  border-right-width: 1px;
 }
 

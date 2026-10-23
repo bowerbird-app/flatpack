@@ -39,7 +39,7 @@ Use Button Group when a compact row of related actions should look visually conn
 
 A child with no `menu_row`, or whose `menu_row` does not return HTML, is rendered once. That HTML is the wide control when the child stays in the row, and the overflow body when it does not. With `collapse: :menu` the same HTML is also the phone row. It keeps its own chrome. The group only shapes the direct child (joined borders, outer corners, spacing). It does not read another component's targets, and it does not build a second copy of a child.
 
-A dropdown joins the row when it is the direct child. Its root takes the segment shape, and its trigger copies that box. A wrapper around the dropdown is the direct child instead. The group does not restyle the trigger inside that wrapper.
+A dropdown joins the row when it is the direct child. Its root takes the segment's outer radius and does not paint a border. The trigger copies that radius and draws the edge, in the button's own border color. A wrapper around the dropdown is the direct child instead. The group does not restyle the trigger inside that wrapper.
 
 ## Example — overflow
 ```erb
