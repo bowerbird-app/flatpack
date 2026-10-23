@@ -1225,6 +1225,7 @@
       label: "Top Nav",
       method_call: "render FlatPack::TopNav::Component.new do |nav| ... end",
       variables: [
+        { variable: "padding", accepts: ":default, :none", example: "padding: :none" },
         { variable: "left", accepts: "slot block", example: "nav.left { \"Brand\" }" },
         { variable: "center", accepts: "slot block", example: "nav.center { render FlatPack::Search::Component.new }" },
         { variable: "right", accepts: "slot block", example: "nav.right { render FlatPack::Avatar::Component.new(...) }" }
@@ -1349,7 +1350,8 @@
         { variable: "width", accepts: ":narrow, :default, :wide, :full", example: "width: :narrow" },
         { variable: "align", accepts: ":top, :center", example: "align: :center" },
         { variable: "content_scroll", accepts: ":below, :behind", example: "content_scroll: :behind" },
-        { variable: "top_nav", accepts: "slot block", example: "layout.top_nav { render FlatPack::TopNav::Component.new }" },
+        { variable: "top_nav_width", accepts: ":content, :full", example: "top_nav_width: :content" },
+        { variable: "top_nav", accepts: "slot block", example: "layout.top_nav { render FlatPack::TopNav::Component.new(padding: :none) }" },
         { variable: "footer", accepts: "slot block", example: "layout.footer { \"Field notes\" }" },
         { variable: "background", accepts: "slot block", example: "layout.background { image_tag photo_path, alt: \"\" }" },
         { variable: "content", accepts: "block", example: "<h1>Packing notes</h1>" },

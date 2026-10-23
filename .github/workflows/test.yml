@@ -52,7 +52,25 @@ jobs:
           DB_HOST: localhost
           DB_NAME: flatpack_dummy_test
         run: |
-          bundle install
+          # A local clone of the Bundler git cache hardlinks commit-graph
+          # files. A graph still being written fails the clone with
+          # "hardlink different from source" before db:prepare runs.
+          git config --global core.commitGraph false
+          git config --global fetch.writeCommitGraph false
+          git config --global gc.writeCommitGraph false
+          find /opt/hostedtoolcache/Ruby -type d -name commit-graphs -print0 2>/dev/null | xargs -0 -r rm -rf
+          installed=0
+          for attempt in 1 2 3; do
+            if bundle install; then
+              installed=1
+              break
+            fi
+            echo "bundle install failed (attempt ${attempt}); retrying"
+            sleep $((attempt * 2))
+          done
+          if [ "$installed" -ne 1 ]; then
+            exit 1
+          fi
           bundle exec rails db:prepare
 
       - name: Run tests
@@ -116,7 +134,24 @@ jobs:
 
       - name: Install dummy app dependencies
         working-directory: test/dummy
-        run: bundle install
+        run: |
+          # Same commit-graph hardlink race as the Rails Tests dummy install.
+          git config --global core.commitGraph false
+          git config --global fetch.writeCommitGraph false
+          git config --global gc.writeCommitGraph false
+          find /opt/hostedtoolcache/Ruby -type d -name commit-graphs -print0 2>/dev/null | xargs -0 -r rm -rf
+          installed=0
+          for attempt in 1 2 3; do
+            if bundle install; then
+              installed=1
+              break
+            fi
+            echo "bundle install failed (attempt ${attempt}); retrying"
+            sleep $((attempt * 2))
+          done
+          if [ "$installed" -ne 1 ]; then
+            exit 1
+          fi
 
       - name: Prepare databases
         working-directory: test/dummy

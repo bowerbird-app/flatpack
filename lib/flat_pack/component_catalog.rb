@@ -81,6 +81,7 @@ module FlatPack
       {constant: :ANIMATIONS, kwargs: %i[animate]},
       {constant: :DURATIONS, kwargs: %i[duration]},
       {constant: :CONTENT_SCROLLS, kwargs: %i[content_scroll]},
+      {constant: :TOP_NAV_WIDTHS, kwargs: %i[top_nav_width]},
       {constant: :SCROLLS, kwargs: %i[scroll]},
       {constant: :HEIGHTS, kwargs: %i[height]}
     ].freeze

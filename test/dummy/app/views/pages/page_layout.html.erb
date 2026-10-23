@@ -16,41 +16,68 @@
   }
 %>
 
+<% if variant == "plain" %>
+  <% flat_pack_page_nav(anchor_href: demo_page_layout_path, anchor_tooltip: "Close") %>
+  <% register_page_nav "Edit", variant_path.call("article"), role: :primary, icon: :pencil %>
+  <% register_page_nav "Share", variant_path.call("float"), role: :secondary, icon: :share %>
+  <% register_page_nav "Duplicate", variant_path.call("login"), role: :secondary, icon: :"document-duplicate" %>
+  <% register_page_nav "Delete", variant_path.call("plain"), role: :destructive, icon: :trash, overflow: true %>
+<% end %>
+
 <%= render FlatPack::PageLayout::Component.new(
   width: width,
   align: align,
   content_scroll: (floating ? :behind : :below),
+  top_nav_width: (floating ? :full : :content),
   id: "page-layout-demo"
 ) do |layout| %>
   <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new do |nav| %>
-      <% nav.left do %>
-        <% brand = capture do %>
-          <%= render FlatPack::Link::Component.new(href: variant_path.call("plain")) do %>
-            Field notes
-          <% end %>
+    <%= render FlatPack::TopNav::Component.new(padding: (floating ? :default : :none)) do |nav| %>
+      <% if variant == "plain" %>
+        <% nav.left do %>
+          <%= flat_pack_page_nav_tag %>
         <% end %>
-        <% if floating %>
-          <%= render FlatPack::Card::Component.new(
-            padding: :sm,
-            radius: :xxxl,
-            shadow: :sm,
-            class: "self-start mt-[var(--sidebar-float-inset)]"
-          ) do %>
+        <% nav.right do %>
+          <%= page_nav_button_group(
+            styles: {
+              primary: {style: :ghost, size: :sm},
+              secondary: {style: :ghost, size: :sm},
+              destructive: {style: :danger, size: :sm}
+            },
+            variant: :outlined,
+            collapse: :menu,
+            visible: 2
+          ) %>
+        <% end %>
+      <% else %>
+        <% nav.left do %>
+          <% brand = capture do %>
+            <%= render FlatPack::Link::Component.new(href: variant_path.call("plain")) do %>
+              Field notes
+            <% end %>
+          <% end %>
+          <% if floating %>
+            <%= render FlatPack::Card::Component.new(
+              padding: :sm,
+              radius: :xxxl,
+              shadow: :sm,
+              class: "self-start mt-[var(--sidebar-float-inset)]"
+            ) do %>
+              <%= brand %>
+            <% end %>
+          <% else %>
             <%= brand %>
           <% end %>
-        <% else %>
-          <%= brand %>
         <% end %>
-      <% end %>
-      <% nav.right do %>
-        <%= render FlatPack::Button::Component.new(
-          text: "Sign in",
-          href: variant_path.call("login"),
-          style: (floating ? :default : :primary),
-          size: :sm,
-          **(floating ? {class: "self-start mt-[var(--sidebar-float-inset)]"} : {})
-        ) %>
+        <% nav.right do %>
+          <%= render FlatPack::Button::Component.new(
+            text: "Sign in",
+            href: variant_path.call("login"),
+            style: (floating ? :default : :primary),
+            size: :sm,
+            **(floating ? {class: "self-start mt-[var(--sidebar-float-inset)]"} : {})
+          ) %>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
@@ -99,9 +126,9 @@
       <p class="mt-3 text-[var(--surface-muted-content-color)]">The photo stays behind the page. This card is yours.</p>
     <% end %>
   <% else %>
-    <div id="page-layout-plain">
+    <%= render FlatPack::Card::Component.new(padding: :lg, id: "page-layout-plain") do %>
       <h1 class="text-3xl font-semibold">Packing notes</h1>
       <p class="mt-4 text-[var(--surface-muted-content-color)]">One column. A bar at the top. A line at the bottom. The words stay yours.</p>
-    </div>
+    <% end %>
   <% end %>
 <% end %>
