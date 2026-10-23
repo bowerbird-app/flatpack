@@ -1,13 +1,13 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Button Groups",
-  subtitle: "Visually connected button groups with shared borders."
+  subtitle: "A joined row, or ghost actions in a quiet outline."
 ) %>
 
 
 <!-- Button Groups (Wrapped) -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Button Groups (Wrapped Together)", anchor_link: true, subtitle: "Examples for Button Groups (Wrapped Together).") %>
-  <div class="mb-4">
+  <div id="joined-text" class="mb-4">
     <%= render FlatPack::ButtonGroup::Component.new(
       data: {
         controller: "segmented-buttons-demo",
@@ -51,6 +51,39 @@
         &lt;% group.button(FlatPack::Button::Component.new(text: "Left", style: :primary, aria: { pressed: true }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Middle", style: :secondary, aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %&gt;
         &lt;% group.button(FlatPack::Button::Component.new(text: "Right", style: :secondary, aria: { pressed: false }, data: { segmented_buttons_demo_target: "button", action: "segmented-buttons-demo#activate" })) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="outlined">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A quiet outline",
+    anchor_link: true,
+    subtitle: "Ghost actions in one border. They sit apart. More is a ghost too."
+  ) %>
+  <div id="outlined-plain" class="mb-8">
+    <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined) do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %>
+    <% end %>
+  </div>
+  <div id="outlined-overflow" class="mb-4 flex min-h-72 items-start">
+    <%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, visible: 2) do |group| %>
+      <% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %>
+      <% group.button(FlatPack::Button::Component.new(text: "Archive", style: :ghost, size: :sm)) %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::ButtonGroup::Component.new(variant: :outlined, visible: 2) do |group| %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Duplicate", style: :ghost, size: :sm)) %&gt;
+        &lt;% group.button(FlatPack::Button::Component.new(text: "Archive", style: :ghost, size: :sm)) %&gt;
       &lt;% end %&gt;
     CODE
   ) %>

@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.307] - 2026-10-23
+
+### Added
+- `FlatPack::ButtonGroup::Component` takes `variant:`. `:joined` (the default) is the merged row. `:outlined` is a bordered desktop container. Children keep their own border, radius, and fill. The container radius is `--button-group-radius` (`--radius-md` on the default theme, `--radius-full` on rounded). The More trigger is ghost when the variant is outlined, and secondary when it is joined.
+- `page_nav_button_group` accepts `variant:` and passes it to the group.
+
+### Upgrade notes
+- Pass `variant: :outlined` for a quiet desktop row. Pass `style: :ghost` on each child when those actions should read as links. The group does not restyle them.
+- `--button-group-radius` is `--radius-md` until `[data-theme~="rounded"]`, where it is `--radius-full`. Ghost hover stays on `--button-border-radius`, which is the same pill on rounded.
+- `collapse: :menu` still folds every child into the phone menu. The outline is the wide row.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.307`.
+
 ## [0.1.306] - 2026-10-23
 
 ### Added

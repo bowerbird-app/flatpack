@@ -56,8 +56,9 @@ A link descriptor answers `label`, `href`, `role`, `icon`, `data`, `aria`, and `
 | --- | --- | --- | --- | --- |
 | `styles` | Hash | none | yes | Role map. `FlatPack::PageNavRoleStyles::SOLID`, `QUIET`, `PIN`, or a caller's own role → `{style:, size:}`. A link uses the entry for its role. A component ignores the map. A missing role raises `ArgumentError`. |
 | `from` | Symbol, String | `:default` | no | The bucket `into:` used. |
-| `collapse` | false or Symbol | `false` | no | Passed to the button group. `false` keeps the joined row. `:menu` is that row from 768px up and a menu below it. Anything else raises `ArgumentError`. |
-| `visible` | Integer, nil | `nil` | no | Passed to the button group. The first that many children stay in the joined row. `overflow:` on an entry wins. See [Button Group](button-group.md). |
+| `variant` | Symbol, String | `:joined` | no | Passed to the button group. `:joined` merges the row. `:outlined` is the bordered desktop container. Anything else raises `ArgumentError`. See [Button Group](button-group.md). |
+| `collapse` | false or Symbol | `false` | no | Passed to the button group. `false` keeps the row. `:menu` is that row from 768px up and a menu below it. Anything else raises `ArgumentError`. |
+| `visible` | Integer, nil | `nil` | no | Passed to the button group. The first that many children stay in the row. `overflow:` on an entry wins. See [Button Group](button-group.md). |
 | `overflow_label` | String, nil | `nil` | no | Passed to the button group. Visible label on the overflow trigger. `nil` uses the locale string "More". |
 
 ## Slots

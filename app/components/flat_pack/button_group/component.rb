@@ -7,14 +7,18 @@ module FlatPack
 
       undef_method :with_button, :with_button_content
 
-      # false keeps the joined row. :menu is that row from collapse_at up and a
+      # false keeps the row. :menu is that row from collapse_at up and a
       # hamburger disclosure below it. The row and the menu are separate elements.
       COLLAPSES = [false, :menu].freeze
+      # :joined merges direct children into one control. :outlined is a bordered
+      # container on the wide row. The phone menu does not use the container.
+      VARIANTS = [:joined, :outlined].freeze
       DEFAULT_COLLAPSE_AT = 768
       DEFAULT_MENU_ICON = "menu"
       OVERFLOW_ICON = "ellipsis-horizontal"
 
       def initialize(
+        variant: :joined,
         collapse: false,
         menu_label: nil,
         menu_icon: DEFAULT_MENU_ICON,
@@ -23,6 +27,7 @@ module FlatPack
         overflow_label: nil,
         **system_arguments
       )
+        @variant = normalize_variant!(variant)
         @collapse = normalize_collapse!(collapse)
         @menu_label = normalize_menu_label!(menu_label)
         @menu_icon = normalize_menu_icon!(menu_icon)
@@ -45,11 +50,16 @@ module FlatPack
 
       def group_attributes
         merge_attributes(
-          class: group_classes
+          class: group_classes,
+          data: {variant: @variant}
         )
       end
 
       def group_classes
+        if outlined?
+          return classes("fp-button-group", "fp-button-group--outlined", "inline-flex")
+        end
+
         classes(
           "fp-button-group",
           "inline-flex",
@@ -65,7 +75,7 @@ module FlatPack
       end
 
       def menu_root_attributes
-        attributes = merge_attributes(class: "fp-button-group-menu")
+        attributes = merge_attributes(class: "fp-button-group-menu", data: {variant: @variant})
         attributes[:data] = merge_data_attributes(
           attributes[:data],
           {
@@ -79,10 +89,16 @@ module FlatPack
 
       def row_attributes
         {
-          class: "fp-button-group-menu__row",
+          class: row_classes,
           role: "group",
           aria: {label: group_label}
         }
+      end
+
+      def row_classes
+        names = ["fp-button-group-menu__row"]
+        names << "fp-button-group--outlined" if outlined?
+        names.join(" ")
       end
 
       def panel_attributes
@@ -139,6 +155,10 @@ module FlatPack
       # scanned stylesheet. Below it, the row is hidden and the panel is the
       # menu. This block is the wide layout and wins over those rules.
       def collapse_css
+        outlined? ? outlined_collapse_css : joined_collapse_css
+      end
+
+      def joined_collapse_css
         pixels = @collapse_at
         <<~CSS
           @media (min-width: #{pixels}px) {
@@ -176,6 +196,27 @@ module FlatPack
                paint this width in currentColor, a dark line outside the trigger. */
             .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__row > .fp-button-dropdown {
               border-width: 0;
+            }
+
+            .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__panel {
+              display: none;
+            }
+          }
+        CSS
+      end
+
+      # Wide layout only. Below collapse_at the phone menu is unchanged, and
+      # this block does not restyle the children.
+      def outlined_collapse_css
+        pixels = @collapse_at
+        <<~CSS
+          @media (min-width: #{pixels}px) {
+            .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__trigger {
+              display: none;
+            }
+
+            .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__row {
+              display: inline-flex;
             }
 
             .fp-button-group-menu[data-collapse-at="#{pixels}"] > .fp-button-group-menu__panel {
@@ -226,7 +267,7 @@ module FlatPack
           text: overflow_label,
           icon: OVERFLOW_ICON,
           show_chevron: false,
-          style: :secondary,
+          style: overflow_trigger_style,
           size: :sm,
           class: "fp-button-group__overflow"
         )
@@ -262,6 +303,21 @@ module FlatPack
 
         @child_overflow << normalize_overflow!(overflow)
         component
+      end
+
+      def outlined?
+        @variant == :outlined
+      end
+
+      def overflow_trigger_style
+        outlined? ? :ghost : :secondary
+      end
+
+      def normalize_variant!(value)
+        return :joined if value.nil?
+        return value.to_sym if (value.is_a?(Symbol) || value.is_a?(String)) && VARIANTS.include?(value.to_sym)
+
+        raise ArgumentError, "variant must be :joined or :outlined"
       end
 
       def normalize_collapse!(value)

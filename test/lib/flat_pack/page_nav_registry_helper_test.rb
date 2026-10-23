@@ -132,6 +132,18 @@ class PageNavRegistryHelperProbesController < ApplicationController
     helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
     render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_label: \"Extras\") %>", layout: false
   end
+
+  def render_outlined
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :outlined) %>", layout: false
+  end
+
+  def render_bad_variant
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :stacked)
+    head :ok
+  end
 end
 
 class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
@@ -244,6 +256,21 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "page_nav_button_group forwards variant" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_outlined"
+
+      assert_response :success
+      assert_select ".fp-button-group.fp-button-group--outlined[data-variant=outlined]"
+      assert_select ".fp-button-group > a[data-fp-style=secondary]", text: "Share"
+      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]", text: "More"
+      assert_select ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
+
+      error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_variant" }
+      assert_equal "variant must be :joined or :outlined", error.message
+    end
+  end
+
   test "page_nav_button_group forwards overflow_label" do
     with_page_nav_routes do
       get "/demo/page_nav_registry_helper/render_overflow_label"
@@ -304,6 +331,8 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_nav_registry_helper/rejected_overflow", to: "page_nav_registry_helper_probes#rejected_overflow"
         get "/demo/page_nav_registry_helper/render_bad_visible", to: "page_nav_registry_helper_probes#render_bad_visible"
         get "/demo/page_nav_registry_helper/render_overflow_label", to: "page_nav_registry_helper_probes#render_overflow_label"
+        get "/demo/page_nav_registry_helper/render_outlined", to: "page_nav_registry_helper_probes#render_outlined"
+        get "/demo/page_nav_registry_helper/render_bad_variant", to: "page_nav_registry_helper_probes#render_bad_variant"
       end
 
       yield

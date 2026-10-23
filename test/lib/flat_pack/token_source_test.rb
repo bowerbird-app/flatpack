@@ -175,6 +175,7 @@ module FlatPack
     test "shared theme selector does not restate radii a nested color theme would inherit" do
       %w[
         --button-border-radius
+        --button-group-radius
         --form-control-radius
         --chip-border-radius
         --badge-radius
@@ -258,6 +259,7 @@ module FlatPack
       assert_match(/--radius-xxxl:\s*2\.5rem/, scale_block)
       assert_match(/--radius-full:\s*9999px/, scale_block)
       assert_match(/--button-border-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--button-group-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--button-round-border-radius:\s*var\(--radius-full\)/, scale_block)
       assert_match(/--form-control-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, scale_block)
@@ -274,6 +276,7 @@ module FlatPack
       assert_match(/--modal-radius:\s*var\(--radius-lg\)/, scale_block)
       refute_includes root_block, "--radius-md:"
       refute_includes root_block, "--button-border-radius:"
+      refute_includes root_block, "--button-group-radius:"
       refute_includes root_block, "--button-round-border-radius:"
       assert_match(/--button-round-size-sm:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-sm\) \* 2\) \+ 1rem \+ 2px\)\)/, root_block)
       assert_match(/--button-round-size-md:\s*max\(var\(--hit-target-min\), calc\(\(var\(--button-icon-only-padding-md\) \* 2\) \+ 1\.25rem \+ 2px\)\)/, root_block)
@@ -292,6 +295,7 @@ module FlatPack
       assert_match(/--top-nav-float-radius:\s*var\(--radius-full\)/, rounded_block)
       assert_match(/--sidebar-float-radius:\s*var\(--radius-xxxl\)/, rounded_block)
       assert_match(/--button-border-radius:\s*var\(--radius-full\)/, rounded_block)
+      assert_match(/--button-group-radius:\s*var\(--radius-full\)/, rounded_block)
       refute_includes rounded_block, "--button-round-border-radius"
       assert_match(/--form-control-radius:\s*1rem/, rounded_block)
       refute_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
