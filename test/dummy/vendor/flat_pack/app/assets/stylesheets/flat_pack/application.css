@@ -5423,3 +5423,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   border-right-width: 1px;
 }
 
+[data-controller~="flat-pack--image-input"].is-dropping > label,
+[data-controller~="flat-pack--image-input"]:has([data-flat-pack--image-input-target="empty"]:not([hidden])) > label:hover {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+

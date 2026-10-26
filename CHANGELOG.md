@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.320] - 2026-10-26
+
+### Added
+- `FlatPack::ImageInput::Component` picks one image, shows a preview, and can remove it.
+
+### Changed
+- Image Input's empty state is a filled surface. The dashed border is gone. Hover and drag-over use the focus outline on the shaped surface. An error stays a ring on that surface.
+
+### Upgrade notes
+- New component. Existing markup is unchanged.
+- The empty Image Input is a filled surface with no dashed border. Hover and drag-over use the focus outline on the shaped surface.
+- Hosts that scan the gem for Tailwind need one CSS rebuild so `h-20`, `w-36`, and the shape classes exist.
+- The controller is lazy-loaded by the existing controllers pin. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.320`.
+
 ## [0.1.319] - 2026-10-26
 
 ### Changed

@@ -1021,6 +1021,27 @@
         { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left (swatches variant)", example: "tooltip_placement: :top" }
       ]
     },
+    image_input: {
+      label: "Image Input",
+      method_call: "render FlatPack::ImageInput::Component.new(name: \"avatar\", label: \"Avatar\", src: \"https://i.pravatar.cc/150?img=5\", alt: \"A person\", remove_name: \"remove_avatar\")",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"profile_photo\"" },
+        { variable: "src", accepts: "String or nil", example: "src: \"https://i.pravatar.cc/150?img=5\"" },
+        { variable: "alt", accepts: "String or nil", example: "alt: \"A person\"" },
+        { variable: "shape", accepts: ":circle, :rounded, :square", example: "shape: :rounded" },
+        { variable: "size", accepts: ":md, :lg, :xl, :\"2xl\", :wide", example: "size: :wide" },
+        { variable: "icon", accepts: "String", example: "icon: \"camera\"" },
+        { variable: "edit_icon", accepts: "String", example: "edit_icon: \"pencil\"" },
+        { variable: "accept", accepts: "String or nil", example: "accept: \"image/*\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Profile photo\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"PNG or JPEG.\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Choose an image\"" },
+        { variable: "clearable", accepts: "true, false", example: "clearable: true" },
+        { variable: "remove_name", accepts: "String or nil", example: "remove_name: \"remove_avatar\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" }
+      ]
+    },
     text_input: {
       label: "Input",
       method_call: "render FlatPack::TextInput::Component.new(name: \"username\", label: \"Username\")",

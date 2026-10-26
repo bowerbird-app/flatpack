@@ -104,6 +104,7 @@ class DemoCatalog
             {title: "Date Time Input", path: "/demo/forms/date_time_input", description: "Datetime-local input examples", icon: :calendar},
             {title: "Time Input", path: "/demo/forms/time_input", description: "Native time input examples", icon: :calendar},
             {title: "File Input", path: "/demo/forms/file_input", description: "File upload input examples", icon: :box},
+            {title: "Image Input", path: "/demo/forms/image_input", description: "One picture, with a preview and a remove button", icon: :image},
             {title: "Checkbox", path: "/demo/forms/checkbox", description: "Checkbox input examples", icon: :square},
             {title: "Fieldset", path: "/demo/forms/fieldset", description: "Name a group of related fields", icon: :square},
             {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radios, pills, cards, or colour dots", icon: :square},
