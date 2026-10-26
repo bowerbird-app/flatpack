@@ -1,5 +1,5 @@
 version: 1
-updated_at: 2026-10-21
+updated_at: 2026-10-26
 
 format_reference: docs/components/DOC_FORMAT.md
 human_index: docs/components/README.md
@@ -413,6 +413,16 @@ components:
     title: Fieldset
     doc: docs/components/fieldset.md
     primary_class: FlatPack::Fieldset::Component
+    status: documented
+
+  - key: flash
+    title: Flash
+    doc: docs/components/flash.md
+    primary_class: FlatPack::Flash::Component
+    related_classes:
+      - FlatPack::Alert::Component
+      - FlatPack::Toast::Component
+      - FlatPack::Toasts::Region::Component
     status: documented
 
   - key: grid

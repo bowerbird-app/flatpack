@@ -262,47 +262,7 @@
     ) %>
   </section>
 
-  <!-- Flash Messages Example -->
-  <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Flash Messages Pattern", anchor_link: true, subtitle: "Examples for Flash Messages Pattern.") %>
-    <div class="space-y-4 mb-4">
-      <div class="p-4 bg-[var(--surface-muted-background-color)] rounded">
-        <p class="text-sm text-[var(--surface-muted-content-color)] mb-4">Example implementation for Rails flash messages:</p>
-        <%= render FlatPack::CodeBlock::Component.new(
-          code: CGI.unescapeHTML(<<~'CODE'),
-            &lt;% if flash[:notice] %&gt;
-              &lt;%= render FlatPack::Alert::Component.new(
-                description: flash[:notice],
-                style: :success,
-                dismissible: true
-              ) %&gt;
-            &lt;% end %&gt;
-            
-            &lt;% if flash[:alert] %&gt;
-              &lt;%= render FlatPack::Alert::Component.new(
-                description: flash[:alert],
-                style: :danger,
-                dismissible: true
-              ) %&gt;
-            &lt;% end %&gt;
-          CODE
-          class: "text-sm"
-        ) %>
-      </div>
-      
-      <%= render FlatPack::Alert::Component.new(
-        description: "This is a simulated flash success message.",
-        style: :success,
-        dismissible: true
-      ) %>
-      
-      <%= render FlatPack::Alert::Component.new(
-        description: "This is a simulated flash error message.",
-        style: :danger,
-        dismissible: true
-      ) %>
-    </div>
-  </section>
+  <%= render "pages/flash_demo", return_to: "alerts" %>
 
   <!-- Interactive Demo -->
   <section class="mb-12">

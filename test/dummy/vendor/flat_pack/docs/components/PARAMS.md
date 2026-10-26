@@ -54,6 +54,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Collection arrangement | `layout` | `FlatPack::Collection::Component` only. `:stack` (default, vertical), `:grid` (auto-fill, equal height), or `:wrap` (inline flex-wrap for badges and chips). |
 | Empty state actions | `layout` | `FlatPack::EmptyState::Component` only. `:wrap` (default, wrapping row) or `:stack` (one button under the next). The actions render as `FlatPack::Collection::Component` with that layout. Not `:grid`. |
 | Collection element | `as` | `FlatPack::Collection::Component` only. `:list` (default, the `<ul>` alone) or `:nav` (wraps the list in `<nav aria-label>`). |
+| Flash presentation | `as` | `FlatPack::Flash::Component`. `:alert` stacks alerts in place. `:toast` renders toasts in a toast region. Required. |
 | Nav accessible name | `label` | Collection `as: :nav` requires `label:`. That string is the nav's `aria-label`. Not the visible button label (`text`). |
 | Collection item floor | `min_item_width` | Collection `layout: :grid` only. A CSS length such as `"14rem"` (the default). Sets `--fp-collection-min-item-width`. Not Table `min_width`. |
 | Collection gap | `gap` | Collection, Grid, and Masonry. `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |

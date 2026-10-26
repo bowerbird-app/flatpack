@@ -4,7 +4,7 @@
 Provide a fixed-position stacking region for rendering multiple toast notifications.
 
 ## When to use
-Use Toast Region as the shared container where toast instances are appended/managed.
+Use Toast Region as the shared container where toast instances are appended/managed. [`FlatPack::Flash::Component`](flash.md) with `as: :toast` renders this region around one toast per message.
 
 ## Class
 - Primary: `FlatPack::Toasts::Region::Component`

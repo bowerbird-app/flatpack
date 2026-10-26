@@ -173,6 +173,32 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Edit any field to see the Save button become primary."
   end
 
+  test "flash demo redirects with a notice and renders a toast" do
+    get "/demo/flash", params: {as: "toast", key: "notice", return_to: "toasts"}
+
+    assert_redirected_to "/demo/toasts?flash_as=toast"
+    follow_redirect!
+
+    assert_response :success
+    assert_includes response.body, "Saved."
+    assert_includes response.body, "fp-toast-region"
+    assert_includes response.body, "flat-pack--toast"
+    assert_includes response.body, "data-flat-pack--toast-timeout-value=\"5000\""
+  end
+
+  test "flash demo redirects with an alert and renders stacked alerts" do
+    get "/demo/flash", params: {as: "alert", key: "both", return_to: "alerts"}
+
+    assert_redirected_to "/demo/alerts?flash_as=alert"
+    follow_redirect!
+
+    assert_response :success
+    assert_includes response.body, "Saved."
+    assert_includes response.body, "Nope. Try again."
+    assert_includes response.body, "gap-4"
+    refute_includes response.body, "fp-toast-region"
+  end
+
   test "demo pages respond successfully" do
     DEMO_PATHS.each do |path|
       get path
