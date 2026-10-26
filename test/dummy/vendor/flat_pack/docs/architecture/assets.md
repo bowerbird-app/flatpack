@@ -89,11 +89,16 @@ app/javascript/flat_pack/
 │   └── ..._controller.js   # Stimulus controllers
 ├── heroicons.js            # Generated Heroicons v2 icon banks for FlatPack icons
 ├── local_time.js           # Framework-independent local/relative time enhancer
+├── focus_trap.js           # Shared Tab cycle for Drawer, Command palette, and Modal
 └── tiptap/
    └── ...js              # Rich-text helper modules imported by tiptap_controller
 ```
 
 ### Importmap Integration
+
+importmap-rails hosts load these pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb` before importmap-rails reads pin paths. A host that bypasses that importmap, or that copies pins into its own file, adds the same lines or reruns `bin/rails generate flat_pack:install`.
+
+`flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal. A missing pin stops those three controllers. Other controllers do not import it, so they still load.
 
 FlatPack registers its JavaScript modules:
 
@@ -112,6 +117,7 @@ pin_all_from File.expand_path("../app/javascript/flat_pack/tiptap", __dir__),
 pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
 pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
+pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

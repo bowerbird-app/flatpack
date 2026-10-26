@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
+import { focusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"
 
 const LOCK_KEY = "flatPackModalLockCount"
 
@@ -132,22 +133,9 @@ export default class extends Controller {
   }
 
   trapTab(event) {
-    if (event.key !== "Tab" || !this.hasPanelTarget) return
+    if (!this.hasPanelTarget) return
 
-    const focusable = Array.from(
-      this.panelTarget.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
-    )
-    if (focusable.length === 0) return
-
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault()
-      last.focus()
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault()
-      first.focus()
-    }
+    trapTabWithin(event, this.panelTarget)
   }
 
   closedTranslate() {
@@ -163,9 +151,7 @@ export default class extends Controller {
 
   trapFocus() {
     if (!this.hasPanelTarget) return
-    const focusable = this.panelTarget.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
+    const focusable = focusableElements(this.panelTarget)
     if (focusable.length > 0) {
       focusable[0].focus()
     } else {

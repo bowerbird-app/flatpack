@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.319] - 2026-10-26
+
+### Changed
+- Drawer, Command palette, and Modal cycle Tab through `trapTab` in `flat_pack/focus_trap.js`. One selector finds the controls. Modal still skips disabled, hidden, and `aria-hidden` controls, focuses the dialog when nothing inside can take Tab, and wraps when focus is outside the dialog. Drawer and Command palette keep the previous cycle.
+
+### Upgrade notes
+- importmap-rails hosts already receive `flat_pack/focus_trap` from the engine importmap. `initializer "flat_pack.importmap"` appends `config/importmap.rb` before importmap-rails reads it. Add the pin, or rerun `bin/rails generate flat_pack:install`, only when the host bypasses that importmap or keeps its own pin list. A missing pin stops Drawer, Command palette, and Modal. Those three controllers import the module. Every other controller is its own lazy-loaded file and still loads.
+- Keyboard behavior is unchanged. Reload kit JavaScript. Do not rebuild Tailwind.
+- Redeploy so `meta.gem_version` shows `0.1.319`.
+
 ## [0.1.318] - 2026-10-26
 
 ### Added

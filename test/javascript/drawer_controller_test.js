@@ -13,7 +13,16 @@ function loadDrawerController(documentStub) {
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
       'function prefersReducedMotion() { return false }\nfunction motionDuration() { return 0 }\nfunction motionTransition() { return "" }'
     )
+    .replace(
+      'import { focusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"',
+      "const trapTabWithin = trapTab"
+    )
     .replace('export default class extends Controller', 'class DrawerController extends Controller') + '\nmodule.exports = DrawerController\n'
+  const focusTrapPath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "focus_trap.js")
+  const focusTrapSource = fs.readFileSync(focusTrapPath, "utf8")
+    .replaceAll("export function ", "function ")
+    .replaceAll("export const ", "const ")
+  const withFocusTrap = focusTrapSource + "\n" + transformedSource
 
   const context = {
     module: { exports: {} },
@@ -26,7 +35,7 @@ function loadDrawerController(documentStub) {
     clearTimeout() {}
   }
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(withFocusTrap, context, { filename: filePath })
 
   return context.module.exports
 }
@@ -159,4 +168,26 @@ test('disconnect while the overlay is on the body leaves it there', () => {
   controller.disconnect()
 
   assert.equal(element.parentElement, body)
+})
+
+test('tab on the last panel control wraps, and an empty panel does not', () => {
+  const { controller, documentStub } = buildController()
+  const nodes = ['first', 'last'].map((id) => ({
+    id,
+    focused: false,
+    focus() { this.focused = true }
+  }))
+  controller.panelTarget.querySelectorAll = () => nodes
+  documentStub.activeElement = nodes[1]
+  const event = { key: 'Tab', shiftKey: false, prevented: false, preventDefault() { this.prevented = true } }
+
+  controller.trapTab(event)
+
+  assert.equal(event.prevented, true)
+  assert.equal(nodes[0].focused, true)
+
+  controller.panelTarget.querySelectorAll = () => []
+  const empty = { key: 'Tab', shiftKey: false, prevented: false, preventDefault() { this.prevented = true } }
+  controller.trapTab(empty)
+  assert.equal(empty.prevented, false)
 })

@@ -42,7 +42,7 @@ None.
 ## Accessibility
 - Renders `role="dialog"` and `aria-modal="true"`. Rows are `role="option"`.
 - Arrow keys move the highlighted row. Enter activates it. Escape closes.
-- Focus is trapped while open. Body scroll lock shares Modal’s count key.
+- Focus is trapped while open by `trapTab` in `flat_pack/focus_trap.js`, the same cycle Drawer uses. Body scroll lock shares Modal’s count key.
 - Overlay uses `.fp-overlay-pad` and `overscroll-behavior: contain`.
 - Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without scale. Motion writes the Tailwind v4 `scale` property (not `transform`).
 
