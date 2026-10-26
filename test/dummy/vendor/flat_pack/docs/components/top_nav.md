@@ -14,6 +14,7 @@ Use TopNav in app shells for a title, search, or a short set of controls. Pair i
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
 | `padding` | Symbol | `:default` | No | `:default` insets the row by `--top-nav-padding-inline`, never less than the side safe area. `:none` drops that inset and keeps the side safe area, so a row in a content-width slot sits flush with the column. Anything else raises `ArgumentError`. |
+| `size` | Symbol | `:md` | No | `:md` is `--top-nav-height` at `72px`. `:lg` is `96px`. `:default` is an alias for `:md`. The `<header>` sets `data-fp-top-nav-size` to `md` or `lg`. Anything else raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the `<header>` element (`class`, `id`, `data`, `aria`, `style`). |
 
 TopNav does not fold. It has no phone menu, no breakpoint, and no flag that pins a child in the bar. A group of actions that should become one menu on a phone is `FlatPack::ButtonGroup::Component` with `collapse: :menu`, usually in `right`. A notification bell, an avatar, and the sidebar's mobile toggle stay plain children beside that group.
@@ -30,7 +31,7 @@ TopNav always renders all three wrappers, even when a slot is blank. `left` and 
 
 The sections are `.fp-top-nav__left`, `.fp-top-nav__center`, and `.fp-top-nav__right`. They carry no `data-flat-pack-top-nav-section` hook. A parent does not style a slot's children. The `<header>` landmark stays on this component.
 
-The row is `.fp-top-nav`: `--top-nav-height` (`72px`) of content height plus `env(safe-area-inset-top)`, with left/right padding at least `--top-nav-padding-inline` and never less than the side insets. `padding: :none` sets `data-fp-top-nav-padding="none"` and replaces that inline padding with the side safe area alone. `min-width: 0` and `max-width: 100%` keep the row inside its column. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
+The row is `.fp-top-nav`. `size: :md` (the default) and `size: :default` use `--top-nav-height` at `72px`. `size: :lg` sets that same property to `96px` on the row, on the layout bar that wraps it, on the scroll pane beside a large bar, and on `html` when the page has a large row. Hero copy padding is `calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem)`, so it follows the large row too. Height is that token plus `env(safe-area-inset-top)`. Left and right padding are at least `--top-nav-padding-inline` and never less than the side insets. `padding: :none` sets `data-fp-top-nav-padding="none"` and replaces that inline padding with the side safe area alone. `min-width: 0` and `max-width: 100%` keep the row inside its column. That rule is unlayered. Host Tailwind preflight (`* { padding: 0 }` in `@layer base`) loads after Flatpack and would otherwise wipe the inset. Hosts need `viewport-fit=cover` for those insets to apply. See [Installation](../installation.md).
 
 Page Layout's `top_nav_width: :content` sizes its own slot wrapper to the column. It does not change this row. Pass `padding: :none` when that wrapper already supplies the inset and the buttons should meet the column edges. See [Page Layout](page_layout.md).
 
@@ -68,6 +69,9 @@ A bell or an avatar sits next to that group, as its own child. See [Button group
 |---------|-------------|
 | `padding: :default` | Inline padding is `--top-nav-padding-inline`, never less than the side safe area. This is the default. |
 | `padding: :none` | Inline padding is the side safe area only. |
+| `size: :md` | Bar height is `--top-nav-height` at `72px`, plus the top safe area. This is the default. |
+| `size: :lg` | The same token becomes `96px` for this row and for the layout clearance that already reads it. |
+| `size: :default` | Alias of `:md`. The attribute is `data-fp-top-nav-size="md"`. |
 
 ## Example
 

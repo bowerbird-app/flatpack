@@ -13,12 +13,15 @@ module FlatPack
 
       SECTIONS = %w[left center right].freeze
       PADDINGS = %i[default none].freeze
+      SIZES = %i[md lg].freeze
       REMOVED_KEYWORDS = %i[mobile_menu mobile_menu_label mobile_breakpoint].freeze
 
-      def initialize(padding: :default, **system_arguments)
+      def initialize(padding: :default, size: :md, **system_arguments)
         reject_removed!(system_arguments)
         @padding = padding.is_a?(String) ? padding.to_sym : padding
+        @size = normalize_size(size)
         validate_padding!
+        validate_size!
         super(**system_arguments)
       end
 
@@ -74,13 +77,32 @@ module FlatPack
       end
 
       def header_attributes
-        merge_attributes(class: header_classes, data: {"fp-top-nav-padding": @padding.to_s})
+        merge_attributes(
+          class: header_classes,
+          data: {
+            "fp-top-nav-padding": @padding.to_s,
+            "fp-top-nav-size": @size.to_s
+          }
+        )
+      end
+
+      def normalize_size(size)
+        size = size.to_sym if size.is_a?(String)
+        return :md if size == :default
+
+        size
       end
 
       def validate_padding!
         return if PADDINGS.include?(@padding)
 
         raise ArgumentError, "padding must be :default or :none"
+      end
+
+      def validate_size!
+        return if SIZES.include?(@size)
+
+        raise ArgumentError, "size must be :md, :lg, or :default"
       end
 
       def header_classes

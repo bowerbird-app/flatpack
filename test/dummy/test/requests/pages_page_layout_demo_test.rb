@@ -9,7 +9,7 @@ class PagesPageLayoutDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "html[data-theme=rounded]"
     assert_select "#page-layout-demo[data-fp-page-layout-width=default][data-fp-page-layout-align=top][data-fp-page-layout-top-nav-width=content]"
-    assert_select ".fp-layout-top-nav > .fp-page-layout-top-nav-column > header.fp-top-nav[data-fp-top-nav-padding=none]"
+    assert_select ".fp-layout-top-nav > .fp-page-layout-top-nav-column > header.fp-top-nav[data-fp-top-nav-padding=none][data-fp-top-nav-size=lg]"
     assert_select "header .flat-pack-page-nav"
     assert_select "header .fp-button-group-menu__row.fp-button-group--outlined > a[data-fp-style=ghost]", text: "Edit"
     assert_select "header .fp-button-group-menu__row.fp-button-group--outlined > a[data-fp-style=ghost]", text: "Share"
@@ -35,7 +35,7 @@ class PagesPageLayoutDemoTest < ActionDispatch::IntegrationTest
     assert_select "header.fp-top-nav .fp-card", count: 1
     assert_select "header.fp-top-nav a", text: "Sign in"
     assert_select "[data-fp-page-layout-width=wide][data-fp-page-layout-top-nav-width=full]"
-    assert_select "header.fp-top-nav[data-fp-top-nav-padding=default]"
+    assert_select "header.fp-top-nav[data-fp-top-nav-padding=default][data-fp-top-nav-size=lg]"
     assert_select ".fp-page-layout-top-nav-column", count: 0
     assert_select ".fp-backdrop[aria-hidden=true]"
     assert_includes response.body, "/images/hero-packaging.jpg"

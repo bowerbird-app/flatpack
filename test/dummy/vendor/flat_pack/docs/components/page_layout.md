@@ -16,7 +16,7 @@ Use Page Layout for a page with no sidebar: a press kit, an article, a landing p
 |------|------|---------|----------|-------------|
 | `width` | Symbol | `:default` | No | Measure of the column. Allowed: `:narrow`, `:default`, `:wide`, `:full`. Reads `--page-layout-width-narrow` (`40rem`), `--page-layout-width-default` (`56rem`), `--page-layout-width-wide` (`72rem`), and `--page-layout-width-full` (`100%`). Anything else raises `ArgumentError`. Not a CSS length and not a class. |
 | `align` | Symbol | `:top` | No | `:top` starts the column under the bar. `:center` centers it in the viewport, horizontally and vertically. Anything else raises `ArgumentError`. |
-| `content_scroll` | Symbol | `:below` | No | `:below` keeps the bar in flow above the column. `:behind` lets the page scroll under the bar and pads with `--top-nav-height` plus the top safe area. Anything else raises `ArgumentError`. |
+| `content_scroll` | Symbol | `:below` | No | `:below` keeps the bar in flow above the column. The space under the bar is `--page-layout-gap` only. `:behind` lets the page scroll under the bar and pads with `--top-nav-height` plus the top safe area. A large TopNav (`size: :lg`) makes that token `96px`. Anything else raises `ArgumentError`. |
 | `top_nav_width` | Symbol | `:content` | No | `:content` keeps the band full window width and constrains an inner wrapper to the same measure and inline inset as the column. `:full` leaves the slot content full width. Anything else raises `ArgumentError`. |
 
 ## Slots
@@ -103,7 +103,9 @@ Center a sign-in card. Float the bar over a photo. Narrow the column for an arti
 <% end %>
 ```
 
-`content_scroll: :behind` lets the page scroll under the bar. The bar fill, hairline, and frost belong to `.fp-layout-top-nav`. A card in a `TopNav` slot is the host's surface for content that has none. A pill button stays in the slot. The host's margin (`--sidebar-float-inset`, `1rem`) is the gap above the cluster and before the page. The row's own side padding is `--top-nav-padding-inline` unless that row is `padding: :none`.
+`content_scroll: :below` keeps the bar in flow. `.fp-page-layout-frame` already separates the bar and `<main>` with `--page-layout-gap`. When `.fp-layout-top-nav` comes first, `<main>` drops its own `padding-top`, so the gap is not added twice. With no top bar, `<main>` keeps `padding-top: var(--page-layout-padding-block)`.
+
+`content_scroll: :behind` lets the page scroll under the bar. The bar fill, hairline, and frost belong to `.fp-layout-top-nav`. Clearance is `--top-nav-height` plus the top safe area. `TopNav` `size: :lg` sets that token to `96px` (`:md` and `:default` stay `72px`). A card in a `TopNav` slot is the host's surface for content that has none. A pill button stays in the slot. The host's margin (`--sidebar-float-inset`, `1rem`) is the gap above the cluster and before the page. The row's own side padding is `--top-nav-padding-inline` unless that row is `padding: :none`.
 
 `top_nav_width: :content` (the default) keeps that band the full window. Inside it, `.fp-page-layout-top-nav-column` uses the same measure and inline inset as the column: `max-width` is `--layout-content-max-width` plus two times `--layout-content-inset`, and the side padding is `--layout-content-inset`, never less than the side safe area. The page sets `--layout-content-max-width` from the `width:` token and `--layout-content-inset` from `--page-layout-padding-inline`. The wrapper does not name Top Nav classes or tokens. Pass `padding: :none` on `TopNav` when the buttons should sit on those column edges. `top_nav_width: :full` leaves the slot content across the band. A floating cluster uses `:full`, because its inset is the row's own padding.
 

@@ -15,6 +15,10 @@ module FlatPack
       assert_includes css, ".fp-top-nav"
       assert_top_nav_padding_is_unlayered(css)
       assert_includes css, "--top-nav-height"
+      assert_includes css, 'html:has(.fp-top-nav[data-fp-top-nav-size="lg"])'
+      assert_includes css, "--hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);"
+      assert_includes css, '.fp-top-nav[data-fp-top-nav-size="lg"]'
+      assert_includes css, "--top-nav-height: 96px;"
       assert_includes css, "--top-nav-backdrop-blur"
       assert_includes css, "[data-scrolled=\"true\"]"
       assert_includes css, ".fp-hero-overlay"

@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.315] - 2026-10-26
+
+### Added
+- `FlatPack::TopNav::Component` takes `size:`. `:md` (the default) keeps `--top-nav-height` at `72px`. `:lg` sets that same property to `96px` on the row, the layout bar, the scroll pane beside it, and `html`. `:default` is an alias of `:md`. The header sets `data-fp-top-nav-size` to `md` or `lg`.
+
+### Fixed
+- `PageLayout` with a top bar in flow (`content_scroll: :below`) no longer stacks `--page-layout-gap` and `<main>` `padding-top`. The frame gap is the only space under the bar. A page with no top bar still pads `<main>`.
+
+### Upgrade notes
+- Pass `size: :lg` for a `96px` bar. Existing calls stay `72px`. `:default` normalizes to `:md`.
+- A page that already added its own padding under the bar can drop that extra space. The kit gap is the space now.
+- Reload kit CSS/JS. Redeploy so `meta.gem_version` shows `0.1.315`.
+
 ## [0.1.314] - 2026-10-26
 
 ### Added

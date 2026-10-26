@@ -1226,6 +1226,7 @@
       method_call: "render FlatPack::TopNav::Component.new do |nav| ... end",
       variables: [
         { variable: "padding", accepts: ":default, :none", example: "padding: :none" },
+        { variable: "size", accepts: ":md, :lg, :default (alias of :md)", example: "size: :lg" },
         { variable: "left", accepts: "slot block", example: "nav.left { \"Brand\" }" },
         { variable: "center", accepts: "slot block", example: "nav.center { render FlatPack::Search::Component.new }" },
         { variable: "right", accepts: "slot block", example: "nav.right { render FlatPack::Avatar::Component.new(...) }" }
