@@ -163,10 +163,11 @@ end
 
 ### 1. Minimal Dependencies
 
-FlatPack has only **3 runtime dependencies**:
-- `rails` (~> 8.0)
-- `view_component` (~> 3.0)
+FlatPack has four runtime dependencies:
+- `rails` (>= 7.1, < 9)
+- `view_component` (>= 4.14, < 5)
 - `tailwind_merge` (~> 0.13)
+- `pagy` (~> 9.0)
 
 This minimizes supply chain attack surface.
 
