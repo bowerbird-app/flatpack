@@ -434,6 +434,9 @@ class PagesController < ApplicationController
   def forms_file_input
   end
 
+  def forms_image_input
+  end
+
   def forms_checkbox
   end
 

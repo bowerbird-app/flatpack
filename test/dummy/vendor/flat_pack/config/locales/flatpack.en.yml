@@ -170,6 +170,9 @@ en:
       size_bytes: "%{count}B"
       size_kilobytes: "%{count}KB"
       size_megabytes: "%{count}MB"
+    image_input:
+      choose: Choose an image
+      clear: Remove image
     font_swatch:
       fallback: Font
     form:

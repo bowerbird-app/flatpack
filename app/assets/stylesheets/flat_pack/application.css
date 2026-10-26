@@ -5423,3 +5423,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   border-right-width: 1px;
 }
 
+[data-controller~="flat-pack--image-input"].is-dropping [data-flat-pack--image-input-target="empty"] {
+  border-color: var(--color-primary);
+}
+

@@ -1,0 +1,111 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Image input",
+  subtitle: "One picture. Click, drop, or remove it."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :image_input %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Image input", anchor_link: true) %>
+
+  <div class="flex flex-wrap items-start gap-6">
+    <%= render FlatPack::Card::Component.new(class: "w-fit") do |card| %>
+      <% card.body do %>
+        <%= form_with url: "/demo/forms/image_input", method: :get do %>
+          <%= render FlatPack::ImageInput::Component.new(
+            name: "profile_photo",
+            label: "Profile photo",
+            help_text: "PNG or JPEG.",
+            icon: "camera"
+          ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(class: "w-fit") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::ImageInput::Component.new(
+          name: "avatar",
+          src: "https://i.pravatar.cc/150?img=5",
+          alt: "A person",
+          label: "Avatar",
+          clearable: true,
+          remove_name: "remove_avatar"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(class: "w-fit") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::ImageInput::Component.new(
+          name: "logo",
+          shape: :rounded,
+          size: :wide,
+          label: "Company logo",
+          icon: "photo"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(class: "w-fit") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::ImageInput::Component.new(
+          name: "logo_filled",
+          shape: :rounded,
+          size: :wide,
+          src: "/masonry/studio.svg",
+          alt: "Logo"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(class: "w-fit") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::ImageInput::Component.new(
+          name: "cover",
+          shape: :square,
+          size: :md,
+          label: "Cover"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(class: "w-48") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::ImageInput::Component.new(
+          name: "avatar_error",
+          error: "Choose an image",
+          src: "https://i.pravatar.cc/150?img=5",
+          alt: "A person"
+        ) %>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Card::Component.new(class: "w-fit") do |card| %>
+      <% card.body do %>
+        <%= render FlatPack::ImageInput::Component.new(
+          name: "avatar_disabled",
+          disabled: true,
+          src: "https://i.pravatar.cc/150?img=5",
+          alt: "A person",
+          label: "Locked"
+        ) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<%= render FlatPack::CodeBlock::Component.new(
+  code: CGI.unescapeHTML(<<~'CODE'),
+    &lt;%= render FlatPack::ImageInput::Component.new(
+      name: &quot;avatar&quot;,
+      src: &quot;https://i.pravatar.cc/150?img=5&quot;,
+      alt: &quot;A person&quot;,
+      label: &quot;Avatar&quot;,
+      clearable: true,
+      remove_name: &quot;remove_avatar&quot;
+    ) %&gt;
+  CODE
+  language: "erb",
+  title: "Avatar"
+) %>

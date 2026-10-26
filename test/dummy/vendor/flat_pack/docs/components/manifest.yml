@@ -467,6 +467,12 @@ components:
       - FlatPack::Switch::Component
     status: documented
 
+  - key: image_input
+    title: Image Input
+    doc: docs/components/image_input.md
+    primary_class: FlatPack::ImageInput::Component
+    status: documented
+
   - key: inline_edit
     title: Inline Edit
     doc: docs/components/inline-edit.md
