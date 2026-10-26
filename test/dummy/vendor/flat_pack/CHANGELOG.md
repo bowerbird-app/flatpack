@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.319] - 2026-10-26
+## [0.1.316] - 2026-10-26
 
 ### Changed
 - Dropdown triggers, the modal-filter trigger, the chat jump control, the comments floating send, and the modal, drawer, alert, and toast close controls render `FlatPack::Button::Component`. Carousel previous, next, and expand, and the lightbox close, do too. Each parent sets `--button-*` from its own tokens. Stimulus actions, aria names, and carousel lightbox data attributes are unchanged.
@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restyle these controls with `--button-*` on a parent, or with the existing component tokens (`--modal-close-icon-*`, `--drawer-close-icon-*`, `--alert-dismiss-button-*`, `--alert-dismiss-icon-size`, `--toast-dismiss-*`, `--chat-jump-button-*`, `--chat-jump-button-shadow`, `--comments-composer-submit-*`, `--comments-composer-submit-shadow`, `--comments-composer-submit-size`, `--comments-composer-submit-focus-ring-color`, `--focus-outline-color`, `--carousel-control-*`). Do not target the old utility class strings on those buttons. Do not expect the comments send to inherit `--button-primary-*`. Set `--focus-outline-color` to recolour both focus outlines. Set `--comments-composer-submit-focus-ring-color` to recolour only the send.
 - Selectors that expected the dropdown chevron as a direct `svg` child of the trigger should look inside the trailing span.
 - A `trigger_attributes` `style:` string, `href`, `method`, or `target` no longer reaches the trigger. Pass `style:`, `size:`, and `icon:` as dropdown arguments.
-- Copy button and the date picker day cells still use their own markup. No install step. No Tailwind rebuild. Redeploy so `meta.gem_version` shows `0.1.319`.
+- Copy button and the date picker day cells still use their own markup. No install step. No Tailwind rebuild. Redeploy so `meta.gem_version` shows `0.1.316`.
 
 ## [0.1.315] - 2026-10-26
 
