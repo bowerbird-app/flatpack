@@ -358,10 +358,14 @@ module FlatPack
         "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)",
         "--overlay-inset-sm" => "0.5rem",
         "--overlay-inset-md" => "1rem",
-        "--overlay-inset-lg" => "1.5rem"
+        "--overlay-inset-lg" => "1.5rem",
+        "--overlay-edge-offset" => "8px"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
+
+      theme_block = @css[/@theme inline \{.*?^\}/m]
+      assert_match(/--overlay-edge-offset:\s*var\(--overlay-edge-offset\)/, theme_block)
 
       refute_match(/--color-ghost-text:\s*#333/, root_block)
       refute_match(/--color-secondary:\s*#f5f5f5/, root_block)

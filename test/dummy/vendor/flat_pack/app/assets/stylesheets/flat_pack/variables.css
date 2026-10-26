@@ -91,6 +91,7 @@
   --overlay-inset-sm: var(--overlay-inset-sm);
   --overlay-inset-md: var(--overlay-inset-md);
   --overlay-inset-lg: var(--overlay-inset-lg);
+  --overlay-edge-offset: var(--overlay-edge-offset);
   --media-radius: var(--media-radius);
   --media-outline-color: var(--media-outline-color);
   --checkbox-size: var(--checkbox-size);
@@ -1023,6 +1024,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --overlay-inset-sm: 0.5rem;
   --overlay-inset-md: 1rem;
   --overlay-inset-lg: 1.5rem;
+  --overlay-edge-offset: 8px;
   --media-radius: var(--card-radius);
   --media-outline-color: color-mix(in oklch, var(--surface-content-color) 12%, transparent);
   --checkbox-size: 1.25rem;
