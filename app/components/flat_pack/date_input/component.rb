@@ -4,6 +4,7 @@ module FlatPack
   module DateInput
     class Component < FlatPack::BaseComponent
       include FlatPack::FormField::ControlStyles
+      include FlatPack::DatePicker::Field
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
@@ -95,129 +96,8 @@ module FlatPack
         end
       end
 
-      def render_picker_trigger
-        attrs = {
-          type: "text",
-          id: input_id,
-          value: initial_display_value,
-          placeholder: @placeholder || default_picker_placeholder,
-          disabled: @disabled,
-          required: @required,
-          readonly: true,
-          class: picker_trigger_classes,
-          role: "button",
-          data: {
-            "flat-pack--flatpack-date-picker-target": "trigger",
-            action: "click->flat-pack--flatpack-date-picker#toggle keydown.enter->flat-pack--flatpack-date-picker#toggle keydown.space->flat-pack--flatpack-date-picker#toggle"
-          }
-        }
-
-        attrs[:aria] = {
-          haspopup: "dialog",
-          expanded: "false",
-          controls: panel_id,
-          invalid: (@error.present? ? "true" : nil),
-          describedby: describedby_tokens((help_text_id if @help_text), (error_id if @error)).presence
-        }.compact
-
-        tag.input(**attrs)
-      end
-
       def render_picker_hidden_fields
         tag.input(type: "hidden", name: @name, value: @value, data: {"flat-pack--flatpack-date-picker-target": "singleField"})
-      end
-
-      def render_picker_panel
-        content_tag(:div, **picker_panel_attributes) do
-          safe_join([
-            render_picker_quick_ranges,
-            render_picker_calendar
-          ])
-        end
-      end
-
-      def render_picker_quick_ranges
-        content_tag(:div, class: picker_ranges_section_classes) do
-          safe_join([
-            content_tag(:p, fp_t("date.quick_select"), class: "text-xs font-semibold text-[var(--surface-muted-content-color)]"),
-            content_tag(:div, class: "mt-2 space-y-1") do
-              safe_join(quick_range_presets.map { |preset| render_quick_range_button(preset) })
-            end
-          ])
-        end
-      end
-
-      def render_quick_range_button(preset)
-        render(FlatPack::Button::Component.new(
-          text: preset[:label],
-          style: :ghost,
-          size: :sm,
-          type: "button",
-          class: "w-full justify-start",
-          data: {
-            "flat-pack-date-picker-command": "preset",
-            "flat-pack-date-picker-preset": preset[:key]
-          }
-        ))
-      end
-
-      def render_picker_calendar
-        content_tag(:div, class: picker_calendar_section_classes) do
-          safe_join([
-            content_tag(:div, class: "flex items-center justify-between gap-2") do
-              safe_join([
-                render(FlatPack::Button::Component.new(
-                  text: fp_t("date.previous"),
-                  style: :ghost,
-                  size: :sm,
-                  type: "button",
-                  data: {"flat-pack-date-picker-command": "previous-month"}
-                )),
-                content_tag(:p, "", class: "text-sm font-semibold text-[var(--surface-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "monthLabel"}),
-                render(FlatPack::Button::Component.new(
-                  text: fp_t("date.next"),
-                  style: :ghost,
-                  size: :sm,
-                  type: "button",
-                  data: {"flat-pack-date-picker-command": "next-month"}
-                ))
-              ])
-            end,
-            content_tag(:div, class: "mt-3 grid grid-cols-7 gap-1 text-center text-xs font-medium text-[var(--surface-muted-content-color)]") do
-              safe_join(weekday_labels.map { |day| content_tag(:span, day) })
-            end,
-            content_tag(:div, "", class: "mt-2 grid grid-cols-7 justify-items-center gap-x-0 gap-y-1", data: {"flat-pack--flatpack-date-picker-target": "calendarGrid"}),
-            content_tag(:p, "", class: "mt-3 text-xs text-[var(--surface-muted-content-color)]", data: {"flat-pack--flatpack-date-picker-target": "summary"}),
-            content_tag(:div, class: "mt-4 flex items-center justify-end gap-2") do
-              safe_join([
-                render(FlatPack::Button::Component.new(
-                  text: fp_t("date.cancel"),
-                  style: :ghost,
-                  size: :sm,
-                  type: "button",
-                  data: {"flat-pack-date-picker-command": "cancel"}
-                )),
-                render(FlatPack::Button::Component.new(
-                  text: fp_t("date.apply"),
-                  style: :primary,
-                  size: :sm,
-                  type: "button",
-                  data: {
-                    "flat-pack-date-picker-command": "apply",
-                    action: "click->flat-pack--flatpack-date-picker#requestApply"
-                  }
-                ))
-              ])
-            end
-          ])
-        end
-      end
-
-      def picker_root_attributes
-        {
-          class: "relative",
-          data: picker_data_attributes
-        }
       end
 
       def picker_data_attributes
@@ -234,77 +114,11 @@ module FlatPack
         ).compact
       end
 
-      def picker_panel_attributes
-        {
-          id: panel_id,
-          class: picker_panel_classes,
-          role: "dialog",
-          tabindex: "-1",
-          aria: {hidden: "true"},
-          data: {"flat-pack--flatpack-date-picker-target": "panel"}
-        }
-      end
-
-      def picker_panel_classes
-        classes(
-          "flat-pack-date-picker-panel",
-          "hidden",
-          "fixed",
-          "z-50",
-          "w-auto",
-          "overflow-hidden",
-          "rounded-[var(--radius-lg)]",
-          "border",
-          "border-[var(--surface-border-color)]",
-          "bg-[var(--surface-background-color)]",
-          "shadow-xl",
-          "md:flex",
-          "md:items-stretch"
-        )
-      end
-
-      def picker_ranges_section_classes
-        classes(
-          "border-b",
-          "border-[var(--surface-border-color)]",
-          "bg-[var(--surface-subtle-background-color)]",
-          "p-3",
-          "max-w-[150px]",
-          "md:sticky",
-          "md:top-0",
-          "md:w-64",
-          "md:self-start",
-          "md:border-b-0",
-          "md:border-r"
-        )
-      end
-
-      def picker_calendar_section_classes
-        classes(
-          "min-w-0",
-          "flex-1",
-          "max-w-[320px]",
-          "p-3"
-        )
-      end
-
-      def picker_nav_button_classes
-        "rounded-[var(--radius-md)] border border-[var(--surface-border-color)] px-2 py-1 text-xs text-[var(--surface-content-color)] transition-colors duration-base hover:bg-[var(--surface-subtle-background-color)] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring"
-      end
-
-      def picker_trigger_classes
-        classes(input_classes, "cursor-pointer")
-      end
-
       def merged_data_attributes
         existing_controller = data_attributes[:controller]
         controllers = [existing_controller, "flat-pack--date-input"].compact.join(" ")
 
         data_attributes.merge(controller: controllers)
-      end
-
-      def wrapper_classes
-        "flat-pack-input-wrapper"
       end
 
       def input_classes
@@ -313,18 +127,6 @@ module FlatPack
 
       def input_id
         @input_id ||= @system_arguments[:id] || "#{@name.to_s.gsub(/[^a-zA-Z0-9_-]/, "_")}_#{SecureRandom.hex(4)}"
-      end
-
-      def panel_id
-        "#{input_id}_panel"
-      end
-
-      def error_id
-        "#{input_id}_error"
-      end
-
-      def help_text_id
-        "#{input_id}_help_text"
       end
 
       def validate_name!
@@ -345,36 +147,16 @@ module FlatPack
         @picker == :flatpack_date_picker
       end
 
-      def default_picker_placeholder
+      def picker_placeholder
         fp_t("date.select")
       end
 
-      def weekday_labels
-        %w[mo tu we th fr sa su].map { |day| fp_t("date.weekday_#{day}") }
+      def range_picker?
+        false
       end
 
       def initial_display_value
         @value
-      end
-
-      def quick_range_presets
-        %w[
-          today yesterday last_3_days this_week last_week last_4_weeks
-          this_month last_month this_year last_year
-        ].map { |key| {key: key, label: fp_t("date.#{key}")} }
-      end
-
-      # Convert Date objects to YYYY-MM-DD format string
-      # Accepts Date, Time, DateTime objects or strings
-      def format_date_value(value)
-        return nil if value.nil?
-        return value if value.is_a?(String)
-
-        if value.respond_to?(:strftime)
-          value.strftime("%Y-%m-%d")
-        else
-          value.to_s
-        end
       end
     end
   end

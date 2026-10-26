@@ -58,4 +58,6 @@ None.
 ## Dependencies
 - Stimulus controller: `app/javascript/flat_pack/controllers/flatpack_date_picker_controller.js`.
 - Overlay motion: `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`.
-- Uses `FlatPack::Button::Component` for preset, calendar navigation, and action controls.
+- Popup markup: internal `FlatPack::DatePicker::Panel` (also used by `DateInput` in `picker: :flatpack_date_picker`). Buttons in the popup are `FlatPack::Button::Component`.
+- Shared trigger, ids, preset list, and date formatting: `FlatPack::DatePicker::Field`.
+- `quick_range_presets` and `preset_range_for` remain instance methods on this component. A prepend can add a preset by overriding those two methods and calling `super`. The panel renders the list it is given. It does not keep a second copy.
