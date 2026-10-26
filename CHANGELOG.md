@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.314] - 2026-10-26
+
+### Added
+- `FlatPack::ButtonGroup::Component` takes `style:`. The default is `:default`. On `variant: :outlined`, the container sets `data-fp-style` and paints `--fp-button-background` and `--fp-button-border`. `:joined` does not set the attribute. With `collapse: :menu`, the attribute is on `.fp-button-group-menu__row`. `page_nav_button_group` forwards `style:`.
+
+### Upgrade notes
+- An outlined group fills with the surface (`--button-default-background-color` and `--button-default-border-color`) instead of a transparent background. Pass `style:` to paint another button style on the container. Children still take their own `style`, usually `:ghost`.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.314`.
+
 ## [0.1.313] - 2026-10-26
 
 ### Changed
