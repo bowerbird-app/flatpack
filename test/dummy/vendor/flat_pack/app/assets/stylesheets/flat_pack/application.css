@@ -2860,6 +2860,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --button-secondary-hover-background-color: var(--chat-jump-button-hover-background-color);
   --button-secondary-text-color: var(--chat-jump-button-text-color);
   --button-secondary-border-color: var(--chat-jump-button-border-color);
+  --button-focus-ring-color: var(--focus-outline-color, #101010);
 }
 
 .fp-chat-jump .fp-button,
@@ -2876,21 +2877,20 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-chat-jump .fp-button:focus-visible {
   --tw-ring-shadow: 0 0 #0000;
   --tw-ring-offset-shadow: 0 0 #0000;
-  /* The old control used the browser outline, which is near-black, not the label colour. */
-  outline: 1px auto #101010;
+  outline: 1px auto var(--button-focus-ring-color, #101010);
 }
 
 /* The old send control used the browser outline: a thick near-black stroke on the disc.
    Button's inset ring plus a white offset reads as a faint white ring on the white composer.
    The parent maps the ring token. The outline uses that colour and hugs the disc. */
 .fp-comments-composer-submit {
-  --button-focus-ring-color: var(--comments-composer-submit-focus-ring-color);
+  --button-focus-ring-color: var(--comments-composer-submit-focus-ring-color, var(--focus-outline-color, #101010));
 }
 
 .fp-comments-composer-submit .fp-button:focus-visible {
   --tw-ring-shadow: 0 0 #0000;
   --tw-ring-offset-shadow: 0 0 #0000;
-  outline: 1px auto var(--button-focus-ring-color);
+  outline: 1px auto var(--button-focus-ring-color, #101010);
   outline-offset: 0;
 }
 

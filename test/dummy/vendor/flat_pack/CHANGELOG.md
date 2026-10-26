@@ -13,22 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-## [0.1.318] - 2026-10-26
+## [0.1.319] - 2026-10-26
 
 ### Changed
 - Dropdown triggers, the modal-filter trigger, the chat jump control, the comments floating send, and the modal, drawer, alert, and toast close controls render `FlatPack::Button::Component`. Carousel previous, next, and expand, and the lightbox close, do too. Each parent sets `--button-*` from its own tokens. Stimulus actions, aria names, and carousel lightbox data attributes are unchanged.
 - The comments floating send no longer paints with a one-off `button[type="submit"]` rule. Fill, hover, text, border, and shadow come from `--comments-composer-submit-*` only. A parent's `--button-primary-*` does not paint this control. The shadow is `--comments-composer-submit-shadow` (the old Tailwind `shadow-lg` utility). The disk has no border, and a disabled send stays fully opaque.
-- Keyboard focus on the comments send sets `--button-focus-ring-color` to `--comments-composer-submit-focus-ring-color` (`#101010`) and draws the browser `auto` outline in that colour, tight to the disc. Chat jump uses that same near-black browser outline.
+- Keyboard focus on the comments send and the chat jump draws the browser `auto` outline from `--focus-outline-color`. The light default is `#101010`. On `data-theme~="dark"` that token is `--surface-content-color`, so the stroke stays visible. `--comments-composer-submit-focus-ring-color` reads the shared token and falls back to `#101010`. Each parent maps it onto `--button-focus-ring-color`. The send does not inherit a parent's `--button-primary-*`.
 - The chat jump shadow is `--chat-jump-button-shadow` (the same Tailwind `shadow-lg` utility). Flatpack's `--shadow-lg` is a different shadow.
 - Modal and drawer close glyphs sit at the start of the hit area and are centered on the cross axis. Carousel, lightbox, toast, modal, and drawer focus rings are a 2px inset ring in the control's own text color, with no offset. Modal close and back are icon-only `md` buttons, so they still carry `fp-hit-target` (minimum 2.75rem).
 - A labeled dropdown trigger puts the chevron in Button's trailing slot, so the icon is inside an extra span. The trigger's direct children are the label span and that trailing span.
 - The modal back control uses the same ghost Button as the close control. A host `style:` string, `href`, `method`, and `target` on `trigger_attributes` are dropped and are not copied onto the trigger. `size`, `text`, `icon`, and the other Button option keys are dropped the same way, so they do not replace the dropdown's own options.
 
 ### Upgrade notes
-- Restyle these controls with `--button-*` on a parent, or with the existing component tokens (`--modal-close-icon-*`, `--drawer-close-icon-*`, `--alert-dismiss-button-*`, `--alert-dismiss-icon-size`, `--toast-dismiss-*`, `--chat-jump-button-*`, `--chat-jump-button-shadow`, `--comments-composer-submit-*`, `--comments-composer-submit-shadow`, `--comments-composer-submit-size`, `--comments-composer-submit-focus-ring-color`, `--carousel-control-*`). Do not target the old utility class strings on those buttons. Do not expect the comments send to inherit `--button-primary-*`.
+- Restyle these controls with `--button-*` on a parent, or with the existing component tokens (`--modal-close-icon-*`, `--drawer-close-icon-*`, `--alert-dismiss-button-*`, `--alert-dismiss-icon-size`, `--toast-dismiss-*`, `--chat-jump-button-*`, `--chat-jump-button-shadow`, `--comments-composer-submit-*`, `--comments-composer-submit-shadow`, `--comments-composer-submit-size`, `--comments-composer-submit-focus-ring-color`, `--focus-outline-color`, `--carousel-control-*`). Do not target the old utility class strings on those buttons. Do not expect the comments send to inherit `--button-primary-*`. Set `--focus-outline-color` to recolour both focus outlines. Set `--comments-composer-submit-focus-ring-color` to recolour only the send.
 - Selectors that expected the dropdown chevron as a direct `svg` child of the trigger should look inside the trailing span.
 - A `trigger_attributes` `style:` string, `href`, `method`, or `target` no longer reaches the trigger. Pass `style:`, `size:`, and `icon:` as dropdown arguments.
-- Copy button and the date picker day cells still use their own markup. No install step. No Tailwind rebuild. Redeploy so `meta.gem_version` shows `0.1.318`.
+- Copy button and the date picker day cells still use their own markup. No install step. No Tailwind rebuild. Redeploy so `meta.gem_version` shows `0.1.319`.
 
 ## [0.1.315] - 2026-10-26
 

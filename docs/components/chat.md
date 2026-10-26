@@ -85,7 +85,7 @@ High-use interaction props:
 ```
 
 ## Accessibility
-- Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`).
+- Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`). Keyboard focus uses the browser outline in `--focus-outline-color` (`#101010` on light themes, `--surface-content-color` on dark), mapped through `--button-focus-ring-color` on `.fp-chat-jump`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
 - Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays.
