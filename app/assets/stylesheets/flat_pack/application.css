@@ -5164,18 +5164,18 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
-/* Outlined group. The container owns the border, the padding, the gap, and
-   the radius. Direct children keep their own border, radius, and fill.
-   Ghost hover follows --button-border-radius on the button. */
+/* Outlined group. data-fp-style on this element sets --fp-button-background
+   and --fp-button-border. Direct children keep their own border, radius,
+   and fill. Ghost hover follows --button-border-radius on the button. */
 .fp-button-group--outlined {
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1);
   border-width: 1px;
   border-style: solid;
-  border-color: var(--surface-border-color);
+  border-color: var(--fp-button-border);
   border-radius: var(--button-group-radius);
-  background-color: transparent;
+  background-color: var(--fp-button-background);
   box-shadow: none;
 }
 

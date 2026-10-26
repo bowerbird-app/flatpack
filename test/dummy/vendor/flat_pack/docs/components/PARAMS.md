@@ -122,6 +122,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Lightbox thumbnails | `thumbs` | `FlatPack::Lightbox` boolean. Default `false`. `true` shows the carousel thumb strip when there is more than one item. Maps to Carousel `show_thumbs`. |
 | Lightbox item thumbnail | `thumb_src` | Optional image URL on a lightbox item. Falls back to `src`. Carousel slides use the same key. |
 | Button group shape | `variant` | `FlatPack::ButtonGroup::Component` and `page_nav_button_group`. `:joined` (default) merges the row. `:outlined` is a bordered desktop container. Not a color. |
+| Button group container | `style` | `FlatPack::ButtonGroup::Component` and `page_nav_button_group`. A button style name. On `:outlined`, the container sets `data-fp-style` and paints `--fp-button-background` and `--fp-button-border`. `:default` is the surface. Joined groups do not set the attribute. Children keep their own `style`. |
 | Button group count | `visible` | `FlatPack::ButtonGroup::Component` and `page_nav_button_group`. A whole number, or omitted. The first that many children stay in the row. Not scrollbar `:visible`. |
 | Button group overflow | `overflow` | `group.button` and `register_page_nav`. `true` forces that child into the trailing menu. `false` keeps it in the row. Omit it and `visible` decides. |
 | Button group overflow label | `overflow_label` | `FlatPack::ButtonGroup::Component` and `page_nav_button_group`. Visible text on the trailing trigger. Omit it and the trigger is an icon with accessible name "More". |

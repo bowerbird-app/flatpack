@@ -399,9 +399,9 @@ module FlatPack
           "  padding: var(--space-1);",
           "  border-width: 1px;",
           "  border-style: solid;",
-          "  border-color: var(--surface-border-color);",
+          "  border-color: var(--fp-button-border);",
           "  border-radius: var(--button-group-radius);",
-          "  background-color: transparent;",
+          "  background-color: var(--fp-button-background);",
           "  box-shadow: none;",
           "}"
         ].join("\n")
@@ -415,12 +415,51 @@ module FlatPack
           group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost))
         end
 
-        assert_selector ".fp-button-group--outlined[data-variant=outlined]"
+        assert_selector ".fp-button-group--outlined[data-variant=outlined][data-fp-style=default]"
 
         error = assert_raises(ArgumentError) { Component.new(variant: :stacked) }
         assert_equal "variant must be :joined or :outlined", error.message
         assert_raises(ArgumentError) { Component.new(variant: "") }
         assert_raises(ArgumentError) { Component.new(variant: true) }
+      end
+
+      def test_outlined_style_marks_the_container_and_leaves_each_child
+        render_inline(Component.new(variant: :outlined, style: nil)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm))
+          group.button(FlatPack::Button::Component.new(text: "Keep", style: :default, size: :sm))
+        end
+
+        assert_equal "default", page.find(".fp-button-group--outlined")["data-fp-style"]
+        assert_selector ".fp-button-group--outlined > .fp-button[data-fp-style=ghost]", text: "Edit"
+        assert_selector ".fp-button-group--outlined > .fp-button[data-fp-style=default]", text: "Keep"
+
+        render_inline(Component.new(variant: :outlined, style: "secondary")) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm))
+          group.button(FlatPack::Button::Component.new(text: "Keep", style: :default, size: :sm))
+        end
+
+        assert_equal "secondary", page.find(".fp-button-group--outlined")["data-fp-style"]
+        assert_selector ".fp-button-group--outlined > .fp-button[data-fp-style=ghost]", text: "Edit"
+        assert_selector ".fp-button-group--outlined > .fp-button[data-fp-style=default]", text: "Keep"
+
+        render_inline(Component.new(variant: :joined, style: :primary)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :secondary))
+        end
+
+        assert_nil page.find(".fp-button-group")["data-fp-style"]
+        assert_selector ".fp-button[data-fp-style=secondary]", text: "Edit"
+
+        render_inline(Component.new(variant: :outlined, collapse: :menu, style: :primary)) do |group|
+          group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm, href: "/edit"))
+        end
+
+        assert_nil page.find(".fp-button-group-menu")["data-fp-style"]
+        assert_equal "primary", page.find(".fp-button-group-menu__row.fp-button-group--outlined")["data-fp-style"]
+        assert_nil page.find(".fp-button-group-menu__panel")["data-fp-style"]
+        assert_selector ".fp-button-group-menu__row > a.fp-button[data-fp-style=ghost][href='/edit']", text: "Edit"
+
+        error = assert_raises(ArgumentError) { Component.new(style: :stacked) }
+        assert_equal FlatPack::Button::StyleRegistry.invalid_style_message(:stacked), error.message
       end
 
       def test_overflow_trigger_is_ghost_when_outlined_and_secondary_when_joined

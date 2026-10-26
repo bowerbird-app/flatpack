@@ -21,6 +21,7 @@ module FlatPack
 
       def initialize(
         variant: :joined,
+        style: :default,
         collapse: false,
         menu_label: nil,
         menu_icon: nil,
@@ -31,6 +32,7 @@ module FlatPack
         **system_arguments
       )
         @variant = normalize_variant!(variant)
+        @style = normalize_style!(style)
         @collapse = normalize_collapse!(collapse)
         @menu_label = normalize_menu_label!(menu_label)
         @menu_icon = normalize_menu_icon!(menu_icon)
@@ -55,7 +57,7 @@ module FlatPack
       def group_attributes
         merge_attributes(
           class: group_classes,
-          data: {variant: @variant}
+          data: {variant: @variant}.merge(outlined_style_data)
         )
       end
 
@@ -92,11 +94,14 @@ module FlatPack
       end
 
       def row_attributes
-        {
+        attributes = {
           class: row_classes,
           role: "group",
           aria: {label: group_label}
         }
+        style_data = outlined_style_data
+        attributes[:data] = style_data if style_data.any?
+        attributes
       end
 
       def row_classes
@@ -344,6 +349,12 @@ module FlatPack
         @variant == :outlined
       end
 
+      def outlined_style_data
+        return {} unless outlined?
+
+        {fp_style: @style.to_s}
+      end
+
       def overflow_trigger_style
         outlined? ? :ghost : :secondary
       end
@@ -353,6 +364,13 @@ module FlatPack
         return value.to_sym if (value.is_a?(Symbol) || value.is_a?(String)) && VARIANTS.include?(value.to_sym)
 
         raise ArgumentError, "variant must be :joined or :outlined"
+      end
+
+      def normalize_style!(style)
+        name = style.nil? ? :default : style.to_sym
+        return name if FlatPack::Button::StyleRegistry.known?(name)
+
+        raise ArgumentError, FlatPack::Button::StyleRegistry.invalid_style_message(name)
       end
 
       def normalize_collapse!(value)
