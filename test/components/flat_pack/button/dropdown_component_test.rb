@@ -226,6 +226,30 @@ module FlatPack
         refute_selector "button", text: "Nope"
       end
 
+      def test_trigger_attributes_drop_style_string_href_method_and_target
+        render_inline(Dropdown::Component.new(
+          text: "Actions",
+          trigger_attributes: {
+            style: "color: red",
+            href: "/secret",
+            method: :delete,
+            target: "_blank",
+            title: "Kept"
+          }
+        ))
+
+        button = page.find("button.fp-button-dropdown__trigger")
+        assert_equal "Kept", button["title"]
+        assert_nil button["style"]
+        assert_nil button["href"]
+        assert_nil button["target"]
+        refute_includes button.native.attribute("method")&.value.to_s, "delete"
+        html = button.native.to_html
+        refute_includes html, "color: red"
+        refute_includes html, "/secret"
+        refute_includes html, "_blank"
+      end
+
       # Disabled state
       def test_renders_disabled_button
         render_inline(Dropdown::Component.new(text: "Actions", disabled: true))

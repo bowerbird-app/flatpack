@@ -166,6 +166,8 @@ module FlatPack
 
           css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
           assert_includes css, ".fp-comments-composer-submit .fp-button svg {\n  rotate: 90deg;\n}"
+          assert_includes css, "--button-focus-ring-color: var(--comments-composer-submit-focus-ring-color);"
+          assert_includes css, "outline: 1px auto var(--button-focus-ring-color);"
           assert_selector ".fp-comments-composer-submit button svg[data-flat-pack--icon-name-value='paper-airplane']"
         end
 

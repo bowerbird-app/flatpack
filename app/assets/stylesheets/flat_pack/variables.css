@@ -505,6 +505,7 @@
   --comments-composer-submit-text-color: var(--comments-composer-submit-text-color);
   --comments-composer-submit-shadow: var(--comments-composer-submit-shadow);
   --comments-composer-submit-size: var(--comments-composer-submit-size);
+  --comments-composer-submit-focus-ring-color: var(--comments-composer-submit-focus-ring-color);
   --alert-dismiss-icon-size: var(--alert-dismiss-icon-size);
   --comments-inline-input-radius: var(--comments-inline-input-radius);
   --comments-thread-header-border-color: var(--comments-thread-header-border-color);
@@ -1482,6 +1483,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   /* The old floating send used the Tailwind shadow-lg utility, not --shadow-lg. */
   --comments-composer-submit-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --comments-composer-submit-size: 2.5rem;
+  --comments-composer-submit-focus-ring-color: #101010;
   --comments-inline-input-radius: var(--form-control-radius);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);

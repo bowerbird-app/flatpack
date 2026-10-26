@@ -91,7 +91,7 @@ module FlatPack
           component.body { "Content" }
         end
 
-        assert_selector ".fp-modal__close button.fp-button[data-fp-style='ghost'][type='button'][aria-label='Close'][data-action='flat-pack--modal#close']"
+        assert_selector ".fp-modal__close button.fp-button.fp-hit-target[data-fp-style='ghost'][type='button'][aria-label='Close'][data-action='flat-pack--modal#close']"
       end
 
       def test_modal_has_dialog_role
@@ -359,7 +359,7 @@ module FlatPack
         assert_selector "[data-flat-pack--navigable-target='frame']"
         assert_selector "[data-flat-pack--navigable-target='title']", text: "Gallery"
         assert_selector "button.fp-button[data-flat-pack--navigable-target='backButton'][hidden][disabled][data-fp-nav='back'][aria-label='Back']", visible: :all
-        assert_selector ".fp-modal__close button.fp-button[aria-label='Back']", visible: :all
+        assert_selector ".fp-modal__close button.fp-button.fp-hit-target[aria-label='Back']", visible: :all
         assert_selector "[data-flat-pack--navigable-target='headerActions']"
         assert_selector "[data-flat-pack--navigable-target='footer'][hidden]", visible: :all
         assert_selector "[data-flat-pack--navigable-target='loading'][hidden]", visible: :all

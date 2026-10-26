@@ -271,7 +271,7 @@ module FlatPack
             style: :ghost,
             size: :md,
             type: "button",
-            class: "shrink-0 rounded-[var(--radius-sm)]",
+            class: close_button_classes,
             aria: {label: fp_t("modal.close")},
             data: {action: "flat-pack--modal#close"}
           )

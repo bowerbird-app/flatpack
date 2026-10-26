@@ -27,7 +27,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
 | `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
 | `max_height` | String | `"384px"` | no | Applied to menu `max-height` style; menu scrolls when content exceeds this value. |
-| `trigger_attributes` | Hash | `{}` | no | HTML attributes on the trigger. Use `aria: { label: }` for an icon-only name when `text` is blank. `aria-haspopup` and `aria-expanded` stay on the button. `style`, `size`, `text`, `icon`, and the other Button options are ignored here so they cannot replace the dropdown's own options. `type` and `title` still land on the button. |
+| `trigger_attributes` | Hash | `{}` | no | HTML attributes on the trigger. Use `aria: { label: }` for an icon-only name when `text` is blank. `aria-haspopup` and `aria-expanded` stay on the button. A host `style:` string, `href`, `method`, and `target` are dropped and are not copied onto the trigger. `size`, `text`, `icon`, and the other Button option keys are dropped the same way, so they do not replace the dropdown's own options. `type` and `title` still land on the button. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots

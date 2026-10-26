@@ -2823,6 +2823,14 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --button-ghost-text-color: var(--alert-dismiss-button-text-color);
   --button-ghost-border-color: transparent;
   --button-focus-ring-color: var(--alert-dismiss-button-focus-ring-color);
+  /* The old dismiss control used Tailwind's default ring offset, which is white. */
+  --button-focus-ring-offset-color: #fff;
+  /* p-1.5 on the old control. Icon-only sm is a denser pad, which shoves the glyph. */
+  --button-icon-only-padding-sm: 0.375rem;
+}
+
+.fp-alert__dismiss .fp-button {
+  border-width: 0;
 }
 
 .fp-alert__dismiss .fp-button svg {
@@ -2865,11 +2873,25 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   translate: 0 -1px;
 }
 
-.fp-chat-jump .fp-button:focus-visible,
+.fp-chat-jump .fp-button:focus-visible {
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  /* The old control used the browser outline, which is near-black, not the label colour. */
+  outline: 1px auto #101010;
+}
+
+/* The old send control used the browser outline: a thick near-black stroke on the disc.
+   Button's inset ring plus a white offset reads as a faint white ring on the white composer.
+   The parent maps the ring token. The outline uses that colour and hugs the disc. */
+.fp-comments-composer-submit {
+  --button-focus-ring-color: var(--comments-composer-submit-focus-ring-color);
+}
+
 .fp-comments-composer-submit .fp-button:focus-visible {
   --tw-ring-shadow: 0 0 #0000;
   --tw-ring-offset-shadow: 0 0 #0000;
-  outline: 1px auto;
+  outline: 1px auto var(--button-focus-ring-color);
+  outline-offset: 0;
 }
 
 .fp-comments-composer-submit .fp-button {
