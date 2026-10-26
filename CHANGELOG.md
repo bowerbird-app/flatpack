@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.317] - 2026-10-26
+
+### Fixed
+- Clicking the current slide in `FlatPack::Carousel::Component` opens `FlatPack::Lightbox` on that item. Previous, next, indicators, and thumbnails no longer open the first item. A swipe does not open the lightbox, and the expand control still opens on the next press after that swipe. Autoplay pauses while the dialog is open and resumes when it closes. Changing items inside the dialog does not move the carousel on the page or open the dialog again.
+
+### Upgrade notes
+- Reload kit JS. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.317`.
+
 ## [0.1.316] - 2026-10-26
 
 ### Changed

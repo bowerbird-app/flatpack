@@ -142,6 +142,29 @@ module FlatPack
         assert_equal "1", slides[2]["data-lightbox-index"]
       end
 
+      def test_keeps_the_lightbox_group_on_the_carousel_root
+        render_inline(Component.new(slides: lightbox_slides))
+
+        root = page.find("section.flat-pack-carousel")
+        assert_match(/\Acarousel-/, root["data-flat-pack-lightbox-group"])
+
+        page.all("[data-flat-pack--carousel-target='slide']", visible: :all).each do |slide|
+          assert_nil slide["data-flat-pack-lightbox-group"]
+          assert_nil slide["data-flat-pack-lightbox-index"]
+        end
+
+        page.all(
+          "button[data-action='click->flat-pack--carousel#prev'], button[data-action='click->flat-pack--carousel#next'], button[data-flat-pack--carousel-target='indicator'], button[data-flat-pack--carousel-target='thumb']",
+          visible: :all
+        ).each do |control|
+          assert_nil control["data-flat-pack-lightbox-group"]
+          assert_nil control["data-flat-pack-lightbox-index"]
+        end
+
+        stage = page.find("dialog [data-flat-pack-lightbox-stage='true']", visible: :all)
+        assert_nil stage["data-flat-pack-lightbox-group"]
+      end
+
       def test_renders_lightbox_toggle_button_with_expand_icon
         render_inline(Component.new(slides: sample_slides))
 

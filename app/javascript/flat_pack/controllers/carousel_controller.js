@@ -1,6 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion } from "controllers/flat_pack/reduced_motion"
 
+// A touch swipe often emits no click. Hold the slide-click suppression only
+// long enough to swallow the click a swipe may still emit, then drop it so
+// the next expand activation is not a second tap.
+const SWIPE_CLICK_SUPPRESS_MS = 400
+
 export default class extends Controller {
   static targets = ["viewport", "frame", "slide", "indicator", "thumb", "thumbStrip", "caption", "counter", "lightboxToggle"]
 
@@ -34,8 +39,12 @@ export default class extends Controller {
     this.pointerStartY = null
     this.pointerLastX = null
     this.isLightboxOpen = false
+    this.suppressLightboxClick = false
+    this.swipeClickSuppressTimer = null
     this.onLightboxClose = (event) => this.#onLightboxClose(event)
+    this.onRootClick = (event) => this.#onRootClick(event)
     document.addEventListener("flat-pack:lightbox:close", this.onLightboxClose)
+    this.element.addEventListener("click", this.onRootClick)
 
     this.#bindInteropEvents()
     this.#bindViewportInteractions()
@@ -52,6 +61,7 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("flat-pack:lightbox:close", this.onLightboxClose)
+    this.element.removeEventListener("click", this.onRootClick)
     if (this.isLightboxOpen) {
       document.dispatchEvent(new CustomEvent("flat-pack:lightbox:close-request", {
         detail: { group: this.element.dataset.flatPackLightboxGroup }
@@ -59,6 +69,7 @@ export default class extends Controller {
       this.isLightboxOpen = false
     }
     this.#clearAutoplayTimer()
+    this.#clearSwipeClickSuppress()
     this.#resetPointerDragState()
     this.#unbindInteropEvents()
     this.#unbindViewportInteractions()
@@ -136,7 +147,9 @@ export default class extends Controller {
     this.render({ emit: false })
   }
 
-  openLightbox() {
+  openLightbox(event) {
+    if (event && this.#clickIsCarouselControl(event)) return
+
     const activeSlide = this.slideTargets[this.currentIndex]
     const source = activeSlide?.dataset?.lightboxSrc
     const enabled = activeSlide?.dataset?.lightboxEnabled === "true"
@@ -144,6 +157,9 @@ export default class extends Controller {
 
     if (!enabled || !source || !group) return
     if (!document.querySelector(`dialog[data-flat-pack--lightbox-group-value="${CSS.escape(group)}"]`)) return
+
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
 
     const index = Number.parseInt(activeSlide.dataset.lightboxIndex || "0", 10)
     const trigger = this.hasLightboxToggleTarget ? this.lightboxToggleTarget : document.activeElement
@@ -339,6 +355,8 @@ export default class extends Controller {
     }
 
     this.pointerDownHandler = (event) => {
+      this.#clearSwipeClickSuppress()
+
       if (!this.touchSwipeValue || !this.#isPrimarySwipePointer(event) || this.#isInteractiveElement(event.target)) {
         return
       }
@@ -386,6 +404,7 @@ export default class extends Controller {
       }
 
       const isRtl = this.#isRtl()
+      this.#armSwipeClickSuppress()
       if (deltaX < 0) {
         isRtl ? this.prev() : this.next()
       } else {
@@ -398,6 +417,8 @@ export default class extends Controller {
     }
 
     this.mouseDownHandler = (event) => {
+      this.#clearSwipeClickSuppress()
+
       if (!this.touchSwipeValue || this.activePointerId !== null || event.button !== 0 || this.#isInteractiveElement(event.target)) {
         return
       }
@@ -435,6 +456,7 @@ export default class extends Controller {
       }
 
       const isRtl = this.#isRtl()
+      this.#armSwipeClickSuppress()
       if (deltaX < 0) {
         isRtl ? this.prev() : this.next()
       } else {
@@ -781,6 +803,36 @@ export default class extends Controller {
     this.resizeDispatchFrame = null
   }
 
+  #armSwipeClickSuppress() {
+    this.#clearSwipeClickTimer()
+    this.suppressLightboxClick = true
+    this.swipeClickSuppressTimer = window.setTimeout(() => {
+      this.swipeClickSuppressTimer = null
+      this.suppressLightboxClick = false
+    }, SWIPE_CLICK_SUPPRESS_MS)
+  }
+
+  #clearSwipeClickSuppress() {
+    this.suppressLightboxClick = false
+    this.#clearSwipeClickTimer()
+  }
+
+  #clearSwipeClickTimer() {
+    if (this.swipeClickSuppressTimer == null) return
+
+    window.clearTimeout(this.swipeClickSuppressTimer)
+    this.swipeClickSuppressTimer = null
+  }
+
+  #clickIsInsideViewport(event) {
+    const target = event.target
+    if (!target || !this.hasViewportTarget) return false
+    if (this.viewportTarget.contains?.(target)) return true
+
+    const slide = target.closest?.("[data-flat-pack--carousel-target='slide']")
+    return Boolean(slide && this.element.contains(slide))
+  }
+
   #isPrimarySwipePointer(event) {
     if (event.isPrimary === false) {
       return false
@@ -791,6 +843,38 @@ export default class extends Controller {
     }
 
     return true
+  }
+
+  #onRootClick(event) {
+    if (this.suppressLightboxClick && this.#clickIsInsideViewport(event)) {
+      this.#clearSwipeClickSuppress()
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button) return
+    if (this.#clickIsCarouselControl(event)) return
+
+    const slide = event.target?.closest?.("[data-flat-pack--carousel-target='slide']")
+    if (!slide || !this.element.contains(slide)) return
+    if (slide.dataset.lightboxEnabled !== "true") return
+
+    this.openLightbox(event)
+  }
+
+  #clickIsCarouselControl(event) {
+    const control = event.target?.closest?.("button, a, input, select, textarea, summary, video, [role='button']")
+    if (!control) return false
+    if (this.#isLightboxToggle(control)) return false
+
+    return true
+  }
+
+  #isLightboxToggle(node) {
+    if (!this.hasLightboxToggleTarget) return false
+
+    return node === this.lightboxToggleTarget || Boolean(this.lightboxToggleTarget.contains?.(node))
   }
 
   #isInteractiveElement(target) {
