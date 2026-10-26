@@ -29,7 +29,7 @@ module FlatPack
         assert_selector "p#profile-photo_error", text: "Choose an image"
         assert_selector "input[aria-invalid='true'][aria-describedby='profile-photo_help_text profile-photo_error']", visible: :all
         empty = page.find("[data-flat-pack--image-input-target='empty']", visible: :all)
-        assert_includes empty[:class], "border-[var(--color-error)]"
+        refute_includes empty[:class], "border"
         surface = page.find("label.group")
         assert_includes surface[:class], "ring-[var(--color-error)]"
       end
@@ -47,7 +47,9 @@ module FlatPack
 
         assert_no_selector "img"
         assert_selector "[data-flat-pack--image-input-target='preview'][hidden]", visible: :all
-        assert_selector "[data-flat-pack--image-input-target='empty'].border-dashed", visible: :all
+        empty = page.find("[data-flat-pack--image-input-target='empty']", visible: :all)
+        assert_includes empty[:class], "bg-[var(--avatar-background-color)]"
+        refute_includes empty[:class], "border"
         assert_selector "svg[data-flat-pack--icon-name-value='camera']", visible: :all
         assert_no_selector "button"
         assert_selector "button[hidden][aria-label='Remove image']", visible: :all

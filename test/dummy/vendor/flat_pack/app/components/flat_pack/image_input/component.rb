@@ -210,16 +210,9 @@ module FlatPack
       end
 
       def empty_classes
-        border = @error.present? ? "border-[var(--color-error)]" : "border-[var(--surface-border-color)]"
         [
           "absolute inset-0 flex items-center justify-center",
-          "border-2 border-dashed",
-          border,
-          "bg-[var(--surface-muted-background-color)]/40",
-          "hover:border-primary group-focus-within:border-primary",
-          "motion-safe:transition-colors",
-          "motion-safe:duration-[var(--duration-fast)]",
-          "motion-safe:ease-[var(--easing-standard)]"
+          "bg-[var(--avatar-background-color)]"
         ].join(" ")
       end
 

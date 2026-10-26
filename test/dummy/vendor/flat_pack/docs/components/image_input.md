@@ -26,7 +26,7 @@ Use Image Input when the field stores one picture and the person should see that
 | `required` | Boolean | `false` | no | Sets `required` on the file input. |
 | `label` | String | `nil` | no | Visible label. `for` matches the file input id. |
 | `help_text` | String | `nil` | no | Help text under the control. There is no `hint` alias. |
-| `error` | String | `nil` | no | Error text. Sets `aria-invalid`, an error border on the empty layer, and a ring on the surface. |
+| `error` | String | `nil` | no | Error text. Sets `aria-invalid` and a ring on the surface. |
 | `clearable` | Boolean | `true` | no | Renders the remove button. `false` omits it. |
 | `remove_name` | String | `nil` | no | Hidden input name. Value starts at `"0"`. Must be a non-blank string and must not equal `name`. |
 | `input_attributes` | Hash | `{}` | no | Extra attributes on the file input. `data-controller` and `data-action` merge with a space. `type` and `name` stay on the component. |
@@ -39,6 +39,7 @@ The component block renders inside the stage, after the file input, preview, and
 ## Variants
 - Shapes: `:circle`, `:rounded`, `:square`.
 - Sizes: `:md`, `:lg`, `:xl`, `:"2xl"`, `:wide`.
+- The empty state is a filled surface (`--avatar-background-color`) clipped to the shape. It has no border. Focus, hover, and drag-over draw `outline-primary` on that surface. An error draws `ring-2` in `--color-error` on the same surface.
 
 ## Example
 ```erb
