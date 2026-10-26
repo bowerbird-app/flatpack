@@ -170,6 +170,9 @@ fr:
       size_bytes: '%{count}o'
       size_kilobytes: '%{count}Ko'
       size_megabytes: '%{count}Mo'
+    image_input:
+      choose: Choisir une image
+      clear: Retirer l’image
     font_swatch:
       fallback: Police
     form:

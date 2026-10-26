@@ -226,7 +226,7 @@ module FlatPack
       def overlay_classes
         [
           "pointer-events-none absolute inset-0 flex items-center justify-center",
-          "bg-black/45 text-white opacity-0",
+          "bg-[var(--overlay-scrim-color)] text-[var(--hero-overlay-text-color)] opacity-0",
           "group-hover:opacity-100 group-focus-within:opacity-100",
           "motion-safe:transition-opacity",
           "motion-safe:duration-[var(--duration-base)]",
@@ -263,7 +263,7 @@ module FlatPack
       def clear_button_attributes
         base = {
           class: [
-            "fp-hit-slop absolute -top-1 -right-1 z-10 size-6 rounded-full shadow-sm",
+            "fp-hit-slop absolute -top-1 -right-1 z-10 size-6 rounded-[var(--radius-full)] shadow-sm",
             "inline-flex items-center justify-center",
             "border border-[var(--surface-border-color)]",
             "bg-[var(--surface-background-color)] text-[var(--surface-content-color)]"
