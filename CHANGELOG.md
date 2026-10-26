@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.313] - 2026-10-26
+
+### Changed
+- `DateInput` and `DateRangeInput` render the picker popup through internal `FlatPack::DatePicker::Panel` and share field helpers through `FlatPack::DatePicker::Field`. Public kwargs, rendered HTML, data attributes, and Stimulus identifiers are unchanged.
+
+### Upgrade notes
+- No host changes. Keep calling `FlatPack::DateInput::Component` and `FlatPack::DateRangeInput::Component`.
+- A prepend on `DateRangeInput` that overrides `quick_range_presets` and `preset_range_for` still adds a preset. `FlatPack::DatePicker::Panel` renders the list those methods return.
+- Private `DateInput#picker_nav_button_classes` is gone. Month navigation is a `FlatPack::Button::Component`.
+- Private `DateInput#default_picker_placeholder` is now `picker_placeholder`. `DateRangeInput` implements the same method. It used to inline the range placeholder.
+- Redeploy so `meta.gem_version` shows `0.1.313`.
+
 ## [0.1.312] - 2026-10-26
 
 ### Added
