@@ -162,6 +162,22 @@ class PageNavRegistryHelperProbesController < ApplicationController
     helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :stacked)
     head :ok
   end
+
+  def render_outlined_style
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :outlined, style: :primary) %>", layout: false
+  end
+
+  def render_joined_style
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, style: :primary) %>", layout: false
+  end
+
+  def render_bad_style
+    helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
+    helpers.page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, variant: :outlined, style: :stacked)
+    head :ok
+  end
 end
 
 class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
@@ -279,13 +295,31 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       get "/demo/page_nav_registry_helper/render_outlined"
 
       assert_response :success
-      assert_select ".fp-button-group.fp-button-group--outlined[data-variant=outlined]"
+      assert_select ".fp-button-group.fp-button-group--outlined[data-variant=outlined][data-fp-style=default]"
       assert_select ".fp-button-group > a[data-fp-style=secondary]", text: "Share"
       assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost][aria-label=More]"
       assert_select ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
 
       error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_variant" }
       assert_equal "variant must be :joined or :outlined", error.message
+    end
+  end
+
+  test "page_nav_button_group forwards style onto an outlined group" do
+    with_page_nav_routes do
+      get "/demo/page_nav_registry_helper/render_outlined_style"
+
+      assert_response :success
+      assert_select ".fp-button-group--outlined[data-fp-style=primary]"
+      assert_select ".fp-button-group > a[data-fp-style=secondary]", text: "Share"
+
+      get "/demo/page_nav_registry_helper/render_joined_style"
+
+      assert_select ".fp-button-group[data-variant=joined]"
+      assert_select ".fp-button-group[data-fp-style]", count: 0
+
+      error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_style" }
+      assert_equal FlatPack::Button::StyleRegistry.invalid_style_message(:stacked), error.message
     end
   end
 
@@ -377,6 +411,9 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
         get "/demo/page_nav_registry_helper/render_bad_overflow_icon", to: "page_nav_registry_helper_probes#render_bad_overflow_icon"
         get "/demo/page_nav_registry_helper/render_outlined", to: "page_nav_registry_helper_probes#render_outlined"
         get "/demo/page_nav_registry_helper/render_bad_variant", to: "page_nav_registry_helper_probes#render_bad_variant"
+        get "/demo/page_nav_registry_helper/render_outlined_style", to: "page_nav_registry_helper_probes#render_outlined_style"
+        get "/demo/page_nav_registry_helper/render_joined_style", to: "page_nav_registry_helper_probes#render_joined_style"
+        get "/demo/page_nav_registry_helper/render_bad_style", to: "page_nav_registry_helper_probes#render_bad_style"
       end
 
       yield
