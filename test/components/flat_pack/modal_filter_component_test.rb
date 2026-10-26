@@ -16,7 +16,7 @@ module FlatPack
           end
         end
 
-        assert_selector "button", text: "Filter"
+        assert_selector "button.fp-button[data-fp-style='secondary'][data-action='click->flat-pack--modal#open'][data-modal-id='modal-table-filters-modal']", text: "Filter"
         assert_selector "div#modal-table-filters-modal"
         assert_no_selector "[data-flat-pack--modal-origin-value]"
         assert_selector "form#modal-table-filters-mobile-form[data-turbo-frame='modal-filter-table-frame']"

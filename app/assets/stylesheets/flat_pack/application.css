@@ -2687,7 +2687,6 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 [data-fp-style="primary"],
 .fp-fab__trigger,
 .flat-pack-rt-link-apply-btn,
-.flat-pack-comments-composer-input > button[type="submit"],
 .fp-comments-replies-toggle,
 [data-flat-pack-date-picker-command="preset"],
 [data-flat-pack-date-picker-command="show-calendar"] {
@@ -2704,15 +2703,6 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .fp-button[data-fp-style="primary"]:active:not(:disabled):not(.fp-button-current):not(:has(:checked)) {
   background-color: var(--fp-primary-pressed-fill);
-}
-
-.flat-pack-comments-composer-input > button[type="submit"] {
-  background-color: var(--comments-composer-submit-background-color, var(--color-primary));
-  color: var(--comments-composer-submit-text-color, var(--color-primary-text));
-}
-
-.flat-pack-comments-composer-input > button[type="submit"]:hover:not(:disabled) {
-  background-color: var(--comments-composer-submit-hover-background-color, var(--fp-primary-hover-fill));
 }
 
 .fp-comments-replies-toggle {
@@ -2773,6 +2763,212 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-button-hover-background: var(--button-danger-hover-background-color);
   --fp-button-text: var(--button-danger-text-color);
   --fp-button-border: var(--button-danger-border-color);
+}
+
+/* Hosts for buttons that used to copy Button. Tokens live on the parent.
+   The button reads --button-* and does not pin its own colours. */
+.fp-modal__close,
+.fp-drawer__close,
+.fp-alert__dismiss,
+.fp-toast__dismiss,
+.fp-comments-composer-submit,
+.fp-overlay-icon-button {
+  display: contents;
+}
+
+.fp-modal__close {
+  --button-ghost-background-color: transparent;
+  --button-ghost-hover-background-color: transparent;
+  --button-ghost-text-color: var(--modal-close-icon-color);
+  --button-ghost-border-color: transparent;
+  --button-focus-ring-color: var(--modal-close-icon-color);
+}
+
+.fp-drawer__close {
+  --button-ghost-background-color: transparent;
+  --button-ghost-hover-background-color: transparent;
+  --button-ghost-text-color: var(--drawer-close-icon-color);
+  --button-ghost-border-color: transparent;
+  --button-focus-ring-color: var(--drawer-close-icon-color);
+}
+
+/* The old control was a block button with p-1. The glyph sat at the start and vertically in the middle of the hit area. */
+.fp-modal__close .fp-button,
+.fp-drawer__close .fp-button {
+  justify-content: flex-start;
+  align-items: center;
+  border-width: 0;
+  padding: var(--space-1, 0.25rem);
+}
+
+.fp-modal__close .fp-button:focus-visible,
+.fp-drawer__close .fp-button:focus-visible,
+.fp-toast__dismiss .fp-button:focus-visible,
+.fp-overlay-icon-button .fp-button:focus-visible {
+  --tw-ring-offset-shadow: 0 0 #0000;
+  box-shadow: inset 0 0 0 2px var(--button-focus-ring-color);
+}
+
+.fp-modal__close .fp-button:hover:not(:disabled) {
+  color: var(--modal-close-icon-hover-color);
+}
+
+.fp-drawer__close .fp-button:hover:not(:disabled) {
+  color: var(--drawer-close-icon-hover-color);
+}
+
+.fp-alert__dismiss {
+  --button-ghost-background-color: transparent;
+  --button-ghost-hover-background-color: var(--alert-dismiss-button-hover-background-color);
+  --button-ghost-text-color: var(--alert-dismiss-button-text-color);
+  --button-ghost-border-color: transparent;
+  --button-focus-ring-color: var(--alert-dismiss-button-focus-ring-color);
+  /* The old dismiss control used Tailwind's default ring offset, which is white. */
+  --button-focus-ring-offset-color: #fff;
+  /* p-1.5 on the old control. Icon-only sm is a denser pad, which shoves the glyph. */
+  --button-icon-only-padding-sm: 0.375rem;
+}
+
+.fp-alert__dismiss .fp-button {
+  border-width: 0;
+}
+
+.fp-alert__dismiss .fp-button svg {
+  width: var(--alert-dismiss-icon-size);
+  height: var(--alert-dismiss-icon-size);
+}
+
+.fp-toast__dismiss {
+  --button-ghost-background-color: transparent;
+  --button-ghost-hover-background-color: var(--toast-dismiss-hover-background-color);
+  --button-ghost-text-color: var(--toast-dismiss-text-color);
+  --button-ghost-border-color: transparent;
+  --button-focus-ring-color: var(--toast-dismiss-text-color);
+  --button-icon-only-padding-xs: calc((1.75rem - 1rem) / 2);
+}
+
+.fp-toast__dismiss .fp-button {
+  border-width: 0;
+}
+
+.fp-toast__dismiss .fp-button:hover:not(:disabled) {
+  color: var(--toast-dismiss-hover-text-color);
+}
+
+.fp-chat-jump {
+  --button-secondary-background-color: var(--chat-jump-button-background-color);
+  --button-secondary-hover-background-color: var(--chat-jump-button-hover-background-color);
+  --button-secondary-text-color: var(--chat-jump-button-text-color);
+  --button-secondary-border-color: var(--chat-jump-button-border-color);
+  --button-focus-ring-color: var(--focus-outline-color, #101010);
+}
+
+.fp-chat-jump .fp-button,
+.fp-chat-jump .fp-button:hover:not(:disabled),
+.fp-chat-jump .fp-button:active:not(:disabled) {
+  box-shadow: var(--chat-jump-button-shadow);
+}
+
+/* Mini chevron-down sits one pixel below the old filled mark. */
+.fp-chat-jump .fp-button > svg {
+  translate: 0 -1px;
+}
+
+.fp-chat-jump .fp-button:focus-visible {
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  outline: 1px auto var(--button-focus-ring-color, #101010);
+}
+
+/* The old send control used the browser outline: a thick near-black stroke on the disc.
+   Button's inset ring plus a white offset reads as a faint white ring on the white composer.
+   The parent maps the ring token. The outline uses that colour and hugs the disc. */
+.fp-comments-composer-submit {
+  --button-focus-ring-color: var(--comments-composer-submit-focus-ring-color, var(--focus-outline-color, #101010));
+}
+
+.fp-comments-composer-submit .fp-button:focus-visible {
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  outline: 1px auto var(--button-focus-ring-color, #101010);
+  outline-offset: 0;
+}
+
+.fp-comments-composer-submit .fp-button {
+  --button-primary-background-color: var(--comments-composer-submit-background-color, var(--color-primary));
+  --button-primary-hover-background-color: var(--comments-composer-submit-hover-background-color, var(--fp-primary-hover-fill));
+  --button-primary-text-color: var(--comments-composer-submit-text-color, var(--color-primary-text));
+  --button-primary-border-color: var(--comments-composer-submit-background-color, var(--color-primary));
+  --button-shadow: var(--comments-composer-submit-shadow);
+  --button-shadow-hover: var(--comments-composer-submit-shadow);
+  --button-shadow-active: var(--comments-composer-submit-shadow);
+}
+
+.fp-comments-composer-submit .fp-button,
+.fp-comments-composer-submit .fp-button:hover:not(:disabled),
+.fp-comments-composer-submit .fp-button:active:not(:disabled) {
+  width: var(--comments-composer-submit-size);
+  height: var(--comments-composer-submit-size);
+  min-width: var(--comments-composer-submit-size);
+  min-height: var(--comments-composer-submit-size);
+  border-width: 0;
+  border-radius: var(--radius-xl);
+  --button-disabled-opacity: 1;
+}
+
+.fp-modal-filter-trigger > span {
+  min-width: min-content;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.fp-comments-composer-submit .fp-button svg {
+  rotate: 90deg;
+}
+
+.fp-overlay-icon-button {
+  --button-secondary-background-color: var(--carousel-control-background-color);
+  --button-secondary-hover-background-color: var(--carousel-control-hover-background-color);
+  --button-secondary-text-color: var(--carousel-control-text-color);
+  --button-secondary-border-color: transparent;
+  --button-focus-ring-color: var(--carousel-control-text-color);
+  --button-round-size-md: 2.5rem;
+  --button-icon-only-padding-md: calc((2.5rem - 1.25rem - 2px) / 2);
+}
+
+.fp-overlay-icon-button--sm {
+  --button-round-size-sm: 2rem;
+  --button-icon-only-padding-sm: calc((2rem - 1rem - 2px) / 2);
+}
+
+.fp-overlay-icon-button .fp-button,
+.fp-overlay-icon-button .fp-button:hover:not(:disabled),
+.fp-overlay-icon-button .fp-button:active:not(:disabled) {
+  box-shadow: none;
+  border-width: 0;
+  transform: none;
+  min-width: var(--button-round-size-md);
+  min-height: var(--button-round-size-md);
+}
+
+.fp-overlay-icon-button--sm .fp-button,
+.fp-overlay-icon-button--sm .fp-button:hover:not(:disabled),
+.fp-overlay-icon-button--sm .fp-button:active:not(:disabled) {
+  min-width: var(--button-round-size-sm);
+  min-height: var(--button-round-size-sm);
+}
+
+.fp-overlay-icon-button svg {
+  pointer-events: none;
+}
+
+.fp-modal__close .fp-button:active:not(:disabled),
+.fp-drawer__close .fp-button:active:not(:disabled),
+.fp-alert__dismiss .fp-button:active:not(:disabled),
+.fp-toast__dismiss .fp-button:active:not(:disabled),
+.fp-chat-jump .fp-button:active:not(:disabled),
+.fp-comments-composer-submit .fp-button:active:not(:disabled) {
+  transform: none;
 }
 
 /* A status icon painted in the same fill as the button disappears.

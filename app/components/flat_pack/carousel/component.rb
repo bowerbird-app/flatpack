@@ -340,19 +340,26 @@ module FlatPack
 
       def control_button(direction:, classes:)
         label = (direction == :prev) ? fp_t("carousel.previous") : fp_t("carousel.next")
-        icon_name = (direction == :prev) ? :chevron_left : :chevron_right
+        icon_name = (direction == :prev) ? "chevron-left" : "chevron-right"
 
-        content_tag(:button,
-          type: "button",
-          class: [
-            "flat-pack-carousel__control absolute top-1/2 z-20 flex w-10 -translate-y-1/2 cursor-pointer aspect-square items-center justify-center rounded-full bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-            controls_visibility_classes,
-            touch_control_classes,
-            classes
-          ].compact.join(" "),
-          aria: {label: label},
-          data: {action: "click->flat-pack--carousel##{direction}"}) do
-          render FlatPack::Shared::IconComponent.new(name: icon_name, size: :md, class: "pointer-events-none")
+        content_tag(:span, class: "fp-overlay-icon-button") do
+          render FlatPack::Button::Component.new(
+            text: label,
+            icon: icon_name,
+            icon_only: true,
+            round: true,
+            style: :secondary,
+            size: :md,
+            type: "button",
+            class: [
+              "flat-pack-carousel__control absolute top-1/2 z-20 -translate-y-1/2",
+              controls_visibility_classes,
+              touch_control_classes,
+              classes
+            ].compact.join(" "),
+            aria: {label: label},
+            data: {action: "click->flat-pack--carousel##{direction}"}
+          )
         end
       end
 
@@ -435,16 +442,23 @@ module FlatPack
       end
 
       def render_lightbox_toggle
-        content_tag(:button,
-          type: "button",
-          hidden: !lightbox_available_for_index?(@initial_index),
-          class: "absolute right-3 top-3 z-20 flex aspect-square flex-nowrap items-center justify-center cursor-pointer rounded-full bg-[var(--carousel-control-background-color)] p-2 text-[var(--carousel-control-text-color)] transition hover:bg-[var(--carousel-control-hover-background-color)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          aria: {label: fp_t("carousel.expand_image")},
-          data: {
-            flat_pack__carousel_target: "lightboxToggle",
-            action: "click->flat-pack--carousel#openLightbox"
-          }) do
-          render FlatPack::Shared::IconComponent.new(name: :arrows_pointing_out, size: :sm, class: "pointer-events-none")
+        content_tag(:span, class: "fp-overlay-icon-button fp-overlay-icon-button--sm") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("carousel.expand_image"),
+            icon: "arrows-pointing-out",
+            icon_only: true,
+            round: true,
+            style: :secondary,
+            size: :sm,
+            type: "button",
+            hidden: !lightbox_available_for_index?(@initial_index),
+            class: "absolute right-3 top-3 z-20",
+            aria: {label: fp_t("carousel.expand_image")},
+            data: {
+              flat_pack__carousel_target: "lightboxToggle",
+              action: "click->flat-pack--carousel#openLightbox"
+            }
+          )
         end
       end
 

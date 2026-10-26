@@ -1,7 +1,7 @@
 # Toast
 
 ## Purpose
-Show transient status notifications with optional auto-dismiss and manual dismissal. Styles match Alert: tinted surfaces, not filled status paints. Info uses the quiet info alert tokens, not `--color-primary`. The close control is a compact centered ghost X on every style: icon-sized paint, 44px hit via `.fp-hit-slop`, not a 44px filled chip.
+Show transient status notifications with optional auto-dismiss and manual dismissal. Styles match Alert: tinted surfaces, not filled status paints. Info uses the quiet info alert tokens, not `--color-primary`. The close control is a ghost icon-only `FlatPack::Button::Component` at `size: :xs`: icon-sized paint, 44px hit via `.fp-hit-slop`, not a 44px filled chip. `.fp-toast__dismiss` maps `--toast-dismiss-*` onto `--button-ghost-*`. Every toast style uses that same control.
 
 ## When to use
 Use Toast for non-blocking feedback such as success confirmations, warnings, and lightweight errors. A Rails flash that should auto-dismiss is [`FlatPack::Flash::Component`](flash.md) with `as: :toast`.

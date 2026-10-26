@@ -108,82 +108,54 @@ module FlatPack
           }
         end
 
-        def button_attributes
+        def render_trigger_button
+          button = FlatPack::Button::Component.new(**trigger_button_arguments)
+          button.with_trailing { chevron_icon } if @show_chevron
+          render(button)
+        end
+
+        # Keys that belong to the dropdown (and to Button). A host used to pass
+        # these on the raw trigger as HTML attributes. Forwarding them into
+        # Button.new would replace the dropdown's own options and can raise.
+        TRIGGER_HTML_ONLY_KEYS = %i[
+          style size text icon icon_variant icon_style icon_only
+          round loading align lines current href method target
+        ].freeze
+
+        # The trigger is a Button. Callers still pass the dropdown kwargs.
+        # fp-button-dropdown__trigger stays so a joined group can reach the radius.
+        # The chevron is Button's trailing slot, so the icon sits in an extra span.
+        def trigger_button_arguments
           attrs = @trigger_attributes.dup
+          extra_class = [attrs.delete(:class), attrs.delete("class")].compact
+          extra_data = extract_nested_attributes(attrs, :data)
+          extra_aria = extract_nested_attributes(attrs, :aria)
+          title = attrs.delete(:title) || attrs.delete("title")
+          type = attrs.delete(:type) || attrs.delete("type") || "button"
+          TRIGGER_HTML_ONLY_KEYS.each do |key|
+            attrs.delete(key)
+            attrs.delete(key.to_s)
+          end
 
           {
-            class: TailwindMerge::Merger.new.merge([attrs.delete(:class), attrs.delete("class"), button_classes].compact.join(" ")),
-            aria: trigger_aria(attrs),
-            data: extract_nested_attributes(attrs, :data).merge(
+            text: @text.presence,
+            style: @style,
+            size: @size,
+            round: @round,
+            icon: @icon,
+            icon_variant: @icon_variant,
+            icon_style: @icon_style,
+            icon_only: @icon_only,
+            disabled: @disabled,
+            type: type,
+            title: title.is_a?(String) ? title : nil,
+            class: ["fp-button-dropdown__trigger", *extra_class].compact.join(" "),
+            aria: extra_aria.merge(haspopup: "true", expanded: "false"),
+            data: extra_data.merge(
               flat_pack__button_dropdown_target: "trigger",
-              action: "click->flat-pack--button-dropdown#toggle",
-              fp_style: @style.to_s
+              action: "click->flat-pack--button-dropdown#toggle"
             )
-          }.merge(attrs).compact
-        end
-
-        def button_classes
-          base_classes = [
-            "fp-button-dropdown__trigger",
-            "inline-flex items-center justify-center gap-2",
-            trigger_radius_class,
-            "font-medium",
-            "cursor-pointer",
-            "fp-button",
-            FlatPack::Button::StyleRegistry.press_class(@style),
-            "border",
-            "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
-            "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
-            "fp-touch-manipulation"
-          ]
-
-          size_classes = trigger_size_classes
-          base_classes << size_classes if size_classes
-          base_classes << icon_only_classes if @icon_only
-          base_classes.join(" ")
-        end
-
-        def trigger_radius_class
-          if @round
-            FlatPack::Button::Component::ROUND_RADIUS_CLASS
-          else
-            "rounded-[var(--button-border-radius)]"
-          end
-        end
-
-        def trigger_size_classes
-          return if @icon_only
-
-          FlatPack::Button::Component::SIZES.fetch(@size)
-        end
-
-        def icon_only_classes
-          FlatPack::Button::Component.icon_only_classes_for(@size, round: @round)
-        end
-
-        def button_content
-          content = []
-          if @icon
-            content << render(FlatPack::Shared::IconComponent.new(
-              **IconOptions.component_arguments(
-                name: @icon,
-                size: FlatPack::Button::Component.painted_icon_size(@size),
-                icon_variant: @icon_variant,
-                icon_style: @icon_style
-              )
-            ))
-          end
-          content << content_tag(:span, @text) if @text.present? && !@icon_only
-          content << chevron_icon if @show_chevron
-          safe_join(content)
-        end
-
-        def trigger_aria(attrs)
-          aria = extract_nested_attributes(attrs, :aria)
-          label = derived_icon_only_label
-          aria[:label] = label if label.present?
-          aria.merge(haspopup: "true", expanded: "false")
+          }.merge(attrs.compact)
         end
 
         def derived_icon_only_label

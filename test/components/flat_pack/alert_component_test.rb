@@ -111,8 +111,8 @@ module FlatPack
       def test_renders_dismissible_alert
         render_inline(Component.new(title: "Dismissible", dismissible: true))
 
-        assert_selector "button[aria-label='Dismiss']"
-        assert_selector "button[data-action='flat-pack--alert#dismiss']"
+        assert_selector "button.fp-button[data-fp-style='ghost'][aria-label='Dismiss'][data-action='flat-pack--alert#dismiss']"
+        assert_selector ".fp-alert__dismiss"
         refute_selector "button[data-action='alert#dismiss']"
       end
 

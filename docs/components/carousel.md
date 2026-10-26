@@ -79,6 +79,8 @@ A card publishes `--card-inset` from its padding step. Bleed uses that length wh
 ## Viewport chrome
 The default viewport draws a border and a muted fill. `show_border: false` replaces the border with `border-0`. `show_background: false` replaces the fill with `bg-transparent`. Leave a flag on and its token still paints it: `--carousel-viewport-border-color` and `--carousel-viewport-background-color`. A host `style:` that sets those tokens to `transparent` still works while the classes stay on.
 
+Previous, next, and the expand toggle are `FlatPack::Button::Component` (secondary, round, icon-only). `.fp-overlay-icon-button` maps `--carousel-control-*` onto `--button-secondary-*`. The toggle keeps `data-flat-pack--carousel-target="lightboxToggle"` and `click->flat-pack--carousel#openLightbox`. Arrows keep `click->flat-pack--carousel#prev` and `#next`, plus `flat-pack-carousel__control`.
+
 ## Side Preview Notes
 - Applies only to `variant: :default` with `transition: :slide`.
 - Adds `--carousel-peek` (default `0.25`) to the items-per-view count. The previous fixed `+0.25` is that default.

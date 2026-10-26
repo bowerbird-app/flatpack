@@ -36,7 +36,8 @@ module FlatPack
             "Content"
           end
 
-          assert_selector "button[data-action='click->flat-pack--chat-scroll#jump']"
+          assert_selector "button.fp-button[data-fp-style='secondary'][data-action='click->flat-pack--chat-scroll#jump'][aria-label='Jump to latest message']"
+          assert_selector ".fp-chat-jump"
           assert_text "Jump to latest"
         end
 

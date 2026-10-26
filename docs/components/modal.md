@@ -151,7 +151,7 @@ The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem
 
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` bound to the header id.
-- Escape/backdrop close controls are configurable.
+- Escape/backdrop close controls are configurable. The header close control is a ghost icon-only Button. `.fp-modal__close` maps `--modal-close-icon-color` and `--modal-close-icon-hover-color` onto that button, and keeps the glyph at the start of the hit area, centered on the cross axis. The action stays `flat-pack--modal#close`. The navigable back control is the same Button, hidden until a screen asks for it.
 - Tab cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown` even when Escape close is off. The dialog itself is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
 - Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse. `:center` writes the Tailwind v4 `scale` property (not `transform`). `:trigger` writes `transform` and `opacity` from `trigger_origin.js` and falls back to that fade when the trigger cannot be used.

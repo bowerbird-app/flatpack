@@ -65,13 +65,13 @@ module FlatPack
         def test_renders_submit_button
           render_inline(Component.new)
 
-          assert_selector "button[type='submit'][aria-label='Comment']"
+          assert_selector ".fp-comments-composer-submit button.fp-button[data-fp-style='primary'][type='submit'][aria-label='Comment']"
         end
 
         def test_renders_custom_submit_label
           render_inline(Component.new(submit_label: "Post"))
 
-          assert_selector "button", text: "Post"
+          assert_selector "button[type='submit'][aria-label='Post']"
         end
 
         def test_renders_cancel_button_when_show_cancel
@@ -164,7 +164,12 @@ module FlatPack
         def test_rotates_floating_submit_icon_to_90_degrees
           render_inline(Component.new)
 
-          assert_includes page.native.to_html, "rotate-90"
+          css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+          assert_includes css, ".fp-comments-composer-submit .fp-button svg {\n  rotate: 90deg;\n}"
+          assert_includes css, "--button-focus-ring-color: var(--comments-composer-submit-focus-ring-color, var(--focus-outline-color, #101010));"
+          assert_includes css, "outline: 1px auto var(--button-focus-ring-color, #101010);"
+          refute_includes css, "outline: 1px auto #101010;"
+          assert_selector ".fp-comments-composer-submit button svg[data-flat-pack--icon-name-value='paper-airplane']"
         end
 
         def test_renders_avatar_in_default_mode

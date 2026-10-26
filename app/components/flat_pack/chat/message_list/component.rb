@@ -67,23 +67,17 @@ module FlatPack
 
         def render_jump_button
           content_tag(:div, **jump_button_container_attributes) do
-            content_tag(:button, **jump_button_attributes) do
-              safe_join([
-                # Down arrow icon
-                content_tag(:svg,
-                  xmlns: "http://www.w3.org/2000/svg",
-                  viewBox: "0 0 20 20",
-                  fill: "currentColor",
-                  class: "h-5 w-5") do
-                  content_tag(:path,
-                    nil,
-                    "fill-rule": "evenodd",
-                    d: "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
-                    "clip-rule": "evenodd")
-                end,
-                content_tag(:span, fp_t("chat.jump_to_latest"))
-              ])
-            end
+            render FlatPack::Button::Component.new(
+              text: fp_t("chat.jump_to_latest"),
+              icon: "chevron-down",
+              icon_variant: :mini,
+              style: :secondary,
+              size: :md,
+              type: "button",
+              class: "shadow-lg",
+              aria: {label: fp_t("chat.jump_to_latest_message")},
+              data: {action: "click->flat-pack--chat-scroll#jump"}
+            )
           end
         end
 
@@ -136,36 +130,10 @@ module FlatPack
 
         def jump_button_container_classes
           classes(
+            "fp-chat-jump",
             "absolute bottom-4 right-4",
             "hidden",
             "z-10"
-          )
-        end
-
-        def jump_button_attributes
-          {
-            type: "button",
-            class: jump_button_classes,
-            data: {
-              action: "click->flat-pack--chat-scroll#jump"
-            },
-            "aria-label": fp_t("chat.jump_to_latest_message")
-          }
-        end
-
-        def jump_button_classes
-          classes(
-            "flex items-center gap-2",
-            "px-4 py-2",
-            "bg-[var(--chat-jump-button-background-color)]",
-            "border border-[var(--chat-jump-button-border-color)]",
-            "rounded-[var(--button-border-radius)]",
-            "shadow-lg",
-            "text-sm font-medium",
-            "text-[var(--chat-jump-button-text-color)]",
-            "hover:bg-[var(--chat-jump-button-hover-background-color)]",
-            "transition-colors duration-base",
-            "cursor-pointer"
           )
         end
       end

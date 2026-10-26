@@ -6,7 +6,7 @@ Render a comment entry surface with plain-text or rich-text input, optional cust
 ## When to use
 Use Comments Composer where users create or edit comments with optional custom slot content.
 
-The default composer uses a rounded-xl textarea shell and a floating send control.
+The default composer uses a rounded-xl textarea shell and a floating send control. That control is `FlatPack::Button::Component` (primary, icon-only). Its fill follows `--comments-composer-submit-background-color` (fallback `--color-primary`), the hover fill follows `--comments-composer-submit-hover-background-color` (fallback `--fp-primary-hover-fill`), and the shadow is `--comments-composer-submit-shadow`. A parent's `--button-primary-*` does not paint this disk. The box stays `--comments-composer-submit-size`, with no border. A disabled send stays at full opacity, which is how the previous control looked. Keyboard focus draws the browser `auto` outline in `--comments-composer-submit-focus-ring-color`, which reads `--focus-outline-color` and falls back to `#101010`. That shared token is `#101010` on light themes. A dark theme sets it to `--surface-content-color`. `.fp-comments-composer-submit` maps it onto `--button-focus-ring-color`. The paper-airplane glyph is turned 90 degrees by `.fp-comments-composer-submit`.
 Enable `rich_text: true` when the comment flow needs TipTap formatting controls such as the standard toolbar or selection bubble menu.
 
 ## Class

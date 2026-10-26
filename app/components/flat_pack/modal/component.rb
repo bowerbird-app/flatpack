@@ -263,17 +263,23 @@ module FlatPack
       end
 
       def render_close_button
-        content_tag(:button,
-          type: "button",
-          class: close_button_classes,
-          aria: {label: fp_t("modal.close")},
-          data: {action: "flat-pack--modal#close"}) do
-          close_icon
+        content_tag(:span, class: "fp-modal__close") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("modal.close"),
+            icon: "x-mark",
+            icon_only: true,
+            style: :ghost,
+            size: :md,
+            type: "button",
+            class: close_button_classes,
+            aria: {label: fp_t("modal.close")},
+            data: {action: "flat-pack--modal#close"}
+          )
         end
       end
 
       def close_button_classes
-        "shrink-0 cursor-pointer text-[var(--modal-close-icon-color)] hover:text-[var(--modal-close-icon-hover-color)] transition-colors rounded-[var(--radius-sm)] p-1 fp-hit-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+        "shrink-0 rounded-[var(--radius-sm)]"
       end
 
       def render_header_section
@@ -297,17 +303,23 @@ module FlatPack
       end
 
       def render_back_button
-        content_tag(:button,
-          type: "button",
-          class: close_button_classes,
-          hidden: true,
-          disabled: true,
-          aria: {label: fp_t("modal.back"), hidden: true},
-          data: {
-            "flat-pack--navigable-target": "backButton",
-            fp_nav: "back"
-          }) do
-          render FlatPack::Shared::IconComponent.new(name: "arrow-left", size: :md)
+        content_tag(:span, class: "fp-modal__close") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("modal.back"),
+            icon: "arrow-left",
+            icon_only: true,
+            style: :ghost,
+            size: :md,
+            type: "button",
+            hidden: true,
+            disabled: true,
+            class: close_button_classes,
+            aria: {label: fp_t("modal.back"), hidden: true},
+            data: {
+              "flat-pack--navigable-target": "backButton",
+              fp_nav: "back"
+            }
+          )
         end
       end
 
@@ -323,10 +335,6 @@ module FlatPack
 
       def render_close_button_row
         content_tag(:div, class: close_button_row_classes) { render_close_button }
-      end
-
-      def close_icon
-        render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md)
       end
 
       def render_header_content
