@@ -7,11 +7,19 @@ const vm = require('node:vm')
 function loadModalController(documentStub) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'modal_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
-  const transformedSource = source
+  const focusTrapPath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "focus_trap.js")
+  const focusTrapSource = fs.readFileSync(focusTrapPath, "utf8")
+    .replaceAll("export function ", "function ")
+    .replaceAll("export const ", "const ")
+  const transformedSource = focusTrapSource + "\n" + source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
       'function prefersReducedMotion() { return false }\nfunction motionDuration() { return 0 }\nfunction motionTransition() { return "" }'
+    )
+    .replace(
+      'import { focusableElements as sharedFocusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"',
+      "const sharedFocusableElements = focusableElements\nconst trapTabWithin = trapTab"
     )
     .replace(
       /import \{\n  applyTriggerOriginStart,\n  canUseTriggerOrigin,\n  clearTriggerOriginStyles,\n  isTriggerOrigin,\n  playTriggerOriginEnter,\n  playTriggerOriginExit,\n  resolveTrigger\n\} from "controllers\/flat_pack\/trigger_origin"/,
@@ -63,7 +71,10 @@ function button(id) {
     id,
     disabled: false,
     tabIndex: 0,
-    getAttribute() { return null },
+    getAttribute(name) { return name === "aria-hidden" ? null : null },
+    matches(selector) {
+      return String(selector).split(",").some((part) => part.trim().startsWith("button"))
+    },
     focus() { this.focused = true }
   }
 }
@@ -210,6 +221,29 @@ test('trigger origin close reverses into the trigger', () => {
   assert.equal(dialog.style.opacity, '0')
   assert.equal(dialog.style.transform, 'translate(12px, 24px) scale(0.2)')
   assert.equal(dialog.style.scale, undefined)
+})
+
+test('tab with no focusable controls focuses the dialog', () => {
+  const { controller, dialog, documentStub } = buildController({ buttons: [] })
+  documentStub.activeElement = null
+  const event = tabEvent()
+
+  controller.handleKeydown(event)
+
+  assert.equal(event.prevented, true)
+  assert.equal(dialog.focused, true)
+})
+
+test('tab from outside the dialog wraps to the first focusable', () => {
+  const { controller, focusable, documentStub } = buildController()
+  const outside = button('outside')
+  documentStub.activeElement = outside
+  const event = tabEvent()
+
+  controller.handleKeydown(event)
+
+  assert.equal(event.prevented, true)
+  assert.equal(focusable[0].focused, true)
 })
 
 test('trigger origin close falls back to scale when the trigger is gone', () => {

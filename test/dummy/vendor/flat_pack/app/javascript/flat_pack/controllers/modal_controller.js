@@ -10,6 +10,7 @@ import {
   playTriggerOriginExit,
   resolveTrigger
 } from "controllers/flat_pack/trigger_origin"
+import { focusableElements as sharedFocusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"
 
 export default class extends Controller {
   static targets = ["dialog"]
@@ -237,39 +238,13 @@ export default class extends Controller {
     if (!this.hasDialogTarget) return
     if (this.element.classList.contains("hidden")) return
 
-    const focusable = this.focusableElements()
-    if (focusable.length === 0) {
-      event.preventDefault()
-      this.dialogTarget.focus()
-      return
-    }
-
-    const firstElement = focusable[0]
-    const lastElement = focusable[focusable.length - 1]
-    const active = document.activeElement
-    const activeInside = this.dialogTarget.contains(active)
-
-    if (event.shiftKey) {
-      if (!activeInside || active === firstElement) {
-        event.preventDefault()
-        lastElement.focus()
-      }
-    } else if (!activeInside || active === lastElement) {
-      event.preventDefault()
-      firstElement.focus()
-    }
+    trapTabWithin(event, this.dialogTarget, { modal: true })
   }
 
   focusableElements() {
     if (!this.hasDialogTarget) return []
 
-    return Array.from(this.dialogTarget.querySelectorAll(
-      'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-    )).filter((element) => {
-      if (element.disabled) return false
-      if (element.getAttribute("aria-hidden") === "true") return false
-      return element.tabIndex >= 0
-    })
+    return sharedFocusableElements(this.dialogTarget, { modal: true })
   }
 
   applyEnterMotion() {

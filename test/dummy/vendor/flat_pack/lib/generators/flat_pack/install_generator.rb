@@ -56,6 +56,7 @@ module FlatPack
             content = configure_local_time_importmap_pin(importmap_path, content)
             content = configure_copy_importmap_pin(importmap_path, content)
             content = configure_clipboard_importmap_pin(importmap_path, content)
+            content = configure_focus_trap_importmap_pin(importmap_path, content)
             configure_tiptap_importmap_pins(importmap_path, content)
             return
           end
@@ -68,7 +69,8 @@ module FlatPack
             "under: \"flat_pack/tiptap\", to: \"flat_pack/tiptap\", preload: false\n" \
             "pin \"flat_pack/local_time\", to: \"flat_pack/local_time.js\", preload: false\n" \
             "pin \"flat_pack/copy\", to: \"flat_pack/copy.js\", preload: false\n" \
-            "pin \"flat_pack/clipboard\", to: \"flat_pack/clipboard.js\", preload: false\n"
+            "pin \"flat_pack/clipboard\", to: \"flat_pack/clipboard.js\", preload: false\n" \
+            "pin \"flat_pack/focus_trap\", to: \"flat_pack/focus_trap.js\", preload: false\n"
 
           updated = content + pin_config
           updated = add_tiptap_cdn_pins(updated)
@@ -80,6 +82,7 @@ module FlatPack
           say "  - Added pin for flat_pack/local_time", :green
           say "  - Added pin for flat_pack/copy", :green
           say "  - Added pin for flat_pack/clipboard", :green
+          say "  - Added pin for flat_pack/focus_trap", :green
           say "  - Added TipTap CDN pins for rich text editor support", :green
         else
           say "\n⊙ Importmap configuration file not found", :yellow
@@ -89,6 +92,7 @@ module FlatPack
           say "  pin \"flat_pack/local_time\", to: \"flat_pack/local_time.js\", preload: false", :cyan
           say "  pin \"flat_pack/copy\", to: \"flat_pack/copy.js\", preload: false", :cyan
           say "  pin \"flat_pack/clipboard\", to: \"flat_pack/clipboard.js\", preload: false", :cyan
+          say "  pin \"flat_pack/focus_trap\", to: \"flat_pack/focus_trap.js\", preload: false", :cyan
           say "  # Plus TipTap CDN pins — see docs/installation.md for the full list", :cyan
         end
       end
@@ -416,6 +420,15 @@ module FlatPack
         content += "\npin \"flat_pack/clipboard\", to: \"flat_pack/clipboard.js\", preload: false\n"
         File.write(importmap_path, content)
         say "\n✓ Added clipboard module pin to importmap", :green
+        content
+      end
+
+      def configure_focus_trap_importmap_pin(importmap_path, content)
+        return content if content.include?("flat_pack/focus_trap")
+
+        content += "\npin \"flat_pack/focus_trap\", to: \"flat_pack/focus_trap.js\", preload: false\n"
+        File.write(importmap_path, content)
+        say "\n✓ Added focus trap module pin to importmap", :green
         content
       end
 
