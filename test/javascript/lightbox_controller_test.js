@@ -189,6 +189,99 @@ test("ignores a trigger for a different group", () => {
   assert.equal(dialog.open, false)
 })
 
+test("a carousel root is not a lightbox click target", () => {
+  const { dialog, document, HTMLElement, stage } = mount()
+  const carousel = element("section", HTMLElement)
+  carousel.dataset.controller = "flat-pack--carousel"
+  carousel.dataset.flatPackLightboxGroup = "wall"
+
+  function click(target) {
+    document.dispatchEvent({
+      type: "click",
+      button: 0,
+      target,
+      preventDefault() { this.defaulted = true }
+    })
+  }
+
+  click({
+    closest(selector) {
+      return selector === "[data-flat-pack-lightbox-group]" ? carousel : null
+    }
+  })
+  assert.equal(dialog.open, false)
+  assert.equal(stage.flatPackCarousel.moved, null)
+
+  ;["prev", "next", "indicator", "autoplay"].forEach((kind) => {
+    click({
+      kind,
+      closest(selector) {
+        return selector === "[data-flat-pack-lightbox-group]" ? carousel : null
+      }
+    })
+  })
+  assert.equal(dialog.open, false)
+  assert.equal(stage.flatPackCarousel.moved, null)
+})
+
+test("a trigger inside a carousel still opens on its own index", () => {
+  const { dialog, document, HTMLElement, stage } = mount()
+  const trigger = element("button", HTMLElement)
+  trigger.dataset.flatPackLightboxGroup = "wall"
+  trigger.dataset.flatPackLightboxIndex = "1"
+  trigger.dataset.controller = "flat-pack--button"
+
+  document.dispatchEvent({
+    type: "click",
+    button: 0,
+    target: {
+      closest() { return trigger }
+    },
+    preventDefault() {}
+  })
+
+  assert.equal(dialog.open, true)
+  assert.equal(stage.flatPackCarousel.moved, 1)
+})
+
+test("lightbox navigation does not open the dialog again", () => {
+  const { controller, dialog, document, HTMLElement, stage } = mount()
+  const trigger = element("button", HTMLElement)
+  trigger.dataset.flatPackLightboxGroup = "wall"
+  trigger.dataset.flatPackLightboxIndex = "2"
+  document.dispatchEvent({
+    type: "click",
+    button: 0,
+    target: { closest() { return trigger } },
+    preventDefault() {}
+  })
+  assert.equal(stage.flatPackCarousel.moved, 2)
+
+  const dialogCarousel = element("div", HTMLElement)
+  dialogCarousel.dataset.controller = "flat-pack--carousel"
+  dialogCarousel.dataset.flatPackLightboxGroup = "wall"
+  dialog.children.push(dialogCarousel)
+
+  document.dispatchEvent({
+    type: "click",
+    button: 0,
+    target: {
+      closest(selector) {
+        return selector === "[data-flat-pack-lightbox-group]" ? dialogCarousel : null
+      }
+    },
+    preventDefault() {}
+  })
+  document.dispatchEvent({
+    type: "carousel:change",
+    detail: { index: 0, trigger: "next" }
+  })
+  controller.element.dispatchEvent?.({ type: "carousel:change", detail: { index: 1 } })
+
+  assert.equal(dialog.open, true)
+  assert.equal(stage.flatPackCarousel.moved, 2)
+})
+
 test("reduced motion closes without waiting on a transform", () => {
   const { controller, dialog } = mount({ reduceMotion: true })
   controller.openAt(0, null)

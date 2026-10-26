@@ -143,6 +143,8 @@ export default class extends Controller {
     const trigger = event.target?.closest?.("[data-flat-pack-lightbox-group]")
     if (!trigger || trigger.dataset.flatPackLightboxGroup !== this.groupValue) return
     if (this.element.contains(trigger)) return
+    // The carousel root keeps the group for its controller. It is not a click target.
+    if (this.#isCarouselRoot(trigger)) return
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button) return
 
     event.preventDefault()
@@ -161,6 +163,11 @@ export default class extends Controller {
     if (event.detail?.group !== this.groupValue) return
 
     this.requestClose()
+  }
+
+  #isCarouselRoot(trigger) {
+    const controllers = trigger.getAttribute?.("data-controller") || trigger.dataset?.controller || ""
+    return controllers.split(/\s+/).includes("flat-pack--carousel")
   }
 
   #carouselApi() {

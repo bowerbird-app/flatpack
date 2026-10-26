@@ -34,8 +34,11 @@ export default class extends Controller {
     this.pointerStartY = null
     this.pointerLastX = null
     this.isLightboxOpen = false
+    this.suppressLightboxClick = false
     this.onLightboxClose = (event) => this.#onLightboxClose(event)
+    this.onRootClick = (event) => this.#onRootClick(event)
     document.addEventListener("flat-pack:lightbox:close", this.onLightboxClose)
+    this.element.addEventListener("click", this.onRootClick)
 
     this.#bindInteropEvents()
     this.#bindViewportInteractions()
@@ -52,6 +55,7 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("flat-pack:lightbox:close", this.onLightboxClose)
+    this.element.removeEventListener("click", this.onRootClick)
     if (this.isLightboxOpen) {
       document.dispatchEvent(new CustomEvent("flat-pack:lightbox:close-request", {
         detail: { group: this.element.dataset.flatPackLightboxGroup }
@@ -136,7 +140,16 @@ export default class extends Controller {
     this.render({ emit: false })
   }
 
-  openLightbox() {
+  openLightbox(event) {
+    if (this.suppressLightboxClick) {
+      this.suppressLightboxClick = false
+      event?.preventDefault?.()
+      event?.stopPropagation?.()
+      return
+    }
+
+    if (event && this.#clickIsCarouselControl(event)) return
+
     const activeSlide = this.slideTargets[this.currentIndex]
     const source = activeSlide?.dataset?.lightboxSrc
     const enabled = activeSlide?.dataset?.lightboxEnabled === "true"
@@ -144,6 +157,9 @@ export default class extends Controller {
 
     if (!enabled || !source || !group) return
     if (!document.querySelector(`dialog[data-flat-pack--lightbox-group-value="${CSS.escape(group)}"]`)) return
+
+    event?.preventDefault?.()
+    event?.stopPropagation?.()
 
     const index = Number.parseInt(activeSlide.dataset.lightboxIndex || "0", 10)
     const trigger = this.hasLightboxToggleTarget ? this.lightboxToggleTarget : document.activeElement
@@ -339,6 +355,8 @@ export default class extends Controller {
     }
 
     this.pointerDownHandler = (event) => {
+      this.suppressLightboxClick = false
+
       if (!this.touchSwipeValue || !this.#isPrimarySwipePointer(event) || this.#isInteractiveElement(event.target)) {
         return
       }
@@ -386,6 +404,7 @@ export default class extends Controller {
       }
 
       const isRtl = this.#isRtl()
+      this.suppressLightboxClick = true
       if (deltaX < 0) {
         isRtl ? this.prev() : this.next()
       } else {
@@ -398,6 +417,8 @@ export default class extends Controller {
     }
 
     this.mouseDownHandler = (event) => {
+      this.suppressLightboxClick = false
+
       if (!this.touchSwipeValue || this.activePointerId !== null || event.button !== 0 || this.#isInteractiveElement(event.target)) {
         return
       }
@@ -435,6 +456,7 @@ export default class extends Controller {
       }
 
       const isRtl = this.#isRtl()
+      this.suppressLightboxClick = true
       if (deltaX < 0) {
         isRtl ? this.prev() : this.next()
       } else {
@@ -791,6 +813,38 @@ export default class extends Controller {
     }
 
     return true
+  }
+
+  #onRootClick(event) {
+    if (this.suppressLightboxClick) {
+      this.suppressLightboxClick = false
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
+
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button) return
+    if (this.#clickIsCarouselControl(event)) return
+
+    const slide = event.target?.closest?.("[data-flat-pack--carousel-target='slide']")
+    if (!slide || !this.element.contains(slide)) return
+    if (slide.dataset.lightboxEnabled !== "true") return
+
+    this.openLightbox(event)
+  }
+
+  #clickIsCarouselControl(event) {
+    const control = event.target?.closest?.("button, a, input, select, textarea, summary, video, [role='button']")
+    if (!control) return false
+    if (this.#isLightboxToggle(control)) return false
+
+    return true
+  }
+
+  #isLightboxToggle(node) {
+    if (!this.hasLightboxToggleTarget) return false
+
+    return node === this.lightboxToggleTarget || Boolean(this.lightboxToggleTarget.contains?.(node))
   }
 
   #isInteractiveElement(target) {
