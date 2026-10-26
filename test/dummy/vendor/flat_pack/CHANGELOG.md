@@ -40,10 +40,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Dropdown triggers, the modal-filter trigger, the chat jump control, the comments floating send, and the modal, drawer, alert, and toast close controls render `FlatPack::Button::Component`. Carousel previous, next, and expand, and the lightbox close, do too. Each parent sets `--button-*` from its own tokens. Stimulus actions, aria names, and carousel lightbox data attributes are unchanged.
-- The comments floating send no longer paints with a one-off `button[type="submit"]` rule. It uses the primary button tokens, with `--comments-composer-submit-*` when those are set.
+- The comments floating send no longer paints with a one-off `button[type="submit"]` rule. It uses the primary button tokens, with `--comments-composer-submit-*` when those are set. The shadow is `--comments-composer-submit-shadow` (the old Tailwind `shadow-lg` utility). The disk has no border, and a disabled send stays fully opaque.
+- The chat jump shadow is `--chat-jump-button-shadow` (the same Tailwind `shadow-lg` utility). Flatpack's `--shadow-lg` is a different shadow.
+- Modal and drawer close glyphs sit at the start of the hit area and are centered on the cross axis. Carousel, lightbox, toast, modal, and drawer focus rings are a 2px inset ring in the control's own text color, with no offset. Chat jump and the comments send keep the browser outline instead of Button's ring.
+- A labeled dropdown trigger puts the chevron in Button's trailing slot, so the icon is inside an extra span. The trigger's direct children are the label span and that trailing span.
+- The modal back control uses the same ghost Button as the close control. `trigger_attributes` keys that match Button options (`style`, `size`, `text`, `icon`, and the rest) stay on the dropdown and do not replace those options.
 
 ### Upgrade notes
-- Restyle these controls with `--button-*` on a parent, or with the existing component tokens (`--modal-close-icon-*`, `--drawer-close-icon-*`, `--alert-dismiss-button-*`, `--toast-dismiss-*`, `--chat-jump-button-*`, `--comments-composer-submit-*`, `--carousel-control-*`). Do not target the old utility class strings on those buttons.
+- Restyle these controls with `--button-*` on a parent, or with the existing component tokens (`--modal-close-icon-*`, `--drawer-close-icon-*`, `--alert-dismiss-button-*`, `--alert-dismiss-icon-size`, `--toast-dismiss-*`, `--chat-jump-button-*`, `--chat-jump-button-shadow`, `--comments-composer-submit-*`, `--comments-composer-submit-shadow`, `--comments-composer-submit-size`, `--carousel-control-*`). Do not target the old utility class strings on those buttons.
+- Selectors that expected the dropdown chevron as a direct `svg` child of the trigger should look inside the trailing span.
 - Copy button and the date picker day cells still use their own markup. No install step. No Tailwind rebuild. Redeploy so `meta.gem_version` shows `0.1.314`.
 
 ## [0.1.313] - 2026-10-26

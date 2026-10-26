@@ -65,6 +65,7 @@ module FlatPack
           style: :secondary,
           size: @button_size,
           type: "button",
+          class: "fp-modal-filter-trigger",
           data: {
             action: "click->flat-pack--modal#open",
             modal_id: modal_id

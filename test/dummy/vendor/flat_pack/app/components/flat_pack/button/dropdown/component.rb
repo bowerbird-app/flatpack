@@ -114,8 +114,17 @@ module FlatPack
           render(button)
         end
 
+        # Keys that belong to the dropdown (and to Button). A host used to pass
+        # these on the raw trigger as HTML attributes. Forwarding them into
+        # Button.new would replace the dropdown's own options and can raise.
+        TRIGGER_HTML_ONLY_KEYS = %i[
+          style size text icon icon_variant icon_style icon_only
+          round loading align lines current href method target
+        ].freeze
+
         # The trigger is a Button. Callers still pass the dropdown kwargs.
         # fp-button-dropdown__trigger stays so a joined group can reach the radius.
+        # The chevron is Button's trailing slot, so the icon sits in an extra span.
         def trigger_button_arguments
           attrs = @trigger_attributes.dup
           extra_class = [attrs.delete(:class), attrs.delete("class")].compact
@@ -123,6 +132,10 @@ module FlatPack
           extra_aria = extract_nested_attributes(attrs, :aria)
           title = attrs.delete(:title) || attrs.delete("title")
           type = attrs.delete(:type) || attrs.delete("type") || "button"
+          TRIGGER_HTML_ONLY_KEYS.each do |key|
+            attrs.delete(key)
+            attrs.delete(key.to_s)
+          end
 
           {
             text: @text.presence,
@@ -135,14 +148,14 @@ module FlatPack
             icon_only: @icon_only,
             disabled: @disabled,
             type: type,
-            title: title,
+            title: title.is_a?(String) ? title : nil,
             class: ["fp-button-dropdown__trigger", *extra_class].compact.join(" "),
             aria: extra_aria.merge(haspopup: "true", expanded: "false"),
             data: extra_data.merge(
               flat_pack__button_dropdown_target: "trigger",
               action: "click->flat-pack--button-dropdown#toggle"
             )
-          }.merge(attrs)
+          }.merge(attrs.compact)
         end
 
         def derived_icon_only_label

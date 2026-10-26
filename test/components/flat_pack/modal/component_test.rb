@@ -358,7 +358,8 @@ module FlatPack
         assert_selector "turbo-frame#gallery-editor-screen[src='/demo/modals/gallery_editor'][loading='lazy']"
         assert_selector "[data-flat-pack--navigable-target='frame']"
         assert_selector "[data-flat-pack--navigable-target='title']", text: "Gallery"
-        assert_selector "[data-flat-pack--navigable-target='backButton'][hidden][data-fp-nav='back']", visible: :all
+        assert_selector "button.fp-button[data-flat-pack--navigable-target='backButton'][hidden][disabled][data-fp-nav='back'][aria-label='Back']", visible: :all
+        assert_selector ".fp-modal__close button.fp-button[aria-label='Back']", visible: :all
         assert_selector "[data-flat-pack--navigable-target='headerActions']"
         assert_selector "[data-flat-pack--navigable-target='footer'][hidden]", visible: :all
         assert_selector "[data-flat-pack--navigable-target='loading'][hidden]", visible: :all

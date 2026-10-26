@@ -205,6 +205,27 @@ module FlatPack
         assert_selector "button[title='Conversation actions'][aria-label='Conversation actions']"
       end
 
+      def test_trigger_attributes_do_not_replace_button_options
+        render_inline(Dropdown::Component.new(
+          text: "Actions",
+          style: :primary,
+          size: :md,
+          icon: "cog-6-tooth",
+          trigger_attributes: {
+            style: :not_a_style,
+            size: :huge,
+            text: "Nope",
+            icon: "nope",
+            type: "submit",
+            title: "Conversation actions"
+          }
+        ))
+
+        assert_selector "button.fp-button[data-fp-style='primary'][type='submit'][title='Conversation actions']", text: "Actions"
+        assert_selector "button svg[data-flat-pack--icon-name-value='cog-6-tooth']"
+        refute_selector "button", text: "Nope"
+      end
+
       # Disabled state
       def test_renders_disabled_button
         render_inline(Dropdown::Component.new(text: "Actions", disabled: true))

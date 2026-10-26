@@ -2781,6 +2781,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --button-ghost-hover-background-color: transparent;
   --button-ghost-text-color: var(--modal-close-icon-color);
   --button-ghost-border-color: transparent;
+  --button-focus-ring-color: var(--modal-close-icon-color);
 }
 
 .fp-drawer__close {
@@ -2788,6 +2789,24 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --button-ghost-hover-background-color: transparent;
   --button-ghost-text-color: var(--drawer-close-icon-color);
   --button-ghost-border-color: transparent;
+  --button-focus-ring-color: var(--drawer-close-icon-color);
+}
+
+/* The old control was a block button with p-1. The glyph sat at the start and vertically in the middle of the hit area. */
+.fp-modal__close .fp-button,
+.fp-drawer__close .fp-button {
+  justify-content: flex-start;
+  align-items: center;
+  border-width: 0;
+  padding: var(--space-1, 0.25rem);
+}
+
+.fp-modal__close .fp-button:focus-visible,
+.fp-drawer__close .fp-button:focus-visible,
+.fp-toast__dismiss .fp-button:focus-visible,
+.fp-overlay-icon-button .fp-button:focus-visible {
+  --tw-ring-offset-shadow: 0 0 #0000;
+  box-shadow: inset 0 0 0 2px var(--button-focus-ring-color);
 }
 
 .fp-modal__close .fp-button:hover:not(:disabled) {
@@ -2806,12 +2825,22 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --button-focus-ring-color: var(--alert-dismiss-button-focus-ring-color);
 }
 
+.fp-alert__dismiss .fp-button svg {
+  width: var(--alert-dismiss-icon-size);
+  height: var(--alert-dismiss-icon-size);
+}
+
 .fp-toast__dismiss {
   --button-ghost-background-color: transparent;
   --button-ghost-hover-background-color: var(--toast-dismiss-hover-background-color);
   --button-ghost-text-color: var(--toast-dismiss-text-color);
   --button-ghost-border-color: transparent;
-  --button-icon-only-padding-xs: calc((1.75rem - 1rem - 2px) / 2);
+  --button-focus-ring-color: var(--toast-dismiss-text-color);
+  --button-icon-only-padding-xs: calc((1.75rem - 1rem) / 2);
+}
+
+.fp-toast__dismiss .fp-button {
+  border-width: 0;
 }
 
 .fp-toast__dismiss .fp-button:hover:not(:disabled) {
@@ -2828,21 +2857,47 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-chat-jump .fp-button,
 .fp-chat-jump .fp-button:hover:not(:disabled),
 .fp-chat-jump .fp-button:active:not(:disabled) {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--chat-jump-button-shadow);
 }
 
-.fp-comments-composer-submit {
-  --button-primary-background-color: var(--comments-composer-submit-background-color, var(--button-primary-background-color));
-  --button-primary-hover-background-color: var(--comments-composer-submit-hover-background-color, var(--button-primary-hover-background-color));
-  --button-primary-text-color: var(--comments-composer-submit-text-color, var(--button-primary-text-color));
+/* Mini chevron-down sits one pixel below the old filled mark. */
+.fp-chat-jump .fp-button > svg {
+  translate: 0 -1px;
+}
+
+.fp-chat-jump .fp-button:focus-visible,
+.fp-comments-composer-submit .fp-button:focus-visible {
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  outline: 1px auto;
+}
+
+.fp-comments-composer-submit .fp-button {
+  --button-primary-background-color: var(--comments-composer-submit-background-color, var(--color-primary));
+  --button-primary-hover-background-color: var(--comments-composer-submit-hover-background-color, var(--fp-primary-hover-fill));
+  --button-primary-text-color: var(--comments-composer-submit-text-color, var(--color-primary-text));
+  --button-primary-border-color: var(--comments-composer-submit-background-color, var(--color-primary));
+  --button-shadow: var(--comments-composer-submit-shadow);
+  --button-shadow-hover: var(--comments-composer-submit-shadow);
+  --button-shadow-active: var(--comments-composer-submit-shadow);
 }
 
 .fp-comments-composer-submit .fp-button,
 .fp-comments-composer-submit .fp-button:hover:not(:disabled),
 .fp-comments-composer-submit .fp-button:active:not(:disabled) {
-  box-shadow: var(--shadow-lg);
-  min-width: 2.5rem;
-  min-height: 2.5rem;
+  width: var(--comments-composer-submit-size);
+  height: var(--comments-composer-submit-size);
+  min-width: var(--comments-composer-submit-size);
+  min-height: var(--comments-composer-submit-size);
+  border-width: 0;
+  border-radius: var(--radius-xl);
+  --button-disabled-opacity: 1;
+}
+
+.fp-modal-filter-trigger > span {
+  min-width: min-content;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .fp-comments-composer-submit .fp-button svg {
@@ -2854,6 +2909,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --button-secondary-hover-background-color: var(--carousel-control-hover-background-color);
   --button-secondary-text-color: var(--carousel-control-text-color);
   --button-secondary-border-color: transparent;
+  --button-focus-ring-color: var(--carousel-control-text-color);
   --button-round-size-md: 2.5rem;
   --button-icon-only-padding-md: calc((2.5rem - 1.25rem - 2px) / 2);
 }
@@ -2867,6 +2923,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .fp-overlay-icon-button .fp-button:hover:not(:disabled),
 .fp-overlay-icon-button .fp-button:active:not(:disabled) {
   box-shadow: none;
+  border-width: 0;
   transform: none;
   min-width: var(--button-round-size-md);
   min-height: var(--button-round-size-md);

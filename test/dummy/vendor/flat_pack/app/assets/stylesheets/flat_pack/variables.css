@@ -473,6 +473,7 @@
   --chat-jump-button-border-color: var(--chat-jump-button-border-color);
   --chat-jump-button-text-color: var(--chat-jump-button-text-color);
   --chat-jump-button-hover-background-color: var(--chat-jump-button-hover-background-color);
+  --chat-jump-button-shadow: var(--chat-jump-button-shadow);
   --chat-typing-background-color: var(--chat-typing-background-color);
   --chat-typing-dot-color: var(--chat-typing-dot-color);
   --chat-avatar-placeholder-background-color: var(--chat-avatar-placeholder-background-color);
@@ -502,6 +503,9 @@
   --comments-composer-submit-background-color: var(--comments-composer-submit-background-color);
   --comments-composer-submit-hover-background-color: var(--comments-composer-submit-hover-background-color);
   --comments-composer-submit-text-color: var(--comments-composer-submit-text-color);
+  --comments-composer-submit-shadow: var(--comments-composer-submit-shadow);
+  --comments-composer-submit-size: var(--comments-composer-submit-size);
+  --alert-dismiss-icon-size: var(--alert-dismiss-icon-size);
   --comments-inline-input-radius: var(--comments-inline-input-radius);
   --comments-thread-header-border-color: var(--comments-thread-header-border-color);
   --comments-thread-title-color: var(--comments-thread-title-color);
@@ -1450,6 +1454,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-jump-button-border-color: var(--surface-border-color);
   --chat-jump-button-text-color: var(--surface-content-color);
   --chat-jump-button-hover-background-color: var(--surface-muted-background-color);
+  /* The jump button used the Tailwind shadow-lg utility. --shadow-lg is a softer shadow. */
+  --chat-jump-button-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --chat-typing-background-color: var(--surface-muted-background-color);
   --chat-typing-dot-color: var(--surface-content-color);
   --chat-avatar-placeholder-background-color: var(--surface-muted-background-color);
@@ -1473,6 +1479,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --comments-composer-slots-background-color: var(--comments-composer-actions-background-color);
   --comments-composer-cancel-text-color: var(--surface-content-color);
   --comments-composer-cancel-hover-background-color: var(--surface-muted-background-color);
+  /* The old floating send used the Tailwind shadow-lg utility, not --shadow-lg. */
+  --comments-composer-submit-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --comments-composer-submit-size: 2.5rem;
   --comments-inline-input-radius: var(--form-control-radius);
   --comments-thread-header-border-color: var(--surface-border-color);
   --comments-thread-title-color: var(--surface-content-color);
@@ -1544,6 +1553,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --alert-dismiss-button-text-color: currentColor;
   --alert-dismiss-button-hover-background-color: color-mix(in oklab, currentColor 8%, transparent);
   --alert-dismiss-button-focus-ring-color: var(--color-ring);
+  --alert-dismiss-icon-size: 1.25rem;
   --alert-info-background-color: var(--surface-background-color);
   --alert-info-border-color: var(--color-info-border);
   --alert-info-text-color: var(--surface-content-color);
