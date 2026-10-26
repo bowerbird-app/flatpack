@@ -372,6 +372,8 @@ lazyLoadControllersFrom("controllers", application)
 
 **Why `preload: false`?** Importmap modulepreload is disabled for FlatPack controller pins so the browser does not fetch every controller on first page load.
 
+importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading.
+
 **Manual Configuration (if needed):**
 
 If you need to manually configure JavaScript:

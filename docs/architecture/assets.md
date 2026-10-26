@@ -96,6 +96,10 @@ app/javascript/flat_pack/
 
 ### Importmap Integration
 
+importmap-rails hosts load these pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb` before importmap-rails reads pin paths. A host that bypasses that importmap, or that copies pins into its own file, adds the same lines or reruns `bin/rails generate flat_pack:install`.
+
+`flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal. A missing pin stops those three controllers. Other controllers do not import it, so they still load.
+
 FlatPack registers its JavaScript modules:
 
 ```ruby
