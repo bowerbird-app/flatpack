@@ -191,6 +191,7 @@ For a named host-app variant such as `[data-theme~="sunrise"]`, see the theme ge
 --overlay-inset-sm: 0.5rem
 --overlay-inset-md: 1rem
 --overlay-inset-lg: 1.5rem
+--overlay-edge-offset: 8px
 
 --color-ring
 ```
@@ -292,7 +293,7 @@ If host Tailwind loads after `flat_pack/variables`, re-set the kit radii on unla
 
 `--card-shadow` is the card's rest shadow. `--card-border-width` is its rest border width, next to `--card-border-color`. Both live on bare `:root` (`none` and `1px`) and on `[data-theme~="rounded"]` (`var(--shadow-sm)` and `0`). Do not restate them on `[data-theme]`. A dark region inside rounded would snap the card back to a 1px border and no shadow. `Card` uses those tokens when `shadow:` and `border:` are omitted. `:none`, `:sm`, and `:md`, and `:none`, `:default`, and `:strong`, override one card. `background: :none` is a transparent card, so a border-only card on rounded also passes `border: :default`.
 
-Dark theme (`[data-theme~="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`. Overlay item gaps are `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg`. Set those on `:root` or a named theme when the gap should differ from `0.5rem` / `1rem` / `1.5rem`.
+Dark theme (`[data-theme~="dark"]`) adds a faint white hairline to `--shadow-sm` / `--shadow-md` / `--shadow-lg` so cards lift on near-black surfaces. Brand dark themes that want the same lift set those shadow tokens; they are not derived from `--surface-*`. Overlay dimming is `--overlay-backdrop-color`; on-media chrome (carousel chevrons) is `--overlay-scrim-color`. Overlay item gaps are `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg`. Set those on `:root` or a named theme when the gap should differ from `0.5rem` / `1rem` / `1.5rem`. `--overlay-edge-offset` is `8px`, the shared distance from a viewport or anchor edge. It does not follow the root font size. `--overlay-inset-*` stays the gap for an item placed on media.
 
 ### Hit targets
 ```css

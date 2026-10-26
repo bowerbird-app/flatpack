@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.318] - 2026-10-26
+
+### Added
+- `--overlay-edge-offset` is `8px` on `:root, [data-theme]`. It is the shared distance from a viewport or anchor edge. It is also registered on `@theme inline`. The unit is `8px`, not `rem`, on purpose: the offset does not follow the root font size. `--overlay-inset-*` stays in rem.
+
+### Upgrade notes
+- The token is additive. No component reads it. Rendered markup is unchanged.
+- Reload kit CSS when a host wants to override the token. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.318`.
+
 ## [0.1.317] - 2026-10-26
 
 ### Fixed

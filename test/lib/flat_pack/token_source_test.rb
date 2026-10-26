@@ -358,7 +358,8 @@ module FlatPack
         "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)",
         "--overlay-inset-sm" => "0.5rem",
         "--overlay-inset-md" => "1rem",
-        "--overlay-inset-lg" => "1.5rem"
+        "--overlay-inset-lg" => "1.5rem",
+        "--overlay-edge-offset" => "8px"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
