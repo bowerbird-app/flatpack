@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.311] - 2026-10-26
+
+### Changed
+- `flat_pack` depends on `view_component` `>= 4.14`, `< 5`. The previous constraint was `~> 4.12.0`.
+
+### Fixed
+- `~> 4.12.0` blocked the fix for GHSA-8qw7-6phv-7q6p (`view_component` <= 4.12.0). A reused component instance could leak `with_content` and slot content into a later render. ViewComponent 4.14.0 raises `ViewComponent::ReusedInstanceError` on a second render. The lockfiles resolve `view_component` 4.19.0.
+- The lockfiles resolve `crass` 1.0.8. `loofah` already allows that release.
+
+### Upgrade notes
+- Run `bundle update view_component`. Render each component instance once. A second render raises `ViewComponent::ReusedInstanceError`.
+- ViewComponent 4.18 enables caching support on every component and renames `ViewComponent::ExperimentallyCacheable` to `ViewComponent::Cacheable`. Remove `include ViewComponent::ExperimentallyCacheable` if a host added it. FlatPack components do not include it.
+- Redeploy so `meta.gem_version` shows `0.1.311`.
+
 ## [0.1.310] - 2026-10-23
 
 ### Added
