@@ -32,7 +32,7 @@
   id: "page-layout-demo"
 ) do |layout| %>
   <% layout.top_nav do %>
-    <%= render FlatPack::TopNav::Component.new(padding: (floating ? :default : :none)) do |nav| %>
+    <%= render FlatPack::TopNav::Component.new(padding: (floating ? :default : :none), size: :lg) do |nav| %>
       <% if variant == "plain" %>
         <% nav.left do %>
           <%= flat_pack_page_nav_tag %>

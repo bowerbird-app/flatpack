@@ -51,6 +51,31 @@ module FlatPack
       assert_operator @application.index(".fp-page-layout-top-nav-column {"), :>, @application.index(".fp-top-nav {")
     end
 
+    test "a top bar uses the frame gap once" do
+      assert_includes @application, ".fp-page-layout-main:not(.fp-layout-scroll)"
+      assert_includes @application, ".fp-layout-top-nav ~ .fp-page-layout-main:not(.fp-layout-scroll)"
+
+      main = @application[/\.fp-page-layout-main:not\(\.fp-layout-scroll\) \{\s*padding-top: var\(--page-layout-padding-block\);\s*\}/]
+      refute_nil main
+
+      after_bar = @application[/\.fp-layout-top-nav ~ \.fp-page-layout-main:not\(\.fp-layout-scroll\) \{\s*padding-top: 0;\s*\}/]
+      refute_nil after_bar
+      assert_operator @application.index(".fp-layout-top-nav ~ .fp-page-layout-main:not(.fp-layout-scroll)"), :>, @application.index(".fp-page-layout-main:not(.fp-layout-scroll)")
+    end
+
+    test "large top nav retargets the height token without a new theme token" do
+      assert_match(/--top-nav-height:\s*72px;/, @root)
+      refute_match(/--top-nav-height:\s*96px;/, @css)
+
+      assert_includes @application, '.fp-top-nav[data-fp-top-nav-size="md"]'
+      assert_includes @application, '.fp-top-nav[data-fp-top-nav-size="lg"]'
+      assert_includes @application, '.fp-layout-top-nav:has(.fp-top-nav[data-fp-top-nav-size="lg"]) ~ .fp-layout-scroll'
+      assert_includes @application, 'html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="behind"] .fp-top-nav[data-fp-top-nav-size="lg"])'
+      assert_includes @application, 'html:has(.fp-top-nav[data-fp-top-nav-size="lg"])'
+      assert_includes @application, "--top-nav-height: 96px;"
+      assert_includes @application, "--hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);"
+    end
+
     test "rounded padding follows the spacing scale and sets no photo colour" do
       refute_match(/--page-layout-/, @rounded)
       refute_match(/--page-layout-[^;]*(?:#|oklch|rgb)/, @root)

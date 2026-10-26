@@ -1190,6 +1190,10 @@
   padding-top: var(--page-layout-padding-block);
 }
 
+.fp-layout-top-nav ~ .fp-page-layout-main:not(.fp-layout-scroll) {
+  padding-top: 0;
+}
+
 .fp-page-layout-footer {
   flex: none;
   padding-bottom: var(--page-layout-padding-block);
@@ -1336,6 +1340,26 @@
 .fp-top-nav[data-fp-top-nav-padding="none"] {
   padding-right: env(safe-area-inset-right, 0px);
   padding-left: env(safe-area-inset-left, 0px);
+}
+
+/* :root keeps --top-nav-height at 72px. A large row retargets that same
+ * property. Hero copy padding is computed on html from the token, so the
+ * html rule has to set both. A medium row pins 72px when another large
+ * row on the page has already raised the token. */
+.fp-top-nav[data-fp-top-nav-size="md"] {
+  --top-nav-height: 72px;
+}
+
+.fp-top-nav[data-fp-top-nav-size="lg"],
+.fp-layout-top-nav:has(.fp-top-nav[data-fp-top-nav-size="lg"]),
+.fp-layout-top-nav:has(.fp-top-nav[data-fp-top-nav-size="lg"]) ~ .fp-layout-scroll,
+html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="behind"] .fp-top-nav[data-fp-top-nav-size="lg"]) {
+  --top-nav-height: 96px;
+}
+
+html:has(.fp-top-nav[data-fp-top-nav-size="lg"]) {
+  --top-nav-height: 96px;
+  --hero-overlay-copy-padding-top: calc(var(--top-nav-height) + env(safe-area-inset-top, 0px) + 2rem);
 }
 
 .fp-top-nav > div {

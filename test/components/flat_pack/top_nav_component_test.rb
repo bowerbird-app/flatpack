@@ -185,6 +185,31 @@ module FlatPack
         render_inline(Component.new)
 
         assert_selector "header.fp-top-nav[data-fp-top-nav-padding='default']"
+        assert_selector "header.fp-top-nav[data-fp-top-nav-size='md']"
+      end
+
+      def test_large_size_marks_the_row
+        render_inline(Component.new(size: :lg))
+
+        assert_selector "header.fp-top-nav[data-fp-top-nav-size='lg'][data-fp-top-nav-padding='default']"
+      end
+
+      def test_default_size_alias_marks_medium
+        render_inline(Component.new(size: :default))
+
+        assert_selector "header.fp-top-nav[data-fp-top-nav-size='md']"
+      end
+
+      def test_size_accepts_the_string_form
+        render_inline(Component.new(size: "lg"))
+
+        assert_selector "[data-fp-top-nav-size='lg']"
+      end
+
+      def test_size_rejects_unknown_values
+        error = assert_raises(ArgumentError) { Component.new(size: :sm) }
+
+        assert_equal "size must be :md, :lg, or :default", error.message
       end
 
       def test_padding_none_marks_the_row
