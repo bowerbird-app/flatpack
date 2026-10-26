@@ -38,6 +38,8 @@ function loadController() {
 
   const intervals = new Map()
   let intervalId = 0
+  const timeouts = []
+  let timeoutId = 0
   const windowListeners = new Map()
   const context = {
     module: { exports: {} },
@@ -52,6 +54,15 @@ function loadController() {
         return id
       },
       clearInterval(id) { intervals.delete(id) },
+      setTimeout(fn, ms) {
+        const id = ++timeoutId
+        timeouts.push({ id, fn, ms })
+        return id
+      },
+      clearTimeout(id) {
+        const index = timeouts.findIndex((entry) => entry.id === id)
+        if (index >= 0) timeouts.splice(index, 1)
+      },
       addEventListener(type, handler) {
         windowListeners.set(type, handler)
       },
@@ -79,7 +90,7 @@ function loadController() {
   }
   context.globalThis = context
   vm.runInNewContext(source, context, { filename: filePath })
-  return { Controller: context.module.exports, document, context, opens, intervals }
+  return { Controller: context.module.exports, document, context, opens, intervals, timeouts }
 }
 
 function classList() {
@@ -140,8 +151,8 @@ function clickTarget({ slide: slideNode = null, control = null } = {}) {
 }
 
 function mount(options = {}) {
-  const loaded = loadController()
-  const { Controller, document, context, opens, intervals } = loaded
+  const loaded = options.loaded || loadController()
+  const { Controller, document, context, opens, intervals, timeouts } = loaded
   const root = bus()
   root.dataset = { flatPackLightboxGroup: options.group || "wall" }
   const viewport = bus()
@@ -178,7 +189,25 @@ function mount(options = {}) {
   controller.logicalSlideCountValue = 0
   controller.connect()
 
-  return { controller, root, viewport, slides, document, context, opens, intervals }
+  return { controller, root, viewport, slides, document, context, opens, intervals, timeouts, loaded }
+}
+
+function swipe(controller, target) {
+  controller.pointerDownHandler({
+    pointerId: 1,
+    pointerType: "touch",
+    button: 0,
+    isPrimary: true,
+    clientX: 300,
+    clientY: 20,
+    target
+  })
+  controller.pointerUpHandler({
+    pointerId: 1,
+    pointerType: "touch",
+    clientX: 20,
+    clientY: 20
+  })
 }
 
 function click(root, target, extras = {}) {
@@ -224,6 +253,24 @@ test("a mixed gallery opens the lightbox index of the current slide", () => {
   assert.equal(opens.length, 1)
 })
 
+test("an earlier slide that opts out of the lightbox maps the current slide to its gallery index", () => {
+  const slides = [
+    slide(0, { enabled: false }),
+    slide(1, { lightboxIndex: 0 }),
+    slide(2, { lightboxIndex: 1, src: "https://videos.example.com/two.mp4" })
+  ]
+  const { controller, root, opens } = mount({ slides })
+
+  controller.currentIndex = 1
+  click(root, clickTarget({ slide: slides[1] }))
+  assert.equal(opens[0].detail.index, 0)
+
+  controller.currentIndex = 2
+  click(root, clickTarget({ slide: slides[2] }))
+  assert.equal(opens[1].detail.index, 1)
+  assert.notEqual(opens[1].detail.index, controller.currentIndex)
+})
+
 test("carousel controls do not open the lightbox", () => {
   const { root, slides, opens } = mount()
   const prev = clickTarget({ control: { name: "prev" } })
@@ -264,7 +311,8 @@ test("the expand control opens the current item and a following root click does 
 })
 
 test("autoplay pauses while the lightbox is open and resumes on close", () => {
-  const { controller, root, slides, document, context, opens, intervals } = mount({ autoplay: true })
+  const page = mount({ autoplay: true })
+  const { controller, root, slides, document, context, opens, intervals, loaded } = page
   assert.equal(intervals.size, 1)
 
   controller.currentIndex = 2
@@ -278,7 +326,9 @@ test("autoplay pauses while the lightbox is open and resumes on close", () => {
   assert.equal(intervals.size, 0)
   assert.equal(opens.length, 1)
 
-  root.dispatchEvent({ type: "carousel:change", detail: { index: 0, trigger: "next" } })
+  const dialog = mount({ loaded, group: "wall" })
+  dialog.controller.next()
+  assert.equal(dialog.controller.currentIndex, 1)
   assert.equal(opens.length, 1)
   assert.equal(controller.currentIndex, 2)
 
@@ -296,40 +346,81 @@ test("autoplay pauses while the lightbox is open and resumes on close", () => {
 })
 
 test("a swipe does not open the lightbox and later navigation does not loop", () => {
-  const { controller, root, viewport, slides, opens } = mount({ autoplay: true })
+  const { controller, root, viewport, slides, opens, timeouts } = mount({ autoplay: true })
   const image = clickTarget({ slide: slides[0] })
 
-  controller.pointerDownHandler({
-    pointerId: 1,
-    pointerType: "mouse",
-    button: 0,
-    isPrimary: true,
-    clientX: 300,
-    clientY: 20,
-    target: image
-  })
-  controller.pointerUpHandler({
-    pointerId: 1,
-    clientX: 20,
-    clientY: 20
-  })
+  swipe(controller, image)
 
   assert.equal(controller.currentIndex, 1)
   assert.equal(controller.suppressLightboxClick, true)
+  assert.equal(timeouts.length, 1)
   click(root, image)
   assert.equal(opens.length, 0)
   assert.equal(controller.suppressLightboxClick, false)
+  assert.equal(timeouts.length, 0)
   assert.equal(controller.currentIndex, 1)
 
   controller.next()
-  root.dispatchEvent({ type: "carousel:change", detail: { index: controller.currentIndex, trigger: "next" } })
   assert.equal(opens.length, 0)
   assert.equal(viewport.clientWidth, 400)
 })
 
+test("a swipe with no click still opens the expand control on the first tap", () => {
+  const { controller, root, viewport, slides, opens, timeouts } = mount()
+  const toggle = clickTarget({ control: { name: "expand" } })
+  controller.hasLightboxToggleTarget = true
+  controller.lightboxToggleTarget = toggle.closest("button")
+  controller.currentIndex = 2
+
+  swipe(controller, clickTarget({ slide: slides[2] }))
+  assert.equal(controller.currentIndex, 0)
+  assert.equal(controller.suppressLightboxClick, true)
+  assert.equal(opens.length, 0)
+
+  viewport.contains = (node) => node === toggle
+  const event = {
+    type: "click",
+    button: 0,
+    target: toggle,
+    preventDefault() { this.defaulted = true },
+    stopPropagation() { this.stopped = true }
+  }
+  controller.openLightbox(event)
+  assert.equal(opens.length, 1)
+  assert.equal(opens[0].detail.index, 0)
+  assert.equal(event.stopped, true)
+
+  root.dispatchEvent(event)
+  assert.equal(opens.length, 1)
+  assert.equal(controller.suppressLightboxClick, false)
+  assert.equal(timeouts.length, 0)
+})
+
+test("a swipe that never clicks drops the suppression on its timer", () => {
+  const { controller, slides, timeouts } = mount()
+  const source = fs.readFileSync(path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "controllers", "carousel_controller.js"), "utf8")
+  const declared = source.match(/const SWIPE_CLICK_SUPPRESS_MS = (\d+)/)
+  assert.ok(declared)
+  const wait = Number(declared[1])
+  assert.equal(source.split("SWIPE_CLICK_SUPPRESS_MS").length - 1, 2)
+  assert.equal(source.split(String(wait)).length - 1, 1)
+
+  swipe(controller, clickTarget({ slide: slides[0] }))
+  assert.equal(timeouts.length, 1)
+  assert.equal(timeouts[0].ms, wait)
+
+  timeouts[0].fn()
+  assert.equal(controller.suppressLightboxClick, false)
+  assert.equal(controller.swipeClickSuppressTimer, null)
+})
+
 test("disconnect removes the click and close listeners", () => {
-  const { controller, root, document, context, opens } = mount()
+  const { controller, root, document, context, opens, timeouts } = mount()
+  swipe(controller, clickTarget({ slide: controller.slideTargets[0] }))
+  assert.equal(timeouts.length, 1)
   controller.disconnect()
+  assert.equal(timeouts.length, 0)
+  assert.equal(controller.suppressLightboxClick, false)
   root.dispatchEvent({
     type: "click",
     button: 0,

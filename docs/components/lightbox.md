@@ -4,7 +4,7 @@
 Open one overlay on a photo or video, starting from the thumbnail, button, or carousel slide the person clicked.
 
 ## When to use
-Use Lightbox when a control should enlarge media that already lives somewhere else on the page. The gallery is one component. Triggers are separate, so the thumbnails can sit in Masonry, a grid, a Collection, or several places and still open the same items. Use Carousel `lightbox: true` when the sequence itself should open this overlay. A click on the current slide opens that item. Carousel controls stay on the carousel. Use Modal when the layer is a form or a page, not a gallery.
+Use Lightbox when a control should enlarge media that already lives somewhere else on the page. The gallery is one component. Triggers are separate, so the thumbnails can sit in Masonry, a grid, a Collection, or several places and still open the same items. Use Carousel `lightbox: true` when the sequence itself should open this overlay. A click on the current slide opens that item. Carousel controls stay on the carousel. A swipe changes the slide and does not open the overlay. Use Modal when the layer is a form or a page, not a gallery.
 
 ## Class
 - Primary: `FlatPack::Lightbox::Component`
