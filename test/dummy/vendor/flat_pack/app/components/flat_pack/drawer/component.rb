@@ -193,12 +193,18 @@ module FlatPack
       end
 
       def render_close_button
-        content_tag(:button,
-          type: "button",
-          class: "shrink-0 cursor-pointer text-[var(--drawer-close-icon-color)] hover:text-[var(--drawer-close-icon-hover-color)] transition-colors rounded-[var(--radius-sm)] p-1 fp-hit-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          aria: {label: fp_t("drawer.close")},
-          data: {action: "flat-pack--drawer#close"}) do
-          render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md)
+        content_tag(:span, class: "fp-drawer__close") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("drawer.close"),
+            icon: "x-mark",
+            icon_only: true,
+            style: :ghost,
+            size: :md,
+            type: "button",
+            class: "shrink-0 rounded-[var(--radius-sm)]",
+            aria: {label: fp_t("drawer.close")},
+            data: {action: "flat-pack--drawer#close"}
+          )
         end
       end
 

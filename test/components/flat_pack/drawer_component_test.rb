@@ -20,6 +20,7 @@ module FlatPack
         assert_includes html, "fp-drawer-body"
         assert_selector "[role='dialog'][aria-modal='true']"
         assert_selector "h2", text: "Filters"
+        assert_selector ".fp-drawer__close button.fp-button[data-fp-style='ghost'][aria-label='Close'][data-action='flat-pack--drawer#close']"
         assert_text "Narrow the list."
       end
 

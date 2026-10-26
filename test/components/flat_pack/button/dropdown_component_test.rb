@@ -23,9 +23,10 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "More", chevron: "archive"))
 
         trigger = page.find("button")
-        assert_equal ["span", "svg"], trigger.native.element_children.map(&:name)
-        assert_equal "archive", trigger.find("svg")["data-flat-pack--icon-name-value"]
-        assert_nil trigger.find("svg")["data-flat-pack--button-dropdown-target"]
+        assert_equal ["span", "span"], trigger.native.element_children.map(&:name)
+        chevron = trigger.find("span:last-child svg")
+        assert_equal "archive", chevron["data-flat-pack--icon-name-value"]
+        assert_nil chevron["data-flat-pack--button-dropdown-target"]
 
         error = assert_raises(ArgumentError) { Dropdown::Component.new(text: "More", chevron: true) }
         assert_equal "chevron must be a string", error.message
@@ -419,7 +420,14 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", icon_only: false, round: false))
 
         assert_equal default_html, page.native.to_html
-        assert_equal labeled_trigger_class, page.find("button")["class"]
+        trigger = page.find("button")
+        assert_includes trigger["class"], "fp-button"
+        assert_includes trigger["class"], "fp-button-dropdown__trigger"
+        assert_equal "default", trigger["data-fp-style"]
+        assert_equal "click->flat-pack--button-dropdown#toggle", trigger["data-action"]
+        assert_equal "trigger", trigger["data-flat-pack--button-dropdown-target"]
+        assert_equal "true", trigger["aria-haspopup"]
+        assert_equal "false", trigger["aria-expanded"]
         assert_selector "button span", text: "Actions"
         assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
         refute_includes default_html, "fp-hit-target"
@@ -591,24 +599,6 @@ module FlatPack
           assert_selector "div[data-flat-pack--button-dropdown-placement-value='#{placement}']"
           assert_selector "button[data-flat-pack--button-dropdown-target='trigger'][aria-haspopup='true']"
         end
-      end
-
-      def labeled_trigger_class
-        TailwindMerge::Merger.new.merge([
-          "fp-button-dropdown__trigger",
-          "inline-flex items-center justify-center gap-2",
-          "rounded-[var(--button-border-radius)]",
-          "font-medium",
-          "cursor-pointer",
-          "fp-button",
-          "fp-button-raised",
-          "border",
-          "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
-          "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
-          "fp-touch-manipulation",
-          FlatPack::Button::Component::SIZES.fetch(:md)
-        ].join(" "))
       end
     end
   end

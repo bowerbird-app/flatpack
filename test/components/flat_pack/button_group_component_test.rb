@@ -284,8 +284,8 @@ module FlatPack
         assert_equal ["Rename", "Duplicate"], row_labels(".fp-button-group")
         assert_equal ["Delete", "Share", "Move"], overflow_labels
         trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger")
-        assert_equal ["span", "svg"], trigger_child_names(trigger)
-        assert_equal "Extras", trigger.find("span").text
+        assert_equal ["span", "span"], trigger_child_names(trigger)
+        assert_equal "Extras", trigger.find("span", match: :first).text
         assert_equal "chevron-down", trigger.find("svg")["data-flat-pack--icon-name-value"]
         assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
         assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
@@ -506,8 +506,8 @@ module FlatPack
         end
 
         trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]")
-        assert_equal ["span", "svg"], trigger_child_names(trigger)
-        assert_equal "More", trigger.find("span").text
+        assert_equal ["span", "span"], trigger_child_names(trigger)
+        assert_equal "More", trigger.find("span", match: :first).text
         assert_equal "chevron-down", trigger.find("svg")["data-flat-pack--icon-name-value"]
         assert_equal "chevron", trigger.find("svg")["data-flat-pack--button-dropdown-target"]
         refute trigger["aria-label"]
@@ -539,8 +539,8 @@ module FlatPack
         end
 
         labeled = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=secondary]")
-        assert_equal ["span", "svg"], trigger_child_names(labeled)
-        assert_equal "More", labeled.find("span").text
+        assert_equal ["span", "span"], trigger_child_names(labeled)
+        assert_equal "More", labeled.find("span", match: :first).text
         assert_equal "archive", labeled.find("svg")["data-flat-pack--icon-name-value"]
         assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='chevron-down']"
         assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"

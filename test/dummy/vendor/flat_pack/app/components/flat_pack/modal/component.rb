@@ -263,12 +263,18 @@ module FlatPack
       end
 
       def render_close_button
-        content_tag(:button,
-          type: "button",
-          class: close_button_classes,
-          aria: {label: fp_t("modal.close")},
-          data: {action: "flat-pack--modal#close"}) do
-          close_icon
+        content_tag(:span, class: "fp-modal__close") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("modal.close"),
+            icon: "x-mark",
+            icon_only: true,
+            style: :ghost,
+            size: :md,
+            type: "button",
+            class: "shrink-0 rounded-[var(--radius-sm)]",
+            aria: {label: fp_t("modal.close")},
+            data: {action: "flat-pack--modal#close"}
+          )
         end
       end
 
@@ -323,10 +329,6 @@ module FlatPack
 
       def render_close_button_row
         content_tag(:div, class: close_button_row_classes) { render_close_button }
-      end
-
-      def close_icon
-        render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md)
       end
 
       def render_header_content

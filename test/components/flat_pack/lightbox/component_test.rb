@@ -29,6 +29,10 @@ module FlatPack
         assert_includes close[:class], "absolute"
         assert_includes close[:class], "end-0"
         assert_includes close[:class], "top-0"
+        assert_includes close[:class], "fp-button"
+        assert_equal "secondary", close["data-fp-style"]
+        assert_equal "click->flat-pack--lightbox#close", close["data-action"]
+        assert_selector ".fp-lightbox__close", visible: :all
 
         stage = dialog.find("[data-flat-pack-lightbox-stage='true']", visible: :all)
         assert_equal "true", stage["data-flat-pack--carousel-loop-value"]

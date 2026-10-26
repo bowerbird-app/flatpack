@@ -189,17 +189,25 @@ module FlatPack
         def render_floating_submit_button
           return if actions? || @show_cancel
 
-          content_tag(:button,
-            type: "submit",
-            class: "absolute bottom-4 right-4 inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--comments-composer-submit-background-color)] text-[var(--comments-composer-submit-text-color)] shadow-lg transition-colors duration-base hover:bg-[var(--comments-composer-submit-hover-background-color)]",
-            disabled: @disabled,
-            form: @form,
-            "aria-label": @submit_label) do
-            safe_join([
-              render(FlatPack::Shared::IconComponent.new(name: "paper-airplane", size: :md, class: "rotate-90")),
-              content_tag(:span, @submit_label, class: "sr-only")
-            ])
+          content_tag(:span, class: "fp-comments-composer-submit") do
+            render FlatPack::Button::Component.new(**floating_submit_arguments)
           end
+        end
+
+        def floating_submit_arguments
+          arguments = {
+            text: @submit_label,
+            icon: "paper-airplane",
+            icon_only: true,
+            style: :primary,
+            size: :md,
+            type: "submit",
+            disabled: @disabled,
+            class: "absolute bottom-4 right-4 h-10 w-10 rounded-[var(--radius-xl)]",
+            aria: {label: @submit_label}
+          }
+          arguments[:form] = @form if @form
+          arguments
         end
 
         def render_cancel_button

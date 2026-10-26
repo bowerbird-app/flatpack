@@ -8,27 +8,26 @@ module FlatPack
       def test_dismiss_button_is_a_centered_ghost_control
         render_inline(Component.new(text: "Saved", style: :success))
 
-        html = page.native.to_html
-
-        assert_includes html, "inline-flex"
-        assert_includes html, "items-center"
-        assert_includes html, "justify-center"
-        assert_includes html, "fp-hit-slop"
-        assert_includes html, "pointer-events-auto"
-        refute_includes html, "fp-hit-target"
-        assert_includes html, "text-[var(--toast-dismiss-text-color)]"
-        assert_includes html, "hover:bg-[var(--toast-dismiss-hover-background-color)]"
-        refute_includes html, "bg-[var(--toast-danger-dismiss-background-color)]"
+        button = page.find("button[aria-label='Dismiss']")
+        assert_equal "button", button["type"]
+        assert_equal "ghost", button["data-fp-style"]
+        assert_equal "flat-pack--toast#dismiss", button["data-action"]
+        assert_includes button["class"], "fp-button"
+        assert_includes button["class"], "fp-hit-slop"
+        refute_includes button["class"], "fp-hit-target"
+        assert_selector ".fp-toast__dismiss"
+        refute_includes page.native.to_html, "bg-[var(--toast-danger-dismiss-background-color)]"
+        assert_includes css_host("fp-toast__dismiss"), "--button-ghost-text-color: var(--toast-dismiss-text-color)"
+        assert_includes css_host("fp-toast__dismiss"), "--button-ghost-hover-background-color: var(--toast-dismiss-hover-background-color)"
       end
 
       def test_danger_dismiss_matches_other_styles
         render_inline(Component.new(text: "Failed", style: :danger))
 
-        html = page.native.to_html
-
-        assert_includes html, "text-[var(--toast-dismiss-text-color)]"
-        refute_includes html, "bg-[var(--toast-danger-dismiss-background-color)]"
-        refute_includes html, "text-[var(--toast-danger-dismiss-text-color)]"
+        button = page.find("button[aria-label='Dismiss']")
+        assert_equal "ghost", button["data-fp-style"]
+        refute_includes page.native.to_html, "bg-[var(--toast-danger-dismiss-background-color)]"
+        refute_includes page.native.to_html, "text-[var(--toast-danger-dismiss-text-color)]"
       end
 
       def test_default_size_is_medium
@@ -63,6 +62,13 @@ module FlatPack
         end
 
         assert_includes error.message, "Invalid size"
+      end
+
+      private
+
+      def css_host(name)
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        css[/#{Regexp.escape(".#{name}")} \{.*?\}/m].to_s
       end
     end
   end

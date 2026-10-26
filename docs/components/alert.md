@@ -44,4 +44,5 @@ None (optional block content replaces title/description rendering).
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Dismissible mode attaches Stimulus controller `flat-pack--alert`. The dismiss action is `flat-pack--alert#dismiss`. The custom event name stays `alert:dismissed`.
+- The dismiss control is a ghost icon-only Button. `.fp-alert__dismiss` maps `--alert-dismiss-button-*` onto `--button-ghost-*` and `--button-focus-ring-color`.
 - Dismiss collapses height and opacity on `--duration-slow` / `--easing-exit` via `playCollapseExit`, so stacked alerts do not jump. Reduced motion snaps.

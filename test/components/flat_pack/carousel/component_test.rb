@@ -97,16 +97,19 @@ module FlatPack
         prev_button = page.find("button[data-action='click->flat-pack--carousel#prev']")
         control_classes = prev_button[:class]
 
-        assert_includes control_classes, "rounded-full"
-        assert_includes control_classes, "aspect-square"
-        assert_includes control_classes, "flex"
+        assert_includes control_classes, "fp-button"
+        assert_includes control_classes, "flat-pack-carousel__control"
+        assert_includes control_classes, FlatPack::Button::Component::ROUND_RADIUS_CLASS
+        assert_includes control_classes, "inline-flex"
         assert_includes control_classes, "cursor-pointer"
-        assert_includes control_classes, "bg-[var(--carousel-control-background-color)]"
-        assert_includes control_classes, "hover:bg-[var(--carousel-control-hover-background-color)]"
-        assert_includes control_classes, "text-[var(--carousel-control-text-color)]"
+        assert_equal "secondary", prev_button["data-fp-style"]
+        assert_equal "Previous slide", prev_button["aria-label"]
+        assert_selector ".fp-overlay-icon-button button[data-action='click->flat-pack--carousel#prev']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg[data-flat-pack--icon-name-value='chevron-left']", visible: :all
         assert_selector "button[data-action='click->flat-pack--carousel#next'] svg[data-flat-pack--icon-name-value='chevron-right']", visible: :all
-        assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg.pointer-events-none", visible: :all
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        assert_includes css, ".fp-overlay-icon-button svg {\n  pointer-events: none;\n}"
+        assert_includes css, "--button-secondary-background-color: var(--carousel-control-background-color);"
       end
 
       def test_hides_controls_until_hover_on_desktop_when_controls_on_hover_enabled
@@ -145,9 +148,10 @@ module FlatPack
         lightbox_toggle = page.find("button[data-flat-pack--carousel-target='lightboxToggle'][data-action='click->flat-pack--carousel#openLightbox']", visible: :all)
 
         assert_includes lightbox_toggle[:class], "top-3"
-        assert_includes lightbox_toggle[:class], "bg-[var(--carousel-control-background-color)]"
-        assert_includes lightbox_toggle[:class], "hover:bg-[var(--carousel-control-hover-background-color)]"
-        assert_includes lightbox_toggle[:class], "text-[var(--carousel-control-text-color)]"
+        assert_includes lightbox_toggle[:class], "fp-button"
+        assert_equal "secondary", lightbox_toggle["data-fp-style"]
+        assert_equal "click->flat-pack--carousel#openLightbox", lightbox_toggle["data-action"]
+        assert_equal "lightboxToggle", lightbox_toggle["data-flat-pack--carousel-target"]
         refute_includes lightbox_toggle[:class], "top-12"
         assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
       end

@@ -9,7 +9,7 @@ module FlatPack
       # "border-[var(--toast-success-border-color)]" "bg-[var(--toast-success-background-color)]" "text-[var(--toast-success-text-color)]" "text-[var(--toast-success-icon-color)]"
       # "border-[var(--toast-warning-border-color)]" "bg-[var(--toast-warning-background-color)]" "text-[var(--toast-warning-text-color)]" "text-[var(--toast-warning-icon-color)]"
       # "border-[var(--toast-danger-border-color)]" "bg-[var(--toast-danger-background-color)]" "text-[var(--toast-danger-text-color)]" "text-[var(--toast-danger-icon-color)]"
-      # "text-[var(--toast-dismiss-text-color)]" "hover:text-[var(--toast-dismiss-hover-text-color)]" "hover:bg-[var(--toast-dismiss-hover-background-color)]" "pointer-events-auto"
+      # "pointer-events-auto"
       STYLES = {
         info: {
           border: "border-[var(--toast-info-border-color)]",
@@ -187,33 +187,19 @@ module FlatPack
       def render_dismiss_button
         return nil unless @dismissible
 
-        content_tag(:button,
-          type: "button",
-          class: dismiss_button_classes,
-          aria: {label: fp_t("toast.dismiss")},
-          data: {action: "flat-pack--toast#dismiss"}) do
-          render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :sm)
+        content_tag(:span, class: "fp-toast__dismiss") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("toast.dismiss"),
+            icon: "x-mark",
+            icon_only: true,
+            style: :ghost,
+            size: :xs,
+            type: "button",
+            class: "shrink-0 rounded-[var(--radius-sm)]",
+            aria: {label: fp_t("toast.dismiss")},
+            data: {action: "flat-pack--toast#dismiss"}
+          )
         end
-      end
-
-      def dismiss_button_classes
-        classes(
-          "inline-flex",
-          "items-center",
-          "justify-center",
-          "flex-shrink-0",
-          "cursor-pointer",
-          "transition-colors",
-          "rounded-[var(--radius-sm)]",
-          "p-1.5",
-          "fp-hit-slop",
-          "text-[var(--toast-dismiss-text-color)]",
-          "hover:text-[var(--toast-dismiss-hover-text-color)]",
-          "hover:bg-[var(--toast-dismiss-hover-background-color)]",
-          "focus-visible:outline-none",
-          "focus-visible:ring-2 focus-visible:ring-inset",
-          "focus-visible:ring-ring"
-        )
       end
 
       def validate_text!

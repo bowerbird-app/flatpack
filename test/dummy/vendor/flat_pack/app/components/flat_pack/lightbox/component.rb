@@ -110,20 +110,20 @@ module FlatPack
       end
 
       def render_close_button
-        content_tag(:button, type: "button", class: close_classes, aria: {label: fp_t("lightbox.close")}, data: {action: "click->flat-pack--lightbox#close"}) do
-          render FlatPack::Shared::IconComponent.new(name: "x-mark", size: :md, class: "pointer-events-none")
+        content_tag(:span, class: "fp-lightbox__close fp-overlay-icon-button") do
+          render FlatPack::Button::Component.new(
+            text: fp_t("lightbox.close"),
+            icon: "x-mark",
+            icon_only: true,
+            round: true,
+            style: :secondary,
+            size: :md,
+            type: "button",
+            class: "absolute end-0 top-0 z-30",
+            aria: {label: fp_t("lightbox.close")},
+            data: {action: "click->flat-pack--lightbox#close"}
+          )
         end
-      end
-
-      def close_classes
-        [
-          "absolute end-0 top-0 z-30 flex aspect-square w-10 cursor-pointer items-center justify-center rounded-full",
-          "bg-[var(--carousel-control-background-color)] text-[var(--carousel-control-text-color)]",
-          "transition-colors duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
-          "hover:bg-[var(--carousel-control-hover-background-color)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
-          "motion-reduce:transition-none"
-        ].join(" ")
       end
 
       def render_stage

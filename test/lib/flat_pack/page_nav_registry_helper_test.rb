@@ -337,7 +337,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
 
       labeled = css_select(".fp-button-group__overflow > .fp-button-dropdown__trigger").first
       assert_equal "More", labeled.at_css("span").text
-      assert_equal %w[span svg], labeled.element_children.map(&:name)
+      assert_equal %w[span span], labeled.element_children.map(&:name)
       assert_equal "archive", labeled.at_css("svg")["data-flat-pack--icon-name-value"]
 
       error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_overflow_icon" }

@@ -1,7 +1,5 @@
 <div <%= tag.attributes(wrapper_attributes) %>>
-  <button <%= tag.attributes(button_attributes) %><%= " disabled" if @disabled %>>
-    <%= button_content %>
-  </button>
+  <%= render_trigger_button %>
 
   <div <%= tag.attributes(menu_attributes) %> style="max-height: <%= @max_height %>">
     <% menu.each do |item| %>

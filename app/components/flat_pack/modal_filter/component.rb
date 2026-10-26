@@ -60,16 +60,18 @@ module FlatPack
       private
 
       def render_trigger
-        button_tag(
+        button = FlatPack::Button::Component.new(
+          text: @trigger_label,
+          style: :secondary,
+          size: @button_size,
           type: "button",
-          class: trigger_button_classes,
           data: {
             action: "click->flat-pack--modal#open",
-            "modal-id": modal_id
+            modal_id: modal_id
           }
-        ) do
-          trigger_content
-        end
+        )
+        button.with_trailing { render_count_badge } if @active_count.positive?
+        render(button)
       end
 
       def render_modal
@@ -127,36 +129,12 @@ module FlatPack
         )
       end
 
-      def trigger_content
-        content = [content_tag(:span, @trigger_label)]
-        content << render_count_badge if @active_count.positive?
-        safe_join(content)
-      end
-
       def render_count_badge
         render FlatPack::Badge::Component.new(
           text: @active_count.to_s,
           style: :primary,
           size: :xs
         )
-      end
-
-      def trigger_button_classes
-        classes(
-          "inline-flex items-center justify-center gap-2",
-          "rounded-[var(--button-border-radius)]",
-          "font-medium",
-          "cursor-pointer",
-          "transition-colors duration-base",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
-          "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
-          button_size_classes,
-          "bg-[var(--button-secondary-background-color)] hover:bg-[var(--button-secondary-hover-background-color)] text-[var(--button-secondary-text-color)] border border-[var(--button-secondary-border-color)]"
-        )
-      end
-
-      def button_size_classes
-        FlatPack::Button::Component::SIZES.fetch(@button_size)
       end
 
       def filter_body_markup

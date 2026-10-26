@@ -50,7 +50,7 @@ Use `drawer.header` / `drawer.body` / `drawer.footer`. There is no `with_` prefi
 
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` when a title or header is present.
-- Focus moves into the panel; Tab cycles inside; close restores the trigger.
+- Focus moves into the panel; Tab cycles inside; close restores the trigger. The close control is a ghost icon-only Button. `.fp-drawer__close` maps `--drawer-close-icon-*` onto `--button-ghost-*`. The action stays `flat-pack--drawer#close`.
 - Body scroll lock shares the same count key as Modal (`flatPackModalLockCount`).
 - Overlay and `.fp-drawer-body` use `overscroll-behavior: contain`. The panel uses `.fp-overlay-pad`.
 - Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. Reduced motion fades without a slide. Motion writes the Tailwind v4 `translate` property (not `transform`).

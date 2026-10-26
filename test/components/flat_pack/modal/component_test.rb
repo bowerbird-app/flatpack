@@ -91,7 +91,7 @@ module FlatPack
           component.body { "Content" }
         end
 
-        assert_selector "button[aria-label='Close']"
+        assert_selector ".fp-modal__close button.fp-button[data-fp-style='ghost'][type='button'][aria-label='Close'][data-action='flat-pack--modal#close']"
       end
 
       def test_modal_has_dialog_role
