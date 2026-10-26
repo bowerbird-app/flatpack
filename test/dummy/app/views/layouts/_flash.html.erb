@@ -1,0 +1,2 @@
+<% mode = (params[:flash_as].to_s == "toast") ? :toast : :alert %>
+<%= render FlatPack::Flash::Component.new(flash: flash, as: mode, **(mode == :alert ? {class: "mb-4"} : {})) %>

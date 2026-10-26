@@ -376,12 +376,7 @@
       <% layout.main do %>
         <main id="main" tabindex="-1" class="fp-layout-content py-4 sm:py-8 bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
           <div class="fp-layout-column pb-24">
-            <% if notice.present? %>
-              <%= render FlatPack::Alert::Component.new(description: notice, style: :success, dismissible: true, class: "mb-4") %>
-            <% end %>
-            <% if alert.present? %>
-              <%= render FlatPack::Alert::Component.new(description: alert, style: :danger, dismissible: true, class: "mb-4") %>
-            <% end %>
+            <%= render "layouts/flash" %>
 
             <% unless @page_nav_in_demo %>
               <% page_nav = flat_pack_page_nav_tag %>

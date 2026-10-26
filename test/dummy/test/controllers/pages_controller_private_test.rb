@@ -4,6 +4,10 @@ require "test_helper"
 require "fileutils"
 
 class PagesControllerPrivateTest < ActiveSupport::TestCase
+  test "flash demo is uncached" do
+    assert_includes PagesController::UNCACHED_ACTIONS, :flash_demo
+  end
+
   test "query-driven tables demos are uncached" do
     assert_includes PagesController::UNCACHED_ACTIONS, :tables_basic
     assert_includes PagesController::UNCACHED_ACTIONS, :tables_sortable

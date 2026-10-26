@@ -4,7 +4,7 @@
 Render inline status messages for informational, success, warning, or danger feedback. Success, warning, and danger use a tinted surface with a coloured icon and border; they do not fill like status buttons.
 
 ## When to use
-Use Alert when users need immediate contextual feedback near form content or page state.
+Use Alert when users need immediate contextual feedback near form content or page state. A Rails flash that should stay on the page is [`FlatPack::Flash::Component`](flash.md) with `as: :alert`.
 
 ## Class
 - Primary: `FlatPack::Alert::Component`

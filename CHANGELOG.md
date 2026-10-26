@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.312] - 2026-10-26
+
+### Added
+- `FlatPack::Flash::Component` turns a flash hash the caller passes into Flatpack UI. `as: :alert` stacks `FlatPack::Alert::Component`. `as: :toast` renders `FlatPack::Toast::Component` inside `FlatPack::Toasts::Region::Component`. The existing toast controller shows those toasts on load and dismisses them on the toast timeout, including when Turbo inserts the markup. Default styles: `notice` and `success` map to success, `alert`, `error`, and `danger` map to danger, `warning` maps to warning, `info` maps to info, and any other key maps to info. `styles:` overrides keys for that call. Blank values are skipped. Array values render one message each. Message text is escaped.
+
+### Upgrade notes
+- Opt in where you render flash: `render FlatPack::Flash::Component.new(flash: flash, as: :toast)`. Pass `flash:` on each call.
+- No new Stimulus controller. Do not rebuild Tailwind. Do not rerun `bin/rails generate flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.312`.
+
 ## [0.1.311] - 2026-10-26
 
 ### Changed

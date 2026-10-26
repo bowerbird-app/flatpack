@@ -109,11 +109,17 @@ class PagesController < ApplicationController
     forms_unsaved_changes
     buttons_trash buttons_trash_destroy
     fab
+    flash_demo
   ].freeze
+
+  FLASH_DEMO_PAGES = %w[alerts toasts].freeze
+  FLASH_DEMO_MODES = %w[alert toast].freeze
+  FLASH_DEMO_KEYS = %w[notice alert both].freeze
 
   before_action :serve_from_page_cache, except: UNCACHED_ACTIONS
   after_action :write_to_page_cache, except: UNCACHED_ACTIONS
   before_action :disable_http_cache, only: %i[chips chip_add_callback chip_remove_callback]
+  before_action :disable_http_cache, if: :flash_preview_request?
 
   def demo
     @component_index = cached_component_index
@@ -362,6 +368,21 @@ class PagesController < ApplicationController
   end
 
   def alerts
+  end
+
+  def flash_demo
+    page = params[:return_to].to_s
+    page = "alerts" unless FLASH_DEMO_PAGES.include?(page)
+    mode = params[:as].to_s
+    key = params[:key].to_s
+
+    unless FLASH_DEMO_MODES.include?(mode) && FLASH_DEMO_KEYS.include?(key)
+      redirect_to demo_alerts_path
+      return
+    end
+
+    write_flash_demo(key)
+    redirect_to public_send(:"demo_#{page}_path", flash_as: mode)
   end
 
   def forms
@@ -2670,6 +2691,7 @@ class PagesController < ApplicationController
   end
 
   def serve_from_page_cache
+    return if flash_preview_request?
     return unless request.format.html? && request.get?
 
     cached = Rails.cache.read(page_cache_key)
@@ -2679,9 +2701,26 @@ class PagesController < ApplicationController
   end
 
   def write_to_page_cache
+    return if flash_preview_request?
     return unless request.format.html? && request.get? && response.successful?
 
     Rails.cache.write(page_cache_key, response.body, expires_in: 1.hour)
+  end
+
+  def write_flash_demo(key)
+    case key
+    when "notice"
+      flash[:notice] = "Saved."
+    when "alert"
+      flash[:alert] = "Nope. Try again."
+    when "both"
+      flash[:notice] = "Saved."
+      flash[:alert] = "Nope. Try again."
+    end
+  end
+
+  def flash_preview_request?
+    params[:flash_as].present?
   end
 
   def disable_http_cache
