@@ -2495,6 +2495,9 @@
   .bg-\[var\(--modal-surface-color\)\] {
     background-color: var(--modal-surface-color);
   }
+  .bg-\[var\(--overlay-scrim-color\)\] {
+    background-color: var(--overlay-scrim-color);
+  }
   .bg-\[var\(--pagination-current-background-color\)\] {
     background-color: var(--pagination-current-background-color);
   }
