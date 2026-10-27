@@ -14,9 +14,12 @@ function loadController(overrides = {}) {
       "const flatPackCopy = (key) => ({'collection_editor.already_joined': 'This image is already on this page', 'collection_editor.create_failed': 'Could not create the record', 'collection_editor.load_failed': 'Could not load the record', 'collection_editor.save_failed': 'Could not save the record'})[key] || key"
     )
     .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
+    .replace(/import \{[^}]+\} from "flat_pack\/positioning"\n/, "")
     .replace("export default class extends Controller", "class CollectionEditorController extends Controller") + "\nmodule.exports = CollectionEditorController\n"
-  const clickOutsidePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "click_outside.js")
-  const clickOutsideSource = fs.readFileSync(clickOutsidePath, "utf8").replaceAll("export function ", "function ")
+  const flatPackRoot = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack")
+  const helperSource = (name) => fs.readFileSync(path.join(flatPackRoot, name), "utf8").replaceAll("export function ", "function ")
+  const clickOutsideSource = helperSource("click_outside.js")
+  const positioningSource = helperSource("positioning.js")
 
   const context = {
     module: {exports: {}},
@@ -40,7 +43,7 @@ function loadController(overrides = {}) {
     ...overrides
   }
 
-  vm.runInNewContext(clickOutsideSource + "\n" + transformed, context, {filename: filePath})
+  vm.runInNewContext(`${clickOutsideSource}\n${positioningSource}\n${transformed}`, context, {filename: filePath})
   return context.module.exports
 }
 
