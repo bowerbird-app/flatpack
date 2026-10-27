@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.324] - 2026-10-27
+
+### Changed
+- Date picker places its panel with `place` in `flat_pack/positioning.js`. The panel still opens below the trigger, or above when below does not fit. The gap stays 8px. The viewport clamp reads `--overlay-edge-offset` (8px unless a theme sets another px value). An oversized panel still sticks to that edge. The controller still sets the panel width, and at `max-width: 767px` the panel is still full screen. Scroll and resize while the panel is open still follow the trigger. Disconnect still removes those listeners. The open panel is still portaled to `document.body`.
+- No new `place` option. Date picker passes `placement: "bottom"`, `flip: true`, and `stickToEdge: true`.
+
+### Upgrade notes
+- No new importmap pin. `flat_pack/positioning` is already on the engine importmap. A missing pin now stops Date picker as well as Popover and Button dropdown. Those three controllers import the module. Every other controller is its own lazy-loaded file and still loads.
+- Placement is unchanged when `--overlay-edge-offset` is `8px`. A theme that changes the token changes the fit inset, the clamp, the width cap, and `max-width`. The 8px gap does not follow the token. The `max-width: 767px` full-screen panel does not follow the token. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.324`.
+
 ## [0.1.323] - 2026-10-27
 
 ### Changed

@@ -10,7 +10,7 @@
 //   flip: when the preferred side does not fit, use the opposite side (default true)
 //   stickToEdge: when the panel is larger than the viewport, pin it to `edge`
 //                (default false). Popover leaves an oversized panel past the edge.
-//                Button dropdown sticks.
+//                Button dropdown and Date picker stick.
 //   returns { top, left, placement }
 //   Cross axis is centered for top/bottom/left/right, the anchor's start for *_left,
 //   and the anchor's end for *_right. Clamp uses
