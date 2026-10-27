@@ -14,8 +14,8 @@ module FlatPack
         assert_selector "div.fp-overlay.relative.inline-flex"
         assert_selector "div.fp-overlay > div.contents img[alt='Stool in a box']"
         assert_selector "[data-fp-placement='top_left'][data-fp-inset='md']", text: "New"
-        assert_includes page.native.to_html, "top-[var(--overlay-inset-md)]"
-        assert_includes page.native.to_html, "left-[var(--overlay-inset-md)]"
+        assert_includes page.native.to_html, "top-[var(--fp-overlay-item-inset)]"
+        assert_includes page.native.to_html, "left-[var(--fp-overlay-item-inset)]"
       end
 
       def test_nine_placements_use_the_grid
@@ -31,15 +31,15 @@ module FlatPack
         end
 
         html = page.native.to_html
-        assert_includes html, "top-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]"
-        assert_includes html, "top-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2"
-        assert_includes html, "top-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]"
-        assert_includes html, "top-1/2 left-[var(--overlay-inset-md)] -translate-y-1/2"
+        assert_includes html, "top-[var(--fp-overlay-item-inset)] left-[var(--fp-overlay-item-inset)]"
+        assert_includes html, "top-[var(--fp-overlay-item-inset)] left-1/2 -translate-x-1/2"
+        assert_includes html, "top-[var(--fp-overlay-item-inset)] right-[var(--fp-overlay-item-inset)]"
+        assert_includes html, "top-1/2 left-[var(--fp-overlay-item-inset)] -translate-y-1/2"
         assert_includes html, "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        assert_includes html, "top-1/2 right-[var(--overlay-inset-md)] -translate-y-1/2"
-        assert_includes html, "bottom-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]"
-        assert_includes html, "bottom-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2"
-        assert_includes html, "bottom-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]"
+        assert_includes html, "top-1/2 right-[var(--fp-overlay-item-inset)] -translate-y-1/2"
+        assert_includes html, "bottom-[var(--fp-overlay-item-inset)] left-[var(--fp-overlay-item-inset)]"
+        assert_includes html, "bottom-[var(--fp-overlay-item-inset)] left-1/2 -translate-x-1/2"
+        assert_includes html, "bottom-[var(--fp-overlay-item-inset)] right-[var(--fp-overlay-item-inset)]"
       end
 
       def test_inset_steps_use_the_inset_tokens
@@ -49,11 +49,14 @@ module FlatPack
           overlay.with_item(placement: :bottom_right, inset: :lg) { "Large" }
         end
 
-        html = page.native.to_html
-        assert_includes html, "top-[var(--overlay-inset-sm)] left-[var(--overlay-inset-sm)]"
-        assert_includes html, "bottom-[var(--overlay-inset-lg)] right-[var(--overlay-inset-lg)]"
-        assert_selector "[data-fp-placement='top_left'][data-fp-inset='sm']", text: "Small"
-        assert_selector "[data-fp-placement='bottom_right'][data-fp-inset='lg']", text: "Large"
+        small = page.find("[data-fp-placement='top_left'][data-fp-inset='sm']")
+        large = page.find("[data-fp-placement='bottom_right'][data-fp-inset='lg']")
+        assert_includes small[:class], "top-[var(--fp-overlay-item-inset)]"
+        assert_includes small[:class], "left-[var(--fp-overlay-item-inset)]"
+        assert_includes large[:class], "bottom-[var(--fp-overlay-item-inset)]"
+        assert_includes large[:class], "right-[var(--fp-overlay-item-inset)]"
+        assert_equal "Small", small.text
+        assert_equal "Large", large.text
       end
 
       def test_edge_centers_use_inset_on_the_edge_axis_only
@@ -62,11 +65,12 @@ module FlatPack
           overlay.with_item(placement: :middle_left, inset: :lg) { "Side" }
         end
 
-        html = page.native.to_html
-        assert_includes html, "top-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2"
-        refute_includes html, "left-[var(--overlay-inset-md)]"
-        assert_includes html, "top-1/2 left-[var(--overlay-inset-lg)] -translate-y-1/2"
-        refute_includes html, "top-[var(--overlay-inset-lg)]"
+        top = page.find("[data-fp-placement='top_center']")
+        side = page.find("[data-fp-placement='middle_left']")
+        assert_includes top[:class], "top-[var(--fp-overlay-item-inset)]"
+        refute_includes top[:class], "left-[var(--fp-overlay-item-inset)]"
+        assert_includes side[:class], "left-[var(--fp-overlay-item-inset)]"
+        refute_includes side[:class], "top-[var(--fp-overlay-item-inset)]"
       end
 
       def test_center_ignores_inset

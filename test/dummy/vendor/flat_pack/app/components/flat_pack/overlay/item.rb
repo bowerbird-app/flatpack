@@ -6,9 +6,8 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "absolute" "z-10" "h-max" "w-max"
-      # "top-[var(--overlay-inset-sm)]" "right-[var(--overlay-inset-sm)]" "bottom-[var(--overlay-inset-sm)]" "left-[var(--overlay-inset-sm)]"
-      # "top-[var(--overlay-inset-md)]" "right-[var(--overlay-inset-md)]" "bottom-[var(--overlay-inset-md)]" "left-[var(--overlay-inset-md)]"
-      # "top-[var(--overlay-inset-lg)]" "right-[var(--overlay-inset-lg)]" "bottom-[var(--overlay-inset-lg)]" "left-[var(--overlay-inset-lg)]"
+      # "top-[var(--fp-overlay-item-inset)]" "right-[var(--fp-overlay-item-inset)]"
+      # "bottom-[var(--fp-overlay-item-inset)]" "left-[var(--fp-overlay-item-inset)]"
       # "top-1/2" "left-1/2" "-translate-x-1/2" "-translate-y-1/2"
 
       PLACEMENTS = %i[
@@ -23,43 +22,21 @@ module FlatPack
         bottom_right
       ].freeze
 
-      # Gap sizes follow --overlay-edge-offset: sm is the token, md is twice
-      # that, lg is three times. :center does not use the inset.
+      # The length is --fp-overlay-item-inset, set on the item from data-fp-inset.
+      # sm/md/lg are resolved there, not on :root. :center does not use the inset.
       # Edge centers use it on the edge axis only.
-      INSETS = {
-        sm: {
-          top_left: "absolute z-10 h-max w-max top-[var(--overlay-inset-sm)] left-[var(--overlay-inset-sm)]",
-          top_center: "absolute z-10 h-max w-max top-[var(--overlay-inset-sm)] left-1/2 -translate-x-1/2",
-          top_right: "absolute z-10 h-max w-max top-[var(--overlay-inset-sm)] right-[var(--overlay-inset-sm)]",
-          middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--overlay-inset-sm)] -translate-y-1/2",
-          center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--overlay-inset-sm)] -translate-y-1/2",
-          bottom_left: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-sm)] left-[var(--overlay-inset-sm)]",
-          bottom_center: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-sm)] left-1/2 -translate-x-1/2",
-          bottom_right: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-sm)] right-[var(--overlay-inset-sm)]"
-        },
-        md: {
-          top_left: "absolute z-10 h-max w-max top-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]",
-          top_center: "absolute z-10 h-max w-max top-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2",
-          top_right: "absolute z-10 h-max w-max top-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]",
-          middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--overlay-inset-md)] -translate-y-1/2",
-          center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--overlay-inset-md)] -translate-y-1/2",
-          bottom_left: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-md)] left-[var(--overlay-inset-md)]",
-          bottom_center: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-md)] left-1/2 -translate-x-1/2",
-          bottom_right: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-md)] right-[var(--overlay-inset-md)]"
-        },
-        lg: {
-          top_left: "absolute z-10 h-max w-max top-[var(--overlay-inset-lg)] left-[var(--overlay-inset-lg)]",
-          top_center: "absolute z-10 h-max w-max top-[var(--overlay-inset-lg)] left-1/2 -translate-x-1/2",
-          top_right: "absolute z-10 h-max w-max top-[var(--overlay-inset-lg)] right-[var(--overlay-inset-lg)]",
-          middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--overlay-inset-lg)] -translate-y-1/2",
-          center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--overlay-inset-lg)] -translate-y-1/2",
-          bottom_left: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-lg)] left-[var(--overlay-inset-lg)]",
-          bottom_center: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-lg)] left-1/2 -translate-x-1/2",
-          bottom_right: "absolute z-10 h-max w-max bottom-[var(--overlay-inset-lg)] right-[var(--overlay-inset-lg)]"
-        }
+      INSETS = %i[sm md lg].freeze
+
+      PLACEMENT_CLASSES = {
+        top_left: "absolute z-10 h-max w-max top-[var(--fp-overlay-item-inset)] left-[var(--fp-overlay-item-inset)]",
+        top_center: "absolute z-10 h-max w-max top-[var(--fp-overlay-item-inset)] left-1/2 -translate-x-1/2",
+        top_right: "absolute z-10 h-max w-max top-[var(--fp-overlay-item-inset)] right-[var(--fp-overlay-item-inset)]",
+        middle_left: "absolute z-10 h-max w-max top-1/2 left-[var(--fp-overlay-item-inset)] -translate-y-1/2",
+        center: "absolute z-10 h-max w-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+        middle_right: "absolute z-10 h-max w-max top-1/2 right-[var(--fp-overlay-item-inset)] -translate-y-1/2",
+        bottom_left: "absolute z-10 h-max w-max bottom-[var(--fp-overlay-item-inset)] left-[var(--fp-overlay-item-inset)]",
+        bottom_center: "absolute z-10 h-max w-max bottom-[var(--fp-overlay-item-inset)] left-1/2 -translate-x-1/2",
+        bottom_right: "absolute z-10 h-max w-max bottom-[var(--fp-overlay-item-inset)] right-[var(--fp-overlay-item-inset)]"
       }.freeze
 
       def initialize(placement: :top_left, inset: :md, **system_arguments)
@@ -88,7 +65,7 @@ module FlatPack
       end
 
       def position_classes
-        INSETS.fetch(@inset).fetch(@placement)
+        PLACEMENT_CLASSES.fetch(@placement)
       end
 
       def validate_placement!
@@ -98,9 +75,9 @@ module FlatPack
       end
 
       def validate_inset!
-        return if INSETS.key?(@inset)
+        return if INSETS.include?(@inset)
 
-        raise ArgumentError, "Invalid inset: #{@inset}. Must be one of: #{INSETS.keys.join(", ")}"
+        raise ArgumentError, "Invalid inset: #{@inset}. Must be one of: #{INSETS.join(", ")}"
       end
     end
   end

@@ -88,9 +88,6 @@
   --surface-active-border-color: var(--surface-active-border-color);
   --overlay-backdrop-color: var(--overlay-backdrop-color);
   --overlay-scrim-color: var(--overlay-scrim-color);
-  --overlay-inset-sm: var(--overlay-inset-sm);
-  --overlay-inset-md: var(--overlay-inset-md);
-  --overlay-inset-lg: var(--overlay-inset-lg);
   --overlay-edge-offset: var(--overlay-edge-offset);
   --media-radius: var(--media-radius);
   --media-outline-color: var(--media-outline-color);
@@ -1022,9 +1019,6 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --overlay-backdrop-color: rgb(0 0 0 / 0.5);
   --overlay-scrim-color: rgb(31 41 55 / 0.68);
   --overlay-edge-offset: 8px;
-  --overlay-inset-sm: var(--overlay-edge-offset);
-  --overlay-inset-md: calc(var(--overlay-edge-offset) * 2);
-  --overlay-inset-lg: calc(var(--overlay-edge-offset) * 3);
   --media-radius: var(--card-radius);
   --media-outline-color: color-mix(in oklch, var(--surface-content-color) 12%, transparent);
   --checkbox-size: 1.25rem;
