@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.325] - 2026-10-27
+
+### Changed
+- Collection editor places its search menu with `place` in `flat_pack/positioning.js`. The menu still opens 4px under the field, aligned to the field's left edge, or above when below does not fit. The width is still the field width, or 192px when the field is narrower. The vertical clamp reads `--overlay-edge-offset` (8px unless a theme sets another px value). An oversized menu sticks to that edge. The left edge stays on the field, including when that edge is outside the viewport. Scroll and resize while the controller is connected still follow an open menu. Disconnect still removes those listeners. The open menu is still portaled to `document.body`.
+- No new `place` option. Collection editor passes `placement: "bottom_left"`, `flip: true`, and `stickToEdge: true`, then writes the field's left edge over the clamped `left`.
+- `watchViewport` listens for scroll on `window` instead of `document`. Both listeners use capture, so a scroll inside a nested overflow container still reaches the controller.
+
+### Upgrade notes
+- No new importmap pin. `flat_pack/positioning` is already on the engine importmap. A missing pin now stops Collection editor as well as Popover, Button dropdown, and Date picker. Those four controllers import the module. Every other controller is its own lazy-loaded file and still loads.
+- Placement of an on-screen field is unchanged when `--overlay-edge-offset` is `8px`. A theme that changes the token changes the vertical fit inset and the vertical clamp. The 4px gap does not follow the token. The horizontal position does not follow the token. A menu that would start above the viewport now sits on the edge instead of following the field off the top. A menu flipped above a field that is itself past the bottom of the viewport is kept on screen. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.325`.
+
 ## [0.1.324] - 2026-10-27
 
 ### Changed

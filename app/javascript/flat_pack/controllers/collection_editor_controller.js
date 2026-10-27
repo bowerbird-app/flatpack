@@ -1,6 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
 import { isOutside, onClickOutside } from "flat_pack/click_outside"
+import { applyFixedPosition, place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
+
+const RESULTS_GAP = 4
 
 export default class extends Controller {
   static targets = ["list", "template", "empty", "addButton", "status"]
@@ -11,21 +14,19 @@ export default class extends Controller {
   connect() {
     this.onCreateClick = this.submitCreate.bind(this)
     this.onReordered = this.announceReorder.bind(this)
-    this.onPosition = () => this.repositionOpenResults()
     this.outsideClick = onClickOutside(document, (event) => this.closeOnOutside(event))
     this.outsideClick.add()
+    this.viewportWatch = watchViewport(() => this.repositionOpenResults())
+    this.viewportWatch.add()
     document.addEventListener("click", this.onCreateClick)
-    document.addEventListener("scroll", this.onPosition, true)
-    window.addEventListener("resize", this.onPosition)
     this.element.addEventListener("list:reordered", this.onReordered)
     this.refreshEmpty()
   }
 
   disconnect() {
     this.outsideClick?.remove()
+    this.viewportWatch?.remove()
     document.removeEventListener("click", this.onCreateClick)
-    document.removeEventListener("scroll", this.onPosition, true)
-    window.removeEventListener("resize", this.onPosition)
     this.element.removeEventListener("list:reordered", this.onReordered)
     this.element.querySelectorAll("[data-collection-editor-row]").forEach((row) => {
       this.restoreResults(row)
@@ -857,12 +858,16 @@ export default class extends Controller {
     const width = Math.max(rect.width, 192)
     list.classList.add("is-open")
     list.style.width = `${width}px`
-    list.style.left = `${rect.left}px`
-    list.style.top = `${rect.bottom + 4}px`
     const menuRect = list.getBoundingClientRect()
-    if (menuRect.bottom > window.innerHeight - 8) {
-      list.style.top = `${Math.max(8, rect.top - menuRect.height - 4)}px`
-    }
+    const edge = readEdgeOffset(list)
+    const placed = place(
+      rect,
+      { width, height: menuRect.height },
+      { width: window.innerWidth, height: window.innerHeight },
+      { placement: "bottom_left", gap: RESULTS_GAP, edge, flip: true, stickToEdge: true }
+    )
+    applyFixedPosition(list, placed)
+    list.style.left = `${rect.left}px`
     input.setAttribute("aria-expanded", "true")
   }
 

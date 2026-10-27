@@ -11,14 +11,21 @@ module FlatPack
       dropdown = FlatPack::Engine.root.join("test/javascript/button_dropdown_controller_test.js")
       date_picker = FlatPack::Engine.root.join("test/javascript/flatpack_date_picker_controller_test.js")
       date_picker_position = FlatPack::Engine.root.join("test/javascript/flatpack_date_picker_position_test.js")
+      collection = FlatPack::Engine.root.join("test/javascript/collection_editor_position_test.js")
       stdout, status = Open3.capture2e(
-        "node", "--test", helper.to_s, popover.to_s, dropdown.to_s, date_picker.to_s, date_picker_position.to_s
+        "node", "--test",
+        helper.to_s,
+        popover.to_s,
+        dropdown.to_s,
+        date_picker.to_s,
+        date_picker_position.to_s,
+        collection.to_s
       )
 
       assert status.success?, stdout
     end
 
-    test "popover, button dropdown, and date picker place through the shared helper" do
+    test "popover, button dropdown, date picker, and collection editor place through the shared helper" do
       helper = FlatPack::Engine.root.join("app/javascript/flat_pack/positioning.js").read
       popover = controller_source("popover_controller.js")
       dropdown = controller_source("button_dropdown_controller.js")
@@ -63,15 +70,20 @@ module FlatPack
       refute_includes date_picker, 'window.addEventListener("scroll"'
       refute_includes date_picker, 'window.addEventListener("resize"'
 
-      tooltip = controller_source("tooltip_controller.js")
       collection = controller_source("collection_editor_controller.js")
+      assert_includes collection, 'from "flat_pack/positioning"'
+      assert_includes collection, "RESULTS_GAP = 4"
+      assert_includes collection, 'placement: "bottom_left"'
+      assert_includes collection, "stickToEdge: true"
+      assert_includes collection, "readEdgeOffset(list)"
+      assert_includes collection, "list.style.left = `${rect.left}px`"
+      refute_includes collection, "rect.bottom + 4"
+      refute_includes collection, 'document.addEventListener("scroll"'
+      refute_includes collection, 'window.addEventListener("resize"'
 
-      [tooltip, collection].each do |source|
-        refute_includes source, 'from "flat_pack/positioning"'
-      end
-
+      tooltip = controller_source("tooltip_controller.js")
+      refute_includes tooltip, 'from "flat_pack/positioning"'
       assert_includes tooltip, "clampToViewport"
-      assert_includes collection, "rect.bottom + 4"
     end
 
     private
