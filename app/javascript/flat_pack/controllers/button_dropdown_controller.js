@@ -2,9 +2,9 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 import { onClickOutside } from "flat_pack/click_outside"
+import { place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
 
-const MENU_OFFSET = 8
-const VIEWPORT_PADDING = 8
+const MENU_GAP = 8
 
 export default class extends Controller {
   static targets = ["trigger", "menu", "chevron"]
@@ -16,19 +16,20 @@ export default class extends Controller {
   connect() {
     this.isOpen = false
     this.closeTimeout = null
-    this.menuOffset = MENU_OFFSET
-    this.viewportPadding = VIEWPORT_PADDING
     this.menuElement = this.menuTarget
     this.originalMenuParent = this.menuElement.parentNode
     this.originalMenuNextSibling = this.menuElement.nextSibling
     this.contextControllerElements = this.collectContextControllerElements()
 
     this.handleEscape = this.handleEscape.bind(this)
-    this.handleReposition = this.handleReposition.bind(this)
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this)
     this.outsideClick = onClickOutside(document, () => this.close(), {
       capture: true,
       roots: () => [this.element, this.menuElement]
+    })
+    this.viewportWatch = watchViewport(() => {
+      if (!this.isOpen) return
+      this.positionMenu()
     })
   }
 
@@ -149,12 +150,6 @@ export default class extends Controller {
     }
   }
 
-  handleReposition() {
-    if (!this.isOpen) return
-
-    this.positionMenu()
-  }
-
   handleMenuItemClick(event) {
     const menuItem = event.target.closest('[role="menuitem"]')
     if (menuItem && this.menuElement.contains(menuItem)) {
@@ -187,16 +182,14 @@ export default class extends Controller {
   addListeners() {
     this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
-    window.addEventListener("resize", this.handleReposition)
-    window.addEventListener("scroll", this.handleReposition, true)
+    this.viewportWatch.add()
     this.menuElement.addEventListener("click", this.handleMenuItemClick)
   }
 
   removeListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
-    window.removeEventListener("resize", this.handleReposition)
-    window.removeEventListener("scroll", this.handleReposition, true)
+    this.viewportWatch?.remove()
     this.menuElement.removeEventListener("click", this.handleMenuItemClick)
   }
 
@@ -273,46 +266,47 @@ export default class extends Controller {
   }
 
   positionMenu() {
-    const triggerRect = this.triggerTarget.getBoundingClientRect()
-    const menuWidth = this.menuElement.offsetWidth
-    const menuHeight = this.menuElement.offsetHeight
-    const { top, left, transformOrigin } = this.computePosition(triggerRect, menuWidth, menuHeight)
+    const menu = this.menuElement
+    const placed = place(
+      this.triggerTarget.getBoundingClientRect(),
+      { width: menu.offsetWidth, height: menu.offsetHeight },
+      { width: window.innerWidth, height: window.innerHeight },
+      {
+        placement: this.menuPlacement(),
+        gap: MENU_GAP,
+        edge: readEdgeOffset(menu),
+        flip: false,
+        stickToEdge: true
+      }
+    )
 
-    const maxTop = Math.max(this.viewportPadding, window.innerHeight - menuHeight - this.viewportPadding)
-    const maxLeft = Math.max(this.viewportPadding, window.innerWidth - menuWidth - this.viewportPadding)
-
-    this.menuElement.style.top = `${Math.min(Math.max(top, this.viewportPadding), maxTop)}px`
-    this.menuElement.style.left = `${Math.min(Math.max(left, this.viewportPadding), maxLeft)}px`
-    this.menuElement.style.transformOrigin = transformOrigin
+    menu.style.top = `${placed.top}px`
+    menu.style.left = `${placed.left}px`
+    menu.style.transformOrigin = this.originFor(placed.placement)
   }
 
-  computePosition(triggerRect, menuWidth, menuHeight) {
+  menuPlacement() {
     switch (this.placementValue) {
       case "bottom_left":
-        return {
-          top: triggerRect.bottom + this.menuOffset,
-          left: triggerRect.left,
-          transformOrigin: "top left"
-        }
       case "top_right":
-        return {
-          top: triggerRect.top - menuHeight - this.menuOffset,
-          left: triggerRect.right - menuWidth,
-          transformOrigin: "bottom right"
-        }
       case "top_left":
-        return {
-          top: triggerRect.top - menuHeight - this.menuOffset,
-          left: triggerRect.left,
-          transformOrigin: "bottom left"
-        }
       case "bottom_right":
+        return this.placementValue
       default:
-        return {
-          top: triggerRect.bottom + this.menuOffset,
-          left: triggerRect.right - menuWidth,
-          transformOrigin: "top right"
-        }
+        return "bottom_right"
+    }
+  }
+
+  originFor(placement) {
+    switch (placement) {
+      case "bottom_left":
+        return "top left"
+      case "top_right":
+        return "bottom right"
+      case "top_left":
+        return "bottom left"
+      default:
+        return "top right"
     }
   }
 

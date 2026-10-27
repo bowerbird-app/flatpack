@@ -8,11 +8,14 @@
 //   gap: space between the anchor and the panel (not the viewport inset)
 //   edge: viewport inset, from --overlay-edge-offset
 //   flip: when the preferred side does not fit, use the opposite side (default true)
+//   stickToEdge: when the panel is larger than the viewport, pin it to `edge`
+//                (default false). Popover leaves an oversized panel past the edge.
+//                Button dropdown sticks.
 //   returns { top, left, placement }
 //   Cross axis is centered for top/bottom/left/right, the anchor's start for *_left,
 //   and the anchor's end for *_right. Clamp uses
-//   min(max(value, edge), viewport - size - edge). An oversized panel can sit
-//   past the edge. That is Popover's rule.
+//   min(max(value, edge), viewport - size - edge). With stickToEdge, the upper
+//   bound is at least `edge`.
 //
 // readEdgeOffset(node) reads --overlay-edge-offset as px. Anything else is 8.
 // applyFixedPosition(element, { top, left }) sets position, top, and left.
@@ -73,15 +76,18 @@ function placementName(side, align) {
   return side
 }
 
-function clampToEdge(value, size, viewportSize, edge) {
-  return Math.min(Math.max(value, edge), viewportSize - size - edge)
+function clampToEdge(value, size, viewportSize, edge, stickToEdge) {
+  const limit = viewportSize - size - edge
+  const max = stickToEdge ? Math.max(edge, limit) : limit
+  return Math.min(Math.max(value, edge), max)
 }
 
 export function place(anchor, panel, viewport, {
   placement = "bottom",
   gap = 0,
   edge = 0,
-  flip = true
+  flip = true,
+  stickToEdge = false
 } = {}) {
   const requested = PLACEMENTS[placement] || PLACEMENTS.bottom
   let side = requested.side
@@ -94,8 +100,8 @@ export function place(anchor, panel, viewport, {
 
   return {
     placement: placementName(side, requested.align),
-    top: clampToEdge(point.top, panel.height, viewport.height, edge),
-    left: clampToEdge(point.left, panel.width, viewport.width, edge)
+    top: clampToEdge(point.top, panel.height, viewport.height, edge, stickToEdge),
+    left: clampToEdge(point.left, panel.width, viewport.width, edge, stickToEdge)
   }
 }
 
