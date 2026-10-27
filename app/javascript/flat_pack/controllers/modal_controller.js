@@ -11,6 +11,7 @@ import {
   resolveTrigger
 } from "controllers/flat_pack/trigger_origin"
 import { focusableElements as sharedFocusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"
+import { isBackdropClick } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["dialog"]
@@ -161,10 +162,9 @@ export default class extends Controller {
 
   clickBackdrop(event) {
     if (!this.closeOnBackdropValue) return
+    if (!isBackdropClick(event)) return
 
-    if (event.target === event.currentTarget) {
-      this.close()
-    }
+    this.close()
   }
 
   preventBodyScroll() {

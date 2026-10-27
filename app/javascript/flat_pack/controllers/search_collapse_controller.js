@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { isOutside, onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["toggle", "field", "input"]
@@ -7,8 +8,10 @@ export default class extends Controller {
   }
 
   initialize() {
-    this.onPointerDown = this.onPointerDown.bind(this)
     this.onKeyDown = this.onKeyDown.bind(this)
+    this.outsideClick = onClickOutside(document, (event) => this.onPointerDown(event), {
+      event: "pointerdown"
+    })
     this.listening = false
     this.pendingFrame = null
     this.focusAfter = undefined
@@ -94,7 +97,7 @@ export default class extends Controller {
       this.pendingFrame = null
       if (this.collapsedValue || this.listening) return
 
-      document.addEventListener("pointerdown", this.onPointerDown)
+      this.outsideClick.add()
       document.addEventListener("keydown", this.onKeyDown)
       this.listening = true
     })
@@ -108,13 +111,13 @@ export default class extends Controller {
 
     if (!this.listening) return
 
-    document.removeEventListener("pointerdown", this.onPointerDown)
+    this.outsideClick?.remove()
     document.removeEventListener("keydown", this.onKeyDown)
     this.listening = false
   }
 
   onPointerDown(event) {
-    if (this.collapsedValue || this.element.contains(event.target) || this.occupied() || !this.holdsFocus()) return
+    if (this.collapsedValue || !isOutside(event, this.element) || this.occupied() || !this.holdsFocus()) return
 
     const landedOnControl = event.target.closest?.("a, button, input, select, textarea, summary, [tabindex]:not([tabindex='-1'])")
     if (!landedOnControl) event.preventDefault()

@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
+import { onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["input", "value", "list", "option", "empty"]
@@ -8,13 +9,16 @@ export default class extends Controller {
   connect() {
     this.openList = false
     this.activeIndex = -1
-    this.handleOutside = this.handleOutside.bind(this)
-    document.addEventListener("mousedown", this.handleOutside)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      event: "mousedown",
+      roots: () => this.element
+    })
+    this.outsideClick.add()
   }
 
   disconnect() {
     cancelOverlayHide(this.listTarget)
-    document.removeEventListener("mousedown", this.handleOutside)
+    this.outsideClick?.remove()
   }
 
   open() {
@@ -95,10 +99,6 @@ export default class extends Controller {
     this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }))
     this.close()
     this.inputTarget.focus()
-  }
-
-  handleOutside(event) {
-    if (!this.element.contains(event.target)) this.close()
   }
 
   visibleOptions() {

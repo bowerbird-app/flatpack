@@ -13,7 +13,10 @@ function loadFabController(documentStub, windowStub, { reduced = false } = {}) {
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
       `function prefersReducedMotion() { return ${reduced} }\nfunction motionDuration() { return ${reduced ? 0 : 150} }\nfunction motionTransition() { return "opacity 150ms linear" }`
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class FabController extends Controller') + '\nmodule.exports = FabController\n'
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
 
   const context = {
     module: { exports: {} },
@@ -23,7 +26,7 @@ function loadFabController(documentStub, windowStub, { reduced = false } = {}) {
     requestAnimationFrame: (fn) => fn()
   }
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
   return context.module.exports
 }
 

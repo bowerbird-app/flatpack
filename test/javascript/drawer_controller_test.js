@@ -17,12 +17,16 @@ function loadDrawerController(documentStub) {
       'import { focusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"',
       "const trapTabWithin = trapTab"
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class DrawerController extends Controller') + '\nmodule.exports = DrawerController\n'
   const focusTrapPath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "focus_trap.js")
   const focusTrapSource = fs.readFileSync(focusTrapPath, "utf8")
     .replaceAll("export function ", "function ")
     .replaceAll("export const ", "const ")
-  const withFocusTrap = focusTrapSource + "\n" + transformedSource
+  const clickOutsidePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "click_outside.js")
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, "utf8")
+    .replaceAll("export function ", "function ")
+  const withFocusTrap = clickOutsideSource + "\n" + focusTrapSource + "\n" + transformedSource
 
   const context = {
     module: { exports: {} },

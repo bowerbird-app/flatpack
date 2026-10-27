@@ -13,7 +13,10 @@ function loadController() {
       'import { prefersReducedMotion, motionTransition } from "controllers/flat_pack/reduced_motion"',
       'function prefersReducedMotion() { return Boolean(globalThis.__reducedMotion) }\nfunction motionTransition(property) { return property + " 200ms var(--easing-standard)" }'
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class TrashButtonController extends Controller') + '\nmodule.exports = TrashButtonController\n'
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
 
   const listeners = { pointerdown: new Set(), keydown: new Set() }
   const document = {
@@ -47,7 +50,7 @@ function loadController() {
   }
   context.globalThis = context
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
 
   return { ControllerClass: context.module.exports, listeners, context }
 }

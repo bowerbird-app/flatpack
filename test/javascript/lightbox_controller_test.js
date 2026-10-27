@@ -12,8 +12,13 @@ function loadController() {
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
       "function prefersReducedMotion() { return globalThis.__reduceMotion === true }\nfunction motionDuration() { return globalThis.__reduceMotion ? 0 : 200 }\nfunction motionTransition() { return \"opacity 200ms\" }"
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace("export default class extends Controller", "class LightboxController extends Controller")
     + "\nmodule.exports = LightboxController\n"
+  const clickOutsidePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "click_outside.js")
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, "utf8")
+    .replaceAll("export function ", "function ")
+  const script = clickOutsideSource + "\n" + source
 
   const listeners = new Map()
   const document = {
@@ -51,7 +56,7 @@ function loadController() {
     }
   }
   context.globalThis = context
-  vm.runInNewContext(source, context, { filename: filePath })
+  vm.runInNewContext(script, context, { filename: filePath })
   return { Controller: context.module.exports, document, context }
 }
 
@@ -173,6 +178,24 @@ test("a click inside the stage does not close", () => {
     }
   })
   assert.equal(dialog.open, true)
+})
+
+test("a click on the shell closes and a click on a control does not", () => {
+  const { controller, dialog } = mount()
+  controller.openAt(0, null)
+  controller.clickBackdrop({
+    target: {
+      closest(selector) {
+        return selector.includes("button") ? { tag: "button" } : null
+      }
+    }
+  })
+  assert.equal(dialog.open, true)
+
+  controller.clickBackdrop({
+    target: { closest() { return null } }
+  })
+  assert.equal(dialog.open, false)
 })
 
 test("ignores a trigger for a different group", () => {

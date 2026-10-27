@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionTransition } from "controllers/flat_pack/reduced_motion"
+import { isOutside, onClickOutside } from "flat_pack/click_outside"
 
 const CONFIRM_GUARD_MS = 300
 
@@ -14,8 +15,10 @@ export default class extends Controller {
   }
 
   initialize() {
-    this.boundPointerDown = this.onDocumentPointerDown.bind(this)
     this.boundKeyDown = this.onDocumentKeyDown.bind(this)
+    this.outsideClick = onClickOutside(document, (event) => this.onDocumentPointerDown(event), {
+      event: "pointerdown"
+    })
     this.confirmBlocked = false
   }
 
@@ -178,7 +181,7 @@ export default class extends Controller {
   }
 
   addDocumentListeners() {
-    document.addEventListener("pointerdown", this.boundPointerDown)
+    this.outsideClick.add()
     document.addEventListener("keydown", this.boundKeyDown)
   }
 
@@ -187,13 +190,13 @@ export default class extends Controller {
       globalThis.cancelAnimationFrame(this.listenerFrame)
       this.listenerFrame = null
     }
-    document.removeEventListener("pointerdown", this.boundPointerDown)
+    this.outsideClick?.remove()
     document.removeEventListener("keydown", this.boundKeyDown)
   }
 
   onDocumentPointerDown(event) {
     if (!this.armedValue) return
-    if (this.element.contains(event.target)) return
+    if (!isOutside(event, this.element)) return
 
     const otherTrash = event.target?.closest?.(".fp-trash-button")
     this.disarm({ focus: !otherTrash })

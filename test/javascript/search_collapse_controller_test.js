@@ -9,7 +9,10 @@ function loadController() {
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class SearchCollapseController extends Controller') + '\nmodule.exports = SearchCollapseController\n'
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
 
   const listeners = { pointerdown: new Set(), keydown: new Set() }
   const document = {
@@ -30,7 +33,7 @@ function loadController() {
   }
   context.globalThis = context
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
 
   return { ControllerClass: context.module.exports, listeners, document }
 }

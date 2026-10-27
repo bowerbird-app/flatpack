@@ -50,6 +50,7 @@ Use `drawer.header` / `drawer.body` / `drawer.footer`. There is no `with_` prefi
 
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` when a title or header is present.
+- A click on the dimmed backdrop closes when `close_on_backdrop` is on. The check is `isBackdropClick` in `flat_pack/click_outside.js`: the target is the backdrop element. A click inside the panel is not. Escape close stays on this controller.
 - Focus moves into the panel; Tab cycles inside through `trapTab` in `flat_pack/focus_trap.js`; close restores the trigger. An empty panel focuses the panel. Tab does not pull focus back in from outside the panel. The close control is a ghost icon-only Button. `.fp-drawer__close` maps `--drawer-close-icon-*` onto `--button-ghost-*`. The glyph sits at the start of the hit area and is centered on the cross axis. The action stays `flat-pack--drawer#close`.
 - Body scroll lock shares the same count key as Modal (`flatPackModalLockCount`).
 - Overlay and `.fp-drawer-body` use `overscroll-behavior: contain`. The panel uses `.fp-overlay-pad`.

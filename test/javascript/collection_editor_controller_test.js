@@ -13,7 +13,10 @@ function loadController(overrides = {}) {
       'import { flatPackCopy } from "flat_pack/copy"',
       "const flatPackCopy = (key) => ({'collection_editor.already_joined': 'This image is already on this page', 'collection_editor.create_failed': 'Could not create the record', 'collection_editor.load_failed': 'Could not load the record', 'collection_editor.save_failed': 'Could not save the record'})[key] || key"
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace("export default class extends Controller", "class CollectionEditorController extends Controller") + "\nmodule.exports = CollectionEditorController\n"
+  const clickOutsidePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "click_outside.js")
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, "utf8").replaceAll("export function ", "function ")
 
   const context = {
     module: {exports: {}},
@@ -37,7 +40,7 @@ function loadController(overrides = {}) {
     ...overrides
   }
 
-  vm.runInNewContext(transformed, context, {filename: filePath})
+  vm.runInNewContext(clickOutsideSource + "\n" + transformed, context, {filename: filePath})
   return context.module.exports
 }
 
@@ -1026,4 +1029,28 @@ test("library search enter does not submit the parent form", () => {
   })
 
   assert.equal(prevented, true)
+})
+
+test("outside click closes an open panel and a click in the row or results does not", () => {
+  const controller = harness()
+  const row = buildNode("li")
+  mark(row, "data-collection-editor-row")
+  const panel = buildNode("div")
+  mark(panel, "data-collection-editor-panel")
+  const field = buildNode("input")
+  mark(field, "data-collection-editor-association")
+  field.value = "1"
+  const results = buildNode("ul")
+  mark(results, "data-collection-editor-results")
+  row.append(panel, field, results)
+  controller.element.append(row)
+
+  controller.closeOnOutside({ target: row })
+  assert.equal(panel.hidden, false)
+
+  controller.closeOnOutside({ target: results })
+  assert.equal(panel.hidden, false)
+
+  controller.closeOnOutside({ target: buildNode("div") })
+  assert.equal(panel.hidden, true)
 })

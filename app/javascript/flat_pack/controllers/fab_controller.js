@@ -3,6 +3,7 @@
 // Layout is a value so :arc can land later without rewriting the open/close loop.
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
+import { onClickOutside } from "flat_pack/click_outside"
 
 const STAGGER_MS = 30
 const SCROLL_DELTA = 8
@@ -20,8 +21,13 @@ export default class extends Controller {
     this.lastScrollY = window.scrollY
     this.hiddenOnScroll = false
 
-    this.handleDocumentPointer = this.handleDocumentPointer.bind(this)
     this.handleMenuKeydown = this.handleMenuKeydown.bind(this)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      event: "pointerdown",
+      capture: true,
+      roots: () => this.element,
+      onlyWhen: () => this.openState
+    })
 
     this.syncBottomNavOffset()
     if (this.hasMenuTarget) this.collapseActions(true)
@@ -29,7 +35,7 @@ export default class extends Controller {
 
   disconnect() {
     this.clearHideTimeout()
-    document.removeEventListener("pointerdown", this.handleDocumentPointer, true)
+    this.outsideClick?.remove()
     if (this.hasMenuTarget) this.menuTarget.removeEventListener("keydown", this.handleMenuKeydown)
   }
 
@@ -56,7 +62,7 @@ export default class extends Controller {
     this.revealActions()
     this.showBackdrop()
 
-    document.addEventListener("pointerdown", this.handleDocumentPointer, true)
+    this.outsideClick.add()
     this.menuTarget.addEventListener("keydown", this.handleMenuKeydown)
 
     const focusDelay = prefersReducedMotion() ? 0 : motionDuration("fast")
@@ -79,7 +85,7 @@ export default class extends Controller {
     this.concealActions()
     this.hideBackdrop()
 
-    document.removeEventListener("pointerdown", this.handleDocumentPointer, true)
+    this.outsideClick?.remove()
     this.menuTarget.removeEventListener("keydown", this.handleMenuKeydown)
 
     const closeDelay = this.closeDuration()
@@ -127,13 +133,6 @@ export default class extends Controller {
 
   onResize() {
     this.syncBottomNavOffset()
-  }
-
-  handleDocumentPointer(event) {
-    if (!this.openState) return
-    if (this.element.contains(event.target)) return
-
-    this.close()
   }
 
   handleMenuKeydown(event) {

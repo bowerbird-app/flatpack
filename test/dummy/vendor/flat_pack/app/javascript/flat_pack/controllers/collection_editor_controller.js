@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
+import { isOutside, onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["list", "template", "empty", "addButton", "status"]
@@ -8,11 +9,11 @@ export default class extends Controller {
   }
 
   connect() {
-    this.onDocumentClick = this.closeOnOutside.bind(this)
     this.onCreateClick = this.submitCreate.bind(this)
     this.onReordered = this.announceReorder.bind(this)
     this.onPosition = () => this.repositionOpenResults()
-    document.addEventListener("click", this.onDocumentClick)
+    this.outsideClick = onClickOutside(document, (event) => this.closeOnOutside(event))
+    this.outsideClick.add()
     document.addEventListener("click", this.onCreateClick)
     document.addEventListener("scroll", this.onPosition, true)
     window.addEventListener("resize", this.onPosition)
@@ -21,7 +22,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    document.removeEventListener("click", this.onDocumentClick)
+    this.outsideClick?.remove()
     document.removeEventListener("click", this.onCreateClick)
     document.removeEventListener("scroll", this.onPosition, true)
     window.removeEventListener("resize", this.onPosition)
@@ -674,7 +675,7 @@ export default class extends Controller {
       if (panel.hidden) return
       const row = panel.closest("[data-collection-editor-row]")
       const list = row ? this.resultsList(row) : null
-      if (row?.contains(event.target) || list?.contains(event.target)) return
+      if (!isOutside(event, [row, list])) return
       if (row) this.closePanel(row)
     })
   }

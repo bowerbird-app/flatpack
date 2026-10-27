@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.321] - 2026-10-27
+
+### Changed
+- Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, and collapsible Search close from a pointer outside through `onClickOutside` in `flat_pack/click_outside.js`. Each keeps its event (`click`, `mousedown`, or `pointerdown`), capture or bubble phase, and connect/disconnect listener. A click on the trigger or inside the overlay does not close. Escape handling is unchanged.
+- Chat message actions uses `isOutside` from the same module for its window click.
+- Modal, Drawer, and Command palette close on a backdrop click through `isBackdropClick`. The click target is the backdrop element. A click inside the dialog does not close. Lightbox uses the same helper: the stage and the controls are not the backdrop, and a click on the shell is.
+
+### Upgrade notes
+- importmap-rails hosts already receive `flat_pack/click_outside` from the engine importmap. `initializer "flat_pack.importmap"` appends `config/importmap.rb` before importmap-rails reads it. Add the pin, or rerun `bin/rails generate flat_pack:install`, only when the host bypasses that importmap or keeps its own pin list. A missing pin stops Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. Those controllers import the module. Every other controller is its own lazy-loaded file and still loads.
+- Pointer behavior is unchanged. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator when the engine importmap is in use.
+- Redeploy so `meta.gem_version` shows `0.1.321`.
+
 ## [0.1.320] - 2026-10-26
 
 ### Added

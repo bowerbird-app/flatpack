@@ -6,6 +6,7 @@ import {
   overlayOrigin,
   overlayEnterOffset
 } from "controllers/flat_pack/reduced_motion"
+import { onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static values = {
@@ -21,9 +22,13 @@ export default class extends Controller {
     this.resolvedPlacement = this.placementValue
 
     this.handleTriggerClick = this.handleTriggerClick.bind(this)
-    this.handleDocumentClick = this.handleDocumentClick.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
     this.handleReposition = this.handleReposition.bind(this)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      capture: true,
+      roots: () => [this.trigger, this.element],
+      onlyWhen: () => this.isOpen
+    })
 
     this.setupTrigger()
   }
@@ -119,17 +124,6 @@ export default class extends Controller {
     }, motionDuration("base"))
   }
 
-  handleDocumentClick(event) {
-    if (!this.isOpen) return
-
-    const clickedTrigger = this.trigger && this.trigger.contains(event.target)
-    const clickedPopover = this.element.contains(event.target)
-
-    if (!clickedTrigger && !clickedPopover) {
-      this.close()
-    }
-  }
-
   handleEscape(event) {
     if (event.key !== "Escape" || !this.isOpen) return
 
@@ -144,14 +138,14 @@ export default class extends Controller {
   }
 
   addListeners() {
-    document.addEventListener("click", this.handleDocumentClick, true)
+    this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
     window.addEventListener("resize", this.handleReposition)
     window.addEventListener("scroll", this.handleReposition, true)
   }
 
   removeListeners() {
-    document.removeEventListener("click", this.handleDocumentClick, true)
+    this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
     window.removeEventListener("resize", this.handleReposition)
     window.removeEventListener("scroll", this.handleReposition, true)

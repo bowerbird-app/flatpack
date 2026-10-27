@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 import { flatPackCopy } from "flat_pack/copy"
+import { onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox", "valueLabel", "valueIcon"]
@@ -30,13 +31,15 @@ export default class extends Controller {
     this.setSearchState(this.searchModeValue === "remote" ? "hint" : "idle")
     this.isOpen = false
 
-    this.handleOutsideClick = this.handleOutsideClick.bind(this)
-    document.addEventListener("click", this.handleOutsideClick)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      roots: () => this.element
+    })
+    this.outsideClick.add()
   }
 
   disconnect() {
     cancelOverlayHide(this.dropdownTarget)
-    document.removeEventListener("click", this.handleOutsideClick)
+    this.outsideClick?.remove()
 
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer)
@@ -90,12 +93,6 @@ export default class extends Controller {
 
     if (this.searchModeValue === "remote") {
       this.setSearchState("hint")
-    }
-  }
-
-  handleOutsideClick(event) {
-    if (!this.element.contains(event.target)) {
-      this.close()
     }
   }
 

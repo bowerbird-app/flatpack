@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { isOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["surface", "tray"]
@@ -42,9 +43,7 @@ export default class extends Controller {
       return
     }
 
-    if (!this.element.contains(event.target)) {
-      this.close()
-    }
+    if (isOutside(event, this.element)) this.close()
   }
 
   handleWindowKeydown(event) {

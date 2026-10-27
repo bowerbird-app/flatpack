@@ -17,11 +17,15 @@ function loadCommandPaletteController(documentStub) {
       'import { trapTab as trapTabWithin } from "flat_pack/focus_trap"',
       'const trapTabWithin = trapTab'
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class CommandPaletteController extends Controller') + '\nmodule.exports = CommandPaletteController\n'
   const focusTrapPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'focus_trap.js')
   const focusTrapSource = fs.readFileSync(focusTrapPath, 'utf8')
     .replaceAll('export function ', 'function ')
     .replaceAll('export const ', 'const ')
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8')
+    .replaceAll('export function ', 'function ')
 
   const context = {
     module: { exports: {} },
@@ -33,7 +37,7 @@ function loadCommandPaletteController(documentStub) {
     clearTimeout() {}
   }
 
-  vm.runInNewContext(focusTrapSource + '\n' + transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + focusTrapSource + '\n' + transformedSource, context, { filename: filePath })
   return context.module.exports
 }
 

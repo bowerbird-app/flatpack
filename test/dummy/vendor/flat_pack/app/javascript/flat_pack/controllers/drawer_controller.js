@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 import { focusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"
+import { isBackdropClick } from "flat_pack/click_outside"
 
 const LOCK_KEY = "flatPackModalLockCount"
 
@@ -129,7 +130,7 @@ export default class extends Controller {
 
   clickBackdrop(event) {
     if (!this.closeOnBackdropValue) return
-    if (event.target === event.currentTarget) this.close()
+    if (isBackdropClick(event)) this.close()
   }
 
   trapTab(event) {
