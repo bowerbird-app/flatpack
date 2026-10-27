@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.323] - 2026-10-27
+
+### Changed
+- Button dropdown places its menu with `place` in `flat_pack/positioning.js`. Placements stay `bottom_right`, `bottom_left`, `top_right`, and `top_left`. The menu does not flip. The gap stays 8px. The viewport clamp reads `--overlay-edge-offset` (8px unless a theme sets another px value). An oversized menu still sticks to that edge. Scroll and resize while the menu is open still follow the trigger. Disconnect still removes those listeners.
+- `place` accepts `stickToEdge`. The default is false, so Popover still lets an oversized panel sit past the viewport edge. Button dropdown passes `stickToEdge: true` and `flip: false`.
+
+### Upgrade notes
+- No new importmap pin. `flat_pack/positioning` is already on the engine importmap. A missing pin now stops Button dropdown as well as Popover. Those two controllers import the module. Every other controller is its own lazy-loaded file and still loads.
+- Placement is unchanged when `--overlay-edge-offset` is `8px`. A theme that changes the token changes how far an open menu sits from the viewport edge, including an oversized menu. The 8px gap does not follow the token. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.323`.
+
 ## [0.1.322] - 2026-10-27
 
 ### Changed

@@ -55,7 +55,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for item element. |
 
 ## Variants
-- Position variants: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. The menu is `fixed` and positioned from the trigger rectangle, including a small icon-only trigger.
+- Position variants: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. The menu is `fixed` and positioned from the trigger rectangle, including a small icon-only trigger. `place` in `flat_pack/positioning.js` keeps the requested corner (`flip: false`). The gap is 8px. The viewport clamp reads `--overlay-edge-offset`, and an oversized menu sticks to that edge. Scroll and resize while open run the same placement. Disconnect removes those listeners.
 - Trigger visual variants come from button `style`, `size`, `round`, and `icon_only`, including host-registered button styles.
 
 ## Example
@@ -150,7 +150,7 @@ Square icon trigger. Omit `round` and the theme corner stays.
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
 - Menu uses `role="menu"`; items use `role="menuitem"`; divider uses `role="separator"`.
 - Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`.
-- Menu origin follows placement. Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
+- Menu origin follows placement (`top right`, `top left`, `bottom right`, or `bottom left`). Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

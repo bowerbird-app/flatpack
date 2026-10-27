@@ -116,6 +116,27 @@ test("clamp pulls a panel back to the edge offset", () => {
   assert.equal(placed.top, 132)
 })
 
+test("stickToEdge pins an oversized panel to the edge and leaves a fitting panel alone", () => {
+  const { place } = loadPositioning().module.exports
+  const oversized = place(
+    anchor({ top: 10, bottom: 30, height: 20 }),
+    { width: 40, height: 500, top: 0, right: 40, bottom: 500, left: 0 },
+    { width: 400, height: 200 },
+    { placement: "bottom_right", gap: 8, edge: 8, flip: false, stickToEdge: true }
+  )
+  const fitting = place(anchor(), panel, viewport, {
+    placement: "bottom_right",
+    gap: 8,
+    edge: 8,
+    flip: false,
+    stickToEdge: true
+  })
+
+  assert.equal(oversized.placement, "bottom_right")
+  assert.equal(oversized.top, 8)
+  samePlace(fitting, { placement: "bottom_right", top: 148, left: 120 })
+})
+
 test("an oversized panel can sit past the edge", () => {
   const { place } = loadPositioning().module.exports
   const placed = place(
