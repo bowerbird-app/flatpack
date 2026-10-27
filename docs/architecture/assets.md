@@ -91,6 +91,7 @@ app/javascript/flat_pack/
 ├── local_time.js           # Framework-independent local/relative time enhancer
 ├── focus_trap.js           # Shared Tab cycle for Drawer, Command palette, and Modal
 ├── click_outside.js        # Shared outside-click listener and dialog backdrop check
+├── positioning.js          # Shared floating-panel placement. Popover uses it.
 └── tiptap/
    └── ...js              # Rich-text helper modules imported by tiptap_controller
 ```
@@ -102,6 +103,8 @@ importmap-rails hosts load these pins from the engine. `initializer "flat_pack.i
 `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal. A missing pin stops those three controllers. Other controllers do not import it, so they still load.
 
 `flat_pack/click_outside` is the document listener for overlays that close when the pointer lands outside, plus `isBackdropClick` for Modal, Drawer, Command palette, and Lightbox. Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, Button group menu, Trash button, and the collapsible Search field import it. Chat message actions uses `isOutside` for its window click. A missing pin stops those controllers. Escape handling stays in each controller. TipTap link and image popovers still bind their own `mousedown` listener.
+
+`flat_pack/positioning` places a panel from an anchor rect: preferred side, flip to the opposite side, then clamp to `--overlay-edge-offset`. Popover is the only caller. A missing pin stops Popover. Tooltip, Button dropdown, Date picker, and Collection editor still place themselves.
 
 FlatPack registers its JavaScript modules:
 
@@ -122,6 +125,7 @@ pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
 pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
 pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
+pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

@@ -42,6 +42,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 - Popover content wrapper is initialized hidden (`aria-hidden="true"`).
 - Ensure trigger is keyboard-focusable and has accessible labeling.
 - Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit`, a few pixels of offset, and origin from the trigger. A close in flight can reverse.
+- The open panel is `position: fixed`. `place` in `flat_pack/positioning.js` uses the `placement` hint (`top`, `bottom`, `left`, `right`), flips to the opposite side when that side does not fit, and clamps the panel to `--overlay-edge-offset`. The gap between the trigger and the panel is 12px and does not follow that token. Scroll and resize while open run the same placement. Disconnect removes those listeners.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

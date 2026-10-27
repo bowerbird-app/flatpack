@@ -7,6 +7,9 @@ import {
   overlayEnterOffset
 } from "controllers/flat_pack/reduced_motion"
 import { onClickOutside } from "flat_pack/click_outside"
+import { applyFixedPosition, place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
+
+const PANEL_GAP = 12
 
 export default class extends Controller {
   static values = {
@@ -15,19 +18,20 @@ export default class extends Controller {
   }
 
   connect() {
-    this.spacing = 12
-    this.viewportPadding = 8
     this.isOpen = false
     this.hideTimeout = null
     this.resolvedPlacement = this.placementValue
 
     this.handleTriggerClick = this.handleTriggerClick.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
-    this.handleReposition = this.handleReposition.bind(this)
     this.outsideClick = onClickOutside(document, () => this.close(), {
       capture: true,
       roots: () => [this.trigger, this.element],
       onlyWhen: () => this.isOpen
+    })
+    this.viewportWatch = watchViewport(() => {
+      if (!this.isOpen) return
+      this.position()
     })
 
     this.setupTrigger()
@@ -132,94 +136,35 @@ export default class extends Controller {
     this.trigger?.focus()
   }
 
-  handleReposition() {
-    if (!this.isOpen) return
-    this.position()
-  }
-
   addListeners() {
     this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
-    window.addEventListener("resize", this.handleReposition)
-    window.addEventListener("scroll", this.handleReposition, true)
+    this.viewportWatch.add()
   }
 
   removeListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
-    window.removeEventListener("resize", this.handleReposition)
-    window.removeEventListener("scroll", this.handleReposition, true)
+    this.viewportWatch?.remove()
   }
 
   position() {
     if (!this.trigger) return
 
-    const triggerRect = this.trigger.getBoundingClientRect()
-    const popoverRect = this.element.getBoundingClientRect()
-
-    this.resolvedPlacement = this.resolvePlacement(this.placementValue, triggerRect, popoverRect)
-    const { top, left } = this.computePosition(this.resolvedPlacement, triggerRect, popoverRect)
-
-    const clampedTop = Math.min(
-      Math.max(top, this.viewportPadding),
-      window.innerHeight - popoverRect.height - this.viewportPadding
+    const placed = place(
+      this.trigger.getBoundingClientRect(),
+      this.element.getBoundingClientRect(),
+      { width: window.innerWidth, height: window.innerHeight },
+      {
+        placement: this.placementValue,
+        gap: PANEL_GAP,
+        edge: readEdgeOffset(this.element)
+      }
     )
 
-    const clampedLeft = Math.min(
-      Math.max(left, this.viewportPadding),
-      window.innerWidth - popoverRect.width - this.viewportPadding
-    )
-
-    this.element.style.position = "fixed"
-    this.element.style.top = `${clampedTop}px`
-    this.element.style.left = `${clampedLeft}px`
+    this.resolvedPlacement = placed.placement
+    applyFixedPosition(this.element, placed)
     this.element.style.transformOrigin = overlayOrigin(this.resolvedPlacement)
-  }
-
-  resolvePlacement(placement, triggerRect, popoverRect) {
-    const fitsTop = triggerRect.top - popoverRect.height - this.spacing >= this.viewportPadding
-    const fitsBottom = triggerRect.bottom + this.spacing + popoverRect.height <= window.innerHeight - this.viewportPadding
-    const fitsLeft = triggerRect.left - popoverRect.width - this.spacing >= this.viewportPadding
-    const fitsRight = triggerRect.right + this.spacing + popoverRect.width <= window.innerWidth - this.viewportPadding
-
-    switch (placement) {
-      case "top":
-        return fitsTop ? "top" : "bottom"
-      case "bottom":
-        return fitsBottom ? "bottom" : "top"
-      case "left":
-        return fitsLeft ? "left" : "right"
-      case "right":
-        return fitsRight ? "right" : "left"
-      default:
-        return fitsBottom ? "bottom" : "top"
-    }
-  }
-
-  computePosition(placement, triggerRect, popoverRect) {
-    switch (placement) {
-      case "top":
-        return {
-          top: triggerRect.top - popoverRect.height - this.spacing,
-          left: triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2)
-        }
-      case "bottom":
-        return {
-          top: triggerRect.bottom + this.spacing,
-          left: triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2)
-        }
-      case "left":
-        return {
-          top: triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2),
-          left: triggerRect.left - popoverRect.width - this.spacing
-        }
-      case "right":
-      default:
-        return {
-          top: triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2),
-          left: triggerRect.right + this.spacing
-        }
-    }
   }
 
   preparePopoverA11y() {

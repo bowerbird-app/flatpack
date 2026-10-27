@@ -346,6 +346,9 @@ pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
 # Shared outside-click listener and dialog backdrop check
 pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 
+# Shared floating-panel placement. Popover imports it.
+pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
+
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
@@ -375,7 +378,7 @@ lazyLoadControllersFrom("controllers", application)
 
 **Why `preload: false`?** Importmap modulepreload is disabled for FlatPack controller pins so the browser does not fetch every controller on first page load.
 
-importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading. `flat_pack/click_outside` is imported by Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. A missing pin stops those controllers.
+importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading. `flat_pack/click_outside` is imported by Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. A missing pin stops those controllers. `flat_pack/positioning` is imported only by Popover, so a missing pin stops that controller and leaves the others loading.
 
 **Manual Configuration (if needed):**
 
@@ -396,6 +399,7 @@ If you need to manually configure JavaScript:
    pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
    pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
    pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
+   pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 
