@@ -2,6 +2,9 @@ import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 import { flatPackCopy } from "flat_pack/copy"
 import { onClickOutside } from "flat_pack/click_outside"
+import { applyFixedPosition, place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
+
+const PANEL_GAP = 8
 
 export default class extends Controller {
   static targets = [
@@ -30,9 +33,6 @@ export default class extends Controller {
   }
 
   connect() {
-    this.spacing = 8
-    this.viewportPadding = 8
-
     this.today = this.startOfDay(new Date())
     this.visibleMonth = this.initialVisibleMonth()
     this.committed = this.initialCommittedValues()
@@ -58,7 +58,7 @@ export default class extends Controller {
     })
     this.handlePanelClick = this.handlePanelClick.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
-    this.handleReposition = this.handleReposition.bind(this)
+    this.viewportWatch = watchViewport(() => this.handleReposition())
 
     if (this.panelElement) {
       this.panelElement.style.display = "none"
@@ -296,16 +296,14 @@ export default class extends Controller {
     this.outsideClick?.add()
     document.addEventListener("keydown", this.handleEscape, true)
     this.panelElement?.addEventListener("click", this.handlePanelClick, true)
-    window.addEventListener("resize", this.handleReposition)
-    window.addEventListener("scroll", this.handleReposition, true)
+    this.viewportWatch?.add()
   }
 
   removeGlobalListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
     this.panelElement?.removeEventListener("click", this.handlePanelClick, true)
-    window.removeEventListener("resize", this.handleReposition)
-    window.removeEventListener("scroll", this.handleReposition, true)
+    this.viewportWatch?.remove()
   }
 
   handlePanelClick(event) {
@@ -442,24 +440,19 @@ export default class extends Controller {
     this.panelElement.style.height = ""
     this.panelElement.style.maxHeight = ""
 
-    const triggerRect = this.triggerTarget.getBoundingClientRect()
-    const panelRect = this.panelElement.getBoundingClientRect()
-    const width = Math.min(panelRect.width, window.innerWidth - (this.viewportPadding * 2))
+    const edge = readEdgeOffset(this.panelElement)
+    const measured = this.panelElement.getBoundingClientRect()
+    const width = Math.min(measured.width, window.innerWidth - (edge * 2))
+    const placed = place(
+      this.triggerTarget.getBoundingClientRect(),
+      { width, height: measured.height },
+      { width: window.innerWidth, height: window.innerHeight },
+      { placement: "bottom", gap: PANEL_GAP, edge, flip: true, stickToEdge: true }
+    )
 
-    const preferredBelow = triggerRect.bottom + this.spacing
-    const preferredAbove = triggerRect.top - panelRect.height - this.spacing
-    const canFitBelow = preferredBelow + panelRect.height <= window.innerHeight - this.viewportPadding
-    const top = canFitBelow ? preferredBelow : preferredAbove
-
-    const centeredLeft = triggerRect.left + (triggerRect.width / 2) - (width / 2)
-    const clampedLeft = Math.max(this.viewportPadding, Math.min(centeredLeft, window.innerWidth - width - this.viewportPadding))
-    const clampedTop = Math.max(this.viewportPadding, Math.min(top, window.innerHeight - panelRect.height - this.viewportPadding))
-
-    this.panelElement.style.position = "fixed"
-    this.panelElement.style.left = `${clampedLeft}px`
-    this.panelElement.style.top = `${clampedTop}px`
+    applyFixedPosition(this.panelElement, placed)
     this.panelElement.style.width = `${width}px`
-    this.panelElement.style.maxWidth = `${window.innerWidth - (this.viewportPadding * 2)}px`
+    this.panelElement.style.maxWidth = `${window.innerWidth - (edge * 2)}px`
   }
 
   renderCalendar() {

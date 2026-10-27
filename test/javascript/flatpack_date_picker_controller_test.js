@@ -17,9 +17,12 @@ function playOverlayExit(element, options = {}) { element.classList.add("hidden"
 function cancelOverlayHide() {}`
     )
     .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
+    .replace(/import \{[^}]+\} from "flat_pack\/positioning"\n/, "")
     .replace('export default class extends Controller', 'class FlatpackDatePickerController extends Controller') + '\nmodule.exports = FlatpackDatePickerController\n'
-  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
-  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
+  const flatPackRoot = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack')
+  const helperSource = (name) => fs.readFileSync(path.join(flatPackRoot, name), 'utf8').replaceAll('export function ', 'function ')
+  const clickOutsideSource = helperSource('click_outside.js')
+  const positioningSource = helperSource('positioning.js')
 
   const context = {
     module: { exports: {} },
@@ -39,7 +42,7 @@ function cancelOverlayHide() {}`
     ...overrides
   }
 
-  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
+  vm.runInNewContext(`${clickOutsideSource}\n${positioningSource}\n${transformedSource}`, context, { filename: filePath })
 
   return context.module.exports
 }

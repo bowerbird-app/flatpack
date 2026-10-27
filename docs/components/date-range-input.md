@@ -54,6 +54,7 @@ None.
 - Calendar ranges display a quick preset label when the chosen start/end exactly match a preset; otherwise they display as `YYYY-MM-DD to YYYY-MM-DD`.
 - On first render, if `start_value` and `end_value` match a known quick preset range for today, the trigger displays that preset label.
 - Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit` and a few pixels of offset from the trigger, the same helper as Popover. A close in flight can reverse. The panel stays `display: none` while closed because it also uses `md:flex`.
+- The open panel moves to `document.body`. `place` in `flat_pack/positioning.js` puts it below the trigger, or above when below does not fit. The gap is 8px. The clamp reads `--overlay-edge-offset`, and an oversized panel sticks to that edge. The controller sets the panel width to the measured width or the viewport minus that inset, whichever is smaller. At `max-width: 767px` the panel is `inset: 0`, `100vw`, and `100dvh`. Scroll and resize while open run the same placement. Disconnect removes those listeners. A click on the trigger or the portaled panel does not close it.
 
 ## Dependencies
 - Stimulus controller: `app/javascript/flat_pack/controllers/flatpack_date_picker_controller.js`.

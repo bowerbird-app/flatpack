@@ -9,12 +9,16 @@ module FlatPack
       helper = FlatPack::Engine.root.join("test/javascript/positioning_test.js")
       popover = FlatPack::Engine.root.join("test/javascript/popover_controller_test.js")
       dropdown = FlatPack::Engine.root.join("test/javascript/button_dropdown_controller_test.js")
-      stdout, status = Open3.capture2e("node", "--test", helper.to_s, popover.to_s, dropdown.to_s)
+      date_picker = FlatPack::Engine.root.join("test/javascript/flatpack_date_picker_controller_test.js")
+      date_picker_position = FlatPack::Engine.root.join("test/javascript/flatpack_date_picker_position_test.js")
+      stdout, status = Open3.capture2e(
+        "node", "--test", helper.to_s, popover.to_s, dropdown.to_s, date_picker.to_s, date_picker_position.to_s
+      )
 
       assert status.success?, stdout
     end
 
-    test "popover and button dropdown place through the shared helper" do
+    test "popover, button dropdown, and date picker place through the shared helper" do
       helper = FlatPack::Engine.root.join("app/javascript/flat_pack/positioning.js").read
       popover = controller_source("popover_controller.js")
       dropdown = controller_source("button_dropdown_controller.js")
@@ -45,16 +49,28 @@ module FlatPack
       refute_includes dropdown, 'window.addEventListener("scroll"'
       refute_includes dropdown, 'window.addEventListener("resize"'
 
-      tooltip = controller_source("tooltip_controller.js")
       date_picker = controller_source("flatpack_date_picker_controller.js")
+      assert_includes date_picker, 'from "flat_pack/positioning"'
+      assert_includes date_picker, "PANEL_GAP = 8"
+      assert_includes date_picker, 'placement: "bottom"'
+      assert_includes date_picker, "flip: true"
+      assert_includes date_picker, "stickToEdge: true"
+      assert_includes date_picker, "readEdgeOffset(this.panelElement)"
+      assert_includes date_picker, "positionPanel"
+      assert_includes date_picker, "isMobileViewport"
+      assert_includes date_picker, "100dvh"
+      refute_includes date_picker, "viewportPadding"
+      refute_includes date_picker, 'window.addEventListener("scroll"'
+      refute_includes date_picker, 'window.addEventListener("resize"'
+
+      tooltip = controller_source("tooltip_controller.js")
       collection = controller_source("collection_editor_controller.js")
 
-      [tooltip, date_picker, collection].each do |source|
+      [tooltip, collection].each do |source|
         refute_includes source, 'from "flat_pack/positioning"'
       end
 
       assert_includes tooltip, "clampToViewport"
-      assert_includes date_picker, "positionPanel"
       assert_includes collection, "rect.bottom + 4"
     end
 
