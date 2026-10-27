@@ -66,6 +66,10 @@ module FlatPack
       --carousel-bleed
       --card-inset
       --card-inner-radius
+      --fp-overlay-item-inset
+      --overlay-inset-sm
+      --overlay-inset-md
+      --overlay-inset-lg
       --fp-pane-fade-top
       --fp-pane-fade-bottom
     ].freeze

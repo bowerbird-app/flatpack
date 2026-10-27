@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.326] - 2026-10-27
+
+### Changed
+- Overlay item gaps are px and resolve on the item. `:sm` is `--overlay-edge-offset`. `:md` is twice that. `:lg` is three times that. At the default `8px` token that is `8px`, `16px`, and `24px`. `:root` does not assign `--overlay-inset-sm`, `--overlay-inset-md`, or `--overlay-inset-lg`.
+- A plain parent such as `<div style="--overlay-edge-offset: 12px">` changes those gaps. A parent `--overlay-inset-sm`, `--overlay-inset-md`, or `--overlay-inset-lg` wins for that one size. The item reads the token and does not set it.
+- Carousel chevrons stay at `0.75rem`. The lightbox shell, Modal, Drawer, and Command palette keep `--overlay-padding`. Those insets are not the Overlay item gap.
+
+### Upgrade notes
+- The gaps no longer follow the root font size. At a 16px root and the default `8px` token, the default looks the same. A larger root font no longer widens the gap.
+- `--overlay-inset-sm`, `--overlay-inset-md`, and `--overlay-inset-lg` are no longer set on `:root` or `@theme`. Host CSS that read one of those tokens from `:root` no longer gets a length from the kit. Set the token on a parent, or set `--overlay-edge-offset`.
+- Rebuild host Tailwind so `top-[var(--fp-overlay-item-inset)]` and the `right`, `bottom`, and `left` matches exist. Reload kit CSS. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.326`.
+
 ## [0.1.325] - 2026-10-27
 
 ### Changed

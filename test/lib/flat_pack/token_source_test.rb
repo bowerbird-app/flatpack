@@ -356,9 +356,6 @@ module FlatPack
         "--carousel-chevron-background-color" => "var(--overlay-scrim-color)",
         "--overlay-backdrop-color" => "rgb(0 0 0 / 0.5)",
         "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)",
-        "--overlay-inset-sm" => "0.5rem",
-        "--overlay-inset-md" => "1rem",
-        "--overlay-inset-lg" => "1.5rem",
         "--overlay-edge-offset" => "8px"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
@@ -370,6 +367,27 @@ module FlatPack
       refute_match(/--color-ghost-text:\s*#333/, root_block)
       refute_match(/--color-secondary:\s*#f5f5f5/, root_block)
       refute_match(/--chip-remove-hover-background-color:\s*rgb\(0 0 0 \/ 0\.1\)/, root_block)
+    end
+
+    test "overlay item insets resolve on the item so a parent edge offset cascades" do
+      refute_match(/--overlay-inset-(?:sm|md|lg):\s*(?!var\(--overlay-inset-)/, root_block)
+
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+      item = FlatPack::Engine.root.join("app/components/flat_pack/overlay/item.rb").read
+
+      {
+        "sm" => "var(--overlay-inset-sm, var(--overlay-edge-offset))",
+        "md" => "var(--overlay-inset-md, calc(var(--overlay-edge-offset) * 2))",
+        "lg" => "var(--overlay-inset-lg, calc(var(--overlay-edge-offset) * 3))"
+      }.each do |size, value|
+        assert_includes css, %([data-fp-inset="#{size}"] {\n  --fp-overlay-item-inset: #{value};)
+        refute_includes css, "--overlay-inset-#{size}:"
+      end
+
+      assert_includes item, "top-[var(--fp-overlay-item-inset)]"
+      assert_includes item, "left-[var(--fp-overlay-item-inset)]"
+      refute_match(/--overlay-inset-(?:sm|md|lg):/, item)
+      refute_match(/--overlay-edge-offset:/, item)
     end
 
     test "dark block no longer restates derived component colours" do

@@ -29,8 +29,8 @@ module FlatPack
 
         assert_selector "[data-fp-placement='bottom_left'][data-fp-inset='sm']", text: "JPG · 1120×1400 · 4:5"
         assert_selector "[data-fp-placement='top_right'][data-fp-inset='lg']", text: "Save"
-        assert_includes page.native.to_html, "bottom-[var(--overlay-inset-sm)]"
-        assert_includes page.native.to_html, "top-[var(--overlay-inset-lg)]"
+        assert_includes page.find("[data-fp-inset='sm']")[:class], "bottom-[var(--fp-overlay-item-inset)]"
+        assert_includes page.find("[data-fp-inset='lg']")[:class], "top-[var(--fp-overlay-item-inset)]"
       end
 
       def test_item_keeps_a_badge

@@ -1507,6 +1507,23 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
   }
 }
 
+/* Overlay item gap resolves on the item. :root does not assign --overlay-inset-*,
+ * so a plain parent --overlay-edge-offset reaches this calc. A parent
+ * --overlay-inset-sm, --overlay-inset-md, or --overlay-inset-lg wins, because
+ * the item reads that token and does not set it.
+ */
+[data-fp-inset="sm"] {
+  --fp-overlay-item-inset: var(--overlay-inset-sm, var(--overlay-edge-offset));
+}
+
+[data-fp-inset="md"] {
+  --fp-overlay-item-inset: var(--overlay-inset-md, calc(var(--overlay-edge-offset) * 2));
+}
+
+[data-fp-inset="lg"] {
+  --fp-overlay-item-inset: var(--overlay-inset-lg, calc(var(--overlay-edge-offset) * 3));
+}
+
 /* Overlay inset padding follows --overlay-padding / --overlay-padding-wide, never less than the notch.
  * Unlayered for the same preflight reason as .fp-top-nav. Modal, drawer,
  * command palette, and lightbox all use this class.
