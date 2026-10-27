@@ -1021,10 +1021,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --surface-border-hover-color: #d1d5db;
   --overlay-backdrop-color: rgb(0 0 0 / 0.5);
   --overlay-scrim-color: rgb(31 41 55 / 0.68);
-  --overlay-inset-sm: 0.5rem;
-  --overlay-inset-md: 1rem;
-  --overlay-inset-lg: 1.5rem;
   --overlay-edge-offset: 8px;
+  --overlay-inset-sm: var(--overlay-edge-offset);
+  --overlay-inset-md: calc(var(--overlay-edge-offset) * 2);
+  --overlay-inset-lg: calc(var(--overlay-edge-offset) * 3);
   --media-radius: var(--card-radius);
   --media-outline-color: color-mix(in oklch, var(--surface-content-color) 12%, transparent);
   --checkbox-size: 1.25rem;

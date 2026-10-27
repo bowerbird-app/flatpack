@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.326] - 2026-10-27
+
+### Changed
+- Overlay item gaps follow `--overlay-edge-offset`. `--overlay-inset-sm` is that token. `--overlay-inset-md` is twice it. `--overlay-inset-lg` is three times it. At the default `8px` token, on a 16px root, the gaps stay `8px`, `16px`, and `24px`.
+- Carousel chevrons stay at `0.75rem`. The lightbox shell, Modal, Drawer, and Command palette keep `--overlay-padding`. Those insets are not the Overlay item gap.
+
+### Upgrade notes
+- A parent or theme that sets `--overlay-edge-offset` now moves Overlay items. Previously that token did not. Set one `--overlay-inset-*` token to override a single size.
+- The gaps no longer follow the root font size. At a 16px root the default looks the same. A larger root font no longer widens the gap.
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.326`.
+
 ## [0.1.325] - 2026-10-27
 
 ### Changed

@@ -23,8 +23,8 @@ module FlatPack
         bottom_right
       ].freeze
 
-      # Gap sizes are --overlay-inset-sm (0.5rem), --overlay-inset-md (1rem),
-      # and --overlay-inset-lg (1.5rem). :center does not use the inset.
+      # Gap sizes follow --overlay-edge-offset: sm is the token, md is twice
+      # that, lg is three times. :center does not use the inset.
       # Edge centers use it on the edge axis only.
       INSETS = {
         sm: {
