@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 import { flatPackCopy } from "flat_pack/copy"
+import { onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = [
@@ -50,7 +51,11 @@ export default class extends Controller {
     this.panelOriginalParent = null
     this.panelOriginalNextSibling = null
 
-    this.handleDocumentClick = this.handleDocumentClick.bind(this)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      capture: true,
+      roots: () => [this.element, this.panelElement],
+      onlyWhen: () => this.isOpen
+    })
     this.handlePanelClick = this.handlePanelClick.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
     this.handleReposition = this.handleReposition.bind(this)
@@ -288,7 +293,7 @@ export default class extends Controller {
   }
 
   addGlobalListeners() {
-    document.addEventListener("click", this.handleDocumentClick, true)
+    this.outsideClick?.add()
     document.addEventListener("keydown", this.handleEscape, true)
     this.panelElement?.addEventListener("click", this.handlePanelClick, true)
     window.addEventListener("resize", this.handleReposition)
@@ -296,7 +301,7 @@ export default class extends Controller {
   }
 
   removeGlobalListeners() {
-    document.removeEventListener("click", this.handleDocumentClick, true)
+    this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
     this.panelElement?.removeEventListener("click", this.handlePanelClick, true)
     window.removeEventListener("resize", this.handleReposition)
@@ -358,19 +363,6 @@ export default class extends Controller {
     }
 
     return null
-  }
-
-  handleDocumentClick(event) {
-    if (!this.isOpen) {
-      return
-    }
-
-    const clickedInsideTrigger = this.element.contains(event.target)
-    const clickedInsidePanel = this.panelElement && this.panelElement.contains(event.target)
-    const clickedInside = clickedInsideTrigger || clickedInsidePanel
-    if (!clickedInside) {
-      this.close()
-    }
   }
 
   handleReposition() {

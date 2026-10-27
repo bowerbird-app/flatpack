@@ -10,6 +10,10 @@ function loadController(filename, className, sandbox = {}, extraReplacements = [
   const filePath = path.join(CONTROLLERS, filename)
   let source = fs.readFileSync(filePath, "utf8")
     .replace('import { Controller } from "@hotwired/stimulus"\n', "class Controller {}\n")
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
+  const clickOutsidePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "click_outside.js")
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, "utf8").replaceAll("export function ", "function ")
+  source = clickOutsideSource + "\n" + source
 
   extraReplacements.forEach(([from, to]) => {
     source = source.replace(from, to)

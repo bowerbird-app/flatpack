@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
+import { isBackdropClick } from "flat_pack/click_outside"
 
 // Native <dialog> supplies the backdrop, Escape, and the focus trap.
 // This controller opens it on a group, plays the overlay motion, and
@@ -63,8 +64,10 @@ export default class extends Controller {
   }
 
   clickBackdrop(event) {
-    if (event.target.closest("[data-flat-pack--lightbox-target='stage']")) return
-    if (event.target.closest("button, a, video, input, textarea, select")) return
+    if (!isBackdropClick(event, {
+      content: "[data-flat-pack--lightbox-target='stage']",
+      controls: "button, a, video, input, textarea, select"
+    })) return
 
     this.requestClose()
   }

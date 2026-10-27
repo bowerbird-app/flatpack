@@ -16,7 +16,10 @@ function loadController(overrides = {}) {
 function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
 function cancelOverlayHide() {}`
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class FlatpackDatePickerController extends Controller') + '\nmodule.exports = FlatpackDatePickerController\n'
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
 
   const context = {
     module: { exports: {} },
@@ -36,7 +39,7 @@ function cancelOverlayHide() {}`
     ...overrides
   }
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
 
   return context.module.exports
 }

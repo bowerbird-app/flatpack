@@ -1,6 +1,7 @@
 // FlatPack Button Dropdown Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
+import { onClickOutside } from "flat_pack/click_outside"
 
 const MENU_OFFSET = 8
 const VIEWPORT_PADDING = 8
@@ -22,11 +23,13 @@ export default class extends Controller {
     this.originalMenuNextSibling = this.menuElement.nextSibling
     this.contextControllerElements = this.collectContextControllerElements()
 
-    // Bind methods to maintain context
-    this.handleClickOutside = this.handleClickOutside.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
     this.handleReposition = this.handleReposition.bind(this)
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      capture: true,
+      roots: () => [this.element, this.menuElement]
+    })
   }
 
   disconnect() {
@@ -122,16 +125,6 @@ export default class extends Controller {
     this.removeListeners()
   }
 
-  handleClickOutside(event) {
-    // Close if click is outside the dropdown
-    const clickedTrigger = this.element.contains(event.target)
-    const clickedMenu = this.menuElement.contains(event.target)
-
-    if (!clickedTrigger && !clickedMenu) {
-      this.close()
-    }
-  }
-
   handleEscape(event) {
     if (!this.isOpen) return
 
@@ -192,8 +185,7 @@ export default class extends Controller {
   }
 
   addListeners() {
-    // Use capture phase for click outside
-    document.addEventListener("click", this.handleClickOutside, true)
+    this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
     window.addEventListener("resize", this.handleReposition)
     window.addEventListener("scroll", this.handleReposition, true)
@@ -201,7 +193,7 @@ export default class extends Controller {
   }
 
   removeListeners() {
-    document.removeEventListener("click", this.handleClickOutside, true)
+    this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
     window.removeEventListener("resize", this.handleReposition)
     window.removeEventListener("scroll", this.handleReposition, true)

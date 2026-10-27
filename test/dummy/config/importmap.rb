@@ -13,6 +13,7 @@ pin "flat_pack/local_time", to: "flat_pack/local_time.js", preload: false
 pin "flat_pack/copy", to: "flat_pack/copy.js", preload: false
 pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
+pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 
 # Third-party dependencies
 pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.esm.js"

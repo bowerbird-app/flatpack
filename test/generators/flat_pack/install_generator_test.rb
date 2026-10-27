@@ -55,6 +55,7 @@ module FlatPack
           assert_includes content, "flat_pack/copy"
           assert_includes content, "flat_pack/clipboard"
           assert_includes content, "flat_pack/focus_trap"
+          assert_includes content, "flat_pack/click_outside"
           assert_includes content, "preload: false"
         end
       end
@@ -77,6 +78,7 @@ module FlatPack
           assert_equal 1, content.scan('pin "flat_pack/copy"').length
           assert_equal 1, content.scan('pin "flat_pack/clipboard"').length
           assert_equal 1, content.scan('pin "flat_pack/focus_trap"').length
+          assert_equal 1, content.scan('pin "flat_pack/click_outside"').length
         end
       end
 

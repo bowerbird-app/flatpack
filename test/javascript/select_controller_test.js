@@ -1,3 +1,5 @@
+let activeDocument
+
 const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
@@ -92,6 +94,11 @@ class FakeElement {
   querySelectorAll(selector) {
     return flatten(this).filter((element) => matchesSelector(element, selector))
   }
+
+  contains(node) {
+    if (node === this) return true
+    return this.children.some((child) => child === node || child.contains?.(node))
+  }
 }
 
 function flatten(element) {
@@ -140,18 +147,30 @@ function loadController() {
 function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
 function cancelOverlayHide() {}`
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class SelectController extends Controller') + '\nmodule.exports = SelectController\n'
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
+
+  activeDocument = {
+    listeners: [],
+    addEventListener(type, listener, capture) {
+      this.listeners.push({ type, listener, capture })
+    },
+    removeEventListener(type, listener, capture) {
+      this.listeners = this.listeners.filter((entry) => {
+        return entry.type !== type || entry.listener !== listener || entry.capture !== capture
+      })
+    },
+    createElement(tagName) {
+      return new FakeElement(tagName)
+    }
+  }
 
   const context = {
     module: { exports: {} },
     exports: {},
-    document: {
-      addEventListener() {},
-      removeEventListener() {},
-      createElement(tagName) {
-        return new FakeElement(tagName)
-      }
-    },
+    document: activeDocument,
     CSS: {
       escape(value) {
         return String(value)
@@ -166,7 +185,7 @@ function cancelOverlayHide() {}`
     }
   }
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
 
   return context.module.exports
 }
@@ -448,4 +467,31 @@ test('close is a no-op when the dropdown is already closed', () => {
 
   assert.equal(controller.dropdownTarget.classList.contains('hidden'), true)
   assert.equal(controller.isOpen, false)
+})
+
+test('outside click closes, a click inside the trigger does not, and disconnect removes the listener', () => {
+  const controller = buildController({ nested: false })
+  controller.open()
+  const click = (target) => {
+    activeDocument.listeners
+      .filter((entry) => entry.type === 'click')
+      .forEach((entry) => entry.listener({ target }))
+  }
+
+  assert.equal(activeDocument.listeners.some((entry) => entry.type === 'click' && entry.capture === false), true)
+
+  click(controller.triggerTarget)
+  assert.equal(controller.isOpen, true)
+
+  click(controller.dropdownTarget)
+  assert.equal(controller.isOpen, true)
+
+  click(new FakeElement('div'))
+  assert.equal(controller.isOpen, false)
+
+  controller.open()
+  controller.disconnect()
+  click(new FakeElement('div'))
+  assert.equal(controller.isOpen, true)
+  assert.equal(activeDocument.listeners.some((entry) => entry.type === 'click'), false)
 })

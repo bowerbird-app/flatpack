@@ -1,3 +1,5 @@
+let activeDocument
+
 const test = require('node:test')
 const assert = require('node:assert/strict')
 const fs = require('node:fs')
@@ -61,6 +63,17 @@ class FakeElement {
   }
 
   scrollIntoView() {}
+
+  contains(node) {
+    if (node === this) return true
+    return (this.children || []).some((child) => child === node || child.contains?.(node))
+  }
+
+  appendChild(child) {
+    this.children = this.children || []
+    this.children.push(child)
+    return child
+  }
 }
 
 function loadController() {
@@ -74,19 +87,31 @@ function loadController() {
 function playOverlayExit(element, options = {}) { element.classList.add("hidden"); options.onHidden?.(); return 0 }
 function cancelOverlayHide() {}`
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace('export default class extends Controller', 'class ComboboxController extends Controller') + '\nmodule.exports = ComboboxController\n'
+  const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
+
+  activeDocument = {
+    listeners: [],
+    addEventListener(type, listener, capture) {
+      this.listeners.push({ type, listener, capture })
+    },
+    removeEventListener(type, listener, capture) {
+      this.listeners = this.listeners.filter((entry) => {
+        return entry.type !== type || entry.listener !== listener || entry.capture !== capture
+      })
+    }
+  }
 
   const context = {
     module: { exports: {} },
     exports: {},
-    document: {
-      addEventListener() {},
-      removeEventListener() {}
-    },
+    document: activeDocument,
     clearTimeout() {}
   }
 
-  vm.runInNewContext(transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
 
   return context.module.exports
 }
@@ -133,4 +158,29 @@ test('close is a no-op when the list is already closed', () => {
 
   assert.equal(controller.listTarget.classList.contains('hidden'), true)
   assert.equal(controller.openList, false)
+})
+
+test('mousedown outside closes, mousedown on the input does not, and disconnect removes the listener', () => {
+  const controller = buildController()
+  controller.element.appendChild(controller.inputTarget)
+  controller.open()
+  const press = (target) => {
+    activeDocument.listeners
+      .filter((entry) => entry.type === 'mousedown')
+      .forEach((entry) => entry.listener({ target }))
+  }
+
+  assert.equal(activeDocument.listeners.some((entry) => entry.type === 'mousedown' && entry.capture === false), true)
+
+  press(controller.inputTarget)
+  assert.equal(controller.openList, true)
+
+  press(new FakeElement('div'))
+  assert.equal(controller.openList, false)
+
+  controller.open()
+  controller.disconnect()
+  press(new FakeElement('div'))
+  assert.equal(controller.openList, true)
+  assert.equal(activeDocument.listeners.some((entry) => entry.type === 'mousedown'), false)
 })

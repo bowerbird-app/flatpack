@@ -11,7 +11,10 @@ function loadModalController(documentStub) {
   const focusTrapSource = fs.readFileSync(focusTrapPath, "utf8")
     .replaceAll("export function ", "function ")
     .replaceAll("export const ", "const ")
-  const transformedSource = focusTrapSource + "\n" + source
+  const clickOutsidePath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "click_outside.js")
+  const clickOutsideSource = fs.readFileSync(clickOutsidePath, "utf8")
+    .replaceAll("export function ", "function ")
+  const transformedSource = clickOutsideSource + "\n" + focusTrapSource + "\n" + source
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
@@ -21,6 +24,7 @@ function loadModalController(documentStub) {
       'import { focusableElements as sharedFocusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"',
       "const sharedFocusableElements = focusableElements\nconst trapTabWithin = trapTab"
     )
+    .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
     .replace(
       /import \{\n  applyTriggerOriginStart,\n  canUseTriggerOrigin,\n  clearTriggerOriginStyles,\n  isTriggerOrigin,\n  playTriggerOriginEnter,\n  playTriggerOriginExit,\n  resolveTrigger\n\} from "controllers\/flat_pack\/trigger_origin"/,
       `
@@ -257,4 +261,22 @@ test('trigger origin close falls back to scale when the trigger is gone', () => 
   assert.equal(dialog.style.opacity, '0')
   assert.equal(dialog.style.scale, '0.95')
   assert.equal(dialog.style.transform, undefined)
+})
+
+test('a backdrop click closes and a click inside the dialog does not', () => {
+  const { controller } = buildController()
+  controller.closeOnBackdropValue = true
+  let closed = 0
+  controller.close = () => { closed += 1 }
+
+  const backdrop = { id: 'backdrop' }
+  controller.clickBackdrop({ target: backdrop, currentTarget: backdrop })
+  assert.equal(closed, 1)
+
+  controller.clickBackdrop({ target: { id: 'dialog' }, currentTarget: backdrop })
+  assert.equal(closed, 1)
+
+  controller.closeOnBackdropValue = false
+  controller.clickBackdrop({ target: backdrop, currentTarget: backdrop })
+  assert.equal(closed, 1)
 })

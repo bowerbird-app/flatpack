@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
+import { onClickOutside } from "flat_pack/click_outside"
 
 export default class extends Controller {
   static targets = ["input", "dropdown", "results", "noResults", "loading"]
@@ -14,12 +15,14 @@ export default class extends Controller {
   connect() {
     this.debounceTimer = null
     this.abortController = null
-    this.handleOutsideClick = this.handleOutsideClick.bind(this)
-    document.addEventListener("click", this.handleOutsideClick)
+    this.outsideClick = onClickOutside(document, () => this.close(), {
+      roots: () => this.element
+    })
+    this.outsideClick.add()
   }
 
   disconnect() {
-    document.removeEventListener("click", this.handleOutsideClick)
+    this.outsideClick?.remove()
     this.clearDebounce()
     this.abortPendingRequest()
   }
@@ -96,12 +99,6 @@ export default class extends Controller {
     if (event.key === "Escape") {
       this.close()
       this.inputTarget.blur()
-    }
-  }
-
-  handleOutsideClick(event) {
-    if (!this.element.contains(event.target)) {
-      this.close()
     }
   }
 

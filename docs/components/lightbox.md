@@ -89,7 +89,7 @@ Carousel slides with `lightbox: true` render this component. Image slides defaul
 - `/demo/lightbox`
 
 ## Accessibility
-- The overlay is a native `<dialog>`, opened with `showModal`, so the browser supplies the backdrop, Escape, and the focus trap.
+- The overlay is a native `<dialog>`, opened with `showModal`, so the browser supplies the backdrop, Escape, and the focus trap. A click on the shell closes. A click on the stage, a button, a link, a video, or a field does not. That check is `isBackdropClick` in `flat_pack/click_outside.js`. Escape stays on the dialog `cancel` event.
 - Close returns focus to the trigger.
 - The dialog is labelled with I18n `flatpack.lightbox.label`. The close button uses `flatpack.lightbox.close`. It is a round icon-only Button. `.fp-lightbox__close` paints it from `--carousel-control-*`.
 - Arrow keys move between items unless focus is already in the carousel viewport, a video, or a field.
