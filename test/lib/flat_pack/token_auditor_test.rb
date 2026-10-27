@@ -54,6 +54,26 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-collapsed-frame"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-panel-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--page-layout-width"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-overlay-item-inset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-sm"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-md"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-lg"
+    end
+
+    test "overlay item insets stay off the theme file so a parent edge offset cascades" do
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-overlay-item-inset"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-sm"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-md"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-lg"
+
+      variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+      %w[--overlay-inset-sm --overlay-inset-md --overlay-inset-lg --fp-overlay-item-inset].each do |token|
+        refute_includes variables, "#{token}:"
+      end
+
+      assert_includes application, "--fp-overlay-item-inset: var(--overlay-inset-md, calc(var(--overlay-edge-offset) * 2))"
     end
 
     test "brand primitives and transition aliases are defined" do
