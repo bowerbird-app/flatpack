@@ -47,7 +47,7 @@ A named host theme should set semantic tokens, not component aliases. Component 
 - Exact hex: `--color-primary` (and `--color-primary-text` if the fill is light)
 - Surfaces, if they should differ from the kit greys: `--surface-page-background-color`, `--surface-background-color`, `--surface-muted-background-color`, `--surface-border-color`, `--surface-content-color`, `--surface-muted-content-color`
 
-**Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`, `--backdrop-color`, `--backdrop-filter`, `--backdrop-tint-opacity`.
+**Dark** — set `color-scheme: dark` plus the surface tokens and `--color-primary*`. Ghost, secondary, list hover, chip remove, switch track, and modal/carousel overlays then follow those semantics. Optional extras with no surface equivalent: `--overlay-backdrop-color`, `--overlay-scrim-color`, `--shadow-*` (hairline lift), `--bottom-nav-*`, `--top-nav-background-color`, `--sidebar-background-color`, `--backdrop-color`, `--backdrop-filter`, `--backdrop-tint-opacity`. `--backdrop-content-color` and `--backdrop-muted-content-color` alias the surface content colours. Rounded points them at the hero overlay text tokens. `.fp-on-backdrop` opts page text in only inside `[data-flat-pack-layout-background]`.
 
 Stack the brand on rounded. The attribute is a list, base first. Rounded still supplies spacing, shape, and the backdrop wash (`#2f2f2f`, black tint at `0.18`). That wash follows the dark block in the kit, so `rounded dark` keeps `0.18` instead of `0.78`. The brand block overrides only the tokens it sets. Load that block after `flat_pack/variables`. Both selectors have the same specificity, so source order decides the winner.
 
@@ -535,6 +535,8 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --backdrop-filter: saturate(1);
   --backdrop-tint-color: var(--surface-page-background-color);
   --backdrop-tint-opacity: 0.55;
+  --backdrop-content-color: var(--surface-content-color);
+  --backdrop-muted-content-color: var(--surface-muted-content-color);
   --sidebar-border-color: oklch(0.89 0.01 250);
   --sidebar-divider-color: oklch(0.89 0.01 250);
   --sidebar-item-text-color: oklch(0.45 0.01 250);

@@ -49,6 +49,8 @@ components:
       - --backdrop-filter
       - --backdrop-tint-color
       - --backdrop-tint-opacity
+      - --backdrop-content-color
+      - --backdrop-muted-content-color
     status: documented
 
   - key: badge

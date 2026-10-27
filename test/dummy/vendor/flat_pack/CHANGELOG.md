@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.327] - 2026-10-28
+
+### Added
+- `--backdrop-content-color` and `--backdrop-muted-content-color` alias the surface content colours. `[data-theme~="rounded"]` points them at `--hero-overlay-text-color` and `--hero-overlay-muted-text-color`. Dark does not set them. `rounded dark` keeps the white overlay text because that block follows dark.
+- `.fp-on-backdrop` and `.fp-on-backdrop-muted` recolour page text from those tokens. Breadcrumbs, top-nav items, and ghost buttons follow `.fp-on-backdrop`. Both classes do nothing without `[data-flat-pack-layout-background]`. A card inside `.fp-on-backdrop` keeps its own text.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.327`.
+
 ## [0.1.326] - 2026-10-27
 
 ### Changed

@@ -1138,6 +1138,41 @@
   background-color: transparent;
 }
 
+/* Opt-in text over a layout photo. Without [data-flat-pack-layout-background] this class does nothing.
+   --color-ghost-hover stays the theme mix so a card can point its ghost button back at it. */
+[data-flat-pack-layout-background] .fp-on-backdrop {
+  color: var(--backdrop-content-color);
+  --surface-content-color: var(--backdrop-content-color);
+  --surface-muted-content-color: var(--backdrop-muted-content-color);
+  --breadcrumb-current-color: var(--backdrop-content-color);
+  --breadcrumb-link-color: var(--backdrop-muted-content-color);
+  --breadcrumb-link-hover-color: var(--backdrop-content-color);
+  --breadcrumb-separator-color: var(--backdrop-muted-content-color);
+  --top-nav-item-text-color: var(--backdrop-muted-content-color);
+  --top-nav-item-icon-color: var(--backdrop-muted-content-color);
+  --top-nav-item-hover-text-color: var(--backdrop-content-color);
+  --color-ghost-text: var(--backdrop-content-color);
+  --button-ghost-text-color: var(--backdrop-content-color);
+  --button-ghost-hover-background-color: color-mix(in oklab, var(--backdrop-content-color) 16%, transparent);
+}
+
+[data-flat-pack-layout-background] .fp-on-backdrop-muted {
+  color: var(--backdrop-muted-content-color);
+}
+
+[data-flat-pack-layout-background] .fp-on-backdrop .fp-card {
+  --breadcrumb-current-color: var(--surface-content-color);
+  --breadcrumb-link-color: var(--surface-muted-content-color);
+  --breadcrumb-link-hover-color: var(--surface-content-color);
+  --breadcrumb-separator-color: var(--surface-muted-content-color);
+  --top-nav-item-text-color: var(--surface-muted-content-color);
+  --top-nav-item-icon-color: var(--surface-muted-content-color);
+  --top-nav-item-hover-text-color: var(--surface-content-color);
+  --color-ghost-text: var(--surface-content-color);
+  --button-ghost-text-color: var(--surface-content-color);
+  --button-ghost-hover-background-color: var(--color-ghost-hover);
+}
+
 /* Public page shell. Arrangement only. The top bar rules below are shared
  * with SidebarLayout. Unlayered so host preflight cannot zero the column padding.
  */

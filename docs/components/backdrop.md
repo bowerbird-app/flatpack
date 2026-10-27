@@ -50,4 +50,4 @@ The photo, tint, and fill are `aria-hidden="true"`. Pass `alt=""` when the photo
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - No Stimulus controller.
-- Tokens: `--backdrop-blur` (`40px`), `--backdrop-color` (`transparent`), `--backdrop-filter` (`saturate(1)`), `--backdrop-tint-color` (the page colour), `--backdrop-tint-opacity` (`0.55`, `0.78` on dark). `[data-theme~="rounded"]` sets the edge to `#2f2f2f`, the tint to `#000`, and the opacity to `0.18`. That block follows dark, so `rounded dark` keeps `0.18`.
+- Tokens: `--backdrop-blur` (`40px`), `--backdrop-color` (`transparent`), `--backdrop-filter` (`saturate(1)`), `--backdrop-tint-color` (the page colour), `--backdrop-tint-opacity` (`0.55`, `0.78` on dark), `--backdrop-content-color`, `--backdrop-muted-content-color`. The base content tokens alias the surface content colours. Rounded uses the hero overlay text tokens. `.fp-on-backdrop` opts page text in only inside `[data-flat-pack-layout-background]`. `[data-theme~="rounded"]` sets the edge to `#2f2f2f`, the tint to `#000`, and the opacity to `0.18`. That block follows dark, so `rounded dark` keeps `0.18`.

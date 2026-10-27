@@ -24,6 +24,7 @@ class PagesPageLayoutDemoTest < ActionDispatch::IntegrationTest
     assert_select "a[href='/demo/page_layout?variant=login']"
     refute_includes response.body, "flat-pack--sidebar-layout"
     refute_includes response.body, "fp-backdrop"
+    refute_includes response.body, "fp-on-backdrop"
     refute_includes response.body, "data-controller=\"dark-mode\""
   end
 
@@ -40,6 +41,10 @@ class PagesPageLayoutDemoTest < ActionDispatch::IntegrationTest
     assert_select ".fp-backdrop[aria-hidden=true]"
     assert_includes response.body, "/images/hero-packaging.jpg"
     assert_select "#page-layout-float", text: /On the road/
+    assert_select "#page-layout-float-title.fp-on-backdrop"
+    assert_select "footer #page-layout-footer.fp-on-backdrop"
+    assert_select "#page-layout-float.fp-card"
+    assert_select "#page-layout-float.fp-on-backdrop", count: 0
     refute_includes response.body, "flat-pack--sidebar-layout"
   end
 
