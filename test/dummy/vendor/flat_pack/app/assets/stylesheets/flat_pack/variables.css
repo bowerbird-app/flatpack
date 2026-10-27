@@ -377,6 +377,8 @@
   --backdrop-filter: var(--backdrop-filter);
   --backdrop-tint-color: var(--backdrop-tint-color);
   --backdrop-tint-opacity: var(--backdrop-tint-opacity);
+  --backdrop-content-color: var(--backdrop-content-color);
+  --backdrop-muted-content-color: var(--backdrop-muted-content-color);
   --sidebar-border-color: var(--sidebar-border-color);
   --sidebar-divider-color: var(--sidebar-divider-color);
   --sidebar-item-text-color: var(--sidebar-item-text-color);
@@ -1359,6 +1361,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --backdrop-filter: saturate(1);
   --backdrop-tint-color: var(--surface-page-background-color);
   --backdrop-tint-opacity: 0.55;
+  --backdrop-content-color: var(--surface-content-color);
+  --backdrop-muted-content-color: var(--surface-muted-content-color);
   --sidebar-border-color: var(--surface-border-color);
   --sidebar-divider-color: var(--surface-border-color);
   --sidebar-item-text-color: var(--surface-muted-content-color);
@@ -2063,6 +2067,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --backdrop-color: #2f2f2f;
   --backdrop-tint-color: #000;
   --backdrop-tint-opacity: 0.18;
+  --backdrop-content-color: var(--hero-overlay-text-color);
+  --backdrop-muted-content-color: var(--hero-overlay-muted-text-color);
 }
 
 @media (prefers-reduced-motion: reduce) {

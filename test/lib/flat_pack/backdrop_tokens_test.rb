@@ -86,5 +86,54 @@ module FlatPack
       refute_match(/prefers-reduced-motion:[^\n]*\n(?:.*\n){0,8}.*backdrop-filter/, @application)
       refute_match(/forced-colors:[^\n]*\n(?:.*\n){0,8}.*backdrop-/, @application)
     end
+
+    test "content tokens alias surface text and rounded uses the hero overlay text" do
+      theme_block = @css[/@theme inline \{.*?^\}/m]
+      root_block = @css[/^:root,\s*\[data-theme\]\s*\{.*?^\}/m]
+      rounded = @css[/\[data-theme~="rounded"\]\s*\{(.*?)\}/m, 1]
+      dark = @css[/\[data-theme~="dark"\]\s*\{(.*?)\}/m, 1]
+
+      assert_includes theme_block, "--backdrop-content-color: var(--backdrop-content-color);"
+      assert_includes theme_block, "--backdrop-muted-content-color: var(--backdrop-muted-content-color);"
+      assert_match(/--backdrop-content-color:\s*var\(--surface-content-color\);/, root_block)
+      assert_match(/--backdrop-muted-content-color:\s*var\(--surface-muted-content-color\);/, root_block)
+      assert_match(/--backdrop-content-color:\s*var\(--hero-overlay-text-color\);/, rounded)
+      assert_match(/--backdrop-muted-content-color:\s*var\(--hero-overlay-muted-text-color\);/, rounded)
+      refute_match(/--backdrop-content-color:\s*var\(--backdrop-content-color\)/, rounded)
+      refute_match(/--backdrop-muted-content-color:\s*var\(--backdrop-muted-content-color\)/, rounded)
+      refute_match(/--backdrop-content-color\s*:/, dark)
+      refute_match(/--backdrop-muted-content-color\s*:/, dark)
+    end
+
+    test "on-backdrop text is gated on a layout photo and leaves the card surface alone" do
+      main = @application[/\[data-flat-pack-layout-background\] \.fp-layout-main \{.*?\n\}/m]
+      on_backdrop = @application[/\[data-flat-pack-layout-background\] \.fp-on-backdrop \{.*?\n\}/m]
+      muted = @application[/\[data-flat-pack-layout-background\] \.fp-on-backdrop-muted \{.*?\n\}/m]
+      card = @application[/\[data-flat-pack-layout-background\] \.fp-on-backdrop \.fp-card \{.*?\n\}/m]
+
+      assert_match(/\A\[data-flat-pack-layout-background\]/, main)
+      assert_match(/\A\[data-flat-pack-layout-background\]/, on_backdrop)
+      assert_match(/\A\[data-flat-pack-layout-background\]/, muted)
+      assert_match(/\A\[data-flat-pack-layout-background\]/, card)
+      refute_includes main, "--surface-content-color"
+      refute_match(/--surface-content-color\s*:/, card)
+
+      assert_includes on_backdrop, "color: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--surface-content-color: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--surface-muted-content-color: var(--backdrop-muted-content-color);"
+      assert_includes on_backdrop, "--breadcrumb-current-color: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--breadcrumb-link-color: var(--backdrop-muted-content-color);"
+      assert_includes on_backdrop, "--breadcrumb-link-hover-color: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--breadcrumb-separator-color: var(--backdrop-muted-content-color);"
+      assert_includes on_backdrop, "--top-nav-item-text-color: var(--backdrop-muted-content-color);"
+      assert_includes on_backdrop, "--top-nav-item-icon-color: var(--backdrop-muted-content-color);"
+      assert_includes on_backdrop, "--top-nav-item-hover-text-color: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--color-ghost-text: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--button-ghost-text-color: var(--backdrop-content-color);"
+      assert_includes on_backdrop, "--button-ghost-hover-background-color: color-mix(in oklab, var(--backdrop-content-color) 16%, transparent);"
+      refute_match(/--color-ghost-hover\s*:/, on_backdrop)
+
+      assert_includes muted, "color: var(--backdrop-muted-content-color);"
+    end
   end
 end
