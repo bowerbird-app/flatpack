@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.322] - 2026-10-27
+
+### Changed
+- Popover places its panel with `place` in `flat_pack/positioning.js`. Placements stay `top`, `bottom`, `left`, and `right`. The panel still flips to the opposite side when the preferred side does not fit, and the gap between the trigger and the panel stays 12px. The viewport clamp reads `--overlay-edge-offset` (8px unless a theme sets another px value). Scroll and resize while the popover is open still follow the trigger. Disconnect still removes those listeners.
+- Tooltip, Button dropdown, Date picker, and Collection editor still place themselves.
+
+### Upgrade notes
+- importmap-rails hosts already receive `flat_pack/positioning` from the engine importmap. `initializer "flat_pack.importmap"` appends `config/importmap.rb` before importmap-rails reads it. Add the pin, or rerun `bin/rails generate flat_pack:install`, only when the host bypasses that importmap or keeps its own pin list. A missing pin stops Popover. That controller imports the module. Every other controller is its own lazy-loaded file and still loads.
+- Placement is unchanged when `--overlay-edge-offset` is `8px`. A theme that changes the token changes how far an open Popover sits from the viewport edge. The 12px gap does not follow the token. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator when the engine importmap is in use.
+- Redeploy so `meta.gem_version` shows `0.1.322`.
+
 ## [0.1.321] - 2026-10-27
 
 ### Changed
