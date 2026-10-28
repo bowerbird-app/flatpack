@@ -262,12 +262,24 @@ module FlatPack
         content_tag(:span, trailing, class: TRAILING_CLASSES.fetch(@lines))
       end
 
-      # button_content calls this, not render_icon. A host prepend on render_icon
-      # can still paint an inline SVG mark. Heroicon names stay here so
-      # icon_variant and icon_style are not dropped.
+      # Heroicon names stay here so icon_variant and icon_style are not dropped.
+      # A trusted `<svg` string, or a host prepend on render_icon, goes through
+      # render_icon. Do not pass user input as icon:.
       def render_leading_icon
-        return render_icon if delegated_svg_icon?
+        return render_icon if FlatPack::Shared::InlineSvg.markup?(@icon)
 
+        render_heroicon
+      end
+
+      def render_icon
+        if FlatPack::Shared::InlineSvg.markup?(@icon)
+          @icon.html_safe
+        else
+          render_heroicon
+        end
+      end
+
+      def render_heroicon
         render FlatPack::Shared::IconComponent.new(
           **IconOptions.component_arguments(
             name: @icon,
@@ -276,16 +288,6 @@ module FlatPack
             icon_style: @icon_style
           )
         )
-      end
-
-      def render_icon
-        render_leading_icon
-      end
-
-      def delegated_svg_icon?
-        return false unless @icon.is_a?(String) && @icon.start_with?("<svg")
-
-        method(:render_icon).owner != FlatPack::Button::Component
       end
 
       def icon_size

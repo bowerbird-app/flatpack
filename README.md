@@ -94,7 +94,7 @@ For AI-assisted installation and usage, start with the gem-shipped contract and 
 ) %>
 ```
 
-Styles: `:primary`, `:secondary`, `:ghost`. `round: true` makes a label a pill and an icon-only button a circle. Omit it and the theme corner stays.
+Styles: `:primary`, `:secondary`, `:ghost`. `round: true` makes a label a pill and an icon-only button a circle. Omit it and the theme corner stays. `icon:` is a Heroicon name, or a trusted `<svg` string (not user input), the same as List::Item.
 
 ### Card Component
 
