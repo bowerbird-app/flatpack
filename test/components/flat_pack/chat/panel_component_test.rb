@@ -107,9 +107,22 @@ module FlatPack
           assert_includes wrapper["class"], "bg-[var(--chat-header-background-color)]"
           assert_equal 1, parts.length
           assert_equal "right-header", parts[0]["data-flat-pack-chat-panel-part"]
-          assert_equal "flex shrink-0 w-min items-center justify-end", parts[0]["class"]
+          assert_equal "ml-auto flex shrink-0 w-min items-center justify-end", parts[0]["class"]
+          assert_includes parts[0]["class"], "ml-auto"
           assert_equal "Actions", parts[0].text
           assert_no_selector "[data-flat-pack-chat-panel-part='header']"
+        end
+
+        def test_right_header_alone_is_right_aligned
+          render_inline(Component.new) do |panel|
+            panel.right_header { "Actions" }
+          end
+
+          actions = page.native.at_css("[data-flat-pack-chat-panel-part='right-header']")
+
+          assert_includes actions["class"], "ml-auto"
+          assert_includes actions["class"], "justify-end"
+          assert_includes actions["class"], "w-min"
         end
 
         def test_applies_header_container_styles

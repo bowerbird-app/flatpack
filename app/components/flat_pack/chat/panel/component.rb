@@ -84,11 +84,20 @@ module FlatPack
         def render_right_header_part
           content_tag(
             :div,
-            class: "flex shrink-0 w-min items-center justify-end",
+            class: right_header_part_classes,
             data: {flat_pack_chat_panel_part: "right-header"}
           ) do
             right_header.to_s
           end
+        end
+
+        # w-min does not grow, so a lone right part needs ml-auto to sit on the right.
+        # "ml-auto flex shrink-0 w-min items-center justify-end"
+        # "flex shrink-0 w-min items-center justify-end"
+        def right_header_part_classes
+          return "ml-auto flex shrink-0 w-min items-center justify-end" unless header?
+
+          "flex shrink-0 w-min items-center justify-end"
         end
 
         def render_messages_section

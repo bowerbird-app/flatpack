@@ -46,7 +46,7 @@ High-use interaction props:
 
 ## Slots
 - `Layout`: `sidebar`, `panel`.
-- `Panel`: `header`, `right_header`, `messages`, `composer`. `right_header` is optional. When it is present the header bar is a row: `header` is `min-w-0 flex-1` and `right_header` is `flex shrink-0 w-min items-center justify-end`. Omit `right_header` and the header markup stays a single wrapper. The bar does not add padding. A parent can restyle the parts with `data-flat-pack-chat-panel-part="header"` and `data-flat-pack-chat-panel-part="right-header"`. `right_header` alone still renders that row.
+- `Panel`: `header`, `right_header`, `messages`, `composer`. `right_header` is optional. When it is present the header bar is a row: `header` is `min-w-0 flex-1` and `right_header` is `flex shrink-0 w-min items-center justify-end`. Omit `right_header` and the header markup stays a single wrapper. The bar does not add padding. A parent can restyle the parts with `data-flat-pack-chat-panel-part="header"` and `data-flat-pack-chat-panel-part="right-header"`. `right_header` alone still renders that row, with `ml-auto` so the `w-min` part sits on the right. Because the part is `w-min` and does not shrink, its content must not wrap: use `whitespace-nowrap`, icon buttons, and badges. Use `right_header` for actions beside the panel `header` slot. Use `Chat::Header`'s `right` slot for actions inside that header, next to its title.
 - `Header`: `left_meta`, `right`.
 - `MessageGroup`: `avatar`, `messages`.
 - `ReceivedMessage`/`SentMessage`: `attachments`, `media_attachments`, `meta` (and `actions` for sent).
@@ -84,7 +84,7 @@ High-use interaction props:
 <% end %>
 ```
 
-Actions that should stay on the right of a long title use `right_header`. The panel does not pad that bar.
+Actions that should stay on the right of a long title use `right_header`. The panel does not pad that bar. The right part is `w-min`, so that content must not wrap.
 
 ```erb
 <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
