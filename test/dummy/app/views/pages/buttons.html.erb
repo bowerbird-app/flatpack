@@ -460,7 +460,7 @@
       anchor_link: true,
       subtitle: "A trusted SVG in icon:, not a Heroicon name."
     ) %>
-    <% mark = %(<svg class="block h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="12" cy="12" r="8"></circle></svg>) %>
+    <% mark = %(<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"></circle></svg>) %>
     <div class="flex flex-wrap items-center gap-3 mb-4">
       <%= render FlatPack::Button::Component.new(text: "Google", icon: mark, style: :secondary) %>
       <%= render FlatPack::Button::Component.new(icon: mark, icon_only: true, style: :primary, aria: { label: "Google" }) %>

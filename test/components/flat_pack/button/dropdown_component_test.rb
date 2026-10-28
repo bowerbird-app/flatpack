@@ -175,7 +175,7 @@ module FlatPack
         svg = '<svg data-logo="mark" class="block h-5 w-5 shrink-0" viewBox="0 0 24 24"></svg>'
         render_inline(Dropdown::Component.new(text: "Google", icon: svg))
 
-        assert_selector "button > svg[data-logo='mark']"
+        assert_selector "button > span[aria-hidden='true'] > svg[data-logo='mark']"
         assert_selector "button svg[data-flat-pack--icon-name-value='chevron-down']"
         refute_selector "button svg[data-flat-pack--icon-name-value][data-logo]"
       end

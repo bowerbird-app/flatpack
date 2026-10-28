@@ -273,10 +273,21 @@ module FlatPack
 
       def render_icon
         if FlatPack::Shared::InlineSvg.markup?(@icon)
-          @icon.html_safe
+          content_tag(:span, @icon.html_safe, class: inline_svg_classes, aria: {hidden: true})
         else
           render_heroicon
         end
+      end
+
+      # Tailwind CSS scanning requires these classes as string literals.
+      # DO NOT REMOVE:
+      # "inline-flex" "h-4" "w-4" "h-5" "w-5" "h-6" "w-6" "[&_svg]:h-full" "[&_svg]:w-full"
+      def inline_svg_classes
+        [
+          "inline-flex shrink-0 items-center justify-center",
+          FlatPack::Shared::IconComponent::SIZES.fetch(icon_size),
+          "[&_svg]:h-full [&_svg]:w-full"
+        ].join(" ")
       end
 
       def render_heroicon
