@@ -71,6 +71,8 @@ All component templates use Rails' standard auto-escaping:
 <%= user_input.html_safe %>
 ```
 
+`FlatPack::Button::Component` and `FlatPack::List::Item` paint an `icon:` string that starts with `<svg` as markup (`html_safe`). Pass only trusted host SVG. Do not pass user input.
+
 ### 4. Safe HTML Slots
 
 When passing rich HTML content to components, use the sidecar pattern with blocks:
