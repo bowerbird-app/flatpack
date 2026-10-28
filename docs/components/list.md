@@ -35,7 +35,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `key` | String | `nil` | no | `:key_value` only, and required there. The `<dt>` text. The block is the value (`<dd>`). |
-| `icon` | Symbol/String | `nil` | no | Leading icon in `.flat-pack-list-item-icon` (content colour). String values starting with `<svg` render inline SVG. Ordered lists show the decimal marker and this icon together. In `:key_value`, the icon sits inside the `<dt>` before the key and is `aria-hidden`. |
+| `icon` | Symbol/String | `nil` | no | Leading icon in `.flat-pack-list-item-icon` (content colour). A String that starts with `<svg` (after leading whitespace) is painted as markup. That string must be trusted host markup, not user input. Ordered lists show the decimal marker and this icon together. In `:key_value`, the icon sits inside the `<dt>` before the key and is `aria-hidden`. |
 | `leading` | String | `nil` | no | Custom leading content text. Not supported when the list layout is `:key_value`. |
 | `trailing` | String | `nil` | no | Trailing content, such as a copy button, at the end of the row. |
 | `href` | String | `nil` | no | Optional link URL. Sanitized and validated; unsafe URLs raise `ArgumentError`. Not supported when the list layout is `:key_value`. |

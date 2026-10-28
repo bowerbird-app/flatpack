@@ -3,7 +3,7 @@
   "updated_at": "2026-10-28",
   "gem": {
     "name": "flat_pack",
-    "version": "0.1.327"
+    "version": "0.1.328"
   },
   "compatibility": {
     "ruby": ">= 3.2.0",

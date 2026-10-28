@@ -585,6 +585,67 @@ module FlatPack
         assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-icon-style='success']"
       end
 
+      def test_inline_svg_icon_renders_as_an_svg_element
+        render_inline(Component.new(text: "Google", icon: inline_mark_svg))
+
+        html = page.native.to_html
+        assert_selector "button > span[aria-hidden='true'] > svg[data-logo='mark']"
+        refute_selector "button svg[data-flat-pack--icon-name-value]"
+        refute_includes html, "&lt;svg"
+        refute_selector "button", text: /<svg/
+        assert_includes html, "w-5"
+        assert_includes html, "h-5"
+        assert_includes html, "[&amp;_svg]:h-full"
+      end
+
+      def test_inline_svg_icon_ignores_leading_whitespace
+        render_inline(Component.new(text: "Google", icon: "  \n#{inline_mark_svg}"))
+
+        assert_selector "button > span[aria-hidden='true'] > svg[data-logo='mark']"
+      end
+
+      def test_heroicon_name_still_renders_a_kit_icon
+        render_inline(Component.new(text: "Search", icon: "magnifying-glass"))
+
+        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-name-value='magnifying-glass']"
+        refute_selector "button > svg[data-logo]"
+      end
+
+      def test_short_icon_alias_still_maps_to_a_heroicon
+        render_inline(Component.new(text: "Search", icon: "search"))
+
+        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-name-value='magnifying-glass']"
+      end
+
+      def test_inline_svg_icon_uses_the_heroicon_box_at_each_size
+        render_inline(Component.new(text: "Google", icon: inline_mark_svg, size: :sm))
+        html = page.native.to_html
+        assert_includes html, "w-4"
+        assert_includes html, "h-4"
+
+        render_inline(Component.new(icon: inline_mark_svg, icon_only: true, size: :xs, text: "Google"))
+        html = page.native.to_html
+        assert_includes html, "w-4"
+        assert_includes html, "h-4"
+        assert_includes html, "fp-hit-slop"
+      end
+
+      def test_icon_only_inline_svg_keeps_hit_target_and_accessible_name
+        render_inline(Component.new(icon: inline_mark_svg, icon_only: true, text: "Google"))
+
+        assert_selector "button[aria-label='Google'] > span[aria-hidden='true'] > svg[data-logo='mark']"
+        refute_selector "button span", text: "Google"
+        assert_includes page.native.to_html, "fp-hit-target"
+        refute_selector "button svg[data-flat-pack--icon-name-value]"
+      end
+
+      def test_inline_svg_link_button_keeps_the_icon_ahead_of_the_label
+        render_inline(Component.new(text: "Google", href: "/auth/google", icon: inline_mark_svg))
+
+        assert_selector "a[href='/auth/google'] > span[aria-hidden='true'] > svg[data-logo='mark']"
+        assert_selector "a[href='/auth/google'] > span", text: "Google"
+      end
+
       def test_inline_svg_still_reaches_a_render_icon_override
         component = Component.new(text: "Google", icon: '<svg data-logo="mark"></svg>', icon_style: :success)
         component.define_singleton_method(:render_icon) { "<span id=\"host-logo\">logo</span>".html_safe }
@@ -811,6 +872,10 @@ module FlatPack
         vc_test_controller.view_context.render(
           FlatPack::Badge::Component.new(text: "12", size: :sm)
         )
+      end
+
+      def inline_mark_svg
+        %(<svg data-logo="mark" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"></circle></svg>)
       end
     end
   end

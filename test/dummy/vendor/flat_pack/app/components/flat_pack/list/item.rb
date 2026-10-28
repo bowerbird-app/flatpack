@@ -72,7 +72,8 @@ module FlatPack
       end
 
       def render_icon_graphic
-        if @icon.is_a?(String) && @icon.start_with?("<svg")
+        if FlatPack::Shared::InlineSvg.markup?(@icon)
+          # Trusted host markup only. Same as Button `icon:` starting with `<svg`.
           @icon.html_safe
         else
           render FlatPack::Shared::IconComponent.new(name: @icon, size: :md)

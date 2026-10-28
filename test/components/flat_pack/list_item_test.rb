@@ -25,6 +25,15 @@ module FlatPack
         assert_selector "span svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
       end
 
+      def test_inline_svg_icon_renders_as_an_svg_element
+        svg = '  <svg data-logo="mark" viewBox="0 0 24 24"></svg>'
+        render_inline(Item.new(icon: svg)) { "Content" }
+
+        assert_selector "span.flat-pack-list-item-icon > svg[data-logo='mark']"
+        refute_selector "svg[data-flat-pack--icon-name-value]"
+        refute_includes page.native.to_html, "&lt;svg"
+      end
+
       def test_icon_has_proper_styling
         render_inline(Item.new(icon: :check)) { "Content" }
 

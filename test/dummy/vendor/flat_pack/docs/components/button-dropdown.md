@@ -18,7 +18,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `style` | Symbol | `:default` | no | Trigger style. Built-in button styles plus any name registered with `FlatPack::Button.register_style`. Invalid values raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | Trigger size. Delegates to `FlatPack::Button::Component` (`:sm`, `:md`, `:lg`, and icon-only `:xs`). `:xs` without `icon_only: true` raises `ArgumentError`. |
 | `round` | Boolean | `false` | no | `true` uses `FlatPack::Button::Component::ROUND_RADIUS_CLASS` (`--button-round-border-radius`). A label becomes a pill. `icon_only: true` also applies `ROUND_ICON_ONLY_SIZES`, so the trigger is a circle. `false` keeps `--button-border-radius`. Anything other than `true` or `false` raises `ArgumentError`. |
-| `icon` | String/Symbol | `nil` | no | Optional leading icon. Required when `icon_only: true`. A missing icon raises `ArgumentError`. |
+| `icon` | String/Symbol | `nil` | no | Optional leading icon on the trigger, passed through to `FlatPack::Button::Component`. A trusted `<svg` string works the same as on Button. Required when `icon_only: true`. A missing icon raises `ArgumentError`. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on the leading icon. Omit to use `default_icon_variant`. The chevron stays on that default. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the trigger text. `:primary`, `:success`, `:warning`, or `:danger` colour the leading icon the same way as Button. The chevron stays the trigger text colour. Unknown names raise `ArgumentError`. |
 | `icon_only` | Boolean | `false` | no | Hides the label, drops the chevron, and uses Button `ICON_ONLY_SIZES`. `:sm`, `:md`, and `:lg` add `fp-hit-target`. `:xs` adds `fp-hit-slop` so the painted trigger stays about 32px and the tap stays 44px. Needs `icon:` and an accessible name (`text:` or `trigger_attributes: { aria: { label: } }`). Always pass an `aria-label`. A blank name raises `ArgumentError`. Leave about 12px before the next `:xs` control or the tap areas overlap. |
@@ -44,7 +44,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Item label text. |
-| `icon` | String/Symbol | `nil` | no | Optional leading icon. |
+| `icon` | String/Symbol | `nil` | no | Optional leading Heroicon name. Menu items do not paint a raw `<svg` string; the trigger does, through Button. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on that icon. Omit to use `default_icon_variant`. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the item text. `:primary`, `:success`, `:warning`, or `:danger` use the button icon tokens. Unknown names raise `ArgumentError`. |
 | `badge` | String | `nil` | no | Optional badge content. |

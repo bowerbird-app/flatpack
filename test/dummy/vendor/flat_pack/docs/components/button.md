@@ -20,7 +20,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
 | `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
-| `icon` | String, nil | `nil` | no | Heroicons v2 name rendered before text (or alone with `icon_only`), e.g. `"magnifying-glass"`, `"plus"`, `"trash"`. Legacy shorthand aliases are supported for backward compatibility. |
+| `icon` | String, nil | `nil` | no | Leading mark, before text (or alone with `icon_only`). A Heroicons v2 name such as `"magnifying-glass"`, `"plus"`, or `"trash"`, including legacy short aliases. A String that starts with `<svg` (after leading whitespace) is painted as markup, the same way `FlatPack::List::Item` does. That string must be trusted host markup, not user input. The kit puts it in a Heroicon-sized box (`w-5 h-5` at `:md`, `w-4 h-4` at `:sm` and icon-only `:xs`, `w-6 h-6` at `:lg`). `icon_variant` and `icon_style` apply to Heroicon names only. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro`. Omit to use `FlatPack.configuration.default_icon_variant` (`:outline` unless the host changed it). Passed to `FlatPack::Shared::IconComponent` `variant:`. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, or `:danger` paint the glyph from `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`. The class mixes that token toward `--fp-button-text` so it stays readable on every button `style`. When `icon_style` matches `style`, the glyph uses the button text colour. Disabled buttons still mute it with `--button-disabled-opacity`. Unknown names raise `ArgumentError`. There is no `icon_class`. |
 | `icon_only` | Boolean | `false` | no | Uses compact icon-only padding and hides visible text. `:sm`, `:md`, and `:lg` grow the painted box with `.fp-hit-target` (44px). `:xs` paints about 32px (`--button-icon-only-padding-xs`, a 1rem icon) and keeps the 44px tap on `.fp-hit-slop`. Requires `text:` or `aria: { label: "…" }`. Always pass an `aria-label`. Adjacent `:xs` buttons need about 12px between them or the 44px tap areas overlap. |
@@ -44,7 +44,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - Round: `round: true` for a pill label or a circular icon-only button. Omit it for the theme corner.
 - Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
 - States: loading, icon + text, icon-only, current (`current: true`)
-- Icon artwork: omit `icon_variant` (host default), or `:outline`, `:solid`, `:mini`, `:micro`
+- Icon artwork: a Heroicon name (omit `icon_variant` for the host default, or `:outline`, `:solid`, `:mini`, `:micro`), or a trusted `<svg` string
 - Icon colour: omit `icon_style` (button text), or `:primary`, `:success`, `:warning`, `:danger`
 - Label alignment: `:center` (default), `:start`
 - Label lines: `1` (default), `2`
@@ -164,6 +164,15 @@ Pass `track: true` when the row should read as a bordered group. The default is 
 ) %>
 ```
 
+A host logo belongs in `icon:` as trusted SVG, not in the trailing slot.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Google",
+  icon: %(<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"></circle></svg>)
+) %>
+```
+
 `:xs` is the press-kit overlay size. The glyph stays 1rem. The painted control is about 32px. The tap target stays 44px. Leave about 12px between two of them.
 
 ```erb
@@ -213,7 +222,7 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 
 ## Accessibility
 - Icon-only buttons must have an accessible name: `text:` (used as `aria-label`, not shown) or `aria: { label: "Open settings" }`. Missing a name raises `ArgumentError`.
-- Leading icons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`. `icon_variant` selects the Heroicon weight. `icon_style` colours that glyph only. The trailing slot is unchanged.
+- Leading Heroicons render through `FlatPack::Shared::IconComponent` and stay `aria-hidden="true"`. `icon_variant` selects the Heroicon weight. `icon_style` colours that glyph only. A trusted `<svg` string on `icon:` is painted as markup (not escaped) inside an `aria-hidden` box the same size as a Heroicon. The trailing slot is unchanged. Do not pass user input as `icon:`.
 - Loading icon-only buttons keep that name and set `aria-busy="true"`.
 - `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover and press stay on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
 - Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.

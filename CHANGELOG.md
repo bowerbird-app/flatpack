@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.328] - 2026-10-28
+
+### Added
+- Button `icon:` accepts a trusted `<svg` string and paints it as markup, the same way List::Item does. A Heroicon name and a short alias such as `"search"` are unchanged. `icon_variant` and `icon_style` still apply only to Heroicon names. A host `render_icon` override still paints that SVG; Heroicon names still skip the override.
+
+### Upgrade notes
+- Pass a trusted `<svg` string on Button `icon:` when the mark is not a Heroicon. Do not pass user input. The kit sizes that mark to the same box as a Heroicon at that button size.
+- Link buttons, Button Group children, Page Nav icon controls, and the Button Dropdown trigger pick this up because they render `FlatPack::Button::Component`. Dropdown menu items and Menu Collapse headers still use `IconComponent` and stay Heroicon names.
+- The Recording Studio Users `FlatpackButtonSvgIcon` prepend on `FlatPack::Button::Component` can be deleted. Button now paints and sizes that SVG. Keep the prepend only if it still does extra wrapping or restyling you want.
+- Reload the gem. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.328`.
+
 ## [0.1.327] - 2026-10-28
 
 ### Added
