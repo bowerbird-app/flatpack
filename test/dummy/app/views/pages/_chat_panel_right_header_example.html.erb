@@ -46,7 +46,7 @@
     </div>
 
     <div id="right-header-four">
-      <p class="mb-2 text-sm font-semibold">Four buttons</p>
+      <p class="mb-2 text-sm font-semibold">Four buttons, paired below 640px</p>
       <div class="overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
         <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
           <% panel.header do %>
@@ -61,6 +61,11 @@
               <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, title: "Mute", aria: { label: "Mute conversation" }) %>
               <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions" }) %>
               <%= render FlatPack::Badge::Component.new(text: "4 new", style: :primary, size: :sm) %>
+            </div>
+          <% end %>
+          <% panel.right_header_mobile do %>
+            <div class="flex items-center gap-2 whitespace-nowrap p-4">
+              <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions on a small screen" }) %>
             </div>
           <% end %>
         <% end %>
@@ -145,6 +150,12 @@
             &lt;%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, title: "Mute", aria: { label: "Mute conversation" }) %&gt;
             &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions" }) %&gt;
             &lt;%= render FlatPack::Badge::Component.new(text: "4 new", style: :primary, size: :sm) %&gt;
+          &lt;/div&gt;
+        &lt;% end %&gt;
+
+        &lt;% panel.right_header_mobile do %&gt;
+          &lt;div class="flex items-center gap-2 whitespace-nowrap p-4"&gt;
+            &lt;%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions on a small screen" }) %&gt;
           &lt;/div&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
