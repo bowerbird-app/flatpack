@@ -331,14 +331,8 @@
   .top-14 {
     top: calc(var(--spacing) * 14);
   }
-  .top-\[var\(--overlay-inset-lg\)\] {
-    top: var(--overlay-inset-lg);
-  }
-  .top-\[var\(--overlay-inset-md\)\] {
-    top: var(--overlay-inset-md);
-  }
-  .top-\[var\(--overlay-inset-sm\)\] {
-    top: var(--overlay-inset-sm);
+  .top-\[var\(--fp-overlay-item-inset\)\] {
+    top: var(--fp-overlay-item-inset);
   }
   .top-full {
     top: 100%;
@@ -364,14 +358,8 @@
   .right-\[28\%\] {
     right: 28%;
   }
-  .right-\[var\(--overlay-inset-lg\)\] {
-    right: var(--overlay-inset-lg);
-  }
-  .right-\[var\(--overlay-inset-md\)\] {
-    right: var(--overlay-inset-md);
-  }
-  .right-\[var\(--overlay-inset-sm\)\] {
-    right: var(--overlay-inset-sm);
+  .right-\[var\(--fp-overlay-item-inset\)\] {
+    right: var(--fp-overlay-item-inset);
   }
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
@@ -388,14 +376,8 @@
   .bottom-12 {
     bottom: calc(var(--spacing) * 12);
   }
-  .bottom-\[var\(--overlay-inset-lg\)\] {
-    bottom: var(--overlay-inset-lg);
-  }
-  .bottom-\[var\(--overlay-inset-md\)\] {
-    bottom: var(--overlay-inset-md);
-  }
-  .bottom-\[var\(--overlay-inset-sm\)\] {
-    bottom: var(--overlay-inset-sm);
+  .bottom-\[var\(--fp-overlay-item-inset\)\] {
+    bottom: var(--fp-overlay-item-inset);
   }
   .bottom-full {
     bottom: 100%;
@@ -430,14 +412,8 @@
   .left-\[30\%\] {
     left: 30%;
   }
-  .left-\[var\(--overlay-inset-lg\)\] {
-    left: var(--overlay-inset-lg);
-  }
-  .left-\[var\(--overlay-inset-md\)\] {
-    left: var(--overlay-inset-md);
-  }
-  .left-\[var\(--overlay-inset-sm\)\] {
-    left: var(--overlay-inset-sm);
+  .left-\[var\(--fp-overlay-item-inset\)\] {
+    left: var(--fp-overlay-item-inset);
   }
   .z-0 {
     z-index: 0;
@@ -759,6 +735,10 @@
   }
   .aspect-square {
     aspect-ratio: 1 / 1;
+  }
+  .size-6 {
+    width: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 6);
   }
   .size-12 {
     width: calc(var(--spacing) * 12);
@@ -1142,6 +1122,9 @@
   .w-max {
     width: max-content;
   }
+  .w-min {
+    width: min-content;
+  }
   .w-px {
     width: 1px;
   }
@@ -1374,9 +1357,6 @@
   }
   .rotate-3 {
     rotate: 3deg;
-  }
-  .rotate-90 {
-    rotate: 90deg;
   }
   .rotate-180 {
     rotate: 180deg;
@@ -2102,9 +2082,6 @@
   .border-\[var\(--button-default-border-color\)\] {
     border-color: var(--button-default-border-color);
   }
-  .border-\[var\(--button-secondary-border-color\)\] {
-    border-color: var(--button-secondary-border-color);
-  }
   .border-\[var\(--card-border-color\)\] {
     border-color: var(--card-border-color);
   }
@@ -2128,9 +2105,6 @@
   }
   .border-\[var\(--chat-input-border-color\)\] {
     border-color: var(--chat-input-border-color);
-  }
-  .border-\[var\(--chat-jump-button-border-color\)\] {
-    border-color: var(--chat-jump-button-border-color);
   }
   .border-\[var\(--chat-message-failed-color\)\] {
     border-color: var(--chat-message-failed-color);
@@ -2339,17 +2313,11 @@
       background-color: color-mix(in oklab, var(--button-primary-background-color) 20%, transparent);
     }
   }
-  .bg-\[var\(--button-secondary-background-color\)\] {
-    background-color: var(--button-secondary-background-color);
-  }
   .bg-\[var\(--card-background-color\)\] {
     background-color: var(--card-background-color);
   }
   .bg-\[var\(--carousel-caption-overlay-background-color\)\] {
     background-color: var(--carousel-caption-overlay-background-color);
-  }
-  .bg-\[var\(--carousel-control-background-color\)\] {
-    background-color: var(--carousel-control-background-color);
   }
   .bg-\[var\(--carousel-counter-background-color\)\] {
     background-color: var(--carousel-counter-background-color);
@@ -2392,9 +2360,6 @@
   }
   .bg-\[var\(--chat-input-background-color\)\] {
     background-color: var(--chat-input-background-color);
-  }
-  .bg-\[var\(--chat-jump-button-background-color\)\] {
-    background-color: var(--chat-jump-button-background-color);
   }
   .bg-\[var\(--chat-message-incoming-background-color\)\] {
     background-color: var(--chat-message-incoming-background-color);
@@ -2461,9 +2426,6 @@
   }
   .bg-\[var\(--comments-composer-background-color\)\] {
     background-color: var(--comments-composer-background-color);
-  }
-  .bg-\[var\(--comments-composer-submit-background-color\)\] {
-    background-color: var(--comments-composer-submit-background-color);
   }
   .bg-\[var\(--comments-item-system-background-color\)\] {
     background-color: var(--comments-item-system-background-color);
@@ -2688,9 +2650,6 @@
   }
   .p-0 {
     padding: calc(var(--spacing) * 0);
-  }
-  .p-1 {
-    padding: calc(var(--spacing) * 1);
   }
   .p-1\.5 {
     padding: calc(var(--spacing) * 1.5);
@@ -3461,9 +3420,6 @@
   .text-\[var\(--alert-description-color\)\] {
     color: var(--alert-description-color);
   }
-  .text-\[var\(--alert-dismiss-button-text-color\)\] {
-    color: var(--alert-dismiss-button-text-color);
-  }
   .text-\[var\(--alert-info-icon-color\)\] {
     color: var(--alert-info-icon-color);
   }
@@ -3530,17 +3486,11 @@
   .text-\[var\(--button-primary-text-color\)\] {
     color: var(--button-primary-text-color);
   }
-  .text-\[var\(--button-secondary-text-color\)\] {
-    color: var(--button-secondary-text-color);
-  }
   .text-\[var\(--carousel-caption-below-text-color\)\] {
     color: var(--carousel-caption-below-text-color);
   }
   .text-\[var\(--carousel-caption-overlay-text-color\)\] {
     color: var(--carousel-caption-overlay-text-color);
-  }
-  .text-\[var\(--carousel-control-text-color\)\] {
-    color: var(--carousel-control-text-color);
   }
   .text-\[var\(--carousel-counter-text-color\)\] {
     color: var(--carousel-counter-text-color);
@@ -3565,9 +3515,6 @@
   }
   .text-\[var\(--chat-input-text-color\)\] {
     color: var(--chat-input-text-color);
-  }
-  .text-\[var\(--chat-jump-button-text-color\)\] {
-    color: var(--chat-jump-button-text-color);
   }
   .text-\[var\(--chat-message-failed-color\)\] {
     color: var(--chat-message-failed-color);
@@ -3650,9 +3597,6 @@
   .text-\[var\(--color-warning-text\)\] {
     color: var(--color-warning-text);
   }
-  .text-\[var\(--comments-composer-submit-text-color\)\] {
-    color: var(--comments-composer-submit-text-color);
-  }
   .text-\[var\(--comments-composer-text-color\)\] {
     color: var(--comments-composer-text-color);
   }
@@ -3689,9 +3633,6 @@
   .text-\[var\(--drawer-body-color\)\] {
     color: var(--drawer-body-color);
   }
-  .text-\[var\(--drawer-close-icon-color\)\] {
-    color: var(--drawer-close-icon-color);
-  }
   .text-\[var\(--drawer-title-color\)\] {
     color: var(--drawer-title-color);
   }
@@ -3712,9 +3653,6 @@
   }
   .text-\[var\(--modal-body-color\)\] {
     color: var(--modal-body-color);
-  }
-  .text-\[var\(--modal-close-icon-color\)\] {
-    color: var(--modal-close-icon-color);
   }
   .text-\[var\(--modal-title-color\)\] {
     color: var(--modal-title-color);
@@ -3838,9 +3776,6 @@
   }
   .text-\[var\(--toast-danger-text-color\)\] {
     color: var(--toast-danger-text-color);
-  }
-  .text-\[var\(--toast-dismiss-text-color\)\] {
-    color: var(--toast-dismiss-text-color);
   }
   .text-\[var\(--toast-info-icon-color\)\] {
     color: var(--toast-info-icon-color);
@@ -4045,6 +3980,9 @@
   }
   .ring-\[var\(--avatar-status-ring-color\)\] {
     --tw-ring-color: var(--avatar-status-ring-color);
+  }
+  .ring-\[var\(--color-error\)\] {
+    --tw-ring-color: var(--color-error);
   }
   .ring-\[var\(--color-primary\)\] {
     --tw-ring-color: var(--color-primary);
@@ -4634,6 +4572,17 @@
       --tw-ring-color: var(--comments-composer-focus-ring-color);
     }
   }
+  .focus-within\:outline-2 {
+    &:focus-within {
+      outline-style: var(--tw-outline-style);
+      outline-width: 2px;
+    }
+  }
+  .focus-within\:outline-offset-2 {
+    &:focus-within {
+      outline-offset: 2px;
+    }
+  }
   .focus-within\:outline-none {
     &:focus-within {
       --tw-outline-style: none;
@@ -4688,13 +4637,6 @@
       }
     }
   }
-  .hover\:bg-\[var\(--alert-dismiss-button-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--alert-dismiss-button-hover-background-color);
-      }
-    }
-  }
   .hover\:bg-\[var\(--badge-remove-hover-background-color\)\] {
     &:hover {
       @media (hover: hover) {
@@ -4716,31 +4658,10 @@
       }
     }
   }
-  .hover\:bg-\[var\(--button-secondary-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--button-secondary-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--carousel-control-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--carousel-control-hover-background-color);
-      }
-    }
-  }
   .hover\:bg-\[var\(--chat-attachment-hover-background-color\)\] {
     &:hover {
       @media (hover: hover) {
         background-color: var(--chat-attachment-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--chat-jump-button-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--chat-jump-button-hover-background-color);
       }
     }
   }
@@ -4762,13 +4683,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--collapse-trigger-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--comments-composer-submit-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--comments-composer-submit-hover-background-color);
       }
     }
   }
@@ -4814,13 +4728,6 @@
       }
     }
   }
-  .hover\:bg-\[var\(--surface-subtle-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--surface-subtle-background-color);
-      }
-    }
-  }
   .hover\:bg-\[var\(--table-row-hover-background-color\)\] {
     &:hover {
       @media (hover: hover) {
@@ -4832,13 +4739,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--tabs-pill-inactive-hover-background-color);
-      }
-    }
-  }
-  .hover\:bg-\[var\(--toast-dismiss-hover-background-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--toast-dismiss-hover-background-color);
       }
     }
   }
@@ -4891,20 +4791,6 @@
       }
     }
   }
-  .hover\:text-\[var\(--drawer-close-icon-hover-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--drawer-close-icon-hover-color);
-      }
-    }
-  }
-  .hover\:text-\[var\(--modal-close-icon-hover-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--modal-close-icon-hover-color);
-      }
-    }
-  }
   .hover\:text-\[var\(--search-input-text-color\)\] {
     &:hover {
       @media (hover: hover) {
@@ -4951,13 +4837,6 @@
     &:hover {
       @media (hover: hover) {
         color: var(--tabs-pill-inactive-hover-text-color);
-      }
-    }
-  }
-  .hover\:text-\[var\(--toast-dismiss-hover-text-color\)\] {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--toast-dismiss-hover-text-color);
       }
     }
   }
@@ -5062,11 +4941,6 @@
     &:focus {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-  }
-  .focus\:ring-\[var\(--alert-dismiss-button-focus-ring-color\)\] {
-    &:focus {
-      --tw-ring-color: var(--alert-dismiss-button-focus-ring-color);
     }
   }
   .focus\:ring-\[var\(--chat-input-focus-ring-color\)\] {
@@ -5389,6 +5263,12 @@
       transition-property: opacity;
       transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
       transition-duration: var(--tw-duration, var(--default-transition-duration));
+    }
+  }
+  .motion-safe\:duration-\[var\(--duration-base\)\] {
+    @media (prefers-reduced-motion: no-preference) {
+      --tw-duration: var(--duration-base);
+      transition-duration: var(--duration-base);
     }
   }
   .motion-safe\:duration-\[var\(--duration-fast\)\] {
@@ -6456,6 +6336,16 @@
       clip-path: inset(50%);
       white-space: nowrap;
       border-width: 0;
+    }
+  }
+  .\[\&_svg\]\:h-full {
+    & svg {
+      height: 100%;
+    }
+  }
+  .\[\&_svg\]\:w-full {
+    & svg {
+      width: 100%;
     }
   }
   .\[\&\:has\(\[aria-expanded\=true\]\)_\[role\=tooltip\]\]\:pointer-events-none {

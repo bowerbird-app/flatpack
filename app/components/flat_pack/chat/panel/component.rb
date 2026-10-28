@@ -5,10 +5,12 @@ module FlatPack
     module Panel
       class Component < FlatPack::BaseComponent
         renders_one :header
+        renders_one :right_header
         renders_one :messages
         renders_one :composer
 
         undef_method :with_header, :with_header_content
+        undef_method :with_right_header, :with_right_header_content
         undef_method :with_messages, :with_messages_content
         undef_method :with_composer, :with_composer_content
 
@@ -20,6 +22,12 @@ module FlatPack
           return get_slot(:header) if args.empty? && kwargs.empty? && !block_given?
 
           set_slot(:header, nil, *args, **kwargs, &block)
+        end
+
+        def right_header(*args, **kwargs, &block)
+          return get_slot(:right_header) if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:right_header, nil, *args, **kwargs, &block)
         end
 
         def messages(*args, **kwargs, &block)
@@ -37,7 +45,7 @@ module FlatPack
         def call
           content_tag(:div, **panel_attributes) do
             safe_join([
-              (render_header_section if header?),
+              (render_header_section if header? || right_header?),
               (render_messages_section if messages?),
               (render_composer_section if composer?)
             ].compact)
@@ -47,8 +55,39 @@ module FlatPack
         private
 
         def render_header_section
+          return render_split_header_section if right_header?
+
           content_tag(:div, class: header_classes) do
             header.to_s
+          end
+        end
+
+        def render_split_header_section
+          content_tag(:div, class: split_header_classes) do
+            safe_join([
+              (render_header_part if header?),
+              render_right_header_part
+            ].compact)
+          end
+        end
+
+        def render_header_part
+          content_tag(
+            :div,
+            class: "min-w-0 flex-1",
+            data: {flat_pack_chat_panel_part: "header"}
+          ) do
+            header.to_s
+          end
+        end
+
+        def render_right_header_part
+          content_tag(
+            :div,
+            class: "flex shrink-0 w-min items-center justify-end",
+            data: {flat_pack_chat_panel_part: "right-header"}
+          ) do
+            right_header.to_s
           end
         end
 
@@ -75,11 +114,19 @@ module FlatPack
         end
 
         def header_classes
-          classes(
+          classes(*header_chrome_classes)
+        end
+
+        def split_header_classes
+          classes("flex", *header_chrome_classes)
+        end
+
+        def header_chrome_classes
+          [
             "flex-shrink-0",
             "border-b border-[var(--chat-header-border-color)]",
             "bg-[var(--chat-header-background-color)]"
-          )
+          ]
         end
       end
     end

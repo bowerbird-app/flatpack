@@ -46,7 +46,7 @@ High-use interaction props:
 
 ## Slots
 - `Layout`: `sidebar`, `panel`.
-- `Panel`: `header`, `messages`, `composer`.
+- `Panel`: `header`, `right_header`, `messages`, `composer`. `right_header` is optional. When it is present the header bar is a row: `header` is `min-w-0 flex-1` and `right_header` is `flex shrink-0 w-min items-center justify-end`. Omit `right_header` and the header markup stays a single wrapper. The bar does not add padding. A parent can restyle the parts with `data-flat-pack-chat-panel-part="header"` and `data-flat-pack-chat-panel-part="right-header"`. `right_header` alone still renders that row.
 - `Header`: `left_meta`, `right`.
 - `MessageGroup`: `avatar`, `messages`.
 - `ReceivedMessage`/`SentMessage`: `attachments`, `media_attachments`, `meta` (and `actions` for sent).
@@ -84,12 +84,35 @@ High-use interaction props:
 <% end %>
 ```
 
+Actions that should stay on the right of a long title use `right_header`. The panel does not pad that bar.
+
+```erb
+<%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+  <% panel.header do %>
+    <div class="flex min-w-0 items-center p-4">
+      <p class="min-w-0 truncate text-sm font-semibold">Riverside studio quarterly launch planning with Alicia, Mina, and the full design chat group</p>
+    </div>
+  <% end %>
+
+  <% panel.right_header do %>
+    <div class="flex items-center gap-2 whitespace-nowrap p-4">
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm, title: "Search", aria: { label: "Search conversation" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "bookmark", icon_only: true, style: :ghost, size: :sm, title: "Save", aria: { label: "Save conversation" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, title: "Mute", aria: { label: "Mute conversation" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions" }) %>
+      <%= render FlatPack::Badge::Component.new(text: "4 new", style: :primary, size: :sm) %>
+    </div>
+  <% end %>
+<% end %>
+```
+
 ## Accessibility
 - Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`). Keyboard focus uses the browser outline in `--focus-outline-color` (`#101010` on light themes, `--surface-content-color` on dark), mapped through `--button-focus-ring-color` on `.fp-chat-jump`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
 - Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
+- `right_header` does not name its controls. Icon buttons there need `title` and `aria-label`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
