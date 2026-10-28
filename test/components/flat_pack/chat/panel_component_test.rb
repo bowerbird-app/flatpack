@@ -22,8 +22,204 @@ module FlatPack
           component = Component.new
 
           refute_respond_to component, :with_header
+          refute_respond_to component, :with_right_header
+          refute_respond_to component, :with_right_header_content
+          refute_respond_to component, :with_right_header_mobile
+          refute_respond_to component, :with_right_header_mobile_content
           refute_respond_to component, :with_messages
           refute_respond_to component, :with_composer
+        end
+
+        def test_omitting_right_header_keeps_todays_markup
+          render_inline(Component.new) do |panel|
+            panel.header { "Header" }
+            panel.messages { "Messages" }
+            panel.composer { "Composer" }
+          end
+
+          assert_equal(
+            %(<div class="flex flex-col h-full min-h-0 overflow-hidden"><div class="flex-shrink-0 border-b border-[var(--chat-header-border-color)] bg-[var(--chat-header-background-color)]">Header</div>MessagesComposer</div>),
+            rendered_content
+          )
+          assert_no_selector "[data-flat-pack-chat-panel-part]"
+        end
+
+        def test_right_header_row_classes_and_order
+          render_inline(Component.new) do |panel|
+            panel.header { "Header" }
+            panel.right_header { "Actions" }
+          end
+
+          wrapper = page.native.at_css("div.border-b")
+          parts = wrapper.element_children
+
+          assert_equal(
+            "flex items-center flex-shrink-0 border-b border-[var(--chat-header-border-color)] bg-[var(--chat-header-background-color)]",
+            wrapper["class"]
+          )
+          assert_equal 2, parts.length
+          assert_equal "header", parts[0]["data-flat-pack-chat-panel-part"]
+          assert_equal "min-w-0 flex-1", parts[0]["class"]
+          assert_equal "Header", parts[0].text
+          assert_equal "right-header", parts[1]["data-flat-pack-chat-panel-part"]
+          assert_equal "flex shrink-0 w-min items-center justify-end", parts[1]["class"]
+          assert_equal "Actions", parts[1].text
+          assert_operator rendered_content.index("Header"), :<, rendered_content.index("Actions")
+        end
+
+        def test_right_header_predicate_without_with_setter
+          component = Component.new
+
+          refute_respond_to component, :with_right_header
+          refute_respond_to component, :with_right_header_mobile
+          refute_predicate component, :right_header?
+          refute_predicate component, :right_header_mobile?
+
+          component.right_header { "Actions" }
+          component.right_header_mobile { "More" }
+
+          assert_predicate component, :right_header?
+          assert_predicate component, :right_header_mobile?
+          assert_kind_of ViewComponent::Slot, component.right_header
+          assert_kind_of ViewComponent::Slot, component.right_header_mobile
+        end
+
+        def test_merges_custom_class_with_right_header
+          render_inline(Component.new(class: "custom-panel gap-4")) do |panel|
+            panel.header { "Header" }
+            panel.right_header { "Actions" }
+          end
+
+          root = page.native.at_css("div.custom-panel")
+          header = page.native.at_css("[data-flat-pack-chat-panel-part='header']")
+          actions = page.native.at_css("[data-flat-pack-chat-panel-part='right-header']")
+
+          assert_equal "custom-panel gap-4 flex flex-col h-full min-h-0 overflow-hidden", root["class"]
+          refute_includes header["class"], "custom-panel"
+          refute_includes header["class"], "gap-4"
+          assert_equal "min-w-0 flex-1", header["class"]
+          assert_equal "flex shrink-0 w-min items-center justify-end", actions["class"]
+        end
+
+        def test_right_header_parts_are_vertically_centered
+          render_inline(Component.new) do |panel|
+            panel.header { "Header" }
+            panel.right_header { "Actions" }
+          end
+
+          wrapper = page.native.at_css("div.border-b")
+          header = page.native.at_css("[data-flat-pack-chat-panel-part='header']")
+          actions = page.native.at_css("[data-flat-pack-chat-panel-part='right-header']")
+
+          assert_includes wrapper["class"], "items-center"
+          assert_equal "min-w-0 flex-1", header["class"]
+          refute_includes header["class"].split, "flex"
+          refute_includes header["class"].split, "items-center"
+          assert_includes actions["class"], "items-center"
+        end
+
+        def test_right_header_alone_renders_the_row
+          render_inline(Component.new) do |panel|
+            panel.right_header { "Actions" }
+          end
+
+          wrapper = page.native.at_css("div.border-b")
+          parts = wrapper.element_children
+
+          assert_includes wrapper["class"], "flex"
+          assert_includes wrapper["class"], "border-b"
+          assert_includes wrapper["class"], "bg-[var(--chat-header-background-color)]"
+          assert_equal 1, parts.length
+          assert_equal "right-header", parts[0]["data-flat-pack-chat-panel-part"]
+          assert_equal "ml-auto flex shrink-0 w-min items-center justify-end", parts[0]["class"]
+          assert_includes parts[0]["class"], "ml-auto"
+          assert_equal "Actions", parts[0].text
+          assert_no_selector "[data-flat-pack-chat-panel-part='header']"
+        end
+
+        def test_right_header_alone_is_right_aligned
+          render_inline(Component.new) do |panel|
+            panel.right_header { "Actions" }
+          end
+
+          actions = page.native.at_css("[data-flat-pack-chat-panel-part='right-header']")
+
+          assert_includes actions["class"], "ml-auto"
+          assert_includes actions["class"], "justify-end"
+          assert_includes actions["class"], "w-min"
+          refute_includes actions["class"], "hidden"
+        end
+
+        def test_right_header_and_mobile_share_the_row
+          render_inline(Component.new) do |panel|
+            panel.header { "Header" }
+            panel.right_header { "Desktop" }
+            panel.right_header_mobile { "Mobile" }
+          end
+
+          wrapper = page.native.at_css("div.border-b")
+          parts = wrapper.element_children
+
+          assert_equal(
+            "flex items-center flex-shrink-0 border-b border-[var(--chat-header-border-color)] bg-[var(--chat-header-background-color)]",
+            wrapper["class"]
+          )
+          refute_includes wrapper["class"], "sm:hidden"
+          assert_equal 3, parts.length
+          assert_equal "header", parts[0]["data-flat-pack-chat-panel-part"]
+          assert_equal "min-w-0 flex-1", parts[0]["class"]
+          assert_equal "right-header", parts[1]["data-flat-pack-chat-panel-part"]
+          assert_equal "hidden sm:flex shrink-0 w-min items-center justify-end", parts[1]["class"]
+          assert_equal "Desktop", parts[1].text
+          assert_equal "right-header-mobile", parts[2]["data-flat-pack-chat-panel-part"]
+          assert_equal "flex sm:hidden shrink-0 w-min items-center justify-end", parts[2]["class"]
+          assert_equal "Mobile", parts[2].text
+        end
+
+        def test_both_right_parts_are_right_aligned_without_a_header
+          render_inline(Component.new) do |panel|
+            panel.right_header { "Desktop" }
+            panel.right_header_mobile { "Mobile" }
+          end
+
+          desktop = page.native.at_css("[data-flat-pack-chat-panel-part='right-header']")
+          mobile = page.native.at_css("[data-flat-pack-chat-panel-part='right-header-mobile']")
+
+          assert_equal "ml-auto hidden sm:flex shrink-0 w-min items-center justify-end", desktop["class"]
+          assert_equal "ml-auto flex sm:hidden shrink-0 w-min items-center justify-end", mobile["class"]
+          assert_no_selector "[data-flat-pack-chat-panel-part='header']"
+        end
+
+        def test_right_header_mobile_with_header_is_mobile_only
+          render_inline(Component.new) do |panel|
+            panel.header { "Header" }
+            panel.right_header_mobile { "Mobile" }
+          end
+
+          wrapper = page.native.at_css("div.border-b")
+          mobile = page.native.at_css("[data-flat-pack-chat-panel-part='right-header-mobile']")
+
+          refute_includes wrapper["class"], "sm:hidden"
+          assert_includes wrapper["class"], "items-center"
+          assert_equal "flex sm:hidden shrink-0 w-min items-center justify-end", mobile["class"]
+          assert_no_selector "[data-flat-pack-chat-panel-part='right-header']"
+        end
+
+        def test_right_header_mobile_alone_is_right_aligned_and_mobile_only
+          render_inline(Component.new) do |panel|
+            panel.right_header_mobile { "Mobile" }
+          end
+
+          wrapper = page.native.at_css("div.border-b")
+          mobile = page.native.at_css("[data-flat-pack-chat-panel-part='right-header-mobile']")
+
+          assert_includes wrapper["class"], "sm:hidden"
+          assert_includes wrapper["class"], "items-center"
+          assert_equal "ml-auto flex sm:hidden shrink-0 w-min items-center justify-end", mobile["class"]
+          assert_includes mobile["class"], "items-center"
+          assert_includes mobile["class"], "w-min"
+          assert_no_selector "[data-flat-pack-chat-panel-part='right-header']"
+          assert_no_selector "[data-flat-pack-chat-panel-part='header']"
         end
 
         def test_applies_header_container_styles

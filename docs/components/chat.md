@@ -46,7 +46,7 @@ High-use interaction props:
 
 ## Slots
 - `Layout`: `sidebar`, `panel`.
-- `Panel`: `header`, `messages`, `composer`.
+- `Panel`: `header`, `right_header`, `right_header_mobile`, `messages`, `composer`. `right_header` and `right_header_mobile` are optional. When either is present the header bar is a row: `flex items-center`. `header` is `min-w-0 flex-1` and stays a block, so caller content still fills that part and truncates. Each right part is `shrink-0 w-min items-center justify-end`. The row's `items-center` lines the title block up with the actions. Omit both right slots and the header markup stays a single wrapper. The bar does not add padding. A parent can restyle the parts with `data-flat-pack-chat-panel-part="header"`, `data-flat-pack-chat-panel-part="right-header"`, and `data-flat-pack-chat-panel-part="right-header-mobile"`. A right part with no `header` also has `ml-auto`. Because the part is `w-min` and does not shrink, its content must not wrap: use `whitespace-nowrap`, icon buttons, and badges. Use `right_header` for actions beside the panel `header` slot. Use `Chat::Header`'s `right` slot for actions inside that header, next to its title. `right_header_mobile` is the compact set below the chat `sm` breakpoint (640px, the same cutoff as `Chat::Layout`'s default `split_breakpoint`). Below `sm` the mobile part is shown and `right_header` is hidden when both are passed. At `sm` and up, `right_header` is shown and the mobile part is hidden. Pass only `right_header` and it stays visible at every width. Pass only `right_header_mobile` and it shows below `sm`; with no `header` the bar hides at `sm` and up (`sm:hidden`). Both parts render into the DOM and CSS hides one, so do not repeat ids or Stimulus targets across the two slots. Pair `right_header` with `right_header_mobile` when the desktop set has four or more actions, or a long-text badge. The swap follows the viewport (`sm` = 640px), not the panel's container width. A narrow panel on a wide viewport, including a `Chat::Layout` split column, still shows the desktop set.
 - `Header`: `left_meta`, `right`.
 - `MessageGroup`: `avatar`, `messages`.
 - `ReceivedMessage`/`SentMessage`: `attachments`, `media_attachments`, `meta` (and `actions` for sent).
@@ -84,12 +84,43 @@ High-use interaction props:
 <% end %>
 ```
 
+Actions that should stay on the right of a long title use `right_header`. The panel does not pad that bar. The right part is `w-min`, so that content must not wrap.
+
+```erb
+<%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+  <% panel.header do %>
+    <div class="flex min-w-0 items-center p-4">
+      <p class="min-w-0 truncate text-sm font-semibold">Riverside studio quarterly launch planning with Alicia, Mina, and the full design chat group</p>
+    </div>
+  <% end %>
+
+  <% panel.right_header do %>
+    <div class="flex items-center gap-2 whitespace-nowrap p-4">
+      <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm, title: "Search", aria: { label: "Search conversation" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "bookmark", icon_only: true, style: :ghost, size: :sm, title: "Save", aria: { label: "Save conversation" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, title: "Mute", aria: { label: "Mute conversation" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions" }) %>
+      <%= render FlatPack::Badge::Component.new(text: "4 new", style: :primary, size: :sm) %>
+    </div>
+  <% end %>
+
+  <% panel.right_header_mobile do %>
+    <div class="flex items-center gap-2 whitespace-nowrap p-4">
+      <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions on a small screen" }) %>
+    </div>
+  <% end %>
+<% end %>
+```
+
+Four or more actions, or a long-text badge, belong in that pair. The swap follows the viewport, not the panel width, so a narrow split column on a wide screen still shows `right_header`. Give the two slots different controls; both stay in the DOM.
+
 ## Accessibility
 - Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`). Keyboard focus uses the browser outline in `--focus-outline-color` (`#101010` on light themes, `--surface-content-color` on dark), mapped through `--button-focus-ring-color` on `.fp-chat-jump`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
 - Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
+- `right_header` and `right_header_mobile` do not name their controls. Icon buttons there need `title` and `aria-label`. Do not reuse the same `id` or Stimulus target on both slots; both are in the DOM.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

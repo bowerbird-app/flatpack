@@ -1142,6 +1142,9 @@
   .w-max {
     width: max-content;
   }
+  .w-min {
+    width: min-content;
+  }
   .w-px {
     width: 1px;
   }
