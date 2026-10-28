@@ -2,7 +2,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Actions on the right",
     anchor_link: true,
-    subtitle: "A long title stays on the left. Buttons stay on the right, in one row."
+    subtitle: "A long title stays on the left. Buttons stay on the right, in one row. Below 640px, right_header_mobile replaces right_header. A strip with no title keeps those buttons on the right."
   ) %>
 
   <% long_title = "Riverside studio quarterly launch planning with Alicia, Mina, and the full design chat group" %>
@@ -61,6 +61,65 @@
               <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, title: "Mute", aria: { label: "Mute conversation" }) %>
               <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More conversation actions" }) %>
               <%= render FlatPack::Badge::Component.new(text: "4 new", style: :primary, size: :sm) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="right-header-both">
+      <p class="mb-2 text-sm font-semibold">Desktop and mobile</p>
+      <div class="overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+        <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+          <% panel.header do %>
+            <div class="flex min-w-0 items-center p-4">
+              <p class="min-w-0 truncate text-sm font-semibold"><%= long_title %></p>
+            </div>
+          <% end %>
+          <% panel.right_header do %>
+            <div class="flex items-center gap-2 whitespace-nowrap p-4">
+              <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm, title: "Search", aria: { label: "Search this conversation" }) %>
+              <%= render FlatPack::Button::Component.new(icon: "bookmark", icon_only: true, style: :ghost, size: :sm, title: "Save", aria: { label: "Save this conversation" }) %>
+              <%= render FlatPack::Button::Component.new(icon: "bell", icon_only: true, style: :ghost, size: :sm, title: "Mute", aria: { label: "Mute this conversation" }) %>
+              <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More actions for this conversation" }) %>
+              <%= render FlatPack::Badge::Component.new(text: "4 new", style: :primary, size: :sm) %>
+            </div>
+          <% end %>
+          <% panel.right_header_mobile do %>
+            <div class="flex items-center gap-2 whitespace-nowrap p-4">
+              <%= render FlatPack::Button::Component.new(icon: "dots", icon_only: true, style: :ghost, size: :sm, title: "More", aria: { label: "More actions on a small screen" }) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="right-header-mobile-only">
+      <p class="mb-2 text-sm font-semibold">Mobile actions only</p>
+      <div class="overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+        <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+          <% panel.header do %>
+            <div class="flex min-w-0 items-center p-4">
+              <p class="min-w-0 truncate text-sm font-semibold">Mobile actions only</p>
+            </div>
+          <% end %>
+          <% panel.right_header_mobile do %>
+            <div class="flex items-center gap-2 whitespace-nowrap p-4">
+              <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm, title: "Search", aria: { label: "Search on a small screen" }) %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div id="right-header-only">
+      <p class="mb-2 text-sm font-semibold">Right header only</p>
+      <div class="overflow-hidden rounded-lg border border-(--surface-border-color) bg-(--surface-background-color)">
+        <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+          <% panel.right_header do %>
+            <div class="flex items-center gap-2 whitespace-nowrap p-4">
+              <%= render FlatPack::Button::Component.new(icon: "search", icon_only: true, style: :ghost, size: :sm, title: "Search", aria: { label: "Search conversation" }) %>
+              <%= render FlatPack::Button::Component.new(icon: "bookmark", icon_only: true, style: :ghost, size: :sm, title: "Save", aria: { label: "Save conversation" }) %>
             </div>
           <% end %>
         <% end %>

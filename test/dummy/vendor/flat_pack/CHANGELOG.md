@@ -16,12 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.329] - 2026-10-28
 
 ### Added
-- `FlatPack::Chat::Panel::Component` accepts an optional `right_header` slot. It sits in the panel header at `w-min`, right-aligned, and does not shrink. `header` keeps the remaining width. Omit `right_header` and the panel markup stays the same. The bar adds no padding. The parts expose `data-flat-pack-chat-panel-part="header"` and `data-flat-pack-chat-panel-part="right-header"`. With no `header`, the right part also has `ml-auto`.
-- Because the right part is `w-min` and does not shrink, its content must not wrap. Use `whitespace-nowrap`, icon buttons, and badges.
+- `FlatPack::Chat::Panel::Component` accepts optional `right_header` and `right_header_mobile` slots. Each sits in the panel header at `w-min`, right-aligned, and does not shrink. `header` keeps the remaining width. Omit both and the panel markup stays the same. The bar adds no padding. The parts expose `data-flat-pack-chat-panel-part="header"`, `data-flat-pack-chat-panel-part="right-header"`, and `data-flat-pack-chat-panel-part="right-header-mobile"`. With no `header`, a right part also has `ml-auto`. The row and the parts use `items-center`, so the title and the actions share a vertical center.
+- `right_header_mobile` is the compact set below the chat `sm` breakpoint (640px). Below `sm`, that part is shown and `right_header` is hidden when both slots are passed. At `sm` and up, `right_header` is shown and the mobile part is hidden. `right_header` alone stays visible at every width. `right_header_mobile` alone shows below `sm`; with no `header`, the bar hides at `sm` and up. Both parts are in the DOM. CSS hides one, so ids and Stimulus targets must not be duplicated between them.
+- Because a right part is `w-min` and does not shrink, its content must not wrap. Use `whitespace-nowrap`, icon buttons, and badges.
 
 ### Upgrade notes
-- Additive. Existing `panel.header` calls render the same markup. Pass `panel.right_header` for actions that stay on the right. Put your own padding on the slot content (`p-4`). Keep that content on one line (`whitespace-nowrap`, icon buttons, badges). `Chat::Header`'s `right` slot is for actions inside that header, next to its title. `right_header` is for actions beside the panel `header` slot.
-- Rebuild host Tailwind so `w-min` is generated if the host did not already use it. Reload kit CSS. Do not rerun the install generator.
+- Additive. Existing `panel.header` calls render the same markup. Pass `panel.right_header` for actions that stay on the right at every width, or pair it with `panel.right_header_mobile` for a compact set below 640px. Put your own padding on the slot content (`p-4`). Keep that content on one line (`whitespace-nowrap`, icon buttons, badges). `Chat::Header`'s `right` slot is for actions inside that header, next to its title. `right_header` is for actions beside the panel `header` slot. Do not repeat ids or Stimulus targets across `right_header` and `right_header_mobile`.
+- Rebuild host Tailwind so `w-min`, `hidden`, `sm:flex`, and `sm:hidden` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 - Redeploy so `meta.gem_version` shows `0.1.329`.
 
 ## [0.1.328] - 2026-10-28
