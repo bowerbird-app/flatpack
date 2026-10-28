@@ -59,7 +59,7 @@ module FlatPack
           )
           assert_equal 2, parts.length
           assert_equal "header", parts[0]["data-flat-pack-chat-panel-part"]
-          assert_equal "flex min-w-0 flex-1 items-center", parts[0]["class"]
+          assert_equal "min-w-0 flex-1", parts[0]["class"]
           assert_equal "Header", parts[0].text
           assert_equal "right-header", parts[1]["data-flat-pack-chat-panel-part"]
           assert_equal "flex shrink-0 w-min items-center justify-end", parts[1]["class"]
@@ -97,7 +97,7 @@ module FlatPack
           assert_equal "custom-panel gap-4 flex flex-col h-full min-h-0 overflow-hidden", root["class"]
           refute_includes header["class"], "custom-panel"
           refute_includes header["class"], "gap-4"
-          assert_equal "flex min-w-0 flex-1 items-center", header["class"]
+          assert_equal "min-w-0 flex-1", header["class"]
           assert_equal "flex shrink-0 w-min items-center justify-end", actions["class"]
         end
 
@@ -112,10 +112,10 @@ module FlatPack
           actions = page.native.at_css("[data-flat-pack-chat-panel-part='right-header']")
 
           assert_includes wrapper["class"], "items-center"
-          assert_includes header["class"], "items-center"
+          assert_equal "min-w-0 flex-1", header["class"]
+          refute_includes header["class"].split, "flex"
+          refute_includes header["class"].split, "items-center"
           assert_includes actions["class"], "items-center"
-          assert_equal "flex min-w-0 flex-1 items-center", header["class"]
-          assert_equal "flex shrink-0 w-min items-center justify-end", actions["class"]
         end
 
         def test_right_header_alone_renders_the_row
@@ -160,11 +160,14 @@ module FlatPack
           wrapper = page.native.at_css("div.border-b")
           parts = wrapper.element_children
 
-          assert_includes wrapper["class"], "items-center"
+          assert_equal(
+            "flex items-center flex-shrink-0 border-b border-[var(--chat-header-border-color)] bg-[var(--chat-header-background-color)]",
+            wrapper["class"]
+          )
           refute_includes wrapper["class"], "sm:hidden"
           assert_equal 3, parts.length
           assert_equal "header", parts[0]["data-flat-pack-chat-panel-part"]
-          assert_equal "flex min-w-0 flex-1 items-center", parts[0]["class"]
+          assert_equal "min-w-0 flex-1", parts[0]["class"]
           assert_equal "right-header", parts[1]["data-flat-pack-chat-panel-part"]
           assert_equal "hidden sm:flex shrink-0 w-min items-center justify-end", parts[1]["class"]
           assert_equal "Desktop", parts[1].text

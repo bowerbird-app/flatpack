@@ -86,7 +86,7 @@ module FlatPack
         def render_header_part
           content_tag(
             :div,
-            class: "flex min-w-0 flex-1 items-center",
+            class: "min-w-0 flex-1",
             data: {flat_pack_chat_panel_part: "header"}
           ) do
             header.to_s
