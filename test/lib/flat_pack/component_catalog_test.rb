@@ -203,6 +203,17 @@ module FlatPack
       refute FlatPack::ComponentCatalog.show("Masonry::Image")
     end
 
+    test "show Grid binds shared GAPS to gap and ALIGNS to align" do
+      payload = FlatPack::ComponentCatalog.show("Grid::Component")
+      gap = parameter_named(payload, "gap")
+      align = parameter_named(payload, "align")
+
+      assert_equal FlatPack::Shared::Flex::GAPS.keys.map(&:to_s), gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      assert_equal FlatPack::Shared::Flex::ALIGNS.keys.map(&:to_s), align.fetch(:enum)
+      assert_equal "stretch", align.fetch(:default)
+    end
+
     test "show Stack binds GAPS to gap and ALIGNS to align" do
       payload = FlatPack::ComponentCatalog.show("Stack::Component")
       gap = parameter_named(payload, "gap")

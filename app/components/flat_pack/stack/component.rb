@@ -8,6 +8,9 @@ module FlatPack
       # "flex" "flex-col"
       # "gap-[var(--stack-gap-sm)]" "gap-[var(--stack-gap-md)]" "gap-[var(--stack-gap-lg)]"
       # "items-start" "items-center" "items-stretch"
+      # The catalog reads these names here. The maps live on Shared::Flex.
+      GAPS = FlatPack::Shared::Flex::GAPS
+      ALIGNS = FlatPack::Shared::Flex::ALIGNS
 
       def initialize(
         gap: :md,

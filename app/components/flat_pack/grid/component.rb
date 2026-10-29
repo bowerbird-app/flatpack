@@ -10,6 +10,9 @@ module FlatPack
       # "lg:grid-cols-3" "lg:grid-cols-4" "lg:grid-cols-6" "lg:grid-cols-12" "xl:grid-cols-4"
       # "gap-[var(--stack-gap-sm)]" "gap-[var(--stack-gap-md)]" "gap-[var(--stack-gap-lg)]"
       # "items-start" "items-center" "items-stretch"
+      # The catalog reads these names here. The maps live on Shared::Flex.
+      GAPS = FlatPack::Shared::Flex::GAPS
+      ALIGNS = FlatPack::Shared::Flex::ALIGNS
       COLUMN_PRESETS = {
         1 => {base: 1},
         2 => {base: 1, md: 2},
