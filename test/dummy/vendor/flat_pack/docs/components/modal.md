@@ -139,7 +139,7 @@ While a screen loads, the kit spinner and skeleton sit over the body. If the fra
 Navigation lives in `flat-pack--navigable`, attached next to `flat-pack--modal` only when `navigable: true`. Drawer can reuse that controller later. `header` and `body` slots are invalid with `navigable: true`; screens supply title, body, and actions.
 
 ## Overlay scroll and insets
-Opening a modal locks `document.body` (`overflow: hidden` and `overscroll-behavior: none`, same lock count as Drawer and Command palette). The overlay itself is `overflow-y-auto` and uses `overscroll-behavior: contain`, so a fling does not scroll the page underneath.
+Opening a modal locks `document.body` (`overflow: hidden` and `overscroll-behavior: none`, same lock count as Drawer and Command palette). The overlay itself is `overflow-y-auto` and uses `overscroll-behavior: contain`, so a fling does not scroll the page underneath. On `turbo:before-cache` the controller hides itself immediately (no exit animation) and releases its own lock count, so a restored page is never an open dialog or a stuck `overflow: hidden`. Nested open modals each decrement once. A close already in flight does not decrement again.
 
 `scroll: :body` (default) keeps today’s card: the dialog is capped with `.fp-modal-dialog-cap` (`100dvh` minus padding, `100vh` fallback) and `.flat-pack-modal__body` scrolls inside.
 

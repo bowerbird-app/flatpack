@@ -93,9 +93,11 @@ function classListStub(initial = []) {
   }
 }
 
-function buildController({ buttons, hidden = false } = {}) {
-  const documentStub = {
+function buildDocumentStub() {
+  const listeners = {}
+  return {
     activeElement: null,
+    listeners,
     body: {
       style: {
         overflow: "",
@@ -108,10 +110,19 @@ function buildController({ buttons, hidden = false } = {}) {
       removeEventListener() {}
     },
     documentElement: { clientWidth: 1024 },
-    addEventListener() {},
-    removeEventListener() {}
+    addEventListener(name, handler) {
+      listeners[name] = listeners[name] || []
+      listeners[name].push(handler)
+    },
+    removeEventListener(name, handler) {
+      listeners[name] = (listeners[name] || []).filter((item) => item !== handler)
+    }
   }
-  const ModalController = loadModalController(documentStub)
+}
+
+function buildController({ buttons, hidden = false, documentStub } = {}) {
+  const doc = documentStub || buildDocumentStub()
+  const ModalController = loadModalController(doc)
   const focusable = buttons || [button('first'), button('middle'), button('last')]
   const dialog = {
     style: {},
@@ -135,7 +146,7 @@ function buildController({ buttons, hidden = false } = {}) {
     }
   })
 
-  return { controller, focusable, dialog, documentStub }
+  return { controller, focusable, dialog, documentStub: doc }
 }
 
 function tabEvent({ shiftKey = false } = {}) {
@@ -261,6 +272,87 @@ test('trigger origin close falls back to scale when the trigger is gone', () => 
   assert.equal(dialog.style.opacity, '0')
   assert.equal(dialog.style.scale, '0.95')
   assert.equal(dialog.style.transform, undefined)
+})
+
+test('turbo:before-cache hides an open modal and releases its scroll lock', () => {
+  const { controller, dialog, documentStub } = buildController({ hidden: true })
+  controller.open()
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(documentStub.body.style.overflow, 'hidden')
+  assert.equal(controller.element.classList.contains('flex'), true)
+
+  controller.handleTurboBeforeCache()
+
+  assert.equal(controller.element.classList.contains('hidden'), true)
+  assert.equal(controller.element.classList.contains('flex'), false)
+  assert.equal(controller.element.attributes['aria-hidden'], 'true')
+  assert.equal(controller.element.style.opacity, '')
+  assert.equal(dialog.style.opacity, '')
+  assert.equal(dialog.style.scale, '')
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, undefined)
+  assert.equal(documentStub.body.style.overflow, '')
+})
+
+test('turbo:before-cache keeps the lock count correct across two open modals', () => {
+  const documentStub = buildDocumentStub()
+  const first = buildController({ hidden: true, documentStub })
+  const second = buildController({ hidden: true, documentStub })
+
+  first.controller.open()
+  second.controller.open()
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, '2')
+  assert.equal(documentStub.body.style.overflow, 'hidden')
+
+  first.controller.handleTurboBeforeCache()
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(documentStub.body.style.overflow, 'hidden')
+  assert.equal(first.controller.element.classList.contains('hidden'), true)
+  assert.equal(second.controller.element.classList.contains('flex'), true)
+
+  second.controller.handleTurboBeforeCache()
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, undefined)
+  assert.equal(documentStub.body.style.overflow, '')
+  assert.equal(second.controller.element.classList.contains('hidden'), true)
+})
+
+test('turbo:before-cache does not decrement again when close already released the lock', () => {
+  const documentStub = buildDocumentStub()
+  const first = buildController({ hidden: true, documentStub })
+  const second = buildController({ hidden: true, documentStub })
+
+  first.controller.open()
+  second.controller.open()
+  first.controller.close()
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(first.controller.closing, true)
+
+  first.controller.handleTurboBeforeCache()
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(documentStub.body.style.overflow, 'hidden')
+  assert.equal(first.controller.element.classList.contains('hidden'), true)
+  assert.equal(first.controller.closing, false)
+})
+
+test('turbo:before-cache leaves a closed modal and its lock count alone', () => {
+  const { controller, documentStub } = buildController({ hidden: true })
+  documentStub.body.dataset.flatPackModalLockCount = '1'
+  documentStub.body.style.overflow = 'hidden'
+
+  controller.handleTurboBeforeCache()
+
+  assert.equal(controller.element.classList.contains('hidden'), true)
+  assert.equal(documentStub.body.dataset.flatPackModalLockCount, '1')
+  assert.equal(documentStub.body.style.overflow, 'hidden')
+})
+
+test('connect listens for turbo:before-cache and disconnect removes it', () => {
+  const { controller, documentStub } = buildController({ hidden: true })
+
+  controller.connect()
+  assert.equal((documentStub.listeners['turbo:before-cache'] || []).length, 1)
+
+  controller.disconnect()
+  assert.equal((documentStub.listeners['turbo:before-cache'] || []).length, 0)
 })
 
 test('a backdrop click closes and a click inside the dialog does not', () => {

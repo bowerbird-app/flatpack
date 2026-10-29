@@ -28,7 +28,9 @@ export default class extends Controller {
     this.closing = false
     this.usedTriggerOrigin = false
     this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
+    this.handleTurboBeforeCache = this.handleTurboBeforeCache.bind(this)
     document.addEventListener("click", this.handleDocumentTriggerClick)
+    document.addEventListener("turbo:before-cache", this.handleTurboBeforeCache)
 
     if (this.element.classList.contains("hidden")) {
       this.restoreBodyScroll()
@@ -37,6 +39,7 @@ export default class extends Controller {
 
   disconnect() {
     document.removeEventListener("click", this.handleDocumentTriggerClick)
+    document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     this.clearHideTimeout()
 
     // Restore scroll if modal was open when disconnected
@@ -137,6 +140,33 @@ export default class extends Controller {
     }
   }
 
+  // Snapshot a closed dialog. An animated close would still be `flex` when Turbo
+  // copies the page, and a leftover lock count would freeze scroll on restore.
+  handleTurboBeforeCache() {
+    if (this.element.classList.contains("hidden") && !this.closing) return
+
+    this.clearHideTimeout()
+
+    const holdsLock = !this.closing && this.element.classList.contains("flex")
+    this.closing = false
+    this.usedTriggerOrigin = false
+
+    if (holdsLock) this.restoreBodyScroll()
+    if (this.hasDialogTarget) {
+      clearTriggerOriginStyles(this.dialogTarget)
+      this.dialogTarget.style.opacity = ""
+      this.dialogTarget.style.scale = ""
+      this.dialogTarget.style.transition = ""
+    }
+
+    this.element.style.opacity = ""
+    this.element.style.transition = ""
+    this.element.classList.remove("flex")
+    this.element.classList.add("hidden")
+    this.element.setAttribute("aria-hidden", "true")
+    this.restoreFocus()
+  }
+
   handleDocumentTriggerClick(event) {
     const trigger = event.target.closest("[data-modal-id]")
     if (!trigger) return
@@ -168,12 +198,12 @@ export default class extends Controller {
   }
 
   preventBodyScroll() {
-    this.originalOverflow = document.body.style.overflow
-    this.originalPaddingRight = document.body.style.paddingRight
-    this.originalOverscrollBehavior = document.body.style.overscrollBehavior
     const lockCount = Number(document.body.dataset.flatPackModalLockCount || "0")
 
     if (lockCount === 0) {
+      this.originalOverflow = document.body.style.overflow
+      this.originalPaddingRight = document.body.style.paddingRight
+      this.originalOverscrollBehavior = document.body.style.overscrollBehavior
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
 
       if (scrollbarWidth > 0) {
