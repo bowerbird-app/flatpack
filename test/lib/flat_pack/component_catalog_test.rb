@@ -19,6 +19,8 @@ module FlatPack
       assert_includes names, "Fieldset::Component"
       assert_includes names, "TrashButton::Component"
       assert_includes names, "Content::Component"
+      assert_includes names, "Heading::Component"
+      assert_includes names, "Text::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
@@ -447,6 +449,89 @@ module FlatPack
       assert_equal "Text::Stream::Component", payload.fetch(:name)
       assert_includes payload.fetch(:description), "caret"
       refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
+    test "nested family components keep the family docs they resolve to on main" do
+      button = FlatPack::ComponentCatalog.show("Button::Component")
+      dropdown = FlatPack::ComponentCatalog.show("Button::Dropdown::Component")
+      thread = FlatPack::ComponentCatalog.show("Comments::Thread::Component")
+      sidebar = FlatPack::ComponentCatalog.show("Sidebar::Component")
+      billing_plan = FlatPack::ComponentCatalog.show("Billing::PlanSummary::Component")
+
+      assert_equal button.fetch(:description), dropdown.fetch(:description)
+      assert_includes dropdown.fetch(:description), "Render a button or link"
+      refute_includes dropdown.fetch(:description), "button-triggered action menu"
+
+      %w[
+        Billing::InvoiceList::Component
+        Billing::PaymentMethod::Component
+        Billing::PlanPicker::Component
+        Billing::StatusAlert::Component
+        Billing::UsageMeter::Component
+      ].each do |name|
+        payload = FlatPack::ComponentCatalog.show(name)
+
+        assert_equal billing_plan.fetch(:description), payload.fetch(:description), name
+      end
+      assert_includes billing_plan.fetch(:description), "presentational FlatPack billing"
+
+      %w[
+        Comments::Composer::Component
+        Comments::InlineInput::Component
+        Comments::Item::Component
+        Comments::Replies::Component
+      ].each do |name|
+        payload = FlatPack::ComponentCatalog.show(name)
+
+        assert_equal thread.fetch(:description), payload.fetch(:description), name
+      end
+      assert_includes thread.fetch(:description), "Compose full comment experiences"
+
+      assert_equal sidebar.fetch(:description), FlatPack::ComponentCatalog.show("Sidebar::Group::Component").fetch(:description)
+      assert_equal sidebar.fetch(:description), FlatPack::ComponentCatalog.show("Sidebar::SectionTitle::Component").fetch(:description)
+      assert_includes sidebar.fetch(:description), "composable sidebar container"
+      refute_includes FlatPack::ComponentCatalog.show("Sidebar::Group::Component").fetch(:description), "collapsible group of sidebar items"
+
+      collapse = FlatPack::ComponentCatalog.show("Menu::Collapse::Component")
+
+      assert_equal "No dedicated documentation available for this component yet.", collapse.fetch(:description)
+      refute_includes collapse.fetch(:description), "labelled menu row"
+    end
+
+    test "show Text documents body copy without stealing Stream docs" do
+      payload = FlatPack::ComponentCatalog.show("Text::Component")
+      size = parameter_named(payload, "size")
+      style = parameter_named(payload, "style")
+      weight = parameter_named(payload, "weight")
+      as = parameter_named(payload, "as")
+
+      assert_equal "Text::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "body copy"
+      refute_includes payload.fetch(:description), "caret"
+      assert_equal %w[xs sm base lg xl 2xl], size.fetch(:enum)
+      assert_equal "base", size.fetch(:default)
+      assert_equal %w[default muted primary], style.fetch(:enum)
+      assert_equal %w[normal medium semibold bold], weight.fetch(:enum)
+      assert_equal "normal", weight.fetch(:default)
+      assert_equal %w[p span div], as.fetch(:enum)
+      assert_equal "p", as.fetch(:default)
+    end
+
+    test "show Heading binds independent level and size" do
+      payload = FlatPack::ComponentCatalog.show("Heading::Component")
+      size = parameter_named(payload, "size")
+      level = parameter_named(payload, "level")
+      style = parameter_named(payload, "style")
+      weight = parameter_named(payload, "weight")
+
+      assert_equal "Heading::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "heading tag"
+      assert_equal %w[xs sm base lg xl 2xl 3xl 4xl 5xl], size.fetch(:enum)
+      assert_equal "2xl", size.fetch(:default)
+      assert_equal %w[h1 h2 h3 h4 h5 h6], level.fetch(:enum)
+      assert_equal "h2", level.fetch(:default)
+      assert_equal %w[default muted primary], style.fetch(:enum)
+      assert_equal "semibold", weight.fetch(:default)
     end
 
     test "show returns nil for unknown names and accepts URL aliases" do

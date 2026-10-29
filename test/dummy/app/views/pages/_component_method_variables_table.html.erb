@@ -833,6 +833,30 @@
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-4\", id: \"studio-wall\"" }
       ]
     },
+    heading: {
+      label: "Heading",
+      method_call: "render FlatPack::Heading::Component.new(text: \"Verify your email\", level: :h1, size: :\"2xl\")",
+      variables: [
+        { variable: "text", accepts: "String, or block content", example: "text: \"Verify your email\"" },
+        { variable: "level", accepts: ":h1–:h6, or 1–6", example: "level: :h1" },
+        { variable: "size", accepts: ":xs, :sm, :base, :lg, :xl, :\"2xl\", :\"3xl\", :\"4xl\", :\"5xl\"", example: "size: :lg" },
+        { variable: "style", accepts: ":default, :muted, :primary", example: "style: :muted" },
+        { variable: "weight", accepts: ":normal, :medium, :semibold, :bold", example: "weight: :semibold" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-2\", id: \"verify\"" }
+      ]
+    },
+    text: {
+      label: "Text",
+      method_call: "render FlatPack::Text::Component.new(text: \"We sent a link to your inbox.\", size: :sm, style: :muted)",
+      variables: [
+        { variable: "text", accepts: "String, or block content", example: "text: \"We sent a link to your inbox.\"" },
+        { variable: "size", accepts: ":xs, :sm, :base, :lg, :xl, :\"2xl\"", example: "size: :sm" },
+        { variable: "style", accepts: ":default, :muted, :primary", example: "style: :muted" },
+        { variable: "weight", accepts: ":normal, :medium, :semibold, :bold", example: "weight: :medium" },
+        { variable: "as", accepts: ":p, :span, :div", example: "as: :span" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"mt-1\", id: \"hint\"" }
+      ]
+    },
     hero_title: {
       label: "Hero Title",
       method_call: "render FlatPack::HeroTitle::Component.new(text: \"A press kit for the Northlight collection\")",

@@ -4,7 +4,7 @@
 Wrap long-form HTML in a `div.fp-content` so bare `h1`, `p`, `ul`, and the rest pick up the kit reading scale. Same sizes and spacing as the main Content demo: kicker, display title, lead, then body at 18px / 1.75.
 
 ## When to use
-Use Content for marketing copy, editorial sections, docs, and CMS / WYSIWYG HTML. Drop the HTML in as-is. Do not use it for UI chrome, forms, or tables. Prefer `FlatPack::ContentEditor::Component` when the same region must be edited in place.
+Use Content for marketing copy, editorial sections, docs, and CMS / WYSIWYG HTML. Drop the HTML in as-is. Do not use it for UI chrome, forms, or tables. Prefer `FlatPack::ContentEditor::Component` when the same region must be edited in place. One heading or one line of UI copy is `FlatPack::Heading::Component` or `FlatPack::Text::Component`.
 
 ## Class
 - Primary: `FlatPack::Content::Component`

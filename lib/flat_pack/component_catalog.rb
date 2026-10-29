@@ -83,7 +83,8 @@ module FlatPack
       {constant: :CONTENT_SCROLLS, kwargs: %i[content_scroll]},
       {constant: :TOP_NAV_WIDTHS, kwargs: %i[top_nav_width]},
       {constant: :SCROLLS, kwargs: %i[scroll]},
-      {constant: :HEIGHTS, kwargs: %i[height]}
+      {constant: :HEIGHTS, kwargs: %i[height]},
+      {constant: :WEIGHTS, kwargs: %i[weight]}
     ].freeze
 
     DOC_KEYS = {
@@ -106,6 +107,10 @@ module FlatPack
       "url_input" => "inputs",
       "comments" => "comments-thread",
       "text" => "text-stream"
+    }.freeze
+
+    DOC_PATH_OVERRIDES = {
+      "text/component.rb" => "text"
     }.freeze
 
     TYPE_RULES = [
@@ -231,7 +236,7 @@ module FlatPack
 
       def doc_path_for(relative)
         family = relative.split("/").first
-        doc_key = DOC_KEYS.fetch(family, family)
+        doc_key = DOC_PATH_OVERRIDES[relative] || DOC_KEYS.fetch(family, family)
         dash_key = doc_key.tr("_", "-")
         [
           FlatPack::Engine.root.join("docs/components/#{doc_key}.md"),

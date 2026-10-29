@@ -34,7 +34,7 @@ bin/rake flat_pack:verify_install
 - `docs/installation.md`: human-readable installation guide
 - `docs/i18n.md`: English kit copy under `flatpack.*`; hosts provide other languages. `FlatPack::Copy.t` uses English when the active locale has no `flatpack.*` value
 
-The running inventory is `FlatPack::ComponentCatalog` (HTTP `GET /recording_studio_api/api/v1/flatpack/components` on a host that registers those endpoints, including this dummy). `manifest.yml` is not the runtime catalog. `list` is skinny records plus `meta`. `show(name)` adds `parameters`, `slots`, and `examples` from the component doc `## Example` section. A parameter may include `default` when the `initialize` kwarg is a JSON-safe literal. The key is omitted when that default is unknown.
+The running inventory is `FlatPack::ComponentCatalog` (HTTP `GET /recording_studio_api/api/v1/flatpack/components` on a host that registers those endpoints, including this dummy). `manifest.yml` is not the runtime catalog. `list` is skinny records plus `meta`. `show(name)` adds `parameters`, `slots`, and `examples` from the component doc `## Example` section. A parameter may include `default` when the `initialize` kwarg is a JSON-safe literal. The key is omitted when that default is unknown. Catalog copy comes from the first path segment's family markdown (`DOC_KEYS`, then `docs/components/<family>.md`). `DOC_PATH_OVERRIDES` is the exception list. Today that is only `text/component.rb` → `docs/components/text.md`. Other `text/*` files still use `text-stream.md`.
 
 ## Shape
 
