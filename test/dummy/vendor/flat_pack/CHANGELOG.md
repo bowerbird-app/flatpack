@@ -8,15 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Button accepts `disabled:`. `false` is the default and keeps today’s markup. `true` mutes the control with the same opacity and `pointer-events-none` as loading, without the spinner. A `<button>` sets the `disabled` attribute. A link keeps `href`, sets `aria-disabled="true"` and `tabindex="-1"`. `nil` and `false` mean enabled. `loading: true` still disables as before.
+- Button accepts `disabled:`. `false` is the default and keeps today’s markup. `true` sets the `disabled` attribute on a `<button>` and mutes it with the same opacity as loading, without the spinner. `nil` and `false` mean enabled. Link buttons with `href` keep their `href`. `loading: true` still disables as before.
 
 ### Changed
 
 ### Fixed
-
-### Upgrade notes
-- Additive. Pass `disabled: true` on `FlatPack::Button::Component` when the control must not be used. Omit it, or pass `false` or `nil`, and the markup stays enabled. Prefer this over a host `disabled` HTML attribute or extra opacity classes.
-- Rebuild host Tailwind so `pointer-events-none` and `opacity-[var(--button-disabled-opacity)]` exist without the `disabled:` prefix (needed for muted link buttons). Reload the gem. Do not rerun the install generator.
 
 ## [0.1.329] - 2026-10-28
 

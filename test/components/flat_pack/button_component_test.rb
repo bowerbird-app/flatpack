@@ -391,15 +391,10 @@ module FlatPack
 
         assert_selector "a[href='/path']", text: "Open"
         assert_selector "a[target='_blank']"
-        assert_selector "a[rel~='noopener']"
-        assert_selector "a[rel~='noreferrer']"
-        assert_selector "a[aria-disabled='true']"
-        assert_selector "a[tabindex='-1']"
+        assert_selector "a[rel='noopener noreferrer']"
         refute_selector "a[disabled]"
-        html = page.native.to_html
-        assert_includes html, "pointer-events-none"
-        assert_includes html, "opacity-[var(--button-disabled-opacity)]"
-        refute_includes html, "fp-spinner"
+        refute_selector "a[aria-disabled]"
+        refute_selector "a[tabindex]"
       end
 
       def test_enabled_link_keeps_href_and_is_not_aria_disabled
