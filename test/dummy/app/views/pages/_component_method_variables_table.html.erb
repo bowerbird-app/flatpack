@@ -1065,6 +1065,32 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"email\", class: \"w-full\", data: { testid: \"email-input\" }" }
       ]
     },
+    text_area: {
+      label: "Text Area",
+      method_call: "render FlatPack::TextArea::Component.new(name: \"description\", label: \"Description\", rows: 3)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"chat[message]\"" },
+        { variable: "value", accepts: "String or nil", example: "value: \"Hello\"" },
+        { variable: "placeholder", accepts: "String or nil", example: "placeholder: \"Write a message...\"" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Message\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"Keep it short\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Message is required\"" },
+        { variable: "rows", accepts: "Integer", example: "rows: 1" },
+        { variable: "autogrow", accepts: "true, false", example: "autogrow: true" },
+        { variable: "submit_on_enter", accepts: "true, false", example: "submit_on_enter: true" },
+        { variable: "character_count", accepts: "true, false", example: "character_count: true" },
+        { variable: "quick_copy", accepts: "true, false", example: "quick_copy: true" },
+        { variable: "min_characters", accepts: "Integer or nil", example: "min_characters: 20" },
+        { variable: "max_characters", accepts: "Integer or nil", example: "max_characters: 280" },
+        { variable: "rich_text", accepts: "true, false", example: "rich_text: true" },
+        { variable: "rich_text_options", accepts: "Hash", example: "rich_text_options: { preset: :minimal }" },
+        { variable: "chrome", accepts: ":field, :cell", example: "chrome: :cell" },
+        { variable: "variant", accepts: ":default, :chat", example: "variant: :chat" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"message\", class: \"w-full\"" }
+      ]
+    },
     select: {
       label: "Select",
       method_call: "render FlatPack::Select::Component.new(name: \"country\", label: \"Country\", options: [[\"United States\", \"US\"], [\"Canada\", \"CA\"]], searchable: true, multiple: true)",
