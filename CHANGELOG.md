@@ -67,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Dropdown menu sets `--dropdown-max-height` on one `style` attribute. `.fp-button-dropdown__menu` applies `max-height: var(--dropdown-max-height)`. A host `style:` string is joined after that variable.
 
 ### Fixed
+- `--dropdown-max-height` is a runtime token. The Dropdown menu sets it on the element. It is not a theme token in `variables.css`.
 - Modal closes and releases its body scroll lock on `turbo:before-cache`. A Turbo snapshot never restores an open dialog or a leftover `flatPackModalLockCount`. Nested modals still share that count; each open modal decrements once. A close already in flight does not decrement again.
 - A featured card at a 768px viewport no longer puts a one-word title beside a 208px cover. The columns wait until the card is about 640px wide, and the copy column stays at least 18rem.
 - Long featured copy no longer sits flush against the meta line. `--card-body-gap` separates those body children.

@@ -74,6 +74,7 @@ module FlatPack
       --overlay-inset-sm
       --overlay-inset-md
       --overlay-inset-lg
+      --dropdown-max-height
       --fp-pane-fade-top
       --fp-pane-fade-bottom
     ].freeze

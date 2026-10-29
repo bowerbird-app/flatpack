@@ -62,6 +62,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-sm"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-md"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--overlay-inset-lg"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--dropdown-max-height"
     end
 
     test "overlay item insets stay off the theme file so a parent edge offset cascades" do
