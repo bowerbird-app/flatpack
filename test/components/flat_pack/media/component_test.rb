@@ -5,12 +5,22 @@ require "test_helper"
 module FlatPack
   module Media
     class ComponentTest < ViewComponent::TestCase
+      def test_featured_cover_omits_h_auto
+        Component.with_featured_cover do
+          render_inline(Component.new(src: "/a.jpg", alt: "Cover", width: 800, height: 320))
+        end
+
+        refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
+        assert_equal false, Component.featured_cover?
+      end
+
       def test_renders_a_lazy_image_with_reserved_ratio
         render_inline(Component.new(src: "https://example.com/harbour.jpg", alt: "Harbour at dusk", width: 1120, height: 1400))
 
         assert_selector "div.fp-overlay.w-full"
         assert_includes page.native.to_html, "group/media"
-        assert_selector "img.fp-media__image[src='https://example.com/harbour.jpg'][alt='Harbour at dusk']"
+        assert_selector "img.fp-media__image.h-auto[src='https://example.com/harbour.jpg'][alt='Harbour at dusk']"
         assert_selector "img[width='1120'][height='1400'][loading='lazy'][decoding='async']"
         html = page.native.to_html
         assert_includes html, "aspect-ratio: 1120 / 1400"

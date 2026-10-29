@@ -1038,6 +1038,31 @@ module FlatPack
         refute_includes page.native.to_html, "data-fp-card-variant"
       end
 
+      def test_featured_media_omits_h_auto_so_the_cover_height_can_apply
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media do
+            vc_test_controller.view_context.render(
+              FlatPack::Media::Component.new(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+            )
+          end
+        end
+
+        refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
+      end
+
+      def test_stacked_media_keeps_h_auto
+        render_inline(Component.new) do |card|
+          card.media do
+            vc_test_controller.view_context.render(
+              FlatPack::Media::Component.new(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+            )
+          end
+        end
+
+        assert_includes page.find("img[alt='Cover']")[:class], "h-auto"
+      end
+
       def test_featured_variant_uses_cover_layout_parts
         render_inline(Component.new(variant: :featured, padding: :none, inset: :md, radius: :xxxl, shadow: :md, border: :none)) do |card|
           card.media { "<img src='/images/hero-stool.jpg' alt='Cover'>".html_safe }
@@ -1155,6 +1180,11 @@ module FlatPack
         assert_includes css, "@media (min-width: 768px)"
         assert_includes css, "inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px))"
         assert_includes css, ":where(.fp-card--featured)"
+        assert_match(
+          /@layer base \{.*?:where\(\.fp-card--featured\) \.fp-media__image \{[^}]*height: var\(--card-media-image-height, 100%\);/m,
+          css
+        )
+        refute_includes css, ":where(.fp-card__featured-media img) {\n  width: 100%;\n  height: 100%;"
         assert_includes css, "--card-title-size: var(--text-4xl);"
         assert_includes css, "--card-title-weight: var(--display-weight);"
         assert_includes css, "font-size: var(--card-title-size, var(--text-2xl));"

@@ -77,6 +77,58 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
     refute_equal sample.fetch("before"), sample.fetch("after")
   end
 
+  test "media outside a featured card uses h-auto instead of the attribute height" do
+    visit "/demo/cards"
+    image = find("img[alt='Packaging']", match: :first)
+    assert_includes image[:class], "h-auto"
+
+    sample = page.evaluate_script(<<~JS)
+      (() => {
+        const image = document.querySelector("img[alt='Packaging']")
+        return {
+          used: image.getBoundingClientRect().height,
+          attribute: Number(image.getAttribute("height"))
+        }
+      })()
+    JS
+
+    assert_operator sample.fetch("used"), :<, sample.fetch("attribute")
+  end
+
+  test "featured cover uses the image height token and a host utility wins" do
+    visit "/demo/cards"
+
+    sample = page.evaluate_script(<<~JS)
+      (() => {
+        const image = document.querySelector(".fp-card--featured .fp-media__image")
+        const card = image.closest(".fp-card--featured")
+        const overlay = image.closest(".fp-overlay")
+        image.style.aspectRatio = "16 / 9"
+        const cover = image.getBoundingClientRect()
+        const slot = overlay.getBoundingClientRect()
+        image.classList.add("h-px")
+        const host = image.getBoundingClientRect().height
+        image.classList.remove("h-px")
+        card.style.setProperty("--card-media-image-height", "13px")
+        const token = image.getBoundingClientRect().height
+        return {
+          classes: image.className,
+          cover: cover.height,
+          width: cover.width,
+          slot: slot.height,
+          host,
+          token
+        }
+      })()
+    JS
+
+    refute_includes sample.fetch("classes"), "h-auto"
+    assert_in_delta sample.fetch("slot"), sample.fetch("cover"), 1
+    assert_in_delta sample.fetch("width"), sample.fetch("cover"), 1
+    assert_in_delta 1, sample.fetch("host"), 0.5
+    assert_in_delta 13, sample.fetch("token"), 0.5
+  end
+
   private
 
   def glyph(label)

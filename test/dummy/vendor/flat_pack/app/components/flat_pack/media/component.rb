@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "group/media" "w-full" "block" "max-w-full" "object-cover"
+      # "group/media" "w-full" "block" "h-auto" "max-w-full" "object-cover"
       # The frame fill, hairline, and radius live in kit CSS (.fp-media__frame), not these utilities.
       # "opacity-0" "opacity-100" "group-hover/media:opacity-100" "focus-within:opacity-100"
       # "transition-opacity" "duration-[var(--duration-fast)]" "ease-[var(--easing-standard)]"
@@ -32,6 +32,20 @@ module FlatPack
       end
 
       renders_many :items, Item
+
+      # Featured cards set this while they render the media slot. A photo built
+      # beforehand cannot see it and keeps h-auto, which then wins over the cover height.
+      def self.with_featured_cover
+        previous = Thread.current[:flat_pack_media_featured_cover]
+        Thread.current[:flat_pack_media_featured_cover] = true
+        yield
+      ensure
+        Thread.current[:flat_pack_media_featured_cover] = previous
+      end
+
+      def self.featured_cover?
+        Thread.current[:flat_pack_media_featured_cover] == true
+      end
 
       def initialize(src:, alt:, width:, height:, radius: nil, **system_arguments)
         if system_arguments.key?(:href) || system_arguments.key?(:caption)
@@ -99,10 +113,11 @@ module FlatPack
         [
           "fp-media__image",
           "block",
+          ("h-auto" unless self.class.featured_cover?),
           "w-full",
           "max-w-full",
           "object-cover"
-        ].join(" ")
+        ].compact.join(" ")
       end
 
       def validate_radius!

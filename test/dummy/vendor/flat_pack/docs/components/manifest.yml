@@ -178,6 +178,7 @@ components:
     tokens:
       - --card-inset
       - --card-inner-radius
+      - --card-media-image-height
       - --card-radius
       - --card-title-size
       - --card-title-weight

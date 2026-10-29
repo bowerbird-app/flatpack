@@ -213,7 +213,8 @@ module FlatPack
       end
 
       def featured_media
-        content_tag(:div, media, class: "fp-card__featured-media", data: {fp_card_part: "media"})
+        rendered = FlatPack::Media::Component.with_featured_cover { media.to_s }
+        content_tag(:div, rendered, class: "fp-card__featured-media", data: {fp_card_part: "media"})
       end
 
       def featured_copy
