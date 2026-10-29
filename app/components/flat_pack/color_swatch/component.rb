@@ -14,6 +14,10 @@ module FlatPack
       }.freeze
 
       DEFAULT_COLOR = "#000000"
+      RESET_ACTIONS = [
+        "color-swatch:reset->flat-pack--color-swatch#reset",
+        "color-swatch:clear->flat-pack--color-swatch#clear"
+      ].join(" ").freeze
 
       def initialize(
         color:,
@@ -52,13 +56,15 @@ module FlatPack
       private
 
       def root_attributes
-        merge_attributes(
+        attrs = merge_attributes(
           class: root_classes,
           data: {
             controller: "flat-pack--color-swatch",
             selected: @selected.to_s
           }
         ).except(:id)
+        attrs[:data] = merge_data_attributes(attrs[:data], {action: RESET_ACTIONS})
+        attrs
       end
 
       def root_classes

@@ -132,6 +132,21 @@ module FlatPack
         refute_selector "[data-flat-pack--color-swatch-target='preview']"
       end
 
+      def test_wires_public_reset_and_clear_events
+        render_inline(Component.new(color: "#123456", text: "Accent"))
+
+        assert_selector "[data-action*='color-swatch:reset->flat-pack--color-swatch#reset']"
+        assert_selector "[data-action*='color-swatch:clear->flat-pack--color-swatch#clear']"
+      end
+
+      def test_keeps_host_root_action_with_reset_events
+        render_inline(Component.new(color: "#123456", text: "Accent", data: {action: "click->host#ping"}))
+
+        assert_selector "[data-action*='click->host#ping']"
+        assert_selector "[data-action*='color-swatch:reset->flat-pack--color-swatch#reset']"
+        assert_selector "[data-action*='color-swatch:clear->flat-pack--color-swatch#clear']"
+      end
+
       def test_uses_id_for_input
         render_inline(Component.new(color: "#123456", text: "Accent", id: "accent-swatch"))
 
