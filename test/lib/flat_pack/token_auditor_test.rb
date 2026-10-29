@@ -54,6 +54,7 @@ module FlatPack
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-title-weight"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-title-color"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-media-image-height"
+      assert_includes TokenAuditor::RUNTIME_TOKENS, "--card-body-gap"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-measured-width"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--sidebar-collapsed-frame"
       assert_includes TokenAuditor::RUNTIME_TOKENS, "--fp-panel-width"
