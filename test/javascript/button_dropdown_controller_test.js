@@ -115,23 +115,30 @@ function mount({
   return { controller, menuElement, trigger, windowStub, windowEvents }
 }
 
-function clickTarget({ form = false, keepOpen = false, menuitem = true } = {}) {
+function clickTarget({ form = false, keepOpen = false, menuitem = true, submitButton = false } = {}) {
   const item = menuitem
     ? { matches() { return false }, dataset: { action: "" } }
     : null
 
   return {
-    tagName: form ? "INPUT" : "A",
+    tagName: submitButton ? "BUTTON" : (form ? "INPUT" : "A"),
     isContentEditable: false,
     dataset: { action: "" },
     matches() { return false },
     closest(selector) {
       if (selector === '[role="menuitem"]') return item
-      if (selector === "form, [data-flat-pack-dropdown-keep-open]") {
-        if (form || keepOpen) return { tagName: "FORM" }
+      if (selector === "[data-flat-pack-dropdown-keep-open]") {
+        if (keepOpen) return { tagName: "DIV" }
         return null
       }
-      if (selector === "a, button") return form ? null : this
+      if (selector === "form") {
+        if (form || submitButton) return { tagName: "FORM" }
+        return null
+      }
+      if (selector === "a, button") {
+        if (form && !submitButton) return null
+        return this
+      }
       return null
     }
   }
@@ -265,12 +272,30 @@ test("a form inside the menu does not close it", () => {
   menuElement.contains = () => true
 
   controller.handleMenuItemClick({
-    target: clickTarget({ form: true, menuitem: false }),
+    target: clickTarget({ form: true, keepOpen: true, menuitem: false, submitButton: true }),
     defaultPrevented: false
   })
 
   assert.equal(closed, 0)
   assert.equal(controller.isOpen, true)
+})
+
+test("a form inside plain menu_html still closes the menu on click", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  menuElement.contains = () => true
+
+  controller.handleMenuItemClick({
+    target: clickTarget({ form: true, menuitem: false, submitButton: true }),
+    defaultPrevented: false
+  })
+
+  assert.equal(closed, 1)
 })
 
 test("a keep-open item does not close the menu", () => {
@@ -301,7 +326,7 @@ test("arrow keys in a form field do not move menu focus", () => {
 
   controller.handleEscape({
     key: "ArrowDown",
-    target: clickTarget({ form: true, menuitem: false }),
+    target: clickTarget({ form: true, keepOpen: true, menuitem: false }),
     preventDefault() {}
   })
 
@@ -317,7 +342,7 @@ test("tab in a form does not close the menu", () => {
 
   controller.handleEscape({
     key: "Tab",
-    target: clickTarget({ form: true, menuitem: false }),
+    target: clickTarget({ form: true, keepOpen: true, menuitem: false }),
     preventDefault() {}
   })
 

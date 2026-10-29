@@ -423,6 +423,16 @@ module FlatPack
         assert_selector "div[role='menu'][style*='max-height: 384px']"
       end
 
+      def test_menu_renders_one_max_height_style_attribute
+        render_inline(Dropdown::Component.new(text: "Actions", max_height: "200px"))
+
+        menu = page.native.at_css("div[role='menu']")
+        opening = menu.to_html[/\A<div[^>]*>/]
+
+        assert_equal 1, opening.scan(/\sstyle="/).size
+        assert_match(/\sstyle="max-height:\s*200px;?"/, opening)
+      end
+
       # Custom attributes
       def test_accepts_custom_classes
         render_inline(Dropdown::Component.new(text: "Actions", class: "custom-class"))

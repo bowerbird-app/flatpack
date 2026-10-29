@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `with_trigger_label` replaces the visible trigger label in place. The trigger stays a Button. `text:` is still required. Omit the slot and the trigger shows `text:`.
 - Dropdown items accept `icon_position: :start` (default) or `:end`. `:end` puts the icon after the label (`order-last`).
 - Dropdown items accept `keep_open: true` to leave the menu open. The item stays `role="menuitem"`.
-- `menu_form` places a form in the menu as `role="none"` so sibling items keep `role="menuitem"`. A `form` in the menu (including `menu_html`) does not close the menu on click, Tab, or arrow keys. Escape still closes.
+- `menu_form` places a form in the menu as `role="none"` so sibling items keep `role="menuitem"`. Clicks, Tab, and arrow keys inside that wrapper do not close the menu. Escape still closes. A form in `menu_html` closes the menu on click unless it sets `data-flat-pack-dropdown-keep-open`.
 
 ### Upgrade notes
 - Additive. Existing picker calls keep the bordered inline panel. Pass `variant: :flush` instead of host `!border-0 !bg-transparent !shadow-none !rounded-none !p-0` overrides when the picker is embedded in another surface. Rebuild host Tailwind so `border-0`, `bg-transparent`, `shadow-none`, `rounded-none`, `p-0`, and `py-0` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A hand-built `FlatPack::Grid::Item` with no `columns:` and a bare integer `span:` emits no `col-span-*` class. `with_item` still passes the grid's column preset, so a bare integer there still starts at the first breakpoint that has enough columns. Pass a hash, including `base:`, on a hand-built item when that cell should span without a preset. An integer outside `1`–`12` still raises `ArgumentError`.
 - Select, Picker, Search, and Combobox share `createRemoteQuery` in `flat_pack/remote_query.js` for the debounce timer, the abort, and the JSON `GET`. Each component still owns its wait, its query params, and its response shape. Select and Combobox both read `items` (or a top-level array). Picker still reads `items`. Search still reads `results`.
 - ComponentCatalog still maps the `text` family to `docs/components/text-stream.md`. `Text::Component` is the one override (`DOC_PATH_OVERRIDES`) and reads `docs/components/text.md`. Nested billing, button, comments, menu, and sidebar entries still use the family file.
+- The Dropdown menu previously rendered two `style` attributes (`max-height` on the tag and again through `menu_attributes`). It now renders one `style` with that `max-height`.
 
 ### Fixed
 - Modal closes and releases its body scroll lock on `turbo:before-cache`. A Turbo snapshot never restores an open dialog or a leftover `flatPackModalLockCount`. Nested modals still share that count; each open modal decrements once. A close already in flight does not decrement again.

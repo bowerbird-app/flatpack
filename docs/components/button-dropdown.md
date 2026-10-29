@@ -41,7 +41,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
 | `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. |
-| `menu_form` | slot | no | Places a form in the menu. The wrapper is `role="none"` with keep-open, so sibling items keep `role="menuitem"`. Clicks, Tab, and arrow keys inside the form do not close the menu. Escape still closes. A `form` passed through `menu_html` gets the same keep-open behavior. |
+| `menu_form` | slot | no | Places a form in the menu. The wrapper is `role="none"` with keep-open, so sibling items keep `role="menuitem"`. Clicks, Tab, and arrow keys inside the form do not close the menu. Escape still closes. A `form` in `menu_html` closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
 
 `menu_item` props:
 
