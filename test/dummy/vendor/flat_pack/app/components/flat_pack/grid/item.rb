@@ -31,8 +31,9 @@ module FlatPack
       private
 
       def item_attributes
+        host_class = @system_arguments.delete(:class)
         merge_attributes(
-          class: ["fp-grid__item", *Array(span_classes)]
+          class: ["fp-grid__item", *Array(span_classes), host_class]
         )
       end
 
@@ -48,13 +49,26 @@ module FlatPack
       def normalize_span(span)
         return if span.nil?
 
-        FlatPack::Shared::Breakpoints.normalize(span) { |count| normalize_span_count(count) }
+        normalized = FlatPack::Shared::Breakpoints.normalize(span) { |count| normalize_span_count(count) }
+        return normalized if span.is_a?(Hash) || !normalized.is_a?(Hash)
+
+        count = normalized[:base]
+        return {base: count} if count == :full || !count.is_a?(Integer)
+
+        # A bare integer does not set base. An unprefixed col-span wider than
+        # the one-column phone template adds an implicit auto track.
+        {sm: count, md: count, lg: count, xl: count}
       end
 
       def normalize_span_count(count)
-        return :full if count.to_s == "full"
+        return :full if count == :full || count.to_s == "full"
+        return Integer(count) if count.is_a?(Integer) || integer_string?(count)
 
-        Integer(count)
+        count
+      end
+
+      def integer_string?(count)
+        count.is_a?(String) && count.match?(/\A[+-]?\d+\z/)
       end
 
       def validate_span!
@@ -67,6 +81,10 @@ module FlatPack
         FlatPack::Shared::Breakpoints.validate_keys!(@span.keys, label: "span")
 
         @span.each do |breakpoint, count|
+          unless count == :full || count.is_a?(Integer)
+            raise ArgumentError, "Invalid span #{breakpoint}: #{count.inspect}. Must be an integer from 1 to 12, or :full."
+          end
+
           next if count == :full || SPAN_COUNTS.cover?(count)
 
           raise ArgumentError, "Invalid span #{breakpoint}: #{count.inspect}. Must be an integer from 1 to 12, or :full."

@@ -136,28 +136,49 @@ module FlatPack
         refute_includes html, "col-span-"
       end
 
-      def test_four_column_preset_emits_a_base_template_below_md
+      def test_four_column_preset_stays_one_column_below_md
         render_inline(Component.new(cols: 4)) do |grid|
           grid.with_item(span: :full) { "Full width" }
         end
 
-        html = page.native.to_html
-        assert_includes html, "grid-cols-2"
-        assert_includes html, "lg:grid-cols-4"
-        assert_includes html, "col-span-full"
-        refute_includes html, "grid-cols-1"
-        refute_includes html, "md:grid-cols-2"
+        classes = page.find("div.grid")[:class].split
+        assert_includes classes, "grid-cols-1"
+        assert_includes classes, "md:grid-cols-2"
+        assert_includes classes, "lg:grid-cols-4"
+        refute_includes classes, "grid-cols-2"
+        assert_includes page.find("div.fp-grid__item")[:class].split, "col-span-full"
       end
 
-      def test_item_span_integer_applies_at_every_breakpoint
+      def test_item_span_integer_starts_at_sm
         render_inline(Component.new(cols: 4)) do |grid|
           grid.with_item(span: 2) { "Wide" }
         end
 
-        html = page.native.to_html
-        assert_includes html, "col-span-2"
-        refute_includes html, "md:col-span-2"
-        refute_includes html, "lg:col-span-2"
+        classes = page.find("div.fp-grid__item")[:class].split
+        assert_includes classes, "sm:col-span-2"
+        assert_includes classes, "md:col-span-2"
+        assert_includes classes, "lg:col-span-2"
+        assert_includes classes, "xl:col-span-2"
+        refute_includes classes, "col-span-2"
+      end
+
+      def test_item_span_base_is_explicit
+        render_inline(Item.new(span: {base: 2})) { "Phone" }
+
+        classes = page.find("div.fp-grid__item")[:class].split
+        assert_includes classes, "col-span-2"
+        refute_includes classes, "sm:col-span-2"
+      end
+
+      def test_host_col_span_wins_over_span
+        render_inline(Item.new(span: {md: 2, lg: 8}, class: "md:col-span-4 custom")) { "Host" }
+
+        classes = page.find("div.fp-grid__item")[:class].split
+        assert_includes classes, "md:col-span-4"
+        assert_includes classes, "lg:col-span-8"
+        assert_includes classes, "custom"
+        assert_includes classes, "fp-grid__item"
+        refute_includes classes, "md:col-span-2"
       end
 
       def test_item_span_hash_maps_breakpoints
@@ -198,13 +219,24 @@ module FlatPack
           view.render(Item.new(span: 3)) { "Nested" }
         end
 
-        assert_includes page.native.to_html, "col-span-3"
+        classes = page.find("div.fp-grid__item")[:class].split
+        assert_includes classes, "sm:col-span-3"
+        refute_includes classes, "col-span-3"
         assert_text "Nested"
       end
 
       def test_rejects_invalid_span
         error = assert_raises(ArgumentError) { Item.new(span: 13) }
         assert_match(/Invalid span/, error.message)
+      end
+
+      def test_rejects_non_integer_span
+        error = assert_raises(ArgumentError) { Item.new(span: 2.5) }
+        assert_match(/integer/i, error.message)
+
+        error = assert_raises(ArgumentError) { Item.new(span: {md: 2.5}) }
+        assert_match(/integer/i, error.message)
+        assert_match(/2\.5/, error.message)
       end
 
       def test_rejects_invalid_span_breakpoint

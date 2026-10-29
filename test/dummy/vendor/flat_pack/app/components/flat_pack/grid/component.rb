@@ -9,12 +9,11 @@ module FlatPack
       # "sm:grid-cols-2" "md:grid-cols-2" "md:grid-cols-3" "md:grid-cols-4" "md:grid-cols-6"
       # "lg:grid-cols-3" "lg:grid-cols-4" "lg:grid-cols-6" "lg:grid-cols-12" "xl:grid-cols-4"
       # "gap-2" "gap-4" "gap-6" "items-start" "items-center" "items-stretch"
-      # cols: 4 is two tracks below lg so a full span covers the row under md.
       COLUMN_PRESETS = {
         1 => {base: 1},
         2 => {base: 1, md: 2},
         3 => {base: 1, md: 2, lg: 3},
-        4 => {base: 2, lg: 4},
+        4 => {base: 1, md: 2, lg: 4},
         6 => {base: 2, md: 3, lg: 6},
         12 => {base: 2, md: 4, lg: 12},
         :auto => {base: 1, sm: 2, lg: 3, xl: 4}
