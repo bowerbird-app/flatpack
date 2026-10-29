@@ -14,7 +14,7 @@ Use Grid for card collections, dashboards, and responsive sections that need pre
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `cols` | Symbol or Integer | `:auto` | No | Column preset. Allowed: `:auto`, `1`, `2`, `3`, `4`, `6`, `12`. |
+| `cols` | Symbol or Integer | `:auto` | No | Column preset. Allowed: `:auto`, `1`, `2`, `3`, `4`, `6`, `12`. `4` is two columns below `lg` and four from `lg` up. |
 | `gap` | Symbol | `:md` | No | Gap preset. Allowed: `:sm`, `:md`, `:lg`. |
 | `align` | Symbol | `:stretch` | No | Item alignment preset. Allowed: `:start`, `:center`, `:stretch`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into grid container. |
@@ -26,15 +26,16 @@ Use Grid for card collections, dashboards, and responsive sections that need pre
 | `span` | Integer, `:full`, or Hash | omit | No | How many columns this cell covers. An integer `1`–`12` applies at every breakpoint (`col-span-2`). `:full` is `col-span-full`. A hash accepts `base`, `sm`, `md`, `lg`, `xl` with those same values. Omit it and the cell is one track wide. |
 
 ## Slots
-- `with_item` — optional. The slot wrapper is the grid cell. Pass `span:` to cover more than one column.
-Default block content is also accepted: each direct child is a grid item. You can render `FlatPack::Grid::Item` inside that block. Existing grids that pass children with no `with_item` keep the same markup.
+- `with_item` — optional. The slot wrapper is the grid cell and has the class `fp-grid__item`. Pass `span:` to cover more than one column.
+Default block content is also accepted: each direct child is a grid item and is not wrapped. You can render `FlatPack::Grid::Item` inside that block. Existing grids that pass children with no `with_item` keep the same markup.
 
 ## Variants
 
 | variant | description |
 |---------|-------------|
 | `cols: :auto` | Responsive preset `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`. |
-| `cols: 2/3/4/6/12` | Fixed preset mappings defined in component constants. |
+| `cols: 2/3/6/12` | Fixed preset mappings defined in component constants. |
+| `cols: 4` | `grid-cols-2` below `lg`, `lg:grid-cols-4` from `lg` up. Two tracks below `md`, so `span: :full` covers the row on a phone. |
 | `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
 | `span: 2` | Item class `col-span-2` at every breakpoint. |

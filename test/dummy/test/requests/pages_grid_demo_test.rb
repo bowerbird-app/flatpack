@@ -30,5 +30,8 @@ class PagesGridDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "lg:col-span-2"
     assert_includes response.body, "col-span-2"
     assert_includes response.body, "col-span-full"
+    assert_includes response.body, "fp-grid__item"
+    assert_includes response.body, "grid-cols-2"
+    assert_includes response.body, "lg:grid-cols-4"
   end
 end

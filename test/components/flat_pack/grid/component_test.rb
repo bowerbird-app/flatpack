@@ -128,12 +128,25 @@ module FlatPack
 
       def test_item_slot_wraps_content_without_span_classes
         render_inline(Component.new) do |grid|
-          grid.with_item { "Plain cell" }
+          grid.with_item(class: "host-cell") { "Plain cell" }
         end
 
-        assert_selector "div.grid > div", text: "Plain cell"
+        assert_selector "div.grid > div.fp-grid__item.host-cell", text: "Plain cell"
         html = page.native.to_html
         refute_includes html, "col-span-"
+      end
+
+      def test_four_column_preset_emits_a_base_template_below_md
+        render_inline(Component.new(cols: 4)) do |grid|
+          grid.with_item(span: :full) { "Full width" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "grid-cols-2"
+        assert_includes html, "lg:grid-cols-4"
+        assert_includes html, "col-span-full"
+        refute_includes html, "grid-cols-1"
+        refute_includes html, "md:grid-cols-2"
       end
 
       def test_item_span_integer_applies_at_every_breakpoint

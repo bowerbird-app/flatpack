@@ -6,16 +6,18 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "grid-cols-1" "grid-cols-2" "grid-cols-3" "grid-cols-4" "grid-cols-6" "grid-cols-12"
-      # "md:grid-cols-2" "md:grid-cols-3" "md:grid-cols-4" "md:grid-cols-6"
+      # "sm:grid-cols-2" "md:grid-cols-2" "md:grid-cols-3" "md:grid-cols-4" "md:grid-cols-6"
+      # "lg:grid-cols-3" "lg:grid-cols-4" "lg:grid-cols-6" "lg:grid-cols-12" "xl:grid-cols-4"
       # "gap-2" "gap-4" "gap-6" "items-start" "items-center" "items-stretch"
-      COLS = {
-        1 => "grid-cols-1",
-        2 => "grid-cols-1 md:grid-cols-2",
-        3 => "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-        4 => "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
-        6 => "grid-cols-2 md:grid-cols-3 lg:grid-cols-6",
-        12 => "grid-cols-2 md:grid-cols-4 lg:grid-cols-12",
-        :auto => "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      # cols: 4 is two tracks below lg so a full span covers the row under md.
+      COLUMN_PRESETS = {
+        1 => {base: 1},
+        2 => {base: 1, md: 2},
+        3 => {base: 1, md: 2, lg: 3},
+        4 => {base: 2, lg: 4},
+        6 => {base: 2, md: 3, lg: 6},
+        12 => {base: 2, md: 4, lg: 12},
+        :auto => {base: 1, sm: 2, lg: 3, xl: 4}
       }.freeze
 
       GAPS = {
@@ -31,7 +33,6 @@ module FlatPack
       }.freeze
 
       renders_many :items, "FlatPack::Grid::Item"
-      undef_method :with_item, :with_item_content
 
       def initialize(
         cols: :auto,
@@ -47,11 +48,6 @@ module FlatPack
         validate_cols!
         validate_gap!
         validate_align!
-      end
-
-      def with_item(span: nil, **system_arguments, &block)
-        set_slot(:items, nil, span: span, **system_arguments, &block)
-        nil
       end
 
       def call
@@ -83,7 +79,9 @@ module FlatPack
       end
 
       def cols_classes
-        COLS.fetch(@cols)
+        COLUMN_PRESETS.fetch(@cols).map do |breakpoint, count|
+          FlatPack::Shared::Breakpoints.utility(breakpoint, "grid-cols-#{count}")
+        end
       end
 
       def gap_classes
@@ -95,8 +93,9 @@ module FlatPack
       end
 
       def validate_cols!
-        return if COLS.key?(@cols)
-        raise ArgumentError, "Invalid cols: #{@cols}. Must be one of: #{COLS.keys.join(", ")}"
+        return if COLUMN_PRESETS.key?(@cols)
+
+        raise ArgumentError, "Invalid cols: #{@cols}. Must be one of: #{COLUMN_PRESETS.keys.join(", ")}"
       end
 
       def validate_gap!

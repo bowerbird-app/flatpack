@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Section Title, Page Title, Hero Title, Content, and Empty State still cover section chrome, page chrome, cover type, article HTML, and empty-state titles. Use Heading when a host needs a plain heading tag with an independent size. Use Text when a host needs a line of kit copy. Demos: `/demo/heading`, `/demo/text`.
 - `FlatPack::Embed::Component` frames a host iframe (`src:`, required `title:`) at a Card-media aspect ratio (default `16/9`). `loading:` defaults to `lazy`. `referrerpolicy:` defaults to `strict-origin-when-cross-origin`. Optional `allow:`, `sandbox:`, `allowfullscreen:`, and `caption:` (or a block). Demo: `/demo/embed`.
 - Color Swatch exposes a public reset for the native colour picker. Stimulus `reset` restores the server-rendered `#rrggbb` on `data-flat-pack--color-swatch-color-value`. It does not read the input value at connect time. Hosts dispatch `color-swatch:reset` on the swatch root, or pass `detail.value` as `#rrggbb`. Reset fires `input` and `change` on the colour input, then `color-swatch:change`. Do not reach into the input or swatch face.
-- Grid items can span more than one column. Pass `span:` on `with_item` or render `FlatPack::Grid::Item`. An integer `1`–`12` applies at every breakpoint. `:full` is `col-span-full`. A hash uses `base`, `sm`, `md`, `lg`, and `xl` the same way Masonry `columns:` does. Omit `span:` and the cell is one track wide. Grids that still pass children with no `with_item` keep the same markup.
+- Grid items can span more than one column. Pass `span:` on `with_item` or render `FlatPack::Grid::Item`. An integer `1`–`12` applies at every breakpoint. `:full` is `col-span-full`. A hash uses `base`, `sm`, `md`, `lg`, and `xl` the same way Masonry `columns:` does. Omit `span:` and the cell is one track wide. Each `with_item` wrapper has the class `fp-grid__item`. Grids that still pass children with no `with_item` keep the same markup.
 
 ### Upgrade notes
 - Additive. Existing picker calls keep the bordered inline panel. Pass `variant: :flush` instead of host `!border-0 !bg-transparent !shadow-none !rounded-none !p-0` overrides when the picker is embedded in another surface. Rebuild host Tailwind so `border-0`, `bg-transparent`, `shadow-none`, `rounded-none`, `p-0`, and `py-0` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
@@ -34,7 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additive. Render `FlatPack::Embed::Component` for maps, clips, and other host iframe URLs. Flatpack does not build provider URLs.
 - Rebuild host Tailwind so `aspect-[16/9]`, `aspect-[4/3]`, `aspect-square`, and `rounded-[var(--media-radius)]` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 - Additive. Existing Color Swatch markup and `color-swatch:change` stay the same. To reset without touching internals, dispatch `color-swatch:reset` on `[data-controller='flat-pack--color-swatch']`, or call `reset` on `flat-pack--color-swatch`. `detail.value` must be `#rrggbb`. A CSS colour on `color:` still paints the first face. Reset returns the picker hex, not that CSS colour. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
-- Additive. Existing `FlatPack::Grid::Component` calls with default block content do not wrap items and do not add `col-span-*` classes.
+- Additive for span. Existing `FlatPack::Grid::Component` calls with default block content do not wrap items and do not add `col-span-*` or `fp-grid__item`.
+- `cols: 4` is two columns below the `lg` breakpoint and four from `lg` up (`grid-cols-2 lg:grid-cols-4`). It was one column below `md` and two from `md` until `lg` (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`). Other `cols` presets are unchanged.
 - Rebuild host Tailwind so `col-span-1` through `col-span-12`, `col-span-full`, and the `sm:`, `md:`, `lg:`, and `xl:` prefixes are generated. Reload kit CSS. Do not rerun the install generator.
 
 ### Changed
@@ -42,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Modal closes and releases its body scroll lock on `turbo:before-cache`. A Turbo snapshot never restores an open dialog or a leftover `flatPackModalLockCount`. Nested modals still share that count; each open modal decrements once. A close already in flight does not decrement again.
+- `cols: 4` emits a base `grid-cols-2` template, so `span: :full` covers both columns below `md`. It used to be a single column until `md`.
 
 ## [0.1.330] - 2026-10-29
 
