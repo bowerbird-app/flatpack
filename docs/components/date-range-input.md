@@ -23,6 +23,7 @@ Use this when your form needs a start and end date pair with one compact control
 | `error` | String, nil | `nil` | no | Error text shown below the control; sets `aria-invalid`. |
 | `min` | String, Date, Time, DateTime, nil | `nil` | no | Minimum selectable date. |
 | `max` | String, Date, Time, DateTime, nil | `nil` | no | Maximum selectable date. |
+| `presets` | Array of names or hashes, nil | default quick list | no | Quick ranges shown in the picker. Omit to keep the default names. A name is a built-in key such as `:last_30_days` or `:last_4_weeks`. `:last_30_days` is built in and is not in the default list. A hash is `label:` plus `days:` (inclusive window ending today) or `start:` and `end:`. Optional `key:` sets the Stimulus preset id. `FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS` is the default name list. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the wrapper/trigger (for example `id`, `class`, `data`, `aria`). |
 
 ## Slots
@@ -37,10 +38,11 @@ None.
 	start_name: "reporting_period_start",
 	end_name: "reporting_period_end",
 	label: "Reporting Period",
-	start_value: (Date.today - 30).to_s,
+	start_value: (Date.today - 29).to_s,
 	end_value: Date.today.to_s,
 	min: (Date.today - 365).to_s,
-	max: Date.today.to_s
+	max: Date.today.to_s,
+	presets: [:last_30_days, *FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS]
 ) %>
 ```
 
@@ -61,4 +63,5 @@ None.
 - Overlay motion: `playOverlayEnter` / `playOverlayExit` from `controllers/flat_pack/reduced_motion`.
 - Popup markup: internal `FlatPack::DatePicker::Panel` (also used by `DateInput` in `picker: :flatpack_date_picker`). Buttons in the popup are `FlatPack::Button::Component`.
 - Shared trigger, ids, preset list, and date formatting: `FlatPack::DatePicker::Field`.
-- `quick_range_presets` and `preset_range_for` remain instance methods on this component. A prepend can add a preset by overriding those two methods and calling `super`. The panel renders the list it is given. It does not keep a second copy.
+- Pass `presets:` for the list. Named built-ins include `:last_30_days` (today and the 29 days before it). Custom hashes send their range to the Stimulus controller as `presetRanges`. The browser fills start and end on click.
+- `quick_range_presets` and `preset_range_for` remain instance methods on this component. A prepend can still add a preset by overriding those two methods and calling `super`. Prefer `presets:` so hosts do not need a prepend. The panel renders the list it is given. It does not keep a second copy.

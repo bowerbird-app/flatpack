@@ -5,6 +5,16 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       include FlatPack::DatePicker::Field
 
+      DEFAULT_PRESET_KEYS = %i[
+        today yesterday last_3_days this_week last_week last_4_weeks
+        this_month last_month this_year last_year
+      ].freeze
+
+      NAMED_PRESET_KEYS = %i[
+        today yesterday last_3_days this_week last_week last_4_weeks last_30_days
+        this_month last_month this_year last_year
+      ].freeze
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-error)]" "border-[var(--color-error)]"
@@ -22,6 +32,7 @@ module FlatPack
         help_text: nil,
         min: nil,
         max: nil,
+        presets: nil,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -38,8 +49,10 @@ module FlatPack
         @help_text = normalize_help_text!(help_text)
         @min = format_date_value(min)
         @max = format_date_value(max)
+        @preset_entries = presets
 
         validate_names!
+        resolved_presets unless @preset_entries.nil?
       end
 
       def call
@@ -96,6 +109,7 @@ module FlatPack
           "flat-pack--flatpack-date-picker-start-value": @start_value,
           "flat-pack--flatpack-date-picker-end-value": @end_value,
           "flat-pack--flatpack-date-picker-preset-labels-value": quick_range_presets.index_by { |preset| preset[:key] }.transform_values { |preset| preset[:label] },
+          "flat-pack--flatpack-date-picker-preset-ranges-value": custom_preset_ranges_value,
           "flat-pack--flatpack-date-picker-preset-key-value": initial_preset_key,
           "flat-pack--flatpack-date-picker-panel-id-value": panel_id
         ).compact
@@ -171,7 +185,98 @@ module FlatPack
         end&.dig(:key)
       end
 
+      def quick_range_presets
+        return super if @preset_entries.nil?
+
+        resolved_presets.map { |preset| {key: preset[:key], label: preset[:label]} }
+      end
+
+      def custom_preset_ranges_value
+        return if @preset_entries.nil?
+
+        ranges = resolved_presets.each_with_object({}) do |preset, acc|
+          next if preset[:start].blank? || preset[:end].blank?
+
+          acc[preset[:key]] = {start: preset[:start], end: preset[:end]}
+        end
+
+        ranges.presence
+      end
+
+      def resolved_presets
+        @resolved_presets ||= Array(@preset_entries).map { |entry| resolve_preset_entry(entry) }
+      end
+
+      def resolve_preset_entry(entry)
+        case entry
+        when String, Symbol
+          named_preset(entry)
+        when Hash
+          resolve_hash_preset(entry)
+        else
+          raise ArgumentError, "presets entries must be a name or a label and range"
+        end
+      end
+
+      def resolve_hash_preset(entry)
+        entry = entry.to_h.symbolize_keys
+        has_days = !entry[:days].nil?
+        has_start = !entry[:start].nil?
+        has_end = !entry[:end].nil?
+
+        if has_days && (has_start || has_end)
+          raise ArgumentError, "preset needs days: or start: and end:, not both"
+        end
+
+        if !has_days && !has_start && !has_end
+          raise ArgumentError, "preset needs days: or start: and end:" if entry[:key].blank?
+
+          named = named_preset(entry[:key])
+          named[:label] = entry[:label].to_s if entry[:label].present?
+          return named
+        end
+
+        raise ArgumentError, "preset label is required" if entry[:label].blank?
+        raise ArgumentError, "preset needs days: or start: and end:" if has_start != has_end
+
+        key = (entry[:key].presence || entry[:label].to_s.parameterize(separator: "_")).to_s
+        raise ArgumentError, "preset key is required" if key.blank?
+
+        range = if has_days
+          inclusive_days_range(entry[:days])
+        else
+          {start: format_date_value(entry[:start]), end: format_date_value(entry[:end])}
+        end
+
+        {key: key, label: entry[:label].to_s, start: range[:start], end: range[:end]}
+      end
+
+      def named_preset(name)
+        key = name.to_s
+        unless NAMED_PRESET_KEYS.map(&:to_s).include?(key)
+          raise ArgumentError, "unknown date range preset #{key.inspect}"
+        end
+
+        {key: key, label: fp_t("date.#{key}")}
+      end
+
+      def inclusive_days_range(days)
+        count = Integer(days)
+        raise ArgumentError, "preset days must be greater than 0" if count < 1
+
+        today = Date.current
+        {start: (today - (count - 1).days).iso8601, end: today.iso8601}
+      rescue ArgumentError, TypeError
+        raise ArgumentError, "preset days must be greater than 0"
+      end
+
       def preset_range_for(key)
+        key = key.to_s
+        resolved = resolved_presets.find { |candidate| candidate[:key] == key }
+        if resolved && resolved[:start].present? && resolved[:end].present?
+          return {start: resolved[:start], end: resolved[:end]}
+        end
+
         today = Date.current
 
         case key
@@ -192,6 +297,8 @@ module FlatPack
           {start: week_start.iso8601, end: week_end.iso8601}
         when "last_4_weeks"
           {start: (today - 27.days).iso8601, end: today.iso8601}
+        when "last_30_days"
+          {start: (today - 29.days).iso8601, end: today.iso8601}
         when "this_month"
           month_start = Date.new(today.year, today.month, 1)
           {start: month_start.iso8601, end: today.iso8601}

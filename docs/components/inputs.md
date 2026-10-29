@@ -48,6 +48,7 @@ Component-specific props:
 | `end_name` | String | none | yes (`DateRangeInput`) | Hidden field name used to submit the selected range end date. |
 | `start_value` | String, Date, Time, DateTime | `nil` | no (`DateRangeInput`) | Initial selected range start date. |
 | `end_value` | String, Date, Time, DateTime | `nil` | no (`DateRangeInput`) | Initial selected range end date. |
+| `presets` | Array of names or hashes, nil | default quick list | no (`DateRangeInput`) | Quick ranges in the picker. Omit to keep the default names. `:last_30_days` is a built-in name and is not in the default list. Custom hashes take `label:` plus `days:` or `start:` and `end:`. |
 | `step` | Numeric | `1` | no | Step increment (`NumberInput`, `RangeInput`). |
 | `accept` | String | `nil` | no | File MIME/extensions whitelist for `FileInput`. Dangerous executable extensions raise `ArgumentError`. |
 | `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`) and multi-value selection (`Select`). |
@@ -351,9 +352,10 @@ or:
 ```
 
 In custom picker mode, both `DateInput` (`picker: :flatpack_date_picker`) and `DateRangeInput` provide quick presets: `Today`, `Yesterday`, `Last 3 days`, `This week`, `Last week`, `Last 4 weeks`, `This month`, `Last month`, `This year`, `Last year`.
+`DateRangeInput` also accepts `presets:`. Omit it and that default list stays. Pass names to choose the list, including `:last_30_days` (not in the default list). Custom hashes take `label:` plus `days:` or `start:` and `end:`.
 The popup renders as side-by-side quick ranges + calendar on larger screens and stacks vertically on smaller screens. Open and close use the same overlay helper as Popover.
 
-Both popups are `FlatPack::DatePicker::Panel`, built from `FlatPack::Button::Component` and the same surface tokens. `FlatPack::DatePicker::Field` holds the shared trigger, ids, preset list, and date formatting. Hosts still render `DateInput` and `DateRangeInput`. `DateRangeInput#quick_range_presets` and `#preset_range_for` stay instance methods, so a prepend on `DateRangeInput` can add a preset and `super` still reaches the built-in list.
+Both popups are `FlatPack::DatePicker::Panel`, built from `FlatPack::Button::Component` and the same surface tokens. `FlatPack::DatePicker::Field` holds the shared trigger, ids, preset list, and date formatting. Hosts still render `DateInput` and `DateRangeInput`. Prefer `DateRangeInput` `presets:` over a prepend. `DateRangeInput#quick_range_presets` and `#preset_range_for` stay instance methods, so a prepend can still add a preset and `super` still reaches the built-in list.
 
 ## Rich Text Mode
 

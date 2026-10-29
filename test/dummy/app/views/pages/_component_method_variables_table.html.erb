@@ -1148,6 +1148,7 @@
         { variable: "error", accepts: "String or nil", example: "error: \"Date range is required\"" },
         { variable: "min", accepts: "String, Date, Time, DateTime, nil", example: "min: \"2026-01-01\"" },
         { variable: "max", accepts: "String, Date, Time, DateTime, nil", example: "max: \"2026-12-31\"" },
+        { variable: "presets", accepts: "Array of names or hashes, or nil", example: "presets: [:last_30_days, *FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS]" },
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"reporting-period\", class: \"w-full\", data: { testid: \"date-range-input\" }" }
       ]
     },

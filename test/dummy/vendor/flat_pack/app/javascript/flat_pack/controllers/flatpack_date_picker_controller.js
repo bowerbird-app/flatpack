@@ -29,6 +29,7 @@ export default class extends Controller {
     end: String,
     presetKey: String,
     presetLabels: Object,
+    presetRanges: Object,
     panelId: String
   }
 
@@ -690,6 +691,11 @@ export default class extends Controller {
   }
 
   computePresetRange(key) {
+    const supplied = this.suppliedPresetRange(key)
+    if (supplied) {
+      return supplied
+    }
+
     const today = this.today
 
     switch (key) {
@@ -713,6 +719,8 @@ export default class extends Controller {
       }
       case "last_4_weeks":
         return { start: this.addDays(today, -27), end: today }
+      case "last_30_days":
+        return { start: this.addDays(today, -29), end: today }
       case "this_month": {
         const start = new Date(today.getFullYear(), today.getMonth(), 1)
         return { start, end: today }
@@ -734,6 +742,26 @@ export default class extends Controller {
       default:
         return null
     }
+  }
+
+  suppliedPresetRange(key) {
+    if (!key || !this.hasPresetRangesValue) {
+      return null
+    }
+
+    const ranges = this.presetRangesValue || {}
+    const supplied = ranges[key]
+    if (!supplied) {
+      return null
+    }
+
+    const start = this.parseIso(supplied.start)
+    const end = this.parseIso(supplied.end)
+    if (!start || !end) {
+      return null
+    }
+
+    return { start, end }
   }
 
   clipRange(range) {

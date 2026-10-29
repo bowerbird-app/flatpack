@@ -5,7 +5,7 @@ module FlatPack
     # Internal picker surface shared by DateInput (custom picker) and DateRangeInput.
     # Hosts keep rendering those components. This panel is not a public field API.
     # Preset lists are passed in so DateRangeInput#quick_range_presets stays the
-    # overridable method (a prepend on DateRangeInput still adds presets).
+    # overridable method. Hosts should pass DateRangeInput presets: when they can.
     class Panel < FlatPack::BaseComponent
       def initialize(panel_id:, presets:, range:)
         super()

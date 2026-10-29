@@ -13,6 +13,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [0.1.330] - 2026-10-29
+
+### Added
+- `DateRangeInput` accepts `presets:`. Omit it and the quick list is unchanged: Today, Yesterday, Last 3 days, This week, Last week, Last 4 weeks, This month, Last month, This year, Last year. Pass names to choose the list. `:last_30_days` is a built-in name (today and the 29 days before it) and is not in the default list. Custom entries take `label:` plus `days:` (a rolling inclusive window ending today) or `start:` and `end:`.
+- The date picker Stimulus controller fills that range on click. Named built-ins stay in the controller. Custom `days:` / `start:` / `end:` ranges are written on the field as `presetRanges` so the click path does not need a host prepend.
+
+### Upgrade notes
+- Additive. Calls that omit `presets:` render the same default names. `:last_4_weeks` and the other default names are unchanged.
+- Recording Studio sitemaps can drop the `DateRangeInput` prepend. Pass the last-30-days name first, then the default names:
+
+```erb
+<%= render FlatPack::DateRangeInput::Component.new(
+  start_name: "start_date",
+  end_name: "end_date",
+  presets: [:last_30_days, *FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS]
+) %>
+```
+
+- A prepend that still overrides `quick_range_presets` and `preset_range_for` keeps working. Prefer `presets:` for new hosts.
+- Reload the gem. Rebuild host JavaScript so the date picker controller picks up `last_30_days` and `presetRanges`. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.330`.
+
 ## [0.1.329] - 2026-10-28
 
 ### Added
