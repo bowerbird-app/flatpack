@@ -451,6 +451,53 @@ module FlatPack
       refute_includes payload.fetch(:description), "No dedicated documentation"
     end
 
+    test "nested family components keep the family docs they resolve to on main" do
+      button = FlatPack::ComponentCatalog.show("Button::Component")
+      dropdown = FlatPack::ComponentCatalog.show("Button::Dropdown::Component")
+      thread = FlatPack::ComponentCatalog.show("Comments::Thread::Component")
+      sidebar = FlatPack::ComponentCatalog.show("Sidebar::Component")
+      billing_plan = FlatPack::ComponentCatalog.show("Billing::PlanSummary::Component")
+
+      assert_equal button.fetch(:description), dropdown.fetch(:description)
+      assert_includes dropdown.fetch(:description), "Render a button or link"
+      refute_includes dropdown.fetch(:description), "button-triggered action menu"
+
+      %w[
+        Billing::InvoiceList::Component
+        Billing::PaymentMethod::Component
+        Billing::PlanPicker::Component
+        Billing::StatusAlert::Component
+        Billing::UsageMeter::Component
+      ].each do |name|
+        payload = FlatPack::ComponentCatalog.show(name)
+
+        assert_equal billing_plan.fetch(:description), payload.fetch(:description), name
+      end
+      assert_includes billing_plan.fetch(:description), "presentational FlatPack billing"
+
+      %w[
+        Comments::Composer::Component
+        Comments::InlineInput::Component
+        Comments::Item::Component
+        Comments::Replies::Component
+      ].each do |name|
+        payload = FlatPack::ComponentCatalog.show(name)
+
+        assert_equal thread.fetch(:description), payload.fetch(:description), name
+      end
+      assert_includes thread.fetch(:description), "Compose full comment experiences"
+
+      assert_equal sidebar.fetch(:description), FlatPack::ComponentCatalog.show("Sidebar::Group::Component").fetch(:description)
+      assert_equal sidebar.fetch(:description), FlatPack::ComponentCatalog.show("Sidebar::SectionTitle::Component").fetch(:description)
+      assert_includes sidebar.fetch(:description), "composable sidebar container"
+      refute_includes FlatPack::ComponentCatalog.show("Sidebar::Group::Component").fetch(:description), "collapsible group of sidebar items"
+
+      collapse = FlatPack::ComponentCatalog.show("Menu::Collapse::Component")
+
+      assert_equal "No dedicated documentation available for this component yet.", collapse.fetch(:description)
+      refute_includes collapse.fetch(:description), "labelled menu row"
+    end
+
     test "show Text documents body copy without stealing Stream docs" do
       payload = FlatPack::ComponentCatalog.show("Text::Component")
       size = parameter_named(payload, "size")

@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rebuild host Tailwind so `text-[length:var(--text-xs)]` through `text-[length:var(--text-5xl)]`, `font-normal` / `font-medium` / `font-semibold` / `font-bold`, and `text-[var(--surface-content-color)]` / `text-[var(--surface-muted-content-color)]` / `text-[var(--color-primary)]` exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 
 ### Changed
+- ComponentCatalog still maps the `text` family to `docs/components/text-stream.md`. `Text::Component` is the one override (`DOC_PATH_OVERRIDES`) and reads `docs/components/text.md`. Nested billing, button, comments, menu, and sidebar entries still use the family file.
 
 ### Fixed
 - Modal closes and releases its body scroll lock on `turbo:before-cache`. A Turbo snapshot never restores an open dialog or a leftover `flatPackModalLockCount`. Nested modals still share that count; each open modal decrements once. A close already in flight does not decrement again.
