@@ -224,16 +224,21 @@ function runTriggerAction(controller, action, eventName, event) {
   })
 }
 
-// Chrome activates a <button> with a click after Enter and after Space.
-// preventDefault on keydown is what stops that click.
-function pressTriggerKey(controller, key) {
-  const action = triggerAction()
-  const keydown = {
+function keyEvent(key, { repeat = false } = {}) {
+  return {
     key,
+    repeat,
     defaultPrevented: false,
     preventDefault() { this.defaultPrevented = true },
     stopPropagation() {}
   }
+}
+
+// Chrome activates a <button> with a click after Enter and after Space.
+// preventDefault on keydown is what stops that click.
+function pressTriggerKey(controller, key) {
+  const action = triggerAction()
+  const keydown = keyEvent(key)
   runTriggerAction(controller, action, "keydown", keydown)
   if (!keydown.defaultPrevented) {
     runTriggerAction(controller, action, "click", {
@@ -636,6 +641,60 @@ test("enter and space on the trigger action open the menu once and focus the fir
   assert.equal(pressTriggerKey(controller, " "), true)
   assert.equal(controller.isOpen, true)
   assert.equal(focused, 1)
+})
+
+test("space keyup then the activation click leaves the menu open", () => {
+  const { controller, documentStub, windowStub } = mount({ anchor: triggerRect })
+  documentStub.body.appendChild = () => {}
+  const timeouts = []
+  windowStub.setTimeout = (fn) => {
+    timeouts.push(fn)
+    return timeouts.length
+  }
+  const action = triggerAction()
+  assert.match(action, /keyup\.space->flat-pack--button-dropdown#releaseKey/)
+  assert.match(action, /keyup\.enter->flat-pack--button-dropdown#releaseKey/)
+
+  const keydown = keyEvent(" ")
+  runTriggerAction(controller, action, "keydown", keydown)
+  assert.equal(keydown.defaultPrevented, true)
+  assert.equal(controller.isOpen, true)
+
+  const keyup = keyEvent(" ")
+  runTriggerAction(controller, action, "keyup", keyup)
+  assert.equal(keyup.defaultPrevented, true)
+
+  const click = { preventDefault() {}, stopPropagation() {} }
+  runTriggerAction(controller, action, "click", click)
+  assert.equal(controller.isOpen, true)
+
+  timeouts.forEach((fn) => fn())
+  runTriggerAction(controller, action, "click", { preventDefault() {}, stopPropagation() {} })
+  assert.equal(controller.isOpen, false)
+})
+
+test("a repeated keydown or keyup does not open or close the menu", () => {
+  const { controller, documentStub } = mount({ anchor: triggerRect })
+  documentStub.body.appendChild = () => {}
+  const action = triggerAction()
+
+  const repeatedDown = keyEvent(" ", { repeat: true })
+  runTriggerAction(controller, action, "keydown", repeatedDown)
+  assert.equal(repeatedDown.defaultPrevented, true)
+  assert.equal(controller.isOpen, false)
+
+  assert.equal(pressTriggerKey(controller, "Enter"), true)
+  assert.equal(controller.isOpen, true)
+
+  const repeatedEnter = keyEvent("Enter", { repeat: true })
+  runTriggerAction(controller, action, "keydown", repeatedEnter)
+  assert.equal(repeatedEnter.defaultPrevented, true)
+  assert.equal(controller.isOpen, true)
+
+  const repeatedUp = keyEvent(" ", { repeat: true })
+  runTriggerAction(controller, action, "keyup", repeatedUp)
+  assert.equal(repeatedUp.defaultPrevented, true)
+  assert.equal(controller.isOpen, true)
 })
 
 test("tabbing past the last stop in a dialog closes it and returns focus to the trigger", () => {

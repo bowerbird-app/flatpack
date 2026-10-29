@@ -173,7 +173,7 @@ module FlatPack
             aria: extra_aria.merge(haspopup: trigger_popup, expanded: "false"),
             data: extra_data.merge(
               flat_pack__button_dropdown_target: "trigger",
-              action: "click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey"
+              action: "click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey keyup.enter->flat-pack--button-dropdown#releaseKey keyup.space->flat-pack--button-dropdown#releaseKey"
             )
           }.merge(attrs.compact)
         end
