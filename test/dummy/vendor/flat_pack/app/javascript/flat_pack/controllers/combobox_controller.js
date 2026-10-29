@@ -89,6 +89,7 @@ export default class extends Controller {
   }
 
   applyRemoteFilter() {
+    this.remote.abort()
     const query = this.inputTarget.value.trim()
     const selected = this.currentOptions().find((option) => option.getAttribute("aria-selected") === "true")
     const selectedLabel = selected?.dataset.label || ""
@@ -112,14 +113,14 @@ export default class extends Controller {
       })
 
       if (!response.ok) {
-        this.renderRemoteOptions([])
+        this.renderRemoteOptionsIfCurrent(query, [])
         return
       }
 
-      this.renderRemoteOptions(this.normalizeItems(await response.json()))
+      this.renderRemoteOptionsIfCurrent(query, this.normalizeItems(await response.json()))
     } catch (error) {
       if (error?.name === "AbortError") return
-      this.renderRemoteOptions([])
+      this.renderRemoteOptionsIfCurrent(query, [])
     }
   }
 
@@ -141,6 +142,11 @@ export default class extends Controller {
         }
       })
       .filter(Boolean)
+  }
+
+  renderRemoteOptionsIfCurrent(query, items) {
+    if (this.inputTarget.value.trim() !== query) return
+    this.renderRemoteOptions(items)
   }
 
   renderRemoteOptions(items) {

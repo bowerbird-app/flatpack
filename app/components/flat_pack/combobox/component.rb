@@ -246,6 +246,8 @@ module FlatPack
         content_tag(:li,
           text,
           class: "hidden px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
+          role: "status",
+          aria: {live: "polite"},
           data: {"flat-pack--combobox-target": target})
       end
 

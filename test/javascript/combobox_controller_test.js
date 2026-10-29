@@ -142,7 +142,9 @@ function matchesSelector(node, selector) {
   return false
 }
 
-function loadController({ fetchImpl } = {}) {
+let pendingTimers = []
+
+function loadController({ fetchImpl, deferTimers = false } = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'combobox_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
@@ -187,10 +189,18 @@ function cancelOverlayHide() {}`
     AbortController,
     fetch: fetchImpl || (async () => ({ ok: true, json: async () => ({ items: [] }) })),
     setTimeout(fn) {
-      fn()
-      return 1
+      if (!deferTimers) {
+        fn()
+        return 1
+      }
+
+      pendingTimers.push(fn)
+      return pendingTimers.length
     },
-    clearTimeout() {}
+    clearTimeout(id) {
+      if (!deferTimers || id == null) return
+      pendingTimers[id - 1] = null
+    }
   }
 
   vm.runInNewContext(clickOutsideSource + '\n' + remoteQuerySource + '\n' + transformedSource, context, { filename: filePath })
@@ -229,8 +239,9 @@ function buildController() {
   return controller
 }
 
-function buildRemoteController({ fetchImpl } = {}) {
-  const ControllerClass = loadController({ fetchImpl })
+function buildRemoteController({ fetchImpl, deferTimers = false } = {}) {
+  pendingTimers = []
+  const ControllerClass = loadController({ fetchImpl, deferTimers })
   const controller = new ControllerClass()
   controller.element = new FakeElement('div')
   controller.inputTarget = new FakeElement('input')
@@ -367,6 +378,61 @@ test('remote fetch paints options from json and keeps keyboard selection', async
   assert.equal(controller.valueTarget.value, 'fed-square')
   assert.equal(controller.inputTarget.value, 'Federation Square')
   assert.equal(controller.openList, false)
+})
+
+test('a query change aborts the in-flight search so a late response cannot render', async () => {
+  let firstSignal
+  let resolveLate
+  const fetches = []
+  const controller = buildRemoteController({
+    deferTimers: true,
+    fetchImpl: (_url, options) => {
+      fetches.push(options.signal)
+      if (fetches.length === 1) {
+        firstSignal = options.signal
+        return new Promise((resolve, reject) => {
+          resolveLate = () => resolve({
+            ok: true,
+            json: async () => ({ items: [{ value: 'fed-square', label: 'Federation Square' }] })
+          })
+          options.signal.addEventListener('abort', () => {
+            const error = new Error('aborted')
+            error.name = 'AbortError'
+            reject(error)
+          })
+        })
+      }
+
+      return {
+        ok: true,
+        json: async () => ({ items: [{ value: 'opera-house', label: 'Sydney Opera House' }] })
+      }
+    }
+  })
+
+  controller.debounceValue = 300
+  controller.open()
+  controller.inputTarget.value = 'mel'
+  controller.filter()
+  pendingTimers.shift()()
+  await flush()
+
+  assert.equal(firstSignal.aborted, false)
+
+  controller.inputTarget.value = 'me'
+  controller.filter()
+  await flush()
+
+  assert.equal(firstSignal.aborted, true)
+  assert.equal(controller.hintTarget.classList.contains('hidden'), false)
+  assert.equal(controller.listTarget.querySelectorAll('[role="option"]').length, 0)
+
+  resolveLate()
+  await flush()
+
+  assert.equal(controller.listTarget.querySelectorAll('[role="option"]').length, 0)
+  assert.equal(controller.valueTarget.value, '')
+  assert.equal(fetches.length, 1)
 })
 
 test('remote search shows a hint before min characters and skips fetch', async () => {

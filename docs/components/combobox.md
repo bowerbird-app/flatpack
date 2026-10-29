@@ -86,7 +86,8 @@ A choice dispatches `change` on the hidden field and `flat-pack:combobox:selecte
 - The visible field is `role="combobox"` with `aria-controls` pointing at a `role="listbox"`. `spellcheck` is off.
 - Arrow keys move `aria-activedescendant`. Enter chooses. Escape closes. One click on a row chooses it once.
 - Typing filters labels. A value that no longer matches the typed text is cleared until a row is chosen.
-- Remote search sets `aria-busy` on the field while a request is in flight.
+- Remote search sets `aria-busy` on the field while a request is in flight. Hint and loading rows are `role="status"` with `aria-live="polite"`.
+- A new keystroke aborts the in-flight search. A response for an older query does not paint rows.
 - Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit`, a few pixels of offset, and origin from the field. A close in flight can reverse. Under `prefers-reduced-motion`, the list fades without the offset.
 
 ## Dependencies

@@ -65,8 +65,8 @@ module FlatPack
         assert_selector "div[data-flat-pack--combobox-min-search-length-value='3']"
         assert_selector "div[data-flat-pack--combobox-debounce-value='250']"
         assert_selector "input[spellcheck='false']"
-        assert_selector "[data-flat-pack--combobox-target='hint']", text: "Type at least 3 characters to search", visible: :all
-        assert_selector "[data-flat-pack--combobox-target='loading']", text: "Searching...", visible: :all
+        assert_selector "[data-flat-pack--combobox-target='hint'][role='status'][aria-live='polite']", text: "Type at least 3 characters to search", visible: :all
+        assert_selector "[data-flat-pack--combobox-target='loading'][role='status'][aria-live='polite']", text: "Searching...", visible: :all
         refute_selector "[role='option']"
       end
 
