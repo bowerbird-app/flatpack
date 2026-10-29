@@ -198,6 +198,8 @@ Rails.application.routes.draw do
   get "demo/page_title/display", to: "pages#page_title_display"
   get "demo/hero_title", to: "pages#hero_title"
   get "demo/type_scale", to: "pages#type_scale"
+  get "demo/heading", to: "pages#heading"
+  get "demo/text", to: "pages#text"
   get "demo/section_title", to: "pages#section_title"
   get "demo/page_nav", to: "pages#page_nav"
   get "demo/page_nav/carry", to: "page_nav_flow#show", as: :demo_page_nav_carry

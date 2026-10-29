@@ -96,6 +96,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/page_header
     /demo/page_title/display
     /demo/hero_title
+    /demo/heading
+    /demo/text
     /demo/type_scale
     /pages/hero/display
     /demo/section_title
@@ -849,6 +851,35 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "3.75rem / 60px"
     assert_includes response.body, "4.5rem / 72px"
     assert_includes response.body, "6rem / 96px"
+  end
+
+  test "heading demo keeps level independent of size" do
+    get "/demo/heading"
+
+    assert_response :success
+    assert_includes response.body, "fp-heading"
+    assert_includes response.body, ">Verify your email</h2>"
+    assert_includes response.body, ">Message sent</h1>"
+    assert_includes response.body, ">Clip stats</h2>"
+    assert_includes response.body, ">Heading H1</h1>"
+    assert_includes response.body, ">Heading H6</h6>"
+    assert_includes response.body, "text-[length:var(--text-2xl)]"
+    assert_includes response.body, "text-[length:var(--text-lg)]"
+    assert_includes response.body, "text-[length:var(--text-5xl)]"
+    refute_includes response.body, "fp-section-title\">Verify your email"
+  end
+
+  test "text demo renders size ink and inline span" do
+    get "/demo/text"
+
+    assert_response :success
+    assert_includes response.body, "fp-text"
+    assert_includes response.body, "We sent a link to your inbox."
+    assert_includes response.body, "The link expires in 30 minutes."
+    assert_includes response.body, ">Saved</span>"
+    assert_includes response.body, "text-[var(--surface-muted-content-color)]"
+    assert_includes response.body, "text-[var(--color-primary)]"
+    assert_includes response.body, "fp-heading"
   end
 
   test "hero title demo renders every size and wrapping copy" do

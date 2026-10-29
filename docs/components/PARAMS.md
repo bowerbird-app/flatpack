@@ -6,7 +6,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 
 | Concept | Param | Use for |
 | --- | --- | --- |
-| Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
+| Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes. Heading and Text ink is only `:default` (`--surface-content-color`), `:muted` (`--surface-muted-content-color`), or `:primary` (`--color-primary`). |
 | Card colour fill | `background` | Card and Card Stat. `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. `:none` is transparent and inherits text. Card `shadow`, `border`, and `hover` are separate. |
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). |
@@ -56,6 +56,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Empty state actions | `layout` | `FlatPack::EmptyState::Component` only. `:wrap` (default, wrapping row) or `:stack` (one button under the next). The actions render as `FlatPack::Collection::Component` with that layout. Not `:grid`. |
 | Collection element | `as` | `FlatPack::Collection::Component` only. `:list` (default, the `<ul>` alone) or `:nav` (wraps the list in `<nav aria-label>`). |
 | Flash presentation | `as` | `FlatPack::Flash::Component`. `:alert` stacks alerts in place. `:toast` renders toasts in a toast region. Required. |
+| Text tag | `as` | `FlatPack::Text::Component` only for this row. `:p` (default), `:span`, or `:div`. Heading tags stay on Heading `level:`. Not Collection `as` and not Flash `as`. |
 | Nav accessible name | `label` | Collection `as: :nav` requires `label:`. That string is the nav's `aria-label`. Not the visible button label (`text`). |
 | Collection item floor | `min_item_width` | Collection `layout: :grid` only. A CSS length such as `"14rem"` (the default). Sets `--fp-collection-min-item-width`. Not Table `min_width`. |
 | Collection gap | `gap` | Collection, Grid, and Masonry. `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
@@ -89,7 +90,9 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Number duration | `duration` | Number only. `:fast`, `:base`, or `:slow` (default). Reads `--motion-duration-*`. |
 | Number motion | `animate` | Number only. `:count` (default), `:roll`, `:fade`, or `:none`. |
 | FAB speed-dial item look | `style` | FAB `with_action` only. Omit for today’s surface glyph. `:danger` uses `--button-danger-*` (same tokens as TrashButton). |
-| Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). Animated character sizes are `:sm`, `:md`, `:lg`, `:xl` on a larger scale than icons (`:xl` is `w-40`). |
+| Scale | `size` | `:sm`, `:md`, `:lg`, and other size tokens. Heading uses `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:"2xl"`, `:"3xl"`, `:"4xl"`, `:"5xl"` (`:"2xl"` is `--text-2xl`, the default). Text uses `:xs` through `:"2xl"` (`:base` is the default). PageTitle and Hero also accept `:display` for cover type. HeroTitle uses `:md`, `:lg`, `:xl`, `:xxl` (`:xl` is `--display-size`). Animated character sizes are `:sm`, `:md`, `:lg`, `:xl` on a larger scale than icons (`:xl` is `w-40`). |
+| Heading rank | `level` | `FlatPack::Heading::Component`, Section Title, and Hero Title. `:h1`–`:h6`. Heading also accepts `1`–`6`. Visual size stays on `size:`. Page Title uses `variant` for the same tags. |
+| Type weight | `weight` | Heading and Text only. `:normal`, `:medium`, `:semibold`, `:bold`. Heading defaults to `:semibold`. Text defaults to `:normal`. |
 | Character definition | `definition` | `FlatPack::AnimatedCharacter::Component` only. A Hash of `parts` and `states`. Not a raw SVG string. |
 | Character mood | `state` | `FlatPack::AnimatedCharacter::Component` only. A state name from `definition`, such as `:idle` or `:blink`. Not billing `status`. |
 | Icon motion | `animate` | `FlatPack::Shared::IconComponent` only. `:wiggle`, `:pop`, `:draw`, `:spin`, `:nudge`. |
@@ -158,6 +161,9 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not pass FAB `layout: :stack` to List or Collection, or List `layout: :key_value` to FAB or Collection. Collection `layout` is `:grid`, `:wrap`, or `:stack`. EmptyState `layout` is only `:wrap` or `:stack` for its action row. Do not pass Collection `:grid` or List `:key_value` to EmptyState.
 - Do not pass Hero `title_size` (`:md`, `:lg`, `:xl`, `:xxl`) to EmptyState. EmptyState `title_size` is `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:xxl` is `--text-2xl` there, not HeroTitle's largest step.
 - Do not pass EmptyState `title_size` to `description_size`. `description_size` is `:sm`, `:md`, `:lg`, or `:xl`. `:md` is `--text-base`. `:base` is not a description step.
+- Do not pass Heading `size: :"2xl"` to Section Title. Section Title `size` is `:lg`, `:md`, or `:sm`. Do not pass Heading `level:` to Page Title; that argument is `variant`.
+- Do not add `tone` or `color` on Heading or Text. Ink is `style: :default`, `:muted`, or `:primary`. Do not pass Badge `:success` to that `style`.
+- Do not pass Text `as: :h2`. Headings use `FlatPack::Heading::Component`. Do not pass Collection `:nav` or Flash `:toast` to Text `as`.
 - Do not pass EmptyState `size` (`:sm`, `:md`, `:lg`) to `icon_size` and expect the same glyph. `icon_size` is the IconComponent scale. `size: :md` draws a `:lg` icon unless `icon_size` is set.
 - Do not pass `graphic` to EmptyState, and do not pass `visual` and `media` together. Markup is `visual`. An image is `media`. `icon:` is the default when neither is set. A block replaces the icon.
 - Do not pass Grid `:stretch` or Hero `:left` to Button `align`. Button accepts `:center` and `:start`.

@@ -1,0 +1,116 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Heading",
+  subtitle: "A heading tag. Level is the rank. Size is the look."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :heading %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  heading_sizes = [
+    {size: :xs, label: "xs"},
+    {size: :sm, label: "sm"},
+    {size: :base, label: "base"},
+    {size: :lg, label: "lg"},
+    {size: :xl, label: "xl"},
+    {size: :"2xl", label: "2xl · default"},
+    {size: :"3xl", label: "3xl"},
+    {size: :"4xl", label: "4xl"},
+    {size: :"5xl", label: "5xl"}
+  ]
+%>
+
+<section class="mb-12" id="default">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Default",
+    anchor_link: true,
+    subtitle: "h2 at 2xl. Same visual step as Section Title size: :lg, without the wrapper."
+  ) %>
+
+  <%= render FlatPack::Heading::Component.new(text: "Verify your email") %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Heading::Component.new(
+        text: "Verify your email"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="rank-vs-look">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Rank vs look",
+    anchor_link: true,
+    subtitle: "An h1 can look small. An h3 can look large. The tag follows the outline."
+  ) %>
+
+  <div class="space-y-6">
+    <%= render FlatPack::Heading::Component.new(
+      text: "Message sent",
+      level: :h1,
+      size: :"2xl"
+    ) %>
+    <%= render FlatPack::Heading::Component.new(
+      text: "Clip stats",
+      level: :h2,
+      size: :lg
+    ) %>
+    <%= render FlatPack::Heading::Component.new(
+      text: "Quiet label",
+      level: :h3,
+      size: :sm,
+      style: :muted,
+      weight: :medium
+    ) %>
+  </div>
+</section>
+
+<section class="mb-12" id="sizes">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sizes",
+    anchor_link: true,
+    subtitle: "xs through 5xl. Cover type stays on Hero Title."
+  ) %>
+
+  <div class="space-y-6">
+    <% heading_sizes.each do |row| %>
+      <div>
+        <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]"><%= row[:label] %></p>
+        <%= render FlatPack::Heading::Component.new(
+          text: "Northlight collection",
+          size: row[:size]
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="levels">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Levels",
+    anchor_link: true,
+    subtitle: "h1 through h6 at the default 2xl size."
+  ) %>
+
+  <div class="space-y-4">
+    <% %i[h1 h2 h3 h4 h5 h6].each do |level| %>
+      <%= render FlatPack::Heading::Component.new(
+        text: "Heading #{level.to_s.upcase}",
+        level: level
+      ) %>
+    <% end %>
+  </div>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Section Title", href: "/demo/section_title"},
+  {text: "Page Title", href: "/demo/page_header"},
+  {text: "Hero Title", href: "/demo/hero_title"},
+  {text: "Text", href: "/demo/text"},
+  {text: "Type scale", href: "/demo/type_scale"}
+] %>

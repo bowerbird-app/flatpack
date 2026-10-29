@@ -8,7 +8,7 @@ Use Hero Title for a big cover line on its own — a press kit, a landing splash
 
 - Use `FlatPack::Hero::Component` when the headline sits in a landing hero with tagline, body, image, and actions. Hero `size: :display` (or `title_size:`) renders this component for you.
 - Use `FlatPack::PageTitle::Component` for in-app page headings (`font-bold`, `--page-title-h*-size`). Pass `size: :display` when a page heading should be cover type; that path also renders Hero Title.
-- Do not use Hero Title for section headings inside a page. Use `FlatPack::SectionTitle::Component`.
+- Do not use Hero Title for section headings inside a page. Use `FlatPack::SectionTitle::Component`. For a bare product-scale heading (`--text-5xl` and below), use `FlatPack::Heading::Component`.
 
 ## Class
 - Primary: `FlatPack::HeroTitle::Component`

@@ -83,7 +83,8 @@ module FlatPack
       {constant: :CONTENT_SCROLLS, kwargs: %i[content_scroll]},
       {constant: :TOP_NAV_WIDTHS, kwargs: %i[top_nav_width]},
       {constant: :SCROLLS, kwargs: %i[scroll]},
-      {constant: :HEIGHTS, kwargs: %i[height]}
+      {constant: :HEIGHTS, kwargs: %i[height]},
+      {constant: :WEIGHTS, kwargs: %i[weight]}
     ].freeze
 
     DOC_KEYS = {
@@ -104,8 +105,7 @@ module FlatPack
       "text_area" => "inputs",
       "text_input" => "inputs",
       "url_input" => "inputs",
-      "comments" => "comments-thread",
-      "text" => "text-stream"
+      "comments" => "comments-thread"
     }.freeze
 
     TYPE_RULES = [
@@ -230,13 +230,31 @@ module FlatPack
       end
 
       def doc_path_for(relative)
-        family = relative.split("/").first
-        doc_key = DOC_KEYS.fetch(family, family)
-        dash_key = doc_key.tr("_", "-")
-        [
-          FlatPack::Engine.root.join("docs/components/#{doc_key}.md"),
-          FlatPack::Engine.root.join("docs/components/#{dash_key}.md")
-        ].find { |candidate| File.exist?(candidate) }
+        stem = relative.sub(%r{/component\.rb\z}, "").sub(/\.rb\z/, "")
+        segments = stem.split("/")
+        lookup_keys(segments).each do |key|
+          dash_key = key.tr("_", "-")
+          path = [
+            FlatPack::Engine.root.join("docs/components/#{key}.md"),
+            FlatPack::Engine.root.join("docs/components/#{dash_key}.md")
+          ].find { |candidate| File.exist?(candidate) }
+          return path if path
+        end
+        nil
+      end
+
+      def lookup_keys(segments)
+        keys = []
+        segments.length.downto(1) do |count|
+          slice = segments.first(count)
+          joined = slice.join("_")
+          keys << joined
+          next unless count == 1
+
+          mapped = DOC_KEYS[slice.first]
+          keys << mapped if mapped.present? && mapped != joined
+        end
+        keys.uniq
       end
 
       def first_paragraph_from_markdown(path)

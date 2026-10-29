@@ -51,6 +51,8 @@ class PagesController < ApplicationController
     {action: /\Aread_more\z/, title: "Read more", patterns: [/\A--read-more-/]},
     {action: /\Acards(_.*)?\z/, title: "Cards", patterns: [/\A--card-/]},
     {action: /\Ahero_title/, title: "Hero Title", patterns: [/\A--hero-title-/, /\A--display-/]},
+    {action: /\Aheading\z/, title: "Heading", patterns: [/\A--(font-|text-|surface-content|surface-muted-content|color-primary)/]},
+    {action: /\Atext\z/, title: "Text", patterns: [/\A--(font-|text-|surface-content|surface-muted-content|color-primary)/]},
     {action: /\Ahero(_.*)?\z/, title: "Hero", patterns: [/\A--hero-/]},
     {action: /\Atype_scale\z/, title: "Type", patterns: [/\A--(font-|text-|leading-|display-)/]},
     {action: /\Abreadcrumbs\z/, title: "Breadcrumbs", patterns: [/\A--breadcrumb-/]},
@@ -671,6 +673,12 @@ class PagesController < ApplicationController
   end
 
   def type_scale
+  end
+
+  def heading
+  end
+
+  def text
   end
 
   def section_title

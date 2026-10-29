@@ -19,6 +19,8 @@ module FlatPack
       assert_includes names, "Fieldset::Component"
       assert_includes names, "TrashButton::Component"
       assert_includes names, "Content::Component"
+      assert_includes names, "Heading::Component"
+      assert_includes names, "Text::Component"
       assert_includes names, "List::Item"
       assert_includes names, "Timeline::Item"
       assert_includes names, "ChartButtons::ButtonComponent"
@@ -447,6 +449,42 @@ module FlatPack
       assert_equal "Text::Stream::Component", payload.fetch(:name)
       assert_includes payload.fetch(:description), "caret"
       refute_includes payload.fetch(:description), "No dedicated documentation"
+    end
+
+    test "show Text documents body copy without stealing Stream docs" do
+      payload = FlatPack::ComponentCatalog.show("Text::Component")
+      size = parameter_named(payload, "size")
+      style = parameter_named(payload, "style")
+      weight = parameter_named(payload, "weight")
+      as = parameter_named(payload, "as")
+
+      assert_equal "Text::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "body copy"
+      refute_includes payload.fetch(:description), "caret"
+      assert_equal %w[xs sm base lg xl 2xl], size.fetch(:enum)
+      assert_equal "base", size.fetch(:default)
+      assert_equal %w[default muted primary], style.fetch(:enum)
+      assert_equal %w[normal medium semibold bold], weight.fetch(:enum)
+      assert_equal "normal", weight.fetch(:default)
+      assert_equal %w[p span div], as.fetch(:enum)
+      assert_equal "p", as.fetch(:default)
+    end
+
+    test "show Heading binds independent level and size" do
+      payload = FlatPack::ComponentCatalog.show("Heading::Component")
+      size = parameter_named(payload, "size")
+      level = parameter_named(payload, "level")
+      style = parameter_named(payload, "style")
+      weight = parameter_named(payload, "weight")
+
+      assert_equal "Heading::Component", payload.fetch(:name)
+      assert_includes payload.fetch(:description), "heading tag"
+      assert_equal %w[xs sm base lg xl 2xl 3xl 4xl 5xl], size.fetch(:enum)
+      assert_equal "2xl", size.fetch(:default)
+      assert_equal %w[h1 h2 h3 h4 h5 h6], level.fetch(:enum)
+      assert_equal "h2", level.fetch(:default)
+      assert_equal %w[default muted primary], style.fetch(:enum)
+      assert_equal "semibold", weight.fetch(:default)
     end
 
     test "show returns nil for unknown names and accepts URL aliases" do

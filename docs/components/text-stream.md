@@ -4,7 +4,7 @@
 Type a line of copy once it scrolls into view, with a caret. The full text stays in the DOM. The typing is decorative.
 
 ## When to use
-Use it for a chat reply, a caption, or any short line that should arrive as if it were being written. Compose it inside a chat message. Do not add a `stream:` flag to the message. Skip it for long articles.
+Use it for a chat reply, a caption, or any short line that should arrive as if it were being written. Compose it inside a chat message. Do not add a `stream:` flag to the message. Skip it for long articles. Static body copy is `FlatPack::Text::Component`.
 
 ## Class
 - Primary: `FlatPack::Text::Stream::Component`

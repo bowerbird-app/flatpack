@@ -1,0 +1,111 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Text",
+  subtitle: "A line of copy. Size, ink, and weight follow kit tokens."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :text %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  text_sizes = [
+    {size: :xs, label: "xs"},
+    {size: :sm, label: "sm"},
+    {size: :base, label: "base · default"},
+    {size: :lg, label: "lg"},
+    {size: :xl, label: "xl"},
+    {size: :"2xl", label: "2xl"}
+  ]
+%>
+
+<section class="mb-12" id="default">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Default",
+    anchor_link: true,
+    subtitle: "A paragraph at base size and surface ink."
+  ) %>
+
+  <%= render FlatPack::Text::Component.new(text: "We sent a link to your inbox.") %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: <<~CODE
+      #{erb_output_open} render FlatPack::Text::Component.new(
+        text: "We sent a link to your inbox."
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="with-heading">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "With a heading",
+    anchor_link: true,
+    subtitle: "The pairing hosts reach for instead of a raw h1 and a grey p."
+  ) %>
+
+  <div class="space-y-2">
+    <%= render FlatPack::Heading::Component.new(text: "Verify your email") %>
+    <%= render FlatPack::Text::Component.new(
+      text: "The link expires in 30 minutes.",
+      size: :sm,
+      style: :muted
+    ) %>
+  </div>
+</section>
+
+<section class="mb-12" id="sizes">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Sizes",
+    anchor_link: true,
+    subtitle: "xs through 2xl. Bigger type on a heading tag is Heading."
+  ) %>
+
+  <div class="space-y-4">
+    <% text_sizes.each do |row| %>
+      <div>
+        <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]"><%= row[:label] %></p>
+        <%= render FlatPack::Text::Component.new(
+          text: "The walnut stool ships Friday.",
+          size: row[:size]
+        ) %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="ink">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Ink",
+    anchor_link: true,
+    subtitle: "style: is the colour token. Not tone."
+  ) %>
+
+  <div class="space-y-2">
+    <%= render FlatPack::Text::Component.new(text: "Default ink on the surface.") %>
+    <%= render FlatPack::Text::Component.new(text: "Muted helper under a title.", style: :muted) %>
+    <%= render FlatPack::Text::Component.new(text: "Primary accent for a status.", style: :primary, weight: :medium) %>
+  </div>
+</section>
+
+<section class="mb-12" id="inline">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Inline",
+    anchor_link: true,
+    subtitle: "as: :span sits inside a sentence."
+  ) %>
+
+  <p class="text-[length:var(--text-base)] text-[var(--surface-content-color)]">
+    Status:
+    <%= render FlatPack::Text::Component.new(text: "Saved", as: :span, size: :sm, weight: :medium, style: :primary) %>
+  </p>
+</section>
+
+<%= render "shared/related_demos", links: [
+  {text: "Heading", href: "/demo/heading"},
+  {text: "Content", href: "/demo/text/content"},
+  {text: "Quote", href: "/demo/text/quote"},
+  {text: "Type scale", href: "/demo/type_scale"}
+] %>
