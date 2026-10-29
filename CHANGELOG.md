@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Button accepts `disabled:`. `false` is the default and keeps today’s markup. `true` sets the `disabled` attribute on a `<button>` and mutes it with the same opacity as loading, without the spinner. `nil` and `false` mean enabled. Link buttons with `href` keep their `href`. `loading: true` still disables as before.
+- `FlatPack::Picker::Component` accepts `variant: :flush` on the inline shell. That look is borderless, transparent, unpadded, and unrounded (`border-0 bg-transparent shadow-none rounded-none p-0`), plus `py-0` on the body. Omit it, or pass `variant: :default`, and the existing panel chrome stays. Modal pickers ignore `variant` and keep Modal chrome. Unknown values raise `ArgumentError`.
+
+### Upgrade notes
+- Additive. Existing picker calls keep the bordered inline panel. Pass `variant: :flush` instead of host `!border-0 !bg-transparent !shadow-none !rounded-none !p-0` overrides when the picker is embedded in another surface. Rebuild host Tailwind so `border-0`, `bg-transparent`, `shadow-none`, `rounded-none`, `p-0`, and `py-0` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 
 ### Changed
 

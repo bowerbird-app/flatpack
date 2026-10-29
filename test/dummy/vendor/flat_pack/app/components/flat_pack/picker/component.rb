@@ -10,6 +10,7 @@ module FlatPack
       OUTPUT_MODES = %i[event field].freeze
       RESULTS_LAYOUTS = %i[list grid].freeze
       FORM_VALUE_MODES = %i[id ids json].freeze
+      VARIANTS = %i[default flush].freeze
       ACCEPTED_KINDS = %w[image file record].freeze
 
       def initialize(
@@ -39,6 +40,7 @@ module FlatPack
         modal_body_height_mode: :fixed,
         modal_body_height: "clamp(20rem, 55vh, 30rem)",
         form: nil,
+        variant: :default,
         **system_arguments
       )
         super(**system_arguments)
@@ -67,6 +69,7 @@ module FlatPack
         @modal_body_height_mode = modal_body_height_mode
         @modal_body_height = modal_body_height
         @form = normalize_form(form)
+        @variant = variant.to_sym
         @items = normalize_items(items)
 
         validate_id!
@@ -74,6 +77,7 @@ module FlatPack
         validate_search_mode!
         validate_output_mode!
         validate_results_layout!
+        validate_variant!
         validate_search_configuration!
         validate_search_endpoint!(search_endpoint) if search_endpoint.present?
         validate_form!
@@ -280,10 +284,22 @@ module FlatPack
       def inline_attributes
         merge_attributes(
           id: @id,
-          class: inline_wrapper_classes
+          class: inline_wrapper_classes,
+          data: {
+            flat_pack_picker_variant: @variant
+          }
         )
       end
 
+      def flush?
+        @variant == :flush
+      end
+
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "p-4" "sm:p-6" "bg-[var(--modal-surface-color)]" "rounded-[var(--radius-lg)]"
+      # "shadow-lg" "border" "border-[var(--modal-border-color)]"
+      # "p-0" "py-0" "bg-transparent" "rounded-none" "shadow-none" "border-0"
       def inline_wrapper_classes
         classes(
           "relative",
@@ -293,14 +309,30 @@ module FlatPack
           "w-full",
           "overflow-hidden",
           FlatPack::Modal::Component::SIZES.fetch(@size),
-          "p-4",
-          "sm:p-6",
-          "bg-[var(--modal-surface-color)]",
-          "rounded-[var(--radius-lg)]",
-          "shadow-lg",
-          "border",
-          "border-[var(--modal-border-color)]"
+          *inline_shell_chrome_classes
         )
+      end
+
+      def inline_shell_chrome_classes
+        if flush?
+          [
+            "p-0",
+            "bg-transparent",
+            "rounded-none",
+            "shadow-none",
+            "border-0"
+          ]
+        else
+          [
+            "p-4",
+            "sm:p-6",
+            "bg-[var(--modal-surface-color)]",
+            "rounded-[var(--radius-lg)]",
+            "shadow-lg",
+            "border",
+            "border-[var(--modal-border-color)]"
+          ]
+        end
       end
 
       def inline_body_attributes
@@ -318,7 +350,7 @@ module FlatPack
           "min-h-0",
           (@modal_body_height_mode == :auto) ? "flex-1" : "shrink-0",
           "overflow-y-auto",
-          "py-4",
+          flush? ? "py-0" : "py-4",
           "text-sm",
           "text-[var(--modal-body-color)]"
         )
@@ -529,6 +561,12 @@ module FlatPack
         return if RESULTS_LAYOUTS.include?(@results_layout)
 
         raise ArgumentError, "Invalid results_layout: #{@results_layout}. Must be one of: #{RESULTS_LAYOUTS.join(", ")}."
+      end
+
+      def validate_variant!
+        return if VARIANTS.include?(@variant)
+
+        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}."
       end
 
       def validate_search_configuration!

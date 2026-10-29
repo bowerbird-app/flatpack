@@ -31,6 +31,7 @@ Use Picker when users need to choose image assets, files, or application records
 | `output_mode` | Symbol | `:event` | No | Allowed: `:event`, `:field`. |
 | `output_target` | String or nil | `nil` | No | CSS selector to receive JSON output when `output_mode: :field`. |
 | `form` | Hash or nil | `nil` | No | Optional built-in Rails form wrapper. Supports `url`, `method`, `scope`, `field`, `value_mode`, `value_path`, and `turbo`. |
+| `variant` | Symbol | `:default` | No | Allowed: `:default`, `:flush`. Inline shells only. `:flush` drops the panel chrome (border, fill, radius, shadow, padding) so the picker can sit inside another surface. Modal pickers ignore it and keep Modal chrome. Anything else raises `ArgumentError`. |
 | `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
 | `empty_text` | String | `"No assets found"` | No | Empty-results text. |
 | `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
@@ -71,6 +72,7 @@ List rows are rendered through four display regions derived from item data rathe
 | `output_mode: :field` | Also writes selected JSON to hidden field and optional `output_target`. |
 | `form: { ... }` | Wraps the picker in a standard Rails form and submits hidden inputs built from the current selection. |
 | `modal: false` | Renders the picker inline without a modal backdrop or modal close behavior. Inline picker shells shrink-wrap their content and only use `modal_body_height` as a maximum body height cap. This is the default. |
+| `variant: :flush` | Inline shell with no border, fill, radius, shadow, or padding (`border-0 bg-transparent shadow-none rounded-none p-0`). Use this instead of host `!` class overrides when the picker is embedded in a parent panel. Modal mode still uses Modal chrome. |
 | `selection_mode: :single, auto_confirm: true` | Selecting an item immediately syncs field output, emits `flat-pack:picker:confirm`, and closes the modal when modal-backed. |
 
 ## Built-in form config
@@ -100,6 +102,21 @@ Each picker item must include `name`. The component uses `thumbnail_url` and `ri
   search_mode: :local,
   selection_mode: :multiple,
   context: { target: "composer" }
+) %>
+```
+
+### Flush inline picker
+
+Use `variant: :flush` when the picker sits inside another surface (a moveable panel, a card body, a sidebar) and should not draw its own panel chrome.
+
+```erb
+<%= render FlatPack::Picker::Component.new(
+  id: "embedded-asset-picker",
+  items: @assets,
+  variant: :flush,
+  search_mode: :local,
+  selection_mode: :single,
+  auto_confirm: true
 ) %>
 ```
 
