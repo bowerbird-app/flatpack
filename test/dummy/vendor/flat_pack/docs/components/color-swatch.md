@@ -34,6 +34,38 @@ None.
 - Selected vs idle: selected shows a ring on the circle.
 - Click the circle to open the native `<input type="color">` dialog directly — no intermediate panel.
 
+## Public reset
+The native colour picker cannot be empty. `reset` and `clear` restore the swatch face and picker value from connect time. They are aliases.
+
+Hosts must not reach into the colour input or swatch face. Dispatch a bubbling event on the Color Swatch root (`[data-controller='flat-pack--color-swatch']`), or call the Stimulus method.
+
+| Trigger | What happens |
+|---|---|
+| Stimulus `reset` / `clear` | Restores the connect-time picker value and swatch face, then fires `color-swatch:change`. |
+| Event `color-swatch:reset` | Same as `reset`. Wired on the root as `color-swatch:reset->flat-pack--color-swatch#reset`. |
+| Event `color-swatch:clear` | Same as `clear`. Wired on the root as `color-swatch:clear->flat-pack--color-swatch#clear`. |
+| `event.detail.value` | Optional CSS colour. Sets both the picker and the face to that colour instead of the connect-time original. |
+
+```js
+const swatch = document.querySelector("[data-color-swatch='accent']")
+swatch.dispatchEvent(new CustomEvent("color-swatch:reset", { bubbles: true }))
+swatch.dispatchEvent(new CustomEvent("color-swatch:reset", {
+  bubbles: true,
+  detail: { value: "#321100" }
+}))
+```
+
+```erb
+<%= render FlatPack::ColorSwatch::Component.new(
+  color: "#321100",
+  text: "Accent",
+  data: { color_swatch: "accent" }
+) %>
+<button type="button" data-action="click->host-theme#resetAccent">Reset</button>
+```
+
+A sibling button is not inside the Color Swatch controller. Dispatch `color-swatch:reset` on the swatch root from the host controller. A descendant control can use `click->flat-pack--color-swatch#reset` or `#clear` directly.
+
 ## Example
 ```erb
 <div class="flex flex-wrap items-start gap-[var(--stack-gap-md)]">
@@ -66,4 +98,5 @@ None.
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
 - Stimulus controllers: `flat-pack--color-swatch`, and `flat-pack--tooltip` when tooltips are enabled.
+- Public actions: `reset`, `clear`. Public events in: `color-swatch:reset`, `color-swatch:clear`. Public event out: `color-swatch:change`.
 - Composes `FlatPack::Tooltip::Component` for the name on hover/focus.
