@@ -15,7 +15,7 @@ Use Collection when the items are already FlatPack components — a press-kit me
 | `as` | Symbol | `:list` | no | `:list` renders the `<ul>` alone. `:nav` wraps it in `<nav aria-label="…">` and requires `label:`. |
 | `label` | String, nil | `nil` | with `as: :nav` | Accessible name for the nav. Required when `as` is `:nav`. Not allowed otherwise. |
 | `layout` | Symbol | `:stack` | no | `:grid` (auto-fill, items stretch to equal height), `:wrap` (inline flex-wrap), or `:stack` (vertical). |
-| `gap` | Symbol | `:md` | no | `:sm`, `:md`, or `:lg`. Same sizes as Grid: `gap-2`, `gap-4`, `gap-6`. |
+| `gap` | Symbol | `:md` | no | `:sm`, `:md`, or `:lg`, emitted as `gap-2`, `gap-4`, and `gap-6`. Grid, Stack, and Cluster use `--stack-gap-*` instead. |
 | `min_item_width` | String | `"14rem"` | no | CSS length for `:grid` only. Sets `--fp-collection-min-item-width`. The column class stays the literal `grid-cols-[repeat(auto-fill,minmax(var(--fp-collection-min-item-width),1fr))]`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the outer element (`nav` when `as: :nav`, otherwise the `ul`). No colour prop and no item class. |
 

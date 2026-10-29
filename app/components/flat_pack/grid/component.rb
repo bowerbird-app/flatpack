@@ -73,7 +73,7 @@ module FlatPack
 
       def cols_classes
         COLUMN_PRESETS.fetch(@cols).map do |breakpoint, count|
-          FlatPack::Shared::Flex.utility(breakpoint, "grid-cols-#{count}")
+          FlatPack::Shared::Breakpoints.utility(breakpoint, "grid-cols-#{count}")
         end
       end
 

@@ -39,7 +39,7 @@ module FlatPack
       end
 
       def span_classes
-        return if @span.nil? || @omit_bare_span
+        return if @span.nil?
 
         @span.map do |breakpoint, count|
           name = (count == :full) ? "col-span-full" : "col-span-#{count}"
@@ -68,11 +68,12 @@ module FlatPack
       def bare_integer_span(count)
         counts = columns_by_breakpoint
         if counts.nil?
-          @omit_bare_span = true
-          return {base: count}
-        end
+          unless SPAN_COUNTS.cover?(count)
+            raise ArgumentError, "Invalid span: #{count.inspect}. Must be an integer from 1 to 12, or :full."
+          end
 
-        @omit_bare_span = false
+          return
+        end
 
         start = FlatPack::Shared::Breakpoints::NAMES.find { |name| counts[name].to_i >= count }
         if start

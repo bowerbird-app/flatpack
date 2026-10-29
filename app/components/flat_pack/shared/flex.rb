@@ -42,10 +42,6 @@ module FlatPack
 
         raise ArgumentError, "Invalid align: #{align}. Must be one of: #{ALIGNS.keys.join(", ")}"
       end
-
-      def utility(breakpoint, class_name)
-        Breakpoints.utility(breakpoint, class_name)
-      end
     end
   end
 end
