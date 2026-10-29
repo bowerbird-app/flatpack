@@ -132,11 +132,19 @@ module FlatPack
         refute_selector "[data-flat-pack--color-swatch-target='preview']"
       end
 
-      def test_wires_public_reset_and_clear_events
+      def test_wires_public_reset_with_server_hex
         render_inline(Component.new(color: "#123456", text: "Accent"))
 
+        assert_selector "[data-flat-pack--color-swatch-color-value='#123456']"
         assert_selector "[data-action*='color-swatch:reset->flat-pack--color-swatch#reset']"
-        assert_selector "[data-action*='color-swatch:clear->flat-pack--color-swatch#clear']"
+        refute_selector "[data-action*='color-swatch:clear']"
+      end
+
+      def test_reset_hex_follows_the_picker_not_a_css_face
+        render_inline(Component.new(color: "var(--color-primary)", value: "#ABCDEF", text: "Primary"))
+
+        assert_selector "[data-flat-pack--color-swatch-color-value='#abcdef']"
+        assert_includes page.native.to_html, "background-color: var(--color-primary)"
       end
 
       def test_keeps_host_root_action_with_reset_events
@@ -144,7 +152,7 @@ module FlatPack
 
         assert_selector "[data-action*='click->host#ping']"
         assert_selector "[data-action*='color-swatch:reset->flat-pack--color-swatch#reset']"
-        assert_selector "[data-action*='color-swatch:clear->flat-pack--color-swatch#clear']"
+        refute_selector "[data-action*='color-swatch:clear']"
       end
 
       def test_uses_id_for_input

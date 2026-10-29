@@ -5,7 +5,7 @@ require "open3"
 
 module FlatPack
   class ColorSwatchControllerTest < ActiveSupport::TestCase
-    test "node tests cover update reset and clear" do
+    test "node tests cover update and reset" do
       test_file = FlatPack::Engine.root.join("test/javascript/color_swatch_controller_test.js")
       stdout, status = Open3.capture2e("node", "--test", test_file.to_s)
 

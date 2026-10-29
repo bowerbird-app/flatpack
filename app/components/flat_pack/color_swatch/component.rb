@@ -14,10 +14,7 @@ module FlatPack
       }.freeze
 
       DEFAULT_COLOR = "#000000"
-      RESET_ACTIONS = [
-        "color-swatch:reset->flat-pack--color-swatch#reset",
-        "color-swatch:clear->flat-pack--color-swatch#clear"
-      ].join(" ").freeze
+      RESET_ACTIONS = "color-swatch:reset->flat-pack--color-swatch#reset"
 
       def initialize(
         color:,
@@ -60,7 +57,8 @@ module FlatPack
           class: root_classes,
           data: {
             controller: "flat-pack--color-swatch",
-            selected: @selected.to_s
+            selected: @selected.to_s,
+            flat_pack__color_swatch_color_value: picker_hex
           }
         ).except(:id)
         attrs[:data] = merge_data_attributes(attrs[:data], {action: RESET_ACTIONS})
@@ -179,6 +177,13 @@ module FlatPack
       def input_value
         candidate = @value.presence || @color
         return candidate if FlatPack::AttributeSanitizer::CSS_HEX_COLOR_PATTERN.match?(candidate)
+
+        DEFAULT_COLOR
+      end
+
+      def picker_hex
+        candidate = input_value.to_s.downcase
+        return candidate if candidate.match?(/\A#[0-9a-f]{6}\z/)
 
         DEFAULT_COLOR
       end

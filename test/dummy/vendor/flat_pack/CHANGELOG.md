@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::Text::Component` renders body copy. `size:` is `:xs` through `:"2xl"` (default `:base`). `style:` and `weight:` use the same tokens as Heading (`weight` defaults to `:normal`). `as:` is `:p` (default), `:span`, or `:div`.
 - Section Title, Page Title, Hero Title, Content, and Empty State still cover section chrome, page chrome, cover type, article HTML, and empty-state titles. Use Heading when a host needs a plain heading tag with an independent size. Use Text when a host needs a line of kit copy. Demos: `/demo/heading`, `/demo/text`.
 - `FlatPack::Embed::Component` frames a host iframe (`src:`, required `title:`) at a Card-media aspect ratio (default `16/9`). `loading:` defaults to `lazy`. `referrerpolicy:` defaults to `strict-origin-when-cross-origin`. Optional `allow:`, `sandbox:`, `allowfullscreen:`, and `caption:` (or a block). Demo: `/demo/embed`.
-- Color Swatch exposes a public reset for the native colour picker. Stimulus `reset` and `clear` restore the connect-time colour. Hosts dispatch `color-swatch:reset` or `color-swatch:clear` on the swatch root, or pass `detail.value` to set a colour. Do not reach into the input or swatch face.
+- Color Swatch exposes a public reset for the native colour picker. Stimulus `reset` restores the server-rendered `#rrggbb` on `data-flat-pack--color-swatch-color-value`. It does not read the input value at connect time. Hosts dispatch `color-swatch:reset` on the swatch root, or pass `detail.value` as `#rrggbb`. Reset fires `input` and `change` on the colour input, then `color-swatch:change`. Do not reach into the input or swatch face.
 
 ### Upgrade notes
 - Additive. Existing picker calls keep the bordered inline panel. Pass `variant: :flush` instead of host `!border-0 !bg-transparent !shadow-none !rounded-none !p-0` overrides when the picker is embedded in another surface. Rebuild host Tailwind so `border-0`, `bg-transparent`, `shadow-none`, `rounded-none`, `p-0`, and `py-0` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
@@ -32,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rebuild host Tailwind so `text-[length:var(--text-xs)]` through `text-[length:var(--text-5xl)]`, `font-normal` / `font-medium` / `font-semibold` / `font-bold`, and `text-[var(--surface-content-color)]` / `text-[var(--surface-muted-content-color)]` / `text-[var(--color-primary)]` exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 - Additive. Render `FlatPack::Embed::Component` for maps, clips, and other host iframe URLs. Flatpack does not build provider URLs.
 - Rebuild host Tailwind so `aspect-[16/9]`, `aspect-[4/3]`, `aspect-square`, and `rounded-[var(--media-radius)]` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
-- Additive. Existing Color Swatch markup and `color-swatch:change` stay the same. To reset without touching internals, dispatch `color-swatch:reset` on `[data-controller='flat-pack--color-swatch']`, or call `reset` / `clear` on `flat-pack--color-swatch`. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Additive. Existing Color Swatch markup and `color-swatch:change` stay the same. To reset without touching internals, dispatch `color-swatch:reset` on `[data-controller='flat-pack--color-swatch']`, or call `reset` on `flat-pack--color-swatch`. `detail.value` must be `#rrggbb`. A CSS colour on `color:` still paints the first face. Reset returns the picker hex, not that CSS colour. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
 
 ### Changed
 - ComponentCatalog still maps the `text` family to `docs/components/text-stream.md`. `Text::Component` is the one override (`DOC_PATH_OVERRIDES`) and reads `docs/components/text.md`. Nested billing, button, comments, menu, and sidebar entries still use the family file.
@@ -61,9 +61,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A prepend that still overrides `quick_range_presets` and `preset_range_for` keeps working. Prefer `presets:` for new hosts.
 - Reload the gem. Rebuild host JavaScript so the date picker controller picks up `last_30_days` and `presetRanges`. Do not rebuild Tailwind. Do not rerun the install generator.
 - Redeploy so `meta.gem_version` shows `0.1.330`.
-
-### Upgrade notes
-- Additive. Existing Color Swatch markup and `color-swatch:change` stay the same. To reset without touching internals, dispatch `color-swatch:reset` on `[data-controller='flat-pack--color-swatch']`, or call `reset` / `clear` on `flat-pack--color-swatch`. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
 
 ## [0.1.329] - 2026-10-28
 
