@@ -105,7 +105,12 @@ module FlatPack
       "text_area" => "inputs",
       "text_input" => "inputs",
       "url_input" => "inputs",
-      "comments" => "comments-thread"
+      "comments" => "comments-thread",
+      "text" => "text-stream"
+    }.freeze
+
+    DOC_PATH_OVERRIDES = {
+      "text/component.rb" => "text"
     }.freeze
 
     TYPE_RULES = [
@@ -230,31 +235,13 @@ module FlatPack
       end
 
       def doc_path_for(relative)
-        stem = relative.sub(%r{/component\.rb\z}, "").sub(/\.rb\z/, "")
-        segments = stem.split("/")
-        lookup_keys(segments).each do |key|
-          dash_key = key.tr("_", "-")
-          path = [
-            FlatPack::Engine.root.join("docs/components/#{key}.md"),
-            FlatPack::Engine.root.join("docs/components/#{dash_key}.md")
-          ].find { |candidate| File.exist?(candidate) }
-          return path if path
-        end
-        nil
-      end
-
-      def lookup_keys(segments)
-        keys = []
-        segments.length.downto(1) do |count|
-          slice = segments.first(count)
-          joined = slice.join("_")
-          keys << joined
-          next unless count == 1
-
-          mapped = DOC_KEYS[slice.first]
-          keys << mapped if mapped.present? && mapped != joined
-        end
-        keys.uniq
+        family = relative.split("/").first
+        doc_key = DOC_PATH_OVERRIDES[relative] || DOC_KEYS.fetch(family, family)
+        dash_key = doc_key.tr("_", "-")
+        [
+          FlatPack::Engine.root.join("docs/components/#{doc_key}.md"),
+          FlatPack::Engine.root.join("docs/components/#{dash_key}.md")
+        ].find { |candidate| File.exist?(candidate) }
       end
 
       def first_paragraph_from_markdown(path)
