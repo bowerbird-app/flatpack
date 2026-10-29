@@ -1,0 +1,84 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Cluster",
+  subtitle: "A wrapping row. Same gap scale as Grid. Replaces flex flex-wrap gap-2."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :cluster %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+  tags = %w[Print Screen Social Northlight Harbour Crew Quotes Fonts Guidelines]
+%>
+
+<section class="mb-12" id="default">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Actions that wrap",
+    anchor_link: true,
+    subtitle: "Two buttons in a row. On a narrow column they still sit on one line until they cannot."
+  ) %>
+
+  <%= render FlatPack::Cluster::Component.new(gap: :sm) do %>
+    <%= render FlatPack::Button::Component.new(text: "Save", style: :primary) %>
+    <%= render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Cluster::Component.new(gap: :sm) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Button::Component.new(text: "Save", style: :primary) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Button::Component.new(text: "Cancel", style: :secondary) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="wrap">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Badges in a narrow box",
+    anchor_link: true,
+    subtitle: "The cluster wraps. Overflow Row would scroll instead."
+  ) %>
+
+  <div class="max-w-sm rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] p-4">
+    <%= render FlatPack::Cluster::Component.new(gap: :sm) do %>
+      <% tags.each do |tag| %>
+        <%= render FlatPack::Badge::Component.new(text: tag, size: :sm) %>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
+<section class="mb-12" id="justify">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Justify between",
+    anchor_link: true,
+    subtitle: "Title on the left, actions on the right. The cluster still wraps if the row is tight."
+  ) %>
+
+  <%= render FlatPack::Cluster::Component.new(gap: :sm, justify: :between, class: "w-full") do %>
+    <span class="text-lg font-semibold text-[var(--surface-content-color)]">Take 14</span>
+    <%= render FlatPack::Cluster::Component.new(gap: :sm) do %>
+      <%= render FlatPack::Button::Component.new(text: "Edit", style: :secondary) %>
+      <%= render FlatPack::Button::Component.new(text: "Share", style: :primary) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Cluster::Component.new(gap: :sm, justify: :between, class: "w-full") do #{erb_tag_close}
+        &lt;span class="text-lg font-semibold"&gt;Take 14&lt;/span&gt;
+        #{erb_output_open} render FlatPack::Cluster::Component.new(gap: :sm) do #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Edit", style: :secondary) #{erb_tag_close}
+          #{erb_output_open} render FlatPack::Button::Component.new(text: "Share", style: :primary) #{erb_tag_close}
+        #{erb_output_open} end #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>

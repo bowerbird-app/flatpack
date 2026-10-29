@@ -4,7 +4,7 @@
 Lay out block content in responsive CSS grid columns with configurable gaps and alignment.
 
 ## When to use
-Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and a shared row height. Use `Masonry` when portraits and landscapes should keep their own shape and stack without empty holes.
+Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and a shared row height. Use `Stack` for a single vertical column. Use `Cluster` for a wrapping horizontal row. Use `Masonry` when portraits and landscapes should keep their own shape and stack without empty holes.
 
 ## Class
 - Primary: `FlatPack::Grid::Component`

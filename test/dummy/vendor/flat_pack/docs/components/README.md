@@ -46,6 +46,7 @@ drawer | FlatPack::Drawer::Component | docs/components/drawer.md
 code_block | FlatPack::CodeBlock::Component | docs/components/code-block.md
 collapse | FlatPack::Collapse::Component | docs/components/collapse.md
 collection | FlatPack::Collection::Component | docs/components/collection.md
+cluster | FlatPack::Cluster::Component | docs/components/cluster.md
 collage | FlatPack::Collage::Component | docs/components/collage.md
 collection_editor | FlatPack::CollectionEditor::Component | docs/components/collection-editor.md
 combobox | FlatPack::Combobox::Component | docs/components/combobox.md
@@ -112,6 +113,7 @@ sidebar_layout | FlatPack::SidebarLayout::Component | docs/components/sidebar_la
 skip_link | FlatPack::SkipLink::Component | docs/components/skip-link.md
 skeleton | FlatPack::Skeleton::Component | docs/components/skeleton.md
 spinner | FlatPack::Spinner::Component | docs/components/spinner.md
+stack | FlatPack::Stack::Component | docs/components/stack.md
 sortable_tables | FlatPack::Table::Component | docs/components/sortable-tables.md
 sortable_tables_examples | FlatPack::Table::Component | docs/components/sortable-tables-examples.md
 stepper | FlatPack::Stepper::Component | docs/components/stepper.md

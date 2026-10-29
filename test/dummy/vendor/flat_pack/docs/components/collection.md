@@ -4,7 +4,7 @@
 Lay out a list of items in a grid, a wrapping row, or a vertical stack, without painting them.
 
 ## When to use
-Use Collection when the items are already FlatPack components — a press-kit menu of buttons, or a wrap of badges and chips. Use `Grid` for block content that is not a list. Use `List` for rows with icons, keys, or selection.
+Use Collection when the items are already FlatPack components — a press-kit menu of buttons, or a wrap of badges and chips. Use `Stack` or `Cluster` for block or inline content that is not a list. Use `Grid` for block content in columns. Use `List` for rows with icons, keys, or selection.
 
 ## Class
 - Primary: `FlatPack::Collection::Component`

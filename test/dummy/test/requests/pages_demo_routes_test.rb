@@ -55,6 +55,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/overflow_row
     /demo/read_more
     /demo/collection
+    /demo/stack
+    /demo/cluster
     /demo/divider
     /demo/alerts
     /demo/cards

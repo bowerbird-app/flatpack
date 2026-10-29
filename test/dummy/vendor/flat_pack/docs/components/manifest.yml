@@ -259,6 +259,7 @@ components:
       - FlatPack::ColorSwatch::Component
       - FlatPack::FontSwatch::Component
       - FlatPack::ChipGroup::Component
+      - FlatPack::Cluster::Component
       - FlatPack::Grid::Component
     status: documented
 
@@ -307,6 +308,17 @@ components:
       - FlatPack::Button::Component
       - FlatPack::Badge::Component
       - FlatPack::Chip::Component
+    status: documented
+
+  - key: cluster
+    title: Cluster
+    doc: docs/components/cluster.md
+    primary_class: FlatPack::Cluster::Component
+    related_classes:
+      - FlatPack::Stack::Component
+      - FlatPack::OverflowRow::Component
+      - FlatPack::Collection::Component
+      - FlatPack::ChipGroup::Component
     status: documented
 
   - key: collection_editor
@@ -801,6 +813,16 @@ components:
     title: Spinner
     doc: docs/components/spinner.md
     primary_class: FlatPack::Spinner::Component
+    status: documented
+
+  - key: stack
+    title: Stack
+    doc: docs/components/stack.md
+    primary_class: FlatPack::Stack::Component
+    related_classes:
+      - FlatPack::Cluster::Component
+      - FlatPack::Grid::Component
+      - FlatPack::Collection::Component
     status: documented
 
   - key: stepper

@@ -176,6 +176,15 @@ class DemoCatalog
             {title: "Movable Cards", search_title: "Grid: Movable Cards", path: "/demo/grid/movable_cards", description: "Draggable card grid with persisted ordering", icon: :chevron_down}
           ]
         },
+        {
+          type: :group,
+          title: "Stack & Cluster",
+          icon: :dashboard,
+          children: [
+            {title: "Stack", search_title: "Stack", path: "/demo/stack", description: "Vertical flex with the Grid gap scale", icon: :align_left},
+            {title: "Cluster", search_title: "Cluster", path: "/demo/cluster", description: "Wrapping horizontal flex with gap and justify", icon: :dashboard}
+          ]
+        },
         {type: :item, title: "Masonry", path: "/demo/masonry", description: "A photo wall. Each tile is a link, a badge, and a filename", icon: :image},
         {type: :item, title: "Collage", path: "/demo/collage", description: "Tilted cards in a grid. They stack straight on a small screen", icon: :photo},
         {type: :item, title: "Animated characters", path: "/demo/animated_character", description: "A tiny bot with moods, and icons that wiggle, pop, draw, spin, or nudge", icon: :sparkles},
