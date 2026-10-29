@@ -82,6 +82,7 @@ module FlatPack
         icon_style: nil,
         icon_only: false,
         loading: false,
+        disabled: false,
         type: "button",
         align: :center,
         lines: 1,
@@ -101,6 +102,7 @@ module FlatPack
         @icon_style = IconOptions.normalize_style!(icon_style)
         @icon_only = icon_only
         @loading = loading
+        @disabled = disabled ? true : false
         @type = type
         @align = align.to_sym
         @lines = lines
@@ -218,7 +220,7 @@ module FlatPack
           attrs[:rel] = "noopener noreferrer" if @target == "_blank"
         else
           attrs[:type] = @type
-          attrs[:disabled] = true if @loading
+          attrs[:disabled] = true if inactive?
         end
 
         attrs
@@ -315,7 +317,7 @@ module FlatPack
           class: button_classes,
           data: style_data
         }
-        attrs[:disabled] = true if @loading
+        attrs[:disabled] = true if inactive?
         apply_shared_control_attributes!(attrs)
         merge_attributes(**attrs)
       end
@@ -465,6 +467,10 @@ module FlatPack
         return if @current == true || @current == false
 
         raise ArgumentError, "Invalid current: #{@current.inspect}. Must be true or false."
+      end
+
+      def inactive?
+        @disabled || @loading
       end
 
       def validate_title!

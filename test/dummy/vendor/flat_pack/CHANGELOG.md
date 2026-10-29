@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Button accepts `disabled:`. `false` is the default and keeps today’s markup. `true` sets the `disabled` attribute on a `<button>` and mutes it with the same opacity as loading, without the spinner. `nil` and `false` mean enabled. Link buttons with `href` keep their `href`. `loading: true` still disables as before.
 
 ### Changed
 

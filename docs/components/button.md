@@ -25,6 +25,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, or `:danger` paint the glyph from `--button-icon-primary-color`, `--button-icon-success-color`, `--button-icon-warning-color`, and `--button-icon-danger-color`. The class mixes that token toward `--fp-button-text` so it stays readable on every button `style`. When `icon_style` matches `style`, the glyph uses the button text colour. Disabled buttons still mute it with `--button-disabled-opacity`. Unknown names raise `ArgumentError`. There is no `icon_class`. |
 | `icon_only` | Boolean | `false` | no | Uses compact icon-only padding and hides visible text. `:sm`, `:md`, and `:lg` grow the painted box with `.fp-hit-target` (44px). `:xs` paints about 32px (`--button-icon-only-padding-xs`, a 1rem icon) and keeps the 44px tap on `.fp-hit-slop`. Requires `text:` or `aria: { label: "…" }`. Always pass an `aria-label`. Adjacent `:xs` buttons need about 12px between them or the 44px tap areas overlap. |
 | `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
+| `disabled` | Boolean | `false` | no | Disables a `<button>` without the spinner. `true` sets the `disabled` attribute and uses the same muted opacity as loading. `nil` and `false` leave the control enabled. A link with `href` keeps its `href`. |
 | `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
 | `align` | Symbol | `:center` | no | `:center` keeps the label in the middle. `:start` left-aligns it and lets the label fill the remaining space (`flex-1 min-w-0`). |
 | `lines` | Integer | `1` | no | `1` or `2`. Clamps the label with an ellipsis. `2` top-aligns the row so a wrapped label and the trailing slot share the first line. |
@@ -43,7 +44,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - Sizes: `:sm`, `:md`, `:lg`. Icon-only also accepts `:xs`.
 - Round: `round: true` for a pill label or a circular icon-only button. Omit it for the theme corner.
 - Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
-- States: loading, icon + text, icon-only, current (`current: true`)
+- States: loading, disabled (`disabled: true`), icon + text, icon-only, current (`current: true`)
 - Icon artwork: a Heroicon name (omit `icon_variant` for the host default, or `:outline`, `:solid`, `:mini`, `:micro`), or a trusted `<svg` string
 - Icon colour: omit `icon_style` (button text), or `:primary`, `:success`, `:warning`, `:danger`
 - Label alignment: `:center` (default), `:start`
@@ -164,6 +165,22 @@ Pass `track: true` when the row should read as a bordered group. The default is 
 ) %>
 ```
 
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Save",
+  style: :primary,
+  disabled: true
+) %>
+```
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Open",
+  href: post_path(@post),
+  disabled: true
+) %>
+```
+
 A host logo belongs in `icon:` as trusted SVG, not in the trailing slot.
 
 ```erb
@@ -227,6 +244,7 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover and press stay on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
 - Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
+- `disabled: true` is the rest state for a native button that must not be used. It does not show the spinner. Native buttons use the `disabled` attribute and the loading muted opacity. Link buttons keep `href`.
 - Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Colour does not come from per-style Tailwind background classes.
 
 ## Unsaved changes
