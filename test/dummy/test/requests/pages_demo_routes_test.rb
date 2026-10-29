@@ -250,6 +250,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Heat the pan"
   end
 
+  test "list demo renders row alignment" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Row alignment"
+    assert_includes response.body, "align: :center"
+    assert_includes response.body, "items-center"
+  end
+
   test "tables draggable demo renders event listener example" do
     get "/demo/tables/draggable"
 

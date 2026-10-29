@@ -3,6 +3,16 @@
 module FlatPack
   module List
     class Item < FlatPack::BaseComponent
+      # Tailwind CSS scanning requires these classes to be present as string literals.
+      # DO NOT REMOVE - These duplicates ensure CSS generation:
+      # "items-start" "items-center" "items-end" "items-baseline"
+      ALIGNS = {
+        start: "items-start",
+        center: "items-center",
+        end: "items-end",
+        baseline: "items-baseline"
+      }.freeze
+
       def initialize(
         key: nil,
         icon: nil,
@@ -12,11 +22,13 @@ module FlatPack
         hover: false,
         active: false,
         link_arguments: {},
+        align: nil,
         **system_arguments
       )
         super(**system_arguments)
         @key_value = Rendering.key_value?
         @stack_below = Rendering.stack_below if @key_value
+        @align = normalize_align(align)
         @icon = icon
         @leading = leading
         @trailing = trailing
@@ -167,6 +179,7 @@ module FlatPack
           raise ArgumentError, "key: is required when the list layout is :key_value." if @key.blank?
           raise ArgumentError, "href: is not supported when the list layout is :key_value." if href.present?
           raise ArgumentError, "leading: is not supported when the list layout is :key_value." if @leading.present?
+          raise ArgumentError, "align: is not supported when the list layout is :key_value." unless @align == :start
           return
         end
 
@@ -194,7 +207,8 @@ module FlatPack
 
       def item_classes
         classes(
-          "flex items-start",
+          "flex",
+          align_class,
           "rounded-[var(--radius-sm)]",
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
@@ -218,9 +232,23 @@ module FlatPack
       def link_classes
         classes(
           "flat-pack-list-item-link",
-          "flex w-full items-start",
+          "flex w-full",
+          align_class,
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-(--button-focus-ring-color)"
         )
+      end
+
+      def align_class
+        ALIGNS.fetch(@align)
+      end
+
+      def normalize_align(align)
+        return Rendering.align if align.nil?
+
+        name = align.to_sym
+        return name if ALIGNS.key?(name)
+
+        raise ArgumentError, "Invalid align: #{align.inspect}. Must be one of: #{ALIGNS.keys.join(", ")}."
       end
 
       def merge_class_names(*class_names)

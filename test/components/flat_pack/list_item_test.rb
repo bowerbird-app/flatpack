@@ -187,6 +187,38 @@ module FlatPack
         assert_selector "span.flat-pack-list-item-icon svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
         assert_selector "div.min-w-0.flex-1", text: "Content"
       end
+
+      def test_align_center_uses_items_center_on_the_row_and_link
+        render_inline(Item.new(align: :center, href: "/demo/list")) { "Content" }
+
+        assert_selector "li.flex.items-center"
+        refute_selector "li.items-start"
+        assert_selector "li a.flat-pack-list-item-link.items-center"
+        refute_selector "li a.items-start"
+      end
+
+      def test_align_end_and_baseline
+        render_inline(Item.new(align: :end)) { "Content" }
+
+        assert_selector "li.flex.items-end"
+        refute_selector "li.items-start"
+
+        render_inline(Item.new(align: :baseline)) { "Content" }
+
+        assert_selector "li.flex.items-baseline"
+      end
+
+      def test_invalid_align_raises
+        error = assert_raises(ArgumentError) { Item.new(align: :middle) }
+        assert_includes error.message, "Invalid align: :middle"
+      end
+
+      def test_key_value_rejects_a_non_start_align
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", align: :center) }
+        end
+        assert_match(/align:/, error.message)
+      end
     end
   end
 end
