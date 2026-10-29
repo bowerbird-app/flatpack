@@ -117,6 +117,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/page_layout
     /demo/overlay
     /demo/video_preview
+    /demo/embed
     /demo/fab
     /demo/inline_edit
     /demo/pagination

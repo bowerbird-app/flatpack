@@ -59,6 +59,7 @@ comments_item | FlatPack::Comments::Item::Component | docs/components/comments-i
 comments_replies | FlatPack::Comments::Replies::Component | docs/components/comments-replies.md
 comments_thread | FlatPack::Comments::Thread::Component | docs/components/comments-thread.md
 empty_state | FlatPack::EmptyState::Component | docs/components/empty-state.md
+embed | FlatPack::Embed::Component | docs/components/embed.md
 fab | FlatPack::Fab::Component | docs/components/fab.md
 email_button | FlatPack::EmailButton::Component | docs/components/email-button.md
 email_card | FlatPack::EmailCard::Component | docs/components/email-card.md

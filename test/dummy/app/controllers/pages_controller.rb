@@ -767,6 +767,9 @@ class PagesController < ApplicationController
   def video_preview
   end
 
+  def embed
+  end
+
   def fab
     allowed = %w[bottom_right bottom_left top_right top_left]
     @fab_position = allowed.include?(params[:position].to_s) ? params[:position].to_sym : :bottom_right

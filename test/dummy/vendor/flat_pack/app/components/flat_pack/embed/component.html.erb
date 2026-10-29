@@ -1,0 +1,6 @@
+<%= tag.figure(**root_attributes) do %>
+  <%= tag.div(**frame_attributes) do %>
+    <%= tag.iframe(**iframe_attributes) %>
+  <% end %>
+  <%= tag.figcaption(caption_text, class: caption_classes) if caption_text.present? %>
+<% end %>

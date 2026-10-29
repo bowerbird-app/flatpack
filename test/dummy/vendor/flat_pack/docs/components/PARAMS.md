@@ -11,11 +11,11 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
-| Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. |
+| Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. Embed `src` is the iframe URL. Media `src` is the image URL. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
 | Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts. Exception: `FlatPack::CopyButton::Component` `text` is the clipboard string. The visible label is `label`. |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy. Video preview's play button requires `label:` (for example `"Play: Launch trailer"`). The host translates it. |
-| Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups |
+| Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups. Exception: Embed `title` is the iframe accessible name, required. |
 | Beside a heading | `trailing` | Section Title slot (`with_trailing`). After the heading element, before the copy-link icon. Outside both, so the accessible name stays `title`. Generic content. Not a count param. |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Floating layer anchor | `placement` | Tooltips, popovers, dropdowns, and notification menus. Typical values are `:top`, `:bottom`, `:left`, `:right`. Menu components that already list corner values keep those. |
@@ -41,7 +41,11 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Table column visibility | `hide_below` | `FlatPack::Table::Column` only. `:sm`, `:md`, `:lg`, `:xl`. Hides that header and its cells below the breakpoint. The column stays in `colspan`. |
 | Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param name as Button and Badge. Card fill is `background`. |
 | Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
-| Media frame ratio | `aspect_ratio` | Card media, Carousel, and Video preview. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview defaults to `"16/9"`. |
+| Media frame ratio | `aspect_ratio` | Card media, Carousel, Video preview, and Embed. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview and Embed default to `"16/9"`. |
+| Iframe permissions | `allow` | Embed only. Permissions Policy string. Omit it to leave the attribute off. |
+| Iframe sandbox | `sandbox` | Embed only. Space-separated tokens, or `""` for the strict sandbox. Omit it to leave the iframe unsandboxed. |
+| Iframe fetch | `loading` | Embed only. `"lazy"` (default) or `"eager"`. |
+| Iframe referrer | `referrerpolicy` | Embed only. Default `"strict-origin-when-cross-origin"`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. Button label alignment is `:center` (default) or `:start`. `:start` left-aligns the label and gives it `flex-1 min-w-0`. |
 | Table column alignment | `align` | `FlatPack::Table::Column` only. `:start` (default), `:center`, `:end`. Logical, so RTL flips start and end. |
@@ -122,7 +126,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Lightbox gallery name | `group` | `FlatPack::Lightbox` and its triggers. A letter, then letters, numbers, hyphens, or underscores. Several triggers can name one group. |
 | Lightbox start item | `index` | Zero-based item in that `group`. Triggers pass it. The gallery opens on the clicked item. |
 | Lightbox item list | `items` | `FlatPack::Lightbox` only. Each hash has `src`, optional `alt` and `caption`, and `type` `:image` or `:video`. |
-| Slide or item caption | `caption` | Carousel slides and lightbox items. Optional supporting copy under the media. |
+| Slide or item caption | `caption` | Carousel slides, lightbox items, and Embed. Optional supporting copy under the media. Embed also accepts the same copy as a block. |
 | Lightbox count | `show_count` | `FlatPack::Lightbox` boolean. `true` shows `3 / 12` when there is more than one item. Maps to Carousel `show_counter`. |
 | Lightbox thumbnails | `thumbs` | `FlatPack::Lightbox` boolean. Default `false`. `true` shows the carousel thumb strip when there is more than one item. Maps to Carousel `show_thumbs`. |
 | Lightbox item thumbnail | `thumb_src` | Optional image URL on a lightbox item. Falls back to `src`. Carousel slides use the same key. |

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::Heading::Component` renders a bare `h1`–`h6`. `level:` (or `1`–`6`) is the tag. `size:` is the look (`:xs` through `:"5xl"`, default `:"2xl"` / `--text-2xl`). `style:` is `:default`, `:muted`, or `:primary`. `weight:` is `:normal`, `:medium`, `:semibold` (default), or `:bold`. No wrapper, subtitle, trailing slot, or copy-link.
 - `FlatPack::Text::Component` renders body copy. `size:` is `:xs` through `:"2xl"` (default `:base`). `style:` and `weight:` use the same tokens as Heading (`weight` defaults to `:normal`). `as:` is `:p` (default), `:span`, or `:div`.
 - Section Title, Page Title, Hero Title, Content, and Empty State still cover section chrome, page chrome, cover type, article HTML, and empty-state titles. Use Heading when a host needs a plain heading tag with an independent size. Use Text when a host needs a line of kit copy. Demos: `/demo/heading`, `/demo/text`.
+- `FlatPack::Embed::Component` frames a host iframe (`src:`, required `title:`) at a Card-media aspect ratio (default `16/9`). `loading:` defaults to `lazy`. `referrerpolicy:` defaults to `strict-origin-when-cross-origin`. Optional `allow:`, `sandbox:`, `allowfullscreen:`, and `caption:` (or a block). Demo: `/demo/embed`.
 
 ### Upgrade notes
 - Additive. Existing picker calls keep the bordered inline panel. Pass `variant: :flush` instead of host `!border-0 !bg-transparent !shadow-none !rounded-none !p-0` overrides when the picker is embedded in another surface. Rebuild host Tailwind so `border-0`, `bg-transparent`, `shadow-none`, `rounded-none`, `p-0`, and `py-0` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
@@ -28,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additive. Existing Section Title, Page Title, Hero Title, Content, and Text Stream calls are unchanged.
 - Replace a host `<h1 class="text-2xl font-semibold">` or raw `<h2>` with `FlatPack::Heading::Component`. Replace a host `<p class="text-sm text-gray-500">` with `FlatPack::Text::Component` (`style: :muted`, `size: :sm`). Keep Section Title when the block needs a subtitle, trailing content, or a copy-link.
 - Rebuild host Tailwind so `text-[length:var(--text-xs)]` through `text-[length:var(--text-5xl)]`, `font-normal` / `font-medium` / `font-semibold` / `font-bold`, and `text-[var(--surface-content-color)]` / `text-[var(--surface-muted-content-color)]` / `text-[var(--color-primary)]` exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
+- Additive. Render `FlatPack::Embed::Component` for maps, clips, and other host iframe URLs. Flatpack does not build provider URLs.
+- Rebuild host Tailwind so `aspect-[16/9]`, `aspect-[4/3]`, `aspect-square`, and `rounded-[var(--media-radius)]` are generated if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 
 ### Changed
 - ComponentCatalog still maps the `text` family to `docs/components/text-stream.md`. `Text::Component` is the one override (`DOC_PATH_OVERRIDES`) and reads `docs/components/text.md`. Nested billing, button, comments, menu, and sidebar entries still use the family file.
