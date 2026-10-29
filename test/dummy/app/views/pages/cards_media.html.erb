@@ -149,6 +149,61 @@
       CODE
     ) %>
   </section>
+  <!-- Actions on hover -->
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Actions on hover", anchor_link: true, subtitle: "Point at the photo. The menu appears. On a phone it stays in view.") %>
+    <p class="mb-4 text-sm text-[var(--surface-muted-content-color)] max-w-2xl">
+      <code>media.hover_actions</code> sits on the photo. Hover hides it on a mouse. Focus and touch keep it visible.
+      This is not Reveal. Reveal is the scroll-in move.
+    </p>
+    <div class="mb-4 max-w-sm">
+      <%= render FlatPack::Card::Component.new(padding: :none) do |card| %>
+        <% card.media(aspect_ratio: "16/9", padding: :none) do |media| %>
+          <%= image_tag "/masonry/kiln.svg", class: "h-full w-full object-cover", alt: "Kiln yard" %>
+          <% media.hover_actions do %>
+            <%= render FlatPack::Button::Dropdown::Component.new(
+              text: "Cover actions",
+              icon: "ellipsis-vertical",
+              icon_only: true,
+              style: :secondary,
+              size: :sm,
+              placement: :bottom_left
+            ) do |dropdown| %>
+              <% dropdown.menu_item(text: "Replace cover", href: "#replace-cover") %>
+              <% dropdown.menu_item(text: "Remove cover", href: "#remove-cover") %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <% card.body do %>
+          <h3 class="text-lg font-semibold mb-1">Kiln notes</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">A menu on the cover. Same pattern as a kit cover card.</p>
+        <% end %>
+      <% end %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      language: "erb",
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Card::Component.new(padding: :none) do |card| %&gt;
+          &lt;% card.media(aspect_ratio: "16/9", padding: :none) do |media| %&gt;
+            &lt;%= image_tag "/masonry/kiln.svg", class: "h-full w-full object-cover", alt: "Kiln yard" %&gt;
+            &lt;% media.hover_actions do %&gt;
+              &lt;%= render FlatPack::Button::Dropdown::Component.new(
+                text: "Cover actions",
+                icon: "ellipsis-vertical",
+                icon_only: true,
+                style: :secondary,
+                size: :sm,
+                placement: :bottom_left
+              ) do |dropdown| %&gt;
+                &lt;% dropdown.menu_item(text: "Replace cover", href: "#") %&gt;
+                &lt;% dropdown.menu_item(text: "Remove cover", href: "#") %&gt;
+              &lt;% end %&gt;
+            &lt;% end %&gt;
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+      CODE
+    ) %>
+  </section>
   <!-- Media Slot -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Media Slot", anchor_link: true, subtitle: "Examples for Media Slot.") %>

@@ -39,7 +39,7 @@ There is no `href`. Wrap the component in a link when the photo should navigate.
 | `inset` | Symbol | `:md` | no | `:sm`, `:md`, `:lg`. `:center` ignores it. Edge-centers use it on the edge axis only. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into that item's wrapper. |
 
-The root is `group/media`. A control that should appear on hover can use `group-hover/media:` on the item. Keep it visible for keyboard focus (`focus-within:opacity-100`) and for pointers that cannot hover.
+The root is `group/media`. A control that should appear on hover can use `group-hover/media:` on the item. Keep it visible for keyboard focus (`focus-within:opacity-100`) and for pointers that cannot hover. On Card media, use `media.hover_actions` instead of copying those utilities. See [Card](card.md). `FlatPack::Reveal::Component` is scroll-in motion and does not hide overlay controls.
 
 ## Variants
 `width` and `height` set the shape. The frame (`div.fp-media__frame`) owns the radius, the muted fill, and the hairline. Omit `radius:` and that radius is `--media-radius`, which follows `--card-radius`. `radius: :card_inner` uses the card's inner radius. See [Card](card.md).
