@@ -386,18 +386,13 @@ module FlatPack
         refute_selector "button", text: "Loading"
       end
 
-      def test_disabled_link_uses_aria_disabled_and_drops_href
+      def test_disabled_link_keeps_href
         render_inline(Component.new(text: "Open", href: "/path", method: :delete, target: "_blank", disabled: true))
 
-        assert_selector "a[aria-disabled='true'][tabindex='-1']", text: "Open"
-        refute_selector "a[href]"
+        assert_selector "a[href='/path'][target='_blank'][rel='noopener noreferrer']", text: "Open"
         refute_selector "a[disabled]"
-        refute_selector "a[target]"
-        refute_selector "a[rel]"
-        html = page.native.to_html
-        assert_includes html, "pointer-events-none"
-        assert_includes html, "opacity-[var(--button-disabled-opacity)]"
-        refute_includes html, "fp-spinner"
+        refute_selector "a[aria-disabled]"
+        refute_selector "a[tabindex]"
       end
 
       def test_enabled_link_keeps_href_and_is_not_aria_disabled
@@ -425,11 +420,17 @@ module FlatPack
         assert_includes page.native.to_html, "fp-spinner"
       end
 
-      def test_invalid_disabled_raises
-        [nil, :disabled, "true", 1].each do |disabled|
-          error = assert_raises(ArgumentError) { Component.new(text: "Save", disabled: disabled) }
-          assert_match(/disabled/, error.message)
+      def test_disabled_nil_false_and_true_are_accepted
+        [nil, false, true].each do |disabled|
+          Component.new(text: "Save", disabled: disabled)
         end
+      end
+
+      def test_disabled_nil_omits_the_disabled_attribute
+        render_inline(Component.new(text: "Save", disabled: nil))
+
+        assert_selector "button[type='button']", text: "Save"
+        refute_selector "button[disabled]"
       end
 
       def test_submit_button_with_data_attributes

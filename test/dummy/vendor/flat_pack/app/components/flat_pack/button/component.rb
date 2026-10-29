@@ -102,7 +102,7 @@ module FlatPack
         @icon_style = IconOptions.normalize_style!(icon_style)
         @icon_only = icon_only
         @loading = loading
-        @disabled = disabled
+        @disabled = disabled ? true : false
         @type = type
         @align = align.to_sym
         @lines = lines
@@ -124,7 +124,6 @@ module FlatPack
         validate_align!
         validate_lines!
         validate_current!
-        validate_disabled!
         validate_title!
       end
 
@@ -143,10 +142,8 @@ module FlatPack
       def menu_row
         validate_trailing!
 
-        if @href && !drop_link_href?
+        if @href
           link_to(@href, **menu_row_attributes(link: true)) { menu_row_content }
-        elsif @href
-          content_tag(:a, **menu_row_attributes(link: true)) { menu_row_content }
         else
           button_tag(**menu_row_attributes(link: false)) { menu_row_content }
         end
@@ -177,12 +174,8 @@ module FlatPack
       private
 
       def render_link
-        if drop_link_href?
-          content_tag(:a, **link_attributes) { button_content }
-        else
-          link_to @href, **link_attributes do
-            button_content
-          end
+        link_to @href, **link_attributes do
+          button_content
         end
       end
 
@@ -222,12 +215,9 @@ module FlatPack
         attrs[:aria] = aria if aria.present?
 
         if link
-          unless drop_link_href?
-            attrs[:method] = @method if @method
-            attrs[:target] = @target if @target
-            attrs[:rel] = "noopener noreferrer" if @target == "_blank"
-          end
-          apply_inert_link_attributes!(attrs)
+          attrs[:method] = @method if @method
+          attrs[:target] = @target if @target
+          attrs[:rel] = "noopener noreferrer" if @target == "_blank"
         else
           attrs[:type] = @type
           attrs[:disabled] = true if inactive?
@@ -335,15 +325,12 @@ module FlatPack
       def link_attributes
         attrs = {
           class: button_classes,
+          method: @method,
+          target: @target,
           data: style_data
         }
-        unless drop_link_href?
-          attrs[:method] = @method
-          attrs[:target] = @target
-          attrs[:rel] = "noopener noreferrer" if @target == "_blank"
-        end
+        attrs[:rel] = "noopener noreferrer" if @target == "_blank"
         apply_shared_control_attributes!(attrs)
-        apply_inert_link_attributes!(attrs)
         if @current
           attrs[:aria] ||= {}
           attrs[:aria][:current] = "page"
@@ -373,8 +360,6 @@ module FlatPack
           "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
-          # "pointer-events-none" "opacity-[var(--button-disabled-opacity)]"
-          (inactive_classes if inactive?),
           "fp-touch-manipulation",
           conditional_size_classes,
           icon_only_classes,
@@ -484,30 +469,8 @@ module FlatPack
         raise ArgumentError, "Invalid current: #{@current.inspect}. Must be true or false."
       end
 
-      def validate_disabled!
-        return if @disabled == true || @disabled == false
-
-        raise ArgumentError, "Invalid disabled: #{@disabled.inspect}. Must be true or false."
-      end
-
       def inactive?
         @disabled || @loading
-      end
-
-      def drop_link_href?
-        @href.present? && @disabled
-      end
-
-      def inactive_classes
-        "pointer-events-none opacity-[var(--button-disabled-opacity)]"
-      end
-
-      def apply_inert_link_attributes!(attrs)
-        return unless @href.present? && inactive?
-
-        attrs[:tabindex] = "-1"
-        attrs[:aria] ||= {}
-        attrs[:aria][:disabled] = "true"
       end
 
       def validate_title!
