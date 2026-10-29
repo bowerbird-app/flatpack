@@ -245,6 +245,7 @@
   --card-padding-sm: var(--card-padding-sm);
   --card-padding-md: var(--card-padding-md);
   --card-padding-lg: var(--card-padding-lg);
+  --card-body-gap: var(--card-body-gap);
   --card-hover-subtle-background-color: var(--card-hover-subtle-background-color);
   --card-hover-strong-border-color: var(--card-hover-strong-border-color);
   --card-hover-strong-shadow: var(--card-hover-strong-shadow);
@@ -1171,6 +1172,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --card-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --card-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --card-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --card-body-gap: var(--space-4);
   --empty-state-padding-y-sm: round(nearest, calc(var(--space-6) * var(--density)), 1px);
   --empty-state-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --empty-state-padding-y-md: round(nearest, calc((var(--space-6) + var(--space-4)) * var(--density)), 1px);

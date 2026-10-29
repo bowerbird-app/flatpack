@@ -1249,6 +1249,9 @@ module FlatPack
         assert_includes css, "@container fp-card (min-width: 40rem)"
         assert_includes css, "minmax(18rem, 1fr)"
         assert_includes css, "--card-body-gap: var(--space-4);"
+        variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+        assert_includes variables, "--card-body-gap: var(--card-body-gap);"
+        assert_includes variables, "--card-body-gap: var(--space-4);"
         assert_match(/:where\(\.fp-card__cover\)\s*\{[^}]*contain:\s*size;/m, css)
         refute_match(/:where\(\.fp-card__featured-media\) > \* \{\s*contain:\s*size;/, css)
         assert_includes css, "align-self: start;"

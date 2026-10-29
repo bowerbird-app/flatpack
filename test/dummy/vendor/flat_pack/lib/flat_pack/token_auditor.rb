@@ -70,7 +70,6 @@ module FlatPack
       --card-title-weight
       --card-title-color
       --card-media-image-height
-      --card-body-gap
       --fp-overlay-item-inset
       --overlay-inset-sm
       --overlay-inset-md
