@@ -391,7 +391,8 @@ module FlatPack
 
         assert_selector "a[href='/path']", text: "Open"
         assert_selector "a[target='_blank']"
-        assert_selector "a[rel='noopener noreferrer']"
+        assert_selector "a[rel~='noopener']"
+        assert_selector "a[rel~='noreferrer']"
         refute_selector "a[disabled]"
         refute_selector "a[aria-disabled]"
         refute_selector "a[tabindex]"
