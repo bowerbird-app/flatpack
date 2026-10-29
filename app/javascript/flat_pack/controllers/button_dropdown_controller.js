@@ -2,7 +2,10 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 import { onClickOutside } from "flat_pack/click_outside"
+import { focusableElements } from "flat_pack/focus_trap"
 import { place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
+
+const ITEM_HOOK = "[data-flat-pack-dropdown-item]"
 
 const MENU_GAP = 8
 
@@ -139,7 +142,8 @@ export default class extends Controller {
     if (event.key === "Tab") {
       if (this.tabKeepsMenuOpen(event)) return
 
-      this.close({ returnFocus: false })
+      event.preventDefault()
+      this.close()
       return
     }
 
@@ -164,8 +168,8 @@ export default class extends Controller {
     }
   }
 
-  // Tab and focusout stay open while focus is inside a keep-open node, or
-  // still inside a dialog menu. A pure action menu still closes on Tab.
+  // Focus leaving the panel closes it. Tab on a role=menu also closes, and
+  // returns focus to the trigger. A dialog panel keeps Tab inside.
   handleFocusOut(event) {
     if (!this.isOpen) return
 
@@ -185,12 +189,16 @@ export default class extends Controller {
     })
   }
 
+  // Only a dialog panel keeps Tab inside. A role=menu closes on Tab even
+  // when the current item, or the next stop, is keep_open.
   tabKeepsMenuOpen(event) {
+    if (this.isActionMenu()) return false
+
     if (this.keepsMenuOpen(event.target)) return true
 
     const next = this.tabStop(event.target, event.shiftKey)
     if (next && this.keepsMenuOpen(next)) return true
-    if (!this.isActionMenu() && next && this.menuElement.contains(next)) return true
+    if (next && this.menuElement.contains(next)) return true
 
     return false
   }
@@ -217,9 +225,7 @@ export default class extends Controller {
   }
 
   getTabStops() {
-    return Array.from(this.menuElement.querySelectorAll(
-      "a[href], button:not([disabled]), input:not([disabled]):not([type='hidden']), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])"
-    )).filter((item) => {
+    return focusableElements(this.menuElement).filter((item) => {
       if (typeof item.closest === "function" && item.closest("[hidden]")) return false
       if (typeof item.getAttribute === "function" && item.getAttribute("tabindex") === "-1") return false
       if (typeof item.getAttribute === "function" && item.getAttribute("aria-disabled") === "true") return false
@@ -231,7 +237,7 @@ export default class extends Controller {
   handleMenuItemClick(event) {
     if (this.keepsMenuOpen(event.target)) return
 
-    const menuItem = event.target.closest('[role="menuitem"]')
+    const menuItem = event.target.closest(ITEM_HOOK)
     if (menuItem && this.menuElement.contains(menuItem)) {
       if (menuItem.matches("[disabled], [aria-disabled='true']")) return
 

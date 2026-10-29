@@ -7,6 +7,9 @@ const vm = require("node:vm")
 function loadDropdownController(globals) {
   const root = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack")
   const helper = (name) => fs.readFileSync(path.join(root, name), "utf8").replaceAll("export function ", "function ")
+  const focusTrap = fs.readFileSync(path.join(root, "focus_trap.js"), "utf8")
+    .replaceAll("export function ", "function ")
+    .replaceAll("export const ", "const ")
   const source = fs.readFileSync(path.join(root, "controllers", "button_dropdown_controller.js"), "utf8")
     .replace('import { Controller } from "@hotwired/stimulus"', "class Controller {}")
     .replace(
@@ -16,6 +19,7 @@ function loadDropdownController(globals) {
        function motionTransition() { return "none" }`
     )
     .replace('import { onClickOutside } from "flat_pack/click_outside"\n', "")
+    .replace('import { focusableElements } from "flat_pack/focus_trap"\n', "")
     .replace('import { place, readEdgeOffset, watchViewport } from "flat_pack/positioning"\n', "")
     .replace("export default class extends Controller", "class ButtonDropdownController extends Controller")
 
@@ -28,7 +32,7 @@ function loadDropdownController(globals) {
     requestAnimationFrame: globals.requestAnimationFrame || ((fn) => fn())
   }
   vm.runInNewContext(
-    `${helper("click_outside.js")}\n${helper("positioning.js")}\n${source}\nmodule.exports = ButtonDropdownController\n`,
+    `${focusTrap}\n${helper("click_outside.js")}\n${helper("positioning.js")}\n${source}\nmodule.exports = ButtonDropdownController\n`,
     context,
     { filename: "button_dropdown_controller.js" }
   )
@@ -60,7 +64,8 @@ function mount({
   anchor,
   menu = { width: 100, height: 80 },
   viewport = { width: 400, height: 400 },
-  edge = "8px"
+  edge = "8px",
+  role = "menu"
 } = {}) {
   const windowEvents = events()
   const windowStub = {
@@ -81,7 +86,7 @@ function mount({
   const menuListeners = []
   const menuElement = {
     style: {},
-    role: "menu",
+    role,
     tabStops: [],
     offsetWidth: menu.width,
     offsetHeight: menu.height,
@@ -125,6 +130,10 @@ function mount({
   return { controller, menuElement, trigger, windowStub, windowEvents, documentStub, menuListeners }
 }
 
+function mountDialog(options = {}) {
+  return mount({ ...options, role: "dialog" })
+}
+
 function clickTarget({ form = false, keepOpen = false, menuitem = true, submitButton = false } = {}) {
   const item = menuitem
     ? { matches() { return false }, dataset: { action: "" } }
@@ -136,7 +145,7 @@ function clickTarget({ form = false, keepOpen = false, menuitem = true, submitBu
     dataset: { action: "" },
     matches() { return false },
     closest(selector) {
-      if (selector === '[role="menuitem"]') return item
+      if (selector === "[data-flat-pack-dropdown-item]" || selector === '[role="menuitem"]') return item
       if (selector === "[data-flat-pack-dropdown-keep-open]") {
         if (keepOpen) return { tagName: "DIV" }
         return null
@@ -344,7 +353,7 @@ test("arrow keys in a form field do not move menu focus", () => {
 })
 
 test("tab in a form does not close the menu", () => {
-  const { controller, menuElement } = mount({ anchor: triggerRect })
+  const { controller, menuElement } = mountDialog({ anchor: triggerRect })
   let closed = 0
   controller.close = () => { closed += 1 }
   controller.isOpen = true
@@ -360,7 +369,7 @@ test("tab in a form does not close the menu", () => {
 })
 
 test("tab into a keep-open node does not close the menu", () => {
-  const { controller, menuElement } = mount({ anchor: triggerRect })
+  const { controller, menuElement } = mountDialog({ anchor: triggerRect })
   let closed = 0
   controller.close = () => { closed += 1 }
   controller.isOpen = true
@@ -381,7 +390,7 @@ test("tab into a keep-open node does not close the menu", () => {
 })
 
 test("tab on a keep-open control does not close the menu", () => {
-  const { controller, menuElement } = mount({ anchor: triggerRect })
+  const { controller, menuElement } = mountDialog({ anchor: triggerRect })
   let closed = 0
   controller.close = () => { closed += 1 }
   controller.isOpen = true
@@ -394,6 +403,82 @@ test("tab on a keep-open control does not close the menu", () => {
   })
 
   assert.equal(closed, 0)
+})
+
+test("tab on a plain menuitem closes the menu and returns focus to the trigger", () => {
+  const { controller, menuElement, trigger } = mount({ anchor: triggerRect })
+  let focused = 0
+  let prevented = 0
+  trigger.focus = () => { focused += 1 }
+  controller.isOpen = true
+  const item = clickTarget({ keepOpen: true })
+  menuElement.contains = () => true
+  menuElement.tabStops = [item]
+
+  controller.handleEscape({
+    key: "Tab",
+    shiftKey: false,
+    target: item,
+    preventDefault() { prevented += 1 }
+  })
+
+  assert.equal(controller.isOpen, false)
+  assert.equal(focused, 1)
+  assert.equal(prevented, 1)
+})
+
+test("tab in a dialog stays open when the next stop is inside the panel", () => {
+  const { controller, menuElement } = mountDialog({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => { closed += 1 }
+  controller.isOpen = true
+  const first = clickTarget({ menuitem: false })
+  const second = clickTarget({ menuitem: false })
+  menuElement.tabStops = [first, second]
+  menuElement.contains = (node) => node === first || node === second
+
+  controller.handleEscape({
+    key: "Tab",
+    shiftKey: false,
+    target: first,
+    preventDefault() {}
+  })
+
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+})
+
+test("a dialog action dispatches without a menuitem role", () => {
+  const { controller, menuElement } = mountDialog({ anchor: triggerRect })
+  let dispatched = 0
+  controller.dispatchDetachedActions = (menuItem) => {
+    dispatched += 1
+    assert.equal(menuItem.dataset.action, "click->lists--add-to-list#toggle")
+  }
+  controller.close = () => { controller.isOpen = false }
+  controller.isOpen = true
+  menuElement.contains = () => true
+  const item = {
+    dataset: { action: "click->lists--add-to-list#toggle" },
+    matches() { return false },
+    closest(selector) {
+      if (selector === "[data-flat-pack-dropdown-item]") return this
+      if (selector === '[role="menuitem"]') return null
+      if (selector === "[data-flat-pack-dropdown-keep-open]") return null
+      if (selector === "a, button") return this
+      return null
+    }
+  }
+
+  controller.handleMenuItemClick({
+    target: item,
+    defaultPrevented: false,
+    detail: null,
+    preventDefault() {},
+    stopPropagation() {}
+  })
+
+  assert.equal(dispatched, 1)
 })
 
 test("focusout inside a keep-open node does not close the menu", () => {

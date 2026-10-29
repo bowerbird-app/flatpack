@@ -3,18 +3,6 @@
 module FlatPack
   module Button
     module Dropdown
-      def self.plain_actions?
-        Thread.current[:flat_pack_dropdown_plain_actions] == true
-      end
-
-      def self.with_plain_actions
-        previous = Thread.current[:flat_pack_dropdown_plain_actions]
-        Thread.current[:flat_pack_dropdown_plain_actions] = true
-        yield
-      ensure
-        Thread.current[:flat_pack_dropdown_plain_actions] = previous
-      end
-
       class Component < FlatPack::BaseComponent
         renders_one :trigger_label
 
@@ -234,8 +222,8 @@ module FlatPack
           host_class = [host.delete(:class), host.delete("class")]
           host_data = extract_nested_attributes(host, :data)
           host_aria = extract_nested_attributes(host, :aria)
-          host.delete(:role)
-          host.delete("role")
+          dropped_role = host.delete(:role) || host.delete("role")
+          warn_dropped_menu_role(dropped_role)
           host_style = host.delete(:style) || host.delete("style")
 
           {
@@ -274,9 +262,33 @@ module FlatPack
         end
 
         def render_menu_entries
-          return safe_join(menu) unless menu_contains_form?
+          mark_dialog_items! if menu_contains_form?
 
-          FlatPack::Button::Dropdown.with_plain_actions { safe_join(menu) }
+          safe_join(menu)
+        end
+
+        # The dialog flag stays on this dropdown's own items. A Dropdown nested
+        # inside menu_form is a different instance and keeps role=menu.
+        def mark_dialog_items!
+          menu.each do |entry|
+            next unless entry.respond_to?(:plain_actions=)
+
+            entry.plain_actions = true
+          end
+        end
+
+        def warn_dropped_menu_role(role)
+          return if role.blank?
+          return unless development_log?
+
+          Rails.logger.warn(
+            "[FlatPack::Button::Dropdown] Dropped menu_attributes role=#{role.inspect}. " \
+            "The panel role is #{menu_role.inspect}."
+          )
+        end
+
+        def development_log?
+          defined?(Rails) && Rails.respond_to?(:env) && Rails.env.development?
         end
 
         def menu_classes(*extra)
@@ -365,11 +377,11 @@ module FlatPack
           return label if row[:icon].blank?
 
           icon_arguments = {name: row[:icon], size: :sm}
-          icon_arguments[:class] = "order-last" if row[:icon_position] == :end
-          safe_join([
-            render(FlatPack::Shared::IconComponent.new(**icon_arguments)),
-            label
-          ])
+          icon_arguments[:class] = "ms-auto" if row[:icon_position] == :end
+          icon = render(FlatPack::Shared::IconComponent.new(**icon_arguments))
+          return safe_join([label, icon]) if row[:icon_position] == :end
+
+          safe_join([icon, label])
         end
 
         def extract_nested_attributes(attrs, key)

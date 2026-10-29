@@ -29,7 +29,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `max_height` | String | `"384px"` | no | Sets `--dropdown-max-height` on the menu. The menu uses `max-height: var(--dropdown-max-height)` and scrolls when content exceeds it. |
 | `trigger_attributes` | Hash | `{}` | no | HTML attributes on the trigger. Use `aria: { label: }` for an icon-only name when `text` is blank. `aria-haspopup` and `aria-expanded` stay on the button. A host `style:` string, `href`, `method`, and `target` are dropped and are not copied onto the trigger. `size`, `text`, `icon`, and the other Button option keys are dropped the same way, so they do not replace the dropdown's own options. `type` and `title` still land on the button. |
 | `menu_class` | String | `nil` | no | Extra classes on the menu. Kit menu classes stay. Omit it and the menu classes stay the same. |
-| `menu_attributes` | Hash | `{}` | no | Extra HTML attributes on the menu. `class` and `data-controller` merge. `aria-hidden` and the Stimulus menu target stay. A pure action list stays `role="menu"`. A menu that contains `menu_form` is `role="dialog"` instead. A host `role` is dropped. A host `style:` string is joined after `--dropdown-max-height`. |
+| `menu_attributes` | Hash | `{}` | no | Extra HTML attributes on the menu. `class` and `data-controller` merge. `aria-hidden` and the Stimulus menu target stay. A pure action list stays `role="menu"`. A menu that contains `menu_form` is `role="dialog"` instead. A host `role` is dropped. In development that drop is written to the log. A host `style:` string is joined after `--dropdown-max-height`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots
@@ -37,11 +37,11 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 
 | name | type | required | description |
 |---|---|---|---|
-| `trigger_label` | slot | no | Replaces the visible trigger label in place (`with_trigger_label`). The trigger stays a Button. `text:` stays the accessible name when `icon_only: true`, and the collapse header. Omit the slot and the trigger shows `text:`. |
+| `trigger_label` | slot | no | A new `renders_one` slot (main had none). Replaces the visible trigger label in place (`with_trigger_label`). The trigger stays a Button. `text:` stays the accessible name when `icon_only: true`, and the collapse header. Omit the slot and the trigger shows `text:`. |
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
 | `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. |
-| `menu_form` | slot | no | Places a form in the menu. The panel becomes `role="dialog"` (not `role="menu"`), and items are not `menuitem`. The form wrapper has no `menu`, `menuitem`, or `none` role. Clicks, Tab, and focus inside that wrapper do not close the menu. Escape still closes. A `form` in `menu_html` closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
+| `menu_form` | slot | no | Places a form in the menu. The panel becomes `role="dialog"` (not `role="menu"`), and items are not `menuitem`. Each item has `data-flat-pack-dropdown-item`, so an outer `data-action` still runs. The form wrapper has no `menu`, `menuitem`, or `none` role. Clicks, Tab, and focus inside that wrapper do not close the menu. Escape still closes. A nested Dropdown inside the form keeps its own menu roles. A `form` in `menu_html` closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
 
 `menu_item` props:
 
@@ -49,7 +49,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Item label text. |
 | `icon` | String/Symbol | `nil` | no | Optional leading Heroicon name. Menu items do not paint a raw `<svg` string; the trigger does, through Button. |
-| `icon_position` | Symbol | `:start` | no | `:start` paints the icon before the label. `:end` paints it after (`order-last`). Unknown names raise `ArgumentError`. |
+| `icon_position` | Symbol | `:start` | no | `:start` paints the icon before the label. `:end` renders the icon after the label and pushes it to the trailing edge with `ms-auto` (one class, so a host class on that icon wins). Unknown names raise `ArgumentError`. |
 | `keep_open` | Boolean | `false` | no | `true` keeps the menu open when this item is used. The item stays `role="menuitem"`. Anything other than `true` or `false` raises `ArgumentError`. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on that icon. Omit to use `default_icon_variant`. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the item text. `:primary`, `:success`, `:warning`, or `:danger` use the button icon tokens. Unknown names raise `ArgumentError`. |
@@ -176,7 +176,7 @@ Host menu classes and a trigger label, with no subclass:
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
 - A pure action list uses `role="menu"`; items use `role="menuitem"`; the divider uses `role="separator"`.
 - A menu that contains `menu_form` uses `role="dialog"` with `aria-modal="false"` and an accessible name from `text`. Items in that dialog are not `menuitem`. The form is not wrapped in `role="menu"`, `role="menuitem"`, or `role="none"`. The trigger uses `aria-haspopup="dialog"`.
-- Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`.
+- Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`. `Tab` closes a `role="menu"` and returns focus to the trigger, including when the item is `keep_open`. `Tab` inside a `role="dialog"` stays in the panel.
 - Menu origin follows placement (`top right`, `top left`, `bottom right`, or `bottom left`). Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
 
 ## Dependencies

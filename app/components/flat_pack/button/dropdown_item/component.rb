@@ -55,7 +55,11 @@ module FlatPack
           validate_badge_style! if @badge
           validate_icon_position!
           validate_keep_open!
+          @plain_actions = false
         end
+
+        # Set by the parent dropdown while it renders a dialog panel.
+        attr_writer :plain_actions
 
         def menu_row
           {
@@ -93,25 +97,32 @@ module FlatPack
 
         def item_content
           content = []
-          if @icon
-            content << render(FlatPack::Shared::IconComponent.new(**item_icon_arguments))
-          end
+          content << item_icon if @icon && @icon_position == :start
           content << content_tag(:span, @text, class: "flex-1")
-          if @badge
-            content << content_tag(:span, @badge, class: badge_classes)
-          end
+          content << content_tag(:span, @badge, class: badge_classes) if @badge
+          content << item_icon if @icon && @icon_position == :end
           safe_join(content)
+        end
+
+        def item_icon
+          render(FlatPack::Shared::IconComponent.new(**item_icon_arguments))
         end
 
         def item_attributes
           attrs = {
             class: item_classes,
-            tabindex: @disabled ? "-1" : "0"
+            tabindex: @disabled ? "-1" : "0",
+            data: item_data
           }
-          attrs[:role] = "menuitem" unless FlatPack::Button::Dropdown.plain_actions?
+          attrs[:role] = "menuitem" unless @plain_actions
           attrs[:disabled] = true if @disabled && !@href
-          attrs[:data] = {flat_pack_dropdown_keep_open: true} if @keep_open
           merge_attributes(**attrs)
+        end
+
+        def item_data
+          data = {flat_pack_dropdown_item: true}
+          data[:flat_pack_dropdown_keep_open] = true if @keep_open
+          data
         end
 
         def item_icon_arguments
@@ -123,7 +134,8 @@ module FlatPack
           )
           return arguments unless @icon_position == :end
 
-          arguments.merge(class: [arguments[:class], "order-last"].compact.join(" "))
+          # One utility, so a host class on this icon beats a kit rule.
+          arguments.merge(class: [arguments[:class], "ms-auto"].compact.join(" "))
         end
 
         def item_classes

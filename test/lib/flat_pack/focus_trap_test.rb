@@ -14,11 +14,12 @@ module FlatPack
       assert status.success?, stdout
     end
 
-    test "drawer command palette and modal share one focusable selector" do
+    test "drawer command palette modal and dropdown share one focusable selector" do
       helper = FlatPack::Engine.root.join("app/javascript/flat_pack/focus_trap.js").read
       drawer = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/drawer_controller.js").read
       palette = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/command_palette_controller.js").read
       modal = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/modal_controller.js").read
+      dropdown = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/button_dropdown_controller.js").read
 
       assert_equal 1, helper.scan(SELECTOR).length
       assert_includes helper, "export function trapTab"
@@ -26,11 +27,15 @@ module FlatPack
       assert_includes drawer, 'from "flat_pack/focus_trap"'
       assert_includes palette, 'from "flat_pack/focus_trap"'
       assert_includes modal, 'from "flat_pack/focus_trap"'
+      assert_includes dropdown, 'from "flat_pack/focus_trap"'
+      assert_includes dropdown, "focusableElements"
       assert_includes modal, "modal: true"
       refute_includes drawer, "modal: true"
       refute_includes palette, "modal: true"
       refute_includes drawer, SELECTOR
       refute_includes palette, SELECTOR
+      refute_includes dropdown, SELECTOR
+      refute_includes dropdown, "input:not([disabled]):not([type='hidden'])"
       refute_includes modal, "a[href], button:not([disabled])"
     end
   end

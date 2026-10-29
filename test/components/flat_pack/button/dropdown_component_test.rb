@@ -718,6 +718,7 @@ module FlatPack
 
         assert_equal default_html, page.native.to_html
         refute_includes default_html, "order-last"
+        refute_includes default_html, "ms-auto"
         refute_includes default_html, "data-flat-pack-dropdown-keep-open"
         refute_includes default_html, "fp-button-dropdown__form"
         assert_selector "a[role='menuitem'][href='/edit']", text: "Edit"
@@ -728,8 +729,14 @@ module FlatPack
           dropdown.menu_item(text: "Favorites", icon: "heart", icon_position: :end, href: "/favorites")
         end
 
-        assert_selector "a[href='/favorites'] svg.fp-button-icon.order-last[data-flat-pack--icon-name-value='heart']"
-        assert_selector "a[role='menuitem'][href='/favorites']", text: "Favorites"
+        link = page.find("a[role='menuitem'][href='/favorites']")
+        children = link.native.element_children
+        assert_equal "span", children[0].name
+        assert_equal "Favorites", children[0].text
+        assert_equal "svg", children[1].name
+        assert_includes children[1]["class"], "ms-auto"
+        assert_equal "heart", children[1]["data-flat-pack--icon-name-value"]
+        refute_includes link.native.to_html, "order-last"
       end
 
       def test_invalid_icon_position_raises
@@ -772,12 +779,72 @@ module FlatPack
         assert_selector "div[role='dialog'][aria-modal='false'][aria-label='Add to list'].fp-button-dropdown__menu"
         assert_selector "button[aria-haspopup='dialog']"
         assert_selector "div.fp-button-dropdown__form[data-flat-pack-dropdown-keep-open='true'] form input[name='name']"
-        assert_selector "a[href='/favorites']", text: "Favorites"
+        assert_selector "a[href='/favorites'][data-flat-pack-dropdown-item='true']", text: "Favorites"
         refute_selector "[role='menu']"
         refute_selector "[role='menuitem']"
         refute_selector "[role='none']"
         refute_selector "form[role]"
         refute_selector "input[role]"
+      end
+
+      def test_dialog_item_keeps_a_host_action_without_menuitem
+        render_inline(Dropdown::Component.new(text: "Add to list")) do |dropdown|
+          dropdown.menu_item(
+            text: "Favorites",
+            href: "/favorites",
+            data: {action: "click->lists--add-to-list#toggle"}
+          )
+          dropdown.menu_form do
+            "<form><button type='submit'>Add</button></form>".html_safe
+          end
+        end
+
+        assert_selector "a[href='/favorites'][data-flat-pack-dropdown-item='true'][data-action='click->lists--add-to-list#toggle']"
+        refute_selector "a[role='menuitem']"
+      end
+
+      def test_nested_dropdown_inside_menu_form_keeps_its_own_menu
+        render_inline(Dropdown::Component.new(text: "Lists")) do |dropdown|
+          dropdown.menu_item(text: "Favorites", href: "/favorites")
+          dropdown.menu_form do
+            vc_test_controller.view_context.render(Dropdown::Component.new(text: "More")) do |nested|
+              nested.menu_item(text: "Pin", href: "/pin")
+            end
+          end
+        end
+
+        assert_selector "div[role='dialog'] a[href='/favorites'][data-flat-pack-dropdown-item='true']"
+        refute_selector "a[href='/favorites'][role='menuitem']"
+        assert_selector "div[role='menu'] a[role='menuitem'][href='/pin']"
+      end
+
+      def test_host_menu_role_is_dropped_and_logged_in_development
+        messages = []
+        logger = Logger.new(StringIO.new)
+        logger.define_singleton_method(:warn) { |message| messages << message }
+        development = ActiveSupport::StringInquirer.new("development")
+        rails = class << Rails; self; end
+        original_env = rails.instance_method(:env)
+        original_logger = rails.instance_method(:logger)
+        rails.define_method(:env) { development }
+        rails.define_method(:logger) { logger }
+
+        begin
+          render_inline(Dropdown::Component.new(
+            text: "Actions",
+            menu_attributes: {role: "listbox"}
+          )) do |dropdown|
+            dropdown.menu_item(text: "Edit", href: "/edit")
+          end
+        ensure
+          rails.define_method(:env, original_env)
+          rails.define_method(:logger, original_logger)
+        end
+
+        assert_selector "div[role='menu']"
+        refute_selector "[role='listbox']"
+        assert_match(/listbox/, messages.join)
+        assert_match(/menu/, messages.join)
       end
 
       def test_catalog_reports_new_dropdown_defaults
