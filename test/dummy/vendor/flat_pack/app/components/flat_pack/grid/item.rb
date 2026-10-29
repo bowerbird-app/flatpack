@@ -64,10 +64,16 @@ module FlatPack
       # min-width cascade, so they are not repeated. When the preset never
       # reaches the count, the span is clamped to the widest column count and
       # starts where that width first appears. Without a preset (a hand-built
-      # Item, not with_item), the span starts at sm.
+      # Item, not with_item), a bare integer adds no span class.
       def bare_integer_span(count)
         counts = columns_by_breakpoint
-        return {sm: count} if counts.nil?
+        if counts.nil?
+          unless SPAN_COUNTS.cover?(count)
+            raise ArgumentError, "Invalid span: #{count.inspect}. Must be an integer from 1 to 12, or :full."
+          end
+
+          return
+        end
 
         start = FlatPack::Shared::Breakpoints::NAMES.find { |name| counts[name].to_i >= count }
         if start

@@ -17,7 +17,7 @@ Masonry is layout only. A photo is `FlatPack::Media::Component` inside `with_ite
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
 | `columns` | Integer or Hash | `{base: 2, md: 3, lg: 4}` | No | Column count. An integer (1–6) applies at every breakpoint. A hash accepts `base`, `sm`, `md`, `lg`, `xl`. |
-| `gap` | Symbol | `:md` | No | Gutter preset, same scale as Grid. Allowed: `:sm` (`gap-2` / 0.5rem), `:md` (`gap-4` / 1rem), `:lg` (`gap-6` / 1.5rem). |
+| `gap` | Symbol | `:md` | No | Gutter preset. Allowed: `:sm` (`gap-2` / 0.5rem), `:md` (`gap-4` / 1rem), `:lg` (`gap-6` / 1.5rem). Grid, Stack, and Cluster use `--stack-gap-*` instead. |
 | `order` | Symbol | `:columns` | No | Packing direction. Allowed: `:columns`, `:rows`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the masonry container. |
 

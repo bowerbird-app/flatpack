@@ -300,6 +300,8 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 ### Layout & Structure
 - **Card** - Flexible content containers with header, body, footer, and media slots. `inset:` sets the inner photo radius without adding padding.
 - **Grid** - Responsive CSS grid layout with configurable columns and gaps
+- **Stack** - Vertical flex column with the same `gap:` / `align:` scale as Grid
+- **Cluster** - Wrapping horizontal flex row with `gap:`, `align:`, and `justify:`
 - **Masonry** - Mixed-ratio photos and tiles stacked without empty holes
 - **Collage** - A tilted grid, or a brick such as five over four. On a phone, a short overlapping row. Cards can rise, deal, or drift
 - **Overflow Row** - One-row layout that scrolls sideways when same-size items do not fit

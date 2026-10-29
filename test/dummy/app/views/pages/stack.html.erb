@@ -1,0 +1,88 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Stack",
+  subtitle: "One item under the next. Same gap tokens as Grid. Replaces flex flex-col gap-4."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :stack %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="default">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "A page of stacked blocks",
+    anchor_link: true,
+    subtitle: "Title, a short note, then a primary action. align: :start keeps the button its own width."
+  ) %>
+
+  <%= render FlatPack::Stack::Component.new(gap: :md, align: :start) do %>
+    <%= render FlatPack::Alert::Component.new(
+      title: "Lists",
+      description: "Three lists in this workspace. Add one, or open a list to record.",
+      style: :info
+    ) %>
+    <%= render FlatPack::Button::Component.new(text: "New list", href: "#align", style: :primary) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Stack::Component.new(gap: :md, align: :start) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Alert::Component.new(title: "Lists", description: "Three lists in this workspace.", style: :info) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Button::Component.new(text: "New list", href: "/lists/new", style: :primary) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="gaps">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Gap",
+    anchor_link: true,
+    subtitle: "sm, md, and lg use --stack-gap-sm, --stack-gap-md, and --stack-gap-lg. Same three steps as Grid."
+  ) %>
+
+  <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>
+    <% {sm: "Tight", md: "Default", lg: "Roomy"}.each do |gap, label| %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <p class="text-sm font-medium mb-3"><%= label %> · gap: :<%= gap %></p>
+          <%= render FlatPack::Stack::Component.new(gap: gap) do %>
+            <div class="rounded-[var(--radius-md)] bg-[var(--surface-muted-background-color)] px-3 py-2 text-sm">First</div>
+            <div class="rounded-[var(--radius-md)] bg-[var(--surface-muted-background-color)] px-3 py-2 text-sm">Second</div>
+            <div class="rounded-[var(--radius-md)] bg-[var(--surface-muted-background-color)] px-3 py-2 text-sm">Third</div>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="align">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Align start",
+    anchor_link: true,
+    subtitle: "stretch is the default. start keeps children their own width, like self-start on a button."
+  ) %>
+
+  <%= render FlatPack::Stack::Component.new(gap: :sm, align: :start) do %>
+    <%= render FlatPack::Badge::Component.new(text: "Draft", style: :warning) %>
+    <%= render FlatPack::Button::Component.new(text: "New list", href: "#align", style: :primary) %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Stack::Component.new(gap: :sm, align: :start) do #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Badge::Component.new(text: "Draft", style: :warning) #{erb_tag_close}
+        #{erb_output_open} render FlatPack::Button::Component.new(text: "New list", href: "/lists/new", style: :primary) #{erb_tag_close}
+      #{erb_output_open} end #{erb_tag_close}
+    CODE
+  ) %>
+</section>

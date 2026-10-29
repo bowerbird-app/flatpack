@@ -4,11 +4,11 @@
 Lay out same-size items in a single horizontal row that scrolls sideways only when they do not fit, with a soft trailing fade while more content remains to the right.
 
 ## When to use
-Use Overflow Row for compact same-size controls that should stay on one line — for example a row of `ColorSwatch` and `FontSwatch` circles in a theme editor. Prefer this over `flex-wrap` when a second row is unwanted. Do not use `ChipGroup` for swatches (`ChipGroup` is for chips and wraps by default). Do not use `Grid` for this job.
+Use Overflow Row for compact same-size controls that should stay on one line — for example a row of `ColorSwatch` and `FontSwatch` circles in a theme editor. Prefer this over `Cluster` when a second row is unwanted. Do not use `ChipGroup` for swatches (`ChipGroup` is for chips and wraps by default). Do not use `Grid` for this job.
 
 ## Class
 - Primary: `FlatPack::OverflowRow::Component`
-- Related classes: `FlatPack::ColorSwatch::Component`, `FlatPack::FontSwatch::Component`, `FlatPack::ChipGroup::Component`, `FlatPack::Grid::Component`
+- Related classes: `FlatPack::ColorSwatch::Component`, `FlatPack::FontSwatch::Component`, `FlatPack::ChipGroup::Component`, `FlatPack::Cluster::Component`, `FlatPack::Grid::Component`
 
 ## Props
 | name | type | default | required | description |

@@ -4,7 +4,7 @@
 Lay out block content in responsive CSS grid columns with configurable gaps and alignment.
 
 ## When to use
-Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and a shared row height. Use `Masonry` when portraits and landscapes should keep their own shape and stack without empty holes.
+Use Grid for card collections, dashboards, and responsive sections that need predictable spacing and a shared row height. Use `Stack` for a single vertical column. Use `Cluster` for a wrapping horizontal row. Use `Masonry` when portraits and landscapes should keep their own shape and stack without empty holes.
 
 ## Class
 - Primary: `FlatPack::Grid::Component`
@@ -36,7 +36,7 @@ Default block content is also accepted: each direct child is a grid item and is 
 | `cols: :auto` | Responsive preset `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`. |
 | `cols: 2/3/6/12` | Fixed preset mappings defined in component constants. |
 | `cols: 4` | `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`. One column below `md`. |
-| `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
+| `gap: :sm/:md/:lg` | Applies `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, or `gap-[var(--stack-gap-lg)]`. Same presets as Stack and Cluster. |
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
 | `span: 2` on `cols: :auto` | `sm:col-span-2`. `:auto` is two columns from `sm`. |
 | `span: 2` on `cols: 2`, `3`, or `4` | `md:col-span-2`. Those presets are one column until `md`. |
@@ -44,7 +44,7 @@ Default block content is also accepted: each direct child is a grid item and is 
 | `span: {base: 2}` | `col-span-2` only. A hash is not rewritten. |
 | `span: {base: 1, md: 2, lg: 8}` | `col-span-1 md:col-span-2 lg:col-span-8`. |
 
-`with_item` passes the column preset into the item. A hand-built `FlatPack::Grid::Item` does not see that preset, so a bare integer there starts at `sm` (`sm:col-span-2` only).
+`with_item` passes the column preset into the item. A hand-built `FlatPack::Grid::Item` without `columns:` emits no span class for a bare integer. Pass a hash, including `base:`, when that item should span without a preset.
 
 A span wider than the explicit columns at that breakpoint adds an implicit track sized `auto` (the cell's minimum content, not `1fr`). Later cells flow into that track, so the columns are unequal. `span: :full` is `grid-column: 1 / -1`. Those lines count only the explicit tracks, so the full cell does not cover the implicit one. Pass `base:` when a cell must span on a phone, and only when the preset already has that many base columns (`cols: 6` and `cols: 12` are `grid-cols-2` at base). A non-integer such as `2.5` raises `ArgumentError`.
 

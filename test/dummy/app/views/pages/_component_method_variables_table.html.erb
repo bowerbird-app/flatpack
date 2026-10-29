@@ -791,6 +791,25 @@
         { variable: "span", accepts: "Integer 1-12, :full, or Hash (base, sm, md, lg, xl)", example: "span: 2" }
       ]
     },
+    stack: {
+      label: "Stack",
+      method_call: "render FlatPack::Stack::Component.new(gap: :md, align: :stretch) do ... end",
+      variables: [
+        { variable: "gap", accepts: ":sm, :md, :lg", example: "gap: :md" },
+        { variable: "align", accepts: ":start, :center, :stretch", example: "align: :stretch" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-md\", id: \"list-page\"" }
+      ]
+    },
+    cluster: {
+      label: "Cluster",
+      method_call: "render FlatPack::Cluster::Component.new(gap: :sm, align: :center, justify: :start) do ... end",
+      variables: [
+        { variable: "gap", accepts: ":sm, :md, :lg", example: "gap: :sm" },
+        { variable: "align", accepts: ":start, :center, :stretch", example: "align: :center" },
+        { variable: "justify", accepts: ":start, :center, :end, :between", example: "justify: :between" },
+        { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-sm\", id: \"form-actions\"" }
+      ]
+    },
     media: {
       label: "Media",
       method_call: "render FlatPack::Media::Component.new(src: \"/photos/harbour.jpg\", alt: \"Harbour at dusk\", width: 1120, height: 1400) do |media| ... end",

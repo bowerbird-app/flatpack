@@ -203,6 +203,44 @@ module FlatPack
       refute FlatPack::ComponentCatalog.show("Masonry::Image")
     end
 
+    test "show Grid binds shared GAPS to gap and ALIGNS to align" do
+      payload = FlatPack::ComponentCatalog.show("Grid::Component")
+      gap = parameter_named(payload, "gap")
+      align = parameter_named(payload, "align")
+
+      assert_equal FlatPack::Shared::Flex::GAPS.keys.map(&:to_s), gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      assert_equal FlatPack::Shared::Flex::ALIGNS.keys.map(&:to_s), align.fetch(:enum)
+      assert_equal "stretch", align.fetch(:default)
+    end
+
+    test "show Stack binds GAPS to gap and ALIGNS to align" do
+      payload = FlatPack::ComponentCatalog.show("Stack::Component")
+      gap = parameter_named(payload, "gap")
+      align = parameter_named(payload, "align")
+
+      assert_equal %w[sm md lg], gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      assert_equal %w[start center stretch], align.fetch(:enum)
+      assert_equal "stretch", align.fetch(:default)
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::Stack::Component"
+    end
+
+    test "show Cluster binds GAPS, ALIGNS, and JUSTIFIES" do
+      payload = FlatPack::ComponentCatalog.show("Cluster::Component")
+      gap = parameter_named(payload, "gap")
+      align = parameter_named(payload, "align")
+      justify = parameter_named(payload, "justify")
+
+      assert_equal %w[sm md lg], gap.fetch(:enum)
+      assert_equal "md", gap.fetch(:default)
+      assert_equal %w[start center stretch], align.fetch(:enum)
+      assert_equal "center", align.fetch(:default)
+      assert_equal %w[start center end between], justify.fetch(:enum)
+      assert_equal "start", justify.fetch(:default)
+      assert_includes payload.fetch(:examples).first.fetch(:erb), "FlatPack::Cluster::Component"
+    end
+
     test "show Masonry binds ORDERS to order and GAPS to gap" do
       payload = FlatPack::ComponentCatalog.show("Masonry::Component")
       order = parameter_named(payload, "order")
