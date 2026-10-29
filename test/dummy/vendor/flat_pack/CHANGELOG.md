@@ -38,6 +38,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A bare `span:` integer follows the column preset instead of always starting at `sm`. `cols: 2`, `3`, and `4` stay one column until `md`, so `span: 2` is `md:col-span-2` and does not add an implicit track between `sm` and `md`. Pass `base:` to span on a phone, and only when that preset already has enough base columns (`cols: 6` and `cols: 12` are `grid-cols-2` at base). A span wider than the columns at that breakpoint still adds an implicit `auto` track. `span: :full` is `grid-column: 1 / -1` and covers only the explicit tracks.
 - A host `col-span-*` class on the item wins over the classes from `span:`.
 - Rebuild host Tailwind so `col-span-1` through `col-span-12`, `col-span-full`, and the `sm:`, `md:`, `lg:`, and `xl:` prefixes are generated. Reload kit CSS. Do not rerun the install generator.
+- Combobox can load options from a fetch URL or a loader hook. Pass `search_endpoint:` (optional `search_param:`, `min_search_length:`, `debounce:`) for `GET` JSON, or `loader: true` and listen for `flat-pack:combobox:load`. Typing still filters a local `options:` list when neither is set. The list keeps keyboard movement, Enter, Escape, and `aria-activedescendant`. Loading, hint, and empty rows are kit copy. A choice still writes the hidden field and dispatches `change`. It also dispatches `flat-pack:combobox:selected` with `value`, `label`, and optional `subtitle`.
+- Additive. Existing Combobox calls with `options:` are unchanged.
+- Remote JSON is `{ "options": [{ "value": "...", "label": "...", "subtitle": "..." }] }`. `results` or `items` arrays, and `id` / `name` keys, are also accepted. `subtitle` is optional.
+- `options:` may be omitted when `search_endpoint:` or `loader: true` is set. Seed `options:` with the current choice so the field can show a label before the next search.
+- Rebuild host Tailwind if the host did not already use `block` and `text-xs` on Combobox rows. Reload kit JavaScript. Do not rerun the install generator.
 
 ### Changed
 - ComponentCatalog still maps the `text` family to `docs/components/text-stream.md`. `Text::Component` is the one override (`DOC_PATH_OVERRIDES`) and reads `docs/components/text.md`. Nested billing, button, comments, menu, and sidebar entries still use the family file.

@@ -3,15 +3,26 @@
 module FlatPack
   module Combobox
     class Component < FlatPack::BaseComponent
+      DEFAULT_DEBOUNCE = 300
+      DEFAULT_MIN_SEARCH_LENGTH = 2
+      DEFAULT_SEARCH_PARAM = "q"
+
       def initialize(
         name:,
-        options:,
+        options: nil,
         value: nil,
         label: nil,
         placeholder: FlatPack::Copy::OMITTED,
         disabled: false,
         required: false,
         empty_text: FlatPack::Copy::OMITTED,
+        loading_text: FlatPack::Copy::OMITTED,
+        hint_text: FlatPack::Copy::OMITTED,
+        search_endpoint: nil,
+        search_param: DEFAULT_SEARCH_PARAM,
+        min_search_length: DEFAULT_MIN_SEARCH_LENGTH,
+        debounce: DEFAULT_DEBOUNCE,
+        loader: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -23,8 +34,16 @@ module FlatPack
         @disabled = disabled
         @required = required
         @empty_text = fp_text(empty_text, "combobox.empty")
+        @loading_text = fp_text(loading_text, "combobox.searching")
+        @search_endpoint = search_endpoint.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_endpoint) : nil
+        @search_param = search_param.presence || DEFAULT_SEARCH_PARAM
+        @min_search_length = [min_search_length.to_i, 1].max
+        @debounce = [debounce.to_i, 0].max
+        @loader = loader == true
+        @hint_text = fp_text(hint_text, "combobox.type_to_search", count: @min_search_length)
         @list_id = "fp-combobox-#{SecureRandom.hex(4)}"
         validate_name!
+        validate_search_endpoint!(search_endpoint) if search_endpoint.present?
         validate_options!
       end
 
@@ -46,10 +65,11 @@ module FlatPack
           if option.is_a?(Hash)
             {
               value: option[:value].to_s,
-              label: (option[:label] || option[:value]).to_s
+              label: (option[:label] || option[:value]).to_s,
+              subtitle: option[:subtitle].to_s.presence
             }
           else
-            {value: option.to_s, label: option.to_s}
+            {value: option.to_s, label: option.to_s, subtitle: nil}
           end
         end
       end
@@ -59,14 +79,30 @@ module FlatPack
         match ? match[:label] : @value
       end
 
+      def async?
+        @search_endpoint.present? || @loader
+      end
+
       def root_attributes
         merge_attributes(
           class: "relative w-full",
-          data: {
-            controller: "flat-pack--combobox",
-            "flat-pack--combobox-empty-text-value": @empty_text
-          }
+          data: root_data
         )
+      end
+
+      def root_data
+        data = {
+          controller: "flat-pack--combobox",
+          "flat-pack--combobox-empty-text-value": @empty_text,
+          "flat-pack--combobox-loading-text-value": @loading_text,
+          "flat-pack--combobox-hint-text-value": @hint_text,
+          "flat-pack--combobox-search-param-value": @search_param,
+          "flat-pack--combobox-min-search-length-value": @min_search_length,
+          "flat-pack--combobox-debounce-value": @debounce,
+          "flat-pack--combobox-loader-value": @loader
+        }
+        data["flat-pack--combobox-search-endpoint-value"] = @search_endpoint if @search_endpoint.present?
+        data
       end
 
       def render_label
@@ -135,7 +171,13 @@ module FlatPack
 
       def render_list
         content_tag(:ul, id: @list_id, **list_attributes) do
-          safe_join(@options.each_with_index.map { |option, index| render_option(option, index) } + [render_empty_row])
+          safe_join(
+            @options.each_with_index.map { |option, index| render_option(option, index) } + [
+              render_status_row(@hint_text, "hint"),
+              render_status_row(@loading_text, "loading"),
+              render_empty_row
+            ]
+          )
         end
       end
 
@@ -154,22 +196,38 @@ module FlatPack
       def render_option(option, index)
         selected = option[:value] == @value
         content_tag(:li,
-          option[:label],
+          option_inner(option),
           id: "#{@list_id}-option-#{index}",
           role: "option",
           class: option_classes(selected),
-          data: {
-            "flat-pack--combobox-target": "option",
-            value: option[:value],
-            label: option[:label],
-            action: "mousedown->flat-pack--combobox#choose"
-          },
+          data: option_data(option),
           aria: {selected: selected.to_s})
+      end
+
+      def option_data(option)
+        data = {
+          "flat-pack--combobox-target": "option",
+          value: option[:value],
+          label: option[:label],
+          action: "mousedown->flat-pack--combobox#choose"
+        }
+        data[:subtitle] = option[:subtitle] if option[:subtitle].present?
+        data
+      end
+
+      def option_inner(option)
+        return option[:label] unless option[:subtitle].present?
+
+        safe_join([
+          content_tag(:span, option[:label], class: "block"),
+          content_tag(:span, option[:subtitle], class: "block text-xs text-[var(--surface-muted-content-color)]")
+        ])
       end
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "bg-[var(--list-item-hover-background-color)]" "bg-[var(--list-item-active-background-color)]"
+      # "flex flex-col gap-0.5" "block text-xs text-[var(--surface-muted-content-color)]"
       def option_classes(selected)
         [
           "cursor-pointer rounded-[var(--dropdown-item-radius)] px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
@@ -177,6 +235,13 @@ module FlatPack
           "aria-selected:bg-[var(--list-item-active-background-color)]",
           selected ? "bg-[var(--list-item-active-background-color)]" : "hover:bg-[var(--list-item-hover-background-color)]"
         ].join(" ")
+      end
+
+      def render_status_row(text, target)
+        content_tag(:li,
+          text,
+          class: "hidden px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
+          data: {"flat-pack--combobox-target": target})
       end
 
       def render_empty_row
@@ -197,9 +262,15 @@ module FlatPack
       end
 
       def validate_options!
-        return if @options.any?
+        return if @options.any? || async?
 
         raise ArgumentError, "options is required"
+      end
+
+      def validate_search_endpoint!(raw_endpoint)
+        return if @search_endpoint.present?
+
+        raise ArgumentError, "Unsafe search_endpoint detected: #{raw_endpoint}"
       end
     end
   end

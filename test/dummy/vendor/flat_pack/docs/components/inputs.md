@@ -88,6 +88,7 @@ None.
 - Hierarchical nested multiselect via `FlatPack::Select::Component` with `multiple: true` and option `children:`, including parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
 - Legacy hierarchical nested multiselect via `flat-pack--nested-multiselect`; prefer Select for new usage
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
+- Combobox can also fetch options from `search_endpoint` (or a JS loader hook). See [Combobox](combobox.md).
 - `chrome: :cell` on those same controls removes the control border. The collection editor cell draws the line, the focus ring, and the error ring. Select menus and their search field keep their own border. A normal form omits `chrome` and stays bordered.
 
 ## Example
