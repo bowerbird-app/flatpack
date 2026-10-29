@@ -8,6 +8,7 @@ Use Grid for card collections, dashboards, and responsive sections that need pre
 
 ## Class
 - Primary: `FlatPack::Grid::Component`
+- Related classes: `FlatPack::Grid::Item`
 
 ## Props
 
@@ -18,8 +19,15 @@ Use Grid for card collections, dashboards, and responsive sections that need pre
 | `align` | Symbol | `:stretch` | No | Item alignment preset. Allowed: `:start`, `:center`, `:stretch`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into grid container. |
 
+`with_item` / `FlatPack::Grid::Item` props:
+
+| name | type | default | required | description |
+|------|------|---------|----------|-------------|
+| `span` | Integer, `:full`, or Hash | omit | No | How many columns this cell covers. An integer `1`–`12` applies at every breakpoint (`col-span-2`). `:full` is `col-span-full`. A hash accepts `base`, `sm`, `md`, `lg`, `xl` with those same values. Omit it and the cell is one track wide. |
+
 ## Slots
-Default block content; each child element participates as a grid item.
+- `with_item` — optional. The slot wrapper is the grid cell. Pass `span:` to cover more than one column.
+Default block content is also accepted: each direct child is a grid item. You can render `FlatPack::Grid::Item` inside that block. Existing grids that pass children with no `with_item` keep the same markup.
 
 ## Variants
 
@@ -29,6 +37,8 @@ Default block content; each child element participates as a grid item.
 | `cols: 2/3/4/6/12` | Fixed preset mappings defined in component constants. |
 | `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
+| `span: 2` | Item class `col-span-2` at every breakpoint. |
+| `span: {base: 1, md: 2, lg: 8}` | Item classes `col-span-1 md:col-span-2 lg:col-span-8`. |
 
 ## Example
 
@@ -40,6 +50,22 @@ Default block content; each child element participates as a grid item.
 <% end %>
 ```
 
+One cell spanning two columns, then two ordinary cells:
+
+```erb
+<%= render FlatPack::Grid::Component.new(cols: 4) do |grid| %>
+  <% grid.with_item(span: {base: 1, md: 2, lg: 2}) do %>
+    <%= render FlatPack::Card::Component.new(border: :strong) { "Wide" } %>
+  <% end %>
+  <% grid.with_item do %>
+    <%= render FlatPack::Card::Component.new(border: :strong) { "Item 2" } %>
+  <% end %>
+  <% grid.with_item do %>
+    <%= render FlatPack::Card::Component.new(border: :strong) { "Item 3" } %>
+  <% end %>
+<% end %>
+```
+
 Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`. An item added after the controller connects is draggable too.
 
 ## Accessibility
@@ -47,4 +73,5 @@ Grid is structural layout only. Accessibility is determined by the semantics of 
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
+- Tailwind must see the `col-span-*` class literals on `FlatPack::Grid::Item`.
 - Optional drag-reorder integration uses Stimulus controller `flat-pack--grid-sortable`.

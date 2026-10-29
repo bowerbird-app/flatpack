@@ -51,6 +51,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Table column alignment | `align` | `FlatPack::Table::Column` only. `:start` (default), `:center`, `:end`. Logical, so RTL flips start and end. |
 | Overlay copy on a photo | `on` | Hero `:centered_image`. `:dark` is light type on a dark wash. `:light` is dark type on a light wash. |
 | Grid item alignment | `align` | Grid `items-*` presets: `:start`, `:center`, `:stretch`. Same param name as content `align`, different enum. |
+| Grid item column span | `span` | `FlatPack::Grid::Item` and Grid `with_item`. Integer `1`–`12`, `:full`, or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Omit it for one column. Not Table `colspan`. |
 | Masonry column count | `columns` | Masonry: integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Collage grid: one integer 1–6. Collage brick uses `rows` instead. Do not use Grid's `cols` here. |
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
 | FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |

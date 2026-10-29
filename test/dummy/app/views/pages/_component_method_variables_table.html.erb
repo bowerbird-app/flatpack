@@ -786,7 +786,9 @@
       variables: [
         { variable: "cols", accepts: ":auto, Integer", example: "cols: 3" },
         { variable: "gap", accepts: ":none, :xs, :sm, :md, :lg, :xl", example: "gap: :lg" },
-        { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" }
+        { variable: "align", accepts: ":start, :center, :end, :stretch", example: "align: :stretch" },
+        { variable: "with_item", accepts: "slot block, repeatable", example: "grid.with_item(span: {base: 1, md: 2, lg: 8}) { ... }" },
+        { variable: "span", accepts: "Integer 1-12, :full, or Hash (base, sm, md, lg, xl)", example: "span: 2" }
       ]
     },
     media: {

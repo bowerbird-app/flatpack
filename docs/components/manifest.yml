@@ -437,6 +437,8 @@ components:
     title: Grid
     doc: docs/components/grid.md
     primary_class: FlatPack::Grid::Component
+    related_classes:
+      - FlatPack::Grid::Item
     status: documented
 
   - key: hero

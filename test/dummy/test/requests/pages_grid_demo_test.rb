@@ -19,4 +19,16 @@ class PagesGridDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_grid_movable_cards_path
     assert_includes response.body, "Movable Cards"
   end
+
+  test "grid page shows item span classes" do
+    get demo_grid_path
+
+    assert_response :success
+    assert_includes response.body, "Item span"
+    assert_includes response.body, "col-span-1"
+    assert_includes response.body, "md:col-span-2"
+    assert_includes response.body, "lg:col-span-2"
+    assert_includes response.body, "col-span-2"
+    assert_includes response.body, "col-span-full"
+  end
 end

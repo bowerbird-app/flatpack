@@ -30,6 +30,9 @@ module FlatPack
         stretch: "items-stretch"
       }.freeze
 
+      renders_many :items, "FlatPack::Grid::Item"
+      undef_method :with_item, :with_item_content
+
       def initialize(
         cols: :auto,
         gap: :md,
@@ -46,8 +49,20 @@ module FlatPack
         validate_align!
       end
 
+      def with_item(span: nil, **system_arguments, &block)
+        set_slot(:items, nil, span: span, **system_arguments, &block)
+        nil
+      end
+
       def call
-        content_tag(:div, content, **container_attributes)
+        captured = content
+        content_tag(:div, **container_attributes) do
+          if items?
+            safe_join(items)
+          else
+            captured
+          end
+        end
       end
 
       private
