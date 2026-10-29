@@ -89,6 +89,7 @@ A photo with its own inset uses `padding: :none` and `inset:` so `radius: :card_
 | `body` | slot | no | Body slot wrapper (`FlatPack::Card::Body::Component`). |
 | `footer` | slot | no | Footer slot wrapper (`FlatPack::Card::Footer::Component`). |
 | `media` | slot | no | Media slot wrapper (`FlatPack::Card::Media::Component`). |
+| `media.hover_actions` | nested slot | no | One overlay on the photo (dropdown, button, checkbox). Hidden on hover-capable pointers until the media is hovered. Always visible on `focus-within` and on pointers that cannot hover. Named `hover_actions` so it does not collide with a Card-level `actions` slot. `FlatPack::Reveal::Component` does not cover this. Reveal is scroll-in motion. |
 
 Slot props:
 
@@ -99,6 +100,8 @@ Slot props:
 | `footer.divider` | Boolean | `true` | no | Adds top border separator. |
 | `media.aspect_ratio` | String | `nil` | no | Aspect ratio class (`"16/9"`, `"4/3"`, `"1/1"`, or custom ratio string). |
 | `media.padding` | Symbol | `:md` | no | Media inset spacing: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
+| `media.hover_actions.placement` | Symbol | `:top_right` | no | Overlay cell. Same nine-cell grid as `FlatPack::Overlay::Item`: `:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`. Invalid values raise `ArgumentError`. |
+| `media.hover_actions.inset` | Symbol | `:sm` | no | Gap from the media edge. `:sm`, `:md`, or `:lg`. Invalid values raise `ArgumentError`. `:center` ignores it. |
 
 ## Variants
 - Background: `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`.
@@ -166,6 +169,32 @@ The default edge is `--card-border-width` and `--card-shadow`. Those live on bar
 `radius: :xxl` sets the corner to `--radius-xxl` (2rem). `padding: :none` is separate.
 
 ```erb
+<%= render FlatPack::Card::Component.new(padding: :none) do |card| %>
+  <% card.media(aspect_ratio: "16/9", padding: :none) do |media| %>
+    <%= image_tag "/masonry/kiln.svg", class: "h-full w-full object-cover", alt: "Kiln yard" %>
+    <% media.hover_actions do %>
+      <%= render FlatPack::Button::Dropdown::Component.new(
+        text: "Cover actions",
+        icon: "ellipsis-vertical",
+        icon_only: true,
+        style: :secondary,
+        size: :sm,
+        placement: :bottom_left
+      ) do |dropdown| %>
+        <% dropdown.menu_item(text: "Replace cover", href: "#") %>
+        <% dropdown.menu_item(text: "Remove cover", href: "#") %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% card.body { "Kiln notes" } %>
+<% end %>
+```
+
+Omit `hover_actions` and the media markup stays the same. Pass `placement:` and `inset:` on `hover_actions` when the control should sit in another corner.
+
+The slot is visible by default. On `(hover: hover)` it starts hidden and appears on `group-hover/media`. Keyboard focus uses `focus-within`. A phone never matches that hover query, so the control stays in view. `FlatPack::Media::Component` `with_item` can still take the same hover classes by hand. Prefer `hover_actions` on Card media so the host does not copy those utilities.
+
+```erb
 <%= render FlatPack::Card::Component.new(radius: :xxxl, padding: :md) do %>
   <%= render FlatPack::Media::Component.new(
     src: "/images/hero-stool.jpg",
@@ -193,6 +222,7 @@ The default edge is `--card-border-width` and `--card-shadow`. Those live on bar
 - Uses semantic container elements (`div` or `a` when clickable).
 - Clickable cards become a single focusable link target.
 - Keep nested interactive controls out of fully clickable cards to avoid conflicting focus targets.
+- `media.hover_actions` is visual only. The control needs its own label. It stays in the tab order. On a hover pointer it is hidden until the media is hovered or the control is focused. On a touch device it stays visible.
 - `FlatPack::Card::Stat::Component` paints up/down trend copy with `--color-success-background-color` / `--color-danger-background-color`, not a Tailwind green or red.
 
 ## Dependencies
