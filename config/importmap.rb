@@ -10,6 +10,7 @@ pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
 pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
+pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
 
 # Heroicons curated subset — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

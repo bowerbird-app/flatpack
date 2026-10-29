@@ -3,6 +3,8 @@
 module FlatPack
   module Combobox
     class Component < FlatPack::BaseComponent
+      SEARCH_MODES = %i[local remote].freeze
+      DEFAULT_SEARCH_MODE = :local
       DEFAULT_DEBOUNCE = 300
       DEFAULT_MIN_SEARCH_LENGTH = 2
       DEFAULT_SEARCH_PARAM = "q"
@@ -18,11 +20,11 @@ module FlatPack
         empty_text: FlatPack::Copy::OMITTED,
         loading_text: FlatPack::Copy::OMITTED,
         hint_text: FlatPack::Copy::OMITTED,
+        search_mode: DEFAULT_SEARCH_MODE,
         search_endpoint: nil,
         search_param: DEFAULT_SEARCH_PARAM,
         min_search_length: DEFAULT_MIN_SEARCH_LENGTH,
         debounce: DEFAULT_DEBOUNCE,
-        loader: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -35,15 +37,17 @@ module FlatPack
         @required = required
         @empty_text = fp_text(empty_text, "combobox.empty")
         @loading_text = fp_text(loading_text, "combobox.searching")
+        @search_mode = search_mode.to_sym
         @search_endpoint = search_endpoint.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_endpoint) : nil
         @search_param = search_param.presence || DEFAULT_SEARCH_PARAM
         @min_search_length = [min_search_length.to_i, 1].max
         @debounce = [debounce.to_i, 0].max
-        @loader = loader == true
         @hint_text = fp_text(hint_text, "combobox.type_to_search", count: @min_search_length)
         @list_id = "fp-combobox-#{SecureRandom.hex(4)}"
         validate_name!
+        validate_search_mode!
         validate_search_endpoint!(search_endpoint) if search_endpoint.present?
+        validate_search_configuration!
         validate_options!
       end
 
@@ -79,8 +83,8 @@ module FlatPack
         match ? match[:label] : @value
       end
 
-      def async?
-        @search_endpoint.present? || @loader
+      def remote?
+        @search_mode == :remote
       end
 
       def root_attributes
@@ -96,10 +100,10 @@ module FlatPack
           "flat-pack--combobox-empty-text-value": @empty_text,
           "flat-pack--combobox-loading-text-value": @loading_text,
           "flat-pack--combobox-hint-text-value": @hint_text,
+          "flat-pack--combobox-search-mode-value": @search_mode,
           "flat-pack--combobox-search-param-value": @search_param,
           "flat-pack--combobox-min-search-length-value": @min_search_length,
-          "flat-pack--combobox-debounce-value": @debounce,
-          "flat-pack--combobox-loader-value": @loader
+          "flat-pack--combobox-debounce-value": @debounce
         }
         data["flat-pack--combobox-search-endpoint-value"] = @search_endpoint if @search_endpoint.present?
         data
@@ -139,6 +143,7 @@ module FlatPack
           value: selected_label,
           placeholder: @placeholder,
           autocomplete: "off",
+          spellcheck: "false",
           disabled: @disabled,
           role: "combobox",
           aria: {
@@ -262,9 +267,22 @@ module FlatPack
       end
 
       def validate_options!
-        return if @options.any? || async?
+        return if @options.any? || remote?
 
         raise ArgumentError, "options is required"
+      end
+
+      def validate_search_mode!
+        return if SEARCH_MODES.include?(@search_mode)
+
+        raise ArgumentError, "Invalid search_mode: #{@search_mode}. Must be one of: #{SEARCH_MODES.join(", ")}"
+      end
+
+      def validate_search_configuration!
+        return unless remote?
+        return if @search_endpoint.present?
+
+        raise ArgumentError, "search_endpoint is required when search_mode is :remote"
       end
 
       def validate_search_endpoint!(raw_endpoint)

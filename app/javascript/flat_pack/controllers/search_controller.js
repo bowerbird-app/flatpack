@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
 import { onClickOutside } from "flat_pack/click_outside"
+import { createRemoteQuery } from "flat_pack/remote_query"
 
 export default class extends Controller {
   static targets = ["input", "dropdown", "results", "noResults", "loading"]
@@ -13,8 +14,7 @@ export default class extends Controller {
   }
 
   connect() {
-    this.debounceTimer = null
-    this.abortController = null
+    this.remote = createRemoteQuery()
     this.outsideClick = onClickOutside(document, () => this.close(), {
       roots: () => this.element
     })
@@ -23,8 +23,7 @@ export default class extends Controller {
 
   disconnect() {
     this.outsideClick?.remove()
-    this.clearDebounce()
-    this.abortPendingRequest()
+    this.remote?.stop()
   }
 
   search() {
@@ -41,11 +40,10 @@ export default class extends Controller {
       return
     }
 
-    this.clearDebounce()
-    this.debounceTimer = setTimeout(() => {
+    this.remote.debounce(this.debounceValue, () => {
       this.showLoading()
       this.fetchResults(query)
-    }, this.debounceValue)
+    })
   }
 
   filterLocalItems(query) {
@@ -103,16 +101,10 @@ export default class extends Controller {
   }
 
   async fetchResults(query) {
-    this.abortPendingRequest()
-    this.abortController = new AbortController()
-
     try {
-      const url = new URL(this.urlValue, window.location.origin)
-      url.searchParams.set(this.paramValue, query)
-
-      const response = await fetch(url.toString(), {
-        headers: { Accept: "application/json" },
-        signal: this.abortController.signal
+      const response = await this.remote.fetch(this.urlValue, {
+        query,
+        param: this.paramValue
       })
 
       if (!response.ok) {
@@ -186,19 +178,5 @@ export default class extends Controller {
 
   hideLoading() {
     this.loadingTarget.classList.add("hidden")
-  }
-
-  clearDebounce() {
-    if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer)
-      this.debounceTimer = null
-    }
-  }
-
-  abortPendingRequest() {
-    if (this.abortController) {
-      this.abortController.abort()
-      this.abortController = null
-    }
   }
 }

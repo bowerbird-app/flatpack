@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 import { onClickOutside } from "flat_pack/click_outside"
+import { createRemoteQuery } from "flat_pack/remote_query"
 
 const OPTION_CLASSES = [
   "cursor-pointer rounded-[var(--dropdown-item-radius)] px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm",
@@ -15,19 +16,17 @@ export default class extends Controller {
     emptyText: { type: String, default: "No matches" },
     loadingText: { type: String, default: "Searching..." },
     hintText: { type: String, default: "Type at least 2 characters to search" },
+    searchMode: { type: String, default: "local" },
     searchEndpoint: { type: String, default: "" },
     searchParam: { type: String, default: "q" },
     minSearchLength: { type: Number, default: 2 },
-    debounce: { type: Number, default: 300 },
-    loader: { type: Boolean, default: false }
+    debounce: { type: Number, default: 300 }
   }
 
   connect() {
     this.openList = false
     this.activeIndex = -1
-    this.debounceTimer = null
-    this.abortController = null
-    this.requestId = 0
+    this.remote = createRemoteQuery()
     this.outsideClick = onClickOutside(document, () => this.close(), {
       event: "mousedown",
       roots: () => this.element
@@ -36,8 +35,7 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.clearDebounce()
-    this.abortPending()
+    this.remote?.stop()
     cancelOverlayHide(this.listTarget)
     this.outsideClick?.remove()
   }
@@ -96,72 +94,43 @@ export default class extends Controller {
     const selectedLabel = selected?.dataset.label || ""
     if (query.toLowerCase() !== selectedLabel.toLowerCase()) this.valueTarget.value = ""
 
-    this.clearDebounce()
-    this.abortPending()
-
     if (query.length < this.minSearchLengthValue) {
+      this.remote.stop()
       this.showHint()
       return
     }
 
     this.showLoading()
-    this.debounceTimer = setTimeout(() => this.requestRemote(query), this.debounceValue)
+    this.remote.debounce(this.debounceValue, () => this.requestRemote(query))
   }
 
   async requestRemote(query) {
-    const requestId = ++this.requestId
-    const event = new CustomEvent("flat-pack:combobox:load", {
-      bubbles: true,
-      cancelable: true,
-      detail: { query, options: null }
-    })
-    this.element.dispatchEvent(event)
-
     try {
-      let items
-      if (event.defaultPrevented) {
-        items = this.normalizeItems(await event.detail.options)
-      } else if (this.searchEndpointValue) {
-        items = await this.fetchOptions(query)
-      } else {
-        items = []
+      const response = await this.remote.fetch(this.searchEndpointValue, {
+        query,
+        param: this.searchParamValue
+      })
+
+      if (!response.ok) {
+        this.renderRemoteOptions([])
+        return
       }
 
-      if (requestId !== this.requestId) return
-      this.renderRemoteOptions(items)
+      this.renderRemoteOptions(this.normalizeItems(await response.json()))
     } catch (error) {
       if (error?.name === "AbortError") return
-      if (requestId !== this.requestId) return
       this.renderRemoteOptions([])
     }
   }
 
-  async fetchOptions(query) {
-    this.abortController = new AbortController()
-    const url = new URL(this.searchEndpointValue, window.location.origin)
-    url.searchParams.set(this.searchParamValue, query)
-
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: { Accept: "application/json" },
-      signal: this.abortController.signal
-    })
-
-    if (!response.ok) return []
-
-    return this.normalizeItems(await response.json())
-  }
-
   normalizeItems(payload) {
-    const items = Array.isArray(payload)
-      ? payload
-      : payload?.options || payload?.results || payload?.items
+    const items = Array.isArray(payload) ? payload : payload?.items
     if (!Array.isArray(items)) return []
 
     return items
       .map((item) => {
-        const value = String(item?.value || item?.id || "").trim()
-        const label = String(item?.label || item?.name || "").trim()
+        const value = String(item?.value || "").trim()
+        const label = String(item?.label || "").trim()
         if (!value || !label) return null
 
         const subtitle = String(item?.subtitle || "").trim()
@@ -198,10 +167,6 @@ export default class extends Controller {
     option.dataset.value = item.value
     option.dataset.label = item.label
     if (item.subtitle) option.dataset.subtitle = item.subtitle
-    option.addEventListener("mousedown", (event) => {
-      event.preventDefault()
-      this.select(option)
-    })
 
     if (item.subtitle) {
       const label = document.createElement("span")
@@ -323,19 +288,6 @@ export default class extends Controller {
   }
 
   get asyncMode() {
-    return this.loaderValue || Boolean(this.searchEndpointValue)
-  }
-
-  clearDebounce() {
-    if (!this.debounceTimer) return
-    clearTimeout(this.debounceTimer)
-    this.debounceTimer = null
-  }
-
-  abortPending() {
-    this.requestId += 1
-    if (!this.abortController) return
-    this.abortController.abort()
-    this.abortController = null
+    return this.searchModeValue === "remote"
   }
 }

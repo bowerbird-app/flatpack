@@ -473,7 +473,7 @@ class PagesController < ApplicationController
       }.first(10)
     end
 
-    render json: {options: results}
+    render json: {items: results}
   end
 
   def forms_select_options

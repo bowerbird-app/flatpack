@@ -154,9 +154,12 @@ function playOverlayExit(element, options = {}) { element.classList.add("hidden"
 function cancelOverlayHide() {}`
     )
     .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
+    .replace(/import \{[^}]+\} from "flat_pack\/remote_query"\n/, "")
     .replace('export default class extends Controller', 'class ComboboxController extends Controller') + '\nmodule.exports = ComboboxController\n'
   const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
   const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
+  const remoteQueryPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'remote_query.js')
+  const remoteQuerySource = fs.readFileSync(remoteQueryPath, 'utf8').replaceAll('export function ', 'function ')
 
   activeDocument = {
     listeners: [],
@@ -182,7 +185,7 @@ function cancelOverlayHide() {}`
     CustomEvent: FakeCustomEvent,
     Event: FakeCustomEvent,
     AbortController,
-    fetch: fetchImpl || (async () => ({ ok: true, json: async () => ({ options: [] }) })),
+    fetch: fetchImpl || (async () => ({ ok: true, json: async () => ({ items: [] }) })),
     setTimeout(fn) {
       fn()
       return 1
@@ -190,7 +193,7 @@ function cancelOverlayHide() {}`
     clearTimeout() {}
   }
 
-  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + remoteQuerySource + '\n' + transformedSource, context, { filename: filePath })
 
   return context.module.exports
 }
@@ -216,7 +219,7 @@ function buildController() {
   controller.listTarget.classList.add('hidden')
   controller.hasHintTarget = false
   controller.hasLoadingTarget = false
-  controller.loaderValue = false
+  controller.searchModeValue = 'local'
   controller.searchEndpointValue = ''
   controller.searchParamValue = 'q'
   controller.minSearchLengthValue = 2
@@ -226,7 +229,7 @@ function buildController() {
   return controller
 }
 
-function buildRemoteController({ fetchImpl, loader = false } = {}) {
+function buildRemoteController({ fetchImpl } = {}) {
   const ControllerClass = loadController({ fetchImpl })
   const controller = new ControllerClass()
   controller.element = new FakeElement('div')
@@ -246,8 +249,8 @@ function buildRemoteController({ fetchImpl, loader = false } = {}) {
   controller.listTarget.classList.add('hidden')
   controller.hasHintTarget = true
   controller.hasLoadingTarget = true
-  controller.loaderValue = loader
-  controller.searchEndpointValue = loader ? '' : '/demo/forms/combobox/options'
+  controller.searchModeValue = 'remote'
+  controller.searchEndpointValue = '/demo/forms/combobox/options'
   controller.searchParamValue = 'q'
   controller.minSearchLengthValue = 3
   controller.debounceValue = 0
@@ -336,7 +339,7 @@ test('remote fetch paints options from json and keeps keyboard selection', async
       return {
         ok: true,
         json: async () => ({
-          options: [
+          items: [
             { value: 'fed-square', label: 'Federation Square', subtitle: 'Melbourne VIC' }
           ]
         })
@@ -371,7 +374,7 @@ test('remote search shows a hint before min characters and skips fetch', async (
   const controller = buildRemoteController({
     fetchImpl: async () => {
       fetched = true
-      return { ok: true, json: async () => ({ options: [] }) }
+      return { ok: true, json: async () => ({ items: [] }) }
     }
   })
 
@@ -386,7 +389,7 @@ test('remote search shows a hint before min characters and skips fetch', async (
 
 test('remote empty json shows the empty row', async () => {
   const controller = buildRemoteController({
-    fetchImpl: async () => ({ ok: true, json: async () => ({ options: [] }) })
+    fetchImpl: async () => ({ ok: true, json: async () => ({ items: [] }) })
   })
 
   controller.inputTarget.value = 'zzz'
@@ -409,13 +412,11 @@ test('failed fetch shows the empty row', async () => {
   assert.equal(controller.emptyTarget.classList.contains('hidden'), false)
 })
 
-test('results arrays and id keys normalize into options', async () => {
+test('a top-level array uses the same items contract as Select', async () => {
   const controller = buildRemoteController({
     fetchImpl: async () => ({
       ok: true,
-      json: async () => ({
-        results: [{ id: 'opera-house', name: 'Sydney Opera House' }]
-      })
+      json: async () => [{ value: 'opera-house', label: 'Sydney Opera House' }]
     })
   })
 
@@ -428,18 +429,49 @@ test('results arrays and id keys normalize into options', async () => {
   assert.equal(option.dataset.label, 'Sydney Opera House')
 })
 
-test('loader hook can supply options without a fetch url', async () => {
-  const controller = buildRemoteController({ loader: true })
-  controller.element.addEventListener('flat-pack:combobox:load', (event) => {
-    event.preventDefault()
-    event.detail.options = [{ value: 'manual', label: 'Add address', subtitle: 'Type it in' }]
+test('items that omit value or label are dropped', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ items: [{ id: 'opera-house', name: 'Sydney Opera House' }] })
+    })
   })
 
-  controller.inputTarget.value = 'add'
+  controller.inputTarget.value = 'syd'
+  controller.filter()
+  await flush()
+
+  assert.equal(controller.listTarget.querySelectorAll('[role="option"]').length, 0)
+  assert.equal(controller.emptyTarget.classList.contains('hidden'), false)
+})
+
+test('one click selects a remote option once', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ items: [{ value: 'fed-square', label: 'Federation Square' }] })
+    })
+  })
+
+  controller.inputTarget.value = 'fed'
   controller.filter()
   await flush()
 
   const option = controller.listTarget.querySelectorAll('[role="option"]')[0]
-  assert.equal(option.dataset.value, 'manual')
-  assert.equal(option.dataset.label, 'Add address')
+  let selections = 0
+  const select = controller.select.bind(controller)
+  controller.select = (chosen) => {
+    selections += 1
+    select(chosen)
+  }
+
+  const event = { preventDefault() {}, currentTarget: option, target: option }
+  ;(option.listeners.mousedown || []).forEach((listener) => listener(event))
+  if (String(option.getAttribute('data-action') || '').includes('mousedown->flat-pack--combobox#choose')) {
+    controller.choose(event)
+  }
+
+  assert.equal(selections, 1)
+  assert.equal(controller.valueTarget.value, 'fed-square')
+  assert.equal(controller.inputTarget.value, 'Federation Square')
 })

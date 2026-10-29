@@ -92,6 +92,7 @@ app/javascript/flat_pack/
 ├── focus_trap.js           # Shared Tab cycle for Drawer, Command palette, and Modal
 ├── click_outside.js        # Shared outside-click listener and dialog backdrop check
 ├── positioning.js          # Shared floating-panel placement. Popover, Button dropdown, Date picker, and Collection editor use it.
+├── remote_query.js         # Shared debounce and aborting GET. Select, Picker, Search, and Combobox use it.
 └── tiptap/
    └── ...js              # Rich-text helper modules imported by tiptap_controller
 ```
@@ -105,6 +106,8 @@ importmap-rails hosts load these pins from the engine. `initializer "flat_pack.i
 `flat_pack/click_outside` is the document listener for overlays that close when the pointer lands outside, plus `isBackdropClick` for Modal, Drawer, Command palette, and Lightbox. Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, Button group menu, Trash button, and the collapsible Search field import it. Chat message actions uses `isOutside` for its window click. A missing pin stops those controllers. Escape handling stays in each controller. TipTap link and image popovers still bind their own `mousedown` listener.
 
 `flat_pack/positioning` places a panel from an anchor rect: preferred side, optional flip to the opposite side, then clamp to `--overlay-edge-offset`. Popover flips and lets an oversized panel sit past the edge. Button dropdown passes `flip: false` and `stickToEdge: true`, so an oversized menu stays on the edge. Date picker places below, or above when below does not fit, with `stickToEdge: true`. Its width cap and the max-width 767px full-screen panel stay in the date picker controller. Collection editor places its search menu under the field (`bottom_left`, 4px gap, `stickToEdge: true`) and then keeps the field's left edge. A missing pin stops those four controllers. Tooltip still places itself.
+
+`flat_pack/remote_query` is `createRemoteQuery`: a debounce timer, an abort of the previous request, and a JSON `GET`. Select, Picker, Search, and Combobox import it. Each still owns its wait, extra query params, and response shape. A missing pin stops those four controllers.
 
 FlatPack registers its JavaScript modules:
 
@@ -126,6 +129,7 @@ pin "flat_pack/clipboard", to: "flat_pack/clipboard.js", preload: false
 pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
 pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
+pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

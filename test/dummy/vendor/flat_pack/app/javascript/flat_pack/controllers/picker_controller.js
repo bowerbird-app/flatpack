@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
+import { createRemoteQuery } from "flat_pack/remote_query"
 
 export default class extends Controller {
   static targets = ["searchInput", "results", "emptyState", "outputField", "formFields"]
@@ -26,21 +27,14 @@ export default class extends Controller {
   connect() {
     this.filteredItems = this.#baseItems()
     this.selectedIds = new Set()
-    this.debounceTimer = null
-    this.abortController = null
+    this.remote = createRemoteQuery()
     this.#renderResults(this.filteredItems)
     this.#syncOutputField()
     this.#syncFormFields()
   }
 
   disconnect() {
-    if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer)
-    }
-
-    if (this.abortController) {
-      this.abortController.abort()
-    }
+    this.remote?.stop()
   }
 
   search(event) {
@@ -197,28 +191,17 @@ export default class extends Controller {
       return
     }
 
-    if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer)
+    const params = {}
+    if (this.acceptedKindsValue.length > 0) {
+      params.kinds = this.acceptedKindsValue.join(",")
     }
 
-    this.debounceTimer = setTimeout(async () => {
-      if (this.abortController) {
-        this.abortController.abort()
-      }
-
-      this.abortController = new AbortController()
-
-      const url = new URL(this.searchEndpointValue, window.location.origin)
-      url.searchParams.set(this.searchParamValue, query)
-      if (this.acceptedKindsValue.length > 0) {
-        url.searchParams.set("kinds", this.acceptedKindsValue.join(","))
-      }
-
+    this.remote.debounce(250, async () => {
       try {
-        const response = await fetch(url.toString(), {
-          method: "GET",
-          headers: { Accept: "application/json" },
-          signal: this.abortController.signal
+        const response = await this.remote.fetch(this.searchEndpointValue, {
+          query,
+          param: this.searchParamValue,
+          params
         })
 
         if (!response.ok) {
@@ -234,7 +217,7 @@ export default class extends Controller {
           this.#renderResults(this.filteredItems)
         }
       }
-    }, 250)
+    })
   }
 
   #renderResults(items) {

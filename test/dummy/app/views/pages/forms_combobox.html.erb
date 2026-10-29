@@ -66,6 +66,7 @@
       name: "place_id",
       label: "Place",
       placeholder: "Search places",
+      search_mode: :remote,
       search_endpoint: demo_forms_combobox_options_path,
       search_param: "q",
       min_search_length: 3,
@@ -78,6 +79,7 @@
       &lt;%= render FlatPack::Combobox::Component.new(
         name: "place_id",
         label: "Place",
+        search_mode: :remote,
         search_endpoint: place_search_path,
         search_param: "q",
         min_search_length: 3,

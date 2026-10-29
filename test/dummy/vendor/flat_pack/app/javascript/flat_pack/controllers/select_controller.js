@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"
 import { flatPackCopy } from "flat_pack/copy"
 import { onClickOutside } from "flat_pack/click_outside"
+import { createRemoteQuery } from "flat_pack/remote_query"
 
 export default class extends Controller {
   static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox", "valueLabel", "valueIcon"]
@@ -25,8 +26,7 @@ export default class extends Controller {
     this.normalizeNestedSelectedValues()
     const label = this.hasValueLabelTarget ? this.valueLabelTarget : this.triggerTarget.querySelector("span")
     this.defaultTriggerText = label?.textContent || ""
-    this.debounceTimer = null
-    this.abortController = null
+    this.remote = createRemoteQuery()
     this.syncSelectedState()
     this.setSearchState(this.searchModeValue === "remote" ? "hint" : "idle")
     this.isOpen = false
@@ -40,14 +40,7 @@ export default class extends Controller {
   disconnect() {
     cancelOverlayHide(this.dropdownTarget)
     this.outsideClick?.remove()
-
-    if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer)
-    }
-
-    if (this.abortController) {
-      this.abortController.abort()
-    }
+    this.remote?.stop()
   }
 
   toggle(event) {
@@ -605,9 +598,7 @@ export default class extends Controller {
       return
     }
 
-    if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer)
-    }
+    this.remote.clearDebounce()
 
     if (query.length < this.minSearchLengthValue) {
       this.showAllOptions()
@@ -617,21 +608,11 @@ export default class extends Controller {
 
     this.setSearchState("loading")
 
-    this.debounceTimer = setTimeout(async () => {
-      if (this.abortController) {
-        this.abortController.abort()
-      }
-
-      this.abortController = new AbortController()
-
-      const url = new URL(this.searchEndpointValue, window.location.origin)
-      url.searchParams.set(this.searchParamValue, query)
-
+    this.remote.debounce(250, async () => {
       try {
-        const response = await fetch(url.toString(), {
-          method: "GET",
-          headers: { Accept: "application/json" },
-          signal: this.abortController.signal
+        const response = await this.remote.fetch(this.searchEndpointValue, {
+          query,
+          param: this.searchParamValue
         })
 
         if (!response.ok) {
@@ -651,7 +632,7 @@ export default class extends Controller {
           this.setSearchState("empty")
         }
       }
-    }, 250)
+    })
   }
 
   normalizeRemoteItems(payload) {

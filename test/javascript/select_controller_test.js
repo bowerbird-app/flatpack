@@ -148,9 +148,12 @@ function playOverlayExit(element, options = {}) { element.classList.add("hidden"
 function cancelOverlayHide() {}`
     )
     .replace(/import \{[^}]+\} from "flat_pack\/click_outside"\n/, "")
+    .replace(/import \{[^}]+\} from "flat_pack\/remote_query"\n/, "")
     .replace('export default class extends Controller', 'class SelectController extends Controller') + '\nmodule.exports = SelectController\n'
   const clickOutsidePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'click_outside.js')
   const clickOutsideSource = fs.readFileSync(clickOutsidePath, 'utf8').replaceAll('export function ', 'function ')
+  const remoteQueryPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'remote_query.js')
+  const remoteQuerySource = fs.readFileSync(remoteQueryPath, 'utf8').replaceAll('export function ', 'function ')
 
   activeDocument = {
     listeners: [],
@@ -185,7 +188,7 @@ function cancelOverlayHide() {}`
     }
   }
 
-  vm.runInNewContext(clickOutsideSource + '\n' + transformedSource, context, { filename: filePath })
+  vm.runInNewContext(clickOutsideSource + '\n' + remoteQuerySource + '\n' + transformedSource, context, { filename: filePath })
 
   return context.module.exports
 }

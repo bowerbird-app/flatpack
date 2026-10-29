@@ -13,7 +13,7 @@ module FlatPack
           options: [{value: "mel", label: "Melbourne"}, {value: "syd", label: "Sydney"}]
         ))
 
-        assert_selector "input[role='combobox'][aria-expanded='false']"
+        assert_selector "input[role='combobox'][aria-expanded='false'][spellcheck='false']"
         assert_selector "label", text: "City"
         assert_selector "[role='listbox']"
         assert_selector "[role='option']", text: "Melbourne"
@@ -52,32 +52,56 @@ module FlatPack
       def test_remote_search_sets_controller_values
         render_inline(Component.new(
           name: "place_id",
+          search_mode: :remote,
           search_endpoint: "/demo/forms/combobox/options",
           search_param: "query",
           min_search_length: 3,
           debounce: 250
         ))
 
+        assert_selector "div[data-flat-pack--combobox-search-mode-value='remote']"
         assert_selector "div[data-flat-pack--combobox-search-endpoint-value='/demo/forms/combobox/options']"
         assert_selector "div[data-flat-pack--combobox-search-param-value='query']"
         assert_selector "div[data-flat-pack--combobox-min-search-length-value='3']"
         assert_selector "div[data-flat-pack--combobox-debounce-value='250']"
+        assert_selector "input[spellcheck='false']"
         assert_selector "[data-flat-pack--combobox-target='hint']", text: "Type at least 3 characters to search", visible: :all
         assert_selector "[data-flat-pack--combobox-target='loading']", text: "Searching...", visible: :all
         refute_selector "[role='option']"
       end
 
-      def test_loader_allows_empty_options
-        render_inline(Component.new(name: "place_id", loader: true))
+      def test_remote_allows_empty_options
+        render_inline(Component.new(
+          name: "place_id",
+          search_mode: :remote,
+          search_endpoint: "/demo/forms/combobox/options"
+        ))
 
-        assert_selector "div[data-flat-pack--combobox-loader-value='true']"
+        assert_selector "div[data-flat-pack--combobox-search-mode-value='remote']"
         refute_selector "[role='option']"
+      end
+
+      def test_raises_error_for_invalid_search_mode
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "place_id", options: ["A"], search_mode: :invalid)
+        end
+
+        assert_match(/Invalid search_mode/, error.message)
+      end
+
+      def test_remote_requires_search_endpoint
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "place_id", search_mode: :remote)
+        end
+
+        assert_equal "search_endpoint is required when search_mode is :remote", error.message
       end
 
       def test_raises_error_for_unsafe_search_endpoint
         error = assert_raises(ArgumentError) do
           Component.new(
             name: "place_id",
+            search_mode: :remote,
             search_endpoint: "javascript:alert(1)"
           )
         end
