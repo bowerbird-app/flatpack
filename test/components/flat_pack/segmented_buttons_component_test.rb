@@ -147,14 +147,14 @@ module FlatPack
         expected << "[&amp;&gt;*:first-child]:rounded-l-[var(--button-border-radius)] [&amp;&gt;*:last-child]:rounded-r-[var(--button-border-radius)] "
         expected << '[&amp;&gt;*]:border-r-0 [&amp;&gt;*:last-child]:border-r [&amp;&gt;*]:shadow-none">'
         expected << '<button name="button" type="button" class="inline-flex gap-2 items-center justify-center rounded-[var(--button-border-radius)] '
-        expected << "font-medium cursor-pointer fp-button text-[var(--button-secondary-text-color)] fp-button-flat border transition-[color,background-color,border-color,box-shadow,transform] "
+        expected << "font-medium cursor-pointer fp-button fp-button-flat border transition-[color,background-color,border-color,box-shadow,transform] "
         expected << "duration-[var(--duration-fast)] ease-[var(--easing-standard)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset "
         expected << "focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)] "
         expected << "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)] fp-touch-manipulation "
         expected << 'px-[var(--button-padding-x-md)] py-[var(--button-padding-y-md)] text-sm fp-button-current" data-fp-style="secondary">'
         expected << '<span class="min-w-0 max-w-full text-center truncate">Day</span></button>'
         expected << '<button name="button" type="button" class="inline-flex gap-2 items-center justify-center rounded-[var(--button-border-radius)] '
-        expected << "font-medium cursor-pointer fp-button text-[var(--button-secondary-text-color)] fp-button-flat border transition-[color,background-color,border-color,box-shadow,transform] "
+        expected << "font-medium cursor-pointer fp-button fp-button-flat border transition-[color,background-color,border-color,box-shadow,transform] "
         expected << "duration-[var(--duration-fast)] ease-[var(--easing-standard)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset "
         expected << "focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)] "
         expected << "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)] fp-touch-manipulation "

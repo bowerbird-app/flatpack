@@ -1350,14 +1350,15 @@
 }
 
 .fp-card__featured-media {
-  --card-media-image-height: 100%;
   min-width: 0;
   padding-block: var(--card-inset);
   padding-inline: var(--card-inset);
 }
 
-.fp-media__image {
-  height: var(--card-media-image-height, auto);
+/* Zero specificity. A host height class on the image wins. The length is the
+ * variable, so a declaration on the card wins over the featured default. */
+:where(.fp-card--featured .fp-media__image) {
+  height: var(--card-media-image-height, 100%);
 }
 
 :where(.fp-card__featured-media > *) {
@@ -1401,6 +1402,7 @@
   --card-title-size: var(--text-4xl);
   --card-title-weight: var(--display-weight);
   --card-title-color: var(--surface-content-color);
+  --card-media-image-height: 100%;
 }
 
 .fp-card--featured [data-fp-card-part="header"] {
@@ -2932,12 +2934,6 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-button-hover-background: var(--button-secondary-hover-background-color);
   --fp-button-text: var(--button-secondary-text-color);
   --fp-button-border: var(--button-secondary-border-color);
-}
-
-/* The secondary fill is near white. Pin the glyph to the button's own text
- * token so an overlay wrapper cannot inherit a light colour onto the icon. */
-.fp-button[data-fp-style="secondary"] {
-  color: var(--button-secondary-text-color);
 }
 
 [data-fp-style="ghost"] {

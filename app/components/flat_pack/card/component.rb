@@ -152,7 +152,7 @@ module FlatPack
         @padding = padding.to_sym
         @inset = inset&.to_sym
         @radius = radius.to_sym
-        @variant = (variant || :default).to_sym
+        @variant = normalize_variant(variant)
 
         # Sanitize URL for security and validate
         if href
@@ -439,10 +439,17 @@ module FlatPack
         raise ArgumentError, "Invalid hover: #{@hover}. Must be one of: #{HOVERS.keys.join(", ")}"
       end
 
+      def normalize_variant(variant)
+        return :default if variant.nil?
+        return variant.to_sym if variant.respond_to?(:to_sym)
+
+        variant
+      end
+
       def validate_variant!
         return if VARIANTS.include?(@variant)
 
-        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+        raise ArgumentError, "Invalid variant: #{@variant.inspect}. Must be one of: #{VARIANTS.join(", ")}"
       end
 
       def reject_removed_theme!(system_arguments)

@@ -7,11 +7,6 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "fp-overlay" "relative" "inline-flex" "items-start" "max-w-full" "contents"
 
-      # A light glyph on a light secondary button disappears. Drop a forced
-      # light text utility from the overlay wrapper. Split so the kit source
-      # does not contain that palette class as one token.
-      LIGHT_TEXT_CLASS = "text-" + "white"
-
       renders_one :media
       renders_many :items, "FlatPack::Overlay::Item"
 
@@ -27,13 +22,7 @@ module FlatPack
       private
 
       def root_attributes
-        attributes = merge_attributes(class: "fp-overlay relative inline-flex items-start max-w-full")
-        attributes[:class] = without_forced_light_text(attributes[:class])
-        attributes
-      end
-
-      def without_forced_light_text(class_name)
-        class_name.to_s.split.reject { |token| token.delete_prefix("!") == LIGHT_TEXT_CLASS }.join(" ")
+        merge_attributes(class: "fp-overlay relative inline-flex items-start max-w-full")
       end
 
       def render_media

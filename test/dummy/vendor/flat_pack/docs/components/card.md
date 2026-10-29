@@ -89,7 +89,7 @@ A photo with its own inset uses `padding: :none` and `inset:` so `radius: :card_
 |---|---|---|---|
 | `header` | slot | no | Header slot wrapper (`FlatPack::Card::Header::Component`). On `:featured`, that element is the top action row (right-aligned in the copy column from `md`, over the photo below `md`). A host class, padding, border, or divider on `card.header` still applies. The row is not `display: contents`. |
 | `badge` | slot | no | Small identity mark. On `:featured`, an info badge sits above the title. Pass `FlatPack::Badge::Component`. |
-| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. Featured defaults are on `:where(.fp-card--featured)` (`--text-4xl`, `--display-weight`, `--surface-content-color`), so a declaration on the card wins. The weight fallback is `--display-weight`. |
+| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. Featured defaults are on `:where(.fp-card--featured)` (`--text-4xl`, `--display-weight`, `--surface-content-color`, and `--card-media-image-height: 100%`), so a declaration on the card wins. The weight fallback is `--display-weight`. The cover photo height is `:where(.fp-card--featured .fp-media__image)`, so a host height class on the image wins. |
 | `body` | slot | no | Body slot wrapper (`FlatPack::Card::Body::Component`). On `:featured`, the label/value block and any extra line under the title. |
 | `footer` | slot | no | Footer slot wrapper (`FlatPack::Card::Footer::Component`). On `:featured`, the footer is a flex row: each control grows to half the row below `md`, and the row aligns to the end from `md`. The footer box is not `display: contents`. |
 | `media` | slot | no | Media slot wrapper (`FlatPack::Card::Media::Component`). On `:featured`, the square cover on the left (full width when stacked). |
@@ -107,7 +107,7 @@ Slot props:
 | `media.hover_actions.placement` | Symbol | `:top_right` | no | Overlay cell. Same nine-cell grid as `FlatPack::Overlay::Item`: `:top_left`, `:top_center`, `:top_right`, `:middle_left`, `:center`, `:middle_right`, `:bottom_left`, `:bottom_center`, `:bottom_right`. Invalid values raise `ArgumentError`. |
 | `media.hover_actions.inset` | Symbol | `:sm` | no | Gap from the media edge. `:sm`, `:md`, or `:lg`. Invalid values raise `ArgumentError`. `:center` ignores it. |
 | `title.prefix` | String | `nil` | no | Optional text before the title. Include the separator, for example `"Press kit: "`. |
-| `title.as` | Symbol | `:h2` | no | Heading tag: `:h1`, `:h2`, or `:h3`. Invalid values raise `ArgumentError`. |
+| `title.level` | Symbol, Integer | `:h2` | no | Heading tag. Same argument as `FlatPack::Heading::Component`: `:h1`–`:h6`, or `1`–`6`. Invalid values raise `ArgumentError`. |
 
 ## Variants
 - Layout: `:default`, `:featured`.

@@ -7,13 +7,9 @@ module FlatPack
       # Size, weight, and colour stay on .fp-card__title. Featured defaults
       # are on :where(.fp-card--featured), so a card or ancestor variable wins.
       class Component < FlatPack::Heading::Component
-        TAGS = %i[h1 h2 h3].freeze
-
-        def initialize(prefix: nil, as: :h2, **system_arguments)
+        def initialize(prefix: nil, level: :h2, **system_arguments)
           @prefix = prefix.presence
-          @as = as.to_sym
-          validate_as!
-          super(level: @as, size: :"2xl", weight: :semibold, style: :default, **system_arguments)
+          super(level: level, size: :"2xl", weight: :semibold, style: :default, **system_arguments)
         end
 
         def call
@@ -44,12 +40,6 @@ module FlatPack
             "fp-text-balance",
             "leading-tight"
           )
-        end
-
-        def validate_as!
-          return if TAGS.include?(@as)
-
-          raise ArgumentError, "Invalid as: #{@as}. Must be one of: #{TAGS.join(", ")}"
         end
       end
     end

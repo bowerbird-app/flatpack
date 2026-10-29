@@ -569,12 +569,12 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Download kit"
     assert_includes response.body, "variant: :featured"
     assert_includes response.body, "fp-heading"
-    share = response.body[/<button[^>]*aria-label="Share"[^>]*>/]
-    heart = response.body[/<button[^>]*aria-label="Add to list"[^>]*>/]
+    share = response.body[/<button[^>]*aria-label="Share"[^>]*>.*?<\/button>/m]
+    heart = response.body[/<button[^>]*aria-label="Add to list"[^>]*>.*?<\/button>/m]
     assert_includes share, 'data-fp-style="secondary"'
     assert_includes heart, 'data-fp-style="secondary"'
-    assert_includes share, "text-[var(--button-secondary-text-color)]"
-    assert_includes heart, "text-[var(--button-secondary-text-color)]"
+    assert_includes share, 'data-flat-pack--icon-name-value="share"'
+    assert_includes heart, 'data-flat-pack--icon-name-value="heart"'
     assert_includes share, "h-[var(--button-round-size-md)]"
     assert_includes heart, "h-[var(--button-round-size-md)]"
     refute_includes share, 'data-fp-style="ghost"'

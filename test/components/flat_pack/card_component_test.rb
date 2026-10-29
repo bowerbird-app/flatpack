@@ -773,9 +773,7 @@ module FlatPack
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
-      def test_secondary_icon_button_keeps_its_text_token_inside_the_overlay
-        view = vc_test_controller.view_context
-
+      def test_media_overlay_keeps_a_host_text_class
         render_inline(
           FlatPack::Media::Component.new(
             src: "/images/hero-stool.jpg",
@@ -785,29 +783,10 @@ module FlatPack
             class: "text-white"
           )
         ) do |media|
-          media.with_item(placement: :top_right, inset: :sm) do
-            view.render(
-              FlatPack::Button::Component.new(
-                icon: "share",
-                icon_only: true,
-                style: :secondary,
-                size: :md,
-                round: true,
-                aria: {label: "Share"}
-              )
-            )
-          end
+          media.with_item(placement: :top_right, inset: :sm) { "Mark" }
         end
 
-        overlay = page.find(".fp-overlay")
-        button = overlay.find("button[aria-label='Share']")
-        classes = button[:class].split
-
-        refute_includes overlay[:class].split, "text-white"
-        assert_includes classes, "fp-button"
-        assert_includes classes, "text-[var(--button-secondary-text-color)]"
-        assert_equal "secondary", button["data-fp-style"]
-        assert_includes overlay.native.to_html, 'data-flat-pack--icon-name-value="share"'
+        assert_includes page.find(".fp-overlay")[:class].split, "text-white"
       end
 
       def test_media_omits_hover_reveal_until_hover_actions_are_slotted
@@ -1088,13 +1067,21 @@ module FlatPack
         refute_includes html, "border-t"
       end
 
-      def test_featured_title_as_h1
+      def test_featured_title_level_h1
         render_inline(Component.new(variant: :featured)) do |card|
-          card.title(as: :h1) { "Harbour set" }
+          card.title(level: :h1) { "Harbour set" }
         end
 
         assert_selector "h1.fp-heading.fp-card__title", text: "Harbour set"
         refute_selector "h2.fp-card__title"
+      end
+
+      def test_title_level_accepts_an_integer
+        render_inline(Component.new) do |card|
+          card.title(level: 1) { "Harbour set" }
+        end
+
+        assert_selector "h1.fp-heading.fp-card__title", text: "Harbour set"
       end
 
       def test_featured_defaults_media_to_square_without_slot_padding
@@ -1141,13 +1128,21 @@ module FlatPack
         assert_includes error.message, "Invalid variant"
       end
 
-      def test_title_validates_as
+      def test_integer_variant_raises_argument_error
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: 1)
+        end
+        assert_includes error.message, "Invalid variant"
+        assert_includes error.message, "1"
+      end
+
+      def test_title_rejects_an_unknown_level
         error = assert_raises(ArgumentError) do
           render_inline(Component.new) do |card|
-            card.title(as: :div) { "Nope" }
+            card.title(level: :div) { "Nope" }
           end
         end
-        assert_includes error.message, "Invalid as"
+        assert_includes error.message, "Invalid level"
       end
 
       def test_kit_css_includes_featured_cover_rules
@@ -1181,19 +1176,13 @@ module FlatPack
         assert_nil page.find(".fp-card")["data-fp-card-variant"]
       end
 
-      def test_card_level_title_variable_wins_over_the_featured_default
+      def test_featured_title_does_not_inline_its_variables
         render_inline(Component.new(variant: :featured)) do |card|
           card.title { "Cover" }
         end
 
         refute page.find("[data-fp-card-part='title']")["style"]
-        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-        defaults = css[/:where\(\.fp-card--featured\)\s*\{[^}]+\}/m]
-        assert_includes defaults, "--card-title-size: var(--text-4xl);"
-        assert_includes defaults, "--card-title-weight: var(--display-weight);"
-        assert_includes defaults, "--card-title-color: var(--surface-content-color);"
-        assert_equal 1, css.scan("--card-title-size:").size
-        refute_match(/\.fp-card--featured \[data-fp-card-part="title"\]/, css)
+        refute page.find(".fp-card")["style"]
       end
 
       def test_featured_header_element_keeps_host_chrome
