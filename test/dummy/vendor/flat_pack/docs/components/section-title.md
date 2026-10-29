@@ -6,6 +6,8 @@ Render section headings with optional subtitle and optional copy-link anchor beh
 ## When to use
 Use Section Title for document-style pages where subsections need deep-linkable anchors. Keep the default (`size: :lg`, `spacing: :lg`) for page sections. Inside a card or a compact stack, pass a smaller `size` and tighter `spacing`.
 
+Section Title already splits the heading tag (`level:`) from visual size (`size: :lg`, `:md`, `:sm`). Use it when you also need a subtitle, trailing slot, copy-link, or section spacing. For a bare `h1`–`h6` with a wider type scale and no wrapper, use `FlatPack::Heading::Component`.
+
 ## Class
 - Primary: `FlatPack::SectionTitle::Component`
 

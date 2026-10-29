@@ -6,7 +6,7 @@ Render a lightweight page heading block with optional subtitle and semantic head
 ## When to use
 Use Page Title for page-level headings when you do not want the bordered visual treatment of `PageHeader`.
 
-Default Page Title is product chrome (`font-bold`, `--page-title-h*-size`). For a cover headline without page chrome, use `FlatPack::HeroTitle::Component`. `size: :display` keeps working and renders Hero Title at `:xl` (today's `--display-size`). For a landing block with tagline, body, and actions, use `FlatPack::Hero::Component`.
+Default Page Title is product chrome (`font-bold`, `--page-title-h*-size`). For a cover headline without page chrome, use `FlatPack::HeroTitle::Component`. `size: :display` keeps working and renders Hero Title at `:xl` (today's `--display-size`). For a landing block with tagline, body, and actions, use `FlatPack::Hero::Component`. For a bare heading tag without page margin or actions, use `FlatPack::Heading::Component`.
 
 ## Class
 - Primary: `FlatPack::PageTitle::Component`

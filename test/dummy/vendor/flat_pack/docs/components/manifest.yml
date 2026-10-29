@@ -439,6 +439,17 @@ components:
     primary_class: FlatPack::Hero::Component
     status: documented
 
+  - key: heading
+    title: Heading
+    doc: docs/components/heading.md
+    primary_class: FlatPack::Heading::Component
+    related_classes:
+      - FlatPack::SectionTitle::Component
+      - FlatPack::PageTitle::Component
+      - FlatPack::HeroTitle::Component
+      - FlatPack::Text::Component
+    status: documented
+
   - key: hero_title
     title: Hero Title
     doc: docs/components/hero-title.md
@@ -834,6 +845,17 @@ components:
       - --tabs-pill-corner-radius
       - --tabs-pill-list-background-color
       - --tabs-pill-list-border-color
+    status: documented
+
+  - key: text
+    title: Text
+    doc: docs/components/text.md
+    primary_class: FlatPack::Text::Component
+    related_classes:
+      - FlatPack::Heading::Component
+      - FlatPack::Content::Component
+      - FlatPack::Quote::Component
+      - FlatPack::Text::Stream::Component
     status: documented
 
   - key: text_stream

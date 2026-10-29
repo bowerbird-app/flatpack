@@ -68,6 +68,7 @@ fieldset | FlatPack::Fieldset::Component | docs/components/fieldset.md
 flash | FlatPack::Flash::Component | docs/components/flash.md
 grid | FlatPack::Grid::Component | docs/components/grid.md
 hero | FlatPack::Hero::Component | docs/components/hero.md
+heading | FlatPack::Heading::Component | docs/components/heading.md
 hero_title | FlatPack::HeroTitle::Component | docs/components/hero-title.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
 inline_edit | FlatPack::InlineEdit::Component | docs/components/inline-edit.md
@@ -115,6 +116,7 @@ sortable_tables_examples | FlatPack::Table::Component | docs/components/sortable
 stepper | FlatPack::Stepper::Component | docs/components/stepper.md
 table | FlatPack::Table::Component | docs/components/table.md
 tabs | FlatPack::Tabs::Component | docs/components/tabs.md
+text | FlatPack::Text::Component | docs/components/text.md
 text_stream | FlatPack::Text::Stream::Component | docs/components/text-stream.md
 timeline | FlatPack::Timeline::Component | docs/components/timeline.md
 timestamp | FlatPack::Timestamp::Component | docs/components/timestamp.md
