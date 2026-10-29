@@ -9,7 +9,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes |
 | Card colour fill | `background` | Card and Card Stat. `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. `:none` is transparent and inherits text. Card `shadow`, `border`, and `hover` are separate. |
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
-| Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split` |
+| Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
 | Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |

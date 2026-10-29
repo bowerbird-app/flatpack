@@ -413,6 +413,48 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
+      title: "Flush Shell",
+      anchor: "flush-shell",
+      anchor_link: true,
+      subtitle: "Drop the inline panel chrome when the picker already sits inside another surface."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            Pass <code>variant: :flush</code> for a borderless, transparent, unpadded shell. Use it in a card, a sidebar, or a moveable panel instead of forcing classes on the default picker.
+          </p>
+
+          <%= render FlatPack::Picker::Component.new(
+            id: "picker-demo-flush",
+            title: "Embedded Picker",
+            subtitle: "No border, fill, radius, shadow, or padding of its own.",
+            items: @picker_demo_items,
+            variant: :flush,
+            search_mode: :local,
+            selection_mode: :single,
+            auto_confirm: true,
+            modal: false,
+            items_height: "min-content",
+            confirm_label: "Use Flush Selection",
+            context: {target: "picker-demo-flush"}
+          ) %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-flush-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
+      language: "erb",
+      code: picker_demo_flush_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
       title: "Items Height",
       anchor: "items-height",
       anchor_link: true,

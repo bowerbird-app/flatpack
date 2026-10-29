@@ -255,6 +255,25 @@ module PagesHelper
     CODE
   end
 
+  def picker_demo_flush_erb_code
+    picker_demo_full_erb_code(<<~CODE)
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-flush",
+        title: "Embedded Picker",
+        subtitle: "No border, fill, radius, shadow, or padding of its own.",
+        items: @picker_demo_items,
+        variant: :flush,
+        search_mode: :local,
+        selection_mode: :single,
+        auto_confirm: true,
+        modal: false,
+        items_height: "min-content",
+        confirm_label: "Use Flush Selection",
+        context: { target: "picker-demo-flush" }
+      ) %>
+    CODE
+  end
+
   def picker_demo_items_height_min_erb_code
     picker_demo_full_erb_code(<<~CODE)
       <%= render FlatPack::Picker::Component.new(

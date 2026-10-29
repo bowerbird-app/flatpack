@@ -712,6 +712,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "id=\"picker-demo-local\""
     assert_includes response.body, "id=\"picker-demo-built-in-form\""
     assert_includes response.body, "id=\"picker-demo-inline\""
+    assert_includes response.body, "Flush Shell"
+    assert_includes response.body, "id=\"picker-demo-flush\""
+    assert_includes response.body, "variant: :flush"
+    assert_includes response.body, "picker-demo-code-flush-erb"
+    assert_includes response.body, "data-flat-pack-picker-variant=\"flush\""
     assert_includes response.body, "id=\"picker-demo-searchable-off\""
     assert_includes response.body, "id=\"picker-demo-minimum-searchable\""
     assert_includes response.body, "id=\"picker-demo-items-height-min\""
@@ -751,6 +756,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_select "#picker-demo-items-height-min .mt-4.flex.items-center.justify-end.gap-2", count: 1
     assert_select "#picker-demo-items-height-min button", text: "Close", count: 1
     assert_select "#picker-demo-items-height-min button", text: "Use Asset", count: 1
+    assert_select "#picker-demo-flush.border-0.bg-transparent.shadow-none.rounded-none.p-0"
   end
 
   test "picker built-in form submission redirects back with controller params" do

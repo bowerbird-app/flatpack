@@ -79,6 +79,38 @@ module FlatPack
         assert_match(/bg-\[var\(--modal-surface-color\)\]/, rendered_content)
         assert_match(/shadow-lg/, rendered_content)
         assert_match(/max-w-2xl/, rendered_content)
+        assert_selector "div#inline-picker[data-flat-pack-picker-variant='default']"
+        assert_match(/\bp-4\b/, rendered_content)
+        refute_match(/\bborder-0\b/, rendered_content)
+      end
+
+      def test_flush_variant_renders_borderless_transparent_unpadded_inline_shell
+        render_inline(Component.new(id: "flush-picker", items: sample_items, variant: :flush))
+
+        assert_selector "div#flush-picker[data-flat-pack-picker-variant='flush'].border-0.bg-transparent.shadow-none.rounded-none.p-0"
+        assert_selector "div#flush-picker > div.py-0"
+        refute_selector "div#flush-picker.border"
+        refute_selector "div#flush-picker.p-4"
+        refute_selector "div#flush-picker.sm\\:p-6"
+        refute_selector "div#flush-picker.shadow-lg"
+        refute_selector "div#flush-picker.rounded-\\[var\\(--radius-lg\\)\\]"
+        refute_selector "div#flush-picker > div.py-4"
+        refute_match(/border-\[var\(--modal-border-color\)\]/, rendered_content)
+        refute_match(/bg-\[var\(--modal-surface-color\)\]/, rendered_content)
+      end
+
+      def test_flush_variant_does_not_change_modal_chrome
+        render_inline(Component.new(id: "flush-modal-picker", items: sample_items, modal: true, variant: :flush))
+
+        assert_selector "div#flush-modal-picker[data-controller='flat-pack--modal']"
+        assert_no_selector "div#flush-modal-picker[data-flat-pack-picker-variant='flush']"
+        refute_includes rendered_content, "bg-transparent"
+      end
+
+      def test_rejects_invalid_variant
+        assert_raises(ArgumentError) do
+          Component.new(id: "invalid-variant-picker", items: sample_items, variant: :card)
+        end
       end
 
       def test_defaults_to_list_results_layout
