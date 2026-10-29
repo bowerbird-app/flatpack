@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prefer Stack for `flex flex-col gap-*` host markup and Cluster for `flex flex-wrap gap-*`. Keep Collection when the children are a list. Keep Overflow Row when a second row is unwanted. Collection and Overflow Row gap classes are unchanged. Grid gap classes and hand-built Grid items changed; see Changed.
 - Rebuild host Tailwind so `flex-col`, `flex-wrap`, `justify-start`, `justify-center`, `justify-end`, `justify-between`, `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, and `gap-[var(--stack-gap-lg)]` are generated if the host did not already use them. Grid, Stack, and Cluster share those gap classes. Reload the gem. Do not rerun the install generator.
 - Additive. Omit `variant:` and the card stays stacked. Pass `variant: :featured` with the existing `media`, `header`, `body`, and `footer` slots, plus optional `badge` and `title`. Recommended cover chrome: `padding: :none`, `inset: :md`, `radius: :xxxl`, `shadow: :md`, `border: :none`. Put `FlatPack::Media` `radius: :card_inner` in `media`. Do not make the card `clickable` when footer buttons are present. Rebuild host Tailwind only if you still need the existing card utilities. Reload kit CSS. Do not rerun the install generator.
+- A secondary button paints its glyph with `--button-secondary-text-color`. Do not put `text-white` on a media overlay to colour those icons. Rebuild host Tailwind so `text-[var(--button-secondary-text-color)]` is generated. Reload kit CSS. Do not rerun the install generator.
 
 ### Changed
 - Grid `gap: :sm`, `:md`, and `:lg` emit `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, and `gap-[var(--stack-gap-lg)]`. They used to emit `gap-2`, `gap-4`, and `gap-6`. A theme that sets `--stack-gap-sm`, `--stack-gap-md`, or `--stack-gap-lg` now resizes Grid as well as Stack and Cluster. A host selector that matched `.gap-2`, `.gap-4`, or `.gap-6` on a Grid no longer matches. Collection, Masonry, and Overflow Row still use `gap-2`, `gap-4`, and `gap-6`.
@@ -58,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ComponentCatalog still maps the `text` family to `docs/components/text-stream.md`. `Text::Component` is the one override (`DOC_PATH_OVERRIDES`) and reads `docs/components/text.md`. Nested billing, button, comments, menu, and sidebar entries still use the family file.
 
 ### Fixed
+- A secondary button keeps `--button-secondary-text-color` on itself. A `text-white` class on the media overlay wrapper is dropped, so the icon is not the same colour as the light button fill.
 - Modal closes and releases its body scroll lock on `turbo:before-cache`. A Turbo snapshot never restores an open dialog or a leftover `flatPackModalLockCount`. Nested modals still share that count; each open modal decrements once. A close already in flight does not decrement again.
 
 ## [0.1.330] - 2026-10-29

@@ -22,7 +22,15 @@ module FlatPack
       private
 
       def root_attributes
-        merge_attributes(class: "fp-overlay relative inline-flex items-start max-w-full")
+        attributes = merge_attributes(class: "fp-overlay relative inline-flex items-start max-w-full")
+        attributes[:class] = without_forced_light_text(attributes[:class])
+        attributes
+      end
+
+      # A light glyph on a light secondary button disappears. Hosts that pass
+      # text-white onto the overlay wrapper do not get that class.
+      def without_forced_light_text(class_name)
+        class_name.to_s.split.reject { |token| token.delete_prefix("!") == "text-white" }.join(" ")
       end
 
       def render_media

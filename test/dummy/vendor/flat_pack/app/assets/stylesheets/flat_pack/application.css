@@ -2928,6 +2928,12 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   --fp-button-border: var(--button-secondary-border-color);
 }
 
+/* The secondary fill is near white. Pin the glyph to the button's own text
+ * token so an overlay wrapper cannot inherit a light colour onto the icon. */
+.fp-button[data-fp-style="secondary"] {
+  color: var(--button-secondary-text-color);
+}
+
 [data-fp-style="ghost"] {
   --fp-button-background: var(--button-ghost-background-color);
   --fp-button-hover-background: var(--button-ghost-hover-background-color);

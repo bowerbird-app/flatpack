@@ -773,6 +773,43 @@ module FlatPack
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
+      def test_secondary_icon_button_keeps_its_text_token_inside_the_overlay
+        view = vc_test_controller.view_context
+
+        render_inline(
+          FlatPack::Media::Component.new(
+            src: "/images/hero-stool.jpg",
+            alt: "Cover",
+            width: 800,
+            height: 800,
+            class: "text-white"
+          )
+        ) do |media|
+          media.with_item(placement: :top_right, inset: :sm) do
+            view.render(
+              FlatPack::Button::Component.new(
+                icon: "share",
+                icon_only: true,
+                style: :secondary,
+                size: :md,
+                round: true,
+                aria: {label: "Share"}
+              )
+            )
+          end
+        end
+
+        overlay = page.find(".fp-overlay")
+        button = overlay.find("button[aria-label='Share']")
+        classes = button[:class].split
+
+        refute_includes overlay[:class].split, "text-white"
+        assert_includes classes, "fp-button"
+        assert_includes classes, "text-[var(--button-secondary-text-color)]"
+        assert_equal "secondary", button["data-fp-style"]
+        assert_includes overlay.native.to_html, 'data-flat-pack--icon-name-value="share"'
+      end
+
       def test_media_omits_hover_reveal_until_hover_actions_are_slotted
         render_inline(Component.new) do |component|
           component.media(padding: :none) { "Photo" }

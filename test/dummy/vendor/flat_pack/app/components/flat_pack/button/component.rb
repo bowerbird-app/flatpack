@@ -22,6 +22,9 @@ module FlatPack
       PUBLIC_SIZES = (SIZES.keys + [:xs]).freeze
 
       ROUND_RADIUS_CLASS = "rounded-[var(--button-round-border-radius)]"
+      # The secondary fill is light. The glyph uses this token on the button,
+      # so a parent overlay colour such as text-white cannot turn it white.
+      SECONDARY_TEXT_CLASS = "text-[var(--button-secondary-text-color)]"
 
       ROUND_ICON_ONLY_SIZES = {
         sm: "h-[var(--button-round-size-sm)] w-[var(--button-round-size-sm)] shrink-0",
@@ -42,6 +45,7 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "inline-flex" "gap-2" "items-center" "items-start" "justify-center" "justify-start"
+      # "text-[var(--button-secondary-text-color)]"
       # "min-w-0" "max-w-full" "flex-1" "text-center" "text-start" "truncate" "line-clamp-2"
       # "shrink-0" "self-start"
       ALIGNS = {
@@ -355,6 +359,7 @@ module FlatPack
           "font-medium",
           "cursor-pointer",
           "fp-button",
+          secondary_text_class,
           press_class,
           "border",
           "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
@@ -399,6 +404,10 @@ module FlatPack
         return if @round == true || @round == false
 
         raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
+      end
+
+      def secondary_text_class
+        SECONDARY_TEXT_CLASS if @style == :secondary
       end
 
       def press_class

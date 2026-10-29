@@ -573,6 +573,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     heart = response.body[/<button[^>]*aria-label="Add to list"[^>]*>/]
     assert_includes share, 'data-fp-style="secondary"'
     assert_includes heart, 'data-fp-style="secondary"'
+    assert_includes share, "text-[var(--button-secondary-text-color)]"
+    assert_includes heart, "text-[var(--button-secondary-text-color)]"
     assert_includes share, "h-[var(--button-round-size-md)]"
     assert_includes heart, "h-[var(--button-round-size-md)]"
     refute_includes share, 'data-fp-style="ghost"'
