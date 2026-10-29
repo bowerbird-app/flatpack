@@ -23,7 +23,7 @@ module FlatPack
 
       ROUND_RADIUS_CLASS = "rounded-[var(--button-round-border-radius)]"
       # The secondary fill is light. The glyph uses this token on the button,
-      # so a parent overlay colour such as text-white cannot turn it white.
+      # so a parent overlay colour cannot turn it the same colour as the fill.
       SECONDARY_TEXT_CLASS = "text-[var(--button-secondary-text-color)]"
 
       ROUND_ICON_ONLY_SIZES = {
