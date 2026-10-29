@@ -357,12 +357,22 @@
         style: :secondary,
         disabled: true
       ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Disabled Link",
+        href: demo_buttons_path,
+        disabled: true
+      ) %>
     </div>
     <%= render FlatPack::CodeBlock::Component.new(
       code: CGI.unescapeHTML(<<~'CODE')
         &lt;%= render FlatPack::Button::Component.new(
           text: "Disabled",
           style: :primary,
+          disabled: true
+        ) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Disabled Link",
+          href: demo_buttons_path,
           disabled: true
         ) %&gt;
       CODE

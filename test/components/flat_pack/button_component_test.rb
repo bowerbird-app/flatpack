@@ -368,6 +368,68 @@ module FlatPack
       def test_submit_button_disabled
         render_inline(Component.new(text: "Submit", type: "submit", disabled: true))
         assert_selector "button[type='submit'][disabled]", text: "Submit"
+        html = page.native.to_html
+        assert_includes html, "pointer-events-none"
+        assert_includes html, "opacity-[var(--button-disabled-opacity)]"
+        refute_includes html, "fp-spinner"
+      end
+
+      def test_disabled_button_sets_the_disabled_attribute_without_loading
+        render_inline(Component.new(text: "Save", style: :primary, disabled: true))
+
+        assert_selector "button[disabled][type='button']", text: "Save"
+        refute_selector "button[aria-busy]"
+        html = page.native.to_html
+        assert_includes html, "pointer-events-none"
+        assert_includes html, "disabled:opacity-[var(--button-disabled-opacity)]"
+        refute_includes html, "fp-spinner"
+        refute_selector "button", text: "Loading"
+      end
+
+      def test_disabled_link_uses_aria_disabled_and_drops_href
+        render_inline(Component.new(text: "Open", href: "/path", method: :delete, target: "_blank", disabled: true))
+
+        assert_selector "a[aria-disabled='true'][tabindex='-1']", text: "Open"
+        refute_selector "a[href]"
+        refute_selector "a[disabled]"
+        refute_selector "a[target]"
+        refute_selector "a[rel]"
+        html = page.native.to_html
+        assert_includes html, "pointer-events-none"
+        assert_includes html, "opacity-[var(--button-disabled-opacity)]"
+        refute_includes html, "fp-spinner"
+      end
+
+      def test_enabled_link_keeps_href_and_is_not_aria_disabled
+        render_inline(Component.new(text: "Open", href: "/path"))
+
+        assert_selector "a[href='/path']", text: "Open"
+        refute_selector "a[aria-disabled]"
+        refute_selector "a[tabindex]"
+        html = page.native.to_html
+        assert_includes html, "disabled:pointer-events-none"
+        refute_includes html.gsub("disabled:pointer-events-none", ""), "pointer-events-none"
+      end
+
+      def test_loading_still_disables_when_disabled_is_omitted
+        render_inline(Component.new(text: "Save", loading: true))
+
+        assert_selector "button[disabled]", text: "Loading"
+        assert_includes page.native.to_html, "fp-spinner"
+      end
+
+      def test_disabled_and_loading_keep_the_spinner
+        render_inline(Component.new(text: "Save", disabled: true, loading: true))
+
+        assert_selector "button[disabled]", text: "Loading"
+        assert_includes page.native.to_html, "fp-spinner"
+      end
+
+      def test_invalid_disabled_raises
+        [nil, :disabled, "true", 1].each do |disabled|
+          error = assert_raises(ArgumentError) { Component.new(text: "Save", disabled: disabled) }
+          assert_match(/disabled/, error.message)
+        end
       end
 
       def test_submit_button_with_data_attributes
