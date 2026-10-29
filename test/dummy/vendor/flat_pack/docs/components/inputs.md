@@ -60,8 +60,8 @@ Component-specific props:
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
 | `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). Select hashes may include `icon:` (Heroicon name). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. Child hashes may include `icon:` too. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
-| `search_mode` | Symbol | `:local` | no | Search mode for `Select`: `:local` (client filter) or `:remote` (AJAX endpoint). |
-| `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select options. |
+| `search_mode` | Symbol | `:local` | no | Search mode for `Select` and `Combobox`: `:local` (client filter) or `:remote` (AJAX endpoint). |
+| `search_endpoint` | String | `nil` | no | Required when `search_mode: :remote`; URL used to fetch Select or Combobox options. |
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
 | `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. On `variant: :swatches` it maps to ColorSwatch circle sizes (`:sm` 2rem, `:md` 2.5rem, `:lg` 3rem). |
@@ -88,6 +88,7 @@ None.
 - Hierarchical nested multiselect via `FlatPack::Select::Component` with `multiple: true` and option `children:`, including parent/child synchronization, indeterminate parent states, initial selection hydration, and hidden input generation
 - Legacy hierarchical nested multiselect via `flat-pack--nested-multiselect`; prefer Select for new usage
 - Remote Select mode (`search_mode: :remote`) fetches options from `search_endpoint` with `search_param`
+- Combobox `search_mode: :remote` uses that same request and `{ "items": [{ "label", "value" }] }` body. Combobox rows may also include `subtitle`. See [Combobox](combobox.md).
 - `chrome: :cell` on those same controls removes the control border. The collection editor cell draws the line, the focus ring, and the error ring. Select menus and their search field keep their own border. A normal form omits `chrome` and stays bordered.
 
 ## Example
@@ -278,7 +279,7 @@ or:
 { "items": [{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }] }
 ```
 
-`icon` is optional. When present it is a Heroicon name. The menu and the closed control use it. A native select ignores it.
+`icon` is optional. When present it is a Heroicon name. The menu and the closed control use it. A native select ignores it. Combobox remote search accepts the same `items` array (or a top-level array) and may include `subtitle` on each row. It does not read `icon`.
 
 ```erb
 <%= render FlatPack::FileInput::Component.new(
