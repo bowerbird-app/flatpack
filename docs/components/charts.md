@@ -22,6 +22,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 | `card` | Boolean | `true` | no | Wraps chart in `FlatPack::Card::Component` with header/body/footer layout. |
 | `title` | String, nil | `nil` | no | Optional title shown in card header. |
 | `subtitle` | String, nil | `nil` | no | Optional subtitle shown under title. |
+| `integer_ticks` | Boolean | `false` | no | When true, ApexCharts numeric axes use whole-number ticks only (`0`, `1`, not `0.0` or `1.5`). Category axes stay as-is. Off by default. |
 | `**system_arguments` | Hash | `{}` | no | Forwarded HTML attributes for outer container in chart-only mode. |
 
 ## Slots
@@ -37,6 +38,7 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
 - Stacked bar defaults for `:stacked_bar` and `:stacked_column` set ApexCharts `chart.stacked` and use multiple `series` entries with shared `xaxis.categories`
 - Gauge defaults for `:gauge` (`radialBar`) with rounded arc ends and primary-color shading
 - Geo chart defaults for `:geochart` with world-region rendering, transparent background, and a primary-color opacity intensity scale
+- Optional `integer_ticks: true` for whole-number numeric axis labels via the chart Stimulus controller
 
 ## Color Defaults
 - By default, charts derive their series palette from `--color-primary`.
@@ -88,6 +90,16 @@ Use `FlatPack::Chart::DefaultFilterComponent` for date-range + optional status f
   series: [{ name: "Revenue", data: [44, 55, 57, 56] }],
   options: { xaxis: { categories: ["Q1", "Q2", "Q3", "Q4"] } },
   title: "Quarterly Revenue"
+) %>
+```
+
+```erb
+<%= render FlatPack::Chart::Component.new(
+  type: :column,
+  integer_ticks: true,
+  series: [{ name: "Jobs", data: [0, 1, 2, 1, 3] }],
+  options: { xaxis: { categories: ["Mon", "Tue", "Wed", "Thu", "Fri"] } },
+  title: "Jobs per day"
 ) %>
 ```
 

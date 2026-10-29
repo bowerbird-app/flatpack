@@ -151,6 +151,82 @@ test('geoRows accepts country code region values', () => {
   ]))
 })
 
+test('renderChart leaves axis options alone when integerTicksValue is false', () => {
+  const { controller } = buildController()
+  let captured = null
+  class ApexCharts {
+    constructor(_element, options) {
+      captured = options
+    }
+    render() {}
+  }
+
+  controller.seriesValue = [{ name: 'Jobs', data: [0, 1, 2] }]
+  controller.typeValue = 'line'
+  controller.optionsValue = { yaxis: { labels: { style: { colors: 'red' } } } }
+  controller.heightValue = 280
+  controller.integerTicksValue = false
+  controller.renderChart(ApexCharts)
+
+  assert.equal(captured.yaxis.stepSize, undefined)
+  assert.equal(captured.yaxis.decimalsInFloat, undefined)
+  assert.equal(captured.yaxis.labels.formatter, undefined)
+  assert.equal(captured.yaxis.labels.style.colors, 'red')
+})
+
+test('renderChart applies integer tick options when integerTicksValue is true', () => {
+  const { controller } = buildController()
+  let captured = null
+  class ApexCharts {
+    constructor(_element, options) {
+      captured = options
+    }
+    render() {}
+  }
+
+  controller.seriesValue = [{ name: 'Jobs', data: [0, 1, 2] }]
+  controller.typeValue = 'bar'
+  controller.optionsValue = {
+    yaxis: { labels: { style: { colors: 'red' } } },
+    xaxis: { categories: ['Mon', 'Tue', 'Wed'] }
+  }
+  controller.heightValue = 280
+  controller.integerTicksValue = true
+  controller.renderChart(ApexCharts)
+
+  assert.equal(captured.yaxis.stepSize, 1)
+  assert.equal(captured.yaxis.decimalsInFloat, 0)
+  assert.equal(captured.yaxis.labels.style.colors, 'red')
+  assert.equal(captured.yaxis.labels.formatter(0.0), '0')
+  assert.equal(captured.yaxis.labels.formatter(1.5), '2')
+  assert.equal(captured.xaxis.stepSize, undefined)
+  assert.equal(captured.xaxis.categories[0], 'Mon')
+})
+
+test('integer ticks wrap an existing yaxis formatter with rounded values', () => {
+  const { controller } = buildController()
+  const axis = controller.integerAxis({
+    labels: {
+      formatter(val) {
+        return `n=${val}`
+      }
+    }
+  })
+
+  assert.equal(axis.labels.formatter(1.5), 'n=2')
+  assert.equal(axis.stepSize, 1)
+})
+
+test('integer ticks skip a non-numeric xaxis and keep a numeric xaxis', () => {
+  const { controller } = buildController()
+  const categoryAxis = controller.integerAxis({ type: 'category' }, { numericOnly: true })
+  const numericAxis = controller.integerAxis({ type: 'numeric' }, { numericOnly: true })
+
+  assert.equal(categoryAxis.stepSize, undefined)
+  assert.equal(numericAxis.stepSize, 1)
+  assert.equal(numericAxis.labels.formatter('3.2'), '3')
+})
+
 test('normalizedCanvasColor returns rgb-compatible color strings', () => {
   const { controller } = buildController()
 

@@ -37,6 +37,7 @@ module FlatPack
         card: true,
         title: nil,
         subtitle: nil,
+        integer_ticks: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -47,10 +48,12 @@ module FlatPack
         @card = card
         @title = title
         @subtitle = subtitle
+        @integer_ticks = integer_ticks
 
         validate_series!
         validate_type!
         validate_height!
+        validate_integer_ticks!
       end
 
       def call
@@ -143,15 +146,16 @@ module FlatPack
       end
 
       def chart_attributes
-        {
-          data: {
-            controller: "flat-pack--chart",
-            "flat-pack--chart-series-value": chart_series_json,
-            "flat-pack--chart-type-value": apex_chart_type,
-            "flat-pack--chart-options-value": chart_options_json,
-            "flat-pack--chart-height-value": @height
-          }
+        data = {
+          controller: "flat-pack--chart",
+          "flat-pack--chart-series-value": chart_series_json,
+          "flat-pack--chart-type-value": apex_chart_type,
+          "flat-pack--chart-options-value": chart_options_json,
+          "flat-pack--chart-height-value": @height
         }
+        data["flat-pack--chart-integer-ticks-value"] = true if @integer_ticks
+
+        {data: data}
       end
 
       def chart_series_json
@@ -432,6 +436,11 @@ module FlatPack
       def validate_height!
         return if @height.is_a?(Integer) && @height > 0
         raise ArgumentError, "height must be a positive integer"
+      end
+
+      def validate_integer_ticks!
+        return if @integer_ticks == true || @integer_ticks == false
+        raise ArgumentError, "integer_ticks must be true or false"
       end
     end
   end
