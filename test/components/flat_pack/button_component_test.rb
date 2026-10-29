@@ -389,7 +389,9 @@ module FlatPack
       def test_disabled_link_keeps_href
         render_inline(Component.new(text: "Open", href: "/path", method: :delete, target: "_blank", disabled: true))
 
-        assert_selector "a[href='/path'][target='_blank'][rel='noopener noreferrer']", text: "Open"
+        assert_selector "a[href='/path']", text: "Open"
+        assert_selector "a[target='_blank']"
+        assert_selector "a[rel='noopener noreferrer']"
         refute_selector "a[disabled]"
         refute_selector "a[aria-disabled]"
         refute_selector "a[tabindex]"
@@ -422,7 +424,7 @@ module FlatPack
 
       def test_disabled_nil_false_and_true_are_accepted
         [nil, false, true].each do |disabled|
-          Component.new(text: "Save", disabled: disabled)
+          assert_nothing_raised { Component.new(text: "Save", disabled: disabled) }
         end
       end
 
