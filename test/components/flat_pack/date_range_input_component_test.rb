@@ -71,6 +71,95 @@ module FlatPack
         assert_equal ["Last week", "Last 4 weeks", "This month"], preset_labels.slice(4, 3)
       end
 
+      def test_omitted_presets_keep_default_names_and_skip_last_30_days
+        render_inline(Component.new(start_name: "period_start", end_name: "period_end"))
+
+        keys = page.all("button[data-flat-pack-date-picker-command='preset']", visible: :all).map { |button| button["data-flat-pack-date-picker-preset"] }
+        assert_equal Component::DEFAULT_PRESET_KEYS.map(&:to_s), keys
+        refute_includes keys, "last_30_days"
+        refute_selector "[data-flat-pack--flatpack-date-picker-preset-ranges-value]", visible: :all
+      end
+
+      def test_named_last_30_days_preset_renders_and_matches_values
+        travel_to Time.utc(2026, 5, 15, 12, 0, 0) do
+          render_inline(Component.new(
+            start_name: "start_date",
+            end_name: "end_date",
+            presets: [:last_30_days],
+            start_value: "2026-04-16",
+            end_value: "2026-05-15"
+          ))
+        end
+
+        assert_selector "button[data-flat-pack-date-picker-preset='last_30_days']", text: "Last 30 days", visible: :all
+        assert_selector "input[type='text'][value='Last 30 days']"
+        assert_selector "div[data-flat-pack--flatpack-date-picker-preset-key-value='last_30_days']", visible: :all
+        refute_selector "button[data-flat-pack-date-picker-preset='today']", visible: :all
+      end
+
+      def test_presets_option_replaces_default_list_and_keeps_named_order
+        render_inline(Component.new(
+          start_name: "period_start",
+          end_name: "period_end",
+          presets: [:last_30_days, *Component::DEFAULT_PRESET_KEYS]
+        ))
+
+        keys = page.all("button[data-flat-pack-date-picker-command='preset']", visible: :all).map { |button| button["data-flat-pack-date-picker-preset"] }
+        assert_equal ["last_30_days", *Component::DEFAULT_PRESET_KEYS.map(&:to_s)], keys
+      end
+
+      def test_custom_days_preset_fills_label_and_stimulus_range
+        travel_to Time.utc(2026, 5, 15, 12, 0, 0) do
+          render_inline(Component.new(
+            start_name: "start_date",
+            end_name: "end_date",
+            presets: [{label: "Last 45 days", days: 45}],
+            start_value: "2026-04-01",
+            end_value: "2026-05-15"
+          ))
+        end
+
+        assert_selector "button[data-flat-pack-date-picker-preset='last_45_days']", text: "Last 45 days", visible: :all
+        assert_selector "input[type='text'][value='Last 45 days']"
+        ranges_payload = page.first("div[data-flat-pack--flatpack-date-picker-preset-ranges-value]", visible: :all)["data-flat-pack--flatpack-date-picker-preset-ranges-value"]
+        assert_includes ranges_payload, "last_45_days"
+        assert_includes ranges_payload, "2026-04-01"
+        assert_includes ranges_payload, "2026-05-15"
+      end
+
+      def test_custom_start_and_end_preset
+        render_inline(Component.new(
+          start_name: "start_date",
+          end_name: "end_date",
+          presets: [{label: "Launch week", start: Date.new(2026, 3, 1), end: Date.new(2026, 3, 7)}]
+        ))
+
+        assert_selector "button[data-flat-pack-date-picker-preset='launch_week']", text: "Launch week", visible: :all
+        ranges_payload = page.first("div[data-flat-pack--flatpack-date-picker-preset-ranges-value]", visible: :all)["data-flat-pack--flatpack-date-picker-preset-ranges-value"]
+        assert_includes ranges_payload, "2026-03-01"
+        assert_includes ranges_payload, "2026-03-07"
+      end
+
+      def test_raises_on_unknown_named_preset
+        error = assert_raises(ArgumentError) do
+          Component.new(start_name: "start_date", end_name: "end_date", presets: [:not_a_preset])
+        end
+
+        assert_equal 'unknown date range preset "not_a_preset"', error.message
+      end
+
+      def test_raises_on_custom_preset_without_range
+        error = assert_raises(ArgumentError) do
+          Component.new(
+            start_name: "start_date",
+            end_name: "end_date",
+            presets: [{label: "Mystery window"}]
+          )
+        end
+
+        assert_equal "preset needs days: or start: and end:", error.message
+      end
+
       def test_formats_date_objects
         render_inline(Component.new(
           start_name: "start_date",

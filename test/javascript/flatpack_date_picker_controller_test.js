@@ -137,6 +137,43 @@ test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {
   assert.equal(range.end.getTime(), new Date(2026, 5, 18).getTime())
 })
 
+test('computePresetRange returns rolling 30-day range for last_30_days', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 18)
+
+  const range = controller.computePresetRange('last_30_days')
+
+  assert.equal(range.start.getTime(), new Date(2026, 4, 20).getTime())
+  assert.equal(range.end.getTime(), new Date(2026, 5, 18).getTime())
+})
+
+test('computePresetRange prefers supplied custom ranges', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 18)
+  controller.hasPresetRangesValue = true
+  controller.presetRangesValue = {
+    last_45_days: { start: '2026-04-04', end: '2026-05-18' }
+  }
+
+  const range = controller.computePresetRange('last_45_days')
+
+  assert.equal(range.start.getTime(), new Date(2026, 3, 4).getTime())
+  assert.equal(range.end.getTime(), new Date(2026, 4, 18).getTime())
+})
+
+test('applyPreset fills the draft from a named last_30_days range', () => {
+  const controller = buildController()
+  controller.today = new Date(2026, 5, 18)
+  controller.clipRange = (range) => range
+  controller.render = () => {}
+
+  controller.applyPreset('last_30_days')
+
+  assert.equal(controller.draft.start.getTime(), new Date(2026, 4, 20).getTime())
+  assert.equal(controller.draft.end.getTime(), new Date(2026, 5, 18).getTime())
+  assert.equal(controller.draftPresetKey, 'last_30_days')
+})
+
 function overlayPanel() {
   const classes = new Set(['hidden'])
 

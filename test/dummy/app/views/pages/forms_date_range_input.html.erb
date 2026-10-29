@@ -30,6 +30,18 @@
         help_text: "Use a matching period to compare performance trends.",
         max: Date.today.to_s
       ) %>
+
+      <%= render FlatPack::DateRangeInput::Component.new(
+        start_name: "sitemap_period_start",
+        end_name: "sitemap_period_end",
+        label: "Sitemap window",
+        min: (Date.today - 365).to_s,
+        max: Date.today.to_s,
+        start_value: (Date.today - 29).to_s,
+        end_value: Date.today.to_s,
+        presets: [:last_30_days, *FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS],
+        help_text: "Last 30 days sits at the top. The rest of the list is the default set."
+      ) %>
     <% end %>
   <% end %>
 
@@ -56,6 +68,18 @@
           min: (Date.today - 730).to_s,
           help_text: &quot;Use a matching period to compare performance trends.&quot;,
           max: Date.today.to_s
+        ) %&gt;
+
+        &lt;%= render FlatPack::DateRangeInput::Component.new(
+          start_name: &quot;sitemap_period_start&quot;,
+          end_name: &quot;sitemap_period_end&quot;,
+          label: &quot;Sitemap window&quot;,
+          min: (Date.today - 365).to_s,
+          max: Date.today.to_s,
+          start_value: (Date.today - 29).to_s,
+          end_value: Date.today.to_s,
+          presets: [:last_30_days, *FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS],
+          help_text: &quot;Last 30 days sits at the top. The rest of the list is the default set.&quot;
         ) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;

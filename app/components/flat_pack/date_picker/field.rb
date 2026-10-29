@@ -3,8 +3,8 @@
 module FlatPack
   module DatePicker
     # Shared field helpers for DateInput and DateRangeInput.
-    # quick_range_presets stays an instance method so a prepend on
-    # DateRangeInput (Recording Studio sitemaps adds last_30_days) still runs.
+    # DateRangeInput accepts presets: for the list it shows. quick_range_presets
+    # stays an instance method so a prepend can still add a name and call super.
     module Field
       private
 
