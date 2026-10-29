@@ -218,6 +218,7 @@ module FlatPack
           attrs[:method] = @method if @method
           attrs[:target] = @target if @target
           attrs[:rel] = "noopener noreferrer" if @target == "_blank"
+          apply_inert_link_attributes!(attrs)
         else
           attrs[:type] = @type
           attrs[:disabled] = true if inactive?
@@ -331,6 +332,7 @@ module FlatPack
         }
         attrs[:rel] = "noopener noreferrer" if @target == "_blank"
         apply_shared_control_attributes!(attrs)
+        apply_inert_link_attributes!(attrs)
         if @current
           attrs[:aria] ||= {}
           attrs[:aria][:current] = "page"
@@ -360,6 +362,8 @@ module FlatPack
           "transition-[color,background-color,border-color,box-shadow,transform] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]",
           "disabled:pointer-events-none disabled:opacity-[var(--button-disabled-opacity)]",
+          # "pointer-events-none" "opacity-[var(--button-disabled-opacity)]"
+          (inactive_classes if inactive?),
           "fp-touch-manipulation",
           conditional_size_classes,
           icon_only_classes,
@@ -471,6 +475,18 @@ module FlatPack
 
       def inactive?
         @disabled || @loading
+      end
+
+      def inactive_classes
+        "pointer-events-none opacity-[var(--button-disabled-opacity)]"
+      end
+
+      def apply_inert_link_attributes!(attrs)
+        return unless @href.present? && inactive?
+
+        attrs[:tabindex] = "-1"
+        attrs[:aria] ||= {}
+        attrs[:aria][:disabled] = "true"
       end
 
       def validate_title!

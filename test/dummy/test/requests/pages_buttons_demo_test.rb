@@ -9,6 +9,6 @@ class PagesButtonsDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Disabled Buttons"
     assert_select "button[disabled]", text: "Disabled Primary"
-    assert_select "a[href]", text: "Disabled Link"
+    assert_select "a[href][aria-disabled='true']", text: "Disabled Link"
   end
 end
