@@ -132,7 +132,7 @@
   })
 %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :text_area %>
 
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Text Area Examples", anchor_link: true) %>
@@ -209,6 +209,48 @@
     CODE
     language: "erb",
     title: "Text Area Examples"
+  ) %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Chat variant",
+    subtitle: "Compact autogrow field that reuses Chat::Composer tokens. Drop this in a composer instead of a long Tailwind class list.",
+    anchor_link: true
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-(--stack-gap-md)") do %>
+      <%= render FlatPack::TextArea::Component.new(
+        name: "chat[standalone]",
+        placeholder: "Write a message...",
+        variant: :chat
+      ) %>
+
+      <%= render FlatPack::Chat::Composer::Component.new do |composer| %>
+        <% composer.center do %>
+          <%= render FlatPack::TextArea::Component.new(
+            name: "chat[message]",
+            placeholder: "Write a message...",
+            variant: :chat,
+            submit_on_enter: true
+          ) %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::TextArea::Component.new(
+        name: &quot;chat[message]&quot;,
+        placeholder: &quot;Write a message...&quot;,
+        variant: :chat,
+        submit_on_enter: true
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Chat variant"
   ) %>
 </section>
 

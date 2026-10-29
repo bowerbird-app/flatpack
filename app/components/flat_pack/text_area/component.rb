@@ -9,6 +9,16 @@ module FlatPack
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "text-[var(--color-error)]" "border-[var(--color-error)]"
+      # "min-h-[var(--chat-composer-control-height)]" "max-h-32"
+      # "rounded-[var(--chat-composer-radius)]"
+      # "border-[var(--chat-input-border-color)]"
+      # "bg-[var(--chat-input-background-color)]"
+      # "px-4" "py-[var(--chat-composer-control-padding-y)]" "leading-5"
+      # "text-[var(--chat-input-text-color)]"
+      # "placeholder:text-[var(--chat-input-placeholder-color)]"
+      # "focus:ring-[var(--chat-input-focus-ring-color)]"
+
+      VARIANTS = %i[default chat].freeze
 
       def initialize(
         name:,
@@ -19,7 +29,7 @@ module FlatPack
         label: nil,
         error: nil,
         help_text: nil,
-        rows: 3,
+        rows: nil,
         autogrow: true,
         submit_on_enter: false,
         character_count: false,
@@ -29,6 +39,7 @@ module FlatPack
         rich_text: false,
         rich_text_options: {},
         chrome: :field,
+        variant: :default,
         **system_arguments
       )
         assign_control_chrome!(chrome)
@@ -42,7 +53,8 @@ module FlatPack
         @label = label
         @error = error
         @help_text = normalize_help_text!(help_text)
-        @rows = rows
+        @variant = (variant.presence || :default).to_s.to_sym
+        @rows = rows.nil? ? default_rows : rows
         @autogrow = autogrow
         @submit_on_enter = submit_on_enter
         @character_count = character_count
@@ -55,6 +67,8 @@ module FlatPack
         @rich_text_options = @rich_text ? RichTextOptions.new(rich_text_options) : nil
 
         validate_name!
+        validate_variant!
+        validate_chat_chrome!
         validate_rows! unless @rich_text
         validate_character_limits! unless @rich_text
       end
@@ -290,7 +304,8 @@ module FlatPack
         classes(
           "flat-pack-richtext-editor",
           *form_control_border_classes(error: @error),
-          *form_control_padding_classes
+          *form_control_padding_classes,
+          *chat_variant_classes
         )
       end
 
@@ -300,9 +315,36 @@ module FlatPack
           custom_class: @custom_class,
           extra: [
             "resize-none",
-            (@quick_copy ? "pr-10" : nil)
+            (@quick_copy ? "pr-10" : nil),
+            *chat_variant_classes
           ].compact
         )
+      end
+
+      def chat_variant?
+        @variant == :chat
+      end
+
+      def default_rows
+        chat_variant? ? 1 : 3
+      end
+
+      def chat_variant_classes
+        return [] unless chat_variant?
+
+        [
+          "min-h-[var(--chat-composer-control-height)]",
+          "max-h-32",
+          "rounded-[var(--chat-composer-radius)]",
+          (@error ? nil : "border-[var(--chat-input-border-color)]"),
+          "bg-[var(--chat-input-background-color)]",
+          "px-4",
+          "py-[var(--chat-composer-control-padding-y)]",
+          "leading-5",
+          "text-[var(--chat-input-text-color)]",
+          "placeholder:text-[var(--chat-input-placeholder-color)]",
+          "focus:ring-[var(--chat-input-focus-ring-color)]"
+        ].compact
       end
 
       def character_count_classes
@@ -354,6 +396,18 @@ module FlatPack
 
       def validate_name!
         raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
+      end
+
+      def validate_variant!
+        return if VARIANTS.include?(@variant)
+
+        raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def validate_chat_chrome!
+        return unless chat_variant? && cell_chrome?
+
+        raise ArgumentError, "variant: :chat is not compatible with chrome: :cell"
       end
 
       def textarea_actions

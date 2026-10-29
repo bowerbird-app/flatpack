@@ -155,6 +155,16 @@ module FlatPack
         refute_includes html, "border-[var(--color-error)]"
       end
 
+      def test_rich_text_chat_variant_uses_composer_tokens
+        render_inline(Component.new(name: "body", rich_text: true, variant: :chat))
+
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--chat-composer-radius)]"
+        assert_includes html, "py-[var(--chat-composer-control-padding-y)]"
+        assert_includes html, "border-[var(--chat-input-border-color)]"
+        refute_includes html, "py-[var(--form-control-padding-y)]"
+      end
+
       def test_rich_text_cell_chrome_drops_the_editor_border
         render_inline(Component.new(name: "body", rich_text: true, chrome: :cell, error: "Required"))
 

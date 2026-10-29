@@ -304,6 +304,78 @@ module FlatPack
         assert_selector "textarea[rows='5']"
         assert_selector "textarea.custom"
       end
+
+      def test_default_variant_keeps_form_control_tokens
+        render_inline(Component.new(name: "description"))
+
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--form-control-radius)]"
+        assert_includes html, "py-[var(--form-control-padding-y)]"
+        refute_includes html, "rounded-[var(--chat-composer-radius)]"
+        refute_includes html, "min-h-[var(--chat-composer-control-height)]"
+        assert_selector "textarea[rows='3']"
+      end
+
+      def test_chat_variant_uses_composer_tokens
+        render_inline(Component.new(name: "chat[message]", variant: :chat, placeholder: "Write a message..."))
+
+        html = page.native.to_html
+        assert_selector "textarea[name='chat[message]'][rows='1'][placeholder='Write a message...']"
+        assert_selector "div[data-flat-pack--text-area-autogrow-value='true']"
+        assert_includes html, "min-h-[var(--chat-composer-control-height)]"
+        assert_includes html, "max-h-32"
+        assert_includes html, "rounded-[var(--chat-composer-radius)]"
+        assert_includes html, "border-[var(--chat-input-border-color)]"
+        assert_includes html, "bg-[var(--chat-input-background-color)]"
+        assert_includes html, "px-4"
+        assert_includes html, "py-[var(--chat-composer-control-padding-y)]"
+        assert_includes html, "leading-5"
+        assert_includes html, "text-[var(--chat-input-text-color)]"
+        assert_includes html, "placeholder:text-[var(--chat-input-placeholder-color)]"
+        assert_includes html, "focus:ring-[var(--chat-input-focus-ring-color)]"
+        refute_includes html, "rounded-[var(--form-control-radius)]"
+        refute_includes html, "py-[var(--form-control-padding-y)]"
+        refute_includes html, "px-[var(--form-control-padding-x)]"
+      end
+
+      def test_chat_variant_keeps_explicit_rows_and_autogrow_off
+        render_inline(Component.new(name: "chat[message]", variant: :chat, rows: 3, autogrow: false))
+
+        assert_selector "textarea[rows='3']"
+        assert_selector "div[data-flat-pack--text-area-autogrow-value='false']"
+      end
+
+      def test_chat_variant_error_keeps_error_border
+        render_inline(Component.new(name: "chat[message]", variant: :chat, error: "Required"))
+
+        html = page.native.to_html
+        assert_includes html, "border-[var(--color-error)]"
+        refute_includes html, "border-[var(--chat-input-border-color)]"
+        assert_includes html, "rounded-[var(--chat-composer-radius)]"
+      end
+
+      def test_chat_variant_accepts_string_name
+        render_inline(Component.new(name: "chat[message]", variant: "chat"))
+
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--chat-composer-radius)]"
+      end
+
+      def test_raises_error_with_invalid_variant
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "description", variant: :pill)
+        end
+
+        assert_equal "Invalid variant: pill. Must be one of: default, chat", error.message
+      end
+
+      def test_raises_error_when_chat_variant_uses_cell_chrome
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "description", variant: :chat, chrome: :cell)
+        end
+
+        assert_equal "variant: :chat is not compatible with chrome: :cell", error.message
+      end
     end
   end
 end

@@ -34,7 +34,10 @@ Component-specific props:
 
 | name | type | default | required | description |
 | --- | --- | --- | --- | --- |
-| `rows` | Integer | `3` | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
+| `rows` | Integer | `3` (`1` when `variant: :chat`) | no | Initial row count (`TextArea` plain mode only; ignored when `rich_text: true`). |
+| `autogrow` | Boolean | `true` | no | Grows the plain `TextArea` with its content. `:chat` keeps this on unless you pass `false`. |
+| `submit_on_enter` | Boolean | `false` | no | Submits the enclosing form on Enter in a plain `TextArea`. Shift+Enter still inserts a newline. |
+| `variant` | Symbol | `:default` | no | `TextArea` look: `:default` is the form field. `:chat` uses Chat::Composer tokens (`--chat-composer-control-height`, `--chat-composer-radius`, `--chat-composer-control-padding-y`, `--chat-input-*`) for a compact autogrow pill/field. Invalid names raise `ArgumentError`. `:chat` cannot be paired with `chrome: :cell`. |
 | `character_count` | Boolean | `false` | no | Enables live count text in `TextInput` and `TextArea` (plain and rich text modes). |
 | `quick_copy` | Boolean | `false` | no | Enables one-click copy for `TextInput` and plain `TextArea` from both a field click and a trailing icon button. The control is `readonly`. Feedback is a toast, then the icon swaps to a check or an error icon. The check keeps the field’s icon colour. Not applied when `TextArea` uses `rich_text: true`. |
 | `rich_text` | Boolean | `false` | no | Activates the TipTap rich text editor in place of the native `<textarea>`. |
@@ -71,6 +74,7 @@ None.
 
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
+- TextArea looks: `:default` is the form field. `variant: :chat` is the Chat::Composer field (compact padding, composer radius, chat input colours, autogrow, `rows` 1).
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
 - RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, the neutral active surface when selected (`--surface-active-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
@@ -127,6 +131,15 @@ Additional focused examples:
   character_count: true,
   min_characters: 20,
   max_characters: 280
+) %>
+```
+
+```erb
+<%= render FlatPack::TextArea::Component.new(
+  name: "chat[message]",
+  placeholder: "Write a message...",
+  variant: :chat,
+  submit_on_enter: true
 ) %>
 ```
 
