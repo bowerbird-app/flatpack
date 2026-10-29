@@ -71,6 +71,76 @@
   ) %>
 </section>
 
+<!-- Item span -->
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Item span", anchor_link: true, subtitle: "One cell can cover more than one column.") %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    Pass <code>span:</code> on <code>with_item</code>. A number starts at the first breakpoint where this grid has that many columns. On <code>cols: 4</code> that is <code>md</code> for two columns. Pass <code>base:</code> to span on a phone. A hash is used as written.
+  </p>
+  <%= render FlatPack::Grid::Component.new(cols: 4) do |grid| %>
+    <% grid.with_item(span: {base: 1, md: 2, lg: 2}) do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">Wide</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
+            Two columns from tablet up.
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% grid.with_item do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">One</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Plain cell.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% grid.with_item do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">One</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Plain cell.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% grid.with_item(span: 2) do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">Always two</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
+            <code>span: 2</code> from <code>md</code> up on this four-column grid. Pass <code>base:</code> to span on a phone.
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% grid.with_item(span: :full) do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">Full row</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
+            <code>span: :full</code> covers the whole track.
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Grid::Component.new(cols: 4) do |grid| %&gt;
+        &lt;% grid.with_item(span: {base: 1, md: 2, lg: 2}) do %&gt;
+          &lt;%= render FlatPack::Card::Component.new(border: :strong) { "Wide" } %&gt;
+        &lt;% end %&gt;
+        &lt;% grid.with_item do %&gt;
+          &lt;%= render FlatPack::Card::Component.new(border: :strong) { "One" } %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    class: "mt-4"
+  ) %>
+</section>
+
 <!-- Grid with Different Gaps -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Grid Gap Sizes", anchor_link: true, subtitle: "Examples for Grid Gap Sizes.") %>
@@ -205,6 +275,7 @@
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Consistent Gaps:</strong> Small, medium, and large gap options<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Auto-Stretch:</strong> Items stretch to fill height by default<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>CSS Grid:</strong> Modern CSS grid implementation<% end %>
+    <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Item span:</strong> <code>with_item(span:)</code> covers more than one column<% end %>
     <%= render FlatPack::List::Item.new(class: "py-0 px-0") do %><strong>Composable:</strong> Works great with Card and other components<% end %>
   <% end %>
 </section>

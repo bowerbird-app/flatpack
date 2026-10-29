@@ -30,93 +30,8 @@ module FlatPack
         md: "1rem",
         lg: "1.5rem"
       }.freeze
-      BREAKPOINTS = %i[base sm md lg xl].freeze
       COLUMN_COUNTS = (1..6)
       DEFAULT_COLUMNS = {base: 2, md: 3, lg: 4}.freeze
-      COLUMN_COUNT_CLASSES = {
-        base: {
-          1 => "columns-1",
-          2 => "columns-2",
-          3 => "columns-3",
-          4 => "columns-4",
-          5 => "columns-5",
-          6 => "columns-6"
-        },
-        sm: {
-          1 => "sm:columns-1",
-          2 => "sm:columns-2",
-          3 => "sm:columns-3",
-          4 => "sm:columns-4",
-          5 => "sm:columns-5",
-          6 => "sm:columns-6"
-        },
-        md: {
-          1 => "md:columns-1",
-          2 => "md:columns-2",
-          3 => "md:columns-3",
-          4 => "md:columns-4",
-          5 => "md:columns-5",
-          6 => "md:columns-6"
-        },
-        lg: {
-          1 => "lg:columns-1",
-          2 => "lg:columns-2",
-          3 => "lg:columns-3",
-          4 => "lg:columns-4",
-          5 => "lg:columns-5",
-          6 => "lg:columns-6"
-        },
-        xl: {
-          1 => "xl:columns-1",
-          2 => "xl:columns-2",
-          3 => "xl:columns-3",
-          4 => "xl:columns-4",
-          5 => "xl:columns-5",
-          6 => "xl:columns-6"
-        }
-      }.freeze
-      GRID_COLUMN_CLASSES = {
-        base: {
-          1 => "grid-cols-1",
-          2 => "grid-cols-2",
-          3 => "grid-cols-3",
-          4 => "grid-cols-4",
-          5 => "grid-cols-5",
-          6 => "grid-cols-6"
-        },
-        sm: {
-          1 => "sm:grid-cols-1",
-          2 => "sm:grid-cols-2",
-          3 => "sm:grid-cols-3",
-          4 => "sm:grid-cols-4",
-          5 => "sm:grid-cols-5",
-          6 => "sm:grid-cols-6"
-        },
-        md: {
-          1 => "md:grid-cols-1",
-          2 => "md:grid-cols-2",
-          3 => "md:grid-cols-3",
-          4 => "md:grid-cols-4",
-          5 => "md:grid-cols-5",
-          6 => "md:grid-cols-6"
-        },
-        lg: {
-          1 => "lg:grid-cols-1",
-          2 => "lg:grid-cols-2",
-          3 => "lg:grid-cols-3",
-          4 => "lg:grid-cols-4",
-          5 => "lg:grid-cols-5",
-          6 => "lg:grid-cols-6"
-        },
-        xl: {
-          1 => "xl:grid-cols-1",
-          2 => "xl:grid-cols-2",
-          3 => "xl:grid-cols-3",
-          4 => "xl:grid-cols-4",
-          5 => "xl:grid-cols-5",
-          6 => "xl:grid-cols-6"
-        }
-      }.freeze
 
       def initialize(
         columns: DEFAULT_COLUMNS,
@@ -187,11 +102,11 @@ module FlatPack
       end
 
       def column_count_classes
-        @columns.map { |breakpoint, count| COLUMN_COUNT_CLASSES.fetch(breakpoint).fetch(count) }
+        @columns.map { |breakpoint, count| FlatPack::Shared::Breakpoints.utility(breakpoint, "columns-#{count}") }
       end
 
       def grid_column_classes
-        @columns.map { |breakpoint, count| GRID_COLUMN_CLASSES.fetch(breakpoint).fetch(count) }
+        @columns.map { |breakpoint, count| FlatPack::Shared::Breakpoints.utility(breakpoint, "grid-cols-#{count}") }
       end
 
       def gap_classes
@@ -199,13 +114,7 @@ module FlatPack
       end
 
       def normalize_columns(columns)
-        if columns.is_a?(Hash)
-          columns.to_h { |breakpoint, count| [breakpoint.to_sym, Integer(count)] }
-        else
-          {base: Integer(columns)}
-        end
-      rescue ArgumentError, TypeError
-        columns
+        FlatPack::Shared::Breakpoints.normalize(columns) { |count| Integer(count) }
       end
 
       def validate_columns!
@@ -213,10 +122,7 @@ module FlatPack
           raise ArgumentError, "Invalid columns: #{@columns.inspect}. Use an integer 1-6 or a hash like {base: 2, md: 3, lg: 4}."
         end
 
-        unknown = @columns.keys - BREAKPOINTS
-        if unknown.any?
-          raise ArgumentError, "Invalid columns breakpoints: #{unknown.join(", ")}. Must be one of: #{BREAKPOINTS.join(", ")}"
-        end
+        FlatPack::Shared::Breakpoints.validate_keys!(@columns.keys, label: "columns")
 
         @columns.each do |breakpoint, count|
           next if COLUMN_COUNTS.cover?(count)
