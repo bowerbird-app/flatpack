@@ -22,7 +22,7 @@ Use Card to group related content in a consistent surface with optional hover an
 | `padding` | Symbol | `:md` | no | Container padding for non-slot content: `:none`, `:sm`, `:md`, `:lg`; invalid values raise `ArgumentError`. |
 | `inset` | Symbol, nil | `nil` | no | Sets `--card-inset` without adding padding. `nil` follows `padding:` exactly. `:sm`, `:md`, and `:lg` map to `--card-padding-sm`, `--card-padding-md`, and `--card-padding-lg` through `data-fp-card-inset`. Unknown values raise `ArgumentError`. |
 | `radius` | Symbol | `:default` | no | `:default`, `:none`, `:sm`, `:md`, `:lg`, `:xl`, `:xxl`, `:xxxl`. `:default` keeps the theme `--card-radius` and adds no markup. Other values set inline `--card-radius`. Independent of `padding:`. Invalid values raise `ArgumentError`. The inline value carries through to `--media-radius` and `--card-inner-radius`. `FlatPack::Card::Stat::Component` does not take `radius:`. |
-| `variant` | Symbol | `:default` | no | Layout. `:default` is the stacked card (media, header, badge, title, body, footer). `:featured` is a large cover: square media on the left, copy on the right, stacking below `md`. Invalid values raise `ArgumentError`. `FlatPack::Card::Stat::Component` does not take `variant:`. |
+| `variant` | Symbol, nil | `:default` | no | Layout. `:default` is the stacked card (media, header, badge, title, body, footer). `nil` is `:default`. `:featured` is a large cover: square media on the left, copy on the right, stacking below `md`. Invalid values raise `ArgumentError`. `FlatPack::Card::Stat::Component` does not take `variant:`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for card root. |
 
 Behavior note:
@@ -87,9 +87,9 @@ A photo with its own inset uses `padding: :none` and `inset:` so `radius: :card_
 ## Slots
 | name | type | required | description |
 |---|---|---|---|
-| `header` | slot | no | Header slot wrapper (`FlatPack::Card::Header::Component`). On `:featured`, the top action row: right-aligned in the copy column from `md`, over the photo below `md`. |
+| `header` | slot | no | Header slot wrapper (`FlatPack::Card::Header::Component`). On `:featured`, that element is the top action row (right-aligned in the copy column from `md`, over the photo below `md`). A host class, padding, border, or divider on `card.header` still applies. The row is not `display: contents`. |
 | `badge` | slot | no | Small identity mark. On `:featured`, an info badge sits above the title. Pass `FlatPack::Badge::Component`. |
-| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. On `:featured` those are `--text-4xl`, `--display-weight`, and `--surface-content-color`. |
+| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. Featured defaults are on `:where(.fp-card--featured)` (`--text-4xl`, `--display-weight`, `--surface-content-color`), so a declaration on the card wins. The weight fallback is `--display-weight`. |
 | `body` | slot | no | Body slot wrapper (`FlatPack::Card::Body::Component`). On `:featured`, the label/value block and any extra line under the title. |
 | `footer` | slot | no | Footer slot wrapper (`FlatPack::Card::Footer::Component`). On `:featured`, the footer is a flex row: each control grows to half the row below `md`, and the row aligns to the end from `md`. The footer box is not `display: contents`. |
 | `media` | slot | no | Media slot wrapper (`FlatPack::Card::Media::Component`). On `:featured`, the square cover on the left (full width when stacked). |
@@ -236,7 +236,8 @@ The slot is visible by default. On `(hover: hover)` it starts hidden and appears
     ) %>
   <% end %>
   <% card.header do %>
-    <%= render FlatPack::Button::Component.new(icon: "share", icon_only: true, style: :ghost, size: :md, aria: { label: "Share" }) %>
+    <%= render FlatPack::Button::Component.new(icon: "share", icon_only: true, style: :secondary, size: :md, round: true, aria: { label: "Share" }) %>
+    <%= render FlatPack::Button::Component.new(icon: "heart", icon_only: true, style: :secondary, size: :md, round: true, aria: { label: "Add to list" }) %>
   <% end %>
   <% card.badge do %>
     <%= render FlatPack::Badge::Component.new(text: "Northlight", style: :info, size: :xs) %>

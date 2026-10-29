@@ -1396,7 +1396,19 @@
   min-width: 0;
 }
 
+/* Zero specificity so a declaration on the card, or an ancestor, wins. */
+:where(.fp-card--featured) {
+  --card-title-size: var(--text-4xl);
+  --card-title-weight: var(--display-weight);
+  --card-title-color: var(--surface-content-color);
+}
+
 .fp-card--featured [data-fp-card-part="header"] {
+  width: 100%;
+}
+
+/* The header element is the row. display: contents would drop a host class, padding, border, or divider. */
+:where(.fp-card--featured [data-fp-card-part="header"] > *) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1405,20 +1417,10 @@
   width: 100%;
 }
 
-:where(.fp-card--featured [data-fp-card-part="header"] > *) {
-  display: contents;
-}
-
-.fp-card--featured [data-fp-card-part="title"] {
-  --card-title-size: var(--text-4xl);
-  --card-title-weight: var(--display-weight);
-  --card-title-color: var(--surface-content-color);
-}
-
 .fp-card__title {
   margin: 0;
   font-size: var(--card-title-size, var(--text-2xl));
-  font-weight: var(--card-title-weight, 600);
+  font-weight: var(--card-title-weight, var(--display-weight));
   color: var(--card-title-color, var(--surface-content-color));
 }
 
@@ -1448,6 +1450,10 @@
     top: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
     inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
     z-index: 1;
+    width: auto;
+  }
+
+  :where(.fp-card--featured [data-fp-card-part="header"] > *) {
     width: auto;
   }
 }

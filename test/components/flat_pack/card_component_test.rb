@@ -1159,12 +1159,57 @@ module FlatPack
         assert_includes css, "@media (max-width: 767px)"
         assert_includes css, "@media (min-width: 768px)"
         assert_includes css, "inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px))"
+        assert_includes css, ":where(.fp-card--featured)"
         assert_includes css, "--card-title-size: var(--text-4xl);"
         assert_includes css, "--card-title-weight: var(--display-weight);"
         assert_includes css, "font-size: var(--card-title-size, var(--text-2xl));"
+        assert_includes css, "font-weight: var(--card-title-weight, var(--display-weight));"
         assert_includes css, "flex: 1 1 calc(50% - var(--space-3));"
         refute_match(/\[data-fp-card-part="footer"\][^{]*\{\s*display:\s*contents/, css)
+        refute_match(/\[data-fp-card-part="header"\][^{]*\{\s*display:\s*contents/, css)
         refute_includes css, ".fp-card--featured [data-fp-card-part=\"title\"] .fp-card__title"
+        refute_match(/\.fp-card--featured \[data-fp-card-part="title"\]\s*\{[^}]*--card-title-size/, css)
+      end
+
+      def test_nil_variant_renders_the_stacked_card
+        render_inline(Component.new(variant: nil)) do |card|
+          card.body { "Stacked" }
+        end
+
+        refute_includes page.native.to_html, "fp-card--featured"
+        assert_selector ".fp-card", text: "Stacked"
+        assert_nil page.find(".fp-card")["data-fp-card-variant"]
+      end
+
+      def test_card_level_title_variable_wins_over_the_featured_default
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.title { "Cover" }
+        end
+
+        refute page.find("[data-fp-card-part='title']")["style"]
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        defaults = css[/:where\(\.fp-card--featured\)\s*\{[^}]+\}/m]
+        assert_includes defaults, "--card-title-size: var(--text-4xl);"
+        assert_includes defaults, "--card-title-weight: var(--display-weight);"
+        assert_includes defaults, "--card-title-color: var(--surface-content-color);"
+        assert_equal 1, css.scan("--card-title-size:").size
+        refute_match(/\.fp-card--featured \[data-fp-card-part="title"\]/, css)
+      end
+
+      def test_featured_header_element_keeps_host_chrome
+        render_inline(Component.new(variant: :featured, padding: :none)) do |card|
+          card.header(class: "host-header", divider: true, padding: :sm) { "Share" }
+        end
+
+        header = page.find("[data-fp-card-part='header'] > div")
+        classes = header[:class].split
+        assert_includes classes, "host-header"
+        assert_includes classes, "border-b"
+        assert_includes classes, "border-[var(--card-border-color)]"
+        assert_includes classes, "p-[var(--card-padding-sm)]"
+        assert_selector "[data-fp-card-part='header']", text: "Share"
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        assert_match(/:where\(\.fp-card--featured \[data-fp-card-part="header"\] > \*\)\s*\{\s*display:\s*flex/m, css)
       end
 
       def test_featured_footer_children_share_the_row

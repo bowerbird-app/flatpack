@@ -179,6 +179,9 @@ components:
       - --card-inset
       - --card-inner-radius
       - --card-radius
+      - --card-title-size
+      - --card-title-weight
+      - --card-title-color
       - --radius-xxl
       - --radius-xxxl
     classes:

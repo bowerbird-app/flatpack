@@ -4,8 +4,8 @@ module FlatPack
   module Card
     module Title
       # Heading supplies the tag, the balance class, and tight leading.
-      # Size, weight, and colour stay on .fp-card__title so a featured card
-      # can set --card-title-* without a parent rule overriding the heading.
+      # Size, weight, and colour stay on .fp-card__title. Featured defaults
+      # are on :where(.fp-card--featured), so a card or ancestor variable wins.
       class Component < FlatPack::Heading::Component
         TAGS = %i[h1 h2 h3].freeze
 
