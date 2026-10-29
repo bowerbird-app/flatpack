@@ -1049,6 +1049,37 @@ module FlatPack
         assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
       end
 
+      def test_featured_image_cover_false_keeps_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320, cover: false)
+          end
+        end
+
+        assert_includes page.find("img[alt='Cover']")[:class], "h-auto"
+      end
+
+      def test_featured_media_slot_cover_false_keeps_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media(cover: false) do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+          end
+        end
+
+        assert_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find(".fp-card__cover")[:class], "fp-card__cover"
+      end
+
+      def test_featured_media_keeps_a_host_class_on_the_cover
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media(class: "host-cover") { "Photo" }
+        end
+
+        classes = page.find(".fp-card__cover")[:class].split
+        assert_includes classes, "fp-card__cover"
+        assert_includes classes, "host-cover"
+      end
+
       def test_nested_card_media_outside_the_featured_slot_keeps_h_auto
         render_inline(Component.new(variant: :featured)) do |card|
           card.media do |media|
@@ -1114,6 +1145,8 @@ module FlatPack
         assert_selector "[data-fp-card-part='body']", text: "Release date"
         assert_selector "[data-fp-card-part='footer']", text: "Download kit"
         assert_includes html, "aspect-square"
+        assert_includes html, "fp-card__cover"
+        assert_includes html, "fp-card__featured-grid"
         refute_includes html, "border-b"
         refute_includes html, "border-t"
       end
@@ -1211,6 +1244,13 @@ module FlatPack
           css
         )
         assert_includes css, "contain: size;"
+        assert_includes css, "container-type: inline-size;"
+        assert_includes css, "container-name: fp-card;"
+        assert_includes css, "@container fp-card (min-width: 40rem)"
+        assert_includes css, "minmax(18rem, 1fr)"
+        assert_includes css, "--card-body-gap: var(--space-4);"
+        assert_match(/:where\(\.fp-card__cover\)\s*\{[^}]*contain:\s*size;/m, css)
+        refute_match(/:where\(\.fp-card__featured-media\) > \* \{\s*contain:\s*size;/, css)
         assert_includes css, "align-self: start;"
         refute_includes css, ":where(.fp-card__featured-media img) {\n  width: 100%;\n  height: 100%;"
         assert_includes css, "--card-title-size: var(--text-4xl);"

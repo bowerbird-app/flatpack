@@ -1339,13 +1339,21 @@
   border-radius: var(--card-inner-radius);
 }
 
-/* Featured: square cover left, copy right. Stacks below md. Header icons
- * sit on the photo on small screens and in the copy column from md.
+/* Featured: square cover beside copy once the card itself is about 640px
+ * (40rem) wide. The card is the container, so a narrow column stacks on a
+ * wide viewport. Below that, the cover is full width and the header sits
+ * on the photo. Side by side, the copy column is at least 18rem.
  */
 .fp-card--featured {
+  container-type: inline-size;
+  container-name: fp-card;
+  position: relative;
+  width: 100%;
+}
+
+.fp-card__featured-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  position: relative;
   width: 100%;
 }
 
@@ -1361,15 +1369,11 @@
  * nested overlay is left alone. They beat that preflight rule, and a host h-*
  * utility still wins. Pass cover: true on the cover Media (the featured media
  * slot's image helper does) so h-auto is omitted and this height can apply.
- * The direct child is size-contained, so its square comes from aspect-ratio
- * and not from the image or a stretched copy column. The overlay and frame
- * fill that square.
+ * Size containment is only on the cover (.fp-card__cover), which also has
+ * a width and aspect-ratio. contain: size on a child with neither collapses
+ * its height to 0. The overlay and frame fill the cover.
  */
 @layer base {
-  :where(.fp-card__featured-media) > * {
-    contain: size;
-  }
-
   :where(.fp-card__featured-media) .fp-overlay,
   :where(.fp-card__featured-media) .fp-media__frame {
     width: 100%;
@@ -1383,11 +1387,12 @@
   }
 }
 
-:where(.fp-card__featured-media > *) {
+:where(.fp-card__cover) {
   display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+  contain: size;
 }
 
 :where(.fp-card__featured-media img) {
@@ -1424,10 +1429,15 @@
   --card-title-weight: var(--display-weight);
   --card-title-color: var(--surface-content-color);
   --card-media-image-height: 100%;
+  --card-body-gap: var(--space-4);
 }
 
 .fp-card--featured [data-fp-card-part="header"] {
-  width: 100%;
+  position: absolute;
+  top: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
+  inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
+  z-index: 1;
+  width: auto;
 }
 
 /* The header element is the row. display: contents would drop a host class, padding, border, or divider. */
@@ -1437,7 +1447,14 @@
   align-items: center;
   justify-content: flex-end;
   gap: var(--space-3);
-  width: 100%;
+  width: auto;
+}
+
+/* Direct children of the featured body (a meta block, then the copy) use the body gap. */
+:where(.fp-card--featured [data-fp-card-part="body"] > *) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-body-gap);
 }
 
 .fp-card__title {
@@ -1467,24 +1484,19 @@
   min-width: 0;
 }
 
-@media (max-width: 767px) {
+@container fp-card (min-width: 40rem) {
+  .fp-card__featured-grid {
+    grid-template-columns: min(50%, 28rem) minmax(18rem, 1fr);
+    align-items: stretch;
+  }
+
   .fp-card--featured [data-fp-card-part="header"] {
-    position: absolute;
-    top: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
-    inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
-    z-index: 1;
-    width: auto;
+    position: static;
+    width: 100%;
   }
 
   :where(.fp-card--featured [data-fp-card-part="header"] > *) {
-    width: auto;
-  }
-}
-
-@media (min-width: 768px) {
-  .fp-card--featured {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: stretch;
+    width: 100%;
   }
 
   .fp-card__featured-media {

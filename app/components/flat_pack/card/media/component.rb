@@ -84,9 +84,11 @@ module FlatPack
         end
 
         # Featured cards pass cover: true. The block can call this so the slot,
-        # not thread state, sets FlatPack::Media cover:.
+        # not thread state, sets FlatPack::Media cover:. A cover: on this call
+        # wins, so the host can pass cover: false and keep h-auto.
         def image(**arguments)
-          render(FlatPack::Media::Component.new(**arguments, cover: @cover))
+          cover = arguments.key?(:cover) ? arguments.delete(:cover) : @cover
+          render(FlatPack::Media::Component.new(**arguments, cover: cover))
         end
 
         def call

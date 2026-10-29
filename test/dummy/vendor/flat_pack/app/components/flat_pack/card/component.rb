@@ -40,7 +40,7 @@ module FlatPack
       def media(**args, &block)
         return media_slot if args.empty? && !block
 
-        set_slot(:media_slot, nil, **default_media_arguments.merge(args), &block)
+        set_slot(:media_slot, nil, **merge_slot_arguments(default_media_arguments, args), &block)
       end
 
       def badge(**args, &block)
@@ -209,7 +209,7 @@ module FlatPack
 
         return content if parts.empty?
 
-        safe_join(parts)
+        content_tag(:div, safe_join(parts), class: "fp-card__featured-grid")
       end
 
       def featured_media
@@ -332,7 +332,7 @@ module FlatPack
       end
 
       def default_media_arguments
-        return {padding: :none, aspect_ratio: "1/1", cover: true} if featured?
+        return {padding: :none, aspect_ratio: "1/1", cover: true, class: "fp-card__cover"} if featured?
 
         {padding: @padding}
       end

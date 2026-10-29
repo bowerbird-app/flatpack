@@ -98,22 +98,73 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
   end
 
   test "a wide featured cover stays square when the copy is tall" do
-    page.current_window.resize_to(1024, 900)
-    visit "/demo/cards?copy=long"
-    assert_selector ".fp-card--featured", text: "Lookbook spreads"
+    [768, 1024].each do |width|
+      page.current_window.resize_to(width, 900)
+      visit "/demo/cards?copy=long"
+      assert_selector ".fp-card--featured", text: "Lookbook spreads"
+
+      sample = page.evaluate_script(<<~JS)
+        (() => {
+          const card = document.querySelector(".fp-card--featured")
+          const cover = card.querySelector(".fp-card__cover")
+          const box = cover.getBoundingClientRect()
+          const cardBox = card.getBoundingClientRect()
+          const sydney = [...card.querySelectorAll("p")].find((node) => node.textContent.trim() === "Sydney")
+          const next = sydney.parentElement.nextElementSibling
+          const gap = next.getBoundingClientRect().top - sydney.getBoundingClientRect().bottom
+          const probe = document.createElement("div")
+          probe.style.height = "var(--card-body-gap)"
+          card.appendChild(probe)
+          const expected = probe.getBoundingClientRect().height
+          probe.remove()
+          return { width: box.width, height: box.height, card: cardBox.height, gap, expected }
+        })()
+      JS
+
+      assert_in_delta sample.fetch("width"), sample.fetch("height"), 1
+      assert_operator sample.fetch("card"), :>, sample.fetch("height") + 40
+      assert_in_delta sample.fetch("expected"), sample.fetch("gap"), 1
+      assert_operator sample.fetch("gap"), :>, 8
+    end
+  end
+
+  test "at 768 the featured card stacks or keeps an 18rem copy column" do
+    page.current_window.resize_to(768, 900)
+    visit "/demo/cards"
+    assert_selector ".fp-card--featured", text: "Spring launch"
+
+    sample = featured_columns
+
+    if sample.fetch("stacked")
+      assert_in_delta sample.fetch("cover"), sample.fetch("coverHeight"), 1
+      header = sample.fetch("headerTop")
+      assert_operator header, :<, sample.fetch("mediaBottom")
+    else
+      assert_operator sample.fetch("copy"), :>=, sample.fetch("minCopy") - 1
+    end
+  end
+
+  test "a host child with no width or aspect ratio keeps its height" do
+    visit "/demo/cards"
+    assert_selector ".fp-card--featured"
 
     sample = page.evaluate_script(<<~JS)
       (() => {
-        const card = document.querySelector(".fp-card--featured")
-        const cover = card.querySelector(".fp-card__featured-media > *")
-        const box = cover.getBoundingClientRect()
-        const cardBox = card.getBoundingClientRect()
-        return { width: box.width, height: box.height, card: cardBox.height }
+        const media = document.querySelector(".fp-card__featured-media")
+        const style = document.createElement("style")
+        style.textContent = ".host-unsized { width: auto; aspect-ratio: auto; height: auto; }"
+        document.head.appendChild(style)
+        const child = document.createElement("div")
+        child.className = "host-unsized"
+        child.textContent = "Host note"
+        media.appendChild(child)
+        const box = child.getBoundingClientRect()
+        return { width: box.width, height: box.height, contain: getComputedStyle(child).contain }
       })()
     JS
 
-    assert_in_delta sample.fetch("width"), sample.fetch("height"), 1
-    assert_operator sample.fetch("card"), :>, sample.fetch("height") + 40
+    assert_operator sample.fetch("height"), :>, 8
+    refute_includes sample.fetch("contain"), "size"
   end
 
   test "media outside a featured card uses h-auto instead of the attribute height" do
@@ -169,6 +220,31 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
   end
 
   private
+
+  def featured_columns
+    page.evaluate_script(<<~JS)
+      (() => {
+        const card = document.querySelector(".fp-card--featured")
+        const media = card.querySelector(".fp-card__featured-media")
+        const copy = card.querySelector(".fp-card__featured-copy")
+        const cover = card.querySelector(".fp-card__cover")
+        const header = card.querySelector("[data-fp-card-part='header']")
+        const root = parseFloat(getComputedStyle(document.documentElement).fontSize)
+        const mediaBox = media.getBoundingClientRect()
+        const copyBox = copy.getBoundingClientRect()
+        const coverBox = cover.getBoundingClientRect()
+        return {
+          stacked: copyBox.top >= mediaBox.bottom - 2,
+          copy: copyBox.width,
+          cover: coverBox.width,
+          coverHeight: coverBox.height,
+          mediaBottom: mediaBox.bottom,
+          headerTop: header.getBoundingClientRect().top,
+          minCopy: 18 * root
+        }
+      })()
+    JS
+  end
 
   def glyph(label)
     page.evaluate_script(<<~JS)

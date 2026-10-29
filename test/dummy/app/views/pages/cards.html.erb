@@ -56,7 +56,7 @@
     subtitle: "Square photo, badge, title, date, and actions."
   ) %>
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-6">
-    Featured splits the card. The photo stays square. Share sits on the photo on a phone, and in the top-right on a wide screen.
+    Featured splits the card when the card is wide enough. The photo stays square. Share sits on the photo on a narrow card, and in the top-right when the columns sit side by side.
   </p>
   <%= render FlatPack::Card::Component.new(
     variant: :featured,
@@ -84,9 +84,11 @@
     <% end %>
     <% card.title(prefix: "Press kit: ") { "Spring launch" } %>
     <% card.body do %>
-      <p class="text-sm text-[var(--surface-muted-content-color)]">Release date</p>
-      <p>3 Sep 2026</p>
-      <p class="text-sm text-[var(--surface-muted-content-color)]">Sydney</p>
+      <div>
+        <p class="text-sm text-[var(--surface-muted-content-color)]">Release date</p>
+        <p>3 Sep 2026</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)]">Sydney</p>
+      </div>
       <% if params[:copy] == "long" %>
         <p>
           The harbour set ships with a printed lookbook, a stills archive, and a short film.
