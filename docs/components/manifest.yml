@@ -379,6 +379,12 @@ components:
       - FlatPack::Shared::IconComponent
     status: documented
 
+  - key: embed
+    title: Embed
+    doc: docs/components/embed.md
+    primary_class: FlatPack::Embed::Component
+    status: documented
+
   - key: fab
     title: FAB
     doc: docs/components/fab.md

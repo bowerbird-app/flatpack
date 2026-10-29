@@ -222,6 +222,7 @@ Rails.application.routes.draw do
   get "demo/page_nav_registry", to: "pages#page_nav_registry"
   get "demo/overlay", to: "pages#overlay"
   get "demo/video_preview", to: "pages#video_preview"
+  get "demo/embed", to: "pages#embed"
   get "demo/fab", to: "pages#fab"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"

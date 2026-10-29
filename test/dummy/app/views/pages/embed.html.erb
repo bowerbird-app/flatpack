@@ -1,0 +1,95 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Embed",
+  subtitle: "A map or a clip in a framed iframe. Give it a title. It stays lazy until it is near the screen."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :embed %>
+
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<section class="mb-12" id="launch-trailer">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Clip",
+    anchor_link: true,
+    subtitle: "Sixteen by nine. You pass the URL. Flatpack does not talk to the provider."
+  ) %>
+
+  <div class="max-w-3xl" id="embed-clip">
+    <%= render FlatPack::Embed::Component.new(
+      src: "https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ?rel=0",
+      title: "Launch trailer",
+      aspect_ratio: "16/9",
+      allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+      allowfullscreen: true,
+      caption: "Big Buck Bunny, a stand-in clip"
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Embed::Component.new(
+        src: trailer_embed_url,
+        title: "Launch trailer",
+        aspect_ratio: "16/9",
+        allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+        allowfullscreen: true,
+        caption: "Big Buck Bunny, a stand-in clip"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="studio-map">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Map",
+    anchor_link: true,
+    subtitle: "Four by three, with a sandbox. Same frame, different URL."
+  ) %>
+
+  <div class="max-w-3xl" id="embed-map">
+    <%= render FlatPack::Embed::Component.new(
+      src: "https://www.openstreetmap.org/export/embed.html?bbox=-0.128%2C51.501%2C-0.118%2C51.508&layer=mapnik",
+      title: "Studio location",
+      aspect_ratio: "4/3",
+      sandbox: "allow-scripts allow-same-origin allow-popups",
+      caption: "The workshop on OpenStreetMap"
+    ) %>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    class: "mt-4",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::Embed::Component.new(
+        src: map_embed_url,
+        title: "Studio location",
+        aspect_ratio: "4/3",
+        sandbox: "allow-scripts allow-same-origin allow-popups",
+        caption: "The workshop on OpenStreetMap"
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="square-frame">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Square",
+    anchor_link: true,
+    subtitle: "One by one. Same map, tighter crop."
+  ) %>
+
+  <div class="max-w-sm" id="embed-square">
+    <%= render FlatPack::Embed::Component.new(
+      src: "https://www.openstreetmap.org/export/embed.html?bbox=-0.128%2C51.501%2C-0.118%2C51.508&layer=mapnik",
+      title: "Studio courtyard",
+      aspect_ratio: "1/1"
+    ) %>
+  </div>
+</section>
