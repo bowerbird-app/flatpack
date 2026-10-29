@@ -170,9 +170,11 @@ components:
     primary_class: FlatPack::Card::Component
     related_classes:
       - FlatPack::Card::Stat::Component
+      - FlatPack::Card::Title::Component
     args:
       - "radius: :xxl"
       - "radius: :xxxl"
+      - "variant: :featured"
     tokens:
       - --card-inset
       - --card-inner-radius
@@ -181,6 +183,7 @@ components:
       - --radius-xxxl
     classes:
       - fp-card
+      - fp-card--featured
       - fp-card-inner-radius
     status: documented
 

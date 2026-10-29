@@ -9,7 +9,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Color / semantic appearance | `style` | `:default`, `:primary`, `:success`, `:warning`, `:danger`, `:info`, and other visual schemes. Heading and Text ink is only `:default` (`--surface-content-color`), `:muted` (`--surface-muted-content-color`), or `:primary` (`--color-primary`). |
 | Card colour fill | `background` | Card and Card Stat. `:default`, `:none`, `:shaded`, `:brand`, `:brand_subtle`, `:gradient`. Not a raw colour. `:none` is transparent and inherits text. Card `shadow`, `border`, and `hover` are separate. |
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
-| Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). |
+| Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). Card uses `:default` (stacked) and `:featured` (square cover beside copy). |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
 | Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. Embed `src` is the iframe URL. Media `src` is the image URL. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
@@ -152,7 +152,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 
 ## Do not mix
 
-- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
+- Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Card `variant` is `:default` or `:featured` (the cover layout), not a colour. Do not pass Card `:featured` to Hero. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
