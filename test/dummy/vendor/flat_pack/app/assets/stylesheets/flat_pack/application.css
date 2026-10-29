@@ -1356,20 +1356,27 @@
 }
 
 /* @layer components is created before Tailwind, so it stays before preflight.
- * A height rule there loses to img { height: auto }. This block is @layer base
- * at one class of specificity: it beats that preflight rule, and a host h-*
- * utility still wins. FlatPack::Media omits h-auto inside a featured card so
- * this height applies. The square is the media slot (aspect-ratio on the direct
- * child). The overlay and frame fill that slot; the image covers it.
+ * A height rule there loses to img { height: auto }. These rules are @layer base
+ * at one class of specificity, and only under .fp-card__featured-media, so a
+ * nested overlay is left alone. They beat that preflight rule, and a host h-*
+ * utility still wins. Pass cover: true on the cover Media (the featured media
+ * slot's image helper does) so h-auto is omitted and this height can apply.
+ * The direct child is size-contained, so its square comes from aspect-ratio
+ * and not from the image or a stretched copy column. The overlay and frame
+ * fill that square.
  */
 @layer base {
-  :where(.fp-card--featured) .fp-overlay,
-  :where(.fp-card--featured) .fp-media__frame {
+  :where(.fp-card__featured-media) > * {
+    contain: size;
+  }
+
+  :where(.fp-card__featured-media) .fp-overlay,
+  :where(.fp-card__featured-media) .fp-media__frame {
     width: 100%;
     height: 100%;
   }
 
-  :where(.fp-card--featured) .fp-media__image {
+  :where(.fp-card__featured-media) .fp-media__image {
     width: 100%;
     height: var(--card-media-image-height, 100%);
     object-fit: cover;
@@ -1481,6 +1488,8 @@
   }
 
   .fp-card__featured-media {
+    align-self: start;
+    height: auto;
     padding-inline-end: 0;
   }
 

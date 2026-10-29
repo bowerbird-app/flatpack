@@ -1038,17 +1038,43 @@ module FlatPack
         refute_includes page.native.to_html, "data-fp-card-variant"
       end
 
-      def test_featured_media_omits_h_auto_so_the_cover_height_can_apply
+      def test_featured_slot_image_sets_cover_and_omits_h_auto
         render_inline(Component.new(variant: :featured)) do |card|
-          card.media do
-            vc_test_controller.view_context.render(
-              FlatPack::Media::Component.new(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
-            )
+          card.media do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
           end
         end
 
         refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
         assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
+      end
+
+      def test_nested_card_media_outside_the_featured_slot_keeps_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+          end
+          card.body do
+            vc_test_controller.view_context.render(Component.new) do |nested|
+              nested.body do
+                vc_test_controller.view_context.render(
+                  FlatPack::Media::Component.new(src: "/images/hero-stool.jpg", alt: "Nested", width: 800, height: 320)
+                )
+              end
+            end
+          end
+        end
+
+        refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find("img[alt='Nested']")[:class], "h-auto"
+      end
+
+      def test_featured_title_does_not_use_a_semibold_utility
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.title { "Spring launch" }
+        end
+
+        refute_includes page.find(".fp-card__title")[:class].to_s.split, "font-semibold"
       end
 
       def test_stacked_media_keeps_h_auto
@@ -1181,9 +1207,11 @@ module FlatPack
         assert_includes css, "inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px))"
         assert_includes css, ":where(.fp-card--featured)"
         assert_match(
-          /@layer base \{.*?:where\(\.fp-card--featured\) \.fp-media__image \{[^}]*height: var\(--card-media-image-height, 100%\);/m,
+          /@layer base \{.*?:where\(\.fp-card__featured-media\) \.fp-media__image \{[^}]*height: var\(--card-media-image-height, 100%\);/m,
           css
         )
+        assert_includes css, "contain: size;"
+        assert_includes css, "align-self: start;"
         refute_includes css, ":where(.fp-card__featured-media img) {\n  width: 100%;\n  height: 100%;"
         assert_includes css, "--card-title-size: var(--text-4xl);"
         assert_includes css, "--card-title-weight: var(--display-weight);"

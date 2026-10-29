@@ -77,6 +77,45 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
     refute_equal sample.fetch("before"), sample.fetch("after")
   end
 
+  test "a card title weight variable changes the computed weight" do
+    visit "/demo/cards"
+    assert_selector ".fp-card--featured .fp-card__title", text: "Spring launch"
+
+    sample = page.evaluate_script(<<~JS)
+      (() => {
+        const card = document.querySelector(".fp-card--featured")
+        const title = card.querySelector(".fp-card__title")
+        const before = getComputedStyle(title).fontWeight
+        card.style.setProperty("--card-title-weight", "200")
+        const after = getComputedStyle(title).fontWeight
+        return { before, after, classes: title.className }
+      })()
+    JS
+
+    refute_includes sample.fetch("classes").split, "font-semibold"
+    assert_equal "600", sample.fetch("before")
+    assert_equal "200", sample.fetch("after")
+  end
+
+  test "a wide featured cover stays square when the copy is tall" do
+    page.current_window.resize_to(1024, 900)
+    visit "/demo/cards?copy=long"
+    assert_selector ".fp-card--featured", text: "Lookbook spreads"
+
+    sample = page.evaluate_script(<<~JS)
+      (() => {
+        const card = document.querySelector(".fp-card--featured")
+        const cover = card.querySelector(".fp-card__featured-media > *")
+        const box = cover.getBoundingClientRect()
+        const cardBox = card.getBoundingClientRect()
+        return { width: box.width, height: box.height, card: cardBox.height }
+      })()
+    JS
+
+    assert_in_delta sample.fetch("width"), sample.fetch("height"), 1
+    assert_operator sample.fetch("card"), :>, sample.fetch("height") + 40
+  end
+
   test "media outside a featured card uses h-auto instead of the attribute height" do
     visit "/demo/cards"
     image = find("img[alt='Packaging']", match: :first)

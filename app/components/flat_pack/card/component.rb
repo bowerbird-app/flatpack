@@ -213,8 +213,7 @@ module FlatPack
       end
 
       def featured_media
-        rendered = FlatPack::Media::Component.with_featured_cover { media.to_s }
-        content_tag(:div, rendered, class: "fp-card__featured-media", data: {fp_card_part: "media"})
+        content_tag(:div, media, class: "fp-card__featured-media", data: {fp_card_part: "media"})
       end
 
       def featured_copy
@@ -333,7 +332,7 @@ module FlatPack
       end
 
       def default_media_arguments
-        return {padding: :none, aspect_ratio: "1/1"} if featured?
+        return {padding: :none, aspect_ratio: "1/1", cover: true} if featured?
 
         {padding: @padding}
       end

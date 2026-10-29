@@ -9,7 +9,7 @@ module FlatPack
       class Component < FlatPack::Heading::Component
         def initialize(prefix: nil, level: :h2, **system_arguments)
           @prefix = prefix.presence
-          super(level: level, size: :"2xl", weight: :semibold, style: :default, **system_arguments)
+          super(level: level, size: :"2xl", style: :default, **system_arguments)
         end
 
         def call

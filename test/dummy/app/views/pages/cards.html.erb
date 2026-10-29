@@ -66,8 +66,8 @@
     shadow: :md,
     border: :none
   ) do |card| %>
-    <% card.media do %>
-      <%= render FlatPack::Media::Component.new(
+    <% card.media do |media| %>
+      <%= media.image(
         src: "/images/hero-stool.jpg",
         alt: "Spring launch cover",
         width: 800,
@@ -87,6 +87,18 @@
       <p class="text-sm text-[var(--surface-muted-content-color)]">Release date</p>
       <p>3 Sep 2026</p>
       <p class="text-sm text-[var(--surface-muted-content-color)]">Sydney</p>
+      <% if params[:copy] == "long" %>
+        <p>
+          The harbour set ships with a printed lookbook, a stills archive, and a short film.
+          Northlight printed the cover on uncoated stock and kept the type large enough to read across a room.
+          The kit includes the release date, the Sydney screening, and a contact for the press office.
+          Share sits on the photo on a phone and moves into the copy column on a wide screen.
+          The photo stays square when this column runs long.
+        </p>
+        <p>
+          <%= "Lookbook spreads, stills, and the short film are in the download. " * 8 %>
+        </p>
+      <% end %>
     <% end %>
     <% card.footer do %>
       <%= render FlatPack::Button::Component.new(text: "Contact", style: :secondary, size: :md) %>

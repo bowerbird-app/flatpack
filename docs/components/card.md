@@ -89,10 +89,10 @@ A photo with its own inset uses `padding: :none` and `inset:` so `radius: :card_
 |---|---|---|---|
 | `header` | slot | no | Header slot wrapper (`FlatPack::Card::Header::Component`). On `:featured`, that element is the top action row (right-aligned in the copy column from `md`, over the photo below `md`). A host class, padding, border, or divider on `card.header` still applies. The row is not `display: contents`. |
 | `badge` | slot | no | Small identity mark. On `:featured`, an info badge sits above the title. Pass `FlatPack::Badge::Component`. |
-| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. Featured defaults are on `:where(.fp-card--featured)` (`--text-4xl`, `--display-weight`, `--surface-content-color`), so a declaration on the card wins. The weight fallback is `--display-weight`. |
+| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. Featured defaults are on `:where(.fp-card--featured)` (`--text-4xl`, `--display-weight`, `--surface-content-color`), so a declaration on the card wins. The weight fallback is `--display-weight`. The title does not add `font-semibold`; the weight variable is the only weight. |
 | `body` | slot | no | Body slot wrapper (`FlatPack::Card::Body::Component`). On `:featured`, the label/value block and any extra line under the title. |
 | `footer` | slot | no | Footer slot wrapper (`FlatPack::Card::Footer::Component`). On `:featured`, the footer is a flex row: each control grows to half the row below `md`, and the row aligns to the end from `md`. The footer box is not `display: contents`. |
-| `media` | slot | no | Media slot wrapper (`FlatPack::Card::Media::Component`). On `:featured`, the square cover on the left (full width when stacked). Photo height is `--card-media-image-height` (default `100%`) from `:where(.fp-card--featured) .fp-media__image` in `@layer base`. That layer beats preflight `img { height: auto }`, and a host `h-*` utility on the image still wins. `@layer components` is ordered before preflight, so a height there would not apply. `FlatPack::Media` rendered inside the featured slot omits `h-auto` so the cover rule can set the height. The frame fills the square and the image covers it. A photo built before the card renders still has `h-auto`, and that utility wins. Outside a featured card, `h-auto` keeps the `width` and `height` attributes from locking the used height. |
+| `media` | slot | no | Media slot wrapper (`FlatPack::Card::Media::Component`). On `:featured`, the square cover on the left (full width when stacked). The block receives that slot. `image` renders `FlatPack::Media` with `cover: true` on a featured card and `cover: false` otherwise. Photo height is `--card-media-image-height` (default `100%`) from `:where(.fp-card__featured-media) .fp-media__image` in `@layer base`. That beats preflight `img { height: auto }`, and a host `h-*` utility on the image still wins. `@layer components` is ordered before preflight, so a height there would not apply. `cover: true` omits `h-auto` so the rule can set the height. Other Media, including a nested card outside this slot, keeps `h-auto`. The cover box is `contain: size` with `aspect-ratio: 1 / 1`, so the square does not follow the photo's own ratio or a taller copy column. The overlay and frame fill that box. From `md` the media column aligns to the start. |
 | `media.hover_actions` | nested slot | no | One overlay on the photo (dropdown, button, checkbox). Hidden on hover-capable pointers until the media is hovered. Always visible on `focus-within` and on pointers that cannot hover. Named `hover_actions` so it does not collide with a Card-level `actions` slot. `FlatPack::Reveal::Component` does not cover this. Reveal is scroll-in motion. |
 
 Slot props:
@@ -116,7 +116,7 @@ Slot props:
 - Border variants: `:none`, `:default`, `:strong`.
 - Hover variants: `:none`, `:subtle`, `:strong`.
 
-`:featured` is a two-column cover from the `md` breakpoint (768px). The photo column is square and inset with `--card-inset` on every side below `md`, and on the top, start, and bottom from `md` (flush toward the copy). Use `padding: :none`, `inset: :md`, `radius: :xxxl`, `shadow: :md`, and `border: :none` for a large raised cover. Pair the photo with `FlatPack::Media` `radius: :card_inner`. Put a label and value (for example a release date) in `body`, and action buttons in `footer`. Do not wrap the card in `href` when the footer has buttons. Header content must not rely on duplicate ids: one header node is used, and CSS places it on the photo below `md`.
+`:featured` is a two-column cover from the `md` breakpoint (768px). The photo stays square at every width, including when the copy column is taller. It is inset with `--card-inset` on every side below `md`, and on the top, start, and bottom from `md` (flush toward the copy). The media column aligns to the start from `md` instead of stretching with the copy. Use `padding: :none`, `inset: :md`, `radius: :xxxl`, `shadow: :md`, and `border: :none` for a large raised cover. Pair the photo with `FlatPack::Media` `radius: :card_inner`. Put a label and value (for example a release date) in `body`, and action buttons in `footer`. Do not wrap the card in `href` when the footer has buttons. Header content must not rely on duplicate ids: one header node is used, and CSS places it on the photo below `md`.
 
 ## Backgrounds
 Each background is four theme tokens. The fill token is a CSS `background`, so a gradient can live there. Host themes set the colours. The card does not take a raw colour.
@@ -226,8 +226,8 @@ The slot is visible by default. On `(hover: hover)` it starts hidden and appears
   shadow: :md,
   border: :none
 ) do |card| %>
-  <% card.media do %>
-    <%= render FlatPack::Media::Component.new(
+  <% card.media do |media| %>
+    <%= media.image(
       src: cover_path,
       alt: "Spring launch",
       width: 800,

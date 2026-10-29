@@ -5,14 +5,19 @@ require "test_helper"
 module FlatPack
   module Media
     class ComponentTest < ViewComponent::TestCase
-      def test_featured_cover_omits_h_auto
-        Component.with_featured_cover do
-          render_inline(Component.new(src: "/a.jpg", alt: "Cover", width: 800, height: 320))
-        end
+      def test_cover_omits_h_auto
+        render_inline(Component.new(src: "/a.jpg", alt: "Cover", width: 800, height: 320, cover: true))
 
         refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
         assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
-        assert_equal false, Component.featured_cover?
+      end
+
+      def test_rejects_a_non_boolean_cover
+        error = assert_raises(ArgumentError) do
+          Component.new(src: "/a.jpg", alt: "Cover", width: 80, height: 40, cover: :fill)
+        end
+
+        assert_match(/Invalid cover/, error.message)
       end
 
       def test_renders_a_lazy_image_with_reserved_ratio

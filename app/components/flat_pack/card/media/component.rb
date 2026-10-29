@@ -73,12 +73,20 @@ module FlatPack
           hover_actions_slot?
         end
 
-        def initialize(aspect_ratio: nil, padding: :md, **system_arguments)
+        def initialize(aspect_ratio: nil, padding: :md, cover: false, **system_arguments)
           @aspect_ratio = aspect_ratio
           @padding = padding.to_sym
+          @cover = cover
           @system_arguments = system_arguments
 
           validate_padding!
+          validate_cover!
+        end
+
+        # Featured cards pass cover: true. The block can call this so the slot,
+        # not thread state, sets FlatPack::Media cover:.
+        def image(**arguments)
+          render(FlatPack::Media::Component.new(**arguments, cover: @cover))
         end
 
         def call
@@ -123,6 +131,12 @@ module FlatPack
           return if PADDINGS.key?(@padding)
 
           raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{PADDINGS.keys.join(", ")}"
+        end
+
+        def validate_cover!
+          return if @cover == true || @cover == false
+
+          raise ArgumentError, "Invalid cover: #{@cover.inspect}. Must be true or false."
         end
       end
     end
