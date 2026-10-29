@@ -1350,19 +1350,24 @@
 }
 
 .fp-card__featured-media {
+  --card-media-image-height: 100%;
   min-width: 0;
   padding-block: var(--card-inset);
   padding-inline: var(--card-inset);
 }
 
-.fp-card__featured-media > * {
+.fp-media__image {
+  height: var(--card-media-image-height, auto);
+}
+
+:where(.fp-card__featured-media > *) {
   display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 
-.fp-card__featured-media img {
+:where(.fp-card__featured-media img) {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1400,31 +1405,41 @@
   width: 100%;
 }
 
-.fp-card--featured [data-fp-card-part="header"] > *,
-.fp-card--featured [data-fp-card-part="footer"] > * {
+:where(.fp-card--featured [data-fp-card-part="header"] > *) {
   display: contents;
 }
 
-.fp-card--featured [data-fp-card-part="title"] .fp-card__title {
+.fp-card--featured [data-fp-card-part="title"] {
+  --card-title-size: var(--text-4xl);
+  --card-title-weight: var(--display-weight);
+  --card-title-color: var(--surface-content-color);
+}
+
+.fp-card__title {
   margin: 0;
-  font-size: var(--text-4xl);
-  font-weight: var(--display-weight);
-  line-height: var(--leading-tight, 1.1);
-  color: var(--surface-content-color);
+  font-size: var(--card-title-size, var(--text-2xl));
+  font-weight: var(--card-title-weight, 600);
+  color: var(--card-title-color, var(--surface-content-color));
 }
 
 .fp-card--featured [data-fp-card-part="footer"] {
+  width: 100%;
+  margin-block-start: auto;
+}
+
+:where(.fp-card--featured [data-fp-card-part="footer"] > *) {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: stretch;
   gap: var(--space-3);
   width: 100%;
-  margin-block-start: auto;
+  min-width: 0;
 }
 
-.fp-card--featured [data-fp-card-part="footer"] > * {
+:where(.fp-card--featured [data-fp-card-part="footer"] > * > *) {
   flex: 1 1 calc(50% - var(--space-3));
+  min-width: 0;
 }
 
 @media (max-width: 767px) {
@@ -1454,11 +1469,11 @@
     height: 100%;
   }
 
-  .fp-card--featured [data-fp-card-part="footer"] {
+  :where(.fp-card--featured [data-fp-card-part="footer"] > *) {
     justify-content: flex-end;
   }
 
-  .fp-card--featured [data-fp-card-part="footer"] > * {
+  :where(.fp-card--featured [data-fp-card-part="footer"] > * > *) {
     flex: 0 1 auto;
   }
 }

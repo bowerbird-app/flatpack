@@ -568,6 +568,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Press kit: "
     assert_includes response.body, "Download kit"
     assert_includes response.body, "variant: :featured"
+    assert_includes response.body, "fp-heading"
+    share = response.body[/<button[^>]*aria-label="Share"[^>]*>/]
+    heart = response.body[/<button[^>]*aria-label="Add to list"[^>]*>/]
+    assert_includes share, 'data-fp-style="secondary"'
+    assert_includes heart, 'data-fp-style="secondary"'
+    assert_includes share, "h-[var(--button-round-size-md)]"
+    assert_includes heart, "h-[var(--button-round-size-md)]"
+    refute_includes share, 'data-fp-style="ghost"'
   end
 
   test "cards media demo renders media gallery example" do

@@ -192,8 +192,8 @@ module FlatPack
         safe_join([
           (media if media?),
           (header if header?),
-          (wrap_stacked_slot("badge", badge) if badge?),
-          (wrap_stacked_slot("title", title) if title?),
+          (wrap_part("badge", badge, pad: true) if badge?),
+          (wrap_part("title", title, pad: true) if title?),
           (body if body?),
           (footer if footer?),
           (content unless slot_based_content?)
@@ -248,12 +248,13 @@ module FlatPack
         content_tag(:div, identity, class: "fp-card__featured-identity", data: {fp_card_part: "identity"})
       end
 
-      def wrap_part(name, node)
-        content_tag(:div, node, data: {fp_card_part: name})
-      end
-
-      def wrap_stacked_slot(name, node)
-        content_tag(:div, node, class: stacked_slot_padding_classes, data: {fp_card_part: name})
+      def wrap_part(name, node, pad: false)
+        content_tag(
+          :div,
+          node,
+          class: (stacked_slot_padding_classes if pad),
+          data: {fp_card_part: name}
+        )
       end
 
       def stacked_slot_padding_classes

@@ -3,20 +3,21 @@
 module FlatPack
   module Card
     module Title
-      class Component < ViewComponent::Base
+      # Heading supplies the tag, the balance class, and tight leading.
+      # Size, weight, and colour stay on .fp-card__title so a featured card
+      # can set --card-title-* without a parent rule overriding the heading.
+      class Component < FlatPack::Heading::Component
         TAGS = %i[h1 h2 h3].freeze
 
         def initialize(prefix: nil, as: :h2, **system_arguments)
           @prefix = prefix.presence
           @as = as.to_sym
-          @system_arguments = system_arguments
           validate_as!
+          super(level: @as, size: :"2xl", weight: :semibold, style: :default, **system_arguments)
         end
 
         def call
-          content_tag(@as, **merged_system_arguments(title_classes)) do
-            safe_join([prefix_node, content].compact)
-          end
+          content_tag(@level, safe_join([prefix_node, title_text].compact), **heading_attributes)
         end
 
         private
@@ -27,14 +28,22 @@ module FlatPack
           content_tag(:span, @prefix, data: {fp_card_part: "title-prefix"})
         end
 
-        def merged_system_arguments(default_classes)
-          @system_arguments.merge(
-            class: class_names(default_classes, @system_arguments[:class])
-          )
+        def title_text
+          text = content.presence || @text
+          return text if text.present?
+
+          raise ArgumentError, "text is required" if @prefix.blank?
+
+          nil
         end
 
-        def title_classes
-          "fp-card__title fp-text-balance"
+        def heading_classes
+          classes(
+            "fp-heading",
+            "fp-card__title",
+            "fp-text-balance",
+            "leading-tight"
+          )
         end
 
         def validate_as!

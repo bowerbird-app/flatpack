@@ -5,7 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "group/media" "w-full" "block" "h-auto" "max-w-full" "object-cover"
+      # "group/media" "w-full" "block" "max-w-full" "object-cover"
       # The frame fill, hairline, and radius live in kit CSS (.fp-media__frame), not these utilities.
       # "opacity-0" "opacity-100" "group-hover/media:opacity-100" "focus-within:opacity-100"
       # "transition-opacity" "duration-[var(--duration-fast)]" "ease-[var(--easing-standard)]"
@@ -99,7 +99,6 @@ module FlatPack
         [
           "fp-media__image",
           "block",
-          "h-auto",
           "w-full",
           "max-w-full",
           "object-cover"

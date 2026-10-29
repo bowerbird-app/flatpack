@@ -89,9 +89,9 @@ A photo with its own inset uses `padding: :none` and `inset:` so `radius: :card_
 |---|---|---|---|
 | `header` | slot | no | Header slot wrapper (`FlatPack::Card::Header::Component`). On `:featured`, the top action row: right-aligned in the copy column from `md`, over the photo below `md`. |
 | `badge` | slot | no | Small identity mark. On `:featured`, an info badge sits above the title. Pass `FlatPack::Badge::Component`. |
-| `title` | slot | no | Heading (`FlatPack::Card::Title::Component`). On `:featured`, `--text-4xl` at `--display-weight`. |
+| `title` | slot | no | `FlatPack::Card::Title::Component`, which renders `FlatPack::Heading::Component`. The heading reads `--card-title-size`, `--card-title-weight`, and `--card-title-color`. On `:featured` those are `--text-4xl`, `--display-weight`, and `--surface-content-color`. |
 | `body` | slot | no | Body slot wrapper (`FlatPack::Card::Body::Component`). On `:featured`, the label/value block and any extra line under the title. |
-| `footer` | slot | no | Footer slot wrapper (`FlatPack::Card::Footer::Component`). On `:featured`, bottom action buttons, right-aligned from `md`, two-up below `md`. |
+| `footer` | slot | no | Footer slot wrapper (`FlatPack::Card::Footer::Component`). On `:featured`, the footer is a flex row: each control grows to half the row below `md`, and the row aligns to the end from `md`. The footer box is not `display: contents`. |
 | `media` | slot | no | Media slot wrapper (`FlatPack::Card::Media::Component`). On `:featured`, the square cover on the left (full width when stacked). |
 | `media.hover_actions` | nested slot | no | One overlay on the photo (dropdown, button, checkbox). Hidden on hover-capable pointers until the media is hovered. Always visible on `focus-within` and on pointers that cannot hover. Named `hover_actions` so it does not collide with a Card-level `actions` slot. `FlatPack::Reveal::Component` does not cover this. Reveal is scroll-in motion. |
 

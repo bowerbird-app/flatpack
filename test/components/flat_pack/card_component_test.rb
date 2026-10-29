@@ -1042,7 +1042,7 @@ module FlatPack
         assert_selector "[data-fp-card-part='copy']"
         assert_selector "[data-fp-card-part='header']", text: "Share"
         assert_selector "[data-fp-card-part='badge']", text: "Northlight"
-        assert_selector "h2.fp-card__title", text: /Spring launch/
+        assert_selector "h2.fp-heading.fp-card__title", text: /Spring launch/
         assert_selector "[data-fp-card-part='title-prefix']", text: "Press kit: "
         assert_selector "[data-fp-card-part='body']", text: "Release date"
         assert_selector "[data-fp-card-part='footer']", text: "Download kit"
@@ -1056,7 +1056,7 @@ module FlatPack
           card.title(as: :h1) { "Harbour set" }
         end
 
-        assert_selector "h1.fp-card__title", text: "Harbour set"
+        assert_selector "h1.fp-heading.fp-card__title", text: "Harbour set"
         refute_selector "h2.fp-card__title"
       end
 
@@ -1093,7 +1093,7 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "border-b"
         assert_selector "[data-fp-card-part='badge']", text: "Live"
-        assert_selector "h2.fp-card__title", text: "Stacked"
+        assert_selector "h2.fp-heading.fp-card__title", text: "Stacked"
         refute_includes html, "fp-card--featured"
       end
 
@@ -1122,6 +1122,22 @@ module FlatPack
         assert_includes css, "@media (max-width: 767px)"
         assert_includes css, "@media (min-width: 768px)"
         assert_includes css, "inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px))"
+        assert_includes css, "--card-title-size: var(--text-4xl);"
+        assert_includes css, "--card-title-weight: var(--display-weight);"
+        assert_includes css, "font-size: var(--card-title-size, var(--text-2xl));"
+        assert_includes css, "flex: 1 1 calc(50% - var(--space-3));"
+        refute_match(/\[data-fp-card-part="footer"\][^{]*\{\s*display:\s*contents/, css)
+        refute_includes css, ".fp-card--featured [data-fp-card-part=\"title\"] .fp-card__title"
+      end
+
+      def test_featured_footer_children_share_the_row
+        render_inline(Component.new(variant: :featured, padding: :none)) do |card|
+          card.footer { "<button type=\"button\">Contact</button><button type=\"button\">Download kit</button>".html_safe }
+        end
+
+        assert_selector "[data-fp-card-part='footer'] > div > button", count: 2
+        assert_selector "[data-fp-card-part='footer'] button", text: "Contact"
+        assert_selector "[data-fp-card-part='footer'] button", text: "Download kit"
       end
     end
   end
