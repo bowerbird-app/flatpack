@@ -170,17 +170,27 @@ components:
     primary_class: FlatPack::Card::Component
     related_classes:
       - FlatPack::Card::Stat::Component
+      - FlatPack::Card::Title::Component
     args:
       - "radius: :xxl"
       - "radius: :xxxl"
+      - "variant: :featured"
     tokens:
+      - --card-body-gap
+      - --card-featured-copy-min
+      - --card-featured-media-max
       - --card-inset
       - --card-inner-radius
+      - --card-media-image-height
       - --card-radius
+      - --card-title-size
+      - --card-title-weight
+      - --card-title-color
       - --radius-xxl
       - --radius-xxxl
     classes:
       - fp-card
+      - fp-card--featured
       - fp-card-inner-radius
     status: documented
 
@@ -572,6 +582,7 @@ components:
       - FlatPack::Overlay::Item
     args:
       - "radius: :card_inner"
+      - "cover: true"
     classes:
       - fp-media__frame
       - fp-card-inner-radius

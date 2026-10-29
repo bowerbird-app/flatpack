@@ -33,7 +33,7 @@ module FlatPack
 
       renders_many :items, Item
 
-      def initialize(src:, alt:, width:, height:, radius: nil, **system_arguments)
+      def initialize(src:, alt:, width:, height:, radius: nil, cover: false, **system_arguments)
         if system_arguments.key?(:href) || system_arguments.key?(:caption)
           raise ArgumentError, "Media does not take href or caption. Wrap a link in the host and put the filename beside the image."
         end
@@ -45,7 +45,9 @@ module FlatPack
         @height = positive_integer!(height, :height)
 
         @radius = radius&.to_sym
+        @cover = cover
 
+        validate_cover!
         validate_src!(src)
         validate_alt!
         validate_radius!
@@ -99,11 +101,17 @@ module FlatPack
         [
           "fp-media__image",
           "block",
-          "h-auto",
+          ("h-auto" unless @cover),
           "w-full",
           "max-w-full",
           "object-cover"
-        ].join(" ")
+        ].compact.join(" ")
+      end
+
+      def validate_cover!
+        return if @cover == true || @cover == false
+
+        raise ArgumentError, "Invalid cover: #{@cover.inspect}. Must be true or false."
       end
 
       def validate_radius!

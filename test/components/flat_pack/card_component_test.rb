@@ -773,6 +773,22 @@ module FlatPack
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
+      def test_media_overlay_keeps_a_host_text_class
+        render_inline(
+          FlatPack::Media::Component.new(
+            src: "/images/hero-stool.jpg",
+            alt: "Cover",
+            width: 800,
+            height: 800,
+            class: "text-white"
+          )
+        ) do |media|
+          media.with_item(placement: :top_right, inset: :sm) { "Mark" }
+        end
+
+        assert_includes page.find(".fp-overlay")[:class].split, "text-white"
+      end
+
       def test_media_omits_hover_reveal_until_hover_actions_are_slotted
         render_inline(Component.new) do |component|
           component.media(padding: :none) { "Photo" }
@@ -1008,6 +1024,310 @@ module FlatPack
         assert_includes css, ".fp-media__frame.fp-card-inner-radius {"
         refute_includes variables, "--card-inset"
         refute_includes variables, "--card-inner-radius"
+      end
+
+      def test_default_variant_stays_a_stacked_flex_column
+        render_inline(Component.new) { "Note" }
+
+        card = page.find(".fp-card")
+        classes = card[:class].to_s.split
+        assert_includes classes, "flex"
+        assert_includes classes, "flex-col"
+        refute_includes classes, "fp-card--featured"
+        refute card[:data]&.include?("fp-card-variant")
+        refute_includes page.native.to_html, "data-fp-card-variant"
+      end
+
+      def test_featured_slot_image_sets_cover_and_omits_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+          end
+        end
+
+        refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
+      end
+
+      def test_featured_image_cover_false_keeps_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320, cover: false)
+          end
+        end
+
+        assert_includes page.find("img[alt='Cover']")[:class], "h-auto"
+      end
+
+      def test_featured_media_slot_cover_false_keeps_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media(cover: false) do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+          end
+        end
+
+        assert_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find(".fp-card__cover")[:class], "fp-card__cover"
+      end
+
+      def test_featured_media_keeps_a_host_class_on_the_cover
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media(class: "host-cover") { "Photo" }
+        end
+
+        classes = page.find(".fp-card__cover")[:class].split
+        assert_includes classes, "fp-card__cover"
+        assert_includes classes, "host-cover"
+      end
+
+      def test_nested_card_media_outside_the_featured_slot_keeps_h_auto
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.media do |media|
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+          end
+          card.body do
+            vc_test_controller.view_context.render(Component.new) do |nested|
+              nested.body do
+                vc_test_controller.view_context.render(
+                  FlatPack::Media::Component.new(src: "/images/hero-stool.jpg", alt: "Nested", width: 800, height: 320)
+                )
+              end
+            end
+          end
+        end
+
+        refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find("img[alt='Nested']")[:class], "h-auto"
+      end
+
+      def test_featured_title_does_not_use_a_semibold_utility
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.title { "Spring launch" }
+        end
+
+        refute_includes page.find(".fp-card__title")[:class].to_s.split, "font-semibold"
+      end
+
+      def test_stacked_media_keeps_h_auto
+        render_inline(Component.new) do |card|
+          card.media do
+            vc_test_controller.view_context.render(
+              FlatPack::Media::Component.new(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320)
+            )
+          end
+        end
+
+        assert_includes page.find("img[alt='Cover']")[:class], "h-auto"
+      end
+
+      def test_featured_variant_uses_cover_layout_parts
+        render_inline(Component.new(variant: :featured, padding: :none, inset: :md, radius: :xxxl, shadow: :md, border: :none)) do |card|
+          card.media { "<img src='/images/hero-stool.jpg' alt='Cover'>".html_safe }
+          card.header { "<button type='button'>Share</button>".html_safe }
+          card.badge { "Northlight" }
+          card.title(prefix: "Press kit: ") { "Spring launch" }
+          card.body { "<p>Release date</p><p>3 Sep 2026</p>".html_safe }
+          card.footer { "<button type='button'>Download kit</button>".html_safe }
+        end
+
+        html = page.native.to_html
+        card = page.find(".fp-card")
+        classes = card[:class].to_s.split
+        assert_includes classes, "fp-card--featured"
+        refute_includes classes, "flex-col"
+        assert_equal "featured", card["data-fp-card-variant"]
+        assert_selector "[data-fp-card-part='media']"
+        assert_selector "[data-fp-card-part='copy']"
+        assert_selector "[data-fp-card-part='header']", text: "Share"
+        assert_selector "[data-fp-card-part='badge']", text: "Northlight"
+        assert_selector "h2.fp-heading.fp-card__title", text: /Spring launch/
+        assert_selector "[data-fp-card-part='title-prefix']", text: "Press kit: "
+        assert_selector "[data-fp-card-part='body']", text: "Release date"
+        assert_selector "[data-fp-card-part='footer']", text: "Download kit"
+        assert_includes html, "aspect-square"
+        assert_includes html, "fp-card__cover"
+        assert_includes html, "fp-card__featured-grid"
+        refute_includes html, "border-b"
+        refute_includes html, "border-t"
+      end
+
+      def test_featured_title_level_h1
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.title(level: :h1) { "Harbour set" }
+        end
+
+        assert_selector "h1.fp-heading.fp-card__title", text: "Harbour set"
+        refute_selector "h2.fp-card__title"
+      end
+
+      def test_title_level_accepts_an_integer
+        render_inline(Component.new) do |card|
+          card.title(level: 1) { "Harbour set" }
+        end
+
+        assert_selector "h1.fp-heading.fp-card__title", text: "Harbour set"
+      end
+
+      def test_featured_defaults_media_to_square_without_slot_padding
+        render_inline(Component.new(variant: :featured, padding: :lg)) do |card|
+          card.media { "Photo" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "aspect-square"
+        refute_includes html, "px-[var(--card-padding-lg)] pt-[var(--card-padding-lg)]"
+        refute_includes html, "px-[var(--card-padding-md)] pt-[var(--card-padding-md)]"
+      end
+
+      def test_featured_without_media_still_renders_copy
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.title { "No photo" }
+          card.body { "Just the words." }
+        end
+
+        refute_selector "[data-fp-card-part='media']"
+        assert_selector "[data-fp-card-part='copy']", text: "No photo"
+        assert_selector "[data-fp-card-part='body']", text: "Just the words."
+      end
+
+      def test_default_variant_keeps_header_divider_when_badge_and_title_are_used
+        render_inline(Component.new) do |card|
+          card.header { "Tools" }
+          card.badge { "Live" }
+          card.title { "Stacked" }
+          card.body { "Copy" }
+        end
+
+        html = page.native.to_html
+        assert_includes html, "border-b"
+        assert_selector "[data-fp-card-part='badge']", text: "Live"
+        assert_selector "h2.fp-heading.fp-card__title", text: "Stacked"
+        refute_includes html, "fp-card--featured"
+      end
+
+      def test_validates_variant
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(variant: :hero))
+        end
+        assert_includes error.message, "Invalid variant"
+      end
+
+      def test_integer_variant_raises_argument_error
+        error = assert_raises(ArgumentError) do
+          Component.new(variant: 1)
+        end
+        assert_includes error.message, "Invalid variant"
+        assert_includes error.message, "1"
+      end
+
+      def test_title_rejects_an_unknown_level
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |card|
+            card.title(level: :div) { "Nope" }
+          end
+        end
+        assert_includes error.message, "Invalid level"
+      end
+
+      def test_kit_css_includes_featured_cover_rules
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, ".fp-card--featured"
+        assert_includes css, ".fp-card__featured-media"
+        assert_includes css, "aspect-ratio: 1 / 1"
+        assert_includes css, "@media (max-width: 767px)"
+        assert_includes css, "@media (min-width: 768px)"
+        assert_includes css, "inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px))"
+        assert_includes css, ":where(.fp-card--featured)"
+        assert_match(
+          /@layer base \{.*?:where\(\.fp-card__featured-media\) \.fp-media__image \{[^}]*height: var\(--card-media-image-height, 100%\);/m,
+          css
+        )
+        assert_includes css, "contain: size;"
+        assert_match(
+          /@layer components \{\s*:where\(\.fp-card--featured\) \{\s*container-type: inline-size;\s*container-name: fp-card;/m,
+          css
+        )
+        refute_match(/\.fp-card--featured \{\s*container-type:/, css)
+        refute_match(/\.fp-card--featured \{[^}]*width:\s*100%/, css)
+        assert_match(
+          /@layer components \{\s*:where\(\.fp-card--featured \[data-fp-card-part="header"\]\) \{\s*position: absolute;.*?width: auto;\s*\}/m,
+          css
+        )
+        assert_match(
+          /@container fp-card \(min-width: 40rem\) \{\s*\.fp-card__featured-grid \{[^}]*\}\s*@layer components \{\s*:where\(\.fp-card--featured \[data-fp-card-part="header"\]\) \{\s*position: static;\s*width: 100%;/m,
+          css
+        )
+        assert_includes css, "container-name: fp-card;"
+        assert_includes css, "@container fp-card (min-width: 40rem)"
+        assert_includes css, "minmax(var(--card-featured-copy-min), 1fr)"
+        assert_includes css, "min(50%, var(--card-featured-media-max))"
+        assert_includes css, "--card-body-gap: var(--space-4);"
+        variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+        assert_includes variables, "--card-body-gap: var(--card-body-gap);"
+        assert_includes variables, "--card-body-gap: var(--space-4);"
+        assert_includes variables, "--card-featured-media-max: var(--card-featured-media-max);"
+        assert_includes variables, "--card-featured-media-max: 28rem;"
+        assert_includes variables, "--card-featured-copy-min: var(--card-featured-copy-min);"
+        assert_includes variables, "--card-featured-copy-min: 18rem;"
+        assert_match(/:where\(\.fp-card__cover\)\s*\{[^}]*contain:\s*size;/m, css)
+        refute_match(/:where\(\.fp-card__featured-media\) > \* \{\s*contain:\s*size;/, css)
+        assert_includes css, "align-self: start;"
+        refute_includes css, ":where(.fp-card__featured-media img) {\n  width: 100%;\n  height: 100%;"
+        assert_includes css, "--card-title-size: var(--text-4xl);"
+        assert_includes css, "--card-title-weight: var(--display-weight);"
+        assert_includes css, "font-size: var(--card-title-size, var(--text-2xl));"
+        assert_includes css, "font-weight: var(--card-title-weight, var(--display-weight));"
+        assert_includes css, "flex: 1 1 calc(50% - var(--space-3));"
+        refute_match(/\[data-fp-card-part="footer"\][^{]*\{\s*display:\s*contents/, css)
+        refute_match(/\[data-fp-card-part="header"\][^{]*\{\s*display:\s*contents/, css)
+        refute_includes css, ".fp-card--featured [data-fp-card-part=\"title\"] .fp-card__title"
+        refute_match(/\.fp-card--featured \[data-fp-card-part="title"\]\s*\{[^}]*--card-title-size/, css)
+      end
+
+      def test_nil_variant_renders_the_stacked_card
+        render_inline(Component.new(variant: nil)) do |card|
+          card.body { "Stacked" }
+        end
+
+        refute_includes page.native.to_html, "fp-card--featured"
+        assert_selector ".fp-card", text: "Stacked"
+        assert_nil page.find(".fp-card")["data-fp-card-variant"]
+      end
+
+      def test_featured_title_does_not_inline_its_variables
+        render_inline(Component.new(variant: :featured)) do |card|
+          card.title { "Cover" }
+        end
+
+        refute page.find("[data-fp-card-part='title']")["style"]
+        refute page.find(".fp-card")["style"]
+      end
+
+      def test_featured_header_element_keeps_host_chrome
+        render_inline(Component.new(variant: :featured, padding: :none)) do |card|
+          card.header(class: "host-header", divider: true, padding: :sm) { "Share" }
+        end
+
+        header = page.find("[data-fp-card-part='header'] > div")
+        classes = header[:class].split
+        assert_includes classes, "host-header"
+        assert_includes classes, "border-b"
+        assert_includes classes, "border-[var(--card-border-color)]"
+        assert_includes classes, "p-[var(--card-padding-sm)]"
+        assert_selector "[data-fp-card-part='header']", text: "Share"
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+        assert_match(/:where\(\.fp-card--featured \[data-fp-card-part="header"\] > \*\)\s*\{\s*display:\s*flex/m, css)
+      end
+
+      def test_featured_footer_children_share_the_row
+        render_inline(Component.new(variant: :featured, padding: :none)) do |card|
+          card.footer { "<button type=\"button\">Contact</button><button type=\"button\">Download kit</button>".html_safe }
+        end
+
+        assert_selector "[data-fp-card-part='footer'] > div > button", count: 2
+        assert_selector "[data-fp-card-part='footer'] button", text: "Contact"
+        assert_selector "[data-fp-card-part='footer'] button", text: "Download kit"
       end
     end
   end

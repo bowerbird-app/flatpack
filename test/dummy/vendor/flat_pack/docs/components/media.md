@@ -21,6 +21,7 @@ Link wrapping is the host's job. Do not put a button inside that link. To open a
 | `width` | Integer |  | yes | Positive pixel width. Sets the attribute and, with `height`, `aspect-ratio`. Non-positive values raise `ArgumentError`. |
 | `height` | Integer |  | yes | Positive pixel height. Same rules as `width`. |
 | `radius` | Symbol |  | no | Omit it and the frame uses `--media-radius`. `:card_inner` sets `fp-card-inner-radius` on the frame, so the corner is `max(0, card radius − card inset)`. Any other value raises `ArgumentError`. |
+| `cover` | Boolean | `false` | no | `true` omits `h-auto` so a featured card's cover height can apply. `false` keeps `h-auto`, and the `width` and `height` attributes do not lock the used height. Anything else raises `ArgumentError`. A featured card's media slot sets this when the block calls `image`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the overlay root. There is no `style`, colour, or theme prop. |
 
 There is no `href`. Wrap the component in a link when the photo should navigate.

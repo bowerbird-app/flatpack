@@ -376,6 +376,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --card-padding-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --card-padding-md: round(nearest, calc(var(--space-4) * var(--density)), 1px);
   --card-padding-lg: round(nearest, calc(var(--space-5) * var(--density)), 1px);
+  --card-body-gap: var(--space-4);
+  --card-featured-media-max: 28rem;
+  --card-featured-copy-min: 18rem;
   --empty-state-padding-y-sm: round(nearest, calc(var(--space-6) * var(--density)), 1px);
   --empty-state-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --empty-state-padding-y-md: round(nearest, calc((var(--space-6) + var(--space-4)) * var(--density)), 1px);

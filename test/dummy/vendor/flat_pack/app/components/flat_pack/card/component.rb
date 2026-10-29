@@ -3,15 +3,21 @@
 module FlatPack
   module Card
     class Component < FlatPack::BaseComponent
+      VARIANTS = %i[default featured].freeze
+
       renders_one :header_slot, FlatPack::Card::Header::Component
       renders_one :body_slot, FlatPack::Card::Body::Component
       renders_one :footer_slot, FlatPack::Card::Footer::Component
       renders_one :media_slot, FlatPack::Card::Media::Component
+      renders_one :badge_slot
+      renders_one :title_slot, FlatPack::Card::Title::Component
 
       undef_method :with_header_slot, :with_header_slot_content
       undef_method :with_body_slot, :with_body_slot_content
       undef_method :with_footer_slot, :with_footer_slot_content
       undef_method :with_media_slot, :with_media_slot_content
+      undef_method :with_badge_slot, :with_badge_slot_content
+      undef_method :with_title_slot, :with_title_slot_content
 
       def header(**args, &block)
         return header_slot if args.empty? && !block
@@ -22,7 +28,7 @@ module FlatPack
       def body(**args, &block)
         return body_slot if args.empty? && !block
 
-        set_slot(:body_slot, nil, **args, &block)
+        set_slot(:body_slot, nil, **body_slot_arguments(args), &block)
       end
 
       def footer(**args, &block)
@@ -34,7 +40,19 @@ module FlatPack
       def media(**args, &block)
         return media_slot if args.empty? && !block
 
-        set_slot(:media_slot, nil, **default_media_arguments.merge(args), &block)
+        set_slot(:media_slot, nil, **merge_slot_arguments(default_media_arguments, args), &block)
+      end
+
+      def badge(**args, &block)
+        return badge_slot if args.empty? && !block
+
+        set_slot(:badge_slot, nil, **args, &block)
+      end
+
+      def title(**args, &block)
+        return title_slot if args.empty? && !block
+
+        set_slot(:title_slot, nil, **args, &block)
       end
 
       # Custom predicate methods
@@ -52,6 +70,14 @@ module FlatPack
 
       def media?
         media_slot?
+      end
+
+      def badge?
+        badge_slot?
+      end
+
+      def title?
+        title_slot?
       end
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -113,6 +139,7 @@ module FlatPack
         padding: :md,
         inset: nil,
         radius: :default,
+        variant: :default,
         **system_arguments
       )
         reject_removed_theme!(system_arguments)
@@ -125,6 +152,7 @@ module FlatPack
         @padding = padding.to_sym
         @inset = inset&.to_sym
         @radius = radius.to_sym
+        @variant = normalize_variant(variant)
 
         # Sanitize URL for security and validate
         if href
@@ -141,6 +169,7 @@ module FlatPack
         validate_padding!
         validate_inset!
         validate_radius!
+        validate_variant!
       end
 
       def call
@@ -158,13 +187,86 @@ module FlatPack
       private
 
       def render_card_content
+        return render_featured_content if featured?
+
         safe_join([
           (media if media?),
           (header if header?),
+          (wrap_part("badge", badge, pad: true) if badge?),
+          (wrap_part("title", title, pad: true) if title?),
           (body if body?),
           (footer if footer?),
-          (content if !media? && !header? && !body? && !footer?)
+          (content unless slot_based_content?)
         ].compact)
+      end
+
+      def render_featured_content
+        copy = featured_copy
+        parts = [
+          (featured_media if media?),
+          copy
+        ].compact
+
+        return content if parts.empty?
+
+        content_tag(:div, safe_join(parts), class: "fp-card__featured-grid")
+      end
+
+      def featured_media
+        content_tag(:div, media, class: "fp-card__featured-media", data: {fp_card_part: "media"})
+      end
+
+      def featured_copy
+        inner = safe_join([
+          (wrap_part("header", header) if header?),
+          featured_main,
+          (wrap_part("footer", footer) if footer?),
+          (content unless featured_slot_content?)
+        ].compact)
+        return if inner.blank?
+
+        content_tag(:div, inner, class: "fp-card__featured-copy", data: {fp_card_part: "copy"})
+      end
+
+      def featured_main
+        cluster = safe_join([
+          featured_identity,
+          (wrap_part("body", body) if body?)
+        ].compact)
+        return if cluster.blank?
+
+        content_tag(:div, cluster, class: "fp-card__featured-main", data: {fp_card_part: "main"})
+      end
+
+      def featured_identity
+        identity = safe_join([
+          (wrap_part("badge", badge) if badge?),
+          (wrap_part("title", title) if title?)
+        ].compact)
+        return if identity.blank?
+
+        content_tag(:div, identity, class: "fp-card__featured-identity", data: {fp_card_part: "identity"})
+      end
+
+      def wrap_part(name, node, pad: false)
+        content_tag(
+          :div,
+          node,
+          class: (stacked_slot_padding_classes if pad),
+          data: {fp_card_part: name}
+        )
+      end
+
+      def stacked_slot_padding_classes
+        padding_classes.presence
+      end
+
+      def featured?
+        @variant == :featured
+      end
+
+      def featured_slot_content?
+        media? || header? || badge? || title? || body? || footer?
       end
 
       def container_attributes
@@ -182,10 +284,11 @@ module FlatPack
       def card_classes
         classes(
           "fp-card",
+          ("fp-card--featured" if featured?),
           "rounded-[var(--card-radius)]",
           overflow_class,
-          "flex",
-          "flex-col",
+          ("flex" unless featured?),
+          ("flex-col" unless featured?),
           "text-[var(--surface-content-color)]",
           background_classes,
           shadow_classes,
@@ -225,19 +328,43 @@ module FlatPack
       end
 
       def slot_based_content?
-        media? || header? || body? || footer?
+        media? || header? || badge? || title? || body? || footer?
       end
 
       def default_media_arguments
+        return {padding: :none, aspect_ratio: "1/1", cover: true, class: "fp-card__cover"} if featured?
+
         {padding: @padding}
       end
 
       def header_slot_arguments(args)
-        {padding: @padding}.merge(args)
+        merge_slot_arguments({padding: @padding}.merge(featured_chrome_arguments), args)
       end
 
       def footer_slot_arguments(args)
-        {padding: @padding}.merge(args)
+        merge_slot_arguments({padding: @padding}.merge(featured_chrome_arguments), args)
+      end
+
+      def body_slot_arguments(args)
+        return args unless featured?
+
+        {padding: :none}.merge(args)
+      end
+
+      def featured_chrome_arguments
+        return {} unless featured?
+
+        {padding: :none, divider: false}
+      end
+
+      def merge_slot_arguments(defaults, args)
+        extras = args.dup
+        extra_class = extras.delete(:class)
+        extra_data = extras.delete(:data)
+        merged = defaults.merge(extras)
+        merged[:class] = class_names(defaults[:class], extra_class)
+        merged[:data] = (defaults[:data] || {}).merge(extra_data || {}) if defaults[:data] || extra_data
+        merged
       end
 
       def background_classes
@@ -285,6 +412,7 @@ module FlatPack
       def card_data
         data = {background: @background.to_s, fp_card_padding: @padding.to_s}
         data[:fp_card_inset] = @inset.to_s if @inset
+        data[:fp_card_variant] = @variant.to_s if featured?
         data
       end
 
@@ -309,6 +437,19 @@ module FlatPack
         return if HOVERS.key?(@hover)
 
         raise ArgumentError, "Invalid hover: #{@hover}. Must be one of: #{HOVERS.keys.join(", ")}"
+      end
+
+      def normalize_variant(variant)
+        return :default if variant.nil?
+        return variant.to_sym if variant.respond_to?(:to_sym)
+
+        variant
+      end
+
+      def validate_variant!
+        return if VARIANTS.include?(@variant)
+
+        raise ArgumentError, "Invalid variant: #{@variant.inspect}. Must be one of: #{VARIANTS.join(", ")}"
       end
 
       def reject_removed_theme!(system_arguments)

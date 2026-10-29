@@ -355,14 +355,24 @@ module FlatPack
 
       assert_equal(
         [
+          {name: "badge", collection: false},
           {name: "body", collection: false},
           {name: "footer", collection: false},
           {name: "header", collection: false},
-          {name: "media", collection: false}
+          {name: "media", collection: false},
+          {name: "title", collection: false}
         ],
         slots
       )
       refute(slots.any? { |slot| slot.fetch(:name).end_with?("_slot") })
+    end
+
+    test "show Card binds VARIANTS to variant" do
+      payload = FlatPack::ComponentCatalog.show("Card::Component")
+      variant = parameter_named(payload, "variant")
+
+      assert_equal %w[default featured], variant.fetch(:enum)
+      assert_equal "default", variant.fetch(:default)
     end
 
     test "show Card binds INSETS to inset and leaves the default unset" do

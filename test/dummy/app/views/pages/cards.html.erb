@@ -10,8 +10,8 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Overview", anchor_link: true) %>
   <p class="text-[var(--surface-muted-content-color)] mb-6">
-    Cards combine media, header, body, and footer slots. Background is the colour. Shadow, border, and hover are separate.
-    Explore colour, slots, media, and composed examples below.
+    Cards combine media, header, badge, title, body, and footer slots. Background is the colour. Shadow, border, and hover are separate.
+    Featured is the large cover. Explore colour, slots, media, and composed examples below.
   </p>
 
   <%= render FlatPack::Grid::Component.new(cols: 2, gap: :md) do %>
@@ -47,6 +47,88 @@
       <% end %>
     <% end %>
   <% end %>
+</section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Featured cover",
+    anchor_link: true,
+    subtitle: "Square photo, badge, title, date, and actions."
+  ) %>
+  <p class="text-sm text-[var(--surface-muted-content-color)] mb-6">
+    Featured splits the card when the card is wide enough. The photo stays square. Share sits on the photo on a narrow card, and in the top-right when the columns sit side by side.
+  </p>
+  <% featured_frame = params[:frame].to_s %>
+  <% if featured_frame == "600" %>
+    <div class="w-fit">
+  <% elsif featured_frame == "500" %>
+    <div class="w-[500px]">
+  <% end %>
+  <%= render FlatPack::Card::Component.new(
+    variant: :featured,
+    padding: :none,
+    inset: :md,
+    radius: :xxxl,
+    shadow: :md,
+    border: :none,
+    **(featured_frame == "600" ? {class: "w-[600px]"} : {})
+  ) do |card| %>
+    <% card.media do |media| %>
+      <%= media.image(
+        src: "/images/hero-stool.jpg",
+        alt: "Spring launch cover",
+        width: 800,
+        height: 800,
+        radius: :card_inner
+      ) %>
+    <% end %>
+    <% card.header do %>
+      <%= render FlatPack::Button::Component.new(icon: "share", icon_only: true, style: :secondary, size: :md, round: true, aria: { label: "Share" }) %>
+      <%= render FlatPack::Button::Component.new(icon: "heart", icon_only: true, style: :secondary, size: :md, round: true, aria: { label: "Add to list" }) %>
+    <% end %>
+    <% card.badge do %>
+      <%= render FlatPack::Badge::Component.new(text: "Northlight", style: :info, size: :xs) %>
+    <% end %>
+    <% card.title(prefix: "Press kit: ") { "Spring launch" } %>
+    <% card.body do %>
+      <div>
+        <p class="text-sm text-[var(--surface-muted-content-color)]">Release date</p>
+        <p>3 Sep 2026</p>
+        <p class="text-sm text-[var(--surface-muted-content-color)]">Sydney</p>
+      </div>
+      <% if params[:copy] == "long" %>
+        <p>
+          The harbour set ships with a printed lookbook, a stills archive, and a short film.
+          Northlight printed the cover on uncoated stock and kept the type large enough to read across a room.
+          The kit includes the release date, the Sydney screening, and a contact for the press office.
+          Share sits on the photo on a phone and moves into the copy column on a wide screen.
+          The photo stays square when this column runs long.
+        </p>
+        <p>
+          <%= "Lookbook spreads, stills, and the short film are in the download. " * 8 %>
+        </p>
+      <% end %>
+    <% end %>
+    <% card.footer do %>
+      <%= render FlatPack::Button::Component.new(text: "Contact", style: :secondary, size: :md) %>
+      <%= render FlatPack::Button::Component.new(text: "Download kit", style: :primary, size: :md) %>
+    <% end %>
+  <% end %>
+  <% if featured_frame.in?(%w[600 500]) %>
+    </div>
+  <% end %>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Card::Component.new(variant: :featured, padding: :none, inset: :md, radius: :xxxl, shadow: :md, border: :none) do |card| %&gt;
+        &lt;% card.media { ... } %&gt;
+        &lt;% card.header { ... } %&gt;
+        &lt;% card.badge { ... } %&gt;
+        &lt;% card.title(prefix: "Press kit: ") { "Spring launch" } %&gt;
+        &lt;% card.body { ... } %&gt;
+        &lt;% card.footer { ... } %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
 </section>
 
 <section class="mb-12">

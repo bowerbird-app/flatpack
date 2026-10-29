@@ -1136,6 +1136,12 @@
   .w-fit {
     width: fit-content;
   }
+  .w-\[500px\] {
+    width: 500px;
+  }
+  .w-\[600px\] {
+    width: 600px;
+  }
   .w-full {
     width: 100%;
   }

@@ -1339,6 +1339,198 @@
   border-radius: var(--card-inner-radius);
 }
 
+/* Featured: square cover beside copy once the card itself is about 640px
+ * (40rem) wide. The card is the container, so a narrow column stacks on a
+ * wide viewport. Below that, the cover is full width and the header sits
+ * on the photo. Side by side, the copy column is at least --card-featured-copy-min.
+ * No width here. A block already fills a definite parent, and an unlayered
+ * width would beat a host w-* utility. container-type is in @layer components
+ * inside :where() for the same reason. A shrink-to-fit parent (inline-block,
+ * w-fit, float, absolute) has no definite width, and inline-size containment
+ * collapses the card there unless the host sets a width.
+ */
+@layer components {
+  :where(.fp-card--featured) {
+    container-type: inline-size;
+    container-name: fp-card;
+    position: relative;
+  }
+}
+
+.fp-card__featured-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+
+.fp-card__featured-media {
+  min-width: 0;
+  padding-block: var(--card-inset);
+  padding-inline: var(--card-inset);
+}
+
+/* @layer components is created before Tailwind, so it stays before preflight.
+ * A height rule there loses to img { height: auto }. These rules are @layer base
+ * at one class of specificity, and only under .fp-card__featured-media, so a
+ * nested overlay is left alone. They beat that preflight rule, and a host h-*
+ * utility still wins. Pass cover: true on the cover Media (the featured media
+ * slot's image helper does) so h-auto is omitted and this height can apply.
+ * Size containment is only on the cover (.fp-card__cover), which also has
+ * a width and aspect-ratio. contain: size on a child with neither collapses
+ * its height to 0. The overlay and frame fill the cover.
+ */
+@layer base {
+  :where(.fp-card__featured-media) .fp-overlay,
+  :where(.fp-card__featured-media) .fp-media__frame {
+    width: 100%;
+    height: 100%;
+  }
+
+  :where(.fp-card__featured-media) .fp-media__image {
+    width: 100%;
+    height: var(--card-media-image-height, 100%);
+    object-fit: cover;
+  }
+}
+
+:where(.fp-card__cover) {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  contain: size;
+}
+
+:where(.fp-card__featured-media img) {
+  width: 100%;
+  object-fit: cover;
+}
+
+.fp-card__featured-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-width: 0;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.fp-card__featured-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.fp-card__featured-identity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* Zero specificity so a declaration on the card, or an ancestor, wins. */
+:where(.fp-card--featured) {
+  --card-title-size: var(--text-4xl);
+  --card-title-weight: var(--display-weight);
+  --card-title-color: var(--surface-content-color);
+  --card-media-image-height: 100%;
+  --card-body-gap: var(--space-4);
+}
+
+@layer components {
+  :where(.fp-card--featured [data-fp-card-part="header"]) {
+    position: absolute;
+    top: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
+    inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
+    z-index: 1;
+    width: auto;
+  }
+}
+
+/* The header element is the row. display: contents would drop a host class, padding, border, or divider. */
+:where(.fp-card--featured [data-fp-card-part="header"] > *) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  width: auto;
+}
+
+/* Direct children of the featured body (a meta block, then the copy) use the body gap. */
+:where(.fp-card--featured [data-fp-card-part="body"] > *) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-body-gap);
+}
+
+.fp-card__title {
+  margin: 0;
+  font-size: var(--card-title-size, var(--text-2xl));
+  font-weight: var(--card-title-weight, var(--display-weight));
+  color: var(--card-title-color, var(--surface-content-color));
+}
+
+.fp-card--featured [data-fp-card-part="footer"] {
+  width: 100%;
+  margin-block-start: auto;
+}
+
+:where(.fp-card--featured [data-fp-card-part="footer"] > *) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+}
+
+:where(.fp-card--featured [data-fp-card-part="footer"] > * > *) {
+  flex: 1 1 calc(50% - var(--space-3));
+  min-width: 0;
+}
+
+@container fp-card (min-width: 40rem) {
+  .fp-card__featured-grid {
+    grid-template-columns: min(50%, var(--card-featured-media-max)) minmax(var(--card-featured-copy-min), 1fr);
+    align-items: stretch;
+  }
+
+  @layer components {
+    :where(.fp-card--featured [data-fp-card-part="header"]) {
+      position: static;
+      width: 100%;
+    }
+  }
+
+  :where(.fp-card--featured [data-fp-card-part="header"] > *) {
+    width: 100%;
+  }
+
+  .fp-card__featured-media {
+    align-self: start;
+    height: auto;
+    padding-inline-end: 0;
+  }
+
+  .fp-card__featured-copy {
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-6);
+    height: 100%;
+  }
+
+  :where(.fp-card--featured [data-fp-card-part="footer"] > *) {
+    justify-content: flex-end;
+  }
+
+  :where(.fp-card--featured [data-fp-card-part="footer"] > * > *) {
+    flex: 0 1 auto;
+  }
+}
+
 .fp-media__frame {
   width: 100%;
   max-width: 100%;

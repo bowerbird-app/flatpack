@@ -5,12 +5,27 @@ require "test_helper"
 module FlatPack
   module Media
     class ComponentTest < ViewComponent::TestCase
+      def test_cover_omits_h_auto
+        render_inline(Component.new(src: "/a.jpg", alt: "Cover", width: 800, height: 320, cover: true))
+
+        refute_includes page.find("img[alt='Cover']")[:class], "h-auto"
+        assert_includes page.find("img[alt='Cover']")[:class], "fp-media__image"
+      end
+
+      def test_rejects_a_non_boolean_cover
+        error = assert_raises(ArgumentError) do
+          Component.new(src: "/a.jpg", alt: "Cover", width: 80, height: 40, cover: :fill)
+        end
+
+        assert_match(/Invalid cover/, error.message)
+      end
+
       def test_renders_a_lazy_image_with_reserved_ratio
         render_inline(Component.new(src: "https://example.com/harbour.jpg", alt: "Harbour at dusk", width: 1120, height: 1400))
 
         assert_selector "div.fp-overlay.w-full"
         assert_includes page.native.to_html, "group/media"
-        assert_selector "img.fp-media__image[src='https://example.com/harbour.jpg'][alt='Harbour at dusk']"
+        assert_selector "img.fp-media__image.h-auto[src='https://example.com/harbour.jpg'][alt='Harbour at dusk']"
         assert_selector "img[width='1120'][height='1400'][loading='lazy'][decoding='async']"
         html = page.native.to_html
         assert_includes html, "aspect-ratio: 1120 / 1400"

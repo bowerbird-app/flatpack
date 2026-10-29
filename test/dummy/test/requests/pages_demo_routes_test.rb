@@ -557,6 +557,29 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Allow Multiple Open"
   end
 
+  test "cards demo renders a featured cover example" do
+    get "/demo/cards"
+
+    assert_response :success
+    assert_includes response.body, "Featured cover"
+    assert_includes response.body, "fp-card--featured"
+    assert_includes response.body, "data-fp-card-variant=\"featured\""
+    assert_includes response.body, "Spring launch"
+    assert_includes response.body, "Press kit: "
+    assert_includes response.body, "Download kit"
+    assert_includes response.body, "variant: :featured"
+    assert_includes response.body, "fp-heading"
+    share = response.body[/<button[^>]*aria-label="Share"[^>]*>.*?<\/button>/m]
+    heart = response.body[/<button[^>]*aria-label="Add to list"[^>]*>.*?<\/button>/m]
+    assert_includes share, 'data-fp-style="secondary"'
+    assert_includes heart, 'data-fp-style="secondary"'
+    assert_includes share, 'data-flat-pack--icon-name-value="share"'
+    assert_includes heart, 'data-flat-pack--icon-name-value="heart"'
+    assert_includes share, "h-[var(--button-round-size-md)]"
+    assert_includes heart, "h-[var(--button-round-size-md)]"
+    refute_includes share, 'data-fp-style="ghost"'
+  end
+
   test "cards media demo renders media gallery example" do
     get "/demo/cards/media"
 
