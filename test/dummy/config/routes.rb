@@ -125,6 +125,7 @@ Rails.application.routes.draw do
   get "demo/forms/select", to: "pages#forms_select"
   get "demo/forms/select/options", to: "pages#forms_select_options"
   get "demo/forms/combobox", to: "pages#forms_combobox"
+  get "demo/forms/combobox/options", to: "pages#forms_combobox_options"
   get "demo/forms/nested_multiselect", to: "pages#forms_nested_multiselect"
   get "demo/forms/switch", to: "pages#forms_switch"
   get "demo/forms/combined", to: "pages#forms_combined"

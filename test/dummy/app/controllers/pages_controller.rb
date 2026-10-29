@@ -454,6 +454,28 @@ class PagesController < ApplicationController
   def forms_combobox
   end
 
+  def forms_combobox_options
+    query = params[:q].to_s.strip.downcase
+
+    options = [
+      {label: "Federation Square", value: "fed-square", subtitle: "Melbourne VIC"},
+      {label: "Sydney Opera House", value: "opera-house", subtitle: "Sydney NSW"},
+      {label: "Story Bridge", value: "story-bridge", subtitle: "Brisbane QLD"},
+      {label: "Kings Park", value: "kings-park", subtitle: "Perth WA"},
+      {label: "Rundle Mall", value: "rundle-mall", subtitle: "Adelaide SA"}
+    ]
+
+    results = if query.blank?
+      []
+    else
+      options.select { |option|
+        "#{option[:label]} #{option[:subtitle]}".downcase.include?(query)
+      }.first(10)
+    end
+
+    render json: {options: results}
+  end
+
   def forms_select_options
     query = params[:q].to_s.strip.downcase
 
