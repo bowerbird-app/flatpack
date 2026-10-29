@@ -6,6 +6,7 @@ module FlatPack
       # :items keeps today's <ul>/<ol>. :key_value renders a <dl> of key/value rows.
       LAYOUTS = %i[items key_value].freeze
       STACK_BELOWS = %i[sm md lg].freeze
+      ALIGNS = %i[start center end baseline].freeze
       CSS_LENGTH_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
 
       def initialize(
@@ -14,6 +15,7 @@ module FlatPack
         stack_below: nil,
         ordered: false,
         spacing: :comfortable,
+        align: :start,
         divider: false,
         selectable: false,
         orderable: false,
@@ -30,6 +32,7 @@ module FlatPack
         @stack_below = normalize_stack_below(stack_below)
         @ordered = ordered
         @spacing = spacing.to_sym
+        @align = normalize_align(align)
         @divider = divider
         @selectable = selectable
         @orderable = orderable
@@ -43,7 +46,7 @@ module FlatPack
       end
 
       def call
-        Rendering.with(layout: @layout, stack_below: @stack_below) do
+        Rendering.with(layout: @layout, stack_below: @stack_below, align: @align) do
           # SECURITY: Content is marked html_safe because it's expected to contain
           # Rails-generated HTML from list items captured via block. Never pass
           # unsanitized user input directly to content.
@@ -154,6 +157,15 @@ module FlatPack
         raise ArgumentError, "Invalid stack_below: #{stack_below.inspect}. Must be one of: #{STACK_BELOWS.join(", ")}."
       end
 
+      def normalize_align(align)
+        raise ArgumentError, "align is required." if align.nil?
+
+        name = align.to_sym
+        return name if ALIGNS.include?(name)
+
+        raise ArgumentError, "Invalid align: #{align.inspect}. Must be one of: #{ALIGNS.join(", ")}."
+      end
+
       def validate_layout_options!
         if key_value?
           validate_key_value_options!
@@ -166,6 +178,7 @@ module FlatPack
         raise ArgumentError, "ordered: true is not supported when layout is :key_value." if @ordered
         raise ArgumentError, "orderable: true is not supported when layout is :key_value." if @orderable
         raise ArgumentError, "selectable: true is not supported when layout is :key_value." if @selectable
+        raise ArgumentError, "align: is not supported when layout is :key_value." unless @align == :start
 
         validate_key_width!
       end

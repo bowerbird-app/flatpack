@@ -888,6 +888,7 @@
         { variable: "stack_below", accepts: ":sm, :md, :lg, or nil. :key_value only", example: "stack_below: :md" },
         { variable: "ordered", accepts: "true, false", example: "ordered: true" },
         { variable: "spacing", accepts: ":comfortable, :dense", example: "spacing: :dense" },
+        { variable: "align", accepts: ":start, :center, :end, :baseline. :items only", example: "align: :center" },
         { variable: "divider", accepts: "true, false", example: "divider: true" },
         { variable: "selectable", accepts: "true, false", example: "selectable: true" },
         { variable: "orderable", accepts: "true, false", example: "orderable: true" },
@@ -910,6 +911,7 @@
         { variable: "hover", accepts: "true, false", example: "hover: true" },
         { variable: "active", accepts: "true, false", example: "active: true" },
         { variable: "link_arguments", accepts: "Hash", example: "link_arguments: { data: { turbo: true }, class: \"group\" }" },
+        { variable: "align", accepts: ":start, :center, :end, :baseline, or nil to inherit the list", example: "align: :center" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"py-1\", id: \"list-item-1\"" }
       ]
     },

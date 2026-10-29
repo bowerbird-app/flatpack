@@ -321,6 +321,35 @@ module FlatPack
         refute_includes rule, "justify-content: center"
       end
 
+      def test_align_is_inherited_by_items_rendered_in_the_list
+        render_inline(Component.new(align: :center)) { rendered_items("Take 3") }
+
+        assert_selector "ul.flat-pack-list > li.flex.items-center", text: "Take 3"
+        refute_selector "ul.flat-pack-list > li.items-start"
+        html = page.native.to_html
+        assert_includes html, "gap-3"
+        refute_includes html, "space-y-0"
+      end
+
+      def test_item_align_overrides_the_list
+        render_inline(Component.new(align: :center)) do
+          Item.new(align: :end).with_content("Override").render_in(vc_test_controller.view_context)
+        end
+
+        assert_selector "ul.flat-pack-list > li.flex.items-end", text: "Override"
+        refute_selector "ul.flat-pack-list > li.items-center"
+      end
+
+      def test_invalid_align_raises
+        error = assert_raises(ArgumentError) { Component.new(align: :middle) }
+        assert_includes error.message, "Invalid align: :middle"
+      end
+
+      def test_key_value_rejects_a_non_start_align
+        error = assert_raises(ArgumentError) { Component.new(layout: :key_value, align: :center) }
+        assert_match(/align:/, error.message)
+      end
+
       def test_ordered_list_keeps_icons_beside_markers
         first = Item.new(icon: :sun).with_content("Heat the pan").render_in(vc_test_controller.view_context)
         second = Item.new(icon: :star).with_content("Crack two eggs").render_in(vc_test_controller.view_context)

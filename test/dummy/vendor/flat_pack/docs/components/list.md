@@ -20,7 +20,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `stack_below` | Symbol | `nil` | no | `:key_value` only. `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. From the breakpoint up, icons, keys, and values stay in columns. |
 | `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. Ordered lists show decimal markers via a kit slot. Not supported when `layout` is `:key_value`. |
 | `spacing` | Symbol | `:comfortable` | no | Vertical spacing. `:items` uses `gap-3` / `gap-1`. `:key_value` uses `gap-y-3` / `gap-y-1` so the key and value columns stay put. Rows keep no bottom margin. Skipped when `orderable` and `divider` are both on so the rule stays even. |
-| `divider` | Boolean | `false` | no | Adds a straight 1px rule between rows. The rule does not follow the row's corner radius. |
+| `align` | Symbol | `:start` | no | Cross-axis alignment for each row in `:items`. `:start`, `:center`, `:end`, or `:baseline`. Items inherit this unless they pass their own `align:`. Not supported when `layout` is `:key_value`. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. Not supported when `layout` is `:key_value`. |
 | `orderable` | Boolean | `false` | no | Enables pointer-driven reordering via `flat-pack--list-orderable`. Not supported when `layout` is `:key_value`. |
 | `orderable_url` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
@@ -42,6 +42,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `hover` | Boolean | `false` | no | Enables hover background styling. |
 | `active` | Boolean | `false` | no | Applies active item background styling. |
 | `link_arguments` | Hash | `{}` | no | Extra attributes merged into internal link when `href` is present. |
+| `align` | Symbol | `:start` | no | Cross-axis alignment for the row. `:start`, `:center`, `:end`, or `:baseline`. Omit it to inherit the list `align:`. Not supported when the list layout is `:key_value`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for `<li>`, or for the key/value row `<div>`. Default padding is `py-4 px-4`. |
 
 ## Slots
@@ -51,6 +52,7 @@ None.
 - Layout `:items` (default) or `:key_value`.
 - Ordered vs unordered (`ordered: true/false`). Ordered lists number each item. Unordered lists do not.
 - Spacing variants via `spacing`.
+- Row alignment via `align` (`:start`, `:center`, `:end`, `:baseline`).
 - Selectable behavior via `selectable: true`.
 - Orderable behavior via `orderable: true` and `orderable_url:`.
 - Key column `:fit` or a fixed CSS length, and an optional `stack_below` breakpoint.
@@ -59,7 +61,7 @@ None.
 
 Render each item inside the list block. The item reads the layout from that render. A row built before the list cannot see `:key_value`.
 
-`ordered: true`, `orderable: true`, and `selectable: true` raise `ArgumentError` when `layout` is `:key_value`. On an item in that layout, a missing `key:`, an `href:`, or a `leading:` also raises. `key:` outside `:key_value` raises. `key_width:` and `stack_below:` outside `:key_value` raise. `key_width` must be `:fit` or a CSS length such as `"10rem"`.
+`ordered: true`, `orderable: true`, `selectable: true`, and a list or item `align:` other than `:start` raise `ArgumentError` when `layout` is `:key_value`. On an item in that layout, a missing `key:`, an `href:`, or a `leading:` also raises. `key:` outside `:key_value` raises. `key_width:` and `stack_below:` outside `:key_value` raise. `key_width` must be `:fit` or a CSS length such as `"10rem"`.
 
 `stack_below: :md` stacks the key above the value below the `md` breakpoint. At `md` and up, the columns return. `:sm` and `:lg` work the same way at those breakpoints. Omit `stack_below` to keep columns at every width.
 
@@ -93,6 +95,13 @@ The root adds `.flat-pack-list--orderable` when `orderable: true`.
 <%= render FlatPack::List::Component.new(ordered: true) do %>
   <%= render FlatPack::List::Item.new(icon: :sun) { "Heat the pan" } %>
   <%= render FlatPack::List::Item.new(icon: :star) { "Crack two eggs" } %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::List::Component.new(align: :center) do %>
+  <%= render FlatPack::List::Item.new(icon: :play, trailing: play_button) { "Take 3" } %>
+  <%= render FlatPack::List::Item.new(icon: :play, trailing: play_button, align: :start) { "A longer title that wraps" } %>
 <% end %>
 ```
 
