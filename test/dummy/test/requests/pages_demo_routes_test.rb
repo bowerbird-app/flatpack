@@ -557,6 +557,19 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Allow Multiple Open"
   end
 
+  test "cards demo renders a featured cover example" do
+    get "/demo/cards"
+
+    assert_response :success
+    assert_includes response.body, "Featured cover"
+    assert_includes response.body, "fp-card--featured"
+    assert_includes response.body, "data-fp-card-variant=\"featured\""
+    assert_includes response.body, "Spring launch"
+    assert_includes response.body, "Press kit: "
+    assert_includes response.body, "Download kit"
+    assert_includes response.body, "variant: :featured"
+  end
+
   test "cards media demo renders media gallery example" do
     get "/demo/cards/media"
 
