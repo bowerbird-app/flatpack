@@ -773,6 +773,89 @@ module FlatPack
         assert_includes page.native.to_html, "overflow-hidden"
       end
 
+      def test_media_omits_hover_reveal_until_hover_actions_are_slotted
+        render_inline(Component.new) do |component|
+          component.media(padding: :none) { "Photo" }
+        end
+
+        html = page.native.to_html
+        refute_includes html, "group/media"
+        refute_includes html, "data-fp-card-media-part"
+        refute_includes html, "[@media(hover:hover)]:opacity-0"
+      end
+
+      def test_media_hover_actions_reveal_on_hover_and_stay_visible_without_hover
+        render_inline(Component.new) do |component|
+          component.media(padding: :none) do |media|
+            media.hover_actions { "Menu" }
+            "Photo"
+          end
+        end
+
+        html = page.native.to_html
+        wrapper = page.find("[class*='group/media']")
+        assert_includes wrapper[:class], "relative"
+        assert_includes wrapper[:class], "overflow-hidden"
+        assert_includes html, "Photo"
+        item = page.find("[data-fp-card-media-part='hover-actions']")
+        assert_equal "Menu", item.text
+        assert_equal "top_right", item["data-fp-placement"]
+        assert_equal "sm", item["data-fp-inset"]
+        assert_includes item[:class], "opacity-100"
+        assert_includes item[:class], "focus-within:opacity-100"
+        assert_includes item[:class], "[@media(hover:hover)]:opacity-0"
+        assert_includes item[:class], "[@media(hover:hover)]:group-hover/media:opacity-100"
+        assert_includes item[:class], "motion-safe:duration-[var(--duration-fast)]"
+        assert_includes item[:class], "motion-safe:ease-[var(--easing-standard)]"
+        assert_includes item[:class], "motion-reduce:transition-none"
+      end
+
+      def test_media_hover_actions_accept_placement_and_inset
+        render_inline(Component.new) do |component|
+          component.media(padding: :none) do |media|
+            media.hover_actions(placement: :bottom_left, inset: :lg) { "Save" }
+          end
+        end
+
+        item = page.find("[data-fp-card-media-part='hover-actions']")
+        assert_equal "bottom_left", item["data-fp-placement"]
+        assert_equal "lg", item["data-fp-inset"]
+        assert_includes item[:class], "bottom-[var(--fp-overlay-item-inset)]"
+        assert_includes item[:class], "left-[var(--fp-overlay-item-inset)]"
+      end
+
+      def test_media_hover_actions_reject_unknown_placement
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |component|
+            component.media(padding: :none) do |media|
+              media.hover_actions(placement: :diagonal) { "No" }
+            end
+          end
+        end
+
+        assert_match(/Invalid placement/, error.message)
+      end
+
+      def test_media_hover_actions_reject_unknown_inset
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new) do |component|
+            component.media(padding: :none) do |media|
+              media.hover_actions(inset: :xl) { "No" }
+            end
+          end
+        end
+
+        assert_match(/Invalid inset/, error.message)
+      end
+
+      def test_media_does_not_expose_with_hover_actions
+        media = Media::Component.new
+        assert_not_respond_to media, :with_hover_actions
+        assert_not_respond_to media, :with_hover_actions_content
+        assert_not_respond_to media, :with_hover_actions_slot
+        assert_respond_to media, :hover_actions
+      end
+
       def test_header_and_footer_follow_the_card_padding_step
         render_inline(Component.new(padding: :lg)) do |component|
           component.header { "Title" }

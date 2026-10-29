@@ -573,6 +573,13 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "p-[var(--card-padding-md)] flex-1 overflow-hidden pointer-events-none px-3 py-2"
     assert_includes response.body, "&quot;style&quot; =&gt; &quot;background-color: transparent&quot;"
     refute_includes response.body, "style: &quot;background-color: transparent&quot;"
+    assert_includes response.body, "Actions on hover"
+    assert_includes response.body, "media.hover_actions"
+    assert_includes response.body, "Cover actions"
+    assert_includes response.body, "group/media"
+    assert_includes response.body, "data-fp-card-media-part=\"hover-actions\""
+    assert_includes response.body, "[@media(hover:hover)]:opacity-0"
+    assert_includes response.body, "focus-within:opacity-100"
   end
 
   test "dummy importmap includes tiptap package pins" do
