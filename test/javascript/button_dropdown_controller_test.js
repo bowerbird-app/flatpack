@@ -142,9 +142,20 @@ function clickTarget({ form = false, keepOpen = false, menuitem = true, submitBu
 
   return {
     tagName: submitButton ? "BUTTON" : (form ? "INPUT" : "A"),
+    disabled: false,
+    tabIndex: 0,
     isContentEditable: false,
     dataset: { action: "" },
-    matches() { return false },
+    getAttribute() { return null },
+    matches(selector) {
+      if (selector === "[disabled], [aria-disabled='true']") return false
+      if (selector === '[tabindex]:not([tabindex="-1"])') return false
+      if (selector === "a[href]") return this.tagName === "A"
+      if (selector === "button, select, textarea") return this.tagName === "BUTTON"
+      if (selector === "input") return this.tagName === "INPUT"
+      if (selector === '[type="hidden"]') return false
+      return false
+    },
     closest(selector) {
       if (
         selector === "[data-flat-pack-dropdown-item]" ||
@@ -166,6 +177,71 @@ function clickTarget({ form = false, keepOpen = false, menuitem = true, submitBu
       return null
     }
   }
+}
+
+function fieldNode({ tagName = "INPUT", hidden = false, disabled = false } = {}) {
+  return {
+    tagName,
+    disabled,
+    tabIndex: 0,
+    isContentEditable: false,
+    closest() { return null },
+    getAttribute(name) {
+      if (name === "type" && hidden) return "hidden"
+      return null
+    },
+    matches(selector) {
+      if (selector === '[tabindex]:not([tabindex="-1"])') return false
+      if (selector === "a[href]") return tagName === "A"
+      if (selector === "button, select, textarea") return tagName === "BUTTON" || tagName === "SELECT" || tagName === "TEXTAREA"
+      if (selector === "input") return tagName === "INPUT"
+      if (selector === '[type="hidden"]') return hidden
+      return false
+    }
+  }
+}
+
+function triggerAction() {
+  const source = fs.readFileSync(
+    path.join(__dirname, "..", "..", "app", "components", "flat_pack", "button", "dropdown", "component.rb"),
+    "utf8"
+  )
+  const match = source.match(/action: "([^"]+)"/)
+  if (!match) throw new Error("dropdown trigger action is missing")
+  return match[1]
+}
+
+function runTriggerAction(controller, action, eventName, event) {
+  action.split(/\s+/).filter(Boolean).forEach((descriptor) => {
+    const split = descriptor.match(/^([^->]+)->([^#]+)#(.+)$/)
+    if (!split) return
+    const [, eventPart, , methodName] = split
+    const [name, filter] = eventPart.split(".")
+    if (name !== eventName) return
+    if (filter === "enter" && event.key !== "Enter") return
+    if (filter === "space" && event.key !== " " && event.key !== "Spacebar") return
+    controller[methodName](event)
+  })
+}
+
+// Chrome activates a <button> with a click after Enter and after Space.
+// preventDefault on keydown is what stops that click.
+function pressTriggerKey(controller, key) {
+  const action = triggerAction()
+  const keydown = {
+    key,
+    defaultPrevented: false,
+    preventDefault() { this.defaultPrevented = true },
+    stopPropagation() {}
+  }
+  runTriggerAction(controller, action, "keydown", keydown)
+  if (!keydown.defaultPrevented) {
+    runTriggerAction(controller, action, "click", {
+      preventDefault() {},
+      stopPropagation() {}
+    })
+  }
+  return keydown.defaultPrevented
 }
 
 const triggerRect = { top: 100, right: 220, bottom: 140, left: 180, width: 40, height: 40 }
@@ -530,7 +606,7 @@ test("a portaled menu_html menuitem without the item hook still dispatches its a
   assert.equal(toggled, 1)
 })
 
-test("enter and space on the trigger open the menu and focus the first item", () => {
+test("enter and space on the trigger action open the menu once and focus the first item", () => {
   const { controller, menuElement, windowStub, documentStub } = mount({ anchor: triggerRect })
   documentStub.body.appendChild = () => {}
   let focused = 0
@@ -544,28 +620,22 @@ test("enter and space on the trigger open the menu and focus the first item", ()
     fn()
     return 0
   }
+  const action = triggerAction()
+  assert.match(action, /keydown\.enter->flat-pack--button-dropdown#openFromKey/)
+  assert.match(action, /keydown\.space->flat-pack--button-dropdown#openFromKey/)
+  assert.match(action, /click->flat-pack--button-dropdown#toggle/)
 
-  let prevented = 0
-  controller.openFromKey({
-    key: "Enter",
-    preventDefault() { prevented += 1 }
-  })
+  assert.equal(pressTriggerKey(controller, "Enter"), true)
   assert.equal(controller.isOpen, true)
   assert.equal(focused, 1)
-  assert.equal(prevented, 1)
 
   controller.close()
   assert.equal(controller.isOpen, false)
 
   focused = 0
-  prevented = 0
-  controller.openFromKey({
-    key: " ",
-    preventDefault() { prevented += 1 }
-  })
+  assert.equal(pressTriggerKey(controller, " "), true)
   assert.equal(controller.isOpen, true)
   assert.equal(focused, 1)
-  assert.equal(prevented, 1)
 })
 
 test("tabbing past the last stop in a dialog closes it and returns focus to the trigger", () => {
@@ -595,20 +665,10 @@ test("a dialog focuses the first form field on open", () => {
   documentStub.body.appendChild = () => {}
   let inputFocused = 0
   let buttonFocused = 0
-  const input = {
-    tagName: "INPUT",
-    isContentEditable: false,
-    focus() { inputFocused += 1 },
-    closest() { return null },
-    getAttribute() { return null }
-  }
-  const button = {
-    tagName: "BUTTON",
-    isContentEditable: false,
-    focus() { buttonFocused += 1 },
-    closest() { return null },
-    getAttribute() { return null }
-  }
+  const input = fieldNode()
+  input.focus = () => { inputFocused += 1 }
+  const button = fieldNode({ tagName: "BUTTON" })
+  button.focus = () => { buttonFocused += 1 }
   menuElement.tabStops = [input, button]
   windowStub.setTimeout = (fn) => {
     fn()
@@ -620,6 +680,27 @@ test("a dialog focuses the first form field on open", () => {
   assert.equal(inputFocused, 1)
   assert.equal(buttonFocused, 0)
   assert.equal(controller.isOpen, true)
+})
+
+test("a dialog skips a leading hidden input and focuses the first visible field", () => {
+  const { controller, menuElement, windowStub, documentStub } = mountDialog({ anchor: triggerRect })
+  documentStub.body.appendChild = () => {}
+  let hiddenFocused = 0
+  let visibleFocused = 0
+  const hidden = fieldNode({ hidden: true })
+  hidden.focus = () => { hiddenFocused += 1 }
+  const visible = fieldNode()
+  visible.focus = () => { visibleFocused += 1 }
+  menuElement.tabStops = [hidden, visible]
+  windowStub.setTimeout = (fn) => {
+    fn()
+    return 0
+  }
+
+  controller.open()
+
+  assert.equal(hiddenFocused, 0)
+  assert.equal(visibleFocused, 1)
 })
 
 test("focusout inside a keep-open node does not close the menu", () => {

@@ -29,6 +29,7 @@ module FlatPack
       assert_includes modal, 'from "flat_pack/focus_trap"'
       assert_includes dropdown, 'from "flat_pack/focus_trap"'
       assert_includes dropdown, "focusableElements"
+      assert_includes dropdown, "modal: true"
       assert_includes modal, "modal: true"
       refute_includes drawer, "modal: true"
       refute_includes palette, "modal: true"

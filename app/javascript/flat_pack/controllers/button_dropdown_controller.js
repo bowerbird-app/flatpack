@@ -54,9 +54,9 @@ export default class extends Controller {
     }
   }
 
-  // Enter and Space on a closed trigger open the menu. preventDefault stops
-  // the button's later click from toggling it shut. An open trigger leaves
-  // the key alone so that click can close it.
+  // Enter and Space on a button fire a click after the key. preventDefault
+  // on keydown stops that click, so the menu opens once. An open trigger
+  // leaves the key alone so the click can close it.
   openFromKey(event) {
     if (this.isOpen) return
 
@@ -237,7 +237,7 @@ export default class extends Controller {
   }
 
   getTabStops() {
-    return focusableElements(this.menuElement).filter((item) => {
+    return focusableElements(this.menuElement, { modal: true }).filter((item) => {
       if (typeof item.closest === "function" && item.closest("[hidden]")) return false
       if (typeof item.getAttribute === "function" && item.getAttribute("tabindex") === "-1") return false
       if (typeof item.getAttribute === "function" && item.getAttribute("aria-disabled") === "true") return false
