@@ -2,8 +2,6 @@
   <%= render_trigger_button %>
 
   <div <%= tag.attributes(menu_attributes) %>>
-    <% menu.each do |item| %>
-      <%= item %>
-    <% end %>
+    <%= render_menu_entries %>
   </div>
 </div>

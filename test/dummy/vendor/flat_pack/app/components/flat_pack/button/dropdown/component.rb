@@ -3,6 +3,18 @@
 module FlatPack
   module Button
     module Dropdown
+      def self.plain_actions?
+        Thread.current[:flat_pack_dropdown_plain_actions] == true
+      end
+
+      def self.with_plain_actions
+        previous = Thread.current[:flat_pack_dropdown_plain_actions]
+        Thread.current[:flat_pack_dropdown_plain_actions] = true
+        yield
+      ensure
+        Thread.current[:flat_pack_dropdown_plain_actions] = previous
+      end
+
       class Component < FlatPack::BaseComponent
         renders_one :trigger_label
 
@@ -87,6 +99,7 @@ module FlatPack
 
         # Form body in the menu. Not a menuitem. Stays open on interaction.
         def menu_form(**kwargs, &block)
+          @menu_contains_form = true
           set_polymorphic_slot(:menu, :form, **kwargs, &block)
         end
 
@@ -169,7 +182,7 @@ module FlatPack
             type: type,
             title: title.is_a?(String) ? title : nil,
             class: ["fp-button-dropdown__trigger", *extra_class].compact.join(" "),
-            aria: extra_aria.merge(haspopup: "true", expanded: "false"),
+            aria: extra_aria.merge(haspopup: trigger_popup, expanded: "false"),
             data: extra_data.merge(
               flat_pack__button_dropdown_target: "trigger",
               action: "click->flat-pack--button-dropdown#toggle"
@@ -227,14 +240,43 @@ module FlatPack
 
           {
             class: menu_classes(*host_class),
-            role: "menu",
-            aria: host_aria.merge(hidden: "true"),
-            style: join_styles("max-height: #{@max_height};", host_style),
+            role: menu_role,
+            aria: menu_aria(host_aria),
+            style: join_styles("--dropdown-max-height: #{@max_height};", host_style),
             data: merge_data_attributes(
               host_data,
               {flat_pack__button_dropdown_target: "menu"}
             )
           }.merge(host)
+        end
+
+        def menu_role
+          menu_contains_form? ? "dialog" : "menu"
+        end
+
+        def menu_aria(host_aria)
+          aria = host_aria.merge(hidden: "true")
+          return aria unless menu_contains_form?
+
+          {label: menu_dialog_name, modal: "false"}.merge(aria)
+        end
+
+        def menu_dialog_name
+          @text.to_s.strip.presence || explicit_aria_label.presence || "Menu"
+        end
+
+        def menu_contains_form?
+          @menu_contains_form == true
+        end
+
+        def trigger_popup
+          menu_contains_form? ? "dialog" : "true"
+        end
+
+        def render_menu_entries
+          return safe_join(menu) unless menu_contains_form?
+
+          FlatPack::Button::Dropdown.with_plain_actions { safe_join(menu) }
         end
 
         def menu_classes(*extra)
@@ -247,6 +289,7 @@ module FlatPack
             "bg-[var(--surface-background-color)]",
             "p-[var(--dropdown-padding)]",
             "shadow-lg",
+            "fp-button-dropdown__menu",
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
             "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]",
             @menu_class,

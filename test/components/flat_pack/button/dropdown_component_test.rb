@@ -414,23 +414,35 @@ module FlatPack
       def test_renders_custom_max_height
         render_inline(Dropdown::Component.new(text: "Actions", max_height: "200px"))
 
-        assert_selector "div[role='menu'][style*='max-height: 200px']"
+        menu = page.find("div[role='menu']")
+        assert_includes menu["style"], "--dropdown-max-height: 200px"
+        refute_match(/(^|;)\s*max-height\s*:/, menu["style"])
+        assert_includes menu["class"], "fp-button-dropdown__menu"
       end
 
       def test_default_max_height_is_384px
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "div[role='menu'][style*='max-height: 384px']"
+        assert_includes page.find("div[role='menu']")["style"], "--dropdown-max-height: 384px"
       end
 
       def test_menu_renders_one_max_height_style_attribute
-        render_inline(Dropdown::Component.new(text: "Actions", max_height: "200px"))
+        render_inline(Dropdown::Component.new(text: "Actions", max_height: "200px", menu_attributes: {style: "color: red"}))
 
         menu = page.native.at_css("div[role='menu']")
         opening = menu.to_html[/\A<div[^>]*>/]
 
         assert_equal 1, opening.scan(/\sstyle="/).size
-        assert_match(/\sstyle="max-height:\s*200px;?"/, opening)
+        assert_match(/--dropdown-max-height:\s*200px/, opening)
+        assert_match(/color:\s*red/, opening)
+        refute_match(/(^|;)\s*max-height\s*:/, menu["style"])
+      end
+
+      def test_menu_max_height_comes_from_the_css_variable
+        css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css"))
+
+        assert_includes css, ".fp-button-dropdown__menu"
+        assert_includes css, "max-height: var(--dropdown-max-height, 384px);"
       end
 
       # Custom attributes
@@ -749,7 +761,7 @@ module FlatPack
         assert_match(/keep_open/, error.message)
       end
 
-      def test_menu_form_is_not_a_menuitem_and_keeps_sibling_roles
+      def test_menu_form_is_a_dialog_without_menu_roles
         render_inline(Dropdown::Component.new(text: "Add to list")) do |dropdown|
           dropdown.menu_item(text: "Favorites", href: "/favorites")
           dropdown.menu_form do
@@ -757,10 +769,15 @@ module FlatPack
           end
         end
 
-        assert_selector "div[role='none'].fp-button-dropdown__form[data-flat-pack-dropdown-keep-open='true'] form input[name='name']"
-        assert_selector "a[role='menuitem'][href='/favorites']", text: "Favorites"
-        refute_selector "[role='menuitem'] form"
-        refute_selector "form[role='menuitem']"
+        assert_selector "div[role='dialog'][aria-modal='false'][aria-label='Add to list'].fp-button-dropdown__menu"
+        assert_selector "button[aria-haspopup='dialog']"
+        assert_selector "div.fp-button-dropdown__form[data-flat-pack-dropdown-keep-open='true'] form input[name='name']"
+        assert_selector "a[href='/favorites']", text: "Favorites"
+        refute_selector "[role='menu']"
+        refute_selector "[role='menuitem']"
+        refute_selector "[role='none']"
+        refute_selector "form[role]"
+        refute_selector "input[role]"
       end
 
       def test_catalog_reports_new_dropdown_defaults

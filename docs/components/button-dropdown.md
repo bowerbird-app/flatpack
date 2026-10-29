@@ -26,10 +26,10 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `chevron` | String, Symbol | `"chevron-down"` | no | Trailing icon when the chevron is shown. It sits in Button's trailing slot (a span around the svg). The default rotates when the menu opens. Another Heroicon name sits in that same slot and does not rotate. A symbol is accepted. Anything else raises `ArgumentError`. Ignored when the chevron is hidden. |
 | `disabled` | Boolean | `false` | no | Disables trigger interaction and applies disabled styling. |
 | `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
-| `max_height` | String | `"384px"` | no | Applied to menu `max-height` style; menu scrolls when content exceeds this value. |
+| `max_height` | String | `"384px"` | no | Sets `--dropdown-max-height` on the menu. The menu uses `max-height: var(--dropdown-max-height)` and scrolls when content exceeds it. |
 | `trigger_attributes` | Hash | `{}` | no | HTML attributes on the trigger. Use `aria: { label: }` for an icon-only name when `text` is blank. `aria-haspopup` and `aria-expanded` stay on the button. A host `style:` string, `href`, `method`, and `target` are dropped and are not copied onto the trigger. `size`, `text`, `icon`, and the other Button option keys are dropped the same way, so they do not replace the dropdown's own options. `type` and `title` still land on the button. |
 | `menu_class` | String | `nil` | no | Extra classes on the menu. Kit menu classes stay. Omit it and the menu classes stay the same. |
-| `menu_attributes` | Hash | `{}` | no | Extra HTML attributes on the menu. `class` and `data-controller` merge. `role="menu"`, `aria-hidden`, and the Stimulus menu target stay. A host `style:` string is joined after `max-height`. |
+| `menu_attributes` | Hash | `{}` | no | Extra HTML attributes on the menu. `class` and `data-controller` merge. `aria-hidden` and the Stimulus menu target stay. A pure action list stays `role="menu"`. A menu that contains `menu_form` is `role="dialog"` instead. A host `role` is dropped. A host `style:` string is joined after `--dropdown-max-height`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots
@@ -41,7 +41,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
 | `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. |
-| `menu_form` | slot | no | Places a form in the menu. The wrapper is `role="none"` with keep-open, so sibling items keep `role="menuitem"`. Clicks, Tab, and arrow keys inside the form do not close the menu. Escape still closes. A `form` in `menu_html` closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
+| `menu_form` | slot | no | Places a form in the menu. The panel becomes `role="dialog"` (not `role="menu"`), and items are not `menuitem`. The form wrapper has no `menu`, `menuitem`, or `none` role. Clicks, Tab, and focus inside that wrapper do not close the menu. Escape still closes. A `form` in `menu_html` closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
 
 `menu_item` props:
 
@@ -153,6 +153,7 @@ Host menu classes and a trigger label, with no subclass:
 ```erb
 <%= render FlatPack::Button::Dropdown::Component.new(
   text: "Lists",
+  placement: :bottom_left,
   menu_class: "min-w-[18rem]",
   menu_attributes: { id: "add-to-list-menu" }
 ) do |dropdown| %>
@@ -173,7 +174,8 @@ Host menu classes and a trigger label, with no subclass:
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
-- Menu uses `role="menu"`; items use `role="menuitem"`; divider uses `role="separator"`. `menu_form` is `role="none"` so the form is not a menuitem.
+- A pure action list uses `role="menu"`; items use `role="menuitem"`; the divider uses `role="separator"`.
+- A menu that contains `menu_form` uses `role="dialog"` with `aria-modal="false"` and an accessible name from `text`. Items in that dialog are not `menuitem`. The form is not wrapped in `role="menu"`, `role="menuitem"`, or `role="none"`. The trigger uses `aria-haspopup="dialog"`.
 - Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`.
 - Menu origin follows placement (`top right`, `top left`, `bottom right`, or `bottom left`). Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
 

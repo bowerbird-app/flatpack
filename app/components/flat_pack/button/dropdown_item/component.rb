@@ -106,9 +106,9 @@ module FlatPack
         def item_attributes
           attrs = {
             class: item_classes,
-            role: "menuitem",
             tabindex: @disabled ? "-1" : "0"
           }
+          attrs[:role] = "menuitem" unless FlatPack::Button::Dropdown.plain_actions?
           attrs[:disabled] = true if @disabled && !@href
           attrs[:data] = {flat_pack_dropdown_keep_open: true} if @keep_open
           merge_attributes(**attrs)

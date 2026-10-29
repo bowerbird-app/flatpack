@@ -22,6 +22,7 @@ export default class extends Controller {
     this.contextControllerElements = this.collectContextControllerElements()
 
     this.handleEscape = this.handleEscape.bind(this)
+    this.handleFocusOut = this.handleFocusOut.bind(this)
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this)
     this.outsideClick = onClickOutside(document, () => this.close(), {
       capture: true,
@@ -135,11 +136,16 @@ export default class extends Controller {
       return
     }
 
-    if (this.keepsMenuOpen(event.target) && this.isFormField(event.target)) {
+    if (event.key === "Tab") {
+      if (this.tabKeepsMenuOpen(event)) return
+
+      this.close({ returnFocus: false })
       return
     }
 
-    if (event.key === "Tab" && this.keepsMenuOpen(event.target)) {
+    if (!this.isActionMenu()) return
+
+    if (this.keepsMenuOpen(event.target) && this.isFormField(event.target)) {
       return
     }
 
@@ -155,10 +161,71 @@ export default class extends Controller {
     } else if (event.key === "End") {
       event.preventDefault()
       this.focusLastItem()
-    } else if (event.key === "Tab") {
-      // Allow tab but close menu
-      this.close({ returnFocus: false })
     }
+  }
+
+  // Tab and focusout stay open while focus is inside a keep-open node, or
+  // still inside a dialog menu. A pure action menu still closes on Tab.
+  handleFocusOut(event) {
+    if (!this.isOpen) return
+
+    const next = event.relatedTarget
+    if (next) {
+      if (this.focusStaysInMenu(next)) return
+
+      this.close({ returnFocus: false })
+      return
+    }
+
+    requestAnimationFrame(() => {
+      if (!this.isOpen) return
+      if (this.focusStaysInMenu(document.activeElement)) return
+
+      this.close({ returnFocus: false })
+    })
+  }
+
+  tabKeepsMenuOpen(event) {
+    if (this.keepsMenuOpen(event.target)) return true
+
+    const next = this.tabStop(event.target, event.shiftKey)
+    if (next && this.keepsMenuOpen(next)) return true
+    if (!this.isActionMenu() && next && this.menuElement.contains(next)) return true
+
+    return false
+  }
+
+  focusStaysInMenu(node) {
+    if (!node) return false
+    if (node === this.triggerTarget) return true
+    if (typeof this.element?.contains === "function" && this.element.contains(node)) return true
+    if (typeof this.menuElement?.contains === "function" && this.menuElement.contains(node)) return true
+
+    return this.keepsMenuOpen(node)
+  }
+
+  isActionMenu() {
+    return this.menuElement.getAttribute("role") === "menu"
+  }
+
+  tabStop(from, shiftKey) {
+    const stops = this.getTabStops()
+    const index = stops.indexOf(from)
+    if (index === -1) return null
+
+    return stops[shiftKey ? index - 1 : index + 1] || null
+  }
+
+  getTabStops() {
+    return Array.from(this.menuElement.querySelectorAll(
+      "a[href], button:not([disabled]), input:not([disabled]):not([type='hidden']), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])"
+    )).filter((item) => {
+      if (typeof item.closest === "function" && item.closest("[hidden]")) return false
+      if (typeof item.getAttribute === "function" && item.getAttribute("tabindex") === "-1") return false
+      if (typeof item.getAttribute === "function" && item.getAttribute("aria-disabled") === "true") return false
+
+      return true
+    })
   }
 
   handleMenuItemClick(event) {
@@ -208,6 +275,7 @@ export default class extends Controller {
   addListeners() {
     this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
+    this.menuElement.addEventListener("focusout", this.handleFocusOut)
     this.viewportWatch.add()
     this.menuElement.addEventListener("click", this.handleMenuItemClick)
   }
@@ -215,6 +283,7 @@ export default class extends Controller {
   removeListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
+    this.menuElement.removeEventListener("focusout", this.handleFocusOut)
     this.viewportWatch?.remove()
     this.menuElement.removeEventListener("click", this.handleMenuItemClick)
   }

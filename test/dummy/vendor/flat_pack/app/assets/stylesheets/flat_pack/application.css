@@ -5663,6 +5663,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   box-shadow: none;
 }
 
+.fp-button-dropdown__menu {
+  max-height: var(--dropdown-max-height, 384px);
+}
+
 /* Joined rows only. The dropdown root is the segment. A joined group paints
    the radius on that direct child. The root must not paint a border:
    preflight's border color is currentColor, so a last-child border width

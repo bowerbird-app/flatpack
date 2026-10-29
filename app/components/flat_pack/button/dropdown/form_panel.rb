@@ -3,8 +3,8 @@
 module FlatPack
   module Button
     module Dropdown
-      # Form body inside a dropdown menu. Not a menuitem, so other items keep
-      # role="menuitem". Clicks inside stay in the open menu.
+      # Form body inside a dropdown. The menu becomes a dialog, so this panel
+      # has no menu, menuitem, or none role. Clicks inside stay in the open menu.
       class FormPanel < FlatPack::BaseComponent
         def menu_row
           {skip: true}
@@ -19,7 +19,6 @@ module FlatPack
         def panel_attributes
           merge_attributes(
             class: panel_classes,
-            role: "none",
             data: {flat_pack_dropdown_keep_open: true}
           )
         end

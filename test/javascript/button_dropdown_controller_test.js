@@ -78,25 +78,34 @@ function mount({
     setAttribute() {},
     focus() {}
   }
+  const menuListeners = []
   const menuElement = {
     style: {},
+    role: "menu",
+    tabStops: [],
     offsetWidth: menu.width,
     offsetHeight: menu.height,
     parentNode: { appendChild() {}, insertBefore() {} },
-    addEventListener() {},
-    removeEventListener() {},
+    addEventListener(type, listener) { menuListeners.push({ type, listener }) },
+    removeEventListener(type, listener) {
+      const index = menuListeners.findIndex((entry) => entry.type === type && entry.listener === listener)
+      if (index >= 0) menuListeners.splice(index, 1)
+    },
     contains() { return false },
     classList: { add() {}, remove() {}, contains() { return false } },
     setAttribute() {},
-    querySelectorAll() { return [] }
+    getAttribute(name) { return name === "role" ? this.role : null },
+    querySelectorAll() { return this.tabStops }
+  }
+  const documentStub = {
+    body: {},
+    activeElement: null,
+    addEventListener() {},
+    removeEventListener() {}
   }
   const ButtonDropdownController = loadDropdownController({
     window: windowStub,
-    document: {
-      body: {},
-      addEventListener() {},
-      removeEventListener() {}
-    },
+    document: documentStub,
     getComputedStyle() {
       return { getPropertyValue() { return edge } }
     }
@@ -104,7 +113,8 @@ function mount({
   const controller = new ButtonDropdownController()
   controller.element = {
     getAttribute() { return "" },
-    parentElement: null
+    parentElement: null,
+    contains() { return false }
   }
   controller.menuTarget = menuElement
   controller.triggerTarget = trigger
@@ -112,7 +122,7 @@ function mount({
   controller.hasChevronTarget = false
   controller.connect()
   controller.positionMenu()
-  return { controller, menuElement, trigger, windowStub, windowEvents }
+  return { controller, menuElement, trigger, windowStub, windowEvents, documentStub, menuListeners }
 }
 
 function clickTarget({ form = false, keepOpen = false, menuitem = true, submitButton = false } = {}) {
@@ -347,4 +357,83 @@ test("tab in a form does not close the menu", () => {
   })
 
   assert.equal(closed, 0)
+})
+
+test("tab into a keep-open node does not close the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => { closed += 1 }
+  controller.isOpen = true
+  const item = clickTarget()
+  const field = clickTarget({ form: true, keepOpen: true, menuitem: false })
+  menuElement.tabStops = [item, field]
+  menuElement.contains = (node) => node === item || node === field
+
+  controller.handleEscape({
+    key: "Tab",
+    shiftKey: false,
+    target: item,
+    preventDefault() {}
+  })
+
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+})
+
+test("tab on a keep-open control does not close the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => { closed += 1 }
+  controller.isOpen = true
+  menuElement.contains = () => true
+
+  controller.handleEscape({
+    key: "Tab",
+    target: clickTarget({ keepOpen: true }),
+    preventDefault() {}
+  })
+
+  assert.equal(closed, 0)
+})
+
+test("focusout inside a keep-open node does not close the menu", () => {
+  const { controller, menuElement, menuListeners, documentStub } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => { closed += 1 }
+  controller.isOpen = true
+  controller.addListeners()
+  const field = clickTarget({ form: true, keepOpen: true, menuitem: false })
+  menuElement.contains = (node) => node === field
+  documentStub.activeElement = field
+
+  assert.equal(menuListeners.some((entry) => entry.type === "focusout"), true)
+
+  controller.handleFocusOut({ relatedTarget: field })
+  assert.equal(closed, 0)
+
+  controller.handleFocusOut({ relatedTarget: null })
+  assert.equal(closed, 0)
+})
+
+test("focusout leaves the menu when focus moves outside", () => {
+  const { controller, menuElement, documentStub } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = ({ returnFocus } = {}) => {
+    closed += 1
+    controller.isOpen = false
+    assert.equal(returnFocus, false)
+  }
+  controller.isOpen = true
+  const outside = clickTarget()
+  menuElement.contains = () => false
+  documentStub.activeElement = outside
+
+  controller.handleFocusOut({ relatedTarget: outside })
+  assert.equal(closed, 1)
+
+  controller.isOpen = true
+  closed = 0
+  documentStub.activeElement = outside
+  controller.handleFocusOut({ relatedTarget: null })
+  assert.equal(closed, 1)
 })
