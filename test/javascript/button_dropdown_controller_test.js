@@ -629,6 +629,7 @@ test("enter and space on the trigger action open the menu once and focus the fir
   assert.match(action, /keydown\.enter->flat-pack--button-dropdown#openFromKey/)
   assert.match(action, /keydown\.space->flat-pack--button-dropdown#openFromKey/)
   assert.match(action, /click->flat-pack--button-dropdown#toggle/)
+  assert.doesNotMatch(action, /keyup\./)
 
   assert.equal(pressTriggerKey(controller, "Enter"), true)
   assert.equal(controller.isOpen, true)
@@ -643,37 +644,45 @@ test("enter and space on the trigger action open the menu once and focus the fir
   assert.equal(focused, 1)
 })
 
-test("space keyup then the activation click leaves the menu open", () => {
-  const { controller, documentStub, windowStub } = mount({ anchor: triggerRect })
+test("a mouse click after a keyboard open closes the menu", () => {
+  const { controller, documentStub } = mount({ anchor: triggerRect })
   documentStub.body.appendChild = () => {}
-  const timeouts = []
-  windowStub.setTimeout = (fn) => {
-    timeouts.push(fn)
-    return timeouts.length
-  }
   const action = triggerAction()
-  assert.match(action, /keyup\.space->flat-pack--button-dropdown#releaseKey/)
-  assert.match(action, /keyup\.enter->flat-pack--button-dropdown#releaseKey/)
 
-  const keydown = keyEvent(" ")
-  runTriggerAction(controller, action, "keydown", keydown)
-  assert.equal(keydown.defaultPrevented, true)
+  assert.equal(pressTriggerKey(controller, "Enter"), true)
   assert.equal(controller.isOpen, true)
 
-  const keyup = keyEvent(" ")
-  runTriggerAction(controller, action, "keyup", keyup)
-  assert.equal(keyup.defaultPrevented, true)
-
-  const click = { preventDefault() {}, stopPropagation() {} }
-  runTriggerAction(controller, action, "click", click)
-  assert.equal(controller.isOpen, true)
-
-  timeouts.forEach((fn) => fn())
-  runTriggerAction(controller, action, "click", { preventDefault() {}, stopPropagation() {} })
+  runTriggerAction(controller, action, "click", {
+    detail: 1,
+    preventDefault() {},
+    stopPropagation() {}
+  })
   assert.equal(controller.isOpen, false)
 })
 
-test("a repeated keydown or keyup does not open or close the menu", () => {
+test("a mouse click after Escape reopens the menu", () => {
+  const { controller, documentStub } = mount({ anchor: triggerRect })
+  documentStub.body.appendChild = () => {}
+  const action = triggerAction()
+
+  assert.equal(pressTriggerKey(controller, " "), true)
+  assert.equal(controller.isOpen, true)
+
+  controller.handleEscape({
+    key: "Escape",
+    preventDefault() {}
+  })
+  assert.equal(controller.isOpen, false)
+
+  runTriggerAction(controller, action, "click", {
+    detail: 1,
+    preventDefault() {},
+    stopPropagation() {}
+  })
+  assert.equal(controller.isOpen, true)
+})
+
+test("a repeated keydown does not open or close the menu", () => {
   const { controller, documentStub } = mount({ anchor: triggerRect })
   documentStub.body.appendChild = () => {}
   const action = triggerAction()
@@ -689,11 +698,6 @@ test("a repeated keydown or keyup does not open or close the menu", () => {
   const repeatedEnter = keyEvent("Enter", { repeat: true })
   runTriggerAction(controller, action, "keydown", repeatedEnter)
   assert.equal(repeatedEnter.defaultPrevented, true)
-  assert.equal(controller.isOpen, true)
-
-  const repeatedUp = keyEvent(" ", { repeat: true })
-  runTriggerAction(controller, action, "keyup", repeatedUp)
-  assert.equal(repeatedUp.defaultPrevented, true)
   assert.equal(controller.isOpen, true)
 })
 

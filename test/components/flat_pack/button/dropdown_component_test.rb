@@ -407,7 +407,7 @@ module FlatPack
       def test_renders_stimulus_action_on_trigger
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey keyup.enter->flat-pack--button-dropdown#releaseKey keyup.space->flat-pack--button-dropdown#releaseKey']"
+        assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey']"
       end
 
       # Max height
@@ -500,7 +500,7 @@ module FlatPack
         assert_includes trigger["class"], "fp-button"
         assert_includes trigger["class"], "fp-button-dropdown__trigger"
         assert_equal "default", trigger["data-fp-style"]
-        assert_equal "click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey keyup.enter->flat-pack--button-dropdown#releaseKey keyup.space->flat-pack--button-dropdown#releaseKey", trigger["data-action"]
+        assert_equal "click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey", trigger["data-action"]
         assert_equal "trigger", trigger["data-flat-pack--button-dropdown-target"]
         assert_equal "true", trigger["aria-haspopup"]
         assert_equal "false", trigger["aria-expanded"]

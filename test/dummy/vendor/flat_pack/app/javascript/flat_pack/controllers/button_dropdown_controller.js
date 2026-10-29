@@ -39,20 +39,11 @@ export default class extends Controller {
 
   disconnect() {
     this.clearCloseTimeout()
-    this.clearClickGuard()
     this.removeListeners()
     this.restoreMenu()
   }
 
   toggle(event) {
-    if (this.ignoreNextToggle) {
-      this.ignoreNextToggle = false
-      this.clearClickGuard()
-      event.preventDefault()
-      event.stopPropagation()
-      return
-    }
-
     event.preventDefault()
     event.stopPropagation()
     
@@ -63,9 +54,10 @@ export default class extends Controller {
     }
   }
 
-  // Enter and Space on a button can fire a click after the key. Firefox and
-  // Safari do that for Space on keyup, even when keydown was cancelled.
-  // A repeated key must not open the menu again.
+  // Enter and Space on a button fire a click after the key. preventDefault
+  // on keydown stops that click, so the menu opens once. A repeated key
+  // must not open it again. An open trigger leaves the key alone so the
+  // click can close it.
   openFromKey(event) {
     if (event.repeat) {
       event.preventDefault()
@@ -74,32 +66,7 @@ export default class extends Controller {
     if (this.isOpen) return
 
     event.preventDefault()
-    this.ignoreNextToggle = true
     this.open()
-  }
-
-  // keyup.space cancels the activation click. The guard also drops a click
-  // that still arrives, then releases so the next click can close the menu.
-  releaseKey(event) {
-    if (event.repeat) {
-      event.preventDefault()
-      return
-    }
-    if ((event.key === " " || event.key === "Spacebar") && this.ignoreNextToggle) {
-      event.preventDefault()
-    }
-    this.clearClickGuard()
-    this.clickGuardTimeout = window.setTimeout(() => {
-      this.ignoreNextToggle = false
-      this.clickGuardTimeout = null
-    }, 0)
-  }
-
-  clearClickGuard() {
-    if (!this.clickGuardTimeout) return
-
-    window.clearTimeout(this.clickGuardTimeout)
-    this.clickGuardTimeout = null
   }
 
   open() {
