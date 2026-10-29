@@ -188,7 +188,7 @@ export default class extends Controller {
     if (!node || typeof node.closest !== "function") return false
     if (!this.menuElement.contains(node)) return false
 
-    return Boolean(node.closest("form, [data-flat-pack-dropdown-keep-open]"))
+    return Boolean(node.closest("[data-flat-pack-dropdown-keep-open]"))
   }
 
   isFormField(node) {

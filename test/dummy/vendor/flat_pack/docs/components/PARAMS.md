@@ -70,7 +70,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon and on EmptyState `icon:`. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
 | Button icon colour | `icon_style` | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, `:danger` use `--button-icon-*` tokens. |
 | Menu item icon side | `icon_position` | `FlatPack::Button::DropdownItem` only. `:start` (default) or `:end`. Not Button `align`. |
-| Keep a menu open | `keep_open` | `FlatPack::Button::DropdownItem` boolean. `true` leaves the menu open after that item. Forms use `menu_form` (or a `form` in the menu) instead of stripping `role="menuitem"`. |
+| Keep a menu open | `keep_open` | `FlatPack::Button::DropdownItem` boolean. `true` leaves the menu open after that item. Forms use `menu_form` (which sets keep-open) instead of stripping `role="menuitem"`. A plain `form` in `menu_html` still closes the menu. |
 | Extra menu classes | `menu_class` | `FlatPack::Button::Dropdown::Component` only. Extra classes on the menu. The wrapper still uses `class:`. |
 | Extra menu HTML | `menu_attributes` | `FlatPack::Button::Dropdown::Component` only. Extra attributes on the menu. `trigger_attributes` stays on the trigger. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
