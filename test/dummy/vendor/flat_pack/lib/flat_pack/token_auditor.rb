@@ -66,6 +66,10 @@ module FlatPack
       --carousel-bleed
       --card-inset
       --card-inner-radius
+      --card-title-size
+      --card-title-weight
+      --card-title-color
+      --card-media-image-height
       --fp-overlay-item-inset
       --overlay-inset-sm
       --overlay-inset-md
