@@ -277,6 +277,56 @@
   ) %>
 </section>
 
+<section class="mb-12" id="host-hooks">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Host hooks",
+    anchor_link: true,
+    subtitle: "Menu classes, a swapped trigger label, an icon at the end, and a form that stays open."
+  ) %>
+  <div class="mb-4 flex flex-wrap items-center gap-3">
+    <%= render FlatPack::Button::Dropdown::Component.new(
+      text: "Lists",
+      style: :secondary,
+      menu_class: "min-w-[18rem]",
+      menu_attributes: {id: "demo-add-to-list-menu"}
+    ) do |dropdown| %>
+      <% dropdown.with_trigger_label { "Lists · 3" } %>
+      <% dropdown.menu_item(text: "Favorites", icon: "heart", icon_position: :end, href: "#") %>
+      <% dropdown.menu_item(text: "Weekend", icon: "calendar", icon_position: :end, href: "#") %>
+      <% dropdown.menu_divider %>
+      <% dropdown.menu_form do %>
+        <form class="flex flex-col gap-2">
+          <%= render FlatPack::TextInput::Component.new(name: "demo_list_name", label: "New list") %>
+          <%= render FlatPack::Button::Component.new(text: "Add", size: :sm, style: :primary, type: "button") %>
+        </form>
+      <% end %>
+    <% end %>
+
+    <%= render FlatPack::Button::Dropdown::Component.new(text: "Pin", style: :ghost) do |dropdown| %>
+      <% dropdown.menu_item(text: "Stay put", icon: "lock", keep_open: true) %>
+      <% dropdown.menu_item(text: "Close after", href: "#") %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Dropdown::Component.new(
+        text: "Lists",
+        menu_class: "min-w-[18rem]",
+        menu_attributes: { id: "add-to-list-menu" }
+      ) do |dropdown| %&gt;
+        &lt;% dropdown.with_trigger_label { "Lists · 3" } %&gt;
+        &lt;% dropdown.menu_item(text: "Favorites", icon: "heart", icon_position: :end, href: "#") %&gt;
+        &lt;% dropdown.menu_form do %&gt;
+          &lt;form&gt;
+            &lt;%= render FlatPack::TextInput::Component.new(name: "name", label: "New list") %&gt;
+            &lt;%= render FlatPack::Button::Component.new(text: "Add", size: :sm, type: "submit") %&gt;
+          &lt;/form&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <%= render "shared/related_demos",
   links: [
     {text: "Buttons", href: demo_buttons_path},

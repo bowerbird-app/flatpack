@@ -212,6 +212,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "dropdown demo shows host hooks and keep-open form" do
+    get "/demo/buttons/dropdowns"
+
+    assert_response :success
+    assert_includes response.body, "Lists · 3"
+    assert_select "#demo-add-to-list-menu[role='menu']"
+    assert_select "#demo-add-to-list-menu .fp-button-dropdown__form[role='none'][data-flat-pack-dropdown-keep-open]"
+    assert_select "svg.order-last"
+    assert_includes response.body, "icon_position: :end"
+    assert_select "[data-flat-pack-dropdown-keep-open='true']"
+  end
+
   test "fieldset demo names a group of fields" do
     get "/demo/forms/fieldset"
 

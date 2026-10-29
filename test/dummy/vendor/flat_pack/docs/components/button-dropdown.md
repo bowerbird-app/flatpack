@@ -28,6 +28,8 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 | `placement` | Symbol | `:bottom_right` | no | Menu placement: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`; invalid values raise `ArgumentError`. |
 | `max_height` | String | `"384px"` | no | Applied to menu `max-height` style; menu scrolls when content exceeds this value. |
 | `trigger_attributes` | Hash | `{}` | no | HTML attributes on the trigger. Use `aria: { label: }` for an icon-only name when `text` is blank. `aria-haspopup` and `aria-expanded` stay on the button. A host `style:` string, `href`, `method`, and `target` are dropped and are not copied onto the trigger. `size`, `text`, `icon`, and the other Button option keys are dropped the same way, so they do not replace the dropdown's own options. `type` and `title` still land on the button. |
+| `menu_class` | String | `nil` | no | Extra classes on the menu. Kit menu classes stay. Omit it and the menu classes stay the same. |
+| `menu_attributes` | Hash | `{}` | no | Extra HTML attributes on the menu. `class` and `data-controller` merge. `role="menu"`, `aria-hidden`, and the Stimulus menu target stay. A host `style:` string is joined after `max-height`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |
 
 ## Slots
@@ -35,9 +37,11 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 
 | name | type | required | description |
 |---|---|---|---|
+| `trigger_label` | slot | no | Replaces the visible trigger label in place (`with_trigger_label`). The trigger stays a Button. `text:` stays the accessible name when `icon_only: true`, and the collapse header. Omit the slot and the trigger shows `text:`. |
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
-| `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item` and `menu_divider`. Button Group uses it for each overflow child's `menu_row`. |
+| `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. |
+| `menu_form` | slot | no | Places a form in the menu. The wrapper is `role="none"` with keep-open, so sibling items keep `role="menuitem"`. Clicks, Tab, and arrow keys inside the form do not close the menu. Escape still closes. A `form` passed through `menu_html` gets the same keep-open behavior. |
 
 `menu_item` props:
 
@@ -45,6 +49,8 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 |---|---|---|---|---|
 | `text` | String | `nil` | yes | Item label text. |
 | `icon` | String/Symbol | `nil` | no | Optional leading Heroicon name. Menu items do not paint a raw `<svg` string; the trigger does, through Button. |
+| `icon_position` | Symbol | `:start` | no | `:start` paints the icon before the label. `:end` paints it after (`order-last`). Unknown names raise `ArgumentError`. |
+| `keep_open` | Boolean | `false` | no | `true` keeps the menu open when this item is used. The item stays `role="menuitem"`. Anything other than `true` or `false` raises `ArgumentError`. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on that icon. Omit to use `default_icon_variant`. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the item text. `:primary`, `:success`, `:warning`, or `:danger` use the button icon tokens. Unknown names raise `ArgumentError`. |
 | `badge` | String | `nil` | no | Optional badge content. |
@@ -142,13 +148,32 @@ Square icon trigger. Omit `round` and the theme corner stays.
 <% end %>
 ```
 
+Host menu classes and a trigger label, with no subclass:
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(
+  text: "Lists",
+  menu_class: "min-w-[18rem]",
+  menu_attributes: { id: "add-to-list-menu" }
+) do |dropdown| %>
+  <% dropdown.with_trigger_label { "Lists · 3" } %>
+  <% dropdown.menu_item(text: "Favorites", icon: "heart", icon_position: :end, href: "#") %>
+  <% dropdown.menu_form do %>
+    <form>
+      <%= render FlatPack::TextInput::Component.new(name: "name", label: "New list") %>
+      <%= render FlatPack::Button::Component.new(text: "Add", size: :sm, style: :primary, type: "submit") %>
+    </form>
+  <% end %>
+<% end %>
+```
+
 ## Collapsing button group
 `menu_row` is the menu form used by [Button Group](button-group.md). `collapse: :menu` uses it in the phone menu. An overflow menu uses it when this dropdown did not stay in the row. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
 
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
-- Menu uses `role="menu"`; items use `role="menuitem"`; divider uses `role="separator"`.
+- Menu uses `role="menu"`; items use `role="menuitem"`; divider uses `role="separator"`. `menu_form` is `role="none"` so the form is not a menuitem.
 - Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`.
 - Menu origin follows placement (`top right`, `top left`, `bottom right`, or `bottom left`). Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
 

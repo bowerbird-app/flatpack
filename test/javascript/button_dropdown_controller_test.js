@@ -24,7 +24,8 @@ function loadDropdownController(globals) {
     exports: {},
     window: globals.window,
     document: globals.document,
-    getComputedStyle: globals.getComputedStyle
+    getComputedStyle: globals.getComputedStyle,
+    requestAnimationFrame: globals.requestAnimationFrame || ((fn) => fn())
   }
   vm.runInNewContext(
     `${helper("click_outside.js")}\n${helper("positioning.js")}\n${source}\nmodule.exports = ButtonDropdownController\n`,
@@ -112,6 +113,28 @@ function mount({
   controller.connect()
   controller.positionMenu()
   return { controller, menuElement, trigger, windowStub, windowEvents }
+}
+
+function clickTarget({ form = false, keepOpen = false, menuitem = true } = {}) {
+  const item = menuitem
+    ? { matches() { return false }, dataset: { action: "" } }
+    : null
+
+  return {
+    tagName: form ? "INPUT" : "A",
+    isContentEditable: false,
+    dataset: { action: "" },
+    matches() { return false },
+    closest(selector) {
+      if (selector === '[role="menuitem"]') return item
+      if (selector === "form, [data-flat-pack-dropdown-keep-open]") {
+        if (form || keepOpen) return { tagName: "FORM" }
+        return null
+      }
+      if (selector === "a, button") return form ? null : this
+      return null
+    }
+  }
 }
 
 const triggerRect = { top: 100, right: 220, bottom: 140, left: 180, width: 40, height: 40 }
@@ -207,4 +230,96 @@ test("scroll and resize reposition, and disconnect removes those listeners", () 
   windowStub.dispatch("resize")
   assert.equal(menuElement.style.top, "198px")
   assert.equal(moves, 2)
+})
+
+test("a menu item click still closes the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  controller.dispatchDetachedActions = () => {}
+  menuElement.contains = () => true
+
+  controller.handleMenuItemClick({
+    target: clickTarget(),
+    defaultPrevented: false,
+    detail: null,
+    preventDefault() {},
+    stopPropagation() {}
+  })
+
+  assert.equal(closed, 1)
+})
+
+test("a form inside the menu does not close it", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  menuElement.contains = () => true
+
+  controller.handleMenuItemClick({
+    target: clickTarget({ form: true, menuitem: false }),
+    defaultPrevented: false
+  })
+
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+})
+
+test("a keep-open item does not close the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  menuElement.contains = () => true
+
+  controller.handleMenuItemClick({
+    target: clickTarget({ keepOpen: true }),
+    defaultPrevented: false
+  })
+
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+})
+
+test("arrow keys in a form field do not move menu focus", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let moved = 0
+  controller.isOpen = true
+  controller.focusNextItem = () => { moved += 1 }
+  menuElement.contains = () => true
+
+  controller.handleEscape({
+    key: "ArrowDown",
+    target: clickTarget({ form: true, menuitem: false }),
+    preventDefault() {}
+  })
+
+  assert.equal(moved, 0)
+})
+
+test("tab in a form does not close the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => { closed += 1 }
+  controller.isOpen = true
+  menuElement.contains = () => true
+
+  controller.handleEscape({
+    key: "Tab",
+    target: clickTarget({ form: true, menuitem: false }),
+    preventDefault() {}
+  })
+
+  assert.equal(closed, 0)
 })

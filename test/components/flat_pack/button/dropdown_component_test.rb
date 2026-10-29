@@ -639,6 +639,142 @@ module FlatPack
         end
       end
 
+      def test_menu_class_appends_to_the_menu
+        render_inline(Dropdown::Component.new(text: "Actions", menu_class: "min-w-[18rem]"))
+
+        menu = page.find("div[role='menu']")
+        assert_includes menu["class"], "min-w-[18rem]"
+        assert_includes menu["class"], "fixed"
+        assert_includes menu["class"], "z-50"
+      end
+
+      def test_menu_attributes_merge_onto_the_menu
+        render_inline(Dropdown::Component.new(
+          text: "Actions",
+          menu_attributes: {
+            id: "host-menu",
+            class: "w-72",
+            data: {controller: "lists--add-to-list"},
+            aria: {label: "Lists"},
+            role: "dialog"
+          }
+        ))
+
+        assert_selector "div[role='menu']#host-menu[aria-label='Lists'][aria-hidden='true']"
+        menu = page.find("div[role='menu']#host-menu")
+        assert_includes menu["class"], "w-72"
+        assert_includes menu["data-controller"], "lists--add-to-list"
+        assert_equal "menu", menu["data-flat-pack--button-dropdown-target"]
+        refute_selector "div[role='dialog']"
+      end
+
+      def test_trigger_label_slot_replaces_the_visible_label
+        render_inline(Dropdown::Component.new(text: "Lists")) do |dropdown|
+          dropdown.with_trigger_label { "Lists · 3" }
+          dropdown.menu_item(text: "Favorites", href: "/favorites")
+        end
+
+        assert_selector "button.fp-button-dropdown__trigger", text: "Lists · 3"
+        refute_selector "button.fp-button-dropdown__trigger", text: "Lists", exact_text: true
+        assert_selector "button[aria-haspopup='true'][aria-expanded='false']"
+        assert_selector "button svg[data-flat-pack--button-dropdown-target='chevron']"
+      end
+
+      def test_omitting_host_hooks_keeps_the_default_menu_and_trigger
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Edit", icon: "edit", href: "/edit")
+        end
+        default_html = page.native.to_html
+
+        render_inline(Dropdown::Component.new(
+          text: "Actions",
+          menu_class: nil,
+          menu_attributes: {}
+        )) do |dropdown|
+          dropdown.menu_item(text: "Edit", icon: "edit", href: "/edit", icon_position: :start, keep_open: false)
+        end
+
+        assert_equal default_html, page.native.to_html
+        refute_includes default_html, "order-last"
+        refute_includes default_html, "data-flat-pack-dropdown-keep-open"
+        refute_includes default_html, "fp-button-dropdown__form"
+        assert_selector "a[role='menuitem'][href='/edit']", text: "Edit"
+      end
+
+      def test_item_icon_position_end_puts_the_icon_last
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Favorites", icon: "heart", icon_position: :end, href: "/favorites")
+        end
+
+        assert_selector "a[href='/favorites'] svg.fp-button-icon.order-last[data-flat-pack--icon-name-value='heart']"
+        assert_selector "a[role='menuitem'][href='/favorites']", text: "Favorites"
+      end
+
+      def test_invalid_icon_position_raises
+        dropdown = Dropdown::Component.new(text: "Actions")
+
+        error = assert_raises(ArgumentError) do
+          dropdown.menu_item(text: "Edit", icon: "edit", icon_position: :middle)
+        end
+        assert_match(/icon_position/, error.message)
+      end
+
+      def test_keep_open_item_keeps_menuitem_role
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Pin", keep_open: true)
+          dropdown.menu_item(text: "Edit", href: "/edit")
+        end
+
+        assert_selector "button[role='menuitem'][data-flat-pack-dropdown-keep-open='true']", text: "Pin"
+        assert_selector "a[role='menuitem'][href='/edit']"
+        refute_selector "a[data-flat-pack-dropdown-keep-open]"
+      end
+
+      def test_invalid_keep_open_raises
+        dropdown = Dropdown::Component.new(text: "Actions")
+
+        error = assert_raises(ArgumentError) do
+          dropdown.menu_item(text: "Pin", keep_open: "yes")
+        end
+        assert_match(/keep_open/, error.message)
+      end
+
+      def test_menu_form_is_not_a_menuitem_and_keeps_sibling_roles
+        render_inline(Dropdown::Component.new(text: "Add to list")) do |dropdown|
+          dropdown.menu_item(text: "Favorites", href: "/favorites")
+          dropdown.menu_form do
+            "<form><input name='name' type='text'><button type='submit'>Add</button></form>".html_safe
+          end
+        end
+
+        assert_selector "div[role='none'].fp-button-dropdown__form[data-flat-pack-dropdown-keep-open='true'] form input[name='name']"
+        assert_selector "a[role='menuitem'][href='/favorites']", text: "Favorites"
+        refute_selector "[role='menuitem'] form"
+        refute_selector "form[role='menuitem']"
+      end
+
+      def test_catalog_reports_new_dropdown_defaults
+        FlatPack::ComponentCatalog.reset!
+        parameters = FlatPack::ComponentCatalog.show("Button::Dropdown::Component").fetch(:parameters)
+        slots = FlatPack::ComponentCatalog.show("Button::Dropdown::Component").fetch(:slots)
+        menu_class = parameters.find { |row| row.fetch(:name) == "menu_class" }
+        menu_attributes = parameters.find { |row| row.fetch(:name) == "menu_attributes" }
+
+        assert menu_class.key?(:default)
+        assert_nil menu_class.fetch(:default)
+        refute menu_attributes.key?(:default)
+        assert_includes slots.map { |row| row.fetch(:name) }, "trigger_label"
+        assert_includes slots.map { |row| row.fetch(:name) }, "menu"
+
+        item = FlatPack::ComponentCatalog.show("Button::DropdownItem::Component")
+        item_parameters = item.fetch(:parameters)
+        icon_position = item_parameters.find { |row| row.fetch(:name) == "icon_position" }
+        keep_open = item_parameters.find { |row| row.fetch(:name) == "keep_open" }
+
+        assert_equal "start", icon_position.fetch(:default)
+        assert_equal false, keep_open.fetch(:default)
+      end
+
       def test_icon_only_menu_stays_fixed_for_every_placement
         %i[bottom_right bottom_left top_right top_left].each do |placement|
           render_inline(Dropdown::Component.new(

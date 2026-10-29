@@ -4,14 +4,17 @@ module FlatPack
   module Button
     module Dropdown
       class Component < FlatPack::BaseComponent
+        renders_one :trigger_label
+
         renders_many :menu, types: {
           item: FlatPack::Button::DropdownItem::Component,
           divider: FlatPack::Button::DropdownDivider::Component,
-          html: ->(body) { body }
+          html: ->(body) { body },
+          form: FlatPack::Button::Dropdown::FormPanel
         }
 
-        undef_method :with_menu_item, :with_menu_divider, :with_menu_html
-        undef_method :with_menu_item_content, :with_menu_divider_content, :with_menu_html_content
+        undef_method :with_menu_item, :with_menu_divider, :with_menu_html, :with_menu_form
+        undef_method :with_menu_item_content, :with_menu_divider_content, :with_menu_html_content, :with_menu_form_content
 
         ICON_VARIANTS = IconOptions::VARIANTS
         ICON_STYLES = IconOptions::STYLES
@@ -39,6 +42,8 @@ module FlatPack
           placement: :bottom_right,
           max_height: "384px",
           trigger_attributes: {},
+          menu_class: nil,
+          menu_attributes: {},
           **system_arguments
         )
           super(**system_arguments)
@@ -56,6 +61,8 @@ module FlatPack
           @placement = placement.to_sym
           @max_height = max_height
           @trigger_attributes = sanitize_args(trigger_attributes)
+          @menu_class = menu_class
+          @host_menu_attributes = sanitize_args(menu_attributes)
 
           validate_style!
           validate_placement!
@@ -78,11 +85,23 @@ module FlatPack
           set_polymorphic_slot(:menu, :html, body)
         end
 
+        # Form body in the menu. Not a menuitem. Stays open on interaction.
+        def menu_form(**kwargs, &block)
+          set_polymorphic_slot(:menu, :form, **kwargs, &block)
+        end
+
         # Phone row for a collapsing button group. The wide control stays a dropdown.
         def menu_row
           render(FlatPack::Menu::Collapse::Component.new(title: @text, icon: @icon)) do |section|
             section.items do
-              safe_join(menu.map { |item| menu_collapse_item(item.menu_row) })
+              safe_join(menu.filter_map { |item|
+                next unless item.respond_to?(:menu_row)
+
+                row = item.menu_row
+                next if row[:skip]
+
+                menu_collapse_item(row)
+              })
             end
           end
         end
@@ -138,7 +157,7 @@ module FlatPack
           end
 
           {
-            text: @text.presence,
+            text: trigger_button_text,
             style: @style,
             size: @size,
             round: @round,
@@ -191,19 +210,34 @@ module FlatPack
           raise ArgumentError, "chevron must be a string"
         end
 
-        def menu_attributes
-          {
-            class: menu_classes,
-            role: "menu",
-            aria: {hidden: "true"},
-            style: "max-height: #{@max_height};",
-            data: {
-              flat_pack__button_dropdown_target: "menu"
-            }
-          }
+        def trigger_button_text
+          return trigger_label if trigger_label?
+
+          @text.presence
         end
 
-        def menu_classes
+        def menu_attributes
+          host = @host_menu_attributes.dup
+          host_class = [host.delete(:class), host.delete("class")]
+          host_data = extract_nested_attributes(host, :data)
+          host_aria = extract_nested_attributes(host, :aria)
+          host.delete(:role)
+          host.delete("role")
+          host_style = host.delete(:style) || host.delete("style")
+
+          {
+            class: menu_classes(*host_class),
+            role: "menu",
+            aria: host_aria.merge(hidden: "true"),
+            style: join_styles("max-height: #{@max_height};", host_style),
+            data: merge_data_attributes(
+              host_data,
+              {flat_pack__button_dropdown_target: "menu"}
+            )
+          }.merge(host)
+        end
+
+        def menu_classes(*extra)
           classes(
             "fixed z-50",
             "min-w-[12rem]",
@@ -214,7 +248,9 @@ module FlatPack
             "p-[var(--dropdown-padding)]",
             "shadow-lg",
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
-            "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]"
+            "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]",
+            @menu_class,
+            *extra
           )
         end
 
@@ -285,8 +321,10 @@ module FlatPack
           label = content_tag(:span, row[:label].to_s)
           return label if row[:icon].blank?
 
+          icon_arguments = {name: row[:icon], size: :sm}
+          icon_arguments[:class] = "order-last" if row[:icon_position] == :end
           safe_join([
-            render(FlatPack::Shared::IconComponent.new(name: row[:icon], size: :sm)),
+            render(FlatPack::Shared::IconComponent.new(**icon_arguments)),
             label
           ])
         end

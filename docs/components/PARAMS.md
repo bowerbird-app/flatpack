@@ -69,6 +69,10 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Button label lines | `lines` | `FlatPack::Button::Component`. `1` (default) or `2`. Clamps the label with an ellipsis. ReadMore `lines` is the clamp budget, a positive integer of line boxes (default `4`). |
 | Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon and on EmptyState `icon:`. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
 | Button icon colour | `icon_style` | `nil` inherits the button text through `currentColor`. `:primary`, `:success`, `:warning`, `:danger` use `--button-icon-*` tokens. |
+| Menu item icon side | `icon_position` | `FlatPack::Button::DropdownItem` only. `:start` (default) or `:end`. Not Button `align`. |
+| Keep a menu open | `keep_open` | `FlatPack::Button::DropdownItem` boolean. `true` leaves the menu open after that item. Forms use `menu_form` (or a `form` in the menu) instead of stripping `role="menuitem"`. |
+| Extra menu classes | `menu_class` | `FlatPack::Button::Dropdown::Component` only. Extra classes on the menu. The wrapper still uses `class:`. |
+| Extra menu HTML | `menu_attributes` | `FlatPack::Button::Dropdown::Component` only. Extra attributes on the menu. `trigger_attributes` stays on the trigger. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
 | Clamped label tooltip | `title` | On Button, the full label for the HTML `title` tooltip when `lines` clamps the visible text. Elsewhere, `title` stays a section heading. |
 | Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |

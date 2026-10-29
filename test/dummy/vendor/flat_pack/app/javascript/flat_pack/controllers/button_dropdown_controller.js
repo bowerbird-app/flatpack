@@ -132,7 +132,18 @@ export default class extends Controller {
     if (event.key === "Escape") {
       event.preventDefault()
       this.close()
-    } else if (event.key === "ArrowDown") {
+      return
+    }
+
+    if (this.keepsMenuOpen(event.target) && this.isFormField(event.target)) {
+      return
+    }
+
+    if (event.key === "Tab" && this.keepsMenuOpen(event.target)) {
+      return
+    }
+
+    if (event.key === "ArrowDown") {
       event.preventDefault()
       this.focusNextItem()
     } else if (event.key === "ArrowUp") {
@@ -151,6 +162,8 @@ export default class extends Controller {
   }
 
   handleMenuItemClick(event) {
+    if (this.keepsMenuOpen(event.target)) return
+
     const menuItem = event.target.closest('[role="menuitem"]')
     if (menuItem && this.menuElement.contains(menuItem)) {
       if (menuItem.matches("[disabled], [aria-disabled='true']")) return
@@ -169,6 +182,19 @@ export default class extends Controller {
     if (action.matches("[disabled], [aria-disabled='true']")) return
 
     this.closeAfterAction()
+  }
+
+  keepsMenuOpen(node) {
+    if (!node || typeof node.closest !== "function") return false
+    if (!this.menuElement.contains(node)) return false
+
+    return Boolean(node.closest("form, [data-flat-pack-dropdown-keep-open]"))
+  }
+
+  isFormField(node) {
+    if (!node || !node.tagName) return false
+
+    return /^(INPUT|SELECT|TEXTAREA)$/.test(node.tagName) || node.isContentEditable === true
   }
 
   closeAfterAction() {
