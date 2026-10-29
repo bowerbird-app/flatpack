@@ -10,20 +10,21 @@ module FlatPack
           "Stack content"
         end
 
-        assert_selector "div.flex.flex-col.gap-4.items-stretch"
+        assert_selector "div.flex.flex-col.items-stretch"
+        assert_includes page.find("div.flex")[:class], "gap-[var(--stack-gap-md)]"
         assert_text "Stack content"
       end
 
       def test_renders_a_small_gap
         render_inline(Component.new(gap: :sm)) { "Content" }
 
-        assert_selector "div.gap-2"
+        assert_includes page.find("div.flex")[:class], "gap-[var(--stack-gap-sm)]"
       end
 
       def test_renders_a_large_gap
         render_inline(Component.new(gap: :lg)) { "Content" }
 
-        assert_selector "div.gap-6"
+        assert_includes page.find("div.flex")[:class], "gap-[var(--stack-gap-lg)]"
       end
 
       def test_renders_start_alignment

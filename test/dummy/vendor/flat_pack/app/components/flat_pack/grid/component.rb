@@ -8,7 +8,8 @@ module FlatPack
       # "grid-cols-1" "grid-cols-2" "grid-cols-3" "grid-cols-4" "grid-cols-6" "grid-cols-12"
       # "sm:grid-cols-2" "md:grid-cols-2" "md:grid-cols-3" "md:grid-cols-4" "md:grid-cols-6"
       # "lg:grid-cols-3" "lg:grid-cols-4" "lg:grid-cols-6" "lg:grid-cols-12" "xl:grid-cols-4"
-      # "gap-2" "gap-4" "gap-6" "items-start" "items-center" "items-stretch"
+      # "gap-[var(--stack-gap-sm)]" "gap-[var(--stack-gap-md)]" "gap-[var(--stack-gap-lg)]"
+      # "items-start" "items-center" "items-stretch"
       COLUMN_PRESETS = {
         1 => {base: 1},
         2 => {base: 1, md: 2},
@@ -17,18 +18,6 @@ module FlatPack
         6 => {base: 2, md: 3, lg: 6},
         12 => {base: 2, md: 4, lg: 12},
         :auto => {base: 1, sm: 2, lg: 3, xl: 4}
-      }.freeze
-
-      GAPS = {
-        sm: "gap-2",
-        md: "gap-4",
-        lg: "gap-6"
-      }.freeze
-
-      ALIGNS = {
-        start: "items-start",
-        center: "items-center",
-        stretch: "items-stretch"
       }.freeze
 
       renders_many :items, lambda { |**system_arguments|
@@ -81,16 +70,16 @@ module FlatPack
 
       def cols_classes
         COLUMN_PRESETS.fetch(@cols).map do |breakpoint, count|
-          FlatPack::Shared::Breakpoints.utility(breakpoint, "grid-cols-#{count}")
+          FlatPack::Shared::Flex.utility(breakpoint, "grid-cols-#{count}")
         end
       end
 
       def gap_classes
-        GAPS.fetch(@gap)
+        FlatPack::Shared::Flex.gap_class(@gap)
       end
 
       def align_classes
-        ALIGNS.fetch(@align)
+        FlatPack::Shared::Flex.align_class(@align)
       end
 
       def validate_cols!
@@ -100,13 +89,11 @@ module FlatPack
       end
 
       def validate_gap!
-        return if GAPS.key?(@gap)
-        raise ArgumentError, "Invalid gap: #{@gap}. Must be one of: #{GAPS.keys.join(", ")}"
+        FlatPack::Shared::Flex.validate_gap!(@gap)
       end
 
       def validate_align!
-        return if ALIGNS.key?(@align)
-        raise ArgumentError, "Invalid align: #{@align}. Must be one of: #{ALIGNS.keys.join(", ")}"
+        FlatPack::Shared::Flex.validate_align!(@align)
       end
     end
   end

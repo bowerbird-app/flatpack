@@ -40,7 +40,7 @@ module FlatPack
           "Content"
         end
 
-        assert_selector "div.gap-4"
+        assert_includes page.find("div.grid")[:class], "gap-[var(--stack-gap-md)]"
       end
 
       def test_renders_grid_with_small_gap
@@ -48,7 +48,7 @@ module FlatPack
           "Content"
         end
 
-        assert_selector "div.gap-2"
+        assert_includes page.find("div.grid")[:class], "gap-[var(--stack-gap-sm)]"
       end
 
       def test_renders_grid_with_large_gap
@@ -56,7 +56,7 @@ module FlatPack
           "Content"
         end
 
-        assert_selector "div.gap-6"
+        assert_includes page.find("div.grid")[:class], "gap-[var(--stack-gap-lg)]"
       end
 
       def test_renders_grid_with_stretch_alignment
@@ -226,7 +226,7 @@ module FlatPack
           view.render(Item.new(span: 3)) { "Nested" }
         end
 
-        assert_equal "fp-grid__item sm:col-span-3", page.find("div.fp-grid__item")[:class]
+        assert_equal "fp-grid__item", page.find("div.fp-grid__item")[:class]
         assert_text "Nested"
       end
 

@@ -14,7 +14,7 @@ Use Stack when host markup would otherwise be `flex flex-col gap-4` — forms, p
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `gap` | Symbol | `:md` | No | Gap preset. Same scale as Grid. Allowed: `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
+| `gap` | Symbol | `:md` | No | Gap preset shared with Grid and Cluster. `:sm`, `:md`, `:lg` map to `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, and `gap-[var(--stack-gap-lg)]`. |
 | `align` | Symbol | `:stretch` | No | Cross-axis alignment. Same enum as Grid. Allowed: `:start`, `:center`, `:stretch`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the stack container. |
 
@@ -25,7 +25,7 @@ Default block content; each child participates as a flex item.
 
 | variant | description |
 |---------|-------------|
-| `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
+| `gap: :sm/:md/:lg` | Applies `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, or `gap-[var(--stack-gap-lg)]`. |
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
 
 ## Example

@@ -5,19 +5,9 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "flex" "flex-col" "gap-2" "gap-4" "gap-6"
+      # "flex" "flex-col"
+      # "gap-[var(--stack-gap-sm)]" "gap-[var(--stack-gap-md)]" "gap-[var(--stack-gap-lg)]"
       # "items-start" "items-center" "items-stretch"
-      GAPS = {
-        sm: "gap-2",
-        md: "gap-4",
-        lg: "gap-6"
-      }.freeze
-
-      ALIGNS = {
-        start: "items-start",
-        center: "items-center",
-        stretch: "items-stretch"
-      }.freeze
 
       def initialize(
         gap: :md,
@@ -53,23 +43,19 @@ module FlatPack
       end
 
       def gap_classes
-        GAPS.fetch(@gap)
+        FlatPack::Shared::Flex.gap_class(@gap)
       end
 
       def align_classes
-        ALIGNS.fetch(@align)
+        FlatPack::Shared::Flex.align_class(@align)
       end
 
       def validate_gap!
-        return if GAPS.key?(@gap)
-
-        raise ArgumentError, "Invalid gap: #{@gap}. Must be one of: #{GAPS.keys.join(", ")}"
+        FlatPack::Shared::Flex.validate_gap!(@gap)
       end
 
       def validate_align!
-        return if ALIGNS.key?(@align)
-
-        raise ArgumentError, "Invalid align: #{@align}. Must be one of: #{ALIGNS.keys.join(", ")}"
+        FlatPack::Shared::Flex.validate_align!(@align)
       end
     end
   end

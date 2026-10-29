@@ -1,6 +1,6 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Stack",
-  subtitle: "One item under the next. Same gap scale as Grid. Replaces flex flex-col gap-4."
+  subtitle: "One item under the next. Same gap tokens as Grid. Replaces flex flex-col gap-4."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :stack %>
@@ -43,7 +43,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Gap",
     anchor_link: true,
-    subtitle: "sm is gap-2. md is gap-4. lg is gap-6. Same three steps as Grid."
+    subtitle: "sm, md, and lg use --stack-gap-sm, --stack-gap-md, and --stack-gap-lg. Same three steps as Grid."
   ) %>
 
   <%= render FlatPack::Grid::Component.new(cols: 3, gap: :md) do %>

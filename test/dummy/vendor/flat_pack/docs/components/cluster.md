@@ -14,7 +14,7 @@ Use Cluster when host markup would otherwise be `flex flex-wrap gap-2` — butto
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `gap` | Symbol | `:md` | No | Gap preset. Same scale as Grid. Allowed: `:sm`, `:md`, `:lg` (`gap-2`, `gap-4`, `gap-6`). |
+| `gap` | Symbol | `:md` | No | Gap preset shared with Grid and Stack. `:sm`, `:md`, `:lg` map to `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, and `gap-[var(--stack-gap-lg)]`. |
 | `align` | Symbol | `:center` | No | Cross-axis alignment. Same enum as Grid. Allowed: `:start`, `:center`, `:stretch`. Default `:center` matches a button or chip row. |
 | `justify` | Symbol | `:start` | No | Main-axis justification. Allowed: `:start`, `:center`, `:end`, `:between`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the cluster container. |
@@ -26,7 +26,7 @@ Default block content; each child participates as a wrapping flex item.
 
 | variant | description |
 |---------|-------------|
-| `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
+| `gap: :sm/:md/:lg` | Applies `gap-[var(--stack-gap-sm)]`, `gap-[var(--stack-gap-md)]`, or `gap-[var(--stack-gap-lg)]`. |
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
 | `justify: :start/:center/:end/:between` | Applies `justify-start`, `justify-center`, `justify-end`, or `justify-between`. |
 

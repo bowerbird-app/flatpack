@@ -9,7 +9,7 @@ class PagesStackClusterDemoTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "FlatPack::Stack::Component"
     assert_includes response.body, "flex flex-col"
-    assert_includes response.body, "gap-4"
+    assert_includes response.body, "gap-[var(--stack-gap-md)]"
     assert_includes response.body, "items-stretch"
     assert_includes response.body, "items-start"
     assert_includes response.body, "gap: :sm"
@@ -24,6 +24,8 @@ class PagesStackClusterDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "justify-between"
     assert_includes response.body, "items-center"
     assert_includes response.body, "Northlight"
+    assert_includes response.body, "fp-heading"
+    assert_includes response.body, "Take 14"
   end
 
   test "stack demo sidebar includes cluster" do
