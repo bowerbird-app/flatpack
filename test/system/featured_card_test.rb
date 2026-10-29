@@ -128,20 +128,46 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
     end
   end
 
-  test "at 768 the featured card stacks or keeps an 18rem copy column" do
+  test "at 768 the featured card stacks" do
     page.current_window.resize_to(768, 900)
     visit "/demo/cards"
     assert_selector ".fp-card--featured", text: "Spring launch"
 
     sample = featured_columns
 
-    if sample.fetch("stacked")
-      assert_in_delta sample.fetch("cover"), sample.fetch("coverHeight"), 1
-      header = sample.fetch("headerTop")
-      assert_operator header, :<, sample.fetch("mediaBottom")
-    else
-      assert_operator sample.fetch("copy"), :>=, sample.fetch("minCopy") - 1
-    end
+    assert sample.fetch("stacked"), "expected the cover above the copy"
+    assert_operator sample.fetch("copyTop"), :>=, sample.fetch("mediaBottom") - 1
+    assert_in_delta sample.fetch("copy"), sample.fetch("card"), 2
+    assert_in_delta sample.fetch("cover"), sample.fetch("coverHeight"), 1
+    assert_operator sample.fetch("headerTop"), :<, sample.fetch("mediaBottom")
+  end
+
+  test "a 500px wrapper stacks the featured card on a 1280 viewport" do
+    page.current_window.resize_to(1280, 900)
+    visit "/demo/cards?frame=500"
+    assert_selector ".fp-card--featured", text: "Spring launch"
+
+    sample = featured_columns
+
+    assert sample.fetch("stacked"), "expected the cover above the copy"
+    assert_in_delta 500, sample.fetch("card"), 2
+    assert_in_delta sample.fetch("copy"), sample.fetch("card"), 2
+    assert_operator sample.fetch("copyTop"), :>=, sample.fetch("mediaBottom") - 1
+    assert_operator sample.fetch("pane"), :>, 700
+  end
+
+  test "a host width on a shrink-to-fit parent wins and the card does not collapse" do
+    page.current_window.resize_to(1440, 900)
+    visit "/demo/cards?frame=600"
+    assert_selector ".fp-card--featured", text: "Spring launch"
+
+    sample = featured_columns
+
+    assert_in_delta 600, sample.fetch("card"), 2
+    assert_in_delta 600, sample.fetch("host"), 2
+    assert_operator sample.fetch("pane"), :>, 800
+    assert sample.fetch("stacked"), "a 600px card stays stacked on a wide viewport"
+    assert_operator sample.fetch("copyTop"), :>=, sample.fetch("mediaBottom") - 1
   end
 
   test "a host child with no width or aspect ratio keeps its height" do
@@ -233,11 +259,17 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
         const mediaBox = media.getBoundingClientRect()
         const copyBox = copy.getBoundingClientRect()
         const coverBox = cover.getBoundingClientRect()
+        const cardBox = card.getBoundingClientRect()
+        const pane = card.closest(".fp-pane-scroll") || document.body
         return {
           stacked: copyBox.top >= mediaBox.bottom - 2,
           copy: copyBox.width,
+          copyTop: copyBox.top,
           cover: coverBox.width,
           coverHeight: coverBox.height,
+          card: cardBox.width,
+          host: card.parentElement.getBoundingClientRect().width,
+          pane: pane.getBoundingClientRect().width,
           mediaBottom: mediaBox.bottom,
           headerTop: header.getBoundingClientRect().top,
           minCopy: 18 * root

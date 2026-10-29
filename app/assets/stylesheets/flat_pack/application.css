@@ -1342,13 +1342,19 @@
 /* Featured: square cover beside copy once the card itself is about 640px
  * (40rem) wide. The card is the container, so a narrow column stacks on a
  * wide viewport. Below that, the cover is full width and the header sits
- * on the photo. Side by side, the copy column is at least 18rem.
+ * on the photo. Side by side, the copy column is at least --card-featured-copy-min.
+ * No width here. A block already fills a definite parent, and an unlayered
+ * width would beat a host w-* utility. container-type is in @layer components
+ * inside :where() for the same reason. A shrink-to-fit parent (inline-block,
+ * w-fit, float, absolute) has no definite width, and inline-size containment
+ * collapses the card there unless the host sets a width.
  */
-.fp-card--featured {
-  container-type: inline-size;
-  container-name: fp-card;
-  position: relative;
-  width: 100%;
+@layer components {
+  :where(.fp-card--featured) {
+    container-type: inline-size;
+    container-name: fp-card;
+    position: relative;
+  }
 }
 
 .fp-card__featured-grid {
@@ -1432,12 +1438,14 @@
   --card-body-gap: var(--space-4);
 }
 
-.fp-card--featured [data-fp-card-part="header"] {
-  position: absolute;
-  top: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
-  inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
-  z-index: 1;
-  width: auto;
+@layer components {
+  :where(.fp-card--featured [data-fp-card-part="header"]) {
+    position: absolute;
+    top: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
+    inset-inline-end: calc(var(--card-inset) + var(--overlay-edge-offset, 8px));
+    z-index: 1;
+    width: auto;
+  }
 }
 
 /* The header element is the row. display: contents would drop a host class, padding, border, or divider. */
@@ -1486,13 +1494,15 @@
 
 @container fp-card (min-width: 40rem) {
   .fp-card__featured-grid {
-    grid-template-columns: min(50%, 28rem) minmax(18rem, 1fr);
+    grid-template-columns: min(50%, var(--card-featured-media-max)) minmax(var(--card-featured-copy-min), 1fr);
     align-items: stretch;
   }
 
-  .fp-card--featured [data-fp-card-part="header"] {
-    position: static;
-    width: 100%;
+  @layer components {
+    :where(.fp-card--featured [data-fp-card-part="header"]) {
+      position: static;
+      width: 100%;
+    }
   }
 
   :where(.fp-card--featured [data-fp-card-part="header"] > *) {

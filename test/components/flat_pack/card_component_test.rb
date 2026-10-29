@@ -1244,14 +1244,32 @@ module FlatPack
           css
         )
         assert_includes css, "contain: size;"
-        assert_includes css, "container-type: inline-size;"
+        assert_match(
+          /@layer components \{\s*:where\(\.fp-card--featured\) \{\s*container-type: inline-size;\s*container-name: fp-card;/m,
+          css
+        )
+        refute_match(/\.fp-card--featured \{\s*container-type:/, css)
+        refute_match(/\.fp-card--featured \{[^}]*width:\s*100%/, css)
+        assert_match(
+          /@layer components \{\s*:where\(\.fp-card--featured \[data-fp-card-part="header"\]\) \{\s*position: absolute;.*?width: auto;\s*\}/m,
+          css
+        )
+        assert_match(
+          /@container fp-card \(min-width: 40rem\) \{\s*\.fp-card__featured-grid \{[^}]*\}\s*@layer components \{\s*:where\(\.fp-card--featured \[data-fp-card-part="header"\]\) \{\s*position: static;\s*width: 100%;/m,
+          css
+        )
         assert_includes css, "container-name: fp-card;"
         assert_includes css, "@container fp-card (min-width: 40rem)"
-        assert_includes css, "minmax(18rem, 1fr)"
+        assert_includes css, "minmax(var(--card-featured-copy-min), 1fr)"
+        assert_includes css, "min(50%, var(--card-featured-media-max))"
         assert_includes css, "--card-body-gap: var(--space-4);"
         variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
         assert_includes variables, "--card-body-gap: var(--card-body-gap);"
         assert_includes variables, "--card-body-gap: var(--space-4);"
+        assert_includes variables, "--card-featured-media-max: var(--card-featured-media-max);"
+        assert_includes variables, "--card-featured-media-max: 28rem;"
+        assert_includes variables, "--card-featured-copy-min: var(--card-featured-copy-min);"
+        assert_includes variables, "--card-featured-copy-min: 18rem;"
         assert_match(/:where\(\.fp-card__cover\)\s*\{[^}]*contain:\s*size;/m, css)
         refute_match(/:where\(\.fp-card__featured-media\) > \* \{\s*contain:\s*size;/, css)
         assert_includes css, "align-self: start;"

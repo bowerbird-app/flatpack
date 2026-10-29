@@ -58,13 +58,20 @@
   <p class="text-sm text-[var(--surface-muted-content-color)] mb-6">
     Featured splits the card when the card is wide enough. The photo stays square. Share sits on the photo on a narrow card, and in the top-right when the columns sit side by side.
   </p>
+  <% featured_frame = params[:frame].to_s %>
+  <% if featured_frame == "600" %>
+    <div class="w-fit">
+  <% elsif featured_frame == "500" %>
+    <div class="w-[500px]">
+  <% end %>
   <%= render FlatPack::Card::Component.new(
     variant: :featured,
     padding: :none,
     inset: :md,
     radius: :xxxl,
     shadow: :md,
-    border: :none
+    border: :none,
+    **(featured_frame == "600" ? {class: "w-[600px]"} : {})
   ) do |card| %>
     <% card.media do |media| %>
       <%= media.image(
@@ -106,6 +113,9 @@
       <%= render FlatPack::Button::Component.new(text: "Contact", style: :secondary, size: :md) %>
       <%= render FlatPack::Button::Component.new(text: "Download kit", style: :primary, size: :md) %>
     <% end %>
+  <% end %>
+  <% if featured_frame.in?(%w[600 500]) %>
+    </div>
   <% end %>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')

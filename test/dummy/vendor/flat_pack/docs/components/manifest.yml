@@ -176,6 +176,9 @@ components:
       - "radius: :xxxl"
       - "variant: :featured"
     tokens:
+      - --card-body-gap
+      - --card-featured-copy-min
+      - --card-featured-media-max
       - --card-inset
       - --card-inner-radius
       - --card-media-image-height
