@@ -29,7 +29,8 @@ function loadDropdownController(globals) {
     window: globals.window,
     document: globals.document,
     getComputedStyle: globals.getComputedStyle,
-    requestAnimationFrame: globals.requestAnimationFrame || ((fn) => fn())
+    requestAnimationFrame: globals.requestAnimationFrame || ((fn) => fn()),
+    setTimeout: (...args) => globals.window.setTimeout(...args)
   }
   vm.runInNewContext(
     `${focusTrap}\n${helper("click_outside.js")}\n${helper("positioning.js")}\n${source}\nmodule.exports = ButtonDropdownController\n`,
@@ -145,7 +146,11 @@ function clickTarget({ form = false, keepOpen = false, menuitem = true, submitBu
     dataset: { action: "" },
     matches() { return false },
     closest(selector) {
-      if (selector === "[data-flat-pack-dropdown-item]" || selector === '[role="menuitem"]') return item
+      if (
+        selector === "[data-flat-pack-dropdown-item]" ||
+        selector === '[role="menuitem"]' ||
+        selector === '[data-flat-pack-dropdown-item], [role="menuitem"]'
+      ) return item
       if (selector === "[data-flat-pack-dropdown-keep-open]") {
         if (keepOpen) return { tagName: "DIV" }
         return null
@@ -463,6 +468,7 @@ test("a dialog action dispatches without a menuitem role", () => {
     matches() { return false },
     closest(selector) {
       if (selector === "[data-flat-pack-dropdown-item]") return this
+      if (selector === '[data-flat-pack-dropdown-item], [role="menuitem"]') return this
       if (selector === '[role="menuitem"]') return null
       if (selector === "[data-flat-pack-dropdown-keep-open]") return null
       if (selector === "a, button") return this
@@ -479,6 +485,141 @@ test("a dialog action dispatches without a menuitem role", () => {
   })
 
   assert.equal(dispatched, 1)
+})
+
+test("a portaled menu_html menuitem without the item hook still dispatches its action", () => {
+  const { controller, menuElement, documentStub } = mount({ anchor: triggerRect })
+  let appended = 0
+  let toggled = 0
+  documentStub.body.appendChild = () => { appended += 1 }
+  controller.ensureMenuInBody()
+  assert.equal(appended, 1)
+
+  const host = {}
+  controller.contextControllerElements = [{ element: host, identifiers: ["lists--add-to-list"] }]
+  controller.application = {
+    getControllerForElementAndIdentifier(element, identifier) {
+      if (element === host && identifier === "lists--add-to-list") {
+        return { toggle() { toggled += 1 } }
+      }
+      return null
+    }
+  }
+  controller.isOpen = true
+  menuElement.contains = () => true
+  const item = {
+    dataset: { action: "click->lists--add-to-list#toggle" },
+    matches() { return false },
+    closest(selector) {
+      if (selector === "[data-flat-pack-dropdown-item]") return null
+      if (selector === '[data-flat-pack-dropdown-item], [role="menuitem"]') return this
+      if (selector === "[data-flat-pack-dropdown-keep-open]") return null
+      if (selector === "a, button") return this
+      return null
+    }
+  }
+
+  controller.handleMenuItemClick({
+    target: item,
+    defaultPrevented: false,
+    detail: null,
+    preventDefault() {},
+    stopPropagation() {}
+  })
+
+  assert.equal(toggled, 1)
+})
+
+test("enter and space on the trigger open the menu and focus the first item", () => {
+  const { controller, menuElement, windowStub, documentStub } = mount({ anchor: triggerRect })
+  documentStub.body.appendChild = () => {}
+  let focused = 0
+  const item = {
+    focus() { focused += 1 },
+    closest() { return null },
+    getAttribute() { return null }
+  }
+  menuElement.tabStops = [item]
+  windowStub.setTimeout = (fn) => {
+    fn()
+    return 0
+  }
+
+  let prevented = 0
+  controller.openFromKey({
+    key: "Enter",
+    preventDefault() { prevented += 1 }
+  })
+  assert.equal(controller.isOpen, true)
+  assert.equal(focused, 1)
+  assert.equal(prevented, 1)
+
+  controller.close()
+  assert.equal(controller.isOpen, false)
+
+  focused = 0
+  prevented = 0
+  controller.openFromKey({
+    key: " ",
+    preventDefault() { prevented += 1 }
+  })
+  assert.equal(controller.isOpen, true)
+  assert.equal(focused, 1)
+  assert.equal(prevented, 1)
+})
+
+test("tabbing past the last stop in a dialog closes it and returns focus to the trigger", () => {
+  const { controller, menuElement, trigger } = mountDialog({ anchor: triggerRect })
+  let focused = 0
+  let prevented = 0
+  trigger.focus = () => { focused += 1 }
+  controller.isOpen = true
+  const only = clickTarget({ menuitem: false })
+  menuElement.tabStops = [only]
+  menuElement.contains = (node) => node === only
+
+  controller.handleEscape({
+    key: "Tab",
+    shiftKey: false,
+    target: only,
+    preventDefault() { prevented += 1 }
+  })
+
+  assert.equal(controller.isOpen, false)
+  assert.equal(focused, 1)
+  assert.equal(prevented, 1)
+})
+
+test("a dialog focuses the first form field on open", () => {
+  const { controller, menuElement, windowStub, documentStub } = mountDialog({ anchor: triggerRect })
+  documentStub.body.appendChild = () => {}
+  let inputFocused = 0
+  let buttonFocused = 0
+  const input = {
+    tagName: "INPUT",
+    isContentEditable: false,
+    focus() { inputFocused += 1 },
+    closest() { return null },
+    getAttribute() { return null }
+  }
+  const button = {
+    tagName: "BUTTON",
+    isContentEditable: false,
+    focus() { buttonFocused += 1 },
+    closest() { return null },
+    getAttribute() { return null }
+  }
+  menuElement.tabStops = [input, button]
+  windowStub.setTimeout = (fn) => {
+    fn()
+    return 0
+  }
+
+  controller.open()
+
+  assert.equal(inputFocused, 1)
+  assert.equal(buttonFocused, 0)
+  assert.equal(controller.isOpen, true)
 })
 
 test("focusout inside a keep-open node does not close the menu", () => {

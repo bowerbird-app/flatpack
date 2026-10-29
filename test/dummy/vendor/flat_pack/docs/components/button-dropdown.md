@@ -40,7 +40,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 | `trigger_label` | slot | no | A new `renders_one` slot (main had none). Replaces the visible trigger label in place (`with_trigger_label`). The trigger stays a Button. `text:` stays the accessible name when `icon_only: true`, and the collapse header. Omit the slot and the trigger shows `text:`. |
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
-| `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. |
+| `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. A hand-written `role="menuitem"` in that HTML still runs its outer `data-action` after the menu moves to `document.body`, even without `data-flat-pack-dropdown-item`. |
 | `menu_form` | slot | no | Places a form in the menu. The panel becomes `role="dialog"` (not `role="menu"`), and items are not `menuitem`. Each item has `data-flat-pack-dropdown-item`, so an outer `data-action` still runs. The form wrapper has no `menu`, `menuitem`, or `none` role. Clicks, Tab, and focus inside that wrapper do not close the menu. Escape still closes. A nested Dropdown inside the form keeps its own menu roles. A `form` in `menu_html` closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
 
 `menu_item` props:
@@ -176,7 +176,7 @@ Host menu classes and a trigger label, with no subclass:
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
 - A pure action list uses `role="menu"`; items use `role="menuitem"`; the divider uses `role="separator"`.
 - A menu that contains `menu_form` uses `role="dialog"` with `aria-modal="false"` and an accessible name from `text`. Items in that dialog are not `menuitem`. The form is not wrapped in `role="menu"`, `role="menuitem"`, or `role="none"`. The trigger uses `aria-haspopup="dialog"`.
-- Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`. `Tab` closes a `role="menu"` and returns focus to the trigger, including when the item is `keep_open`. `Tab` inside a `role="dialog"` stays in the panel.
+- Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`. `Enter` and `Space` on the trigger open the menu. An action menu then focuses the first item. A dialog focuses the first form field, or the first item when the panel has no field. `Tab` closes a `role="menu"` and returns focus to the trigger, including when the item is `keep_open`. `Tab` in a `role="dialog"` leaves the panel open while the next stop is still inside it. Tabbing past the last stop closes the dialog and returns focus to the trigger. A keep-open control, including the form wrapper, does not close on `Tab`.
 - Menu origin follows placement (`top right`, `top left`, `bottom right`, or `bottom left`). Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
 
 ## Dependencies

@@ -5,7 +5,7 @@ import { onClickOutside } from "flat_pack/click_outside"
 import { focusableElements } from "flat_pack/focus_trap"
 import { place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
 
-const ITEM_HOOK = "[data-flat-pack-dropdown-item]"
+const ITEM_HOOK = '[data-flat-pack-dropdown-item], [role="menuitem"]'
 
 const MENU_GAP = 8
 
@@ -52,6 +52,16 @@ export default class extends Controller {
     } else {
       this.open()
     }
+  }
+
+  // Enter and Space on a closed trigger open the menu. preventDefault stops
+  // the button's later click from toggling it shut. An open trigger leaves
+  // the key alone so that click can close it.
+  openFromKey(event) {
+    if (this.isOpen) return
+
+    event.preventDefault()
+    this.open()
   }
 
   open() {
@@ -169,7 +179,8 @@ export default class extends Controller {
   }
 
   // Focus leaving the panel closes it. Tab on a role=menu also closes, and
-  // returns focus to the trigger. A dialog panel keeps Tab inside.
+  // returns focus to the trigger. A dialog stays open while the next stop is
+  // still inside it. Tab past the last stop closes the dialog.
   handleFocusOut(event) {
     if (!this.isOpen) return
 
@@ -189,8 +200,9 @@ export default class extends Controller {
     })
   }
 
-  // Only a dialog panel keeps Tab inside. A role=menu closes on Tab even
-  // when the current item, or the next stop, is keep_open.
+  // A role=menu closes on Tab even when the current item, or the next stop,
+  // is keep_open. A dialog stays open on a keep-open control, or when the
+  // next stop is still in the panel. No next stop closes it.
   tabKeepsMenuOpen(event) {
     if (this.isActionMenu()) return false
 
@@ -306,6 +318,14 @@ export default class extends Controller {
   }
 
   focusFirstItem() {
+    if (!this.isActionMenu()) {
+      const field = this.getTabStops().find((item) => this.isFormField(item))
+      if (field) {
+        field.focus()
+        return
+      }
+    }
+
     const items = this.getFocusableItems()
     if (items.length > 0) {
       items[0].focus()

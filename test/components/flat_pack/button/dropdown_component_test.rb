@@ -407,7 +407,7 @@ module FlatPack
       def test_renders_stimulus_action_on_trigger
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle']"
+        assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey']"
       end
 
       # Max height
@@ -500,7 +500,7 @@ module FlatPack
         assert_includes trigger["class"], "fp-button"
         assert_includes trigger["class"], "fp-button-dropdown__trigger"
         assert_equal "default", trigger["data-fp-style"]
-        assert_equal "click->flat-pack--button-dropdown#toggle", trigger["data-action"]
+        assert_equal "click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey", trigger["data-action"]
         assert_equal "trigger", trigger["data-flat-pack--button-dropdown-target"]
         assert_equal "true", trigger["aria-haspopup"]
         assert_equal "false", trigger["aria-expanded"]
@@ -722,6 +722,20 @@ module FlatPack
         refute_includes default_html, "data-flat-pack-dropdown-keep-open"
         refute_includes default_html, "fp-button-dropdown__form"
         assert_selector "a[role='menuitem'][href='/edit']", text: "Edit"
+      end
+
+      def test_default_icon_position_puts_the_icon_before_the_label
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Favorites", icon: "heart", href: "/favorites")
+        end
+
+        link = page.find("a[role='menuitem'][href='/favorites']")
+        children = link.native.element_children
+        assert_equal "svg", children[0].name
+        assert_equal "heart", children[0]["data-flat-pack--icon-name-value"]
+        refute_includes children[0]["class"].to_s, "ms-auto"
+        assert_equal "span", children[1].name
+        assert_equal "Favorites", children[1].text
       end
 
       def test_item_icon_position_end_puts_the_icon_last
