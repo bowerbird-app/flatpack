@@ -147,6 +147,28 @@ module FlatPack
         assert_selector "[data-flat-pack--chart-height-value='280']"
       end
 
+      def test_omits_integer_ticks_data_attribute_by_default
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        render_inline(Component.new(series: series))
+
+        refute_selector "[data-flat-pack--chart-integer-ticks-value]"
+      end
+
+      def test_renders_integer_ticks_data_attribute_when_enabled
+        series = [{name: "Jobs", data: [0, 1, 2]}]
+        render_inline(Component.new(series: series, integer_ticks: true))
+
+        assert_selector "[data-flat-pack--chart-integer-ticks-value='true']"
+      end
+
+      def test_raises_error_for_invalid_integer_ticks
+        series = [{name: "Sales", data: [10, 20, 30]}]
+        error = assert_raises(ArgumentError) do
+          Component.new(series: series, integer_ticks: "yes")
+        end
+        assert_match(/integer_ticks must be true or false/, error.message)
+      end
+
       def test_renders_chart_with_custom_options
         series = [{name: "Sales", data: [10, 20, 30]}]
         options = {chart: {toolbar: {show: true}}}

@@ -67,3 +67,38 @@
     CODE
   ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Integer ticks", anchor_link: true, subtitle: "Whole-number axis labels for small counts.") %>
+  <p class="text-(--surface-muted-content-color) mb-6">
+    Pass <code>integer_ticks: true</code> so numeric axes show <code>0</code>, <code>1</code>, <code>2</code> instead of <code>0.0</code> or <code>1.5</code>. Category labels stay as you set them.
+  </p>
+  <%= render FlatPack::Chart::Component.new(
+    type: :column,
+    integer_ticks: true,
+    series: [{
+      name: "Jobs",
+      data: [0, 1, 2, 1, 3]
+    }],
+    options: { xaxis: { categories: ["Mon", "Tue", "Wed", "Thu", "Fri"] } },
+    title: "Jobs per day",
+    height: 280
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Chart::Component.new(
+        type: :column,
+        integer_ticks: true,
+        series: [{
+          name: "Jobs",
+          data: [0, 1, 2, 1, 3]
+        }],
+        options: { xaxis: { categories: ["Mon", "Tue", "Wed", "Thu", "Fri"] } },
+        title: "Jobs per day"
+      ) %&gt;
+    CODE
+  ) %>
+</section>

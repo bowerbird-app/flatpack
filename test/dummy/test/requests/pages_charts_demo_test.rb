@@ -3,6 +3,16 @@
 require "test_helper"
 
 class PagesChartsDemoTest < ActionDispatch::IntegrationTest
+  test "charts overview page renders integer ticks example" do
+    get demo_charts_path
+
+    assert_response :success
+    assert_includes response.body, "Integer ticks"
+    assert_includes response.body, "Jobs per day"
+    assert_includes response.body, "data-flat-pack--chart-integer-ticks-value=\"true\""
+    assert_includes response.body, "integer_ticks: true"
+  end
+
   test "charts composition page renders mini chart table row example" do
     get demo_charts_composition_path
 

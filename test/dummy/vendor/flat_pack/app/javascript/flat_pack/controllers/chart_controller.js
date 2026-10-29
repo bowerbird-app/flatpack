@@ -9,7 +9,8 @@ export default class extends Controller {
     series: Array,
     type: { type: String, default: "line" },
     options: { type: Object, default: {} },
-    height: { type: Number, default: 280 }
+    height: { type: Number, default: 280 },
+    integerTicks: { type: Boolean, default: false }
   }
 
   async connect() {
@@ -77,7 +78,7 @@ export default class extends Controller {
 
   renderChart(ApexCharts) {
     const chartOptions = this.optionsValue.chart || {}
-    const options = {
+    let options = {
       ...this.optionsValue,
       series: this.seriesValue,
       chart: {
@@ -87,9 +88,63 @@ export default class extends Controller {
       }
     }
 
+    if (this.integerTicksValue) {
+      options = this.withIntegerTicks(options)
+    }
+
     // Create and render chart
     this.chart = new ApexCharts(this.element, options)
     this.chart.render()
+  }
+
+  withIntegerTicks(options) {
+    return {
+      ...options,
+      yaxis: this.integerAxis(options.yaxis),
+      xaxis: this.integerAxis(options.xaxis, { numericOnly: true })
+    }
+  }
+
+  integerAxis(axis, { numericOnly = false } = {}) {
+    if (Array.isArray(axis)) {
+      return axis.map((item) => this.integerAxis(item, { numericOnly }))
+    }
+
+    const current = axis && typeof axis === "object" ? axis : {}
+    if (numericOnly && current.type && current.type !== "numeric") {
+      return current
+    }
+    if (numericOnly && Array.isArray(current.categories) && current.categories.length > 0) {
+      return current
+    }
+
+    const labels = { ...(current.labels || {}) }
+    const existingFormatter = labels.formatter
+    labels.formatter = (val, opts) => {
+      const integerVal = this.toIntegerTick(val)
+      if (typeof existingFormatter === "function") {
+        return existingFormatter(integerVal, opts)
+      }
+      return String(integerVal)
+    }
+
+    const next = {
+      ...current,
+      decimalsInFloat: current.decimalsInFloat ?? 0,
+      labels
+    }
+
+    if (current.stepSize == null) {
+      next.stepSize = 1
+    }
+
+    return next
+  }
+
+  toIntegerTick(val) {
+    const number = typeof val === "string" ? Number(val) : val
+    if (typeof number !== "number" || !Number.isFinite(number)) return val
+    return Math.round(number)
   }
 
   renderGeoChart(google) {
