@@ -75,7 +75,7 @@
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Item span", anchor_link: true, subtitle: "One cell can cover more than one column.") %>
   <p class="text-[var(--surface-muted-content-color)] mb-4">
-    Pass <code>span:</code> on <code>with_item</code>. A number applies from the <code>sm</code> breakpoint up, not on phones. Pass <code>base:</code> to span on a phone. A hash follows the same breakpoints as Masonry columns.
+    Pass <code>span:</code> on <code>with_item</code>. A number starts at the first breakpoint where this grid has that many columns. On <code>cols: 4</code> that is <code>md</code> for two columns. Pass <code>base:</code> to span on a phone. A hash is used as written.
   </p>
   <%= render FlatPack::Grid::Component.new(cols: 4) do |grid| %>
     <% grid.with_item(span: {base: 1, md: 2, lg: 2}) do %>
@@ -109,7 +109,7 @@
         <% card.body do %>
           <h3 class="font-semibold mb-2">Always two</h3>
           <p class="text-sm text-[var(--surface-muted-content-color)]">
-            <code>span: 2</code> from <code>sm</code> up. Pass <code>base:</code> to span on a phone.
+            <code>span: 2</code> from <code>md</code> up on this four-column grid. Pass <code>base:</code> to span on a phone.
           </p>
         <% end %>
       <% end %>

@@ -23,7 +23,7 @@ Use Grid for card collections, dashboards, and responsive sections that need pre
 
 | name | type | default | required | description |
 |------|------|---------|----------|-------------|
-| `span` | Integer, `:full`, or Hash | omit | No | How many columns this cell covers. An integer `1`–`12` applies from `sm` up (`sm:col-span-2` and the wider prefixes). It does not set `base`. Pass `base:` to span on a phone. `:full` is `col-span-full`, including at `base`. A hash accepts `base`, `sm`, `md`, `lg`, `xl`. Omit `span:` and the cell is one track wide. A host `col-span-*` class on the item wins over `span:`. |
+| `span` | Integer, `:full`, or Hash | omit | No | How many columns this cell covers. A bare integer `1`–`12` starts at the first breakpoint where the grid preset has at least that many columns. Later breakpoints with the same count are omitted. A hash, including `base:`, is emitted as written. `:full` is `col-span-full` at `base`. Omit `span:` and the cell is one track wide. A host `col-span-*` class on the item wins over `span:`. |
 
 ## Slots
 - `with_item` — optional. The slot wrapper is the grid cell and has the class `fp-grid__item`. Pass `span:` to cover more than one column.
@@ -38,11 +38,15 @@ Default block content is also accepted: each direct child is a grid item and is 
 | `cols: 4` | `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`. One column below `md`. |
 | `gap: :sm/:md/:lg` | Applies `gap-2`, `gap-4`, or `gap-6`. |
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
-| `span: 2` | `sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2`. No base class. |
-| `span: {base: 2}` | `col-span-2` on phones as well. |
-| `span: {base: 1, md: 2, lg: 8}` | Item classes `col-span-1 md:col-span-2 lg:col-span-8`. |
+| `span: 2` on `cols: :auto` | `sm:col-span-2`. `:auto` is two columns from `sm`. |
+| `span: 2` on `cols: 2`, `3`, or `4` | `md:col-span-2`. Those presets are one column until `md`. |
+| `span: 3` on `cols: 2` | `md:col-span-2`. The preset never has three columns, so the span clamps to 2 and starts at `md`. |
+| `span: {base: 2}` | `col-span-2` only. A hash is not rewritten. |
+| `span: {base: 1, md: 2, lg: 8}` | `col-span-1 md:col-span-2 lg:col-span-8`. |
 
-A span wider than the explicit columns at that breakpoint adds an implicit track sized `auto` (the cell's minimum content, not `1fr`). Later cells flow into that track, so the columns are unequal. `span: :full` is `grid-column: 1 / -1`. Those lines count only the explicit tracks, so the full cell does not cover the implicit one. To span 2 on a phone, pass `base: 2`, and only when the preset already has two base columns (`cols: 6` and `cols: 12` are `grid-cols-2` at base). A non-integer such as `2.5` raises `ArgumentError`.
+`with_item` passes the column preset into the item. A hand-built `FlatPack::Grid::Item` does not see that preset, so a bare integer there starts at `sm` (`sm:col-span-2` only).
+
+A span wider than the explicit columns at that breakpoint adds an implicit track sized `auto` (the cell's minimum content, not `1fr`). Later cells flow into that track, so the columns are unequal. `span: :full` is `grid-column: 1 / -1`. Those lines count only the explicit tracks, so the full cell does not cover the implicit one. Pass `base:` when a cell must span on a phone, and only when the preset already has that many base columns (`cols: 6` and `cols: 12` are `grid-cols-2` at base). A non-integer such as `2.5` raises `ArgumentError`.
 
 ## Example
 

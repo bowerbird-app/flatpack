@@ -149,17 +149,29 @@ module FlatPack
         assert_includes page.find("div.fp-grid__item")[:class].split, "col-span-full"
       end
 
-      def test_item_span_integer_starts_at_sm
-        render_inline(Component.new(cols: 4)) do |grid|
-          grid.with_item(span: 2) { "Wide" }
+      def test_bare_integer_span_starts_where_the_preset_has_enough_columns
+        expectations = {
+          :auto => "fp-grid__item sm:col-span-2",
+          2 => "fp-grid__item md:col-span-2",
+          3 => "fp-grid__item md:col-span-2",
+          4 => "fp-grid__item md:col-span-2"
+        }
+
+        expectations.each do |cols, expected|
+          render_inline(Component.new(cols: cols)) do |grid|
+            grid.with_item(span: 2) { "Wide" }
+          end
+
+          assert_equal expected, page.find("div.fp-grid__item")[:class], "cols: #{cols.inspect}"
+        end
+      end
+
+      def test_bare_integer_span_clamps_when_the_preset_never_has_enough_columns
+        render_inline(Component.new(cols: 2)) do |grid|
+          grid.with_item(span: 3) { "Clamped" }
         end
 
-        classes = page.find("div.fp-grid__item")[:class].split
-        assert_includes classes, "sm:col-span-2"
-        assert_includes classes, "md:col-span-2"
-        assert_includes classes, "lg:col-span-2"
-        assert_includes classes, "xl:col-span-2"
-        refute_includes classes, "col-span-2"
+        assert_equal "fp-grid__item md:col-span-2", page.find("div.fp-grid__item")[:class]
       end
 
       def test_item_span_base_is_explicit
@@ -173,12 +185,7 @@ module FlatPack
       def test_host_col_span_wins_over_span
         render_inline(Item.new(span: {md: 2, lg: 8}, class: "md:col-span-4 custom")) { "Host" }
 
-        classes = page.find("div.fp-grid__item")[:class].split
-        assert_includes classes, "md:col-span-4"
-        assert_includes classes, "lg:col-span-8"
-        assert_includes classes, "custom"
-        assert_includes classes, "fp-grid__item"
-        refute_includes classes, "md:col-span-2"
+        assert_equal "fp-grid__item lg:col-span-8 md:col-span-4 custom", page.find("div.fp-grid__item")[:class]
       end
 
       def test_item_span_hash_maps_breakpoints
@@ -219,9 +226,7 @@ module FlatPack
           view.render(Item.new(span: 3)) { "Nested" }
         end
 
-        classes = page.find("div.fp-grid__item")[:class].split
-        assert_includes classes, "sm:col-span-3"
-        refute_includes classes, "col-span-3"
+        assert_equal "fp-grid__item sm:col-span-3", page.find("div.fp-grid__item")[:class]
         assert_text "Nested"
       end
 

@@ -31,7 +31,9 @@ module FlatPack
         stretch: "items-stretch"
       }.freeze
 
-      renders_many :items, "FlatPack::Grid::Item"
+      renders_many :items, lambda { |**system_arguments|
+        FlatPack::Grid::Item.new(columns: COLUMN_PRESETS.fetch(@cols), **system_arguments)
+      }
 
       def initialize(
         cols: :auto,

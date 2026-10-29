@@ -18,8 +18,9 @@ module FlatPack
       # "fp-grid__item"
       SPAN_COUNTS = (1..12)
 
-      def initialize(span: nil, **system_arguments)
+      def initialize(span: nil, columns: nil, **system_arguments)
         super(**system_arguments)
+        @columns = columns
         @span = normalize_span(span)
         validate_span!
       end
@@ -55,9 +56,37 @@ module FlatPack
         count = normalized[:base]
         return {base: count} if count == :full || !count.is_a?(Integer)
 
-        # A bare integer does not set base. An unprefixed col-span wider than
-        # the one-column phone template adds an implicit auto track.
-        {sm: count, md: count, lg: count, xl: count}
+        bare_integer_span(count)
+      end
+
+      # A bare integer starts at the first breakpoint where the grid has at
+      # least that many columns. Later breakpoints keep that span through the
+      # min-width cascade, so they are not repeated. When the preset never
+      # reaches the count, the span is clamped to the widest column count and
+      # starts where that width first appears. Without a preset (a hand-built
+      # Item, not with_item), the span starts at sm.
+      def bare_integer_span(count)
+        counts = columns_by_breakpoint
+        return {sm: count} if counts.nil?
+
+        start = FlatPack::Shared::Breakpoints::NAMES.find { |name| counts[name].to_i >= count }
+        if start
+          {start => count}
+        else
+          widest = counts.values.compact.max
+          start = FlatPack::Shared::Breakpoints::NAMES.find { |name| counts[name] == widest }
+          {start => widest}
+        end
+      end
+
+      def columns_by_breakpoint
+        return if @columns.nil?
+
+        count = nil
+        FlatPack::Shared::Breakpoints::NAMES.to_h do |name|
+          count = @columns[name] if @columns.key?(name)
+          [name, count]
+        end
       end
 
       def normalize_span_count(count)
