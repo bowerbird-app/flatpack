@@ -12,6 +12,29 @@ class PagesTablesReorderTest < ActionDispatch::IntegrationTest
     ]
   end
 
+  test "reorders when item ids are strings" do
+    version = DemoTableRow.where(list_key: @list_key).maximum(:updated_at).to_f.to_s
+
+    patch demo_tables_reorder_path, params: {
+      reorder: {
+        resource: "demo_table_rows",
+        strategy: "dense_integer",
+        scope: {list_key: @list_key},
+        version: version,
+        items: [
+          {id: @rows[2].id.to_s, position: 1},
+          {id: @rows[0].id.to_s, position: 2},
+          {id: @rows[1].id.to_s, position: 3}
+        ]
+      }
+    }, as: :json
+
+    assert_response :success
+
+    ordered = DemoTableRow.where(list_key: @list_key).order(:position).pluck(:id)
+    assert_equal [@rows[2].id, @rows[0].id, @rows[1].id], ordered
+  end
+
   test "reorders rows via generic contract" do
     version = DemoTableRow.where(list_key: @list_key).maximum(:updated_at).to_f.to_s
 

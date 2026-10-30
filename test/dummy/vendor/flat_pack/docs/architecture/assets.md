@@ -109,6 +109,8 @@ importmap-rails hosts load these pins from the engine. `initializer "flat_pack.i
 
 `flat_pack/remote_query` is `createRemoteQuery`: a debounce timer, an abort of the previous request, and a JSON `GET`. Select, Picker, Search, and Combobox import it. Each still owns its wait, extra query params, and response shape. A missing pin stops those four controllers.
 
+`flat_pack/reorder_items` is `buildItems`. Table sortable and grid sortable import it to build `{ id, position }` rows. `id` is the string from `data-id`. A missing pin stops those two controllers.
+
 FlatPack registers its JavaScript modules:
 
 ```ruby
@@ -130,6 +132,7 @@ pin "flat_pack/focus_trap", to: "flat_pack/focus_trap.js", preload: false
 pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
 pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
+pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
 
 # Heroicons icon banks — served as a local JS module, no gem required
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false

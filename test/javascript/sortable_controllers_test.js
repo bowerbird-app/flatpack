@@ -14,9 +14,25 @@ class FakeCustomEvent {
   }
 }
 
-function loadController(fileName, className) {
-  const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', fileName)
+const controllerContexts = new Map()
+
+function loadBuildItems() {
+  const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'reorder_items.js')
   const source = fs.readFileSync(filePath, 'utf8')
+    .replace('export function buildItems', 'function buildItems')
+    + '\nmodule.exports = { buildItems }\n'
+  const context = { module: { exports: {} }, exports: {} }
+  vm.runInNewContext(source, context, { filename: filePath })
+  return context.module.exports.buildItems
+}
+
+function loadController(fileName, className) {
+  const helperPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'reorder_items.js')
+  const helperSource = fs.readFileSync(helperPath, 'utf8')
+    .replace('export function buildItems', 'function buildItems')
+  const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', fileName)
+  const source = helperSource + '\n' + fs.readFileSync(filePath, 'utf8')
+    .replace('import { buildItems } from "flat_pack/reorder_items"\n', '')
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace('export default class extends Controller', `class ${className} extends Controller`)
     + `\nmodule.exports = ${className}\n`
@@ -25,15 +41,23 @@ function loadController(fileName, className) {
     module: { exports: {} },
     exports: {},
     CustomEvent: FakeCustomEvent,
+    JSON,
     document: {
       querySelector(selector) {
         if (selector === "meta[name='csrf-token']") return { content: 'csrf-token' }
         return null
       }
+    },
+    fetch(url, options) {
+      if (typeof context.fetchImpl !== 'function') {
+        throw new Error('fetch was not stubbed')
+      }
+      return context.fetchImpl(url, options)
     }
   }
 
   vm.runInNewContext(source, context, { filename: filePath })
+  controllerContexts.set(className, context)
   return context.module.exports
 }
 
@@ -95,6 +119,15 @@ function linkParent(elements) {
       const index = reference ? this.children.indexOf(reference) : this.children.length
       this.children.splice(index, 0, node)
       node.parentNode = this
+
+      // Stimulus target lists follow DOM order. Keep the source array in step
+      // so currentOrder() sees the drop the way a real target list would.
+      const sourceFrom = elements.indexOf(node)
+      if (sourceFrom !== -1) {
+        elements.splice(sourceFrom, 1)
+        const sourceIndex = reference ? elements.indexOf(reference) : elements.length
+        elements.splice(sourceIndex, 0, node)
+      }
     }
   }
   elements.forEach((element) => { element.parentNode = parent })
@@ -139,6 +172,34 @@ function dragStartEvent(element) {
 
 const TableSortableController = loadController('table_sortable_controller.js', 'TableSortableController')
 const GridSortableController = loadController('grid_sortable_controller.js', 'GridSortableController')
+
+test('buildItems keeps string ids, drops missing ids, and numbers positions', () => {
+  const buildItems = loadBuildItems()
+  const uuid = '6f1e1a4a-1c2b-4d3e-8f90-111111111111'
+  const direct = buildItems([uuid, '7'])
+
+  assert.deepEqual(JSON.parse(JSON.stringify(direct)), [
+    { id: uuid, position: 1 },
+    { id: '7', position: 2 }
+  ])
+  assert.deepEqual(direct.map((item) => typeof item.id), ['string', 'string'])
+  assert.deepEqual(direct.map((item) => typeof item.position), ['number', 'number'])
+
+  const { controller } = connectSortable(
+    TableSortableController,
+    'rowTargets',
+    'rowTargetConnected',
+    [uuid, '', '7'],
+    'TR'
+  )
+  const items = buildItems(controller.currentOrder())
+
+  assert.deepEqual(JSON.parse(JSON.stringify(items)), [
+    { id: uuid, position: 1 },
+    { id: '7', position: 2 }
+  ])
+  assert.equal(items.some((item) => item.id == null || item.id === ''), false)
+})
 
 test('appended table rows are draggable', () => {
   const { controller, targets } = connectSortable(TableSortableController, 'rowTargets', 'rowTargetConnected', ['1'], 'TR')
@@ -232,6 +293,123 @@ test('removed grid items lose drag listeners', () => {
     assert.equal(removed.listenerCount(eventName), 0, eventName)
   }
   assert.equal(removed.getAttribute('draggable'), undefined)
+})
+
+function recordEvents(controller) {
+  const events = []
+  controller.element = {
+    dispatchEvent(event) { events.push(event) }
+  }
+  return events
+}
+
+function enableReorder(controller) {
+  controller.reorderUrlValue = '/demo/tables/reorder'
+  controller.hasReorderUrlValue = true
+  controller.resourceValue = 'demo_table_rows'
+  controller.strategyValue = 'dense_integer'
+  controller.scopeValue = { list_key: 'users' }
+  controller.versionValue = '1739990000.12'
+}
+
+function captureFetches(className) {
+  const calls = []
+  controllerContexts.get(className).fetchImpl = (url, options) => {
+    calls.push({ url, body: JSON.parse(options.body) })
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ ok: true, version: '2' })
+    }
+  }
+  return calls
+}
+
+async function dropOnto(dragged, target) {
+  dragged.invoke('dragstart', dragStartEvent(dragged))
+  target.invoke('dragenter', { currentTarget: target })
+  target.invoke('drop', {
+    currentTarget: target,
+    stopPropagation() {}
+  })
+  await new Promise((resolve) => setImmediate(resolve))
+}
+
+async function assertReorderKeepsIds(Controller, className, targetKey, connectedName, tagName, ids, eventName) {
+  const { controller, targets } = connectSortable(Controller, targetKey, connectedName, ids, tagName)
+  const events = recordEvents(controller)
+  controller.dispatch = () => {}
+  enableReorder(controller)
+  const calls = captureFetches(className)
+
+  await dropOnto(targets[0], targets[1])
+
+  const expectedIds = [ids[1], ids[0]]
+  const expectedItems = expectedIds.map((id, index) => ({ id, position: index + 1 }))
+
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].url, '/demo/tables/reorder')
+  assert.deepEqual(calls[0].body.reorder.items, expectedItems)
+  assert.deepEqual(calls[0].body.reorder.items.map((item) => typeof item.id), ['string', 'string'])
+  assert.equal(calls[0].body.reorder.resource, 'demo_table_rows')
+  assert.equal(calls[0].body.reorder.strategy, 'dense_integer')
+  assert.deepEqual(calls[0].body.reorder.scope, { list_key: 'users' })
+  assert.equal(calls[0].body.reorder.version, '1739990000.12')
+  assert.equal(events.length, 1)
+  assert.equal(events[0].type, eventName)
+  assert.deepEqual(events[0].detail.orderedIds, expectedIds)
+  assert.deepEqual(JSON.parse(JSON.stringify(events[0].detail.items)), expectedItems)
+  assert.equal(JSON.stringify(calls[0].body).includes('NaN'), false)
+}
+
+test('table reorder sends uuid ids intact and keeps integer ids as strings', async () => {
+  const uuids = [
+    '6f1e1a4a-1c2b-4d3e-8f90-111111111111',
+    '6f1e1a4a-1c2b-4d3e-8f90-222222222222'
+  ]
+  await assertReorderKeepsIds(
+    TableSortableController,
+    'TableSortableController',
+    'rowTargets',
+    'rowTargetConnected',
+    'TR',
+    uuids,
+    'table:reordered'
+  )
+  await assertReorderKeepsIds(
+    TableSortableController,
+    'TableSortableController',
+    'rowTargets',
+    'rowTargetConnected',
+    'TR',
+    ['7', '4'],
+    'table:reordered'
+  )
+})
+
+test('grid reorder sends uuid ids intact and keeps integer ids as strings', async () => {
+  const uuids = [
+    '6f1e1a4a-1c2b-4d3e-8f90-333333333333',
+    '6f1e1a4a-1c2b-4d3e-8f90-444444444444'
+  ]
+  await assertReorderKeepsIds(
+    GridSortableController,
+    'GridSortableController',
+    'itemTargets',
+    'itemTargetConnected',
+    'DIV',
+    uuids,
+    'grid:reordered'
+  )
+  await assertReorderKeepsIds(
+    GridSortableController,
+    'GridSortableController',
+    'itemTargets',
+    'itemTargetConnected',
+    'DIV',
+    ['7', '4'],
+    'grid:reordered'
+  )
 })
 
 test('reconnecting a grid does not duplicate drag listeners', () => {

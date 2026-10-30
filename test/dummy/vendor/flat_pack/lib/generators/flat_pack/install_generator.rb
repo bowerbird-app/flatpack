@@ -60,6 +60,7 @@ module FlatPack
             content = configure_click_outside_importmap_pin(importmap_path, content)
             content = configure_positioning_importmap_pin(importmap_path, content)
             content = configure_remote_query_importmap_pin(importmap_path, content)
+            content = configure_reorder_items_importmap_pin(importmap_path, content)
             configure_tiptap_importmap_pins(importmap_path, content)
             return
           end
@@ -76,7 +77,8 @@ module FlatPack
             "pin \"flat_pack/focus_trap\", to: \"flat_pack/focus_trap.js\", preload: false\n" \
             "pin \"flat_pack/click_outside\", to: \"flat_pack/click_outside.js\", preload: false\n" \
             "pin \"flat_pack/positioning\", to: \"flat_pack/positioning.js\", preload: false\n" \
-            "pin \"flat_pack/remote_query\", to: \"flat_pack/remote_query.js\", preload: false\n"
+            "pin \"flat_pack/remote_query\", to: \"flat_pack/remote_query.js\", preload: false\n" \
+            "pin \"flat_pack/reorder_items\", to: \"flat_pack/reorder_items.js\", preload: false\n"
 
           updated = content + pin_config
           updated = add_tiptap_cdn_pins(updated)
@@ -92,6 +94,7 @@ module FlatPack
           say "  - Added pin for flat_pack/click_outside", :green
           say "  - Added pin for flat_pack/positioning", :green
           say "  - Added pin for flat_pack/remote_query", :green
+          say "  - Added pin for flat_pack/reorder_items", :green
           say "  - Added TipTap CDN pins for rich text editor support", :green
         else
           say "\n⊙ Importmap configuration file not found", :yellow
@@ -105,6 +108,7 @@ module FlatPack
           say "  pin \"flat_pack/click_outside\", to: \"flat_pack/click_outside.js\", preload: false", :cyan
           say "  pin \"flat_pack/positioning\", to: \"flat_pack/positioning.js\", preload: false", :cyan
           say "  pin \"flat_pack/remote_query\", to: \"flat_pack/remote_query.js\", preload: false", :cyan
+          say "  pin \"flat_pack/reorder_items\", to: \"flat_pack/reorder_items.js\", preload: false", :cyan
           say "  # Plus TipTap CDN pins — see docs/installation.md for the full list", :cyan
         end
       end
@@ -468,6 +472,15 @@ module FlatPack
         content += "\npin \"flat_pack/remote_query\", to: \"flat_pack/remote_query.js\", preload: false\n"
         File.write(importmap_path, content)
         say "\n✓ Added remote query module pin to importmap", :green
+        content
+      end
+
+      def configure_reorder_items_importmap_pin(importmap_path, content)
+        return content if content.include?("flat_pack/reorder_items")
+
+        content += "\npin \"flat_pack/reorder_items\", to: \"flat_pack/reorder_items.js\", preload: false\n"
+        File.write(importmap_path, content)
+        say "\n✓ Added reorder items module pin to importmap", :green
         content
       end
 

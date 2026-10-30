@@ -83,12 +83,14 @@ Drag reorder payload contract sent by `flat-pack--table-sortable`:
     "scope": { "list_key": "users" },
     "version": "1739990000.12",
     "items": [
-      { "id": 7, "position": 1 },
-      { "id": 4, "position": 2 }
+      { "id": "7", "position": 1 },
+      { "id": "4", "position": 2 }
     ]
   }
 }
 ```
+
+`items[].id` is the row id string from `data-id` (or the row element id). It is not coerced with `Number()`. An integer primary key is sent as `"7"`, not `7`. A UUID is sent unchanged. `position` is still a 1-based number. Hosts that cast the id with `Integer()` still accept a numeric string.
 
 ## Accessibility
 Sortable headers are rendered as links, so they are keyboard-focusable and activate with standard link keyboard behavior. Keep header text descriptive for assistive technologies.

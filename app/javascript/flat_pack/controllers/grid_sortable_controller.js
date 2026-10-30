@@ -1,5 +1,6 @@
 // FlatPack Grid Sortable Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { buildItems } from "flat_pack/reorder_items"
 
 export default class extends Controller {
   static targets = ["item"]
@@ -154,10 +155,7 @@ export default class extends Controller {
     const orderedIds = this.currentOrder()
     if (orderedIds.length === 0) return
 
-    const orderedItems = orderedIds.map((id, index) => ({
-      id: Number(id),
-      position: index + 1
-    }))
+    const orderedItems = buildItems(orderedIds)
 
     this.element.dispatchEvent(new CustomEvent("grid:reordered", {
       detail: { orderedIds: orderedIds, items: orderedItems },
@@ -181,10 +179,7 @@ export default class extends Controller {
 
     try {
       const order = this.currentOrder()
-      const items = order.map((id, index) => ({
-        id: Number(id),
-        position: index + 1
-      }))
+      const items = buildItems(order)
 
       const response = await fetch(this.reorderUrlValue, {
         method: "PATCH",
