@@ -74,7 +74,7 @@ One cell spanning two columns, then two ordinary cells:
 <% end %>
 ```
 
-Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`. An item added after the controller connects is draggable too.
+Optional drag-reorder pattern in demos can be composed with Stimulus `flat-pack--grid-sortable` by wrapping grid items with `data-flat-pack--grid-sortable-target="item"` and `data-id`. An item added after the controller connects is draggable too. The PATCH body matches the table reorder contract. `items[].id` is the `data-id` string as rendered (`"7"` for an integer primary key, the UUID text for a UUID). `position` stays a number.
 
 ## Accessibility
 Grid is structural layout only. Accessibility is determined by the semantics of content rendered inside each grid item.

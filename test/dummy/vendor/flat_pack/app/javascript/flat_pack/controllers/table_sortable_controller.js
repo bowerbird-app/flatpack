@@ -191,7 +191,7 @@ export default class extends Controller {
     if (orderedIds.length === 0) return
 
     const orderedItems = orderedIds.map((id, index) => ({
-      id: Number(id),
+      id,
       position: index + 1
     }))
 
@@ -223,7 +223,7 @@ export default class extends Controller {
     try {
       const order = this.currentOrder()
       const items = order.map((id, index) => ({
-        id: Number(id),
+        id,
         position: index + 1
       }))
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Table and grid drag reorder keep each row id as the string rendered in `data-id`. `Number()` no longer turns a UUID primary key into `NaN`. An integer primary key is sent as that same string (`"7"`, not `7`). `position` stays a number. The rest of the reorder payload is unchanged.
+
+### Upgrade notes
+- Hosts that read `items[].id` as a JSON number should read the string. `Integer("7")` still accepts an integer primary key. A UUID stays a UUID. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+
 ## [0.1.331] - 2026-10-30
 
 ### Added
