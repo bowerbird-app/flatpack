@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.332] - 2026-10-30
+
 ### Changed
 - **Breaking.** `items[].id` in the table and grid reorder payload, and in the `table:reordered` and `grid:reordered` event `detail.items`, is now a string. Compare ids as strings, or cast them with `to_i` (`==`, `include?`, and integer-keyed hash lookups).
 
 ### Upgrade notes
 - Hosts that compared `items[].id` with `==`, `include?`, or an integer-keyed hash should compare strings or cast with `to_i`. `Integer("7")` still accepts an integer primary key. A UUID stays a UUID. Table and grid sortable import `flat_pack/reorder_items`. Hosts that keep their own importmap pin list need `pin "flat_pack/reorder_items"`. importmap-rails hosts that load the engine importmap already receive it. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator unless that pin is missing.
+- Redeploy so `meta.gem_version` shows `0.1.332`.
 
 ## [0.1.331] - 2026-10-30
 
