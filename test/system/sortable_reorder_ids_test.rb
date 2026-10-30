@@ -56,16 +56,15 @@ class SortableReorderIdsTest < ActionDispatch::SystemTestCase
   end
 
   def capture_reorder_params
-    captured = []
+    queue = Thread::Queue.new
     subscriber = ActiveSupport::Notifications.subscribe("process_action.action_controller") do |*args|
       payload = args.last
-      captured << payload[:params] if payload[:action] == "tables_reorder"
+      queue << payload[:params] if payload[:action] == "tables_reorder"
     end
 
     yield
 
-    Timeout.timeout(5) { sleep 0.05 until captured.any? }
-    captured.last
+    queue.pop(timeout: 5) || flunk("reorder request was not received")
   ensure
     ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
   end

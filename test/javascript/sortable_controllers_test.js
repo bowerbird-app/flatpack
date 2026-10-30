@@ -16,6 +16,16 @@ class FakeCustomEvent {
 
 const controllerContexts = new Map()
 
+function loadBuildItems() {
+  const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'reorder_items.js')
+  const source = fs.readFileSync(filePath, 'utf8')
+    .replace('export function buildItems', 'function buildItems')
+    + '\nmodule.exports = { buildItems }\n'
+  const context = { module: { exports: {} }, exports: {} }
+  vm.runInNewContext(source, context, { filename: filePath })
+  return context.module.exports.buildItems
+}
+
 function loadController(fileName, className) {
   const helperPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'reorder_items.js')
   const helperSource = fs.readFileSync(helperPath, 'utf8')
@@ -162,6 +172,34 @@ function dragStartEvent(element) {
 
 const TableSortableController = loadController('table_sortable_controller.js', 'TableSortableController')
 const GridSortableController = loadController('grid_sortable_controller.js', 'GridSortableController')
+
+test('buildItems keeps string ids, drops missing ids, and numbers positions', () => {
+  const buildItems = loadBuildItems()
+  const uuid = '6f1e1a4a-1c2b-4d3e-8f90-111111111111'
+  const direct = buildItems([uuid, '7'])
+
+  assert.deepEqual(JSON.parse(JSON.stringify(direct)), [
+    { id: uuid, position: 1 },
+    { id: '7', position: 2 }
+  ])
+  assert.deepEqual(direct.map((item) => typeof item.id), ['string', 'string'])
+  assert.deepEqual(direct.map((item) => typeof item.position), ['number', 'number'])
+
+  const { controller } = connectSortable(
+    TableSortableController,
+    'rowTargets',
+    'rowTargetConnected',
+    [uuid, '', '7'],
+    'TR'
+  )
+  const items = buildItems(controller.currentOrder())
+
+  assert.deepEqual(JSON.parse(JSON.stringify(items)), [
+    { id: uuid, position: 1 },
+    { id: '7', position: 2 }
+  ])
+  assert.equal(items.some((item) => item.id == null || item.id === ''), false)
+})
 
 test('appended table rows are draggable', () => {
   const { controller, targets } = connectSortable(TableSortableController, 'rowTargets', 'rowTargetConnected', ['1'], 'TR')
