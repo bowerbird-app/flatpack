@@ -2,7 +2,10 @@
 import { Controller } from "@hotwired/stimulus"
 import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"
 import { onClickOutside } from "flat_pack/click_outside"
+import { focusableElements } from "flat_pack/focus_trap"
 import { place, readEdgeOffset, watchViewport } from "flat_pack/positioning"
+
+const ITEM_HOOK = '[data-flat-pack-dropdown-item], [role="menuitem"]'
 
 const MENU_GAP = 8
 
@@ -22,6 +25,7 @@ export default class extends Controller {
     this.contextControllerElements = this.collectContextControllerElements()
 
     this.handleEscape = this.handleEscape.bind(this)
+    this.handleFocusOut = this.handleFocusOut.bind(this)
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this)
     this.outsideClick = onClickOutside(document, () => this.close(), {
       capture: true,
@@ -48,6 +52,21 @@ export default class extends Controller {
     } else {
       this.open()
     }
+  }
+
+  // Enter and Space on a button fire a click after the key. preventDefault
+  // on keydown stops that click, so the menu opens once. A repeated key
+  // must not open it again. An open trigger leaves the key alone so the
+  // click can close it.
+  openFromKey(event) {
+    if (event.repeat) {
+      event.preventDefault()
+      return
+    }
+    if (this.isOpen) return
+
+    event.preventDefault()
+    this.open()
   }
 
   open() {
@@ -132,7 +151,24 @@ export default class extends Controller {
     if (event.key === "Escape") {
       event.preventDefault()
       this.close()
-    } else if (event.key === "ArrowDown") {
+      return
+    }
+
+    if (event.key === "Tab") {
+      if (this.tabKeepsMenuOpen(event)) return
+
+      event.preventDefault()
+      this.close()
+      return
+    }
+
+    if (!this.isActionMenu()) return
+
+    if (this.keepsMenuOpen(event.target) && this.isFormField(event.target)) {
+      return
+    }
+
+    if (event.key === "ArrowDown") {
       event.preventDefault()
       this.focusNextItem()
     } else if (event.key === "ArrowUp") {
@@ -144,14 +180,81 @@ export default class extends Controller {
     } else if (event.key === "End") {
       event.preventDefault()
       this.focusLastItem()
-    } else if (event.key === "Tab") {
-      // Allow tab but close menu
-      this.close({ returnFocus: false })
     }
   }
 
+  // Focus leaving the panel closes it. Tab on a role=menu also closes, and
+  // returns focus to the trigger. A dialog stays open while the next stop is
+  // still inside it. Tab past the last stop closes the dialog.
+  handleFocusOut(event) {
+    if (!this.isOpen) return
+
+    const next = event.relatedTarget
+    if (next) {
+      if (this.focusStaysInMenu(next)) return
+
+      this.close({ returnFocus: false })
+      return
+    }
+
+    requestAnimationFrame(() => {
+      if (!this.isOpen) return
+      if (this.focusStaysInMenu(document.activeElement)) return
+
+      this.close({ returnFocus: false })
+    })
+  }
+
+  // A role=menu closes on Tab even when the current item, or the next stop,
+  // is keep_open. A dialog stays open on a keep-open control, or when the
+  // next stop is still in the panel. No next stop closes it.
+  tabKeepsMenuOpen(event) {
+    if (this.isActionMenu()) return false
+
+    if (this.keepsMenuOpen(event.target)) return true
+
+    const next = this.tabStop(event.target, event.shiftKey)
+    if (next && this.keepsMenuOpen(next)) return true
+    if (next && this.menuElement.contains(next)) return true
+
+    return false
+  }
+
+  focusStaysInMenu(node) {
+    if (!node) return false
+    if (node === this.triggerTarget) return true
+    if (typeof this.element?.contains === "function" && this.element.contains(node)) return true
+    if (typeof this.menuElement?.contains === "function" && this.menuElement.contains(node)) return true
+
+    return this.keepsMenuOpen(node)
+  }
+
+  isActionMenu() {
+    return this.menuElement.getAttribute("role") === "menu"
+  }
+
+  tabStop(from, shiftKey) {
+    const stops = this.getTabStops()
+    const index = stops.indexOf(from)
+    if (index === -1) return null
+
+    return stops[shiftKey ? index - 1 : index + 1] || null
+  }
+
+  getTabStops() {
+    return focusableElements(this.menuElement, { modal: true }).filter((item) => {
+      if (typeof item.closest === "function" && item.closest("[hidden]")) return false
+      if (typeof item.getAttribute === "function" && item.getAttribute("tabindex") === "-1") return false
+      if (typeof item.getAttribute === "function" && item.getAttribute("aria-disabled") === "true") return false
+
+      return true
+    })
+  }
+
   handleMenuItemClick(event) {
-    const menuItem = event.target.closest('[role="menuitem"]')
+    if (this.keepsMenuOpen(event.target)) return
+
+    const menuItem = event.target.closest(ITEM_HOOK)
     if (menuItem && this.menuElement.contains(menuItem)) {
       if (menuItem.matches("[disabled], [aria-disabled='true']")) return
 
@@ -171,6 +274,19 @@ export default class extends Controller {
     this.closeAfterAction()
   }
 
+  keepsMenuOpen(node) {
+    if (!node || typeof node.closest !== "function") return false
+    if (!this.menuElement.contains(node)) return false
+
+    return Boolean(node.closest("[data-flat-pack-dropdown-keep-open]"))
+  }
+
+  isFormField(node) {
+    if (!node || !node.tagName) return false
+
+    return /^(INPUT|SELECT|TEXTAREA)$/.test(node.tagName) || node.isContentEditable === true
+  }
+
   closeAfterAction() {
     if (!this.isOpen) return
 
@@ -182,6 +298,7 @@ export default class extends Controller {
   addListeners() {
     this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
+    this.menuElement.addEventListener("focusout", this.handleFocusOut)
     this.viewportWatch.add()
     this.menuElement.addEventListener("click", this.handleMenuItemClick)
   }
@@ -189,6 +306,7 @@ export default class extends Controller {
   removeListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
+    this.menuElement.removeEventListener("focusout", this.handleFocusOut)
     this.viewportWatch?.remove()
     this.menuElement.removeEventListener("click", this.handleMenuItemClick)
   }
@@ -205,6 +323,14 @@ export default class extends Controller {
   }
 
   focusFirstItem() {
+    if (!this.isActionMenu()) {
+      const field = this.getTabStops().find((item) => this.isFormField(item))
+      if (field) {
+        field.focus()
+        return
+      }
+    }
+
     const items = this.getFocusableItems()
     if (items.length > 0) {
       items[0].focus()

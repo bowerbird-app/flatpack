@@ -7,6 +7,8 @@ module FlatPack
         ICON_VARIANTS = IconOptions::VARIANTS
         ICON_STYLES = IconOptions::STYLES
 
+        ICON_POSITIONS = %i[start end].freeze
+
         BADGE_STYLES = {
           default: "border border-[var(--badge-default-border-color)] bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)]",
           primary: "border border-[var(--badge-primary-border-color)] bg-[var(--badge-primary-background-color)] text-[var(--badge-primary-text-color)]",
@@ -27,6 +29,8 @@ module FlatPack
           href: nil,
           disabled: false,
           destructive: false,
+          icon_position: :start,
+          keep_open: false,
           **system_arguments
         )
           super(**system_arguments)
@@ -39,6 +43,8 @@ module FlatPack
           @href = href
           @disabled = disabled
           @destructive = destructive
+          @icon_position = icon_position.to_sym
+          @keep_open = keep_open
 
           # Sanitize URL if provided
           if @href
@@ -47,7 +53,13 @@ module FlatPack
           end
 
           validate_badge_style! if @badge
+          validate_icon_position!
+          validate_keep_open!
+          @plain_actions = false
         end
+
+        # Set by the parent dropdown while it renders a dialog panel.
+        attr_writer :plain_actions
 
         def menu_row
           {
@@ -55,6 +67,7 @@ module FlatPack
             label: @text,
             href: @href,
             icon: @icon,
+            icon_position: @icon_position,
             destructive: @destructive,
             disabled: @disabled
           }
@@ -84,31 +97,45 @@ module FlatPack
 
         def item_content
           content = []
-          if @icon
-            content << render(FlatPack::Shared::IconComponent.new(
-              **IconOptions.component_arguments(
-                name: @icon,
-                size: :sm,
-                icon_variant: @icon_variant,
-                icon_style: @icon_style
-              )
-            ))
-          end
+          content << item_icon if @icon && @icon_position == :start
           content << content_tag(:span, @text, class: "flex-1")
-          if @badge
-            content << content_tag(:span, @badge, class: badge_classes)
-          end
+          content << content_tag(:span, @badge, class: badge_classes) if @badge
+          content << item_icon if @icon && @icon_position == :end
           safe_join(content)
+        end
+
+        def item_icon
+          render(FlatPack::Shared::IconComponent.new(**item_icon_arguments))
         end
 
         def item_attributes
           attrs = {
             class: item_classes,
-            role: "menuitem",
-            tabindex: @disabled ? "-1" : "0"
+            tabindex: @disabled ? "-1" : "0",
+            data: item_data
           }
+          attrs[:role] = "menuitem" unless @plain_actions
           attrs[:disabled] = true if @disabled && !@href
           merge_attributes(**attrs)
+        end
+
+        def item_data
+          data = {flat_pack_dropdown_item: true}
+          data[:flat_pack_dropdown_keep_open] = true if @keep_open
+          data
+        end
+
+        def item_icon_arguments
+          arguments = IconOptions.component_arguments(
+            name: @icon,
+            size: :sm,
+            icon_variant: @icon_variant,
+            icon_style: @icon_style
+          )
+          return arguments unless @icon_position == :end
+
+          # One utility, so a host class on this icon beats a kit rule.
+          arguments.merge(class: [arguments[:class], "ms-auto"].compact.join(" "))
         end
 
         def item_classes
@@ -148,6 +175,18 @@ module FlatPack
           return if BADGE_STYLES.key?(@badge_style)
 
           raise ArgumentError, "Invalid badge_style: #{@badge_style}. Must be one of: #{BADGE_STYLES.keys.join(", ")}"
+        end
+
+        def validate_icon_position!
+          return if ICON_POSITIONS.include?(@icon_position)
+
+          raise ArgumentError, "Invalid icon_position: #{@icon_position.inspect}. Must be :start or :end."
+        end
+
+        def validate_keep_open!
+          return if @keep_open == true || @keep_open == false
+
+          raise ArgumentError, "Invalid keep_open: #{@keep_open.inspect}. Must be true or false."
         end
 
         def validate_url!

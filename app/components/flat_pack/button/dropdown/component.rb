@@ -4,14 +4,17 @@ module FlatPack
   module Button
     module Dropdown
       class Component < FlatPack::BaseComponent
+        renders_one :trigger_label
+
         renders_many :menu, types: {
           item: FlatPack::Button::DropdownItem::Component,
           divider: FlatPack::Button::DropdownDivider::Component,
-          html: ->(body) { body }
+          html: ->(body) { body },
+          form: FlatPack::Button::Dropdown::FormPanel
         }
 
-        undef_method :with_menu_item, :with_menu_divider, :with_menu_html
-        undef_method :with_menu_item_content, :with_menu_divider_content, :with_menu_html_content
+        undef_method :with_menu_item, :with_menu_divider, :with_menu_html, :with_menu_form
+        undef_method :with_menu_item_content, :with_menu_divider_content, :with_menu_html_content, :with_menu_form_content
 
         ICON_VARIANTS = IconOptions::VARIANTS
         ICON_STYLES = IconOptions::STYLES
@@ -39,6 +42,8 @@ module FlatPack
           placement: :bottom_right,
           max_height: "384px",
           trigger_attributes: {},
+          menu_class: nil,
+          menu_attributes: {},
           **system_arguments
         )
           super(**system_arguments)
@@ -56,6 +61,8 @@ module FlatPack
           @placement = placement.to_sym
           @max_height = max_height
           @trigger_attributes = sanitize_args(trigger_attributes)
+          @menu_class = menu_class
+          @host_menu_attributes = sanitize_args(menu_attributes)
 
           validate_style!
           validate_placement!
@@ -78,11 +85,24 @@ module FlatPack
           set_polymorphic_slot(:menu, :html, body)
         end
 
+        # Form body in the menu. Not a menuitem. Stays open on interaction.
+        def menu_form(**kwargs, &block)
+          @menu_contains_form = true
+          set_polymorphic_slot(:menu, :form, **kwargs, &block)
+        end
+
         # Phone row for a collapsing button group. The wide control stays a dropdown.
         def menu_row
           render(FlatPack::Menu::Collapse::Component.new(title: @text, icon: @icon)) do |section|
             section.items do
-              safe_join(menu.map { |item| menu_collapse_item(item.menu_row) })
+              safe_join(menu.filter_map { |item|
+                next unless item.respond_to?(:menu_row)
+
+                row = item.menu_row
+                next if row[:skip]
+
+                menu_collapse_item(row)
+              })
             end
           end
         end
@@ -138,7 +158,7 @@ module FlatPack
           end
 
           {
-            text: @text.presence,
+            text: trigger_button_text,
             style: @style,
             size: @size,
             round: @round,
@@ -150,10 +170,10 @@ module FlatPack
             type: type,
             title: title.is_a?(String) ? title : nil,
             class: ["fp-button-dropdown__trigger", *extra_class].compact.join(" "),
-            aria: extra_aria.merge(haspopup: "true", expanded: "false"),
+            aria: extra_aria.merge(haspopup: trigger_popup, expanded: "false"),
             data: extra_data.merge(
               flat_pack__button_dropdown_target: "trigger",
-              action: "click->flat-pack--button-dropdown#toggle"
+              action: "click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey"
             )
           }.merge(attrs.compact)
         end
@@ -191,19 +211,87 @@ module FlatPack
           raise ArgumentError, "chevron must be a string"
         end
 
-        def menu_attributes
-          {
-            class: menu_classes,
-            role: "menu",
-            aria: {hidden: "true"},
-            style: "max-height: #{@max_height};",
-            data: {
-              flat_pack__button_dropdown_target: "menu"
-            }
-          }
+        def trigger_button_text
+          return trigger_label if trigger_label?
+
+          @text.presence
         end
 
-        def menu_classes
+        def menu_attributes
+          host = @host_menu_attributes.dup
+          host_class = [host.delete(:class), host.delete("class")]
+          host_data = extract_nested_attributes(host, :data)
+          host_aria = extract_nested_attributes(host, :aria)
+          dropped_role = host.delete(:role) || host.delete("role")
+          warn_dropped_menu_role(dropped_role)
+          host_style = host.delete(:style) || host.delete("style")
+
+          {
+            class: menu_classes(*host_class),
+            role: menu_role,
+            aria: menu_aria(host_aria),
+            style: join_styles("--dropdown-max-height: #{@max_height};", host_style),
+            data: merge_data_attributes(
+              host_data,
+              {flat_pack__button_dropdown_target: "menu"}
+            )
+          }.merge(host)
+        end
+
+        def menu_role
+          menu_contains_form? ? "dialog" : "menu"
+        end
+
+        def menu_aria(host_aria)
+          aria = host_aria.merge(hidden: "true")
+          return aria unless menu_contains_form?
+
+          {label: menu_dialog_name, modal: "false"}.merge(aria)
+        end
+
+        def menu_dialog_name
+          @text.to_s.strip.presence || explicit_aria_label.presence || "Menu"
+        end
+
+        def menu_contains_form?
+          @menu_contains_form == true
+        end
+
+        def trigger_popup
+          menu_contains_form? ? "dialog" : "true"
+        end
+
+        def render_menu_entries
+          mark_dialog_items! if menu_contains_form?
+
+          safe_join(menu)
+        end
+
+        # The dialog flag stays on this dropdown's own items. A Dropdown nested
+        # inside menu_form is a different instance and keeps role=menu.
+        def mark_dialog_items!
+          menu.each do |entry|
+            next unless entry.respond_to?(:plain_actions=)
+
+            entry.plain_actions = true
+          end
+        end
+
+        def warn_dropped_menu_role(role)
+          return if role.blank?
+          return unless development_log?
+
+          Rails.logger.warn(
+            "[FlatPack::Button::Dropdown] Dropped menu_attributes role=#{role.inspect}. " \
+            "The panel role is #{menu_role.inspect}."
+          )
+        end
+
+        def development_log?
+          defined?(Rails) && Rails.respond_to?(:env) && Rails.env.development?
+        end
+
+        def menu_classes(*extra)
           classes(
             "fixed z-50",
             "min-w-[12rem]",
@@ -213,8 +301,11 @@ module FlatPack
             "bg-[var(--surface-background-color)]",
             "p-[var(--dropdown-padding)]",
             "shadow-lg",
+            "fp-button-dropdown__menu",
             "opacity-0 scale-95 motion-reduce:scale-100 hidden",
-            "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]"
+            "transition-[opacity,transform] duration-[var(--duration-base)] ease-[var(--easing-enter)]",
+            @menu_class,
+            *extra
           )
         end
 
@@ -285,10 +376,12 @@ module FlatPack
           label = content_tag(:span, row[:label].to_s)
           return label if row[:icon].blank?
 
-          safe_join([
-            render(FlatPack::Shared::IconComponent.new(name: row[:icon], size: :sm)),
-            label
-          ])
+          icon_arguments = {name: row[:icon], size: :sm}
+          icon_arguments[:class] = "ms-auto" if row[:icon_position] == :end
+          icon = render(FlatPack::Shared::IconComponent.new(**icon_arguments))
+          return safe_join([label, icon]) if row[:icon_position] == :end
+
+          safe_join([icon, label])
         end
 
         def extract_nested_attributes(attrs, key)
