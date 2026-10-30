@@ -55,7 +55,7 @@
         "id": "importmap_pins",
         "type": "file_contains_all",
         "path": "config/importmap.rb",
-        "description": "Importmap pins FlatPack controllers, TipTap helpers, local time, copy, clipboard, focus trap, click outside, positioning, remote query, and Heroicons",
+        "description": "Importmap pins FlatPack controllers, TipTap helpers, local time, copy, clipboard, focus trap, click outside, positioning, remote query, reorder items, and Heroicons",
         "matches": [
           "controllers/flat_pack",
           "flat_pack/controllers",
@@ -67,6 +67,7 @@
           "flat_pack/click_outside",
           "flat_pack/positioning",
           "flat_pack/remote_query",
+          "flat_pack/reorder_items",
           "pin \"flat_pack/heroicons\""
         ],
         "success_message": "Verified FlatPack importmap pins in config/importmap.rb"

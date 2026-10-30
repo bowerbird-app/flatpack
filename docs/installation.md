@@ -352,6 +352,9 @@ pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
 # Shared debounce and aborting GET for Select, Picker, Search, and Combobox
 pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
 
+# Shared reorder item list for table and grid sortable
+pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
+
 # Heroicons icon banks — used by FlatPack::Icon::Component
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
@@ -381,7 +384,7 @@ lazyLoadControllersFrom("controllers", application)
 
 **Why `preload: false`?** Importmap modulepreload is disabled for FlatPack controller pins so the browser does not fetch every controller on first page load.
 
-importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading. `flat_pack/click_outside` is imported by Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. A missing pin stops those controllers. `flat_pack/positioning` is imported by Popover, Button dropdown, Date picker, and Collection editor, so a missing pin stops those four controllers and leaves the others loading. `flat_pack/remote_query` is imported by Select, Picker, Search, and Combobox. A missing pin stops those four controllers.
+importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading. `flat_pack/click_outside` is imported by Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. A missing pin stops those controllers. `flat_pack/positioning` is imported by Popover, Button dropdown, Date picker, and Collection editor, so a missing pin stops those four controllers and leaves the others loading. `flat_pack/remote_query` is imported by Select, Picker, Search, and Combobox. A missing pin stops those four controllers. `flat_pack/reorder_items` is imported by table sortable and grid sortable. A missing pin stops those two controllers.
 
 **Manual Configuration (if needed):**
 
@@ -404,6 +407,7 @@ If you need to manually configure JavaScript:
    pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
    pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
    pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
+   pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
    pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
    ```
 

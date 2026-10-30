@@ -17,8 +17,12 @@ class FakeCustomEvent {
 const controllerContexts = new Map()
 
 function loadController(fileName, className) {
+  const helperPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'reorder_items.js')
+  const helperSource = fs.readFileSync(helperPath, 'utf8')
+    .replace('export function buildItems', 'function buildItems')
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', fileName)
-  const source = fs.readFileSync(filePath, 'utf8')
+  const source = helperSource + '\n' + fs.readFileSync(filePath, 'utf8')
+    .replace('import { buildItems } from "flat_pack/reorder_items"\n', '')
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace('export default class extends Controller', `class ${className} extends Controller`)
     + `\nmodule.exports = ${className}\n`

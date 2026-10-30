@@ -58,6 +58,7 @@ module FlatPack
           assert_includes content, "flat_pack/click_outside"
           assert_includes content, "flat_pack/positioning"
           assert_includes content, "flat_pack/remote_query"
+          assert_includes content, "flat_pack/reorder_items"
           assert_includes content, "preload: false"
         end
       end
@@ -83,6 +84,7 @@ module FlatPack
           assert_equal 1, content.scan('pin "flat_pack/click_outside"').length
           assert_equal 1, content.scan('pin "flat_pack/positioning"').length
           assert_equal 1, content.scan('pin "flat_pack/remote_query"').length
+          assert_equal 1, content.scan('pin "flat_pack/reorder_items"').length
         end
       end
 

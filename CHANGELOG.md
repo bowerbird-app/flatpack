@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- Table and grid drag reorder keep each row id as the string rendered in `data-id`. `Number()` no longer turns a UUID primary key into `NaN`. An integer primary key is sent as that same string (`"7"`, not `7`). `position` stays a number. The rest of the reorder payload is unchanged.
+### Changed
+- **Breaking.** `items[].id` in the table and grid reorder payload, and in the `table:reordered` and `grid:reordered` event `detail.items`, is now a string. Compare ids as strings, or cast them with `to_i` (`==`, `include?`, and integer-keyed hash lookups).
 
 ### Upgrade notes
-- Hosts that read `items[].id` as a JSON number should read the string. `Integer("7")` still accepts an integer primary key. A UUID stays a UUID. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Hosts that compared `items[].id` with `==`, `include?`, or an integer-keyed hash should compare strings or cast with `to_i`. `Integer("7")` still accepts an integer primary key. A UUID stays a UUID. Table and grid sortable import `flat_pack/reorder_items`. Hosts that keep their own importmap pin list need `pin "flat_pack/reorder_items"`. importmap-rails hosts that load the engine importmap already receive it. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator unless that pin is missing.
 
 ## [0.1.331] - 2026-10-30
 

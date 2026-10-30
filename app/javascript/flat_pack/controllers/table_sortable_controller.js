@@ -1,5 +1,6 @@
 // FlatPack Table Sortable Stimulus Controller
 import { Controller } from "@hotwired/stimulus"
+import { buildItems } from "flat_pack/reorder_items"
 
 export default class extends Controller {
   static targets = ["row", "handle"]
@@ -190,10 +191,7 @@ export default class extends Controller {
 
     if (orderedIds.length === 0) return
 
-    const orderedItems = orderedIds.map((id, index) => ({
-      id,
-      position: index + 1
-    }))
+    const orderedItems = buildItems(orderedIds)
 
     // Dispatch custom event with ordered IDs
     const event = new CustomEvent("table:reordered", {
@@ -222,10 +220,7 @@ export default class extends Controller {
 
     try {
       const order = this.currentOrder()
-      const items = order.map((id, index) => ({
-        id,
-        position: index + 1
-      }))
+      const items = buildItems(order)
 
       const response = await fetch(this.reorderUrlValue, {
         method: "PATCH",

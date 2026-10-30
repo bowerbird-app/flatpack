@@ -32,6 +32,7 @@ module FlatPack
           pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
           pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
           pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
+          pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
           pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
         RUBY
         write_file(root, "app/javascript/controllers/index.js", <<~JS)

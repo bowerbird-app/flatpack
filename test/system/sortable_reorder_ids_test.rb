@@ -11,121 +11,68 @@ class SortableReorderIdsTest < ActionDispatch::SystemTestCase
     options.add_argument("--disable-gpu")
   end
 
-  test "table and grid reorder send uuid ids intact and integer ids as strings" do
-    visit "/demo/cards"
+  TABLE_UUIDS = [
+    "6f1e1a4a-1c2b-4d3e-8f90-111111111111",
+    "6f1e1a4a-1c2b-4d3e-8f90-222222222222"
+  ].freeze
 
-    payload = page.evaluate_async_script(<<~JS)
-      const done = arguments[0]
-      const tableUuids = [
-        "6f1e1a4a-1c2b-4d3e-8f90-111111111111",
-        "6f1e1a4a-1c2b-4d3e-8f90-222222222222"
-      ]
-      const gridUuids = [
-        "6f1e1a4a-1c2b-4d3e-8f90-333333333333",
-        "6f1e1a4a-1c2b-4d3e-8f90-444444444444"
-      ]
+  GRID_UUIDS = [
+    "6f1e1a4a-1c2b-4d3e-8f90-333333333333",
+    "6f1e1a4a-1c2b-4d3e-8f90-444444444444"
+  ].freeze
 
-      function mountSortable(identifier, targetName, ids) {
-        const root = document.createElement("div")
-        root.setAttribute("data-controller", identifier)
-        root.setAttribute(`data-${identifier}-reorder-url-value`, "/demo/tables/reorder")
-        root.setAttribute(`data-${identifier}-resource-value`, "demo_table_rows")
-        root.setAttribute(`data-${identifier}-strategy-value`, "dense_integer")
-        root.setAttribute(`data-${identifier}-version-value`, "1")
-        root.setAttribute(`data-${identifier}-scope-value`, '{"list_key":"users"}')
+  test "dragging a table sends string uuid ids to the server" do
+    visit "/demo/tables/draggable"
+    ids = drag_uuid_reorder("tr[data-flat-pack--table-sortable-target='row']", TABLE_UUIDS)
 
-        ids.forEach((id) => {
-          const item = document.createElement("div")
-          item.setAttribute(`data-${identifier}-target`, targetName)
-          item.dataset.id = id
-          root.appendChild(item)
-        })
+    assert_equal TABLE_UUIDS.sort, (ids & TABLE_UUIDS).sort
+    ids.each { |id| assert_kind_of String, id }
+  end
 
-        document.body.appendChild(root)
-        return root
-      }
+  test "dragging a grid sends string uuid ids to the server" do
+    visit "/demo/grid/movable_cards"
+    ids = drag_uuid_reorder("[data-flat-pack--grid-sortable-target='item']", GRID_UUIDS)
 
-      function readController(element, identifier) {
-        const application = window.Stimulus
-        if (!application) return null
-        return application.getControllerForElementAndIdentifier(element, identifier)
-      }
+    assert_equal GRID_UUIDS.sort, (ids & GRID_UUIDS).sort
+    ids.each { |id| assert_kind_of String, id }
+  end
 
-      async function controllerFor(element, identifier) {
-        const started = Date.now()
-        while (Date.now() - started < 8000) {
-          const controller = readController(element, identifier)
-          if (controller) return controller
-          await new Promise((resolve) => setTimeout(resolve, 50))
-        }
-        throw new Error("controller missing: " + identifier)
-      }
+  private
 
-      const calls = []
-      const originalFetch = window.fetch
-      window.fetch = (url, options) => {
-        if (String(url).includes("/demo/tables/reorder")) {
-          calls.push(JSON.parse(options.body))
-        }
-        return Promise.resolve({
-          ok: true,
-          json: async () => ({ok: true, version: "2"})
-        })
-      }
-
-      async function send(identifier, targetName, ids) {
-        const element = mountSortable(identifier, targetName, ids)
-        const controller = await controllerFor(element, identifier)
-        const items = [...element.querySelectorAll("[data-id]")]
-        items[0].parentNode.insertBefore(items[1], items[0])
-        await controller.saveOrder()
-        return calls[calls.length - 1].reorder.items
-      }
-
-      async function sendIntegers(identifier) {
-        const root = document.querySelector(`[data-controller="${identifier}"]`)
-        const items = [...root.querySelectorAll("[data-id]")]
-        items[0].dataset.id = "4"
-        items[1].dataset.id = "7"
-        await readController(root, identifier).saveOrder()
-        return calls[calls.length - 1].reorder.items
-      }
-
-      ;(async () => {
-        try {
-          const tableUuid = await send("flat-pack--table-sortable", "row", tableUuids)
-          const tableInteger = await sendIntegers("flat-pack--table-sortable")
-          const gridUuid = await send("flat-pack--grid-sortable", "item", gridUuids)
-          const gridInteger = await sendIntegers("flat-pack--grid-sortable")
-          done({tableUuid, tableInteger, gridUuid, gridInteger})
-        } catch (error) {
-          done({error: error && error.stack ? error.stack : String(error)})
-        } finally {
-          window.fetch = originalFetch
-        }
-      })()
+  def drag_uuid_reorder(selector, uuids)
+    assert_selector selector, minimum: 2
+    page.execute_script(<<~JS, uuids[0], uuids[1], selector)
+      const nodes = document.querySelectorAll(arguments[2])
+      nodes[0].dataset.id = arguments[0]
+      nodes[1].dataset.id = arguments[1]
     JS
 
-    assert_nil payload["error"], payload["error"].to_s
-    assert_equal [
-      {"id" => "6f1e1a4a-1c2b-4d3e-8f90-222222222222", "position" => 1},
-      {"id" => "6f1e1a4a-1c2b-4d3e-8f90-111111111111", "position" => 2}
-    ], payload["tableUuid"]
-    assert_equal [
-      {"id" => "4", "position" => 1},
-      {"id" => "7", "position" => 2}
-    ], payload["tableInteger"]
-    assert_equal [
-      {"id" => "6f1e1a4a-1c2b-4d3e-8f90-444444444444", "position" => 1},
-      {"id" => "6f1e1a4a-1c2b-4d3e-8f90-333333333333", "position" => 2}
-    ], payload["gridUuid"]
-    assert_equal [
-      {"id" => "4", "position" => 1},
-      {"id" => "7", "position" => 2}
-    ], payload["gridInteger"]
-    assert payload["tableUuid"].all? { |item| item["id"].is_a?(String) }
-    assert payload["tableInteger"].all? { |item| item["id"].is_a?(String) }
-    assert payload["gridUuid"].all? { |item| item["id"].is_a?(String) }
-    assert payload["gridInteger"].all? { |item| item["id"].is_a?(String) }
+    captured = capture_reorder_params do
+      rows = all(selector, minimum: 2)
+      rows[0].drag_to(rows[1])
+    end
+
+    item_ids(captured)
+  end
+
+  def capture_reorder_params
+    captured = []
+    subscriber = ActiveSupport::Notifications.subscribe("process_action.action_controller") do |*args|
+      payload = args.last
+      captured << payload[:params] if payload[:action] == "tables_reorder"
+    end
+
+    yield
+
+    Timeout.timeout(5) { sleep 0.05 until captured.any? }
+    captured.last
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
+  end
+
+  def item_ids(params)
+    items = params.dig("reorder", "items") || params.dig(:reorder, :items) || []
+    items = items.values if items.respond_to?(:values) && !items.is_a?(Array)
+    Array(items).map { |item| item["id"] || item[:id] }
   end
 end
