@@ -30,7 +30,12 @@ module FlatPack
         subtitle: nil,
         **system_arguments
       )
-        super(**system_arguments)
+        html_options = system_arguments.delete(:system_arguments) || {}
+        unless html_options.is_a?(Hash)
+          raise ArgumentError, "system_arguments: must be a Hash."
+        end
+
+        super(**html_options.symbolize_keys.merge(system_arguments))
         validate_text_option!(title, name: :title)
         validate_text_option!(subtitle, name: :subtitle)
         @title_text = title

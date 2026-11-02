@@ -260,6 +260,22 @@ module FlatPack
       def test_title_rejects_html_safe_strings
         error = assert_raises(ArgumentError) { Item.new(title: "<b>Take</b>".html_safe) }
         assert_match(/title/, error.message)
+
+        error = assert_raises(ArgumentError) { Item.new(subtitle: "<i>tone</i>".html_safe) }
+        assert_match(/subtitle/, error.message)
+      end
+
+      def test_system_arguments_title_is_the_tooltip
+        render_inline(Item.new(title: "Take 3", system_arguments: {title: "Session note"}))
+
+        assert_selector "li[title='Session note']"
+        assert_selector "p.fp-list-item-title", text: "Take 3"
+        refute_selector "li[title='Take 3']"
+
+        render_inline(Item.new(system_arguments: {title: "Session note"})) { "First item" }
+
+        assert_selector "li[title='Session note']", text: "First item"
+        refute_selector "p.fp-list-item-title"
       end
 
       def test_title_and_slot_together_raise
