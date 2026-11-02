@@ -14,13 +14,17 @@ const PANEL_GAP = 12
 export default class extends Controller {
   static values = {
     triggerId: String,
-    placement: { type: String, default: "bottom" }
+    placement: { type: String, default: "bottom" },
+    gap: { type: Number, default: PANEL_GAP }
   }
 
   connect() {
     this.isOpen = false
     this.hideTimeout = null
+    this.layoutCollapseListening = false
+    this.triggerResize = null
     this.resolvedPlacement = this.placementValue
+    this.handleLayoutCollapse = this.handleLayoutCollapse.bind(this)
 
     this.handleTriggerClick = this.handleTriggerClick.bind(this)
     this.handleEscape = this.handleEscape.bind(this)
@@ -53,9 +57,26 @@ export default class extends Controller {
     this.trigger.setAttribute("aria-haspopup", "dialog")
     this.trigger.setAttribute("aria-expanded", "false")
     this.preparePopoverA11y()
+    this.observeTriggerSize()
+  }
+
+  observeTriggerSize() {
+    if (!this.trigger || typeof ResizeObserver !== "function") return
+
+    this.triggerResize = new ResizeObserver(() => {
+      if (!this.isOpen) return
+      this.position()
+    })
+    this.triggerResize.observe(this.trigger)
+  }
+
+  stopTriggerSize() {
+    this.triggerResize?.disconnect()
+    this.triggerResize = null
   }
 
   removeTriggerListener() {
+    this.stopTriggerSize()
     if (!this.trigger) return
     this.trigger.removeEventListener("click", this.handleTriggerClick)
   }
@@ -136,16 +157,40 @@ export default class extends Controller {
     this.trigger?.focus()
   }
 
+  handleLayoutCollapse() {
+    if (!this.isOpen) return
+    this.position()
+  }
+
   addListeners() {
     this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
     this.viewportWatch.add()
+    this.watchLayoutCollapse()
+  }
+
+  watchLayoutCollapse() {
+    if (this.layoutCollapseListening) return
+    this.layoutCollapseListening = true
+    document.addEventListener("flat-pack--sidebar-layout:collapse", this.handleLayoutCollapse)
+  }
+
+  unwatchLayoutCollapse() {
+    if (!this.layoutCollapseListening) return
+    this.layoutCollapseListening = false
+    document.removeEventListener("flat-pack--sidebar-layout:collapse", this.handleLayoutCollapse)
   }
 
   removeListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
     this.viewportWatch?.remove()
+    this.unwatchLayoutCollapse()
+  }
+
+  panelGap() {
+    const gap = this.gapValue
+    return Number.isFinite(gap) ? gap : PANEL_GAP
   }
 
   position() {
@@ -157,7 +202,7 @@ export default class extends Controller {
       { width: window.innerWidth, height: window.innerHeight },
       {
         placement: this.placementValue,
-        gap: PANEL_GAP,
+        gap: this.panelGap(),
         edge: readEdgeOffset(this.element)
       }
     )

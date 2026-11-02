@@ -291,3 +291,20 @@
     CODE
   ) %>
 </section>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Short list",
+    anchor_link: true,
+    subtitle: "max_height caps the scrolling list. Omit it and the list stays max-h-96."
+  ) %>
+
+  <div id="notification-short-list" class="flex justify-center rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6 pb-48">
+    <%= render FlatPack::Notification::Component.new(
+      unread_count: 3,
+      see_all_href: demo_notification_path,
+      notifications: demo_notifications,
+      max_height: "9rem"
+    ) %>
+  </div>
+</section>

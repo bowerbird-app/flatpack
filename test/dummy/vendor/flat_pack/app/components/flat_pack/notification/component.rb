@@ -3,6 +3,9 @@
 module FlatPack
   module Notification
     class Component < FlatPack::BaseComponent
+      # A length such as "24rem". The default panel keeps the max-h-96 class (24rem).
+      MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
+
       def initialize(
         see_all_href:, notifications: [],
         unread_count: 0,
@@ -11,6 +14,7 @@ module FlatPack
         bell_label: FlatPack::Copy::OMITTED,
         empty_text: FlatPack::Copy::OMITTED,
         timestamp_tooltip_placement: :left,
+        max_height: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -24,6 +28,7 @@ module FlatPack
         @bell_label = fp_text(bell_label, "notification.bell").to_s
         @empty_text = fp_text(empty_text, "notification.empty").to_s
         @timestamp_tooltip_placement = timestamp_tooltip_placement.to_sym
+        @max_height = normalize_max_height(max_height)
 
         validate_placement!
       end
@@ -95,13 +100,34 @@ module FlatPack
       end
 
       def render_notification_panel
-        content_tag(:div, class: "max-h-96 overflow-y-auto") do
+        content_tag(:div, **notification_panel_attributes) do
           if @notifications.empty?
             render_empty_state
           else
             render_notification_list
           end
         end
+      end
+
+      def notification_panel_attributes
+        if @max_height
+          {class: "overflow-y-auto", style: "max-height: #{@max_height};"}
+        else
+          {class: "max-h-96 overflow-y-auto"}
+        end
+      end
+
+      def normalize_max_height(max_height)
+        return if max_height.nil?
+
+        unless max_height.is_a?(String) && !value_html_safe?(max_height)
+          raise ArgumentError, "max_height: must be a CSS length such as \"24rem\"."
+        end
+
+        length = max_height.strip
+        return length if length.match?(MAX_HEIGHT_PATTERN)
+
+        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\"."
       end
 
       def render_notification_list

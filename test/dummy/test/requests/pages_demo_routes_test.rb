@@ -1021,6 +1021,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "rollup_notifications = ["
     assert_includes response.body, "See all notifications"
     assert_includes response.body, "9+"
+    assert_includes response.body, "Short list"
+    assert_includes response.body, "max-height: 9rem"
+  end
+
+  test "popover demo renders a wider gap" do
+    get "/demo/popovers"
+
+    assert_response :success
+    assert_includes response.body, "Wider gap"
+    assert_includes response.body, "data-flat-pack--popover-gap-value=\"28\""
+    assert_includes response.body, "data-flat-pack--popover-gap-value=\"12\""
   end
 
   test "red dot demo renders helper utility examples and helpers section" do

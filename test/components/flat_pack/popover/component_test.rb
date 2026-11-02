@@ -93,6 +93,39 @@ module FlatPack
           Component.new(trigger_id: "trigger", placement: :invalid)
         end
       end
+
+      def test_default_gap_is_12
+        render_inline(Component.new(trigger_id: "trigger")) do |component|
+          component.content { "Content" }
+        end
+
+        assert_selector "div[data-flat-pack--popover-gap-value='12']"
+      end
+
+      def test_gap_is_written_to_the_stimulus_value
+        render_inline(Component.new(trigger_id: "trigger", gap: 28)) do |component|
+          component.content { "Content" }
+        end
+
+        assert_selector "div[data-flat-pack--popover-gap-value='28']"
+      end
+
+      def test_gap_accepts_zero
+        render_inline(Component.new(trigger_id: "trigger", gap: 0)) do |component|
+          component.content { "Content" }
+        end
+
+        assert_selector "div[data-flat-pack--popover-gap-value='0']"
+      end
+
+      def test_gap_rejects_a_negative_or_non_integer
+        [-1, 12.5, "12", nil].each do |gap|
+          error = assert_raises(ArgumentError) do
+            Component.new(trigger_id: "trigger", gap: gap)
+          end
+          assert_match(/gap:/, error.message)
+        end
+      end
     end
   end
 end

@@ -27,18 +27,22 @@ module FlatPack
         left: :left,
         right: :right
       }.freeze
+      PANEL_GAP = 12
 
       def initialize(
         trigger_id:,
         placement: :bottom,
+        gap: PANEL_GAP,
         **system_arguments
       )
         super(**system_arguments)
         @trigger_id = trigger_id
         @placement = placement.to_sym
+        @gap = gap
 
         validate_trigger_id!
         validate_placement!
+        validate_gap!
       end
 
       def call
@@ -64,7 +68,8 @@ module FlatPack
           data: {
             controller: "flat-pack--popover",
             "flat-pack--popover-trigger-id-value": @trigger_id,
-            "flat-pack--popover-placement-value": @placement
+            "flat-pack--popover-placement-value": @placement,
+            "flat-pack--popover-gap-value": @gap
           },
           aria: {
             hidden: "true"
@@ -99,6 +104,12 @@ module FlatPack
       def validate_placement!
         return if PLACEMENTS.key?(@placement)
         raise ArgumentError, "Invalid placement: #{@placement}. Must be one of: #{PLACEMENTS.keys.join(", ")}"
+      end
+
+      def validate_gap!
+        return if @gap.is_a?(Integer) && @gap >= 0
+
+        raise ArgumentError, "gap: must be a non-negative Integer."
       end
     end
   end
