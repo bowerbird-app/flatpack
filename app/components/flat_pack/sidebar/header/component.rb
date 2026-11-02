@@ -42,6 +42,7 @@ module FlatPack
           subtitle: nil,
           collapsible: true,
           show_version: true,
+          version: nil,
           **system_arguments
         )
           super(**system_arguments)
@@ -49,6 +50,7 @@ module FlatPack
           @subtitle = subtitle
           @collapsible = collapsible
           @show_version = show_version
+          @version = normalize_version(version)
           @badge = Badge.resolve(logo: logo, brand_abbr: brand_abbr)
         end
 
@@ -112,7 +114,20 @@ module FlatPack
         end
 
         def sidebar_version_label
-          "v#{FlatPack::VERSION}"
+          "v#{@version || FlatPack::VERSION}"
+        end
+
+        def normalize_version(version)
+          return if version.nil?
+
+          unless version.is_a?(String) && !value_html_safe?(version)
+            raise ArgumentError, "version: must be a String."
+          end
+
+          number = version.strip
+          return if number.empty?
+
+          number.delete_prefix("v")
         end
 
         def sidebar_version_badge_classes

@@ -261,6 +261,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Session notes"
   end
 
+  test "sidebar header demo shows a host version and the kit version" do
+    get "/demo/sidebar/header"
+
+    assert_response :success
+    assert_includes response.body, "v2.4.0"
+    assert_includes response.body, "v#{FlatPack::VERSION}"
+  end
+
   test "list demo renders title and subtitle with kit type" do
     get "/demo/list"
 
