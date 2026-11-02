@@ -14,9 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::Popover::Component` accepts `gap:`. The default is `12`, the same pixel gap as before. `0` is allowed. A negative number, a float, or a string raises `ArgumentError`. The value is `data-flat-pack--popover-gap-value`.
 - `FlatPack::Notification::Component` accepts `max_height:`. Omit it and the list keeps the `max-h-96` class. Pass a CSS length such as `"9rem"` and that length is an inline `max-height` on the scrolling list, without `max-h-96`. A class name, a blank string, or anything that is not a plain length raises `ArgumentError`.
 
+### Security
+- Development lockfile: `addressable` 2.9.2, `rack` 3.2.8, and `sqlite3` 2.10.2. `public_suffix` 7.0.5 comes along with addressable. This clears the current bundler-audit advisories for those gems.
+
 ### Upgrade notes
 - Additive. Existing popovers stay 12px from the trigger. Pass `gap:` when a bell or menu needs a different space. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
 - Additive. Omit `max_height:` and the notification list still uses `max-h-96`. Pass `max_height: "9rem"` instead of a host override on that class. Reload the gem. Do not rerun the install generator.
+- Run `bundle install` so `addressable`, `rack`, and `sqlite3` match the lockfile. No application API change. `view_component` stays where it was.
 - Redeploy so `meta.gem_version` shows `0.1.333`.
 
 ## [0.1.332] - 2026-10-30
