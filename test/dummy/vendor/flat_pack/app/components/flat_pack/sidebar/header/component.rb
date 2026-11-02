@@ -124,10 +124,10 @@ module FlatPack
             raise ArgumentError, "version: must be a String."
           end
 
-          number = version.strip
-          return if number.empty?
+          number = version.strip.sub(/\Av/i, "")
+          return if number.blank?
 
-          number.delete_prefix("v")
+          number
         end
 
         def sidebar_version_badge_classes

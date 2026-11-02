@@ -96,6 +96,15 @@ module FlatPack
           assert_text "v#{FlatPack::VERSION}"
         end
 
+        def test_version_strips_a_capital_v_and_a_bare_v_falls_back
+          render_inline(Component.new(version: "V2.4"))
+          assert_selector ".fp-sidebar-label > span", text: "v2.4"
+          assert_no_text "vV2.4"
+
+          render_inline(Component.new(version: "v"))
+          assert_selector ".fp-sidebar-label > span", text: "v#{FlatPack::VERSION}"
+        end
+
         def test_show_version_false_hides_a_custom_version
           render_inline(Component.new(version: "2.4.0", show_version: false))
 

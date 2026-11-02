@@ -44,7 +44,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `subtitle` | String or nil | `nil` | No | Accepted. Not rendered. |
 | `collapsible` | Boolean | `true` | No | Shows the collapse toggle buttons when `true`. |
 | `show_version` | Boolean | `true` | No | Default `true` renders the version pill beside the title. `false` omits the badge span. |
-| `version` | String or nil | `nil` | No | Version number shown in the pill, without the `v` prefix. Omit it and the pill shows `FlatPack::VERSION`. A leading `v` is dropped. Blank falls back to `FlatPack::VERSION`. `show_version: false` still hides the pill. |
+| `version` | String or nil | `nil` | No | Version number shown in the pill, without the `v` prefix. Omit it and the pill shows `FlatPack::VERSION`. A leading `v` or `V` is dropped (`"V2.4"` reads `v2.4`). Blank, `"v"`, and `"V"` fall back to `FlatPack::VERSION`. `show_version: false` still hides the pill. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the header wrapper. |
 
 ## Slots
