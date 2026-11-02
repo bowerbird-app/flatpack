@@ -115,6 +115,9 @@ Timestamps are rendered using `FlatPack::Timestamp::Component` with `shorten_tim
 ) %>
 ```
 
+## List height
+`max_height:` limits the scrolling list. Rows that do not fit stay in that list. Scrolling the list brings them into view. The **See all notifications** link stays outside the scroller. Omit `max_height:` and the list keeps `max-h-96`.
+
 ## Accessibility
 - The bell trigger is rendered as a keyboard-focusable button.
 - The unread count is included in the button accessible label.

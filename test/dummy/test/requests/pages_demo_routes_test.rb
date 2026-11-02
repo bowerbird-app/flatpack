@@ -1023,6 +1023,10 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "9+"
     assert_includes response.body, "Short list"
     assert_includes response.body, "max-height: 9rem"
+    assert_includes response.body, "Payment received"
+    assert_includes response.body, "Studio invoice 1842 was paid."
+    assert_includes response.body, "Invite accepted"
+    assert_includes response.body, "Riley joined the session."
   end
 
   test "popover demo renders a wider gap" do

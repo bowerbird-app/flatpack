@@ -350,6 +350,25 @@ module FlatPack
         refute_selector "div.max-h-96"
       end
 
+      def test_max_height_keeps_rows_past_the_cap_in_the_scrolling_list
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          max_height: "9rem",
+          unread_count: 4,
+          notifications: 4.times.map { |index|
+            notification(title: "Note #{index + 1}", body: "Body #{index + 1}")
+          }
+        ))
+
+        panel = page.find("div.overflow-y-auto")
+        assert_equal "max-height: 9rem;", panel["style"]
+        assert_includes panel.text, "Note 1"
+        assert_includes panel.text, "Note 4"
+        assert_includes panel.text, "Body 4"
+        refute_includes panel.text, "See all notifications"
+        assert_selector "a[href='/notifications']", text: "See all notifications"
+      end
+
       def test_max_height_rejects_a_class_name_or_unsafe_value
         ["max-h-96", "", "24rem; color: red", 24, "<style>"].each do |max_height|
           error = assert_raises(ArgumentError) do

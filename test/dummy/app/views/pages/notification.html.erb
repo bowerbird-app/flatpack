@@ -296,14 +296,57 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Short list",
     anchor_link: true,
-    subtitle: "max_height caps the scrolling list. Omit it and the list stays max-h-96."
+    subtitle: "Five rows in a 9rem list. A row is cut off above See all notifications. The rest scroll into view."
   ) %>
+
+  <% capped_notifications = [
+    {
+      title: "New comment",
+      body: "Marco commented on your post.",
+      href: "#new-comment",
+      time: "2026-07-03T10:30:00Z",
+      unread: true,
+      icon: :bell
+    },
+    {
+      title: "Build completed",
+      body: "Your export is ready to download.",
+      href: "#build-completed",
+      time: "2026-07-03T09:15:00Z",
+      unread: true,
+      icon: :check
+    },
+    {
+      title: "Mentioned in a thread",
+      body: "You were mentioned by Alex.",
+      href: "#mentioned",
+      time: "2026-07-02T18:45:00Z",
+      unread: true,
+      icon: :chat
+    },
+    {
+      title: "Payment received",
+      body: "Studio invoice 1842 was paid.",
+      href: "#payment",
+      time: "2026-07-02T16:10:00Z",
+      unread: true,
+      icon: :bell
+    },
+    {
+      title: "Invite accepted",
+      body: "Riley joined the session.",
+      href: "#invite",
+      time: "2026-07-02T14:05:00Z",
+      unread: true,
+      icon: :check
+    }
+  ] %>
 
   <div id="notification-short-list" class="flex justify-center rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6 pb-48">
     <%= render FlatPack::Notification::Component.new(
-      unread_count: 3,
+      unread_count: capped_notifications.length,
       see_all_href: demo_notification_path,
-      notifications: demo_notifications,
+      notifications: capped_notifications,
       max_height: "9rem"
     ) %>
   </div>
