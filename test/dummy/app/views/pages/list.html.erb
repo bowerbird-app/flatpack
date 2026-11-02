@@ -108,6 +108,23 @@
   </div>
 </section>
 
+<section class="mb-12" id="list-item-title">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Title and subtitle",
+    anchor_link: true,
+    subtitle: "Kit type on the row, instead of a styled paragraph."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new do %>
+        <%= render FlatPack::List::Item.new(icon: :microphone, title: "Take 3", subtitle: "Room tone, no talking.") %>
+        <%= render FlatPack::List::Item.new(icon: :play, title: "Take 4", subtitle: "Count in, then the chorus.") %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Ordered with icons", anchor_link: true) %>
 

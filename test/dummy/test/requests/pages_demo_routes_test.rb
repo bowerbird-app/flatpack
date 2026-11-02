@@ -261,6 +261,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Session notes"
   end
 
+  test "list demo renders title and subtitle with kit type" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Title and subtitle"
+    assert_includes response.body, "fp-list-item-title"
+    assert_includes response.body, "Take 3"
+    assert_includes response.body, "Room tone, no talking."
+    assert_includes response.body, "text-[length:var(--text-sm)]"
+  end
+
   test "list demo renders ordered marker slots and icon steps" do
     get "/demo/list"
 

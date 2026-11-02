@@ -3,6 +3,9 @@
 module FlatPack
   module List
     class Item < FlatPack::BaseComponent
+      renders_one :title
+      renders_one :subtitle
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "items-start" "items-center" "items-end" "items-baseline"
@@ -23,9 +26,15 @@ module FlatPack
         active: false,
         link_arguments: {},
         align: nil,
+        title: nil,
+        subtitle: nil,
         **system_arguments
       )
         super(**system_arguments)
+        validate_text_option!(title, name: :title)
+        validate_text_option!(subtitle, name: :subtitle)
+        @title_text = title
+        @subtitle_text = subtitle
         @key_value = Rendering.key_value?
         @stack_below = Rendering.stack_below if @key_value
         @align = normalize_align(align)
@@ -43,6 +52,7 @@ module FlatPack
       end
 
       def call
+        ensure_copy_supported!
         return render_key_value if @key_value
 
         content_tag(:li, **item_attributes) do
@@ -70,7 +80,7 @@ module FlatPack
           # SECURITY: Content is marked html_safe because it's expected to contain
           # Rails-generated HTML from components captured via block. Never pass
           # unsanitized user input directly to content.
-          content_tag(:div, content.to_s.html_safe, class: "min-w-0 flex-1"),
+          content_tag(:div, class: "min-w-0 flex-1") { render_copy },
           render_trailing
         ].compact)
       end
@@ -180,12 +190,81 @@ module FlatPack
           raise ArgumentError, "href: is not supported when the list layout is :key_value." if href.present?
           raise ArgumentError, "leading: is not supported when the list layout is :key_value." if @leading.present?
           raise ArgumentError, "align: is not supported when the list layout is :key_value." unless @align == :start
+          if @title_text.present? || @subtitle_text.present?
+            raise ArgumentError, "title: and subtitle: are not supported when the list layout is :key_value."
+          end
           return
         end
 
         return if @key.blank?
 
         raise ArgumentError, "key: is only supported when the list layout is :key_value."
+      end
+
+      def ensure_copy_supported!
+        return unless @key_value
+        return unless titled?
+
+        raise ArgumentError, "title: and subtitle: are not supported when the list layout is :key_value."
+      end
+
+      def titled?
+        title? || subtitle? || @title_text.present? || @subtitle_text.present?
+      end
+
+      def render_copy
+        return content.to_s.html_safe unless titled?
+
+        safe_join([render_title_line, render_subtitle_line, render_extra_content].compact)
+      end
+
+      def render_title_line
+        if title? && @title_text.present?
+          raise ArgumentError, "Pass title: or a title slot, not both."
+        end
+        return title if title?
+        return if @title_text.blank?
+
+        render FlatPack::Text::Component.new(
+          text: @title_text,
+          size: :sm,
+          weight: :medium,
+          as: :p,
+          class: "fp-list-item-title break-words"
+        )
+      end
+
+      def render_subtitle_line
+        if subtitle? && @subtitle_text.present?
+          raise ArgumentError, "Pass subtitle: or a subtitle slot, not both."
+        end
+        return subtitle if subtitle?
+        return if @subtitle_text.blank?
+
+        render FlatPack::Text::Component.new(
+          text: @subtitle_text,
+          size: :sm,
+          style: :muted,
+          as: :p,
+          class: subtitle_classes
+        )
+      end
+
+      def title_present?
+        title? || @title_text.present?
+      end
+
+      def subtitle_classes
+        tokens = %w[fp-list-item-subtitle break-words]
+        tokens << "mt-0.5" if title_present?
+        tokens.join(" ")
+      end
+
+      def render_extra_content
+        body = content.to_s
+        return if body.blank?
+
+        body.html_safe
       end
 
       def render_leading
