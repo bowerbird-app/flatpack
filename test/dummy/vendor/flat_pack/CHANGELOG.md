@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::Notification::Component` accepts `max_height:`. Omit it and the list keeps the `max-h-96` class. Pass a CSS length such as `"9rem"` and that length is an inline `max-height` on the scrolling list, without `max-h-96`. A class name, a blank string, or anything that is not a plain length raises `ArgumentError`.
 
 ### Security
-- Development lockfile: `addressable` 2.9.2, `rack` 3.2.8, and `sqlite3` 2.10.2. `public_suffix` 7.0.5 comes along with addressable. This clears the current bundler-audit advisories for those gems.
+- Development lockfiles: `addressable` 2.9.2, `rack` 3.2.8, and `sqlite3` 2.10.2 in the engine lock, the Rails 8 dummy lock, and the Rails 7 dummy lock. `public_suffix` 7.0.5 comes along with addressable. This clears the current bundler-audit advisories for those gems.
 
 ### Upgrade notes
 - Additive. Existing popovers stay 12px from the trigger. Pass `gap:` when a bell or menu needs a different space. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
