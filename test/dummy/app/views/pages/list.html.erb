@@ -648,6 +648,33 @@
   erb_tag_close = "%" + ">"
 %>
 
+<section class="mb-12" id="title-and-subtitle">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Title and subtitle",
+    anchor_link: true,
+    subtitle: "title: and subtitle: paint two lines with Text. Omit both and the block is still the only copy."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(divider: true) do %>
+        <%= render FlatPack::List::Item.new(icon: :bell, title: "Studio B", subtitle: "Online") %>
+        <%= render FlatPack::List::Item.new(icon: :user, title: "Riley", subtitle: "Joined the session") %>
+        <%= render FlatPack::List::Item.new(icon: :check, title: "Export ready", subtitle: "Download from the library") %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Item.new(icon: :bell, title: "Studio B", subtitle: "Online") %&gt;
+    CODE
+    title: "Title and subtitle",
+    separated: false
+  ) %>
+</section>
+
 <section class="mb-12" id="key-value">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Key and value",

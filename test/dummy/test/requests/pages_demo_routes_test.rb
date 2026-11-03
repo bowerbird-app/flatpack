@@ -248,6 +248,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "list:error"
   end
 
+  test "list demo renders title and subtitle rows" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Title and subtitle"
+    assert_includes response.body, "title: \"Studio B\""
+    assert_includes response.body, "subtitle: \"Online\""
+  end
+
   test "list demo renders key and value rows" do
     get "/demo/list"
 

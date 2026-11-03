@@ -52,6 +52,45 @@ module FlatPack
         render_inline(Item.new) { "Content" }
 
         assert_selector "div.min-w-0.flex-1", text: "Content"
+        refute_selector ".fp-text"
+      end
+
+      def test_title_and_subtitle_use_text
+        render_inline(Item.new(title: "Studio B", subtitle: "Online"))
+
+        assert_selector "div.min-w-0.flex-1 .fp-text", text: "Studio B"
+        assert_selector "div.min-w-0.flex-1 .fp-text", text: "Online"
+        html = page.native.to_html
+        assert_includes html, "text-[length:var(--text-sm)]"
+        assert_includes html, "font-medium"
+        assert_includes html, "text-[length:var(--text-xs)]"
+        assert_includes html, "text-[var(--surface-muted-content-color)]"
+      end
+
+      def test_title_keeps_a_following_block
+        render_inline(Item.new(title: "Studio B")) { "Bring the ribbon mic" }
+
+        assert_selector "div.min-w-0.flex-1 .fp-text", text: "Studio B"
+        assert_selector "div.min-w-0.flex-1", text: "Bring the ribbon mic"
+      end
+
+      def test_blank_title_is_omitted
+        render_inline(Item.new(title: "  ")) { "Only the block" }
+
+        refute_selector ".fp-text"
+        assert_selector "div.min-w-0.flex-1", text: "Only the block"
+      end
+
+      def test_key_value_rejects_title_and_subtitle
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", title: "Studio B") }
+        end
+        assert_includes error.message, "title:"
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", subtitle: "Online") }
+        end
+        assert_includes error.message, "subtitle:"
       end
 
       def test_includes_flex_layout

@@ -23,6 +23,8 @@ module FlatPack
         active: false,
         link_arguments: {},
         align: nil,
+        title: nil,
+        subtitle: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -33,6 +35,8 @@ module FlatPack
         @leading = leading
         @trailing = trailing
         @key = normalize_key(key)
+        @title = normalize_line(title, name: :title)
+        @subtitle = normalize_line(subtitle, name: :subtitle)
         @href = sanitize_url(href)
         @hover = hover
         @active = active
@@ -70,7 +74,7 @@ module FlatPack
           # SECURITY: Content is marked html_safe because it's expected to contain
           # Rails-generated HTML from components captured via block. Never pass
           # unsanitized user input directly to content.
-          content_tag(:div, content.to_s.html_safe, class: "min-w-0 flex-1"),
+          content_tag(:div, render_primary_copy, class: "min-w-0 flex-1"),
           render_trailing
         ].compact)
       end
@@ -179,6 +183,8 @@ module FlatPack
           raise ArgumentError, "key: is required when the list layout is :key_value." if @key.blank?
           raise ArgumentError, "href: is not supported when the list layout is :key_value." if href.present?
           raise ArgumentError, "leading: is not supported when the list layout is :key_value." if @leading.present?
+          raise ArgumentError, "title: is not supported when the list layout is :key_value." if @title.present?
+          raise ArgumentError, "subtitle: is not supported when the list layout is :key_value." if @subtitle.present?
           raise ArgumentError, "align: is not supported when the list layout is :key_value." unless @align == :start
           return
         end
@@ -186,6 +192,30 @@ module FlatPack
         return if @key.blank?
 
         raise ArgumentError, "key: is only supported when the list layout is :key_value."
+      end
+
+      def render_primary_copy
+        titled = @title.present? || @subtitle.present?
+        body = content.to_s
+        return body.html_safe unless titled
+
+        parts = []
+        if @title.present?
+          parts << render(FlatPack::Text::Component.new(text: @title, size: :sm, weight: :medium, as: :div))
+        end
+        if @subtitle.present?
+          parts << render(FlatPack::Text::Component.new(text: @subtitle, size: :xs, style: :muted, as: :div))
+        end
+        parts << content_tag(:div, body.html_safe) if body.present?
+        safe_join(parts)
+      end
+
+      def normalize_line(value, name:)
+        validate_text_option!(value, name: name)
+        return if value.nil?
+
+        stripped = value.strip
+        stripped.presence
       end
 
       def render_leading

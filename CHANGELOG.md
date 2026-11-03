@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.334] - 2026-11-03
+
+### Added
+- `FlatPack::List::Item` accepts `title:` and `subtitle:`. Those lines render `FlatPack::Text::Component` (`:sm` / `:medium` and `:xs` / `:muted`). Omit both and the block is still the only copy. They raise on `layout: :key_value`.
+
+### Upgrade notes
+- Additive. Existing list items with a block keep the same markup. Pass `title:` and `subtitle:` instead of two host paragraphs. Rebuild host Tailwind so `text-[length:var(--text-sm)]`, `text-[length:var(--text-xs)]`, `font-medium`, and `text-[var(--surface-muted-content-color)]` exist if the host did not already use Text. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.334`.
+
 ## [0.1.333] - 2026-11-02
 
 ### Added

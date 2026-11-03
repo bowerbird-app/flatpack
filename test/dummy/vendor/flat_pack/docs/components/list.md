@@ -43,6 +43,8 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `active` | Boolean | `false` | no | Applies active item background styling. |
 | `link_arguments` | Hash | `{}` | no | Extra attributes merged into internal link when `href` is present. |
 | `align` | Symbol | `:start` | no | Cross-axis alignment for the row. `:start`, `:center`, `:end`, or `:baseline`. Omit it to inherit the list `align:`. Not supported when the list layout is `:key_value`. |
+| `title` | String | `nil` | no | Optional first line in the row copy, rendered with `FlatPack::Text::Component` (`size: :sm`, `weight: :medium`). Omit it and the block is still the only copy. Not supported when the list layout is `:key_value`. |
+| `subtitle` | String | `nil` | no | Optional second line under `title:`, rendered with `FlatPack::Text::Component` (`size: :xs`, `style: :muted`). Omit it to keep a single line. Not supported when the list layout is `:key_value`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for `<li>`, or for the key/value row `<div>`. Default padding is `py-4 px-4`. |
 
 ## Slots
