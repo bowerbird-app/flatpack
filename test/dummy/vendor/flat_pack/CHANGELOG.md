@@ -13,10 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FlatPack::Chat::Layout::Component` and `FlatPack::Embed::Component` accept `height:` and `min_height:` tokens `:full`, `:sm` (20rem), `:md` (32rem), `:lg` (`min(40rem, calc(100dvh - 16rem))`), and `:viewport`. Chat still defaults to `h-full` / `min-h-0`. Embed still uses `aspect_ratio` when `height:` is omitted. Embed rejects `:full`.
 
 ### Changed
-- `height:` and `min_height:` are now consumed as arguments on Chat::Layout and Embed. A host that passed `height:` as a raw HTML attribute no longer gets that attribute on the root.
+- **Breaking.** `height:` and `min_height:` are now consumed as arguments on Chat::Layout and Embed. A host that passed `height:` as a raw HTML attribute no longer gets that attribute on the root.
 
 ### Upgrade notes
-- Additive for hosts that omit `height:` and `min_height:`. Omit `height:` and Chat::Layout still fills the parent. Pass `height: :md` instead of a host `h-[32rem]` class. Embed still uses the aspect ratio unless `height:` is set. If a host relied on a raw `height="..."` (or min_height) HTML attribute passed through the kwargs, replace it with `style: "height: ..."` or a CSS class. Rebuild host Tailwind so `h-[20rem]`, `h-[32rem]`, `h-[min(40rem,calc(100dvh-16rem))]`, `h-dvh`, and the matching `min-h-*` utilities exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
+- Breaking for hosts that passed `height:` or `min_height:` as a raw HTML attribute to Chat::Layout or Embed: replace it with `style: "height: ..."` or a CSS class.
+- Additive for hosts that omit `height:` and `min_height:`. Omit `height:` and Chat::Layout still fills the parent. Pass `height: :md` instead of a host `h-[32rem]` class. Embed still uses the aspect ratio unless `height:` is set. Rebuild host Tailwind so `h-[20rem]`, `h-[32rem]`, `h-[min(40rem,calc(100dvh-16rem))]`, `h-dvh`, and the matching `min-h-*` utilities exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 - Redeploy so `meta.gem_version` shows `0.1.336`.
 
 ## [0.1.335] - 2026-11-02

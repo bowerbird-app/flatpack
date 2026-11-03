@@ -23,7 +23,7 @@ Do not use it for a still that should play later (that is `FlatPack::VideoPrevie
 | `referrerpolicy` | String | `"strict-origin-when-cross-origin"` | no | Iframe referrer policy. Allowed values: `no-referrer`, `no-referrer-when-downgrade`, `origin`, `origin-when-cross-origin`, `same-origin`, `strict-origin`, `strict-origin-when-cross-origin`, `unsafe-url`. |
 | `caption` | String | `nil` | no | Optional figcaption. A block can supply the same copy when `caption:` is omitted. |
 | `allowfullscreen` | Boolean | `false` | no | Sets the iframe `allowfullscreen` attribute when `true`. |
-| `height` | Symbol | `nil` | no | Named frame height: `:sm` (`20rem`), `:md` (`32rem`), `:lg` (`min(40rem, calc(100dvh - 16rem))`), `:viewport` (`h-dvh`). Omit it and the frame keeps `aspect_ratio`. `:full` raises `ArgumentError` (Chat::Layout only). |
+| `height` | Symbol | `nil` | no | Named frame height: `:sm` (`20rem`), `:md` (`32rem`), `:lg` (`min(40rem, calc(100dvh - 16rem))`), `:viewport` (`h-dvh`). Omit it and the frame keeps `aspect_ratio`. `:full` raises `ArgumentError` (Chat::Layout only). This is a token kwarg, not a raw HTML `height` attribute; use `style:` or a CSS class for a custom length. |
 | `min_height` | Symbol | `nil` | no | Optional floor using the same tokens as `height:`. `:full` raises. |
 
 ## Slots

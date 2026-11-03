@@ -19,7 +19,7 @@ Core container props:
 | `FlatPack::Chat::Layout::Component#variant` | Symbol | `:single` | no | Layout mode: `:single`, `:split`; invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::Layout::Component#split_breakpoint` | Symbol | `:sm` | no | Width at which `:split` stops stacking and becomes two columns: `:sm` (640px), `:md` (768px), `:lg` (1024px); invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::Layout::Component#sidebar_width` | String | `"clamp(12rem, 30%, 16rem)"` | no | CSS grid track for the sidebar column. Accepts a length, `auto`, `min-content`, `max-content`, a CSS variable, or `minmax()` / `clamp()` / `fit-content()`; anything else raises `ArgumentError`. |
-| `FlatPack::Chat::Layout::Component#height` | Symbol | `:full` | no | Frame height token: `:full` (`h-full`, today's look), `:sm` (`20rem`), `:md` (`32rem`), `:lg` (`min(40rem, calc(100dvh - 16rem))`), `:viewport` (`h-dvh`). Unknown names raise `ArgumentError`. |
+| `FlatPack::Chat::Layout::Component#height` | Symbol | `:full` | no | Frame height token: `:full` (`h-full`, today's look), `:sm` (`20rem`), `:md` (`32rem`), `:lg` (`min(40rem, calc(100dvh - 16rem))`), `:viewport` (`h-dvh`). Unknown names raise `ArgumentError`. This is a token kwarg, not a raw HTML `height` attribute; use `style:` or a CSS class for a custom length. |
 | `FlatPack::Chat::Layout::Component#min_height` | Symbol | `nil` | no | Optional floor using the same tokens as `height:`. Omit it and the root keeps `min-h-0`. |
 | `FlatPack::Chat::Panel::Component` | n/a | n/a | n/a | Slot-only container (no custom props). |
 
