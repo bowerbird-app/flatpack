@@ -43,10 +43,17 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `active` | Boolean | `false` | no | Applies active item background styling. |
 | `link_arguments` | Hash | `{}` | no | Extra attributes merged into internal link when `href` is present. |
 | `align` | Symbol | `:start` | no | Cross-axis alignment for the row. `:start`, `:center`, `:end`, or `:baseline`. Omit it to inherit the list `align:`. Not supported when the list layout is `:key_value`. |
-| `**system_arguments` | Hash | `{}` | no | HTML attributes for `<li>`, or for the key/value row `<div>`. Default padding is `py-4 px-4`. |
+| `title` | String | `nil` | no | Primary line, rendered with `FlatPack::Text` (`size: :sm`, `weight: :medium`). Not supported when the list layout is `:key_value`. An HTML-safe string raises. |
+| `subtitle` | String | `nil` | no | Second line, rendered with `FlatPack::Text` (`size: :sm`, `style: :muted`). Sits under `title` when both are set. Not supported on `:key_value`. An HTML-safe string raises. |
+| `system_arguments` | Hash | `{}` | no | HTML attributes for `<li>`, or for the key/value row `<div>`, including a tooltip `title`. `system_arguments: { title: "Session note" }` keeps the tooltip. `title:` is the visible line, not that attribute. Default padding is `py-4 px-4`. Keyword HTML attributes such as `class:` still merge in. |
 
 ## Slots
-None.
+| name | type | required | description |
+|---|---|---|---|
+| `title` | slot | no | Replaces the `title:` string. Use it when the line is not plain text. Do not pass `title:` as well. |
+| `subtitle` | slot | no | Replaces the `subtitle:` string. Do not pass `subtitle:` as well. |
+
+Omit both and the item block is unchanged. A block next to `title:` or `subtitle:` still renders after those lines. `:key_value` rejects `title:` and `subtitle:`. An HTML-safe string raises for `title:` and `subtitle:`.
 
 ## Variants
 - Layout `:items` (default) or `:key_value`.
