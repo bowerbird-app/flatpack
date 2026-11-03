@@ -153,6 +153,43 @@
   ) %>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Reset the face",
+    anchor_link: true,
+    subtitle: "Pick a new font, then Reset. The host dispatches font-swatch:reset on the swatch root — no poking at the input."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <div class="flex flex-wrap items-center gap-[var(--stack-gap-md)]" data-controller="font-swatch-reset-demo">
+        <%= render FlatPack::FontSwatch::Component.new(
+          font: "ui-sans-serif",
+          options: demo_font_options,
+          text: "Sans",
+          name: "demo[font]",
+          size: :lg,
+          data: {font_swatch_reset_demo_target: "swatch"}
+        ) %>
+        <%= render FlatPack::Button::Component.new(
+          text: "Reset",
+          style: :secondary,
+          data: {action: "click->font-swatch-reset-demo#reset"}
+        ) %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "Reset from a host controller (JS)",
+    language: "javascript",
+    code: <<~CODE
+      const swatch = document.querySelector("[data-controller='flat-pack--font-swatch']")
+      swatch.dispatchEvent(new CustomEvent("font-swatch:reset", { bubbles: true }))
+    CODE
+  ) %>
+</section>
+
 <%= render "shared/related_demos", links: [
   {text: "Color Swatches", href: "/demo/color_swatches"},
   {text: "Popovers", href: "/demo/popovers"},

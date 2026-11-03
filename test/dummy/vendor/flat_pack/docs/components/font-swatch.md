@@ -22,7 +22,7 @@ Use Font Swatch in theme editors and brand settings alongside Color Swatch. Comp
 | `disabled` | Boolean | `false` | no | Disables the circle trigger and omits the Popover menu. |
 | `show_tooltip` | Boolean | `true` | no | Wraps the circle in `FlatPack::Tooltip::Component` when tooltip text is present. Tooltip is hidden while the menu is open. |
 | `tooltip_placement` | Symbol | `:top` | no | Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
-| `**system_arguments` | Hash | `{}` | no | HTML attributes for the root element. `id` is applied to the circle trigger (and used as the Popover `trigger_id`). Extra `data:` merges onto the root (for example `default_font` for a later Reset). |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes for the root element. `id` is applied to the circle trigger (and used as the Popover `trigger_id`). Extra `data:` merges onto the root. |
 
 ## Tokens
 | token | purpose |
@@ -75,6 +75,24 @@ None.
 - Menu options use `role="option"` / `aria-selected` inside a `role="listbox"`.
 - Tooltip content uses `role="tooltip"` via `FlatPack::Tooltip::Component` when enabled; it is hidden while the menu is open.
 - Stimulus updates the sample face, tooltip copy, option selection, and accessible name when a row is chosen.
+
+## Public reset
+`reset` restores the hidden field, the sample face, option `aria-selected`, the trigger name, and the tooltip to the server-rendered `font:` on `data-flat-pack--font-swatch-font-value`. It does not read the input value at connect time. There is no `default_font` data attribute.
+
+Hosts must not reach into the hidden input or swatch face. Dispatch a bubbling event on the Font Swatch root (`[data-controller='flat-pack--font-swatch']`), or call the Stimulus method.
+
+The server must validate the posted font. `font-swatch:reset` `detail.value` can set any string.
+
+| Trigger | What happens |
+|---|---|
+| Stimulus `reset` | Restores the server font, then fires `font-swatch:change` when the value changed. |
+| Event `font-swatch:reset` | Same as `reset`. Wired on the root as `font-swatch:reset->flat-pack--font-swatch#reset`. |
+| `event.detail.value` | Optional CSS `font-family`. Sets the face to that stack instead of the server font. A blank string keeps the server font. |
+
+```js
+const swatch = document.querySelector("[data-controller='flat-pack--font-swatch']")
+swatch.dispatchEvent(new CustomEvent("font-swatch:reset", { bubbles: true }))
+```
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
