@@ -23,6 +23,7 @@ module FlatPack
         max: nil,
         picker: :native,
         chrome: :field,
+        preset_name: nil,
         **system_arguments
       )
         assign_control_chrome!(chrome)
@@ -39,6 +40,7 @@ module FlatPack
         @help_text = normalize_help_text!(help_text)
         @min = format_date_value(min)
         @max = format_date_value(max)
+        @preset_name = normalize_preset_name!(preset_name)
 
         validate_name!
         validate_picker!
@@ -97,7 +99,10 @@ module FlatPack
       end
 
       def render_picker_hidden_fields
-        tag.input(type: "hidden", name: @name, value: @value, data: {"flat-pack--flatpack-date-picker-target": "singleField"})
+        safe_join([
+          tag.input(type: "hidden", name: @name, value: @value, data: {"flat-pack--flatpack-date-picker-target": "singleField"}),
+          render_preset_name_field
+        ].compact)
       end
 
       def picker_data_attributes

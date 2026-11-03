@@ -38,6 +38,19 @@ function cancelOverlayHide() {}`
       removeEventListener() {},
       matchMedia: () => ({ matches: false })
     },
+    Event: class Event {
+      constructor(type, init = {}) {
+        this.type = type
+        this.bubbles = !!init.bubbles
+      }
+    },
+    CustomEvent: class CustomEvent {
+      constructor(type, init = {}) {
+        this.type = type
+        this.bubbles = !!init.bubbles
+        this.detail = init.detail
+      }
+    },
     clearTimeout() {},
     ...overrides
   }
@@ -62,6 +75,13 @@ function buildController() {
   controller.isOpen = false
   controller.committedPresetKey = null
   controller.draftPresetKey = null
+  controller.elementEvents = []
+  controller.element = {
+    dispatchEvent(event) {
+      controller.elementEvents.push(event)
+      return true
+    }
+  }
 
   return controller
 }
@@ -125,6 +145,44 @@ test('apply infers preset label for matching calendar-selected range', () => {
 
   assert.equal(controller.committedPresetKey, 'yesterday')
   assert.equal(controller.triggerTarget.value, 'Yesterday')
+})
+
+test('apply dispatches bubbling change on hidden fields and a custom apply event', () => {
+  const controller = buildController()
+  const startField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const endField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const presetField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+
+  controller.today = new Date(2026, 5, 18)
+  controller.draft = {
+    start: new Date(2026, 5, 17),
+    end: new Date(2026, 5, 17)
+  }
+  controller.draftPresetKey = null
+  controller.hasRangeStartFieldTarget = true
+  controller.hasRangeEndFieldTarget = true
+  controller.hasPresetKeyFieldTarget = true
+  controller.rangeStartFieldTarget = startField
+  controller.rangeEndFieldTarget = endField
+  controller.presetKeyFieldTarget = presetField
+
+  controller.apply({ preventDefault() {} })
+
+  assert.equal(startField.value, '2026-06-17')
+  assert.equal(endField.value, '2026-06-17')
+  assert.equal(presetField.value, 'yesterday')
+  assert.equal(startField.events.length, 1)
+  assert.equal(startField.events[0].type, 'change')
+  assert.equal(startField.events[0].bubbles, true)
+  assert.equal(endField.events[0].type, 'change')
+  assert.equal(presetField.events[0].type, 'change')
+
+  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--date-picker:apply')
+  assert.ok(applyEvent)
+  assert.equal(applyEvent.bubbles, true)
+  assert.equal(applyEvent.detail.start, '2026-06-17')
+  assert.equal(applyEvent.detail.end, '2026-06-17')
+  assert.equal(applyEvent.detail.preset, 'yesterday')
 })
 
 test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {

@@ -33,6 +33,7 @@ module FlatPack
         min: nil,
         max: nil,
         presets: nil,
+        preset_name: nil,
         **system_arguments
       )
         @custom_class = system_arguments[:class]
@@ -50,6 +51,7 @@ module FlatPack
         @min = format_date_value(min)
         @max = format_date_value(max)
         @preset_entries = presets
+        @preset_name = normalize_preset_name!(preset_name)
 
         validate_names!
         resolved_presets unless @preset_entries.nil?
@@ -93,8 +95,9 @@ module FlatPack
       def render_picker_hidden_fields
         safe_join([
           tag.input(type: "hidden", name: @start_name, value: @start_value, data: {"flat-pack--flatpack-date-picker-target": "rangeStartField"}),
-          tag.input(type: "hidden", name: @end_name, value: @end_value, data: {"flat-pack--flatpack-date-picker-target": "rangeEndField"})
-        ])
+          tag.input(type: "hidden", name: @end_name, value: @end_value, data: {"flat-pack--flatpack-date-picker-target": "rangeEndField"}),
+          render_preset_name_field
+        ].compact)
       end
 
       def picker_data_attributes
@@ -113,6 +116,10 @@ module FlatPack
           "flat-pack--flatpack-date-picker-preset-key-value": initial_preset_key,
           "flat-pack--flatpack-date-picker-panel-id-value": panel_id
         ).compact
+      end
+
+      def preset_name_field_value
+        initial_preset_key
       end
 
       def picker_placeholder

@@ -132,7 +132,21 @@ module FlatPack
         assert_selector "input[type='hidden'][name='billing_anchor_date'][value='2026-05-31']", visible: :all
         assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='rangeStartField']", visible: :all
         assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='rangeEndField']", visible: :all
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='presetKeyField']", visible: :all
         assert_selector "input[type='text'][value='2026-05-31']"
+      end
+
+      def test_renders_optional_preset_name_field_for_custom_picker
+        render_inline(Component.new(
+          name: "billing_anchor_date",
+          picker: :flatpack_date_picker,
+          preset_name: "billing_anchor_preset"
+        ))
+
+        field = page.find("input[data-flat-pack--flatpack-date-picker-target='presetKeyField']", visible: :all)
+
+        assert_equal "hidden", field[:type]
+        assert_equal "billing_anchor_preset", field[:name]
       end
 
       def test_renders_with_aria_attributes

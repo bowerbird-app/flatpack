@@ -228,6 +228,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_select "[data-flat-pack-dropdown-keep-open='true']"
   end
 
+  test "date range input demo renders an optional preset name field" do
+    get "/demo/forms/date_range_input"
+
+    assert_response :success
+    assert_includes response.body, "sitemap_period_preset"
+    assert_includes response.body, "flat-pack--flatpack-date-picker-target=\"presetKeyField\""
+  end
+
   test "fieldset demo names a group of fields" do
     get "/demo/forms/fieldset"
 

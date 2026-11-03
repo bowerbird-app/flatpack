@@ -17,7 +17,8 @@ export default class extends Controller {
     "summary",
     "singleField",
     "rangeStartField",
-    "rangeEndField"
+    "rangeEndField",
+    "presetKeyField"
   ]
 
   static values = {
@@ -188,6 +189,7 @@ export default class extends Controller {
     this.committedPresetKey = this.draftPresetKey || this.presetKeyForRange(normalizedDraft)
     this.draftPresetKey = this.committedPresetKey
     this.syncFormFields(this.committed)
+    this.dispatchApplyEvents()
     this.syncTriggerValue(this.committed)
     this.close()
   }
@@ -681,13 +683,49 @@ export default class extends Controller {
       if (this.hasRangeEndFieldTarget) {
         this.rangeEndFieldTarget.value = state.end ? this.toIso(state.end) : ""
       }
-
-      return
-    }
-
-    if (this.hasSingleFieldTarget) {
+    } else if (this.hasSingleFieldTarget) {
       this.singleFieldTarget.value = state.start ? this.toIso(state.start) : ""
     }
+
+    if (this.hasPresetKeyFieldTarget) {
+      this.presetKeyFieldTarget.value = this.committedPresetKey || ""
+    }
+  }
+
+  dispatchApplyEvents() {
+    this.hiddenFieldsForApply().forEach((field) => {
+      field.dispatchEvent(new Event("change", { bubbles: true }))
+    })
+
+    this.element.dispatchEvent(new CustomEvent("flat-pack--date-picker:apply", {
+      bubbles: true,
+      detail: {
+        start: this.committed.start ? this.toIso(this.committed.start) : null,
+        end: this.committed.end ? this.toIso(this.committed.end) : null,
+        preset: this.committedPresetKey || null
+      }
+    }))
+  }
+
+  hiddenFieldsForApply() {
+    const fields = []
+
+    if (this.rangeValue) {
+      if (this.hasRangeStartFieldTarget) {
+        fields.push(this.rangeStartFieldTarget)
+      }
+      if (this.hasRangeEndFieldTarget) {
+        fields.push(this.rangeEndFieldTarget)
+      }
+    } else if (this.hasSingleFieldTarget) {
+      fields.push(this.singleFieldTarget)
+    }
+
+    if (this.hasPresetKeyFieldTarget) {
+      fields.push(this.presetKeyFieldTarget)
+    }
+
+    return fields
   }
 
   computePresetRange(key) {

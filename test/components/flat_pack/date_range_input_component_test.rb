@@ -21,7 +21,32 @@ module FlatPack
 
         assert_selector "input[type='hidden'][name='start_date']", visible: :all
         assert_selector "input[type='hidden'][name='end_date']", visible: :all
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='presetKeyField']", visible: :all
         assert_selector "input[type='text'][readonly][role='button'][placeholder='Select date range']"
+      end
+
+      def test_renders_optional_preset_name_field
+        render_inline(Component.new(
+          start_name: "start_date",
+          end_name: "end_date",
+          preset_name: "reporting_period_preset",
+          start_value: Date.current,
+          end_value: Date.current
+        ))
+
+        field = page.find("input[data-flat-pack--flatpack-date-picker-target='presetKeyField']", visible: :all)
+
+        assert_equal "hidden", field[:type]
+        assert_equal "reporting_period_preset", field[:name]
+        assert_equal "today", field[:value]
+      end
+
+      def test_raises_for_a_blank_preset_name
+        error = assert_raises(ArgumentError) do
+          Component.new(start_name: "start_date", end_name: "end_date", preset_name: "  ")
+        end
+
+        assert_includes error.message, "preset_name"
       end
 
       def test_renders_with_start_and_end_values
