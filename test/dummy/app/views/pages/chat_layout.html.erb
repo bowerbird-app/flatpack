@@ -162,5 +162,35 @@
     ) %>
   </section>
 
+  <section class="mb-12" id="named-height">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Named height",
+      anchor_link: true,
+      subtitle: "height: :md is 32rem. Omit it and the layout still fills the parent with h-full."
+    ) %>
+
+    <div class="mb-4 mt-6 overflow-hidden rounded-lg bg-(--surface-background-color)" id="chat-layout-height-md">
+      <%= render FlatPack::Chat::Layout::Component.new(variant: :split, height: :md) do |layout| %>
+        <% layout.sidebar do %>
+          <div class="p-4">
+            <h3 class="mb-3 text-sm font-semibold text-(--surface-content-color)">Conversations</h3>
+            <button type="button" class="block w-full rounded-lg bg-(--surface-muted-background-color) px-3 py-2 text-left text-sm">Product Launch</button>
+          </div>
+        <% end %>
+
+        <% layout.panel do %>
+          <%= render FlatPack::Chat::Panel::Component.new do |panel| %>
+            <% panel.header do %>
+              <div class="p-4 text-sm font-semibold">Product Launch</div>
+            <% end %>
+            <% panel.messages do %>
+              <div class="flex-1 p-4 text-sm text-(--surface-muted-content-color)">This split is 32rem tall from height: :md.</div>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
   <%= render "pages/chat_panel_right_header_example" %>
 </div>

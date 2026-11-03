@@ -53,12 +53,16 @@ module FlatPack
           variant: :single,
           split_breakpoint: :sm,
           sidebar_width: DEFAULT_SIDEBAR_WIDTH,
+          height: :full,
+          min_height: nil,
           **system_arguments
         )
           super(**system_arguments)
           @variant = variant.to_sym
           @split_breakpoint = split_breakpoint.to_sym
           @sidebar_width = sidebar_width
+          @height = FlatPack::Shared::FrameHeight.normalize(height, name: :height)
+          @min_height = FlatPack::Shared::FrameHeight.normalize(min_height, name: :min_height, allow_nil: true)
 
           validate_variant!
           validate_split_breakpoint!
@@ -113,8 +117,8 @@ module FlatPack
 
         def layout_classes
           classes(
-            "h-full",
-            "min-h-0",
+            FlatPack::Shared::FrameHeight.height_class(@height),
+            frame_min_height_class,
             "border border-[var(--chat-border-color)]",
             "rounded-[var(--card-radius)]",
             "overflow-hidden",
@@ -232,6 +236,12 @@ module FlatPack
             "flex flex-shrink-0 items-center border-b border-[var(--chat-header-border-color)] bg-[var(--chat-header-background-color)] p-2",
             breakpoint_classes.fetch(:stacked_only)
           )
+        end
+
+        def frame_min_height_class
+          return FlatPack::Shared::FrameHeight.min_height_class(@min_height) if @min_height
+
+          "min-h-0"
         end
 
         def validate_variant!

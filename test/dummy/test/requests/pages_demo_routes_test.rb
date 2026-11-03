@@ -634,6 +634,15 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes importmap, 'pin "@tiptap/extension-table-of-contents", to: "https://esm.sh/@tiptap/extension-table-of-contents@#{TIPTAP_VERSION}"'
   end
 
+  test "chat layout demo renders a named height token" do
+    get "/demo/chat/layout"
+
+    assert_response :success
+    assert_includes response.body, "Named height"
+    assert_includes response.body, "h-[32rem]"
+    assert_includes response.body, "height: :md"
+  end
+
   test "chat demo keeps composer visible in full-height panel" do
     get "/demo/chat/demo"
 

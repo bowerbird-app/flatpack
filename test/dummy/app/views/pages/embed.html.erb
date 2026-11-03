@@ -78,6 +78,24 @@
   ) %>
 </section>
 
+<section class="mb-12" id="named-height">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Named height",
+    anchor_link: true,
+    subtitle: "Pass height: instead of an aspect ratio when the host needs a rem or viewport frame."
+  ) %>
+
+  <div class="max-w-3xl" id="embed-height-md">
+    <%= render FlatPack::Embed::Component.new(
+      src: "https://www.openstreetmap.org/export/embed.html?bbox=-0.128%2C51.501%2C-0.118%2C51.508&layer=mapnik",
+      title: "Studio location at a medium height",
+      height: :md,
+      sandbox: "allow-scripts allow-same-origin allow-popups",
+      caption: "Same map, height: :md (32rem)"
+    ) %>
+  </div>
+</section>
+
 <section class="mb-12" id="square-frame">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Square",

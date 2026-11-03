@@ -191,6 +191,41 @@ module FlatPack
           assert_includes layout[:class], "rounded-[var(--card-radius)]"
           assert_includes layout[:class], "overflow-hidden"
         end
+
+        def test_default_height_fills_the_parent
+          render_inline(Component.new(data: {testid: "chat-layout"}))
+
+          layout = page.find("div[data-testid='chat-layout']", visible: :all)
+
+          assert_includes layout[:class], "h-full"
+          assert_includes layout[:class], "min-h-0"
+          refute_includes layout[:class], "h-[32rem]"
+        end
+
+        def test_height_token_sets_a_named_frame
+          render_inline(Component.new(height: :md, data: {testid: "chat-layout"}))
+
+          layout = page.find("div[data-testid='chat-layout']", visible: :all)
+
+          assert_includes layout[:class], "h-[32rem]"
+          assert_includes layout[:class], "min-h-0"
+          refute_includes layout[:class], "h-full"
+        end
+
+        def test_min_height_token_replaces_min_h_0
+          render_inline(Component.new(min_height: :sm, data: {testid: "chat-layout"}))
+
+          layout = page.find("div[data-testid='chat-layout']", visible: :all)
+
+          assert_includes layout[:class], "min-h-[20rem]"
+          refute_includes layout[:class], "min-h-0"
+        end
+
+        def test_raises_for_an_unknown_height_token
+          error = assert_raises(ArgumentError) { Component.new(height: :tall) }
+
+          assert_includes error.message, "Invalid height"
+        end
       end
     end
   end

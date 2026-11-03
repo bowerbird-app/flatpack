@@ -23,7 +23,8 @@ Do not use it for a still that should play later (that is `FlatPack::VideoPrevie
 | `referrerpolicy` | String | `"strict-origin-when-cross-origin"` | no | Iframe referrer policy. Allowed values: `no-referrer`, `no-referrer-when-downgrade`, `origin`, `origin-when-cross-origin`, `same-origin`, `strict-origin`, `strict-origin-when-cross-origin`, `unsafe-url`. |
 | `caption` | String | `nil` | no | Optional figcaption. A block can supply the same copy when `caption:` is omitted. |
 | `allowfullscreen` | Boolean | `false` | no | Sets the iframe `allowfullscreen` attribute when `true`. |
-| `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the `<figure>`. |
+| `height` | Symbol | `nil` | no | Named frame height: `:sm` (`20rem`), `:md` (`32rem`), `:lg` (`min(40rem, calc(100dvh - 16rem))`), `:viewport` (`h-dvh`). Omit it and the frame keeps `aspect_ratio`. `:full` raises `ArgumentError` (Chat::Layout only). |
+| `min_height` | Symbol | `nil` | no | Optional floor using the same tokens as `height:`. `:full` raises. |
 
 ## Slots
 None. Optional caption copy can be passed as `caption:` or as the component block.
@@ -38,6 +39,16 @@ None. `aspect_ratio` sets the frame shape.
   title: "Studio location",
   aspect_ratio: "4/3",
   caption: "The workshop on OpenStreetMap"
+) %>
+```
+
+A clip with a named height instead of an aspect ratio:
+
+```erb
+<%= render FlatPack::Embed::Component.new(
+  src: map_embed_url,
+  title: "Studio location",
+  height: :md
 ) %>
 ```
 

@@ -463,6 +463,8 @@
         { variable: "variant", accepts: ":single, :split", example: "variant: :split" },
         { variable: "split_breakpoint", accepts: ":sm, :md, :lg", example: "split_breakpoint: :lg" },
         { variable: "sidebar_width", accepts: "CSS grid track", example: "sidebar_width: \"minmax(12rem, 30%)\"" },
+        { variable: "height", accepts: ":full, :sm, :md, :lg, :viewport", example: "height: :md" },
+        { variable: "min_height", accepts: ":full, :sm, :md, :lg, :viewport, or nil", example: "min_height: :sm" },
         { variable: "sidebar", accepts: "slot block", example: "layout.sidebar { ... }" },
         { variable: "panel", accepts: "slot block", example: "layout.panel { ... }" }
       ]
@@ -1500,6 +1502,8 @@
         { variable: "referrerpolicy", accepts: "Iframe referrer policy string", example: "referrerpolicy: \"strict-origin-when-cross-origin\"" },
         { variable: "caption", accepts: "String or nil", example: "caption: \"The workshop on OpenStreetMap\"" },
         { variable: "allowfullscreen", accepts: "true, false", example: "allowfullscreen: true" },
+        { variable: "height", accepts: ":sm, :md, :lg, :viewport, or nil", example: "height: :md" },
+        { variable: "min_height", accepts: ":sm, :md, :lg, :viewport, or nil", example: "min_height: :sm" },
         { variable: "**system_arguments", accepts: "Hash", example: "class: \"max-w-3xl\", id: \"studio-map\"" }
       ]
     },
