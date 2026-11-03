@@ -15,7 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Breaking.** `title:` on `FlatPack::List::Item` used to pass through as the HTML `title` attribute (a tooltip). It now renders visible text, and an HTML-safe string raises. Grep for `List::Item.new(... title:` and use `system_arguments: { title: }` for a tooltip.
 
+### Security
+- Development lockfiles: `loofah` 2.25.3, `nokogiri` 1.19.7, and `rails-html-sanitizer` 1.7.2. This clears the current bundler-audit advisories for those gems.
+
 ### Upgrade notes
+- Run `bundle install` so `loofah`, `nokogiri`, and `rails-html-sanitizer` match the lockfile. No application API change.
 - Grep for `List::Item.new(... title:`. A tooltip moves to `system_arguments: { title: }`. The `title:` argument is now the visible line. An HTML-safe string raises. Do not use `title:` or `subtitle:` on `layout: :key_value`. Reload the gem. Do not rebuild Tailwind unless the host is missing `text-[length:var(--text-sm)]`, `font-medium`, or `text-[var(--surface-muted-content-color)]`. Do not rerun the install generator.
 - Redeploy so `meta.gem_version` shows `0.1.334`.
 
