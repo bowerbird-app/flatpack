@@ -46,6 +46,13 @@ module FlatPack
 
         assert_match(/max_height:/, error.message)
       end
+
+      def test_max_height_rejects_percent
+        error = assert_raises(ArgumentError) { Component.new(trigger_id: "account-trigger", max_height: "50%") }
+
+        assert_match(/max_height:/, error.message)
+        assert_match(/Percent/, error.message)
+      end
     end
   end
 end

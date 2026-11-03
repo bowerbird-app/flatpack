@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.338] - 2026-11-03
 
 ### Added
-- `FlatPack::Popover::Component` accepts `max_height:`. Omit it and the shell stays uncapped. Pass a CSS length such as `"9rem"` and that length is inline `max-height` with `overflow-y-auto`. `FlatPack::Notification::Component` `max_height:` now uses that popover cap; the list fills the remaining space and the footer stays outside the scroller. Omit it and the list still uses `max-h-96`.
+- `FlatPack::Popover::Component` accepts `max_height:`. Omit it and the shell stays uncapped. Pass a CSS length such as `"9rem"` and that length is inline `max-height` with `overflow-y-auto`. `%` raises `ArgumentError`. `FlatPack::Notification::Component` `max_height:` now uses that popover cap. Omit it and the list still uses `max-h-96`.
+
+### Changed
+- When Notification `max_height:` is set, the popover shell caps height and the list scrolls inside. The footer stays outside the scroller. Omit `max_height:` and the list still uses `max-h-96`.
 
 ### Upgrade notes
-- Additive for a bare popover. Pass `max_height: "9rem"` instead of a host `max-h-*` override. Notification `max_height:` still drops `max-h-96`. The length now caps the popover shell so the footer stays visible. Rebuild host Tailwind so `overflow-y-auto`, `flex`, `flex-col`, `min-h-0`, and `flex-1` exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
+- Additive for a bare popover that omits `max_height:`. Pass `max_height: "9rem"` instead of a host `max-h-*` override. `%` is rejected. Notification `max_height:` still drops `max-h-96`. The length now caps the popover shell so the footer stays visible. Rebuild host Tailwind so `overflow-y-auto`, `flex`, `flex-col`, `min-h-0`, and `flex-1` exist if the host did not already use them. Reload kit CSS. Do not rerun the install generator.
 - Redeploy so `meta.gem_version` shows `0.1.338`.
 
 ## [0.1.337] - 2026-11-03

@@ -109,6 +109,7 @@ module FlatPack
         assert_includes html, "w-80"
         assert_includes html, "max-w-[calc(100vw-2rem)]"
         assert_includes html, "overflow-hidden"
+        refute_includes html, "!overflow-hidden"
         assert_includes html, "!p-0"
         refute_includes html, "pb-12"
       end
@@ -351,6 +352,7 @@ module FlatPack
         assert_equal "max-height: 9rem;", popover[:style]
         assert_includes popover[:class], "flex"
         assert_includes popover[:class], "flex-col"
+        assert_includes popover[:class], "!overflow-hidden"
         refute_selector "div.max-h-96"
       end
 
@@ -376,7 +378,7 @@ module FlatPack
       end
 
       def test_max_height_rejects_a_class_name_or_unsafe_value
-        ["max-h-96", "", "24rem; color: red", 24, "<style>"].each do |max_height|
+        ["max-h-96", "", "24rem; color: red", 24, "<style>", "50%"].each do |max_height|
           error = assert_raises(ArgumentError) do
             Component.new(see_all_href: "/notifications", max_height: max_height)
           end

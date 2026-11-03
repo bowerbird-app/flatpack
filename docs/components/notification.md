@@ -20,7 +20,7 @@ Use Notification in application navigation, top bars, dashboards, or account are
 | `bell_label` | String | `"Notifications"` | no | Accessible label for the bell button. |
 | `empty_text` | String | `"No recent notifications"` | no | Empty state text. |
 | `timestamp_tooltip_placement` | Symbol | `:left` | no | Tooltip placement for notification timestamps. |
-| `max_height` | String or nil | `nil` | no | CSS length on the popover shell, such as `"9rem"`. The list fills the remaining space and scrolls. The **See all notifications** link stays outside the scroller. Omit it and the list keeps `max-h-96` (24rem). A class name, a blank string, or anything that is not a plain length raises `ArgumentError`. |
+| `max_height` | String or nil | `nil` | no | CSS length on the popover shell, such as `"9rem"`. The list fills the remaining space and scrolls. The **See all notifications** link stays outside the scroller. Omit it and the list keeps `max-h-96` (24rem). `%` is rejected. A class name, a blank string, or anything that is not a plain length raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the wrapper. |
 
 ## Slots

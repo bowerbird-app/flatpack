@@ -33,7 +33,7 @@ module FlatPack
       }.freeze
       PANEL_GAP = 12
 
-      MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
+      MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax)\z/
 
       def initialize(
         trigger_id:,
@@ -138,7 +138,7 @@ module FlatPack
         length = max_height.strip
         return length if length.match?(MAX_HEIGHT_PATTERN)
 
-        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\"."
+        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\". Percent is not allowed."
       end
     end
   end

@@ -4,7 +4,7 @@ module FlatPack
   module Notification
     class Component < FlatPack::BaseComponent
       # A length such as "24rem". The default panel keeps the max-h-96 class (24rem).
-      MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
+      MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax)\z/
 
       def initialize(
         see_all_href:, notifications: [],
@@ -112,7 +112,8 @@ module FlatPack
 
       def notification_popover_classes
         [
-          "w-80 max-w-[calc(100vw-2rem)] !p-0 !overflow-hidden",
+          "w-80 max-w-[calc(100vw-2rem)] !p-0",
+          (@max_height ? "!overflow-hidden" : "overflow-hidden"),
           ("flex flex-col" if @max_height)
         ].compact.join(" ")
       end
@@ -135,7 +136,7 @@ module FlatPack
         length = max_height.strip
         return length if length.match?(MAX_HEIGHT_PATTERN)
 
-        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\"."
+        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\". Percent is not allowed."
       end
 
       def render_notification_list
