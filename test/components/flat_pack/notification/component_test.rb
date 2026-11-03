@@ -377,8 +377,14 @@ module FlatPack
         assert_equal "max-height: 9rem;", page.find("#bell-popover", visible: :all)[:style]
       end
 
+      def test_max_height_accepts_a_percent_length
+        render_inline(Component.new(see_all_href: "/notifications", max_height: "50%", trigger_id: "bell"))
+
+        assert_equal "max-height: 50%;", page.find("#bell-popover", visible: :all)[:style]
+      end
+
       def test_max_height_rejects_a_class_name_or_unsafe_value
-        ["max-h-96", "", "24rem; color: red", 24, "<style>", "50%"].each do |max_height|
+        ["max-h-96", "", "24rem; color: red", 24, "<style>"].each do |max_height|
           error = assert_raises(ArgumentError) do
             Component.new(see_all_href: "/notifications", max_height: max_height)
           end

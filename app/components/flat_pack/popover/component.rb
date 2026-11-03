@@ -107,9 +107,10 @@ module FlatPack
       end
 
       def popover_style
-        return unless @max_height
+        host = html_attributes[:style] || html_attributes["style"]
+        return host unless @max_height
 
-        join_styles(html_attributes[:style] || html_attributes["style"], "max-height: #{@max_height};")
+        join_styles(host, "max-height: #{@max_height};")
       end
 
       def validate_trigger_id!
