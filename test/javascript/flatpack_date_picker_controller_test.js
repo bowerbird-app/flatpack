@@ -172,7 +172,15 @@ test('apply infers preset label for matching calendar-selected range', () => {
 
 test('apply dispatches bubbling change on hidden fields and a custom apply event', () => {
   const controller = buildController()
-  const startField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const startField = {
+    value: '',
+    events: [],
+    dispatchEvent(event) {
+      this.events.push(event)
+      this.triggerAtChange = controller.triggerTarget.value
+      return true
+    }
+  }
   const endField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
   const presetField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
 
@@ -189,6 +197,15 @@ test('apply dispatches bubbling change on hidden fields and a custom apply event
   controller.rangeEndFieldTarget = endField
   controller.presetKeyFieldTarget = presetField
 
+  let triggerAtApply = null
+  controller.element.dispatchEvent = (event) => {
+    if (event.type === 'flat-pack--flatpack-date-picker:apply') {
+      triggerAtApply = controller.triggerTarget.value
+    }
+    controller.elementEvents.push(event)
+    return true
+  }
+
   controller.apply({ preventDefault() {} })
 
   assert.equal(startField.value, '2026-06-17')
@@ -197,8 +214,11 @@ test('apply dispatches bubbling change on hidden fields and a custom apply event
   assert.equal(startField.events.length, 1)
   assert.equal(startField.events[0].type, 'change')
   assert.equal(startField.events[0].bubbles, true)
+  assert.equal(startField.triggerAtChange, 'Yesterday')
   assert.equal(endField.events[0].type, 'change')
   assert.equal(presetField.events[0].type, 'change')
+  assert.equal(triggerAtApply, 'Yesterday')
+  assert.equal(controller.triggerTarget.value, 'Yesterday')
 
   const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--flatpack-date-picker:apply')
   assert.ok(applyEvent)

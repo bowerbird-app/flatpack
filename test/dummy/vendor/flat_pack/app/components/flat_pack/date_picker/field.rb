@@ -102,7 +102,7 @@ module FlatPack
 
         name = value.to_s
         if name.strip.empty?
-          raise ArgumentError, "preset_name is required"
+          raise ArgumentError, "preset_name must be a non-blank String"
         end
 
         name

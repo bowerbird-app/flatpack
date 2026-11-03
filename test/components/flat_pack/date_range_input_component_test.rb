@@ -46,7 +46,7 @@ module FlatPack
           Component.new(start_name: "start_date", end_name: "end_date", preset_name: "  ")
         end
 
-        assert_includes error.message, "preset_name"
+        assert_equal "preset_name must be a non-blank String", error.message
       end
 
       def test_renders_with_start_and_end_values
