@@ -43,7 +43,8 @@ Primary component (`FlatPack::Sidebar::Component`):
 | `title` | String | `"FlatPack"` | No | Title text beside the badge. |
 | `subtitle` | String or nil | `nil` | No | Accepted. Not rendered. |
 | `collapsible` | Boolean | `true` | No | Shows the collapse toggle buttons when `true`. |
-| `show_version` | Boolean | `true` | No | Default `true` renders `v{FlatPack::VERSION}` beside the title. `false` omits the badge span. Product hosts pass `false` so the kit version badge does not ship. |
+| `show_version` | Boolean | `true` | No | Default `true` renders the version pill beside the title. `false` omits the badge span. |
+| `version` | String or nil | `nil` | No | Version number shown in the pill, without the `v` prefix. Omit it and the pill shows `FlatPack::VERSION`. A leading `v` or `V` is dropped (`"V2.4"` reads `v2.4`). Blank, `"v"`, and `"V"` fall back to `FlatPack::VERSION`. `show_version: false` still hides the pill. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the header wrapper. |
 
 ## Slots
@@ -60,7 +61,7 @@ Primary component (`FlatPack::Sidebar::Component`):
 |---------|-------------|
 | `side: :left` | Renders right border (`border-r`). |
 | `side: :right` | Renders left border (`border-l`). |
-| Header `show_version: true` | Default. Renders `v{FlatPack::VERSION}` beside the title. |
+| Header `show_version: true` | Default. Renders `v` plus `version:`, or `v{FlatPack::VERSION}` when `version:` is omitted. |
 | Header `show_version: false` | Omits the version badge span. |
 | Header `logo:` present | Square mark in the badge slot. Title, collapse toggles, and `show_version` stay. |
 
@@ -94,7 +95,19 @@ Primary component (`FlatPack::Sidebar::Component`):
 <% end %>
 ```
 
-A product host that should not ship the kit version badge:
+A product host that should show its own version:
+
+```erb
+<%= render FlatPack::Sidebar::Header::Component.new(
+  brand_abbr: "AC",
+  title: "Acme",
+  version: "2.4.0"
+) %>
+```
+
+That pill reads `v2.4.0`. Omit `version:` and it still reads `v` plus `FlatPack::VERSION`.
+
+A product host that should not ship a version badge:
 
 ```erb
 <%= render FlatPack::Sidebar::Header::Component.new(

@@ -80,6 +80,46 @@ module FlatPack
           assert_selector ".fp-sidebar-label > span", count: 1
         end
 
+        def test_version_string_replaces_the_kit_version
+          render_inline(Component.new(version: "2.4.0"))
+
+          assert_text "v2.4.0"
+          assert_no_text "v#{FlatPack::VERSION}"
+        end
+
+        def test_version_drops_a_leading_v_and_blank_falls_back
+          render_inline(Component.new(version: "v2.4.0"))
+          assert_text "v2.4.0"
+          assert_no_text "vv2.4.0"
+
+          render_inline(Component.new(version: "  "))
+          assert_text "v#{FlatPack::VERSION}"
+        end
+
+        def test_version_strips_a_capital_v_and_a_bare_v_falls_back
+          render_inline(Component.new(version: "V2.4"))
+          assert_selector ".fp-sidebar-label > span", text: "v2.4"
+          assert_no_text "vV2.4"
+
+          render_inline(Component.new(version: "v"))
+          assert_selector ".fp-sidebar-label > span", text: "v#{FlatPack::VERSION}"
+        end
+
+        def test_show_version_false_hides_a_custom_version
+          render_inline(Component.new(version: "2.4.0", show_version: false))
+
+          assert_no_text "v2.4.0"
+          assert_no_selector ".fp-sidebar-label > span"
+        end
+
+        def test_version_rejects_a_non_string
+          error = assert_raises(ArgumentError) { Component.new(version: 2.4) }
+          assert_match(/version:/, error.message)
+
+          error = assert_raises(ArgumentError) { Component.new(version: "2.4.0".html_safe) }
+          assert_match(/version:/, error.message)
+        end
+
         def test_renders_square_mark_in_badge_slot_instead_of_abbr
           render_inline(Component.new(
             logo: "https://example.com/mark.png",

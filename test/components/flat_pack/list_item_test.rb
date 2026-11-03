@@ -252,6 +252,98 @@ module FlatPack
         assert_includes error.message, "Invalid align: :middle"
       end
 
+      def test_title_and_subtitle_use_kit_type
+        render_inline(Item.new(title: "Take 3", subtitle: "Room tone, no talking.", icon: :mic))
+
+        assert_selector "p.fp-text.fp-list-item-title.font-medium", text: "Take 3"
+        assert_selector "p.fp-text.fp-list-item-subtitle", text: "Room tone, no talking."
+        html = page.native.to_html
+        assert_includes html, "text-[length:var(--text-sm)]"
+        assert_includes html, "text-[var(--surface-muted-content-color)]"
+        assert_includes html, "fp-list-item-subtitle break-words mt-0.5"
+      end
+
+      def test_title_slots_replace_the_strings
+        render_inline(Item.new) do |item|
+          item.with_title { "Slotted title" }
+          item.with_subtitle { "Slotted subtitle" }
+        end
+
+        assert_text "Slotted title"
+        assert_text "Slotted subtitle"
+        refute_selector "p.fp-list-item-title"
+      end
+
+      def test_title_keeps_the_item_block_after_the_lines
+        render_inline(Item.new(title: "Take 3")) { "Extra" }
+
+        assert_selector "p.fp-list-item-title", text: "Take 3"
+        assert_text "Extra"
+      end
+
+      def test_omitted_title_keeps_the_block_as_the_only_copy
+        render_inline(Item.new) { "First item" }
+
+        assert_selector "div.min-w-0.flex-1", text: "First item"
+        refute_selector "p.fp-list-item-title"
+        refute_selector "p.fp-list-item-subtitle"
+      end
+
+      def test_title_escapes_html
+        render_inline(Item.new(title: "<b>Take</b>", subtitle: "<i>tone</i>"))
+
+        assert_selector "p.fp-list-item-title", text: "<b>Take</b>"
+        refute_selector "p.fp-list-item-title b"
+      end
+
+      def test_title_rejects_html_safe_strings
+        error = assert_raises(ArgumentError) { Item.new(title: "<b>Take</b>".html_safe) }
+        assert_match(/title/, error.message)
+
+        error = assert_raises(ArgumentError) { Item.new(subtitle: "<i>tone</i>".html_safe) }
+        assert_match(/subtitle/, error.message)
+      end
+
+      def test_system_arguments_title_is_the_tooltip
+        render_inline(Item.new(title: "Take 3", system_arguments: {title: "Session note"}))
+
+        assert_selector "li[title='Session note']"
+        assert_selector "p.fp-list-item-title", text: "Take 3"
+        refute_selector "li[title='Take 3']"
+
+        render_inline(Item.new(system_arguments: {title: "Session note"})) { "First item" }
+
+        assert_selector "li[title='Session note']", text: "First item"
+        refute_selector "p.fp-list-item-title"
+      end
+
+      def test_title_and_slot_together_raise
+        error = assert_raises(ArgumentError) do
+          render_inline(Item.new(title: "Take 3")) do |item|
+            item.with_title { "Other" }
+          end
+        end
+        assert_match(/title:/, error.message)
+      end
+
+      def test_key_value_rejects_title_and_subtitle
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", title: "Studio B") }
+        end
+        assert_match(/title:/, error.message)
+      end
+
+      def test_key_value_rejects_a_title_slot
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) do
+            render_inline(Item.new(key: "Room")) do |item|
+              item.with_title { "Studio B" }
+            end
+          end
+        end
+        assert_match(/title:/, error.message)
+      end
+
       def test_key_value_rejects_a_non_start_align
         error = assert_raises(ArgumentError) do
           Rendering.with(layout: :key_value) { Item.new(key: "Room", align: :center) }
