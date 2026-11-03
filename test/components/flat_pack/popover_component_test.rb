@@ -55,14 +55,13 @@ module FlatPack
       def test_max_height_rejects_a_class_name
         error = assert_raises(ArgumentError) { Component.new(trigger_id: "account-trigger", max_height: "max-h-96") }
 
-        assert_match(/max_height:/, error.message)
+        assert_equal "max_height: must be a CSS length such as \"24rem\".", error.message
       end
 
       def test_max_height_rejects_percent
         error = assert_raises(ArgumentError) { Component.new(trigger_id: "account-trigger", max_height: "50%") }
 
-        assert_match(/max_height:/, error.message)
-        assert_match(/Percent/, error.message)
+        assert_equal "max_height: must be a CSS length such as \"24rem\". Percent is not allowed.", error.message
       end
     end
   end

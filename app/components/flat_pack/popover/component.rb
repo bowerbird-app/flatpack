@@ -139,7 +139,9 @@ module FlatPack
         length = max_height.strip
         return length if length.match?(MAX_HEIGHT_PATTERN)
 
-        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\". Percent is not allowed."
+        message = "max_height: must be a CSS length such as \"24rem\"."
+        message += " Percent is not allowed." if length.include?("%")
+        raise ArgumentError, message
       end
     end
   end
