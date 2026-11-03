@@ -41,6 +41,17 @@ module FlatPack
         assert_equal "max-height: 9rem;", root[:style]
       end
 
+      def test_max_height_keeps_a_host_style
+        render_inline(Component.new(trigger_id: "account-trigger", max_height: "9rem", style: "width: 12rem;")) do |popover|
+          popover.popover_content { "Popover body" }
+        end
+
+        root = page.find("[data-controller='flat-pack--popover']", visible: :all)
+
+        assert_includes root[:style], "width: 12rem;"
+        assert_includes root[:style], "max-height: 9rem;"
+      end
+
       def test_max_height_rejects_a_class_name
         error = assert_raises(ArgumentError) { Component.new(trigger_id: "account-trigger", max_height: "max-h-96") }
 

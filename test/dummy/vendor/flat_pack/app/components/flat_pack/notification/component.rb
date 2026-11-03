@@ -88,8 +88,7 @@ module FlatPack
           trigger_id: @trigger_id,
           placement: @placement,
           id: @popover_id,
-          class: notification_popover_classes,
-          style: ("max-height: #{@max_height};" if @max_height)
+          class: "w-80 max-w-[calc(100vw-2rem)] !p-0 overflow-hidden"
         ) do |popover|
           popover.content do
             safe_join([
@@ -110,17 +109,9 @@ module FlatPack
         end
       end
 
-      def notification_popover_classes
-        [
-          "w-80 max-w-[calc(100vw-2rem)] !p-0",
-          (@max_height ? "!overflow-hidden" : "overflow-hidden"),
-          ("flex flex-col" if @max_height)
-        ].compact.join(" ")
-      end
-
       def notification_panel_attributes
         if @max_height
-          {class: "min-h-0 flex-1 overflow-y-auto"}
+          {class: "overflow-y-auto", style: "max-height: #{@max_height};"}
         else
           {class: "max-h-96 overflow-y-auto"}
         end
