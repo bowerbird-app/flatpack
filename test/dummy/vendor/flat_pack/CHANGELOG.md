@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.335] - 2026-11-02
+
+### Added
+- `FlatPack::Sidebar::Header::Component` accepts `version:`. The pill shows `v` plus that string instead of `FlatPack::VERSION`. Omit it, or pass a blank string, and the pill still shows `v` plus `FlatPack::VERSION`. A leading `v` or `V` is dropped, so `"v2.4.0"`, `"V2.4"`, and `"2.4.0"` read `v2.4.0` or `v2.4`. `"v"` and `"V"` alone fall back to `FlatPack::VERSION`. `show_version: false` still hides the pill. A non-string or an HTML-safe string raises.
+
+### Upgrade notes
+- Additive. Existing headers keep the kit version pill. Pass `version: "2.4.0"` when the pill should name the host. Pass `show_version: false` to hide it. Reload the gem. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.335`.
+
 ## [0.1.334] - 2026-11-02
 
 ### Added
