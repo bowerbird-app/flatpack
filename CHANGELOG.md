@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.340] - 2026-11-03
+
+### Added
+- Font Swatch exposes a public reset. Stimulus `reset` restores the server-rendered `font:` on `data-flat-pack--font-swatch-font-value`. Hosts dispatch `font-swatch:reset` on the swatch root, or pass `detail.value` as a CSS `font-family`. Reset updates the hidden field, sample face, option selection, trigger name, and tooltip, then fires `font-swatch:change`.
+
+### Upgrade notes
+- Additive. Existing Font Swatch markup and `font-swatch:change` stay the same. To reset without touching internals, dispatch `font-swatch:reset` on `[data-controller='flat-pack--font-swatch']`, or call `reset` on `flat-pack--font-swatch`. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.340`.
+
 ## [0.1.339] - 2026-11-03
 
 ### Added

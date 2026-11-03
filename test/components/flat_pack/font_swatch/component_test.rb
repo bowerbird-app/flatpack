@@ -163,7 +163,21 @@ module FlatPack
         assert_selector "[data-flat-pack--font-swatch-target='input']", visible: :hidden
         assert_selector "[data-flat-pack--font-swatch-target='menu']", visible: :all
         assert_selector "button[data-action*='flat-pack--font-swatch#select']", visible: :all
+        assert_selector "[data-flat-pack--font-swatch-font-value='ui-sans-serif']"
+        assert_selector "[data-action*='font-swatch:reset->flat-pack--font-swatch#reset']"
         refute_selector "select"
+      end
+
+      def test_merges_host_action_with_reset
+        render_inline(Component.new(
+          font: "ui-sans-serif",
+          options: DEMO_OPTIONS,
+          text: "Sans",
+          data: {action: "click->host#ping"}
+        ))
+
+        assert_selector "[data-action*='click->host#ping']"
+        assert_selector "[data-action*='font-swatch:reset->flat-pack--font-swatch#reset']"
       end
 
       def test_uses_id_for_trigger

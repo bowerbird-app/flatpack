@@ -25,6 +25,7 @@ module FlatPack
       }.freeze
 
       SAMPLE_TEXT = "Aa"
+      RESET_ACTIONS = "font-swatch:reset->flat-pack--font-swatch#reset"
 
       def initialize(
         font:,
@@ -68,13 +69,16 @@ module FlatPack
       private
 
       def root_attributes
-        merge_attributes(
+        attrs = merge_attributes(
           class: root_classes,
           data: {
             controller: "flat-pack--font-swatch",
-            selected: @selected.to_s
+            selected: @selected.to_s,
+            flat_pack__font_swatch_font_value: @font
           }
         ).except(:id)
+        attrs[:data] = merge_data_attributes(attrs[:data], {action: RESET_ACTIONS})
+        attrs
       end
 
       def root_classes
