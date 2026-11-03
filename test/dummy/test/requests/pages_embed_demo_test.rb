@@ -20,6 +20,8 @@ class PagesEmbedDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "aspect-[16/9]"
     assert_includes response.body, "aspect-[4/3]"
     assert_includes response.body, "aspect-square"
+    assert_includes response.body, "h-[32rem]"
+    assert_includes response.body, "Named height"
   end
 
   test "sidebar includes embed" do

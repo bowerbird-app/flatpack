@@ -8,6 +8,8 @@ module FlatPack
       # "fp-embed" "fp-embed__frame" "fp-embed__caption" "relative" "w-full" "max-w-full"
       # "overflow-hidden" "rounded-[var(--media-radius)]" "aspect-[16/9]" "aspect-[4/3]"
       # "aspect-square" "mt-2" "text-sm" "text-[var(--surface-muted-content-color)]"
+      # "h-[20rem]" "h-[32rem]" "h-[min(40rem,calc(100dvh-16rem))]" "h-dvh"
+      # "min-h-[20rem]" "min-h-[32rem]" "min-h-[min(40rem,calc(100dvh-16rem))]" "min-h-dvh"
 
       LOADINGS = %w[lazy eager].freeze
       REFERRER_POLICIES = %w[
@@ -31,6 +33,8 @@ module FlatPack
         referrerpolicy: "strict-origin-when-cross-origin",
         caption: nil,
         allowfullscreen: false,
+        height: nil,
+        min_height: nil,
         **system_arguments
       )
         super(**system_arguments)
@@ -43,6 +47,10 @@ module FlatPack
         @referrerpolicy = referrerpolicy.to_s
         @caption = caption
         @allowfullscreen = allowfullscreen
+        @height = FlatPack::Shared::FrameHeight.normalize(height, name: :height, allow_nil: true)
+        @min_height = FlatPack::Shared::FrameHeight.normalize(min_height, name: :min_height, allow_nil: true)
+        raise ArgumentError, "height: :full is only for Chat::Layout." if @height == :full
+        raise ArgumentError, "min_height: :full is only for Chat::Layout." if @min_height == :full
 
         validate_src!(src)
         validate_title!
@@ -76,8 +84,9 @@ module FlatPack
           "max-w-full",
           "overflow-hidden",
           "rounded-[var(--media-radius)]",
-          aspect_class
-        ].join(" ")
+          (@height ? FlatPack::Shared::FrameHeight.height_class(@height) : aspect_class),
+          (FlatPack::Shared::FrameHeight.min_height_class(@min_height) if @min_height)
+        ].compact.join(" ")
       end
 
       def aspect_class

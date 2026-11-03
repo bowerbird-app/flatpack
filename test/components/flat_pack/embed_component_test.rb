@@ -117,6 +117,40 @@ module FlatPack
         assert_selector "figcaption", text: "The workshop"
       end
 
+      def test_height_token_replaces_the_aspect_class
+        render_inline(Component.new(src: "https://embed.example/map", title: "Studio location", height: :md))
+
+        classes = page.find(".fp-embed__frame")[:class]
+
+        assert_includes classes, "h-[32rem]"
+        refute_includes classes, "aspect-[16/9]"
+      end
+
+      def test_min_height_token_keeps_the_aspect_class
+        render_inline(Component.new(src: "https://embed.example/map", title: "Studio location", min_height: :sm))
+
+        classes = page.find(".fp-embed__frame")[:class]
+
+        assert_includes classes, "aspect-[16/9]"
+        assert_includes classes, "min-h-[20rem]"
+      end
+
+      def test_rejects_full_height_on_embed
+        error = assert_raises(ArgumentError) do
+          Component.new(src: "https://embed.example/map", title: "Studio location", height: :full)
+        end
+
+        assert_includes error.message, "height: :full"
+      end
+
+      def test_rejects_an_unknown_height_token
+        error = assert_raises(ArgumentError) do
+          Component.new(src: "https://embed.example/map", title: "Studio location", height: :tall)
+        end
+
+        assert_includes error.message, "Invalid height"
+      end
+
       def test_catalog_records_required_title_and_src
         FlatPack::ComponentCatalog.reset!
         payload = FlatPack::ComponentCatalog.show("Embed::Component")
