@@ -202,6 +202,15 @@ module FlatPack
           refute_includes layout[:class], "h-[32rem]"
         end
 
+        def test_nil_height_falls_back_to_full
+          render_inline(Component.new(height: nil, data: {testid: "chat-layout"}))
+
+          layout = page.find("div[data-testid='chat-layout']", visible: :all)
+
+          assert_includes layout[:class], "h-full"
+          refute_includes layout[:class], "h-[32rem]"
+        end
+
         def test_height_token_sets_a_named_frame
           render_inline(Component.new(height: :md, data: {testid: "chat-layout"}))
 

@@ -61,7 +61,7 @@ module FlatPack
           @variant = variant.to_sym
           @split_breakpoint = split_breakpoint.to_sym
           @sidebar_width = sidebar_width
-          @height = FlatPack::Shared::FrameHeight.normalize(height, name: :height)
+          @height = FlatPack::Shared::FrameHeight.normalize(height, name: :height, allow_nil: true) || :full
           @min_height = FlatPack::Shared::FrameHeight.normalize(min_height, name: :min_height, allow_nil: true)
 
           validate_variant!

@@ -25,6 +25,7 @@ Do not use it for a still that should play later (that is `FlatPack::VideoPrevie
 | `allowfullscreen` | Boolean | `false` | no | Sets the iframe `allowfullscreen` attribute when `true`. |
 | `height` | Symbol | `nil` | no | Named frame height: `:sm` (`20rem`), `:md` (`32rem`), `:lg` (`min(40rem, calc(100dvh - 16rem))`), `:viewport` (`h-dvh`). Omit it and the frame keeps `aspect_ratio`. `:full` raises `ArgumentError` (Chat::Layout only). This is a token kwarg, not a raw HTML `height` attribute; use `style:` or a CSS class for a custom length. |
 | `min_height` | Symbol | `nil` | no | Optional floor using the same tokens as `height:`. `:full` raises. |
+| `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the `<figure>`. |
 
 ## Slots
 None. Optional caption copy can be passed as `caption:` or as the component block.
