@@ -296,6 +296,23 @@
   ) %>
 </section>
 
+<section class="mb-12" id="capped-height">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Capped height", anchor_link: true, subtitle: "max_height: puts a CSS length on the shell. Long copy scrolls inside it.") %>
+  <div class="mb-4" id="popover-max-height">
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-max-height", text: "Notes", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-max-height", placement: :bottom, max_height: "9rem") do |popover| %>
+      <% popover.content do %>
+        <div class="w-64 space-y-2 text-sm text-[var(--surface-content-color)]">
+          <p class="font-semibold">Session notes</p>
+          <% 8.times do |index| %>
+            <p>Note <%= index + 1 %>: keep the take short enough to scan, then scroll for the rest.</p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>

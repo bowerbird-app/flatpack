@@ -15,6 +15,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 | `trigger_id` | String | `nil` | yes | DOM id of the trigger element that controls/anchors the popover. |
 | `placement` | Symbol | `:bottom` | no | Positioning hint: `:top`, `:bottom`, `:left`, `:right`. |
 | `gap` | Integer | `12` | no | Pixels between the trigger and the panel. `0` is allowed. A negative number, a float, or a string raises `ArgumentError`. |
+| `max_height` | String or nil | `nil` | no | CSS length such as `"9rem"`. Sets inline `max-height` and `overflow-y-auto` on the shell. Omit it and the panel is uncapped. `%` is rejected. A class name, a blank string, or anything that is not a plain length raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for popover wrapper. |
 
 ## Slots

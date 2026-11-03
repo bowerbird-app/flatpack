@@ -18,6 +18,51 @@ module FlatPack
 
         refute component.respond_to?(:with_popover_content, true)
       end
+
+      def test_omitted_max_height_leaves_the_shell_uncapped
+        render_inline(Component.new(trigger_id: "account-trigger")) do |popover|
+          popover.popover_content { "Popover body" }
+        end
+
+        root = page.find("[data-controller='flat-pack--popover']", visible: :all)
+
+        refute_includes root[:class].to_s, "overflow-y-auto"
+        refute_includes root[:style].to_s, "max-height"
+      end
+
+      def test_max_height_caps_the_shell
+        render_inline(Component.new(trigger_id: "account-trigger", max_height: " 9rem ")) do |popover|
+          popover.popover_content { "Popover body" }
+        end
+
+        root = page.find("[data-controller='flat-pack--popover']", visible: :all)
+
+        assert_includes root[:class], "overflow-y-auto"
+        assert_equal "max-height: 9rem;", root[:style]
+      end
+
+      def test_max_height_keeps_a_host_style
+        render_inline(Component.new(trigger_id: "account-trigger", max_height: "9rem", style: "width: 12rem;")) do |popover|
+          popover.popover_content { "Popover body" }
+        end
+
+        root = page.find("[data-controller='flat-pack--popover']", visible: :all)
+
+        assert_includes root[:style], "width: 12rem;"
+        assert_includes root[:style], "max-height: 9rem;"
+      end
+
+      def test_max_height_rejects_a_class_name
+        error = assert_raises(ArgumentError) { Component.new(trigger_id: "account-trigger", max_height: "max-h-96") }
+
+        assert_equal "max_height: must be a CSS length such as \"24rem\".", error.message
+      end
+
+      def test_max_height_rejects_percent
+        error = assert_raises(ArgumentError) { Component.new(trigger_id: "account-trigger", max_height: "50%") }
+
+        assert_equal "max_height: must be a CSS length such as \"24rem\". Percent is not allowed.", error.message
+      end
     end
   end
 end

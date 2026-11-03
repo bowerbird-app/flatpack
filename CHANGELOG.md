@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.338] - 2026-11-03
+
+### Added
+- `FlatPack::Popover::Component` accepts `max_height:`. Omit it and the shell stays uncapped. Pass a CSS length such as `"9rem"` and that length is inline `max-height` with `overflow-y-auto`. `%` raises `ArgumentError`.
+
+### Upgrade notes
+- Additive. Omit `max_height:` and the popover stays uncapped. Pass `max_height: "9rem"` instead of a host `max-h-*` override. `%` is rejected on Popover `max_height:` only. Rebuild host Tailwind so `overflow-y-auto` exists if the host did not already use it. Reload kit CSS. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.338`.
+
 ## [0.1.337] - 2026-11-03
 
 ### Added
