@@ -149,6 +149,18 @@ module FlatPack
         assert_equal "billing_anchor_preset", field[:name]
       end
 
+      def test_native_picker_ignores_preset_name
+        render_inline(Component.new(
+          name: "billing_anchor_date",
+          picker: :native,
+          preset_name: "billing_anchor_preset"
+        ))
+
+        assert_selector "input[type='date'][name='billing_anchor_date']"
+        assert_no_selector "input[data-flat-pack--flatpack-date-picker-target='presetKeyField']", visible: :all
+        assert_no_selector "input[name='billing_anchor_preset']", visible: :all
+      end
+
       def test_renders_with_aria_attributes
         render_inline(Component.new(name: "birth_date", aria: {label: "Custom date"}))
 

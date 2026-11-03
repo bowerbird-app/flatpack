@@ -185,6 +185,43 @@ test('apply dispatches bubbling change on hidden fields and a custom apply event
   assert.equal(applyEvent.detail.preset, 'yesterday')
 })
 
+test('clear dispatches the same bubbling events as apply', () => {
+  const controller = buildController()
+  const startField = { value: '2026-06-17', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const endField = { value: '2026-06-17', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const presetField = { value: 'yesterday', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+
+  controller.committed = {
+    start: new Date(2026, 5, 17),
+    end: new Date(2026, 5, 17)
+  }
+  controller.committedPresetKey = 'yesterday'
+  controller.hasRangeStartFieldTarget = true
+  controller.hasRangeEndFieldTarget = true
+  controller.hasPresetKeyFieldTarget = true
+  controller.rangeStartFieldTarget = startField
+  controller.rangeEndFieldTarget = endField
+  controller.presetKeyFieldTarget = presetField
+
+  controller.clear({ preventDefault() {} })
+
+  assert.equal(startField.value, '')
+  assert.equal(endField.value, '')
+  assert.equal(presetField.value, '')
+  assert.equal(startField.events.length, 1)
+  assert.equal(startField.events[0].type, 'change')
+  assert.equal(startField.events[0].bubbles, true)
+  assert.equal(endField.events[0].type, 'change')
+  assert.equal(presetField.events[0].type, 'change')
+
+  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--date-picker:apply')
+  assert.ok(applyEvent)
+  assert.equal(applyEvent.bubbles, true)
+  assert.equal(applyEvent.detail.start, null)
+  assert.equal(applyEvent.detail.end, null)
+  assert.equal(applyEvent.detail.preset, null)
+})
+
 test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {
   const controller = buildController()
   controller.today = new Date(2026, 5, 18)

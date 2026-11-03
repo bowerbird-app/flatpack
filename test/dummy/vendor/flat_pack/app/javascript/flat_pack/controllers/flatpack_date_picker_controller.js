@@ -194,6 +194,18 @@ export default class extends Controller {
     this.close()
   }
 
+  clear(event) {
+    event.preventDefault()
+    this.committed = { start: null, end: null }
+    this.committedPresetKey = null
+    this.draft = { ...this.committed }
+    this.draftPresetKey = null
+    this.syncFormFields(this.committed)
+    this.dispatchApplyEvents()
+    this.syncTriggerValue(this.committed)
+    this.close()
+  }
+
   requestApply(event) {
     event.preventDefault()
     this.apply(event)
@@ -330,6 +342,9 @@ export default class extends Controller {
         break
       case "apply":
         this.apply(event)
+        break
+      case "clear":
+        this.clear(event)
         break
       case "preset":
         this.applyPreset(String(commandElement.dataset.flatPackDatePickerPreset || ""))
