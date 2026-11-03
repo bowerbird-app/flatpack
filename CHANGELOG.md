@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.334] - 2026-11-02
+
+### Added
+- `FlatPack::List::Item` accepts `title:` and `subtitle:`, or a `title` slot and a `subtitle` slot. The strings render with `FlatPack::Text`: the title is `size: :sm` and `weight: :medium`, and the subtitle is `size: :sm` and `style: :muted`. Omit both and the item block is unchanged. A block next to them still renders after those lines. `:key_value` rows reject them. Passing the string and the slot for the same line raises. An HTML-safe string raises.
+
+### Changed
+- **Breaking.** `title:` on `FlatPack::List::Item` used to pass through as the HTML `title` attribute (a tooltip). It now renders visible text, and an HTML-safe string raises. Grep for `List::Item.new(... title:` and use `system_arguments: { title: }` for a tooltip.
+
+### Security
+- Development lockfiles: `loofah` 2.25.3, `nokogiri` 1.19.7, and `rails-html-sanitizer` 1.7.2. This clears the current bundler-audit advisories for those gems.
+
+### Upgrade notes
+- Run `bundle install` so `loofah`, `nokogiri`, and `rails-html-sanitizer` match the lockfile. No application API change.
+- Grep for `List::Item.new(... title:`. A tooltip moves to `system_arguments: { title: }`. The `title:` argument is now the visible line. An HTML-safe string raises. Do not use `title:` or `subtitle:` on `layout: :key_value`. Reload the gem. Do not rebuild Tailwind unless the host is missing `text-[length:var(--text-sm)]`, `font-medium`, or `text-[var(--surface-muted-content-color)]`. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.334`.
+
 ## [0.1.333] - 2026-11-02
 
 ### Added
