@@ -8,7 +8,14 @@ function loadController(overrides = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'flatpack_date_picker_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
-    .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { Controller } from "@hotwired/stimulus"', `class Controller {
+  dispatch(eventName, { target = this.element, detail = {}, prefix = this.identifier, bubbles = true } = {}) {
+    const type = prefix ? \`\${prefix}:\${eventName}\` : eventName
+    const event = new CustomEvent(type, { detail, bubbles })
+    target.dispatchEvent(event)
+    return event
+  }
+}`)
     .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key) { return ({ "date_picker.summary": "Select a date from calendar or use a quick range preset." })[key] || key }')
     .replace(
       'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
@@ -38,18 +45,47 @@ function cancelOverlayHide() {}`
       removeEventListener() {},
       matchMedia: () => ({ matches: false })
     },
+    Element: class Element {
+      closest(selector) {
+        if (selector === '[data-flat-pack-date-picker-command]' && this.dataset?.flatPackDatePickerCommand) {
+          return this
+        }
+
+        return null
+      }
+
+      hasAttribute(name) {
+        return name === 'data-flat-pack-date-picker-command' && !!this.dataset?.flatPackDatePickerCommand
+      }
+    },
+    Event: class Event {
+      constructor(type, init = {}) {
+        this.type = type
+        this.bubbles = !!init.bubbles
+      }
+    },
+    CustomEvent: class CustomEvent {
+      constructor(type, init = {}) {
+        this.type = type
+        this.bubbles = !!init.bubbles
+        this.detail = init.detail
+      }
+    },
     clearTimeout() {},
     ...overrides
   }
 
   vm.runInNewContext(`${clickOutsideSource}\n${positioningSource}\n${transformedSource}`, context, { filename: filePath })
 
-  return context.module.exports
+  const ControllerClass = context.module.exports
+  ControllerClass.Element = context.Element
+  return ControllerClass
 }
 
 function buildController() {
   const ControllerClass = loadController()
   const controller = new ControllerClass()
+  controller.identifier = 'flat-pack--flatpack-date-picker'
   controller.rangeValue = true
   controller.hasPresetLabelsValue = true
   controller.presetLabelsValue = {
@@ -62,6 +98,13 @@ function buildController() {
   controller.isOpen = false
   controller.committedPresetKey = null
   controller.draftPresetKey = null
+  controller.elementEvents = []
+  controller.element = {
+    dispatchEvent(event) {
+      controller.elementEvents.push(event)
+      return true
+    }
+  }
 
   return controller
 }
@@ -125,6 +168,115 @@ test('apply infers preset label for matching calendar-selected range', () => {
 
   assert.equal(controller.committedPresetKey, 'yesterday')
   assert.equal(controller.triggerTarget.value, 'Yesterday')
+})
+
+test('apply dispatches bubbling change on hidden fields and a custom apply event', () => {
+  const controller = buildController()
+  const startField = {
+    value: '',
+    events: [],
+    dispatchEvent(event) {
+      this.events.push(event)
+      this.triggerAtChange = controller.triggerTarget.value
+      return true
+    }
+  }
+  const endField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const presetField = { value: '', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+
+  controller.today = new Date(2026, 5, 18)
+  controller.draft = {
+    start: new Date(2026, 5, 17),
+    end: new Date(2026, 5, 17)
+  }
+  controller.draftPresetKey = null
+  controller.hasRangeStartFieldTarget = true
+  controller.hasRangeEndFieldTarget = true
+  controller.hasPresetKeyFieldTarget = true
+  controller.rangeStartFieldTarget = startField
+  controller.rangeEndFieldTarget = endField
+  controller.presetKeyFieldTarget = presetField
+
+  let triggerAtApply = null
+  controller.element.dispatchEvent = (event) => {
+    if (event.type === 'flat-pack--flatpack-date-picker:apply') {
+      triggerAtApply = controller.triggerTarget.value
+    }
+    controller.elementEvents.push(event)
+    return true
+  }
+
+  controller.apply({ preventDefault() {} })
+
+  assert.equal(startField.value, '2026-06-17')
+  assert.equal(endField.value, '2026-06-17')
+  assert.equal(presetField.value, 'yesterday')
+  assert.equal(startField.events.length, 1)
+  assert.equal(startField.events[0].type, 'change')
+  assert.equal(startField.events[0].bubbles, true)
+  assert.equal(startField.triggerAtChange, 'Yesterday')
+  assert.equal(endField.events[0].type, 'change')
+  assert.equal(presetField.events[0].type, 'change')
+  assert.equal(triggerAtApply, 'Yesterday')
+  assert.equal(controller.triggerTarget.value, 'Yesterday')
+
+  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--flatpack-date-picker:apply')
+  assert.ok(applyEvent)
+  assert.equal(applyEvent.bubbles, true)
+  assert.equal(applyEvent.detail.start, '2026-06-17')
+  assert.equal(applyEvent.detail.end, '2026-06-17')
+  assert.equal(applyEvent.detail.preset, 'yesterday')
+})
+
+test('clear dispatches the same bubbling events as apply', () => {
+  const controller = buildController()
+  const startField = { value: '2026-06-17', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const endField = { value: '2026-06-17', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+  const presetField = { value: 'yesterday', events: [], dispatchEvent(event) { this.events.push(event); return true } }
+
+  controller.committed = {
+    start: new Date(2026, 5, 17),
+    end: new Date(2026, 5, 17)
+  }
+  controller.committedPresetKey = 'yesterday'
+  controller.hasRangeStartFieldTarget = true
+  controller.hasRangeEndFieldTarget = true
+  controller.hasPresetKeyFieldTarget = true
+  controller.rangeStartFieldTarget = startField
+  controller.rangeEndFieldTarget = endField
+  controller.presetKeyFieldTarget = presetField
+
+  controller.clear({ preventDefault() {} })
+
+  assert.equal(startField.value, '')
+  assert.equal(endField.value, '')
+  assert.equal(presetField.value, '')
+  assert.equal(startField.events.length, 1)
+  assert.equal(startField.events[0].type, 'change')
+  assert.equal(startField.events[0].bubbles, true)
+  assert.equal(endField.events[0].type, 'change')
+  assert.equal(presetField.events[0].type, 'change')
+
+  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--flatpack-date-picker:apply')
+  assert.ok(applyEvent)
+  assert.equal(applyEvent.bubbles, true)
+  assert.equal(applyEvent.detail.start, null)
+  assert.equal(applyEvent.detail.end, null)
+  assert.equal(applyEvent.detail.preset, null)
+})
+
+test('click on data-flat-pack-date-picker-command=clear reaches clear', () => {
+  const controller = buildController()
+  const calls = []
+  controller.clear = (event) => { calls.push(event) }
+
+  const commandElement = new controller.constructor.Element()
+  commandElement.dataset = { flatPackDatePickerCommand: 'clear' }
+
+  controller.handlePanelClick({ target: commandElement })
+
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].target, commandElement)
 })
 
 test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {

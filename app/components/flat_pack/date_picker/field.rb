@@ -78,6 +78,36 @@ module FlatPack
         ].map { |key| {key: key, label: fp_t("date.#{key}")} }
       end
 
+      def render_preset_name_field
+        return unless preset_name_present?
+
+        tag.input(
+          type: "hidden",
+          name: @preset_name,
+          value: preset_name_field_value,
+          data: {"flat-pack--flatpack-date-picker-target": "presetKeyField"}
+        )
+      end
+
+      def preset_name_present?
+        @preset_name.present?
+      end
+
+      def preset_name_field_value
+        nil
+      end
+
+      def normalize_preset_name!(value)
+        return if value.nil?
+
+        name = value.to_s
+        if name.strip.empty?
+          raise ArgumentError, "preset_name must be a non-blank String"
+        end
+
+        name
+      end
+
       # Convert Date objects to YYYY-MM-DD format string.
       # Accepts Date, Time, DateTime objects or strings.
       def format_date_value(value)

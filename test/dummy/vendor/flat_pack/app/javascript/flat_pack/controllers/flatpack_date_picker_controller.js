@@ -17,7 +17,8 @@ export default class extends Controller {
     "summary",
     "singleField",
     "rangeStartField",
-    "rangeEndField"
+    "rangeEndField",
+    "presetKeyField"
   ]
 
   static values = {
@@ -190,6 +191,19 @@ export default class extends Controller {
     this.syncFormFields(this.committed)
     this.syncTriggerValue(this.committed)
     this.close()
+    this.dispatchApplyEvents()
+  }
+
+  clear(event) {
+    event.preventDefault()
+    this.committed = { start: null, end: null }
+    this.committedPresetKey = null
+    this.draft = { ...this.committed }
+    this.draftPresetKey = null
+    this.syncFormFields(this.committed)
+    this.syncTriggerValue(this.committed)
+    this.close()
+    this.dispatchApplyEvents()
   }
 
   requestApply(event) {
@@ -328,6 +342,9 @@ export default class extends Controller {
         break
       case "apply":
         this.apply(event)
+        break
+      case "clear":
+        this.clear(event)
         break
       case "preset":
         this.applyPreset(String(commandElement.dataset.flatPackDatePickerPreset || ""))
@@ -681,13 +698,49 @@ export default class extends Controller {
       if (this.hasRangeEndFieldTarget) {
         this.rangeEndFieldTarget.value = state.end ? this.toIso(state.end) : ""
       }
-
-      return
-    }
-
-    if (this.hasSingleFieldTarget) {
+    } else if (this.hasSingleFieldTarget) {
       this.singleFieldTarget.value = state.start ? this.toIso(state.start) : ""
     }
+
+    if (this.hasPresetKeyFieldTarget) {
+      this.presetKeyFieldTarget.value = this.committedPresetKey || ""
+    }
+  }
+
+  dispatchApplyEvents() {
+    this.hiddenFieldsForApply().forEach((field) => {
+      field.dispatchEvent(new Event("change", { bubbles: true }))
+    })
+
+    this.dispatch("apply", {
+      bubbles: true,
+      detail: {
+        start: this.committed.start ? this.toIso(this.committed.start) : null,
+        end: this.committed.end ? this.toIso(this.committed.end) : null,
+        preset: this.committedPresetKey || null
+      }
+    })
+  }
+
+  hiddenFieldsForApply() {
+    const fields = []
+
+    if (this.rangeValue) {
+      if (this.hasRangeStartFieldTarget) {
+        fields.push(this.rangeStartFieldTarget)
+      }
+      if (this.hasRangeEndFieldTarget) {
+        fields.push(this.rangeEndFieldTarget)
+      }
+    } else if (this.hasSingleFieldTarget) {
+      fields.push(this.singleFieldTarget)
+    }
+
+    if (this.hasPresetKeyFieldTarget) {
+      fields.push(this.presetKeyFieldTarget)
+    }
+
+    return fields
   }
 
   computePresetRange(key) {

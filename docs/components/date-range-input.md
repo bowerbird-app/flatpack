@@ -24,6 +24,7 @@ Use this when your form needs a start and end date pair with one compact control
 | `min` | String, Date, Time, DateTime, nil | `nil` | no | Minimum selectable date. |
 | `max` | String, Date, Time, DateTime, nil | `nil` | no | Maximum selectable date. |
 | `presets` | Array of names or hashes, nil | default quick list | no | Quick ranges shown in the picker. Omit to keep the default names. A name is a built-in key such as `:last_30_days` or `:last_4_weeks`. `:last_30_days` is built in and is not in the default list. A hash is `label:` plus `days:` (inclusive window ending today) or `start:` and `end:`. Optional `key:` sets the Stimulus preset id. `FlatPack::DateRangeInput::Component::DEFAULT_PRESET_KEYS` is the default name list. |
+| `preset_name` | String, nil | `nil` | no | Optional hidden field name for the chosen preset key. Omit it and no extra field is rendered. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the wrapper/trigger (for example `id`, `class`, `data`, `aria`). |
 
 ## Slots
@@ -49,7 +50,8 @@ None.
 ## Accessibility
 - The visible trigger is keyboard-toggleable (`Enter`/`Space`) and exposes dialog semantics via `aria-haspopup` and `aria-expanded`.
 - Error state sets `aria-invalid="true"` and links to inline error text with `aria-describedby`.
-- Submitted values are stored in hidden `start_name`/`end_name` fields so forms post a predictable date pair.
+- Submitted values are stored in hidden `start_name`/`end_name` fields so forms post a predictable date pair. Pass `preset_name:` to post the chosen preset key as well.
+- On Apply the controller dispatches a bubbling `change` event on each hidden field it writes, then `flat-pack--flatpack-date-picker:apply` on the picker root with `{start, end, preset}`. The picker does not render a Clear button. A host can add an element with `data-flat-pack-date-picker-command="clear"` to empty the fields and fire the same bubbling events as Apply. Dates are `YYYY-MM-DD`. `preset` is the key or `null`. Listen on the form or the picker root. Do not read the calendar internals.
 
 ## Display behavior
 - Selecting a quick preset (for example `Last week`) shows that preset label in the trigger field after Apply.

@@ -47,6 +47,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Iframe sandbox | `sandbox` | Embed only. Space-separated tokens, or `""` for the strict sandbox. Omit it to leave the iframe unsandboxed. |
 | Iframe fetch | `loading` | Embed only. `"lazy"` (default) or `"eager"`. |
 | Iframe referrer | `referrerpolicy` | Embed only. Default `"strict-origin-when-cross-origin"`. |
+| Chosen date-picker preset | `preset_name` | `DateRangeInput` and `DateInput` (`picker: :flatpack_date_picker`). Optional hidden field name for the selected preset key. Omit it and the picker still writes start/end or the single date. `DateInput` with `picker: :native` ignores it. |
+| Date picker Clear | host hook | The picker Panel does not render a Clear button. A host can add an element with `data-flat-pack-date-picker-command="clear"` to empty the fields and fire the same bubbling `change` events as Apply, then `flat-pack--flatpack-date-picker:apply`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
 | Content / cluster alignment | `align` | Hero overlay copy (`:left` / `:center`) and Email (`:left` / `:center` / `:right`). Email-compatible values. Button label alignment is `:center` (default) or `:start`. `:start` left-aligns the label and gives it `flex-1 min-w-0`. |
 | Table column alignment | `align` | `FlatPack::Table::Column` only. `:start` (default), `:center`, `:end`. Logical, so RTL flips start and end. |
