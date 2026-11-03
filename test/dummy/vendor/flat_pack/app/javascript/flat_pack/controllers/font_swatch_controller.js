@@ -3,6 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["trigger", "swatch", "input", "menu", "option"]
+  static values = {font: String}
 
   connect() {
     this.syncFace()
@@ -40,6 +41,56 @@ export default class extends Controller {
         bubbles: true
       })
     )
+  }
+
+  reset(event) {
+    event?.preventDefault?.()
+    if (!this.hasInputTarget) return
+
+    const value = this.resetFont(event)
+    const label = this.labelFor(value)
+
+    this.inputTarget.value = value
+    if (this.hasSwatchTarget) {
+      this.swatchTarget.style.fontFamily = value
+    }
+
+    this.updateOptionSelection(value)
+    this.updateAccessibleName(label)
+    this.updateTooltip(label)
+
+    this.element.dispatchEvent(
+      new CustomEvent("font-swatch:change", {
+        detail: {value, label},
+        bubbles: true
+      })
+    )
+  }
+
+  resetFont(event) {
+    const override = event?.detail?.value
+    if (override == null || (typeof override === "string" && override.trim() === "")) {
+      return this.requireFont(this.fontValue, "reset font")
+    }
+
+    return this.requireFont(override, "reset font")
+  }
+
+  requireFont(value, label) {
+    if (typeof value !== "string" || value.trim() === "") {
+      throw new Error(`Font swatch ${label} must be a CSS font-family, got ${JSON.stringify(value)}.`)
+    }
+
+    return value.trim()
+  }
+
+  labelFor(value) {
+    if (this.hasOptionTarget) {
+      const match = this.optionTargets.find((option) => option.dataset.value === value)
+      if (match?.dataset.label) return match.dataset.label
+    }
+
+    return value || "Font"
   }
 
   syncFace() {
