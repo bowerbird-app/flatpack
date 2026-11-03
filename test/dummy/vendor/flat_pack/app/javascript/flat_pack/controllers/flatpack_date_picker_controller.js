@@ -712,14 +712,14 @@ export default class extends Controller {
       field.dispatchEvent(new Event("change", { bubbles: true }))
     })
 
-    this.element.dispatchEvent(new CustomEvent("flat-pack--date-picker:apply", {
+    this.dispatch("apply", {
       bubbles: true,
       detail: {
         start: this.committed.start ? this.toIso(this.committed.start) : null,
         end: this.committed.end ? this.toIso(this.committed.end) : null,
         preset: this.committedPresetKey || null
       }
-    }))
+    })
   }
 
   hiddenFieldsForApply() {

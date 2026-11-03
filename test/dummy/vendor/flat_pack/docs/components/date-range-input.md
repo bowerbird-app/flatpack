@@ -51,7 +51,7 @@ None.
 - The visible trigger is keyboard-toggleable (`Enter`/`Space`) and exposes dialog semantics via `aria-haspopup` and `aria-expanded`.
 - Error state sets `aria-invalid="true"` and links to inline error text with `aria-describedby`.
 - Submitted values are stored in hidden `start_name`/`end_name` fields so forms post a predictable date pair. Pass `preset_name:` to post the chosen preset key as well.
-- On Apply the controller dispatches a bubbling `change` event on each hidden field it writes, then `flat-pack--date-picker:apply` on the picker root with `{start, end, preset}`. The picker does not render a Clear button. A host can add an element with `data-flat-pack-date-picker-command="clear"` to empty the fields and fire the same bubbling events as Apply. Dates are `YYYY-MM-DD`. `preset` is the key or `null`. Listen on the form or the picker root. Do not read the calendar internals.
+- On Apply the controller dispatches a bubbling `change` event on each hidden field it writes, then `flat-pack--flatpack-date-picker:apply` on the picker root with `{start, end, preset}`. The picker does not render a Clear button. A host can add an element with `data-flat-pack-date-picker-command="clear"` to empty the fields and fire the same bubbling events as Apply. Dates are `YYYY-MM-DD`. `preset` is the key or `null`. Listen on the form or the picker root. Do not read the calendar internals.
 
 ## Display behavior
 - Selecting a quick preset (for example `Last week`) shows that preset label in the trigger field after Apply.

@@ -8,7 +8,14 @@ function loadController(overrides = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'flatpack_date_picker_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const transformedSource = source
-    .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
+    .replace('import { Controller } from "@hotwired/stimulus"', `class Controller {
+  dispatch(eventName, { target = this.element, detail = {}, prefix = this.identifier, bubbles = true } = {}) {
+    const type = prefix ? \`\${prefix}:\${eventName}\` : eventName
+    const event = new CustomEvent(type, { detail, bubbles })
+    target.dispatchEvent(event)
+    return event
+  }
+}`)
     .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key) { return ({ "date_picker.summary": "Select a date from calendar or use a quick range preset." })[key] || key }')
     .replace(
       'import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controllers/flat_pack/reduced_motion"',
@@ -78,6 +85,7 @@ function cancelOverlayHide() {}`
 function buildController() {
   const ControllerClass = loadController()
   const controller = new ControllerClass()
+  controller.identifier = 'flat-pack--flatpack-date-picker'
   controller.rangeValue = true
   controller.hasPresetLabelsValue = true
   controller.presetLabelsValue = {
@@ -192,7 +200,7 @@ test('apply dispatches bubbling change on hidden fields and a custom apply event
   assert.equal(endField.events[0].type, 'change')
   assert.equal(presetField.events[0].type, 'change')
 
-  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--date-picker:apply')
+  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--flatpack-date-picker:apply')
   assert.ok(applyEvent)
   assert.equal(applyEvent.bubbles, true)
   assert.equal(applyEvent.detail.start, '2026-06-17')
@@ -229,7 +237,7 @@ test('clear dispatches the same bubbling events as apply', () => {
   assert.equal(endField.events[0].type, 'change')
   assert.equal(presetField.events[0].type, 'change')
 
-  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--date-picker:apply')
+  const applyEvent = controller.elementEvents.find((event) => event.type === 'flat-pack--flatpack-date-picker:apply')
   assert.ok(applyEvent)
   assert.equal(applyEvent.bubbles, true)
   assert.equal(applyEvent.detail.start, null)
