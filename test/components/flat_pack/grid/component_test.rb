@@ -265,6 +265,22 @@ module FlatPack
         assert_equal "fp-grid__item col-span-1 lg:col-span-2", page.find("div.fp-grid__item")[:class]
       end
 
+      def test_proportional_span_on_auto_cols_covers_four_breakpoints
+        render_inline(Component.new(cols: :auto, span_mode: :proportional)) do |grid|
+          grid.with_item(span: 3) { "Three of four" }
+        end
+
+        assert_equal "fp-grid__item col-span-1 sm:col-span-2 lg:col-span-3", page.find("div.fp-grid__item")[:class]
+      end
+
+      def test_item_span_mode_overrides_the_grid_default
+        render_inline(Component.new(cols: 4, span_mode: :default)) do |grid|
+          grid.with_item(span: 2, span_mode: :proportional) { "Half" }
+        end
+
+        assert_equal "fp-grid__item col-span-1 lg:col-span-2", page.find("div.fp-grid__item")[:class]
+      end
+
       def test_proportional_span_leaves_a_hash_as_written
         render_inline(Component.new(cols: 4, span_mode: :proportional)) do |grid|
           grid.with_item(span: {base: 1, md: 2, lg: 2}) { "Hash" }
