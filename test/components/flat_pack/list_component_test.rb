@@ -103,9 +103,11 @@ module FlatPack
         refute_includes html, "gap-y-1"
       end
 
-      def test_unknown_spacing_raises
-        error = assert_raises(ArgumentError) { Component.new(spacing: :tight) }
-        assert_includes error.message, "Invalid spacing: :tight"
+      def test_unknown_spacing_falls_back_to_gap_3
+        render_inline(Component.new(spacing: :tight)) { "content" }
+        html = page.native.to_html
+        assert_includes html, "gap-3"
+        refute_includes html, "gap-1"
       end
 
       def test_enables_selectable_behavior_when_requested

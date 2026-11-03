@@ -130,12 +130,10 @@ module FlatPack
       end
 
       def normalize_spacing(spacing)
-        raise ArgumentError, "spacing is required." if spacing.nil?
-
         name = spacing.to_sym
         return name if SPACINGS.key?(name)
 
-        raise ArgumentError, "Invalid spacing: #{spacing.inspect}. Must be one of: #{SPACINGS.keys.join(", ")}."
+        :comfortable
       end
 
       def apply_key_width_variable!
