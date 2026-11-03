@@ -63,8 +63,8 @@ module FlatPack
         html = page.native.to_html
         assert_includes html, "text-[length:var(--text-sm)]"
         assert_includes html, "font-medium"
-        assert_includes html, "text-[length:var(--text-xs)]"
         assert_includes html, "text-[var(--surface-muted-content-color)]"
+        refute_includes html, "text-[length:var(--text-xs)]"
       end
 
       def test_title_keeps_a_following_block
@@ -79,18 +79,6 @@ module FlatPack
 
         refute_selector ".fp-text"
         assert_selector "div.min-w-0.flex-1", text: "Only the block"
-      end
-
-      def test_key_value_rejects_title_and_subtitle
-        error = assert_raises(ArgumentError) do
-          Rendering.with(layout: :key_value) { Item.new(key: "Room", title: "Studio B") }
-        end
-        assert_includes error.message, "title:"
-
-        error = assert_raises(ArgumentError) do
-          Rendering.with(layout: :key_value) { Item.new(key: "Room", subtitle: "Online") }
-        end
-        assert_includes error.message, "subtitle:"
       end
 
       def test_includes_flex_layout
@@ -331,6 +319,11 @@ module FlatPack
           Rendering.with(layout: :key_value) { Item.new(key: "Room", title: "Studio B") }
         end
         assert_match(/title:/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", subtitle: "Online") }
+        end
+        assert_match(/subtitle:/, error.message)
       end
 
       def test_key_value_rejects_a_title_slot
