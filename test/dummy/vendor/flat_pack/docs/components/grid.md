@@ -17,6 +17,7 @@ Use Grid for card collections, dashboards, and responsive sections that need pre
 | `cols` | Symbol or Integer | `:auto` | No | Column preset. Allowed: `:auto`, `1`, `2`, `3`, `4`, `6`, `12`. `4` is `grid-cols-1 md:grid-cols-2 lg:grid-cols-4`. |
 | `gap` | Symbol | `:md` | No | Gap preset. Allowed: `:sm`, `:md`, `:lg`. |
 | `align` | Symbol | `:stretch` | No | Item alignment preset. Allowed: `:start`, `:center`, `:stretch`. |
+| `span_mode` | Symbol | `:default` | No | How a bare integer `span:` is placed. `:default` starts at the first breakpoint with enough columns. `:proportional` keeps the same fraction of the row at every breakpoint (`span: 2` on `cols: 4` is `col-span-1 lg:col-span-2`). A hash, including `base:`, is still emitted as written. Unknown names raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into grid container. |
 
 `with_item` / `FlatPack::Grid::Item` props:
@@ -40,6 +41,7 @@ Default block content is also accepted: each direct child is a grid item and is 
 | `align: :start/:center/:stretch` | Applies `items-start`, `items-center`, or `items-stretch`. |
 | `span: 2` on `cols: :auto` | `sm:col-span-2`. `:auto` is two columns from `sm`. |
 | `span: 2` on `cols: 2`, `3`, or `4` | `md:col-span-2`. Those presets are one column until `md`. |
+| `span_mode: :proportional` and `span: 2` on `cols: 4` | `col-span-1 lg:col-span-2`. Half of four columns at every width. |
 | `span: 3` on `cols: 2` | `md:col-span-2`. The preset never has three columns, so the span clamps to 2 and starts at `md`. |
 | `span: {base: 2}` | `col-span-2` only. A hash is not rewritten. |
 | `span: {base: 1, md: 2, lg: 8}` | `col-span-1 md:col-span-2 lg:col-span-8`. |

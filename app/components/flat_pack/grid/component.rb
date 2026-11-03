@@ -23,24 +23,33 @@ module FlatPack
         :auto => {base: 1, sm: 2, lg: 3, xl: 4}
       }.freeze
 
+      SPAN_MODES = %i[default proportional].freeze
+
       renders_many :items, lambda { |**system_arguments|
-        FlatPack::Grid::Item.new(columns: COLUMN_PRESETS.fetch(@cols), **system_arguments)
+        FlatPack::Grid::Item.new(
+          columns: COLUMN_PRESETS.fetch(@cols),
+          span_mode: system_arguments.delete(:span_mode) || @span_mode,
+          **system_arguments
+        )
       }
 
       def initialize(
         cols: :auto,
         gap: :md,
         align: :stretch,
+        span_mode: :default,
         **system_arguments
       )
         super(**system_arguments)
         @cols = cols.is_a?(Symbol) ? cols : cols.to_i
         @gap = gap.to_sym
         @align = align.to_sym
+        @span_mode = span_mode.to_sym
 
         validate_cols!
         validate_gap!
         validate_align!
+        validate_span_mode!
       end
 
       def call
@@ -97,6 +106,12 @@ module FlatPack
 
       def validate_align!
         FlatPack::Shared::Flex.validate_align!(@align)
+      end
+
+      def validate_span_mode!
+        return if SPAN_MODES.include?(@span_mode)
+
+        raise ArgumentError, "Invalid span_mode: #{@span_mode}. Must be one of: #{SPAN_MODES.join(", ")}"
       end
     end
   end
