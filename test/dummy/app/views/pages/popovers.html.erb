@@ -127,6 +127,21 @@
   ) %>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Gap", anchor_link: true, subtitle: "Pixels between the trigger and the panel. 12 is the default.") %>
+  <div class="mb-4 flex justify-center py-16">
+    <%= render FlatPack::Button::Component.new(id: "popover-trigger-gap", text: "Wider gap", style: :secondary) %>
+    <%= render FlatPack::Popover::Component.new(trigger_id: "popover-trigger-gap", placement: :bottom, gap: 28) do |popover| %>
+      <% popover.content do %>
+        <div class="p-3 w-52 text-[var(--surface-content-color)]">
+          <p class="text-sm font-semibold">28px gap</p>
+          <p class="text-xs text-[var(--surface-muted-content-color)] mt-1">The panel sits further from the trigger than the default 12px.</p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</section>
+
 <!-- Rich Content Popover -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Rich Content Popover", anchor_link: true, subtitle: "Examples for Rich Content Popover.") %>
