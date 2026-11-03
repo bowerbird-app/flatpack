@@ -26,7 +26,8 @@ function loadPopoverController(globals) {
     exports: {},
     window: globals.window,
     document: globals.document,
-    getComputedStyle: globals.getComputedStyle
+    getComputedStyle: globals.getComputedStyle,
+    ResizeObserver: globals.ResizeObserver
   }
   vm.runInNewContext(
     `${helper("click_outside.js")}\n${helper("positioning.js")}\n${source}\nmodule.exports = PopoverController\n`,
@@ -61,9 +62,11 @@ function mount({
   anchor,
   panel,
   viewport = { width: 400, height: 400 },
-  edge = "8px"
+  edge = "8px",
+  resizeObservers = []
 } = {}) {
   const windowEvents = events()
+  const documentEvents = events()
   const windowStub = {
     innerWidth: viewport.width,
     innerHeight: viewport.height,
@@ -88,16 +91,25 @@ function mount({
     setAttribute() {},
     classList: { add() {}, remove() {}, contains() { return false } }
   }
+  function ResizeObserver(callback) {
+    this.callback = callback
+    this.disconnected = false
+    resizeObservers.push(this)
+  }
+  ResizeObserver.prototype.observe = function() {}
+  ResizeObserver.prototype.disconnect = function() { this.disconnected = true }
+
   const PopoverController = loadPopoverController({
     window: windowStub,
     document: {
       getElementById(id) { return id === trigger.id ? trigger : null },
-      addEventListener() {},
-      removeEventListener() {}
+      addEventListener: documentEvents.addEventListener.bind(documentEvents),
+      removeEventListener: documentEvents.removeEventListener.bind(documentEvents)
     },
     getComputedStyle() {
       return { getPropertyValue() { return edge } }
-    }
+    },
+    ResizeObserver
   })
   const controller = new PopoverController()
   controller.element = element
@@ -105,7 +117,7 @@ function mount({
   controller.triggerIdValue = trigger.id
   controller.connect()
   controller.position()
-  return { controller, element, trigger, windowStub, windowEvents }
+  return { controller, element, trigger, windowStub, windowEvents, documentEvents, resizeObservers }
 }
 
 const fittedAnchor = { top: 100, right: 220, bottom: 140, left: 180, width: 40, height: 40 }
@@ -190,4 +202,59 @@ test("scroll and resize reposition, and disconnect removes those listeners", () 
   windowStub.dispatch("resize")
   assert.equal(element.style.top, "202px")
   assert.equal(moves, 2)
+})
+
+test("sidebar collapse and trigger resize reposition an open panel", () => {
+  const resizeObservers = []
+  const mounted = mount({
+    anchor: { ...fittedAnchor },
+    panel: fittedPanel,
+    resizeObservers
+  })
+  const { controller, element, trigger, documentEvents } = mounted
+  let moves = 0
+  const position = controller.position.bind(controller)
+  controller.position = () => {
+    moves += 1
+    position()
+  }
+  controller.isOpen = true
+  controller.addListeners()
+  controller.addListeners()
+
+  const collapseListeners = documentEvents.entries.filter((entry) => {
+    return entry.type === "flat-pack--sidebar-layout:collapse"
+  })
+  assert.equal(collapseListeners.length, 1)
+  assert.equal(resizeObservers.length, 1)
+
+  trigger.rect = { ...fittedAnchor, top: 160, bottom: 200 }
+  documentEvents.dispatch("flat-pack--sidebar-layout:collapse")
+  assert.equal(moves, 1)
+  assert.equal(element.style.top, "212px")
+
+  trigger.rect = { ...fittedAnchor, top: 40, bottom: 90, height: 50 }
+  resizeObservers[0].callback()
+  assert.equal(moves, 2)
+  assert.equal(element.style.top, "102px")
+
+  controller.isOpen = false
+  documentEvents.dispatch("flat-pack--sidebar-layout:collapse")
+  resizeObservers[0].callback()
+  assert.equal(moves, 2)
+  assert.equal(element.style.top, "102px")
+
+  controller.disconnect()
+  assert.equal(resizeObservers[0].disconnected, true)
+  assert.equal(documentEvents.entries.filter((entry) => entry.type === "flat-pack--sidebar-layout:collapse").length, 0)
+})
+
+test("gap value replaces the 12px panel gap", () => {
+  const { element, controller } = mount({ anchor: fittedAnchor, panel: fittedPanel })
+
+  controller.gapValue = 28
+  controller.position()
+
+  assert.equal(element.style.top, "168px")
+  assert.equal(element.style.left, "150px")
 })

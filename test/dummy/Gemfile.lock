@@ -128,7 +128,7 @@ GIT
 PATH
   remote: vendor/flat_pack
   specs:
-    flat_pack (0.1.332)
+    flat_pack (0.1.333)
       pagy (~> 9.0)
       rails (>= 7.1, < 9)
       tailwind_merge (~> 0.13)
@@ -211,7 +211,7 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.9.0)
+    addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
     anonymous_loader (0.1.3)
@@ -404,7 +404,7 @@ GEM
     puma (8.0.2)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.2.7)
+    rack (3.2.8)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
       logger (>= 1.6.0)

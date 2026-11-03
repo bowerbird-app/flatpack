@@ -14,6 +14,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 |---|---|---|---|---|
 | `trigger_id` | String | `nil` | yes | DOM id of the trigger element that controls/anchors the popover. |
 | `placement` | Symbol | `:bottom` | no | Positioning hint: `:top`, `:bottom`, `:left`, `:right`. |
+| `gap` | Integer | `12` | no | Pixels between the trigger and the panel. `0` is allowed. A negative number, a float, or a string raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for popover wrapper. |
 
 ## Slots
@@ -42,7 +43,7 @@ Use Popover for contextual content such as menus, hints, and quick actions ancho
 - Popover content wrapper is initialized hidden (`aria-hidden="true"`).
 - Ensure trigger is keyboard-focusable and has accessible labeling.
 - Open/close uses `--duration-base` with `--easing-enter` / `--easing-exit`, a few pixels of offset, and origin from the trigger. A close in flight can reverse.
-- The open panel is `position: fixed`. `place` in `flat_pack/positioning.js` uses the `placement` hint (`top`, `bottom`, `left`, `right`), flips to the opposite side when that side does not fit, and clamps the panel to `--overlay-edge-offset`. The gap between the trigger and the panel is 12px and does not follow that token. Scroll and resize while open run the same placement. Disconnect removes those listeners.
+- The open panel is `position: fixed`. `place` in `flat_pack/positioning.js` uses the `placement` hint (`top`, `bottom`, `left`, `right`), flips to the opposite side when that side does not fit, and clamps the panel to `--overlay-edge-offset`. The gap between the trigger and the panel is `gap:` (default 12px) and does not follow that token. Scroll, resize, a `ResizeObserver` on the trigger, and `flat-pack--sidebar-layout:collapse` while open run the same placement. A closed panel waits until the next open. Disconnect removes those listeners and the observer.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
