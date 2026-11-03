@@ -141,6 +141,41 @@
   ) %>
 </section>
 
+<section class="mb-12" id="proportional-span">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Proportional span", anchor_link: true, subtitle: "span_mode: :proportional keeps the same fraction of the row at every breakpoint.") %>
+  <p class="text-[var(--surface-muted-content-color)] mb-4">
+    On <code>cols: 4</code>, <code>span: 2</code> is half the row: one column on a phone, two from <code>lg</code>. A hash is still used as written.
+  </p>
+  <%= render FlatPack::Grid::Component.new(cols: 4, span_mode: :proportional) do |grid| %>
+    <% grid.with_item(span: 2) do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">Half</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">
+            <code>span: 2</code> with <code>span_mode: :proportional</code>.
+          </p>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% grid.with_item do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">One</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Plain cell.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+    <% grid.with_item do %>
+      <%= render FlatPack::Card::Component.new(border: :strong) do |card| %>
+        <% card.body do %>
+          <h3 class="font-semibold mb-2">One</h3>
+          <p class="text-sm text-[var(--surface-muted-content-color)]">Plain cell.</p>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
 <!-- Grid with Different Gaps -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Grid Gap Sizes", anchor_link: true, subtitle: "Examples for Grid Gap Sizes.") %>

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.341] - 2026-11-03
+
+### Added
+- `FlatPack::Grid::Component` accepts `span_mode: :proportional`. A bare integer `span:` then keeps the same fraction of the row at every breakpoint (`span: 2` on `cols: 4` is `col-span-1 lg:col-span-2`). Omit `span_mode` (or pass `:default`) and a bare integer still starts where the preset first has enough columns. A hash, including `base:`, is still emitted as written.
+
+### Upgrade notes
+- Additive. Existing grids keep today's span classes. Pass `span_mode: :proportional` instead of a host `col-span-*` override when a cell should stay the same fraction of the row on a phone. Rebuild host Tailwind only if you still need the existing `col-span-*` utilities. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.341`.
+
 ## [0.1.340] - 2026-11-03
 
 ### Added

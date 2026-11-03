@@ -18,9 +18,13 @@ module FlatPack
       # "fp-grid__item"
       SPAN_COUNTS = (1..12)
 
-      def initialize(span: nil, columns: nil, **system_arguments)
+      SPAN_MODES = FlatPack::Grid::Component::SPAN_MODES
+
+      def initialize(span: nil, columns: nil, span_mode: :default, **system_arguments)
         super(**system_arguments)
         @columns = columns
+        @span_mode = span_mode.to_sym
+        validate_span_mode!
         @span = normalize_span(span)
         validate_span!
       end
@@ -75,6 +79,8 @@ module FlatPack
           return
         end
 
+        return proportional_integer_span(count, counts) if @span_mode == :proportional
+
         start = FlatPack::Shared::Breakpoints::NAMES.find { |name| counts[name].to_i >= count }
         if start
           {start => count}
@@ -83,6 +89,28 @@ module FlatPack
           start = FlatPack::Shared::Breakpoints::NAMES.find { |name| counts[name] == widest }
           {start => widest}
         end
+      end
+
+      # Keep the same fraction of the row at every breakpoint. span: 2 on
+      # cols: 4 is half of four, so one of two at md and two of four at lg.
+      def proportional_integer_span(count, counts)
+        widest = counts.values.compact.max
+        previous = nil
+        spans = {}
+
+        FlatPack::Shared::Breakpoints::NAMES.each do |name|
+          columns = counts[name]
+          next if columns.nil?
+
+          spanned = [(count * columns.to_f / widest).ceil, columns].min
+          spanned = 1 if spanned < 1
+          next if spanned == previous
+
+          spans[name] = spanned
+          previous = spanned
+        end
+
+        spans
       end
 
       def columns_by_breakpoint
@@ -104,6 +132,12 @@ module FlatPack
 
       def integer_string?(count)
         count.is_a?(String) && count.match?(/\A[+-]?\d+\z/)
+      end
+
+      def validate_span_mode!
+        return if SPAN_MODES.include?(@span_mode)
+
+        raise ArgumentError, "Invalid span_mode: #{@span_mode}. Must be one of: #{SPAN_MODES.join(", ")}"
       end
 
       def validate_span!
