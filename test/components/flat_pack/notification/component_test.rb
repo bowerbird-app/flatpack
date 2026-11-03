@@ -344,9 +344,13 @@ module FlatPack
       end
 
       def test_max_height_sets_an_inline_length_and_drops_max_h_96
-        render_inline(Component.new(see_all_href: "/notifications", max_height: " 9rem "))
+        render_inline(Component.new(see_all_href: "/notifications", max_height: " 9rem ", trigger_id: "bell"))
 
-        assert_selector "div.overflow-y-auto[style='max-height: 9rem;']"
+        popover = page.find("#bell-popover", visible: :all)
+
+        assert_equal "max-height: 9rem;", popover[:style]
+        assert_includes popover[:class], "flex"
+        assert_includes popover[:class], "flex-col"
         refute_selector "div.max-h-96"
       end
 
@@ -354,19 +358,21 @@ module FlatPack
         render_inline(Component.new(
           see_all_href: "/notifications",
           max_height: "9rem",
+          trigger_id: "bell",
           unread_count: 4,
           notifications: 4.times.map { |index|
             notification(title: "Note #{index + 1}", body: "Body #{index + 1}")
           }
         ))
 
-        panel = page.find("div.overflow-y-auto")
-        assert_equal "max-height: 9rem;", panel["style"]
+        panel = page.find("div.min-h-0.flex-1.overflow-y-auto")
+        refute_includes panel[:style].to_s, "max-height"
         assert_includes panel.text, "Note 1"
         assert_includes panel.text, "Note 4"
         assert_includes panel.text, "Body 4"
         refute_includes panel.text, "See all notifications"
         assert_selector "a[href='/notifications']", text: "See all notifications"
+        assert_equal "max-height: 9rem;", page.find("#bell-popover", visible: :all)[:style]
       end
 
       def test_max_height_rejects_a_class_name_or_unsafe_value

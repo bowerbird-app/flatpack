@@ -21,6 +21,10 @@ module FlatPack
         set_slot(:popover_content, nil, *args, **kwargs, &block)
       end
 
+      # Tailwind CSS scanning requires these classes as string literals.
+      # DO NOT REMOVE:
+      # "overflow-y-auto"
+
       PLACEMENTS = {
         top: :top,
         bottom: :bottom,
@@ -29,16 +33,20 @@ module FlatPack
       }.freeze
       PANEL_GAP = 12
 
+      MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
+
       def initialize(
         trigger_id:,
         placement: :bottom,
         gap: PANEL_GAP,
+        max_height: nil,
         **system_arguments
       )
         super(**system_arguments)
         @trigger_id = trigger_id
         @placement = placement.to_sym
         @gap = gap
+        @max_height = normalize_max_height(max_height)
 
         validate_trigger_id!
         validate_placement!
@@ -65,6 +73,7 @@ module FlatPack
       def popover_attributes
         merge_attributes(
           class: popover_classes,
+          style: popover_style,
           data: {
             controller: "flat-pack--popover",
             "flat-pack--popover-trigger-id-value": @trigger_id,
@@ -92,8 +101,15 @@ module FlatPack
           "opacity-0",
           "transition-[opacity,transform]",
           "duration-[var(--duration-base)]",
-          "ease-[var(--easing-enter)]"
+          "ease-[var(--easing-enter)]",
+          ("overflow-y-auto" if @max_height)
         )
+      end
+
+      def popover_style
+        return unless @max_height
+
+        join_styles(html_attributes[:style] || html_attributes["style"], "max-height: #{@max_height};")
       end
 
       def validate_trigger_id!
@@ -110,6 +126,19 @@ module FlatPack
         return if @gap.is_a?(Integer) && @gap >= 0
 
         raise ArgumentError, "gap: must be a non-negative Integer."
+      end
+
+      def normalize_max_height(max_height)
+        return if max_height.nil?
+
+        unless max_height.is_a?(String) && !value_html_safe?(max_height)
+          raise ArgumentError, "max_height: must be a CSS length such as \"24rem\"."
+        end
+
+        length = max_height.strip
+        return length if length.match?(MAX_HEIGHT_PATTERN)
+
+        raise ArgumentError, "max_height: must be a CSS length such as \"24rem\"."
       end
     end
   end

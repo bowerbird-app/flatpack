@@ -1422,6 +1422,8 @@
       variables: [
         { variable: "trigger_id", accepts: "String (required)", example: "trigger_id: \"profile-help\"" },
         { variable: "placement", accepts: ":top, :right, :bottom, :left", example: "placement: :bottom" },
+        { variable: "gap", accepts: "Integer", example: "gap: 12" },
+        { variable: "max_height", accepts: "CSS length or nil", example: "max_height: \"9rem\"" },
         { variable: "content", accepts: "slot block", example: "popover.content { \"Help text\" }" }
       ]
     },
@@ -1537,6 +1539,7 @@
         { variable: "bell_label", accepts: "String", example: "bell_label: \"Notifications\"" },
         { variable: "empty_text", accepts: "String", example: "empty_text: \"No recent notifications\"" },
         { variable: "timestamp_tooltip_placement", accepts: ":top, :right, :bottom, :left", example: "timestamp_tooltip_placement: :left" },
+        { variable: "max_height", accepts: "CSS length or nil", example: "max_height: \"9rem\"" },
         { variable: "notification[:title]", accepts: "String", example: "title: \"Build completed\"" },
         { variable: "notification[:body]", accepts: "String or nil", example: "body: \"Your export is ready to download.\"" },
         { variable: "notification[:href]", accepts: "Relative/allowed URL or nil", example: "href: \"/notifications/2\"" },

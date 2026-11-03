@@ -1074,6 +1074,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-flat-pack--popover-gap-value=\"12\""
   end
 
+  test "popover demo renders a capped height" do
+    get "/demo/popovers"
+
+    assert_response :success
+    assert_includes response.body, "Capped height"
+    assert_includes response.body, "max-height: 9rem"
+  end
+
   test "red dot demo renders helper utility examples and helpers section" do
     get "/demo/red_dot"
 
