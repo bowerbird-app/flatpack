@@ -19,7 +19,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `key_width` | Symbol or String | `:fit` | no | `:key_value` only. `:fit` sizes the key column to the widest key. A CSS length such as `"10rem"` fixes the column. Values wrap in the next column. |
 | `stack_below` | Symbol | `nil` | no | `:key_value` only. `:sm`, `:md`, or `:lg`. Below that breakpoint the key sits above the value. From the breakpoint up, icons, keys, and values stay in columns. |
 | `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. Ordered lists show decimal markers via a kit slot. Not supported when `layout` is `:key_value`. |
-| `spacing` | Symbol | `:comfortable` | no | Vertical spacing. `:items` uses `gap-3` / `gap-1`. `:key_value` uses `gap-y-3` / `gap-y-1` so the key and value columns stay put. Rows keep no bottom margin. Skipped when `orderable` and `divider` are both on so the rule stays even. |
+| `spacing` | Symbol | `:comfortable` | no | Vertical spacing. `:comfortable` is `gap-3` (`gap-y-3` on `:key_value`). `:dense` is `gap-1` / `gap-y-1`. `:none` emits no gap class. An unknown name falls back to `gap-3`. Rows keep no bottom margin. Skipped when `orderable` and `divider` are both on so the rule stays even. |
 | `align` | Symbol | `:start` | no | Cross-axis alignment for each row in `:items`. `:start`, `:center`, `:end`, or `:baseline`. Items inherit this unless they pass their own `align:`. Not supported when `layout` is `:key_value`. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. Not supported when `layout` is `:key_value`. |
 | `orderable` | Boolean | `false` | no | Enables pointer-driven reordering via `flat-pack--list-orderable`. Not supported when `layout` is `:key_value`. |
@@ -58,7 +58,7 @@ Omit both and the item block is unchanged. A block next to `title:` or `subtitle
 ## Variants
 - Layout `:items` (default) or `:key_value`.
 - Ordered vs unordered (`ordered: true/false`). Ordered lists number each item. Unordered lists do not.
-- Spacing variants via `spacing`.
+- Spacing variants via `spacing` (`:comfortable`, `:dense`, `:none`).
 - Row alignment via `align` (`:start`, `:center`, `:end`, `:baseline`).
 - Selectable behavior via `selectable: true`.
 - Orderable behavior via `orderable: true` and `orderable_url:`.

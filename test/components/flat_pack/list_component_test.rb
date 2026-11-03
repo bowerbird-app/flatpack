@@ -85,6 +85,31 @@ module FlatPack
         refute_includes html, "space-y-1"
       end
 
+      def test_renders_none_spacing_without_a_gap_class
+        render_inline(Component.new(spacing: :none)) { "content" }
+        html = page.native.to_html
+        refute_includes html, "gap-3"
+        refute_includes html, "gap-1"
+        refute_includes html, "space-y-0"
+      end
+
+      def test_key_value_none_spacing_omits_gap_y
+        render_inline(Component.new(layout: :key_value, spacing: :none)) {
+          Item.new(key: "Room").with_content("Studio B").render_in(vc_test_controller.view_context)
+        }
+
+        html = page.native.to_html
+        refute_includes html, "gap-y-3"
+        refute_includes html, "gap-y-1"
+      end
+
+      def test_unknown_spacing_falls_back_to_gap_3
+        render_inline(Component.new(spacing: :tight)) { "content" }
+        html = page.native.to_html
+        assert_includes html, "gap-3"
+        refute_includes html, "gap-1"
+      end
+
       def test_enables_selectable_behavior_when_requested
         render_inline(Component.new(selectable: true)) { "content" }
 

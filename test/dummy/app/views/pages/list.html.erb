@@ -215,6 +215,41 @@
   ) %>
 </section>
 
+<section class="mb-12" id="zero-gap">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Zero gap",
+    anchor_link: true,
+    subtitle: "spacing: :none drops the list gap. Comfortable and dense keep gap-3 and gap-1."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(spacing: :none, divider: true) do %>
+        <%= render FlatPack::List::Item.new do %>
+          First row
+        <% end %>
+        <%= render FlatPack::List::Item.new do %>
+          Second row
+        <% end %>
+        <%= render FlatPack::List::Item.new do %>
+          Third row
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new(spacing: :none, divider: true) do %&gt;
+        &lt;%= render FlatPack::List::Item.new { "First row" } %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Zero gap",
+    separated: false
+  ) %>
+</section>
+
 <section class="mb-12" id="row-alignment">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Row alignment",

@@ -298,6 +298,14 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Heat the pan"
   end
 
+  test "list demo renders zero gap" do
+    get "/demo/list"
+
+    assert_response :success
+    assert_includes response.body, "Zero gap"
+    assert_includes response.body, "spacing: :none"
+  end
+
   test "list demo renders row alignment" do
     get "/demo/list"
 

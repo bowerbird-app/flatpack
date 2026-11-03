@@ -7,6 +7,11 @@ module FlatPack
       LAYOUTS = %i[items key_value].freeze
       STACK_BELOWS = %i[sm md lg].freeze
       ALIGNS = %i[start center end baseline].freeze
+      SPACINGS = {
+        comfortable: {items: "gap-3", key_value: "gap-y-3"},
+        dense: {items: "gap-1", key_value: "gap-y-1"},
+        none: {items: nil, key_value: nil}
+      }.freeze
       CSS_LENGTH_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
 
       def initialize(
@@ -31,7 +36,7 @@ module FlatPack
         @key_width = key_width
         @stack_below = normalize_stack_below(stack_below)
         @ordered = ordered
-        @spacing = spacing.to_sym
+        @spacing = normalize_spacing(spacing)
         @align = normalize_align(align)
         @divider = divider
         @selectable = selectable
@@ -120,11 +125,15 @@ module FlatPack
       end
 
       def spacing_gap_class
-        if key_value?
-          return (@spacing == :dense) ? "gap-y-1" : "gap-y-3"
-        end
+        key = key_value? ? :key_value : :items
+        SPACINGS.fetch(@spacing).fetch(key)
+      end
 
-        (@spacing == :dense) ? "gap-1" : "gap-3"
+      def normalize_spacing(spacing)
+        name = spacing.to_sym
+        return name if SPACINGS.key?(name)
+
+        :comfortable
       end
 
       def apply_key_width_variable!

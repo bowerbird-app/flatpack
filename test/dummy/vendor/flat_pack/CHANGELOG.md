@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.339] - 2026-11-03
+
+### Added
+- `FlatPack::List::Component` `spacing: :none` emits no gap class. `:comfortable` still uses `gap-3` (`gap-y-3` on `:key_value`). `:dense` still uses `gap-1` / `gap-y-1`. An unknown spacing name still falls back to `gap-3`.
+
+### Upgrade notes
+- Additive. Omit `spacing:` and lists still use `gap-3`. Pass `spacing: :none` instead of a host `!space-y-0` override. An unknown name still falls back to `gap-3`. Rebuild host Tailwind only if you still need the existing gap utilities. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.339`.
+
 ## [0.1.338] - 2026-11-03
 
 ### Added
