@@ -77,13 +77,15 @@ None.
 - Stimulus updates the sample face, tooltip copy, option selection, and accessible name when a row is chosen.
 
 ## Public reset
-`reset` restores the hidden field, the sample face, option `aria-selected`, the trigger name, and the tooltip to the server-rendered `font:` on `data-flat-pack--font-swatch-font-value`. It does not read the input value at connect time.
+`reset` restores the hidden field, the sample face, option `aria-selected`, the trigger name, and the tooltip to the server-rendered `font:` on `data-flat-pack--font-swatch-font-value`. It does not read the input value at connect time. There is no `default_font` data attribute.
 
 Hosts must not reach into the hidden input or swatch face. Dispatch a bubbling event on the Font Swatch root (`[data-controller='flat-pack--font-swatch']`), or call the Stimulus method.
 
+The server must validate the posted font. `font-swatch:reset` `detail.value` can set any string.
+
 | Trigger | What happens |
 |---|---|
-| Stimulus `reset` | Restores the server font, then fires `font-swatch:change`. |
+| Stimulus `reset` | Restores the server font, then fires `font-swatch:change` when the value changed. |
 | Event `font-swatch:reset` | Same as `reset`. Wired on the root as `font-swatch:reset->flat-pack--font-swatch#reset`. |
 | `event.detail.value` | Optional CSS `font-family`. Sets the face to that stack instead of the server font. A blank string keeps the server font. |
 

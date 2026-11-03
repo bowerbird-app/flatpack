@@ -48,6 +48,7 @@ export default class extends Controller {
     if (!this.hasInputTarget) return
 
     const value = this.resetFont(event)
+    const previous = this.inputTarget.value
     const label = this.labelFor(value)
 
     this.inputTarget.value = value
@@ -58,6 +59,8 @@ export default class extends Controller {
     this.updateOptionSelection(value)
     this.updateAccessibleName(label)
     this.updateTooltip(label)
+
+    if (previous === value) return
 
     this.element.dispatchEvent(
       new CustomEvent("font-swatch:change", {

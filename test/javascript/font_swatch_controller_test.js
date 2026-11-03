@@ -103,6 +103,15 @@ test("reset restores the server font and option selection", () => {
   assert.equal(events.at(-1).bubbles, true)
 })
 
+test("reset does not fire change when the value did not change", () => {
+  const {controller, events} = build()
+  events.length = 0
+
+  controller.reset()
+
+  assert.equal(events.length, 0)
+})
+
 test("reset uses detail.value when the host passes a font-family", () => {
   const {controller, input, swatch, options} = build()
 
