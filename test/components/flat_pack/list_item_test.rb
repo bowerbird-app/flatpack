@@ -250,6 +250,13 @@ module FlatPack
         refute_selector "p.fp-list-item-subtitle"
       end
 
+      def test_blank_title_is_omitted
+        render_inline(Item.new(title: "  ")) { "Only the block" }
+
+        refute_selector "p.fp-list-item-title"
+        assert_selector "div.min-w-0.flex-1", text: "Only the block"
+      end
+
       def test_title_escapes_html
         render_inline(Item.new(title: "<b>Take</b>", subtitle: "<i>tone</i>"))
 
@@ -292,6 +299,11 @@ module FlatPack
           Rendering.with(layout: :key_value) { Item.new(key: "Room", title: "Studio B") }
         end
         assert_match(/title:/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          Rendering.with(layout: :key_value) { Item.new(key: "Room", subtitle: "Online") }
+        end
+        assert_match(/subtitle:/, error.message)
       end
 
       def test_key_value_rejects_a_title_slot
