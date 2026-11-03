@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `DateRangeInput` and custom `DateInput` accept optional `preset_name:` for a hidden preset-key field.
 
 ### Changed
-- Date picker Apply dispatches a bubbling `change` on each hidden field it writes, then `flat-pack--date-picker:apply` on the picker root with `{start, end, preset}`. Chart filters that auto-submit on Apply now auto-submit. Clear writes empty fields and dispatches the same bubbling events.
+- Date picker Apply dispatches a bubbling `change` on each hidden field it writes, then `flat-pack--date-picker:apply` on the picker root with `{start, end, preset}`. Chart filters that auto-submit on Apply now auto-submit. The picker does not render a Clear button. A host can add an element with `data-flat-pack-date-picker-command="clear"` to empty the fields and fire the same bubbling events as Apply.
 
 ### Upgrade notes
 - Behavior change. Chart filters with auto-submit on Apply now auto-submit. Existing pickers still write start and end. Listen for `change` on those fields or for `flat-pack--date-picker:apply` instead of a host click hook. Pass `preset_name: "reporting_period_preset"` when the form should post the key. `preset_name:` on DateInput with `picker: :native` is ignored. Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.

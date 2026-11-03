@@ -38,6 +38,19 @@ function cancelOverlayHide() {}`
       removeEventListener() {},
       matchMedia: () => ({ matches: false })
     },
+    Element: class Element {
+      closest(selector) {
+        if (selector === '[data-flat-pack-date-picker-command]' && this.dataset?.flatPackDatePickerCommand) {
+          return this
+        }
+
+        return null
+      }
+
+      hasAttribute(name) {
+        return name === 'data-flat-pack-date-picker-command' && !!this.dataset?.flatPackDatePickerCommand
+      }
+    },
     Event: class Event {
       constructor(type, init = {}) {
         this.type = type
@@ -57,7 +70,9 @@ function cancelOverlayHide() {}`
 
   vm.runInNewContext(`${clickOutsideSource}\n${positioningSource}\n${transformedSource}`, context, { filename: filePath })
 
-  return context.module.exports
+  const ControllerClass = context.module.exports
+  ControllerClass.Element = context.Element
+  return ControllerClass
 }
 
 function buildController() {
@@ -220,6 +235,20 @@ test('clear dispatches the same bubbling events as apply', () => {
   assert.equal(applyEvent.detail.start, null)
   assert.equal(applyEvent.detail.end, null)
   assert.equal(applyEvent.detail.preset, null)
+})
+
+test('click on data-flat-pack-date-picker-command=clear reaches clear', () => {
+  const controller = buildController()
+  const calls = []
+  controller.clear = (event) => { calls.push(event) }
+
+  const commandElement = new controller.constructor.Element()
+  commandElement.dataset = { flatPackDatePickerCommand: 'clear' }
+
+  controller.handlePanelClick({ target: commandElement })
+
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].target, commandElement)
 })
 
 test('computePresetRange returns rolling 4-week range for last_4_weeks', () => {
