@@ -55,10 +55,8 @@ All components inherit from `FlatPack::BaseComponent`:
 ```ruby
 module FlatPack
   class BaseComponent < ViewComponent::Base
-    include TailwindMerge::Rails::ViewHelper
-    
     def initialize(**system_arguments)
-      @system_arguments = system_arguments
+      @system_arguments = sanitize_args(system_arguments)
     end
   end
 end
@@ -155,7 +153,8 @@ Intelligently merges Tailwind classes:
 ```ruby
 def classes(*additional_classes)
   base_classes = @system_arguments.delete(:class) || ""
-  tailwind_merge(base_classes, *additional_classes.compact)
+  merger = TailwindMerge::Merger.new
+  merger.merge([base_classes, *additional_classes].compact.join(" "))
 end
 ```
 

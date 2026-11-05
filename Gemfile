@@ -18,6 +18,8 @@ gem "turbo-rails"
 
 group :development, :test do
   gem "debug"
+  # Ruby 4 no longer ships ostruct as a default gem. Dummy fixtures and a few tests use it.
+  gem "ostruct"
   gem "rubocop"
   gem "rubocop-discourse"
   gem "rubocop-rake"

@@ -108,7 +108,8 @@ module FlatPack
             [true, false]
           when :STR
             [true, node.children[0]]
-          when :LIT, :INTEGER, :FLOAT
+          when :LIT, :INTEGER, :FLOAT, :SYM
+            # Ruby 4 parses a symbol literal as :SYM. Ruby 3.3 parses it as :LIT.
             json_safe_lit(node.children[0])
           else
             [false, nil]
