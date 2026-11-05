@@ -46,6 +46,13 @@ module FlatPack
       assert_selector "div#test-id.test-class[data-action='click'][aria-label='Test']"
     end
 
+    test "merge_attributes keeps the winning Tailwind utility" do
+      render_inline(TestComponent.new(class: "px-2 px-4"))
+
+      assert_selector "div.px-4"
+      refute_selector "div.px-2"
+    end
+
     test "sanitizes case-insensitive dangerous attributes" do
       render_inline(TestComponent.new(OnClick: "alert('xss')"))
 

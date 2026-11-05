@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.342] - 2026-11-05
+
+### Fixed
+- On Ruby 4, the component catalog again reports symbol keyword defaults such as `style: :default`. Ruby 4's syntax tree uses a `:SYM` node. Ruby 3.3 uses `:LIT`.
+
+### Changed
+- The runtime dependency `tailwind_merge` is `>= 0.13, < 2`. Releases before 1.3.2 require Ruby `< 4.0`, so a Ruby 4 host cannot resolve `~> 0.13`. `TailwindMerge::Merger.new.merge` still takes one class string, or an array, and returns a frozen string. This repo locks 1.5.6.
+- The engine test job runs on Ruby 3.3 and Ruby 4.0. The development group depends on `ostruct` because Ruby 4 does not ship it as a default gem. Host apps do not need `ostruct`.
+
+### Upgrade notes
+- On Ruby 3.2 or 3.3 you can stay on `tailwind_merge` 0.13 or newer, below 2. A lock on 0.16.0 still resolves. You do not have to bump the gem.
+- On Ruby 4, Bundler selects `tailwind_merge` 1.3.2 or newer. 1.3.2 is the first release that does not require Ruby `< 4.0`. 1.3.3 and later require Ruby `>= 3.2` and do not cap Ruby 4. 1.5.6 is the version these lockfiles use.
+- Moving from 0.x to 1.x keeps the same `Merger#merge` call. 1.0 changed which Tailwind v4 utilities conflict with each other.
+- Do not rebuild Tailwind. Do not rerun `flat_pack:install`.
+- Redeploy so `meta.gem_version` shows `0.1.342`.
+
 ## [0.1.341] - 2026-11-03
 
 ### Added

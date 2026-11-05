@@ -48,6 +48,7 @@ module FlatPack
         path = fixture_path(name)
         flunk "missing fixture #{name}" unless File.exist?(path)
         expected = File.binread(path)
+        actual = ruby3_hash_dump(actual)
         next if expected == actual
 
         index = first_difference(expected, actual)
@@ -56,6 +57,12 @@ module FlatPack
     end
 
     private
+
+    # Ruby 4 prints a Hash as `{start: ...}`. Ruby 3.3 prints `{:start=>...}`.
+    # The captured fixture uses the Ruby 3.3 form. The rest of the HTML stays compared byte for byte.
+    def ruby3_hash_dump(html)
+      html.gsub("{start: ", "{:start=&gt;").gsub(", end: ", ", :end=&gt;")
+    end
 
     def cases
       date_input_cases + date_range_cases

@@ -13,8 +13,12 @@ permissions:
 
 jobs:
   test:
-    name: Rails Tests
+    name: Rails Tests (${{ matrix.ruby }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['3.3', '4.0']
 
     services:
       postgres:
@@ -41,9 +45,9 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          cache-version: 3
+          cache-version: ${{ matrix.ruby }}
 
       - name: Rebuild native extensions
         run: bundle pristine

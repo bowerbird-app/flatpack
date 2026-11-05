@@ -168,7 +168,7 @@ end
 FlatPack has four runtime dependencies:
 - `rails` (>= 7.1, < 9)
 - `view_component` (>= 4.14, < 5)
-- `tailwind_merge` (~> 0.13)
+- `tailwind_merge` (>= 0.13, < 2)
 - `pagy` (~> 9.0)
 
 This minimizes supply chain attack surface.
