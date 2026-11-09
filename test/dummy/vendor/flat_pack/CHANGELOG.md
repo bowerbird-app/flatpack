@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.343] - 2026-11-09
+
+### Fixed
+- `variant: :featured` copy stacks from the top when the columns sit side by side. The wide copy column no longer uses `justify-content: space-between`, so a card without a footer keeps the badge, title, and body under the header. A footer still pins to the bottom of the copy column with `margin-block-start: auto`.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.343`.
+
 ## [0.1.342] - 2026-11-05
 
 ### Fixed
