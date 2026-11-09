@@ -1516,7 +1516,6 @@
   }
 
   .fp-card__featured-copy {
-    justify-content: space-between;
     gap: var(--space-5);
     padding: var(--space-6);
     height: 100%;

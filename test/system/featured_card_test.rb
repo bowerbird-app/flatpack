@@ -211,6 +211,35 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
     assert_operator sample.fetch("used"), :<, sample.fetch("attribute")
   end
 
+  test "at 1280 a featured card without a footer stacks copy from the top" do
+    page.current_window.resize_to(1280, 900)
+    visit "/demo/cards?footer=none"
+    assert_selector ".fp-card--featured", text: "Spring launch"
+    refute_selector ".fp-card--featured [data-fp-card-part='footer']"
+
+    sample = featured_copy_stack
+
+    refute sample.fetch("stacked"), "expected side-by-side columns at 1280"
+    assert_operator sample.fetch("card"), :>=, 640
+    assert_operator sample.fetch("mainTop") - sample.fetch("headerBottom"), :<=, sample.fetch("copyGap") + 1
+    assert_operator sample.fetch("mainTop") - sample.fetch("headerBottom"), :>=, -1
+    assert_operator sample.fetch("copyBottom") - sample.fetch("mainBottom"), :>, sample.fetch("copyGap")
+  end
+
+  test "at 1280 a featured card with a footer pins the footer and keeps main under the header" do
+    page.current_window.resize_to(1280, 900)
+    visit "/demo/cards"
+    assert_selector ".fp-card--featured", text: "Download kit"
+    assert_selector ".fp-card--featured [data-fp-card-part='footer']"
+
+    sample = featured_copy_stack
+
+    refute sample.fetch("stacked"), "expected side-by-side columns at 1280"
+    assert_in_delta sample.fetch("copyInnerBottom"), sample.fetch("footerBottom"), 2
+    assert_operator sample.fetch("mainTop") - sample.fetch("headerBottom"), :<=, sample.fetch("copyGap") + 1
+    assert_operator sample.fetch("mainTop") - sample.fetch("headerBottom"), :>=, -1
+  end
+
   test "featured cover uses the image height token and a host utility wins" do
     visit "/demo/cards"
 
@@ -246,6 +275,44 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
   end
 
   private
+
+  def featured_copy_stack
+    page.evaluate_script(<<~JS)
+      (() => {
+        const card = document.querySelector(".fp-card--featured")
+        const media = card.querySelector(".fp-card__featured-media")
+        const copy = card.querySelector(".fp-card__featured-copy")
+        const main = card.querySelector(".fp-card__featured-main")
+        const header = card.querySelector("[data-fp-card-part='header']")
+        const footer = card.querySelector("[data-fp-card-part='footer']")
+        const probe = document.createElement("div")
+        probe.style.height = "var(--space-5)"
+        copy.appendChild(probe)
+        const copyGap = probe.getBoundingClientRect().height
+        probe.remove()
+        const mediaBox = media.getBoundingClientRect()
+        const copyBox = copy.getBoundingClientRect()
+        const mainBox = main.getBoundingClientRect()
+        const headerBox = header ? header.getBoundingClientRect() : null
+        const footerBox = footer ? footer.getBoundingClientRect() : null
+        const cardBox = card.getBoundingClientRect()
+        const copyStyle = getComputedStyle(copy)
+        const padTop = parseFloat(copyStyle.paddingTop)
+        const padBottom = parseFloat(copyStyle.paddingBottom)
+        return {
+          stacked: copyBox.top >= mediaBox.bottom - 2,
+          card: cardBox.width,
+          copyGap,
+          copyBottom: copyBox.bottom,
+          copyInnerBottom: copyBox.bottom - padBottom,
+          mainTop: mainBox.top,
+          mainBottom: mainBox.bottom,
+          headerBottom: headerBox ? headerBox.bottom : copyBox.top + padTop,
+          footerBottom: footerBox ? footerBox.bottom : null
+        }
+      })()
+    JS
+  end
 
   def featured_columns
     page.evaluate_script(<<~JS)
