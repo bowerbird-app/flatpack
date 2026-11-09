@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-05",
+  "updated_at": "2026-11-09",
   "gem": {
     "name": "flat_pack",
-    "version": "0.1.342"
+    "version": "0.1.343"
   },
   "compatibility": {
     "ruby": ">= 3.2.0",
