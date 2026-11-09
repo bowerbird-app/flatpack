@@ -27,6 +27,10 @@ class PagesMasonryDemoTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "with_image"
     assert_includes response.body, demo_grid_path
     assert_includes response.body, demo_overlay_path
+    assert_includes response.body, "id=\"media-radius\""
+    assert_includes response.body, "fp-media-radius-lg"
+    assert_includes response.body, "fp-card-inner-radius"
+    assert_includes response.body, "id=\"media-radius-lg\""
   end
 
   test "sidebar includes masonry" do

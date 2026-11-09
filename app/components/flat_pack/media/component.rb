@@ -13,6 +13,12 @@ module FlatPack
 
       FRAME_RADIUS = {
         nil => nil,
+        :none => "fp-media-radius-none",
+        :xs => "fp-media-radius-xs",
+        :sm => "fp-media-radius-sm",
+        :md => "fp-media-radius-md",
+        :lg => "fp-media-radius-lg",
+        :xl => "fp-media-radius-xl",
         :card_inner => "fp-card-inner-radius"
       }.freeze
 
@@ -117,7 +123,7 @@ module FlatPack
       def validate_radius!
         return if FRAME_RADIUS.key?(@radius)
 
-        raise ArgumentError, "Invalid radius: #{@radius.inspect}. Must be :card_inner"
+        raise ArgumentError, "Invalid radius: #{@radius.inspect}. Must be #{FRAME_RADIUS.keys.map(&:inspect).join(", ")}"
       end
 
       def validate_src!(original)

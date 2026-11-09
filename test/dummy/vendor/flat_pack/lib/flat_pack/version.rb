@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module FlatPack
-  VERSION = "0.1.343"
+  VERSION = "0.1.344"
 end

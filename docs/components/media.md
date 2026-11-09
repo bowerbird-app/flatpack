@@ -20,7 +20,7 @@ Link wrapping is the host's job. Do not put a button inside that link. To open a
 | `alt` | String |  | yes | Accessible name. Required, including `""` when the image is decorative. Non-strings raise `ArgumentError`. |
 | `width` | Integer |  | yes | Positive pixel width. Sets the attribute and, with `height`, `aspect-ratio`. Non-positive values raise `ArgumentError`. |
 | `height` | Integer |  | yes | Positive pixel height. Same rules as `width`. |
-| `radius` | Symbol |  | no | Omit it and the frame uses `--media-radius`. `:card_inner` sets `fp-card-inner-radius` on the frame, so the corner is `max(0, card radius − card inset)`. Any other value raises `ArgumentError`. |
+| `radius` | Symbol |  | no | Omit it and the frame uses `--media-radius` from the theme (it follows `--card-radius`). `:none`, `:xs`, `:sm`, `:md`, `:lg`, and `:xl` set `--media-radius` on the frame to `0` or the matching `--radius-*` token. `:card_inner` sets `fp-card-inner-radius` on the frame, so the corner is `max(0, card radius − card inset)`. Any other value raises `ArgumentError`. |
 | `cover` | Boolean | `false` | no | `true` omits `h-auto` so a featured card's cover height can apply. `false` keeps `h-auto`, and the `width` and `height` attributes do not lock the used height. Anything else raises `ArgumentError`. A featured card's media slot sets this when the block calls `image`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes merged into the overlay root. There is no `style`, colour, or theme prop. |
 
@@ -43,7 +43,7 @@ There is no `href`. Wrap the component in a link when the photo should navigate.
 The root is `group/media`. A control that should appear on hover can use `group-hover/media:` on the item. Keep it visible for keyboard focus (`focus-within:opacity-100`) and for pointers that cannot hover. On Card media, use `media.hover_actions` instead of copying those utilities. See [Card](card.md). `FlatPack::Reveal::Component` is scroll-in motion and does not hide overlay controls.
 
 ## Variants
-`width` and `height` set the shape. The frame (`div.fp-media__frame`) owns the radius, the muted fill, and the hairline. Omit `radius:` and that radius is `--media-radius`, which follows `--card-radius`. `radius: :card_inner` uses the card's inner radius. See [Card](card.md).
+`width` and `height` set the shape. The frame (`div.fp-media__frame`) owns the radius, the muted fill, and the hairline. Omit `radius:` and that radius is `--media-radius`, which follows `--card-radius`. `:none` through `:xl` retarget `--media-radius` on the frame. `radius: :card_inner` uses the card's inner radius. See [Card](card.md).
 
 ```erb
 <%= render FlatPack::Card::Component.new(padding: :md) do %>
@@ -55,6 +55,16 @@ The root is `group/media`. A control that should appear on hover can use `group-
     radius: :card_inner
   ) %>
 <% end %>
+```
+
+```erb
+<%= render FlatPack::Media::Component.new(
+  src: "/photos/harbour.jpg",
+  alt: "Harbour at dusk",
+  width: 1200,
+  height: 800,
+  radius: :lg
+) %>
 ```
 
 ## Example
@@ -89,11 +99,13 @@ The frame paints the fill, the hairline, and the radius. The `<img>` is the bitm
 
 Inside a padded card, `radius: :card_inner` reads `--card-inner-radius`. On the default theme that length is 0 for sm, md, and lg, because the padding is at least the card radius. Outside a card the same option is square, because the card did not set the variable.
 
+A shape step such as `radius: :lg` does not follow the card. It sets `--media-radius` to `--radius-lg` on the frame. The frame already clips with `overflow: hidden` and `border-radius: var(--media-radius)`, so the photo and any layer inside the frame share that corner. Overlay items stay outside the frame. `FlatPack::Card::Media` `image` forwards `radius:` with no extra argument.
+
 ## Accessibility
 `alt` is required. Use `""` only when nearby text already names the image. Overlay items do not name the image. A button in an item needs its own label. Do not wrap a button in the same link as the image. `group-hover/media:` is visual only. The control must still be reachable by keyboard, and it stays visible when the pointer cannot hover.
 
 ## Dependencies
 - `FlatPack::Overlay::Component` for placement.
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- The frame's fill, hairline, and default radius live in kit CSS (`.fp-media__frame`). `fp-card-inner-radius` does too. Reload kit CSS after an upgrade. A Tailwind rebuild is not required for those rules.
+- The frame's fill, hairline, and default radius live in Flatpack CSS (`.fp-media__frame`). `fp-card-inner-radius` and the `fp-media-radius-*` modifiers do too. Reload that stylesheet after an upgrade. A Tailwind rebuild is not required for those rules.
 - No Stimulus controller.

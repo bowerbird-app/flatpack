@@ -42,7 +42,7 @@ Kit CSS sets `--card-inset` from `data-fp-card-padding` (`0px`, or the matching 
 
 Children inherit that length. A nested card sets its own step, so its children use its own inner radius.
 
-`fp-card-inner-radius` sets `border-radius` to that length. It ships in kit CSS. Put it on a photo inside the padding, and add `overflow-hidden` when the bitmap should clip. `FlatPack::Media::Component` accepts `radius: :card_inner` and puts the class on the image frame.
+`fp-card-inner-radius` sets `border-radius` to that length. It ships in Flatpack CSS. Put it on a photo inside the padding, and add `overflow-hidden` when the bitmap should clip. `FlatPack::Media::Component` accepts `radius: :card_inner` and puts the class on the image frame. Shape steps (`:none`, `:xs`, `:sm`, `:md`, `:lg`, `:xl`) set `--media-radius` on that same frame. `image` on `FlatPack::Card::Media` forwards `radius:` to Media.
 
 The media slot stays on the card corner. The shell's `overflow-hidden` and `rounded-[var(--card-radius)]` clip it. The slot has no radius argument.
 

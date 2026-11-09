@@ -86,6 +86,39 @@
   </div>
 </section>
 
+<section class="mb-12" id="media-radius">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Photo corners",
+    anchor_link: true,
+    subtitle: "Default follows the theme. Inner is square off a card. Large is the large step."
+  ) %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+    <%
+      media_radius_examples = [
+        {id: "media-radius-default", radius: nil, label: "Default"},
+        {id: "media-radius-card-inner", radius: :card_inner, label: "Inner"},
+        {id: "media-radius-lg", radius: :lg, label: "Large"}
+      ]
+    %>
+    <% media_radius_examples.each do |example| %>
+      <div id="<%= example[:id] %>">
+        <%= render FlatPack::Media::Component.new(
+          src: "/masonry/kiln.svg",
+          alt: "Kiln yard",
+          width: 500,
+          height: 300,
+          **{radius: example[:radius]}.compact
+        ) do |media| %>
+          <% media.with_item(placement: :top_right, inset: :sm, class: hover_item_class) do %>
+            <%= render FlatPack::Button::Component.new(text: "Save", style: :primary, size: :sm) %>
+          <% end %>
+        <% end %>
+        <span class="mt-2 block text-sm text-[var(--surface-muted-content-color)]"><%= example[:label] %></span>
+      </div>
+    <% end %>
+  </div>
+</section>
+
 <section class="mb-12" id="hover-button">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "A button on the photo",

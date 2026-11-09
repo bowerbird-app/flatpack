@@ -1545,6 +1545,30 @@
   border-radius: var(--card-inner-radius);
 }
 
+.fp-media__frame.fp-media-radius-none {
+  --media-radius: 0;
+}
+
+.fp-media__frame.fp-media-radius-xs {
+  --media-radius: var(--radius-xs);
+}
+
+.fp-media__frame.fp-media-radius-sm {
+  --media-radius: var(--radius-sm);
+}
+
+.fp-media__frame.fp-media-radius-md {
+  --media-radius: var(--radius-md);
+}
+
+.fp-media__frame.fp-media-radius-lg {
+  --media-radius: var(--radius-lg);
+}
+
+.fp-media__frame.fp-media-radius-xl {
+  --media-radius: var(--radius-xl);
+}
+
 /* Unlayered so host Tailwind preflight cannot zero the side inset.
  * Flatpack CSS is linked first, which creates @layer components before the
  * host sheet orders @layer base after it. Preflight's * { padding: 0 } then

@@ -659,6 +659,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-fp-card-media-part=\"hover-actions\""
     assert_includes response.body, "[@media(hover:hover)]:opacity-0"
     assert_includes response.body, "focus-within:opacity-100"
+    assert_includes response.body, "id=\"card-media-image-radius\""
+    assert_includes response.body, "fp-media-radius-lg"
+    assert_includes response.body, "id=\"card-media-radius-lg\""
   end
 
   test "dummy importmap includes tiptap package pins" do

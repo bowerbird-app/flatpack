@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.344] - 2026-11-09
+
+### Added
+- `FlatPack::Media::Component` `radius:` accepts `:none`, `:xs`, `:sm`, `:md`, `:lg`, and `:xl` in addition to omit (`nil`) and `:card_inner`. Each new value sets `--media-radius` on `div.fp-media__frame` (`0` for `:none`, otherwise the matching `--radius-*` token). The frame already paints `border-radius: var(--media-radius)` and `overflow: hidden`, so the bitmap and anything inside the frame that reads `--media-radius` share that corner. Overlay items stay outside the frame, as before. `FlatPack::Card::Media` `image` already forwards `radius:` to Media.
+
+### Upgrade notes
+- Reload Flatpack CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Omit `radius:` or pass `:card_inner` and the markup is unchanged.
+- Redeploy so `meta.gem_version` shows `0.1.344`.
+
 ## [0.1.343] - 2026-11-09
 
 ### Fixed
