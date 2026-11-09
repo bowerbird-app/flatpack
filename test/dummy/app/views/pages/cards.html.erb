@@ -109,9 +109,11 @@
         </p>
       <% end %>
     <% end %>
-    <% card.footer do %>
-      <%= render FlatPack::Button::Component.new(text: "Contact", style: :secondary, size: :md) %>
-      <%= render FlatPack::Button::Component.new(text: "Download kit", style: :primary, size: :md) %>
+    <% unless params[:footer] == "none" %>
+      <% card.footer do %>
+        <%= render FlatPack::Button::Component.new(text: "Contact", style: :secondary, size: :md) %>
+        <%= render FlatPack::Button::Component.new(text: "Download kit", style: :primary, size: :md) %>
+      <% end %>
     <% end %>
   <% end %>
   <% if featured_frame.in?(%w[600 500]) %>
