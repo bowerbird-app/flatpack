@@ -298,6 +298,48 @@
     ) %>
   </section>
 
+  <section class="mb-12" id="card-media-image-radius">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Image corners",
+      anchor_link: true,
+      subtitle: "Default follows the theme. Inner follows the card. Large is the large step."
+    ) %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl">
+      <%
+        card_media_radius_examples = [
+          {id: "card-media-radius-default", radius: nil, label: "Default"},
+          {id: "card-media-radius-card-inner", radius: :card_inner, label: "Inner"},
+          {id: "card-media-radius-lg", radius: :lg, label: "Large"}
+        ]
+      %>
+      <% card_media_radius_examples.each do |example| %>
+        <div id="<%= example[:id] %>">
+          <%= render FlatPack::Card::Component.new(padding: :md) do |card| %>
+            <% card.media(padding: :none) do |media| %>
+              <%= media.image(
+                src: "/images/hero-stool.jpg",
+                alt: "Stool",
+                width: 1200,
+                height: 800,
+                **{radius: example[:radius]}.compact
+              ) %>
+              <% media.hover_actions do %>
+                <%= render FlatPack::Button::Component.new(
+                  text: "Save",
+                  style: :secondary,
+                  size: :sm
+                ) %>
+              <% end %>
+            <% end %>
+            <% card.body do %>
+              <p class="text-sm font-medium"><%= example[:label] %></p>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
 <%= render "shared/related_demos",
   links: [
     {text: "Overview", href: demo_cards_path},

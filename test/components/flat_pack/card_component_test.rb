@@ -1038,6 +1038,21 @@ module FlatPack
         refute_includes page.native.to_html, "data-fp-card-variant"
       end
 
+      def test_media_image_forwards_radius_to_media
+        render_inline(Component.new) do |card|
+          card.media(padding: :none) do |media|
+            media.hover_actions { "Menu" }
+            media.image(src: "/images/hero-stool.jpg", alt: "Cover", width: 800, height: 320, radius: :lg)
+          end
+        end
+
+        assert_selector ".fp-media__frame.fp-media-radius-lg"
+        refute_includes page.find(".fp-media__frame")[:class], "fp-card-inner-radius"
+        item = page.find("[data-fp-card-media-part='hover-actions']")
+        assert_equal "Menu", item.text
+        refute_selector ".fp-media__frame [data-fp-card-media-part='hover-actions']"
+      end
+
       def test_featured_slot_image_sets_cover_and_omits_h_auto
         render_inline(Component.new(variant: :featured)) do |card|
           card.media do |media|
