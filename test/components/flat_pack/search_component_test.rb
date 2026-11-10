@@ -121,7 +121,58 @@ module FlatPack
 
         refute_selector ".fp-search--collapsible"
         refute_includes rendered_content, "flat-pack--search-collapse"
-        assert_selector "div.w-full.max-w-md"
+        assert_selector "div.fp-search.w-full.max-w-md"
+        refute_selector ".fp-search--round"
+        assert_selector "input.fp-search__input"
+        html = CGI.unescapeHTML(rendered_content)
+        refute_includes html, "rounded-[var(--form-control-radius)]"
+        refute_includes html, "rounded-[var(--search-input-radius)]"
+      end
+
+      def test_default_dropdown_keeps_menu_radius
+        render_inline(Component.new(
+          items: [{title: "Buttons", url: "/demo/buttons"}]
+        ))
+
+        html = CGI.unescapeHTML(rendered_content)
+        assert_includes html, "rounded-[var(--menu-radius)]"
+        refute_selector ".fp-search--round"
+      end
+
+      def test_round_adds_modifier_on_expanded_search
+        render_inline(Component.new(
+          round: true,
+          items: [{title: "Buttons", url: "/demo/buttons"}]
+        ))
+
+        assert_selector "div.fp-search.fp-search--round"
+        assert_selector "input.fp-search__input"
+        html = CGI.unescapeHTML(rendered_content)
+        assert_includes html, "rounded-[var(--menu-radius)]"
+        refute_includes html, "rounded-[var(--radius-full)]"
+        refute_includes html, "rounded-[var(--form-control-radius)]"
+      end
+
+      def test_round_adds_modifier_on_collapsible_search
+        render_inline(Component.new(collapsible: true, round: true, id: "round-search"))
+
+        assert_selector "div.fp-search.fp-search--collapsible.fp-search--round"
+        assert_selector "input.fp-search__input"
+        html = CGI.unescapeHTML(rendered_content)
+        refute_includes html, "rounded-[var(--form-control-radius)]"
+      end
+
+      def test_collapsible_default_is_not_round
+        render_inline(Component.new(collapsible: true, id: "plain-collapse"))
+
+        assert_selector "div.fp-search.fp-search--collapsible"
+        refute_selector ".fp-search--round"
+      end
+
+      def test_invalid_round_raises
+        assert_raises(ArgumentError) do
+          Component.new(round: :pill)
+        end
       end
 
       def test_collapsible_renders_a_round_search_button
@@ -175,6 +226,13 @@ module FlatPack
 
         assert_includes controller, 'link.className = "block rounded-[var(--dropdown-item-radius)] px-[var(--search-result-padding-x)] py-[var(--search-result-padding-y)] '
         refute_includes controller, 'link.className = "block px-3 py-2 '
+      end
+
+      def test_input_radius_is_painted_in_flatpack_css
+        css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
+
+        assert_includes css, ".fp-search__input {\n  border-radius: var(--search-input-radius);\n}"
+        assert_includes css, ".fp-search--round {\n  --search-input-radius: var(--radius-full);\n}"
       end
     end
   end

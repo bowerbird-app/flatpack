@@ -241,6 +241,7 @@ The shape scale lives on bare `:root`, same as `--space-*`. Component radii alia
 | `--button-group-radius` | `--radius-md` | `--radius-full` |
 | `--button-round-border-radius` | `--radius-full` | `--radius-full` (not remapped) |
 | `--form-control-radius` | `--radius-md` | `1rem` |
+| `--search-input-radius` | `var(--form-control-radius)` | follows `--form-control-radius` (not remapped). `Search` `round: true` sets `--radius-full` |
 | `--badge-radius`, `--tabs-pill-corner-radius` | `--radius-md` | `--radius-full` |
 | `--chip-border-radius` | `--radius-md` | `--radius-md` |
 | `--sidebar-float-radius` | `--radius-lg` | `--radius-xxxl` |
@@ -254,9 +255,9 @@ Rounded sets `--sidebar-float-radius` to `--radius-xxxl` (2.5rem, 40px). The ite
 
 `Button` `round: true` uses `--button-round-border-radius`, which stays `--radius-full` on the moderate scale and on rounded. An icon-only round button also sets its side from `--button-round-size-sm`, `--button-round-size-md`, or `--button-round-size-lg` (`max(--hit-target-min, padding + icon + border)`), declared with the other button padding formulas so density still applies.
 
-`Search` `collapsible: true` opens to `--search-expanded-width` (`16rem` by default, not remapped by rounded, dark, or ocean). The open width is `min(100%, var(--search-expanded-width))`, so a 390px toolbar does not overflow. The collapsed face uses Button's `--button-round-size-*` tokens. It does not add a second circle scale.
+`Search` `collapsible: true` opens to `--search-expanded-width` (`16rem` by default, not remapped by rounded, dark, or ocean). The open width is `min(100%, var(--search-expanded-width))`, so a 390px toolbar does not overflow. The collapsed face uses Button's `--button-round-size-*` tokens. It does not add a second circle scale. The open field uses `--search-input-radius`, which aliases `--form-control-radius`. `round: true` sets `--search-input-radius` to `--radius-full`. The results menu still uses `--menu-radius`.
 
-Inputs, select, textarea, search fields, and the date range trigger use `--form-control-radius`. On rounded that token is `1rem` (16px). No radius step equals `1rem`, so the rounded block sets the length directly. Other themes keep `--radius-md` (8px). `--checkbox-radius` is `--radius-xs`. `--comments-inline-input-radius` follows `--form-control-radius`. `--media-radius`, accordion, collapse, and the collection editor follow `--card-radius`. Drawers use `--modal-radius`.
+Inputs, select, textarea, and the date range trigger use `--form-control-radius`. Search fields use `--search-input-radius`, which aliases that token unless `round: true`. On rounded `--form-control-radius` is `1rem` (16px). No radius step equals `1rem`, so the rounded block sets the length directly. Other themes keep `--radius-md` (8px). `--checkbox-radius` is `--radius-xs`. `--comments-inline-input-radius` follows `--form-control-radius`. `--media-radius`, accordion, collapse, and the collection editor follow `--card-radius`. Drawers use `--modal-radius`.
 
 Kit surfaces use `rounded-[var(--radius-sm)]` through `rounded-[var(--radius-xl)]`, `rounded-[var(--radius-full)]`, or the component alias. Rich text toolbar buttons and bubble chrome use `var(--radius-md, 0.5rem)` / `var(--radius-sm, 0.25rem)`. The editor field corners use `--form-control-radius`. Do not use Tailwind's `rounded-sm` / `rounded-md` / `rounded-lg` / `rounded-xl` / `rounded-2xl` in kit components. Those names share `--radius-*` with FlatPack and hide which scale is in play. `rounded-full` stays on true circles: avatar circle, status dots, typing dots, stepper and timeline markers, switch, radio, spinner artwork, carousel dots, and the FAB. `rounded-none` stays on segmented inner edges and collection-editor cells.
 

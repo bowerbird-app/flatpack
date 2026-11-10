@@ -800,6 +800,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
   --search-input-focus-ring-color: var(--color-primary);
+  --search-input-radius: var(--form-control-radius);
   --search-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);

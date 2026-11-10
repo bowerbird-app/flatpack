@@ -1161,6 +1161,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">min_characters</td>"
     assert_includes response.body, ">debounce</td>"
     assert_includes response.body, ">no_results_text</td>"
+    assert_includes response.body, ">round</td>"
     assert_includes response.body, "**system_arguments"
   end
 
@@ -1176,6 +1177,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-fp-grow=\"start\""
     assert_includes response.body, "data-fp-collapsed=\"false\""
     assert_includes response.body, "value=\"lamps\""
+    assert_includes response.body, "id=\"round-toolbar-search\""
+    assert_includes response.body, "id=\"round-field-search\""
+    assert_includes response.body, "fp-search--round"
     assert_includes response.body, "Remote JSON"
     assert_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end

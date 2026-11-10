@@ -685,6 +685,7 @@
   --search-input-text-color: var(--search-input-text-color);
   --search-input-placeholder-color: var(--search-input-placeholder-color);
   --search-input-focus-ring-color: var(--search-input-focus-ring-color);
+  --search-input-radius: var(--search-input-radius);
   --search-padding-y-sm: var(--search-padding-y-sm);
   --search-padding-y-md: var(--search-padding-y-md);
   --search-padding-y-lg: var(--search-padding-y-lg);
@@ -1658,6 +1659,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --search-input-text-color: var(--surface-content-color);
   --search-input-placeholder-color: var(--surface-muted-content-color);
   --search-input-focus-ring-color: var(--color-primary);
+  --search-input-radius: var(--form-control-radius);
   --search-padding-y-sm: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-padding-y-md: round(nearest, calc(var(--space-2) * var(--density)), 1px);
   --search-padding-y-lg: round(nearest, calc(var(--space-3) * var(--density)), 1px);

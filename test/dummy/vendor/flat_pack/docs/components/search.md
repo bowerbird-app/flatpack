@@ -26,6 +26,7 @@ Use Search where users need quick keyword filtering in top nav or content surfac
 | `collapsible` | Boolean | `false` | No | Rest as a round icon button that grows into this field. Off leaves today's markup alone. |
 | `collapsed` | Boolean | `true` | No | Starting posture when `collapsible` is on. `false` starts expanded. A present `value` stays open either way. |
 | `grow` | Symbol | `:end` | No | Which way the field grows. `:end` keeps the start edge put. `:start` keeps the end edge put, for a control on the trailing side of a toolbar. |
+| `round` | Boolean | `false` | No | `true` adds `fp-search--round` and sets `--search-input-radius` to `--radius-full`, so the open field is a pill. The focus ring follows that radius. `false` keeps `--search-input-radius` at `--form-control-radius` (`1rem` on rounded, `--radius-md` otherwise). The results dropdown still uses `--menu-radius`. Anything other than `true` or `false` raises `ArgumentError`. Off is the default for collapsible Search too. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the wrapper/input (`class`, `id`, `data`, `aria`). `aria: { label: }` names the round button. |
 
 ## Slots
@@ -75,7 +76,7 @@ Local `items:` ranking prefers exact title, then title prefix, then title substr
 
 ## Collapsible toolbar
 
-`collapsible: true` rests the field as a round icon button. The button is `FlatPack::Button` with `round: true` and `icon_only: true`, so it matches a bell beside it. Click, Enter, or Space grows the shell to `--search-expanded-width` (capped at the parent's width) and focuses the input. The open field uses the same icon, padding, and clear button as a plain search. Escape, a click outside, or blur while the focused field is empty collapses it and returns focus to the button. A click elsewhere leaves an open field alone until that field holds focus. Tabbing to another control collapses an empty field and leaves focus on that control. A typed value stays open. Enter still submits a host form. Search itself is not a form.
+`collapsible: true` rests the field as a round icon button. The button is `FlatPack::Button` with `round: true` and `icon_only: true`, so it matches a bell beside it. Click, Enter, or Space grows the shell to `--search-expanded-width` (capped at the parent's width) and focuses the input. The open field uses the same icon, padding, and clear button as a plain search. Pass `round: true` when that open field should be a pill too (`--search-input-radius: var(--radius-full)`). Omit it and the open field keeps `--form-control-radius`. Escape, a click outside, or blur while the focused field is empty collapses it and returns focus to the button. A click elsewhere leaves an open field alone until that field holds focus. Tabbing to another control collapses an empty field and leaves focus on that control. A typed value stays open. Enter still submits a host form. Search itself is not a form.
 
 `grow: :end` (default) anchors the start edge. `grow: :start` anchors the end edge, so a trailing toolbar slot opens back into the bar. On a narrow row the open width is `min(100%, var(--search-expanded-width))` and the shell can shrink beside a sibling.
 
@@ -84,7 +85,8 @@ Local `items:` ranking prefers exact title, then title prefix, then title substr
   <%= render FlatPack::Search::Component.new(
     collapsible: true,
     grow: :start,
-    placeholder: "Search the kit"
+    round: true,
+    placeholder: "Find pages"
   ) %>
   <%= render FlatPack::Button::Component.new(
     icon: "bell",

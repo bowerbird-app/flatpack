@@ -64,6 +64,75 @@
   ) %>
 </section>
 
+<section class="mb-12" id="round">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Round", anchor_link: true, subtitle: "A pill field that matches round buttons and pill links beside it.") %>
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-8">
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Collapsed, then open, beside pills.</p>
+      <div id="round-toolbar" class="flex w-full max-w-full flex-wrap items-center gap-2">
+        <%= render FlatPack::Search::Component.new(
+          collapsible: true,
+          grow: :end,
+          round: true,
+          items: DemoCatalog.searchable_items,
+          id: "round-toolbar-search",
+          placeholder: "Find pages",
+          min_characters: 1,
+          no_results_text: "No demo pages found"
+        ) %>
+        <%= render FlatPack::Button::Pill::Component.new(
+          items: [
+            {text: "All", href: "#round", active: true},
+            {text: "New", href: "#round"},
+            {text: "Saved", href: "#round"}
+          ]
+        ) %>
+      </div>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Already open, round.</p>
+      <%= render FlatPack::Search::Component.new(
+        collapsible: true,
+        collapsed: false,
+        round: true,
+        items: DemoCatalog.searchable_items,
+        id: "round-open-search",
+        placeholder: "Find pages",
+        min_characters: 1,
+        no_results_text: "No demo pages found"
+      ) %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Always a field, round.</p>
+      <%= render FlatPack::Search::Component.new(
+        round: true,
+        items: DemoCatalog.searchable_items,
+        id: "round-field-search",
+        placeholder: "Find pages",
+        min_characters: 1,
+        no_results_text: "No demo pages found"
+      ) %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Today's corners, for comparison.</p>
+      <%= render FlatPack::Search::Component.new(
+        items: DemoCatalog.searchable_items,
+        id: "default-field-search",
+        placeholder: "Find pages",
+        min_characters: 1,
+        no_results_text: "No demo pages found"
+      ) %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Search::Component.new(collapsible: true, round: true, placeholder: "Find pages") %&gt;
+      &lt;%= render FlatPack::Search::Component.new(round: true, placeholder: "Find pages") %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Small, medium (default), and large. Pick the size that matches nearby controls.") %>
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-4">
@@ -187,6 +256,7 @@
         --search-input-text-color: var(--surface-content-color);
         --search-input-placeholder-color: var(--surface-muted-content-color);
         --search-input-focus-ring-color: var(--color-primary);
+        --search-input-radius: var(--form-control-radius);
         --search-padding-y-sm: 0.375rem;
         --search-padding-y-md: 0.5rem;
         --search-padding-y-lg: 0.75rem;
