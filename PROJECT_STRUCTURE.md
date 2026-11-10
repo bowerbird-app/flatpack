@@ -129,6 +129,7 @@ flat_pack/
 │       │   ├── chat_image_deck_controller.js
 │       │   ├── chat_layout_controller.js
 │       │   ├── chat_message_actions_controller.js
+│       │   ├── chat_timestamp_reveal_controller.js
 │       │   ├── chat_scroll_controller.js
 │       │   ├── chat_sender_controller.js
 │       │   ├── chip_controller.js

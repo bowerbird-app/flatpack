@@ -672,6 +672,17 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes importmap, 'pin "@tiptap/extension-table-of-contents", to: "https://esm.sh/@tiptap/extension-table-of-contents@#{TIPTAP_VERSION}"'
   end
 
+  test "chat message group demo reveals times and last-message status" do
+    get "/demo/chat/message_group"
+
+    assert_response :success
+    assert_includes response.body, "fp-chat-timestamp-reveal"
+    assert_includes response.body, "flat-pack--chat-timestamp-reveal"
+    assert_includes response.body, "Posted. Hover me for the time."
+    assert_includes response.body, "Sent 2:30 PM"
+    assert_includes response.body, "data-flat-pack-chat-group-status"
+  end
+
   test "chat layout demo renders a named height token" do
     get "/demo/chat/layout"
 

@@ -15,12 +15,14 @@ module FlatPack
           timestamp: nil,
           state: :sent,
           edited: false,
+          reveal_timestamp: false,
           **system_arguments
         )
           super(**system_arguments)
           @timestamp = timestamp
           @state = state.to_sym
           @edited = edited
+          @reveal_timestamp = reveal_timestamp
 
           validate_state!
         end
@@ -40,7 +42,14 @@ module FlatPack
         def render_timestamp
           return unless @timestamp
 
-          content_tag(:span, formatted_timestamp, class: "text-xs text-[var(--chat-message-meta-color)]")
+          content_tag(:span, formatted_timestamp, class: timestamp_classes)
+        end
+
+        def timestamp_classes
+          classes = "text-xs text-[var(--chat-message-meta-color)]"
+          return classes unless @reveal_timestamp
+
+          "#{classes} #{FlatPack::Chat::TimestampReveal::TIME_CLASS}"
         end
 
         def render_edited_indicator

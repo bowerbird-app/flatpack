@@ -10,6 +10,17 @@ module FlatPack
           render_inline(Component.new(timestamp: Time.parse("2024-01-15 10:30:00")))
 
           assert_text "10:30 AM"
+          refute_includes rendered_content, "fp-chat-timestamp"
+        end
+
+        def test_reveal_timestamp_adds_clip_class_without_hiding_from_assistive_tech
+          render_inline(Component.new(timestamp: Time.parse("2024-01-15 10:30:00"), reveal_timestamp: true))
+
+          assert_text "10:30 AM"
+          assert_includes rendered_content, "fp-chat-timestamp"
+          refute_includes rendered_content, "display:none"
+          refute_includes rendered_content, "visibility:hidden"
+          refute_includes rendered_content, "aria-hidden"
         end
 
         def test_renders_sent_state_with_single_check_icon

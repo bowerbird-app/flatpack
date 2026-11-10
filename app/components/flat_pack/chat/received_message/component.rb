@@ -4,6 +4,8 @@ module FlatPack
   module Chat
     module ReceivedMessage
       class Component < FlatPack::BaseComponent
+        include FlatPack::Chat::TimestampReveal
+
         renders_many :attachments
         renders_many :media_attachments
         renders_one :meta
@@ -39,12 +41,14 @@ module FlatPack
           state: :sent,
           reveal_actions: false,
           timestamp: nil,
+          reveal_timestamp: false,
           **system_arguments
         )
           super(**system_arguments)
           @state = state.to_sym
           @reveal_actions = reveal_actions
           @timestamp = timestamp
+          @reveal_timestamp = reveal_timestamp
 
           validate_state!
         end
@@ -153,6 +157,15 @@ module FlatPack
         end
 
         def render_meta_section
+          revealed = revealed_timestamp_tag
+          return render_default_meta_section unless revealed
+
+          content_tag(:div, class: incoming_meta_tone_classes(with_margin: meta?)) do
+            safe_join([revealed, (meta.to_s if meta?)].compact)
+          end
+        end
+
+        def render_default_meta_section
           return unless meta?
 
           content_tag(:div, class: "mt-1 [--chat-message-meta-color:var(--chat-message-incoming-meta-color)] [--chat-read-receipt-color:var(--chat-message-incoming-read-receipt-color)]") do
@@ -160,14 +173,19 @@ module FlatPack
           end
         end
 
+        def incoming_meta_tone_classes(with_margin:)
+          tone = "[--chat-message-meta-color:var(--chat-message-incoming-meta-color)] [--chat-read-receipt-color:var(--chat-message-incoming-read-receipt-color)]"
+          with_margin ? "mt-1 #{tone}" : tone
+        end
+
         def message_attributes
           container_classes = @reveal_actions ? "w-full" : "flex justify-start"
 
           merge_attributes(
-            class: container_classes,
-            data: {
-              chat_message_state: @state
-            }
+            **timestamp_reveal_attributes(
+              container_classes,
+              {chat_message_state: @state}
+            )
           )
         end
 

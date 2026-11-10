@@ -357,6 +357,8 @@ fr:
       image: Image
       you: Vous
       attachment: Pièce jointe
+      sent_at: Envoyé à %{time}
+      timestamp_format: "%l:%M %p"
     billing:
       status_alert:
         past_due:

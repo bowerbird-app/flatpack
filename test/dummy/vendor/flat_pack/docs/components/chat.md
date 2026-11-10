@@ -45,12 +45,16 @@ High-use interaction props:
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | none | yes | Conversation name. |
 | `FlatPack::Chat::InboxRow::Component#unread_count` | Integer | `0` | no | Unread count. Positive values render a primary badge with tabular nums. Rows do not clip trailing chrome (`overflow-hidden` is not set). |
+| `FlatPack::Chat::SentMessage::Component#reveal_timestamp` | Boolean | `false` | no | When true, keeps `timestamp:` in the DOM and shows it on hover, tap, or focus. Adds `tabindex="0"` and `flat-pack--chat-timestamp-reveal` unless `reveal_actions:` is also on. |
+| `FlatPack::Chat::ReceivedMessage::Component#reveal_timestamp` | Boolean | `false` | no | Same as sent. Incoming alignment. |
+| `FlatPack::Chat::MessageMeta::Component#reveal_timestamp` | Boolean | `false` | no | Adds `fp-chat-timestamp` to the time span so a parent `.fp-chat-timestamp-reveal` can clip it. Pass `reveal_timestamp: true` on the message as well so hover and focus target the bubble. |
+| `FlatPack::Chat::SentAt::Component#timestamp` | Time, DateTime, or String | n/a | yes | Default last-message status copy. Renders `flatpack.chat.sent_at` with `flatpack.chat.timestamp_format`. |
 
 ## Slots
 - `Layout`: `sidebar`, `panel`.
 - `Panel`: `header`, `right_header`, `right_header_mobile`, `messages`, `composer`. `right_header` and `right_header_mobile` are optional. When either is present the header bar is a row: `flex items-center`. `header` is `min-w-0 flex-1` and stays a block, so caller content still fills that part and truncates. Each right part is `shrink-0 w-min items-center justify-end`. The row's `items-center` lines the title block up with the actions. Omit both right slots and the header markup stays a single wrapper. The bar does not add padding. A parent can restyle the parts with `data-flat-pack-chat-panel-part="header"`, `data-flat-pack-chat-panel-part="right-header"`, and `data-flat-pack-chat-panel-part="right-header-mobile"`. A right part with no `header` also has `ml-auto`. Because the part is `w-min` and does not shrink, its content must not wrap: use `whitespace-nowrap`, icon buttons, and badges. Use `right_header` for actions beside the panel `header` slot. Use `Chat::Header`'s `right` slot for actions inside that header, next to its title. `right_header_mobile` is the compact set below the chat `sm` breakpoint (640px, the same cutoff as `Chat::Layout`'s default `split_breakpoint`). Below `sm` the mobile part is shown and `right_header` is hidden when both are passed. At `sm` and up, `right_header` is shown and the mobile part is hidden. Pass only `right_header` and it stays visible at every width. Pass only `right_header_mobile` and it shows below `sm`; with no `header` the bar hides at `sm` and up (`sm:hidden`). Both parts render into the DOM and CSS hides one, so do not repeat ids or Stimulus targets across the two slots. Pair `right_header` with `right_header_mobile` when the desktop set has four or more actions, or a long-text badge. The swap follows the viewport (`sm` = 640px), not the panel's container width. A narrow panel on a wide viewport, including a `Chat::Layout` split column, still shows the desktop set.
 - `Header`: `left_meta`, `right`.
-- `MessageGroup`: `avatar`, `messages`.
+- `MessageGroup`: `avatar`, `messages`, optional `status` under the last message. Omit `status` and the group markup is unchanged. Put `Chat::SentAt` there for "Sent 2:30 PM", or your own seen-avatars. Flatpack does not decide read vs unread.
 - `ReceivedMessage`/`SentMessage`: `attachments`, `media_attachments`, `meta` (and `actions` for sent).
 - `Composer`: `left`, `center` (`textarea` alias), `right` (`actions` alias), `attachments`.
 - `TypingIndicator`: optional `avatar`.
@@ -116,17 +120,49 @@ Actions that should stay on the right of a long title use `right_header`. The pa
 
 Four or more actions, or a long-text badge, belong in that pair. The swap follows the viewport, not the panel width, so a narrow split column on a wide screen still shows `right_header`. Give the two slots different controls; both stay in the DOM.
 
+Hide times until hover, tap, or keyboard focus. The time string stays in the tree for screen readers.
+
+```erb
+<%= render FlatPack::Chat::SentMessage::Component.new(
+  timestamp: Time.zone.parse("2026-11-10 14:30"),
+  reveal_timestamp: true
+) do %>
+  Ready when you are.
+<% end %>
+```
+
+A group can show delivery copy under the last bubble. Swap that slot for avatars when the host knows the message is read.
+
+```erb
+<%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
+  <% group.message do %>
+    <%= render FlatPack::Chat::SentMessage::Component.new(
+      timestamp: Time.zone.parse("2026-11-10 14:30"),
+      reveal_timestamp: true
+    ) do %>
+      Ready when you are.
+    <% end %>
+  <% end %>
+  <% group.status do %>
+    <%= render FlatPack::Chat::SentAt::Component.new(timestamp: Time.zone.parse("2026-11-10 14:30")) %>
+  <% end %>
+<% end %>
+```
+
+Place `Chat::DateDivider` yourself when a conversation needs a time break. The kit does not infer gaps.
+
 ## Accessibility
 - Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`). Keyboard focus uses the browser outline in `--focus-outline-color` (`#101010` on light themes, `--surface-content-color` on dark), mapped through `--button-focus-ring-color` on `.fp-chat-jump`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
-- Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays.
+- `reveal_timestamp:` wrappers are `tabindex="0"` so `:focus-within` can show the time. They are not `role="button"`. The time is never `display: none`, `visibility: hidden`, or `aria-hidden`.
+- Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays. Timestamp reveal uses the same duration and easing tokens.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
 - `right_header` and `right_header_mobile` do not name their controls. Icon buttons there need `title` and `aria-label`. Do not reuse the same `id` or Stimulus target on both slots; both are in the DOM.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `flat-pack--chat-message-actions`, `flat-pack--chat-image-deck`.
+- Stimulus controllers: `flat-pack--chat-scroll`, `flat-pack--chat-grouping`, `flat-pack--chat-textarea`, `flat-pack--chat-message-actions`, `flat-pack--chat-timestamp-reveal`, `flat-pack--chat-image-deck`.
 - Message history loading uses `FlatPack::PaginationInfinite::Component` when configured.
 
 ---
@@ -198,6 +234,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - `app/components/flat_pack/chat/message_group/component.rb`
 - `app/components/flat_pack/chat/message/component.rb`
 - `app/components/flat_pack/chat/message_meta/component.rb`
+- `app/components/flat_pack/chat/sent_at/component.rb`
 - `app/components/flat_pack/chat/composer/component.rb`
 - `app/components/flat_pack/chat/typing_indicator/component.rb`
 - `app/components/flat_pack/chat/attachment/component.rb`
