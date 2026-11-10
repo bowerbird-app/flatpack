@@ -57,6 +57,20 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 <% end %>
 ```
 
+A wrapping title keeps the close control on the first line:
+
+```erb
+<%= render FlatPack::Modal::Component.new(
+  id: "long-title-modal",
+  title: "Invite everyone who should see this thread before Friday",
+  size: :sm
+) do |modal| %>
+  <% modal.body do %>
+    <p class="text-sm">The close control stays on the first line when the title wraps.</p>
+  <% end %>
+<% end %>
+```
+
 Page-scroll overlay with pinned actions:
 
 ```erb
@@ -152,7 +166,7 @@ The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem
 ## Accessibility
 - Renders `role="dialog"`, `aria-modal="true"`, and `aria-labelledby` bound to the header id.
 - A click on the dimmed backdrop closes when `close_on_backdrop` is on. `isBackdropClick` in `flat_pack/click_outside.js` is true when the event target is the backdrop element. A click inside the dialog is not. Escape close stays on this controller.
-- Escape/backdrop close controls are configurable. The header close control is a ghost icon-only Button. `.fp-modal__close` maps `--modal-close-icon-color` and `--modal-close-icon-hover-color` onto that button, and keeps the glyph at the start of the hit area, centered on the cross axis. The action stays `flat-pack--modal#close`. The navigable back control is the same Button, hidden until a screen asks for it.
+- Escape/backdrop close controls are configurable. The header close control is a ghost icon-only Button. `.fp-modal__close` maps `--modal-close-icon-color` and `--modal-close-icon-hover-color` onto that button. The header stays `items-start` so a wrapped title still stacks under the first line. Close uses `-mt-[calc((var(--hit-target-min)-calc(var(--text-lg)*var(--leading-normal)))/2)]` so the X sits on that first line, and `-me-[var(--space-1)]` so the glyph meets the dialog content edge (the control's own padding). A close-only row (no title) gets the inline pull only. Navigable back mirrors that on the leading edge (`-ms-[var(--space-1)]` and the same first-line offset). The action stays `flat-pack--modal#close`. The navigable back control is the same Button, hidden until a screen asks for it.
 - Tab cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown` even when Escape close is off. The cycle is `trapTab` in `flat_pack/focus_trap.js` with `{ modal: true }`: disabled controls, hidden inputs, and `aria-hidden` controls are skipped, focus returns to the dialog when nothing inside can take Tab, and Tab wraps when focus is outside the dialog. The dialog itself is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
 - Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse. `:center` writes the Tailwind v4 `scale` property (not `transform`). `:trigger` writes `transform` and `opacity` from `trigger_origin.js` and falls back to that fade when the trigger cannot be used.

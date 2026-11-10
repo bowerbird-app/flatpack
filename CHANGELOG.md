@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.348] - 2026-11-10
+
+### Changed
+- Titled modals keep `items-start` on the header so a wrapped title still stacks under the first line. The close control (md ghost icon Button) is taller than that `text-lg` line, so it now uses a negative top margin of `(--hit-target-min - title line height) / 2`, where the title line height is `--text-lg * --leading-normal`. It also uses a negative inline-end margin of `--space-1` (the close control's padding) so the X meets the dialog content edge. Navigable back mirrors that on the leading edge. A close-only row (no title) only gets the inline pull.
+
+### Upgrade notes
+- Visual only. Every titled modal's X moves up onto the title's first line and right by `--space-1` (0.25rem at default density). No API change.
+- Rebuild host Tailwind so the new `-mt-[calc(…)]`, `-me-[var(--space-1)]`, `-ms-[var(--space-1)]`, and title `leading-[calc(…)]` classes exist. Reload kit CSS. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.348`.
+
 ## [0.1.347] - 2026-11-10
 
 ### Added

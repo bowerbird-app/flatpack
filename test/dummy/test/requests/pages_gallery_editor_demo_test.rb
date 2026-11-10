@@ -26,6 +26,8 @@ class PagesGalleryEditorDemoTest < ActionDispatch::IntegrationTest
     assert_select "#origin-table-row[data-flat-pack--modal-origin-value='trigger']"
     assert_select "#origin-page-scroll[data-flat-pack--modal-origin-value='trigger'][data-fp-modal-scroll='page']"
     assert_select "#gallery-editor-from-button[data-controller='flat-pack--modal flat-pack--navigable'][data-flat-pack--modal-origin-value='trigger']"
+    assert_select "#messages-modal h2", text: "Messages"
+    assert_select "#long-title-modal h2", text: "Invite everyone who should see this thread before Friday"
   end
 
   test "gallery screen wraps the matching turbo-frame" do
