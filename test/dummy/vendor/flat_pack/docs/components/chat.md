@@ -45,7 +45,7 @@ High-use interaction props:
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
 | `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | none | yes | Conversation name. |
 | `FlatPack::Chat::InboxRow::Component#unread_count` | Integer | `0` | no | Unread count. Positive values render a primary badge with tabular nums. Rows do not clip trailing chrome (`overflow-hidden` is not set). |
-| `FlatPack::Chat::SentMessage::Component#reveal_timestamp` | Boolean | `false` | no | When true, keeps `timestamp:` in the DOM and shows it on hover, tap, or focus. Adds `tabindex="0"` and `flat-pack--chat-timestamp-reveal` unless `reveal_actions:` is also on. |
+| `FlatPack::Chat::SentMessage::Component#reveal_timestamp` | Boolean | `false` | no | When true, keeps `timestamp:` in the DOM and shows it on hover, tap, or focus. At rest the time takes no layout. Adds `tabindex="0"` and `flat-pack--chat-timestamp-reveal` unless `reveal_actions:` is also on. |
 | `FlatPack::Chat::ReceivedMessage::Component#reveal_timestamp` | Boolean | `false` | no | Same as sent. Incoming alignment. |
 | `FlatPack::Chat::MessageMeta::Component#reveal_timestamp` | Boolean | `false` | no | Adds `fp-chat-timestamp` to the time span so a parent `.fp-chat-timestamp-reveal` can clip it. Pass `reveal_timestamp: true` on the message as well so hover and focus target the bubble. |
 | `FlatPack::Chat::SentAt::Component#timestamp` | Time, DateTime, or String | n/a | yes | Default last-message status copy. Renders `flatpack.chat.sent_at` with `flatpack.chat.timestamp_format`. |
@@ -155,7 +155,7 @@ Place `Chat::DateDivider` yourself when a conversation needs a time break. The k
 - Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`). Keyboard focus uses the browser outline in `--focus-outline-color` (`#101010` on light themes, `--surface-content-color` on dark), mapped through `--button-focus-ring-color` on `.fp-chat-jump`.
 - Date dividers render `role="separator"` with labels.
 - Outgoing/incoming reveal-actions surfaces are keyboard focusable (`role="button"`, `tabindex="0"`).
-- `reveal_timestamp:` wrappers are `tabindex="0"` so `:focus-within` can show the time. They are not `role="button"`. The time is never `display: none`, `visibility: hidden`, or `aria-hidden`.
+- `reveal_timestamp:` wrappers are `tabindex="0"` so `:focus-within` can show the time. They are not `role="button"`. The time is never `display: none`, `visibility: hidden`, or `aria-hidden`. At rest it is clipped to zero height so it does not open a gap between bubbles. Showing it on hover, tap, or focus grows the row and shifts later messages.
 - Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays. Timestamp reveal uses the same duration and easing tokens.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
 - `right_header` and `right_header_mobile` do not name their controls. Icon buttons there need `title` and `aria-label`. Do not reuse the same `id` or Stimulus target on both slots; both are in the DOM.

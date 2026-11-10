@@ -64,7 +64,11 @@
   </section>
 
   <section class="mb-12">
-    <%= render FlatPack::SectionTitle::Component.new(title: "Times", anchor_link: true, subtitle: "Hover or tap a bubble for the time. The last outgoing note can show Sent, or your own seen-avatars.") %>
+    <%= render FlatPack::SectionTitle::Component.new(title: "Times", anchor_link: true, subtitle: "Hover or tap a bubble for the time. The last outgoing note can show Sent, or your own seen-avatars. At rest the time takes no space.") %>
+
+    <div id="times-default" class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render "pages/chat_timestamp_conversation", reveal: false %>
+    </div>
 
     <div id="times-light" class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
       <%= render "pages/chat_timestamp_conversation" %>

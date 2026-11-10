@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.347] - 2026-11-10
 
 ### Added
-- Chat timestamps can stay in the DOM and show on hover, tap, or focus. Pass `reveal_timestamp: true` on `FlatPack::Chat::SentMessage`, `Chat::ReceivedMessage`, and `Chat::MessageMeta`. The time uses opacity and max-height, not `display: none`, `visibility: hidden`, or `aria-hidden`. Desktop hover and keyboard `focus-within` are CSS. Coarse pointers toggle `.is-open` through `flat-pack--chat-timestamp-reveal`. The bubble is `tabindex="0"` only for this opt-in, and not when `reveal_actions:` is already on.
+- Chat timestamps can stay in the DOM and show on hover, tap, or focus. Pass `reveal_timestamp: true` on `FlatPack::Chat::SentMessage`, `Chat::ReceivedMessage`, and `Chat::MessageMeta`. At rest the time is `height: 0` / `line-height: 0` / `opacity: 0` with overflow clipped, not `display: none`, `visibility: hidden`, or `aria-hidden`, so consecutive bubbles keep the same gap as a group without `reveal_timestamp:`. Hover, focus, or tap grows the time under the bubble and shifts the messages below. Desktop hover and keyboard `focus-within` are CSS. Coarse pointers toggle `.is-open` through `flat-pack--chat-timestamp-reveal`. The bubble is `tabindex="0"` only for this opt-in, and not when `reveal_actions:` is already on.
 - `Chat::MessageGroup` has an optional `status` slot under the last message. `Chat::SentAt` fills it with `flatpack.chat.sent_at` (`Sent %{time}`) and `flatpack.chat.timestamp_format`. Hosts can put their own seen-avatars in that slot instead. Flatpack does not compute read receipts.
 
 ### Upgrade notes

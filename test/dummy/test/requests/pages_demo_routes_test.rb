@@ -681,6 +681,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Posted. Hover me for the time."
     assert_includes response.body, "Sent 2:30 PM"
     assert_includes response.body, "data-flat-pack-chat-group-status"
+
+    page = Nokogiri::HTML(response.body)
+    default_panel = page.at_css("#times-default")
+    reveal_panel = page.at_css("#times-light")
+
+    assert default_panel
+    assert reveal_panel
+    refute_includes default_panel.to_html, "fp-chat-timestamp-reveal"
+    refute_includes default_panel.to_html, "Sent 2:30 PM"
+    assert_includes default_panel.to_html, "Can you glance at the launch notes?"
+    assert_includes reveal_panel.to_html, "fp-chat-timestamp-reveal"
+    assert_includes reveal_panel.to_html, "Sent 2:30 PM"
   end
 
   test "chat layout demo renders a named height token" do

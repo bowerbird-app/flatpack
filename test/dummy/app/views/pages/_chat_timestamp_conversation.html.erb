@@ -1,3 +1,4 @@
+<% reveal = local_assigns.fetch(:reveal, true) %>
 <%= render FlatPack::Chat::MessageList::Component.new(stick_to_bottom: false) do %>
   <%= render FlatPack::Chat::DateDivider::Component.new(label: "Today") %>
 
@@ -7,16 +8,14 @@
     <% end %>
     <% group.message do %>
       <%= render FlatPack::Chat::ReceivedMessage::Component.new(
-        timestamp: Time.zone.parse("2026-11-10 10:02"),
-        reveal_timestamp: true
+        **(reveal ? { timestamp: Time.zone.parse("2026-11-10 10:02"), reveal_timestamp: true } : {})
       ) do %>
         Can you glance at the launch notes?
       <% end %>
     <% end %>
     <% group.message do %>
       <%= render FlatPack::Chat::ReceivedMessage::Component.new(
-        timestamp: Time.zone.parse("2026-11-10 10:08"),
-        reveal_timestamp: true
+        **(reveal ? { timestamp: Time.zone.parse("2026-11-10 10:08"), reveal_timestamp: true } : {})
       ) do %>
         Page two still feels loud.
       <% end %>
@@ -31,8 +30,7 @@
     <% end %>
     <% group.message do %>
       <%= render FlatPack::Chat::ReceivedMessage::Component.new(
-        timestamp: Time.zone.parse("2026-11-10 11:32"),
-        reveal_timestamp: true
+        **(reveal ? { timestamp: Time.zone.parse("2026-11-10 11:32"), reveal_timestamp: true } : {})
       ) do %>
         Back from coffee. This version sings.
       <% end %>
@@ -42,22 +40,22 @@
   <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
     <% group.message do %>
       <%= render FlatPack::Chat::SentMessage::Component.new(
-        timestamp: Time.zone.parse("2026-11-10 11:33"),
-        reveal_timestamp: true
+        **(reveal ? { timestamp: Time.zone.parse("2026-11-10 11:33"), reveal_timestamp: true } : {})
       ) do %>
         Shipping that cut.
       <% end %>
     <% end %>
     <% group.message do %>
       <%= render FlatPack::Chat::SentMessage::Component.new(
-        timestamp: Time.zone.parse("2026-11-10 14:30"),
-        reveal_timestamp: true
+        **(reveal ? { timestamp: Time.zone.parse("2026-11-10 14:30"), reveal_timestamp: true } : {})
       ) do %>
         Posted. Hover me for the time.
       <% end %>
     <% end %>
-    <% group.status do %>
-      <%= render FlatPack::Chat::SentAt::Component.new(timestamp: Time.zone.parse("2026-11-10 14:30")) %>
+    <% if reveal %>
+      <% group.status do %>
+        <%= render FlatPack::Chat::SentAt::Component.new(timestamp: Time.zone.parse("2026-11-10 14:30")) %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

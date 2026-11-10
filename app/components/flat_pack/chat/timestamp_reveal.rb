@@ -27,11 +27,7 @@ module FlatPack
       def revealed_timestamp_tag
         return unless timestamp_reveal_enabled? && @timestamp.present?
 
-        content_tag(
-          :span,
-          formatted_timestamp,
-          class: "#{TIME_CLASS} text-xs text-[var(--chat-message-meta-color)]"
-        )
+        content_tag(:span, formatted_timestamp, class: TIME_CLASS)
       end
     end
   end
