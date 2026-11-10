@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.349] - 2026-11-10
+
+### Added
+- `FlatPack::Chat::LinkCard::Component` is a thread item that points at another page. Pass `title:` (required), optional `href:`, `description:`, `meta:`, `icon:` (a Heroicon name), and `direction:` (`:incoming` or `:outgoing`, default `:incoming`). It is not a bubble. Render it through the existing `MessageGroup` `message` slot, on its own or after a text bubble. `MessageGroup` is unchanged.
+- With `href:`, the card is one `<a>`. That anchor is the only focusable node. Accessible name comes from the title and meta in the link text. Hover tints the surface. Keyboard focus shows a ring. There is no thumbnail in this version.
+- Without `href:`, the card is a non-interactive `div`. Text is muted. There is no hover. If `meta:` is omitted, the label is `flatpack.chat.link_card.unavailable` (`Unavailable`).
+- Shape tokens are `--chat-link-card-radius` (default `var(--chat-message-radius)`), `--chat-link-card-padding-x`, and `--chat-link-card-padding-y` (defaults are the chat-message padding vars). Rounded follows the chat-message tokens. Surface and border use `--surface-*`.
+
+### Upgrade notes
+- Additive. Existing chat markup is unchanged until you render `Chat::LinkCard`.
+- Rebuild host Tailwind so `rounded-[var(--chat-link-card-radius)]`, `px-[var(--chat-link-card-padding-x)]`, `py-[var(--chat-link-card-padding-y)]`, and `line-clamp-2` exist if your scan misses this gem. Reload kit CSS. Do not rerun the install generator. No Stimulus registration.
+- Redeploy so `meta.gem_version` shows `0.1.349`.
+
 ## [0.1.348] - 2026-11-10
 
 ### Changed

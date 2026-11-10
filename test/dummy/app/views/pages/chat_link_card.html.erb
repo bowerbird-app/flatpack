@@ -1,0 +1,183 @@
+<div class="container mx-auto max-w-4xl p-4">
+  <%= render FlatPack::PageTitle::Component.new(
+    title: "Chat::LinkCard",
+    subtitle: "A card in the thread that points at another page. Not a bubble."
+  ) %>
+
+  <%= render "pages/component_method_variables_table", component: :chat_link_card, anchor: "component-method-variables" %>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "In a thread", anchor_link: true, subtitle: "A note, then a link card. Incoming and outgoing.") %>
+
+    <div id="thread-light" class="mb-4 mt-6 space-y-6 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %>
+        <% group.avatar do %>
+          <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", size: :sm) %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
+            Here’s the help page if you get stuck.
+          <% end %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Help centre",
+            href: "/demo/alerts",
+            description: "Guides, billing answers, and how to reset a password.",
+            meta: "Support",
+            icon: :lifebuoy
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::SentMessage::Component.new do %>
+            Sending the press page too.
+          <% end %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Press kit",
+            href: "/demo/cards",
+            description: "Logos, product shots, and a short company blurb.",
+            meta: "Press",
+            icon: :newspaper,
+            direction: :outgoing
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div id="thread-dark" data-theme="dark" class="mb-4 mt-6 space-y-6 rounded-lg border border-(--surface-border-color) bg-(--surface-page-background-color) p-6 text-(--surface-content-color)">
+      <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, show_name: true, sender_name: "Mina") do |group| %>
+        <% group.avatar do %>
+          <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", size: :sm) %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
+            Here’s the help page if you get stuck.
+          <% end %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Help centre",
+            href: "/demo/alerts",
+            description: "Guides, billing answers, and how to reset a password.",
+            meta: "Support",
+            icon: :lifebuoy
+          ) %>
+        <% end %>
+      <% end %>
+
+      <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :outgoing, show_avatar: false) do |group| %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::SentMessage::Component.new do %>
+            Sending the press page too.
+          <% end %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Press kit",
+            href: "/demo/cards",
+            description: "Logos, product shots, and a short company blurb.",
+            meta: "Press",
+            icon: :newspaper,
+            direction: :outgoing
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Card only", anchor_link: true, subtitle: "A message that is just the card.") %>
+
+    <div id="card-only" class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, sender_name: "Mina") do |group| %>
+        <% group.avatar do %>
+          <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", size: :sm) %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Download the iOS app",
+            href: "/demo/buttons",
+            description: "The latest build, plus what changed.",
+            meta: "Download",
+            icon: "arrow-down-tray"
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Unavailable", anchor_link: true, subtitle: "No link. The card is not clickable.") %>
+
+    <div id="unavailable" class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming, show_avatar: true, sender_name: "Mina") do |group| %>
+        <% group.avatar do %>
+          <%= render FlatPack::Avatar::Component.new(name: "Mina Cho", size: :sm) %>
+        <% end %>
+        <% group.message do %>
+          <%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Old help article",
+            description: "This page is gone, so the card stays in the thread without a link.",
+            icon: :lifebuoy
+          ) %>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Focus ring", anchor_link: true, subtitle: "Tab to the card. The whole card is the link.") %>
+
+    <div id="focus-ring" class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::LinkCard::Component.new(
+        title: "Help centre",
+        href: "/demo/alerts",
+        description: "Tab here to see the focus ring.",
+        meta: "Support",
+        icon: :lifebuoy
+      ) %>
+    </div>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Rounded", anchor_link: true, subtitle: "This dummy page uses data-theme=rounded, so the card follows chat-message radius and padding.") %>
+
+    <div id="rounded" class="mb-4 mt-6 space-y-4 rounded-lg border border-(--surface-border-color) bg-(--surface-background-color) p-6">
+      <%= render FlatPack::Chat::LinkCard::Component.new(
+        title: "Help centre",
+        href: "/demo/alerts",
+        description: "Corners and padding come from the chat-message tokens.",
+        meta: "Support",
+        icon: :lifebuoy
+      ) %>
+    </div>
+  </section>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming) do |group| %&gt;
+        &lt;% group.message do %&gt;
+          &lt;%= render FlatPack::Chat::ReceivedMessage::Component.new do %&gt;
+            Here’s the help page if you get stuck.
+          &lt;% end %&gt;
+        &lt;% end %&gt;
+        &lt;% group.message do %&gt;
+          &lt;%= render FlatPack::Chat::LinkCard::Component.new(
+            title: "Help centre",
+            href: "/help",
+            description: "Guides and answers.",
+            meta: "Support",
+            icon: :lifebuoy
+          ) %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</div>

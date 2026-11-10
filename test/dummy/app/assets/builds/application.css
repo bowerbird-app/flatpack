@@ -1887,6 +1887,9 @@
   .rounded-\[var\(--chat-composer-radius\)\] {
     border-radius: var(--chat-composer-radius);
   }
+  .rounded-\[var\(--chat-link-card-radius\)\] {
+    border-radius: var(--chat-link-card-radius);
+  }
   .rounded-\[var\(--chat-message-radius\)\] {
     border-radius: var(--chat-message-radius);
   }
@@ -2862,6 +2865,9 @@
   .px-\[var\(--card-padding-sm\)\] {
     padding-inline: var(--card-padding-sm);
   }
+  .px-\[var\(--chat-link-card-padding-x\)\] {
+    padding-inline: var(--chat-link-card-padding-x);
+  }
   .px-\[var\(--chat-message-padding-x\)\] {
     padding-inline: var(--chat-message-padding-x);
   }
@@ -2999,6 +3005,9 @@
   }
   .py-\[var\(--chat-composer-control-padding-y\)\] {
     padding-block: var(--chat-composer-control-padding-y);
+  }
+  .py-\[var\(--chat-link-card-padding-y\)\] {
+    padding-block: var(--chat-link-card-padding-y);
   }
   .py-\[var\(--chat-message-padding-y\)\] {
     padding-block: var(--chat-message-padding-y);
@@ -4996,6 +5005,11 @@
   .focus\:ring-\[var\(--color-primary\)\] {
     &:focus {
       --tw-ring-color: var(--color-primary);
+    }
+  }
+  .focus\:ring-\[var\(--color-ring\)\] {
+    &:focus {
+      --tw-ring-color: var(--color-ring);
     }
   }
   .focus\:ring-\[var\(--font-swatch-selected-ring-color\)\] {
