@@ -113,7 +113,7 @@ module FlatPack
 
         def bubble_classes
           classes(
-            "relative px-4 py-2 rounded-[var(--radius-md)] max-w-[75%] sm:max-w-[500px] shadow-sm",
+            "relative px-[var(--chat-message-padding-x)] py-[var(--chat-message-padding-y)] rounded-[var(--chat-message-radius)] max-w-[75%] sm:max-w-[500px] shadow-sm",
             ((@direction == :outgoing) ? "bg-[var(--chat-message-outgoing-background-color)] text-[var(--chat-message-outgoing-text-color)]" : "bg-[var(--chat-message-incoming-background-color)] text-[var(--chat-message-incoming-text-color)]"),
             state_classes
           )

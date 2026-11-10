@@ -248,6 +248,9 @@ The shape scale lives on bare `:root`, same as `--space-*`. Component radii alia
 | `--sidebar-item-radius` | `--radius-lg` | `--radius-md` |
 | `--dropdown-item-radius` | `--radius-sm` | `--radius-md` |
 | `--chat-composer-radius` | `--radius-lg` | `--radius-full` |
+| `--chat-message-radius` | `--radius-md` | `1.125rem` (18px). No radius step equals 18px, so the rounded block sets the length directly. |
+| `--chat-message-padding-x` | `1rem` | `0.875rem` (14px) |
+| `--chat-message-padding-y` | `0.5rem` | `0.625rem` (10px) |
 | `--card-radius`, `--menu-radius`, `--popover-radius`, `--modal-radius` | `--radius-lg` | `--radius-xl` |
 | `--alert-border-radius`, `--toast-border-radius` | `--radius-lg` | `--radius-xl` |
 
@@ -256,6 +259,8 @@ Rounded sets `--sidebar-float-radius` to `--radius-xxxl` (2.5rem, 40px). The ite
 `Button` `round: true` uses `--button-round-border-radius`, which stays `--radius-full` on the moderate scale and on rounded. An icon-only round button also sets its side from `--button-round-size-sm`, `--button-round-size-md`, or `--button-round-size-lg` (`max(--hit-target-min, padding + icon + border)`), declared with the other button padding formulas so density still applies.
 
 `Search` `collapsible: true` opens to `--search-expanded-width` (`16rem` by default, not remapped by rounded, dark, or ocean). The open width is `min(100%, var(--search-expanded-width))`, so a 390px toolbar does not overflow. The collapsed face uses Button's `--button-round-size-*` tokens. It does not add a second circle scale. The open field uses `--search-input-radius`, which aliases `--form-control-radius`. `round: true` sets `--search-input-radius` to `--radius-full`. The results menu still uses `--menu-radius`.
+
+Sent and received chat bubbles use `--chat-message-radius` and `--chat-message-padding-*`. Those padding tokens are lengths, not `--space-*` steps, so rounded's larger spacing scale does not inflate the bubble. Charcoal, dark, and ocean keep `1rem` / `0.5rem` (today's `px-4 py-2`) and `--radius-md`.
 
 Inputs, select, textarea, and the date range trigger use `--form-control-radius`. Search fields use `--search-input-radius`, which aliases that token unless `round: true`. On rounded `--form-control-radius` is `1rem` (16px). No radius step equals `1rem`, so the rounded block sets the length directly. Other themes keep `--radius-md` (8px). `--checkbox-radius` is `--radius-xs`. `--comments-inline-input-radius` follows `--form-control-radius`. `--media-radius`, accordion, collapse, and the collection editor follow `--card-radius`. Drawers use `--modal-radius`.
 
