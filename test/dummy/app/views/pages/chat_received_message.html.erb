@@ -17,6 +17,14 @@
       ) do %>
         Received and reviewed — click this bubble to slide and reveal message details.
       <% end %>
+
+      <%= render FlatPack::Chat::ReceivedMessage::Component.new(
+        state: :sent,
+        timestamp: Time.zone.parse("2026-11-10 14:30"),
+        reveal_timestamp: true
+      ) do %>
+        Hover or tap this bubble for the time.
+      <% end %>
     </div>
 
     <%= render FlatPack::CodeBlock::Component.new(

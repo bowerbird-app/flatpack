@@ -43,6 +43,34 @@ module FlatPack
           refute_text "Delete"
         end
 
+        def test_default_output_omits_timestamp_reveal
+          render_inline(Component.new(state: :sent, timestamp: Time.zone.parse("2026-11-10 14:30:00"))) do
+            "Incoming"
+          end
+
+          html = rendered_content
+          refute_includes html, "fp-chat-timestamp-reveal"
+          refute_includes html, "tabindex"
+          refute_text "2:30 PM"
+        end
+
+        def test_reveal_timestamp_keeps_time_readable
+          render_inline(Component.new(
+            state: :sent,
+            timestamp: Time.zone.parse("2026-11-10 14:30:00"),
+            reveal_timestamp: true
+          )) do
+            "Incoming"
+          end
+
+          html = rendered_content
+          assert_includes html, "fp-chat-timestamp-reveal"
+          assert_text "2:30 PM"
+          refute_includes html, "display:none"
+          refute_includes html, "visibility:hidden"
+          refute_includes html, "aria-hidden"
+        end
+
         def test_renders_attachment_slot_without_with_prefix
           render_inline(Component.new(state: :sent)) do |message|
             message.attachment { "Attachment" }

@@ -357,6 +357,8 @@ en:
       image: Image
       you: You
       attachment: Attachment
+      sent_at: Sent %{time}
+      timestamp_format: "%l:%M %p"
     billing:
       status_alert:
         past_due:

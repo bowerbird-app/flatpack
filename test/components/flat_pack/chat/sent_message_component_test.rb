@@ -73,6 +73,54 @@ module FlatPack
           refute_text "Delete"
         end
 
+        def test_default_output_omits_timestamp_reveal
+          render_inline(Component.new(state: :sent, timestamp: Time.zone.parse("2026-11-10 14:30:00"))) do
+            "Outgoing"
+          end
+
+          html = rendered_content
+          refute_includes html, "fp-chat-timestamp-reveal"
+          refute_includes html, "flat-pack--chat-timestamp-reveal"
+          refute_includes html, "fp-chat-timestamp"
+          refute_includes html, "tabindex"
+          refute_text "2:30 PM"
+        end
+
+        def test_reveal_timestamp_keeps_time_readable
+          render_inline(Component.new(
+            state: :sent,
+            timestamp: Time.zone.parse("2026-11-10 14:30:00"),
+            reveal_timestamp: true
+          )) do
+            "Outgoing"
+          end
+
+          html = rendered_content
+          assert_includes html, "fp-chat-timestamp-reveal"
+          assert_includes html, "flat-pack--chat-timestamp-reveal"
+          assert_includes html, "fp-chat-timestamp"
+          assert_includes html, 'tabindex="0"'
+          assert_text "2:30 PM"
+          refute_includes html, "display:none"
+          refute_includes html, "display: none"
+          refute_includes html, "visibility:hidden"
+          refute_includes html, "visibility: hidden"
+          refute_includes html, "aria-hidden"
+        end
+
+        def test_reveal_actions_skips_timestamp_reveal_controller
+          render_inline(Component.new(
+            state: :sent,
+            reveal_actions: true,
+            reveal_timestamp: true,
+            timestamp: Time.zone.parse("2026-11-10 14:30:00")
+          )) do
+            "Outgoing"
+          end
+
+          refute_includes rendered_content, "flat-pack--chat-timestamp-reveal"
+        end
+
         def test_does_not_expose_with_prefixed_slot_helpers
           component = Component.new(state: :sent)
 

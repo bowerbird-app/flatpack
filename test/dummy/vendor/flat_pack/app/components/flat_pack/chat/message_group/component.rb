@@ -6,9 +6,13 @@ module FlatPack
       class Component < FlatPack::BaseComponent
         renders_one :avatar
         renders_many :messages
+        renders_one :status
+
+        alias_method :status_slot, :status
 
         undef_method :with_avatar, :with_avatar_content,
-          :with_message, :with_message_content
+          :with_message, :with_message_content,
+          :with_status, :with_status_content
 
         def avatar(*args, **kwargs, &block)
           return get_slot(:avatar) if args.empty? && kwargs.empty? && !block_given?
@@ -18,6 +22,12 @@ module FlatPack
 
         def message(*args, **kwargs, &block)
           set_slot(:messages, nil, *args, **kwargs, &block)
+        end
+
+        def status(*args, **kwargs, &block)
+          return status_slot if args.empty? && kwargs.empty? && !block_given?
+
+          set_slot(:status, nil, *args, **kwargs, &block)
         end
 
         # Tailwind CSS scanning requires these classes to be present as string literals.
@@ -80,7 +90,8 @@ module FlatPack
           content_tag(:div, class: messages_container_classes) do
             safe_join([
               render_sender_name,
-              render_messages_list
+              render_messages_list,
+              render_status
             ].compact)
           end
         end
@@ -94,6 +105,14 @@ module FlatPack
         def render_messages_list
           content_tag(:div, class: "space-y-1") do
             safe_join(messages)
+          end
+        end
+
+        def render_status
+          return unless status?
+
+          content_tag(:div, class: status_classes, data: {flat_pack_chat_group_status: true}) do
+            status.to_s
           end
         end
 
@@ -125,6 +144,13 @@ module FlatPack
           classes(
             "text-sm font-medium text-[var(--chat-message-incoming-text-color)] mb-1",
             (@direction == :outgoing) ? "text-right" : "text-left"
+          )
+        end
+
+        def status_classes
+          classes(
+            "mt-1 text-xs text-[var(--chat-message-meta-color)]",
+            (@direction == :outgoing) ? "text-right [--chat-message-meta-color:var(--chat-message-outgoing-meta-color)]" : "text-left [--chat-message-meta-color:var(--chat-message-incoming-meta-color)]"
           )
         end
 

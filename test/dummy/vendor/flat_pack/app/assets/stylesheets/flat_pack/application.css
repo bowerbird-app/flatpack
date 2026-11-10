@@ -3147,6 +3147,42 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   outline: 1px auto var(--button-focus-ring-color, #101010);
 }
 
+.fp-chat-timestamp-reveal:focus-visible {
+  outline: 1px auto var(--focus-outline-color, #101010);
+  outline-offset: 2px;
+}
+
+.fp-chat-timestamp-reveal .fp-chat-timestamp {
+  display: block;
+  height: 0;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-size: var(--text-xs);
+  line-height: 0;
+  color: var(--chat-message-meta-color);
+  pointer-events: none;
+  transition:
+    height var(--duration-fast) var(--easing-standard),
+    max-height var(--duration-fast) var(--easing-standard),
+    margin var(--duration-fast) var(--easing-standard),
+    opacity var(--duration-fast) var(--easing-standard),
+    line-height var(--duration-fast) var(--easing-standard);
+}
+
+.fp-chat-timestamp-reveal:hover .fp-chat-timestamp,
+.fp-chat-timestamp-reveal:focus-within .fp-chat-timestamp,
+.fp-chat-timestamp-reveal.is-open .fp-chat-timestamp {
+  height: auto;
+  max-height: 2rem;
+  margin-top: 0.25rem;
+  line-height: 1rem;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* The old send control used the browser outline: a thick near-black stroke on the disc.
    Button's inset ring plus a white offset reads as a faint white ring on the white composer.
    The parent maps the ring token. The outline uses that colour and hugs the disc. */

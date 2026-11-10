@@ -102,11 +102,29 @@ module FlatPack
           assert_selector "div[data-test='value']"
         end
 
+        def test_omits_status_by_default
+          render_inline(Component.new(direction: :outgoing)) do |group|
+            group.message { "My message" }
+          end
+
+          refute_selector "[data-flat-pack-chat-group-status]"
+        end
+
+        def test_renders_status_slot
+          render_inline(Component.new(direction: :outgoing)) do |group|
+            group.message { "My message" }
+            group.status { "Sent 2:30 PM" }
+          end
+
+          assert_selector "[data-flat-pack-chat-group-status]", text: "Sent 2:30 PM"
+        end
+
         def test_does_not_expose_with_prefixed_slot_setters
           component = Component.new(direction: :incoming)
 
           refute_respond_to component, :with_avatar
           refute_respond_to component, :with_message
+          refute_respond_to component, :with_status
         end
       end
     end
