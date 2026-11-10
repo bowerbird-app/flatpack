@@ -33,6 +33,9 @@ module FlatPack
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "max-w-sm" "max-w-xl" "max-w-2xl" "max-w-4xl" "max-w-6xl"
       # "sm:my-auto"
+      # "-me-[var(--space-1)]" "-ms-[var(--space-1)]"
+      # "-mt-[calc((var(--hit-target-min)-calc(var(--text-lg)*var(--leading-normal)))/2)]"
+      # "leading-[calc(var(--text-lg)*var(--leading-normal))]"
       SIZES = {
         sm: "max-w-sm",
         md: "max-w-xl",
@@ -44,6 +47,9 @@ module FlatPack
       BODY_HEIGHT_MODES = %i[auto fixed min].freeze
       SCROLL_MODES = %i[body page].freeze
       ORIGINS = %i[center trigger].freeze
+      CLOSE_EDGE_CLASS = "-me-[var(--space-1)]"
+      BACK_EDGE_CLASS = "-ms-[var(--space-1)]"
+      TITLE_LINE_OFFSET_CLASS = "-mt-[calc((var(--hit-target-min)-calc(var(--text-lg)*var(--leading-normal)))/2)]"
 
       def self.screen_frame_id(modal_id)
         "#{modal_id}-screen"
@@ -279,7 +285,19 @@ module FlatPack
       end
 
       def close_button_classes
-        "shrink-0 rounded-[var(--radius-sm)]"
+        classes(
+          "shrink-0 rounded-[var(--radius-sm)]",
+          CLOSE_EDGE_CLASS,
+          (header_section? ? TITLE_LINE_OFFSET_CLASS : nil)
+        )
+      end
+
+      def back_button_classes
+        classes(
+          "shrink-0 rounded-[var(--radius-sm)]",
+          BACK_EDGE_CLASS,
+          TITLE_LINE_OFFSET_CLASS
+        )
       end
 
       def render_header_section
@@ -303,7 +321,7 @@ module FlatPack
       end
 
       def render_back_button
-        content_tag(:span, class: "fp-modal__close") do
+        content_tag(:span, class: "fp-modal__close fp-modal__back") do
           render FlatPack::Button::Component.new(
             text: fp_t("modal.back"),
             icon: "arrow-left",
@@ -313,7 +331,7 @@ module FlatPack
             type: "button",
             hidden: true,
             disabled: true,
-            class: close_button_classes,
+            class: back_button_classes,
             aria: {label: fp_t("modal.back"), hidden: true},
             data: {
               "flat-pack--navigable-target": "backButton",
@@ -354,7 +372,7 @@ module FlatPack
 
       def title_heading_attributes
         attributes = {
-          class: "text-lg font-semibold text-[var(--modal-title-color)] fp-text-balance"
+          class: "text-lg font-semibold leading-[calc(var(--text-lg)*var(--leading-normal))] text-[var(--modal-title-color)] fp-text-balance"
         }
         return attributes unless navigable?
 
@@ -484,17 +502,10 @@ module FlatPack
       end
 
       def header_wrapper_classes
-        if navigable?
-          classes(
-            "flat-pack-modal__header shrink-0 flex items-center justify-between gap-3",
-            sticky_footer? ? "fp-modal-sticky-header" : nil
-          )
-        else
-          classes(
-            "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3",
-            sticky_footer? ? "fp-modal-sticky-header" : nil
-          )
-        end
+        classes(
+          "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3",
+          sticky_footer? ? "fp-modal-sticky-header" : nil
+        )
       end
 
       def close_button_row_classes

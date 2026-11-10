@@ -94,6 +94,45 @@ module FlatPack
         assert_selector ".fp-modal__close button.fp-button.fp-hit-target[data-fp-style='ghost'][type='button'][aria-label='Close'][data-action='flat-pack--modal#close']"
       end
 
+      def test_titled_close_button_aligns_to_first_title_line
+        render_inline(Component.new(id: "my-modal", title: "Invite member")) do |component|
+          component.body { "Content" }
+        end
+
+        html = page.native.to_html
+
+        assert_includes html, "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3"
+        assert_includes html, "leading-[calc(var(--text-lg)*var(--leading-normal))]"
+        close_class = page.find(".flat-pack-modal__header button[aria-label='Close']")[:class]
+        assert_includes close_class, Component::CLOSE_EDGE_CLASS
+        assert_includes close_class, Component::TITLE_LINE_OFFSET_CLASS
+      end
+
+      def test_close_only_row_pulls_to_content_edge_without_title_offset
+        render_inline(Component.new(id: "my-modal")) do |component|
+          component.body { "Content" }
+        end
+
+        close_class = page.find(".flat-pack-modal__close button[aria-label='Close']")[:class]
+        assert_includes close_class, Component::CLOSE_EDGE_CLASS
+        refute_includes close_class, Component::TITLE_LINE_OFFSET_CLASS
+      end
+
+      def test_navigable_close_and_back_align_to_title_line
+        render_inline(Component.new(id: "gallery-editor", title: "Gallery", navigable: true, src: "/demo/modals/gallery_editor"))
+
+        html = page.native.to_html
+
+        assert_includes html, "flat-pack-modal__header shrink-0 flex items-start justify-between gap-3"
+        close_class = page.find(".flat-pack-modal__header button[aria-label='Close']")[:class]
+        back_class = page.find(".fp-modal__back button[aria-label='Back']", visible: :all)[:class]
+        assert_includes close_class, Component::CLOSE_EDGE_CLASS
+        assert_includes close_class, Component::TITLE_LINE_OFFSET_CLASS
+        assert_includes back_class, Component::BACK_EDGE_CLASS
+        assert_includes back_class, Component::TITLE_LINE_OFFSET_CLASS
+        refute_includes back_class, Component::CLOSE_EDGE_CLASS
+      end
+
       def test_modal_has_dialog_role
         render_inline(Component.new(id: "my-modal")) do |component|
           component.body { "Content" }

@@ -127,6 +127,69 @@
   ) %>
 </section>
 
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Title and close",
+    anchor_link: true,
+    subtitle: "The X sits on the first line of the title and on the content edge. A long title wraps under it."
+  ) %>
+  <div class="flex flex-wrap gap-3 mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Messages",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "modal-id": "messages-modal" }
+    ) %>
+    <%= render FlatPack::Button::Component.new(
+      text: "Long title",
+      style: :secondary,
+      data: { action: "click->flat-pack--modal#open", "modal-id": "long-title-modal" }
+    ) %>
+  </div>
+
+  <%= render FlatPack::Modal::Component.new(id: "messages-modal", title: "Messages", size: :sm) do |modal| %>
+    <% modal.body do %>
+      <%= render FlatPack::List::Component.new(spacing: :none) do %>
+        <%= render FlatPack::List::Item.new(icon: :message_circle, hover: true) do %>
+          Nic
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :message_circle, hover: true) do %>
+          Alex
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :message_circle, hover: true) do %>
+          Mira
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::Modal::Component.new(
+    id: "long-title-modal",
+    title: "Invite everyone who should see this thread before Friday",
+    size: :sm
+  ) do |modal| %>
+    <% modal.body do %>
+      <p class="text-(--surface-content-color)">The close control stays on the first line when the title wraps.</p>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Modal::Component.new(
+        id: "long-title-modal",
+        title: "Invite everyone who should see this thread before Friday",
+        size: :sm
+      ) do |modal| %&gt;
+        &lt;% modal.body do %&gt;
+          <p>The close control stays on the first line when the title wraps.</p>
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Wrapping title",
+    separated: false
+  ) %>
+</section>
+
 <!-- Optional Sections -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Optional Sections", anchor_link: true, subtitle: "Examples showing header, body, and footer wrappers only render when content is provided.") %>

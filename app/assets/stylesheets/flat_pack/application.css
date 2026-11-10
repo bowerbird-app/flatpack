@@ -3068,6 +3068,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   padding: var(--space-1, 0.25rem);
 }
 
+.fp-modal__close:not(.fp-modal__back) .fp-button {
+  justify-content: flex-end;
+}
+
 .fp-modal__close .fp-button:focus-visible,
 .fp-drawer__close .fp-button:focus-visible,
 .fp-toast__dismiss .fp-button:focus-visible,
