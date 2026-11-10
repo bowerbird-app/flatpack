@@ -33,7 +33,7 @@ module FlatPack
       refute_includes rest, "display: none"
       refute_includes rest, "visibility: hidden"
       assert_includes hover, "height: auto;"
-      assert_includes hover, "line-height: var(--text-xs--line-height, 1rem);"
+      assert_includes hover, "line-height: 1rem;"
     end
   end
 end
