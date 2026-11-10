@@ -64,7 +64,7 @@ module FlatPack
         def render_revealable_message
           content_tag(
             :div,
-            class: "relative w-full overflow-hidden rounded-[var(--radius-md)]",
+            class: "relative w-full overflow-hidden rounded-[var(--chat-message-radius)]",
             data: {
               controller: "flat-pack--chat-message-actions",
               flat_pack__chat_message_actions_direction_value: :incoming,
@@ -174,8 +174,9 @@ module FlatPack
         def bubble_classes
           classes(
             "relative",
-            "px-4 py-2",
-            "rounded-[var(--radius-md)]",
+            "px-[var(--chat-message-padding-x)]",
+            "py-[var(--chat-message-padding-y)]",
+            "rounded-[var(--chat-message-radius)]",
             "max-w-[75%] sm:max-w-[500px]",
             "shadow-sm",
             "bg-[var(--chat-message-incoming-background-color)] text-[var(--chat-message-incoming-text-color)]",

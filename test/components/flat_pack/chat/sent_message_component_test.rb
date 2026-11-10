@@ -13,6 +13,9 @@ module FlatPack
 
           assert_selector "div[data-chat-message-state='sent']", text: "Outgoing"
           assert_includes rendered_content, "justify-end"
+          assert_includes rendered_content, "px-[var(--chat-message-padding-x)]"
+          assert_includes rendered_content, "py-[var(--chat-message-padding-y)]"
+          assert_includes rendered_content, "rounded-[var(--chat-message-radius)]"
         end
 
         def test_renders_reveal_actions_when_enabled
@@ -21,6 +24,7 @@ module FlatPack
           end
 
           assert_includes rendered_content, "flat-pack--chat-message-actions"
+          assert_includes rendered_content, "rounded-[var(--chat-message-radius)]"
           assert_includes rendered_content, "duration-[var(--duration-fast)]"
           refute_includes rendered_content, "duration-150"
           assert_text "Edit"

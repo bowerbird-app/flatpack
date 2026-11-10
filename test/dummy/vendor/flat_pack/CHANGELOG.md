@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.346] - 2026-11-10
+
+### Added
+- Chat message bubbles read `--chat-message-radius` (default `var(--radius-md)`), `--chat-message-padding-x` (default `1rem`), and `--chat-message-padding-y` (default `0.5rem`). `FlatPack::Chat::SentMessage` and `Chat::ReceivedMessage` paint those tokens, including the revealable-actions wrapper radius. The default theme matches today's `px-4 py-2` and `rounded-[var(--radius-md)]`. Rounded sets `--chat-message-radius: 1.125rem` (18px), `--chat-message-padding-x: 0.875rem` (14px), and `--chat-message-padding-y: 0.625rem` (10px). Padding is a length, not a `--space-*` step, so rounded's larger spacing scale does not inflate the bubble.
+
+### Upgrade notes
+- Additive. Charcoal, dark, and ocean bubbles look the same. Rounded bubbles are a bit rounder and roomier.
+- Rebuild host Tailwind so `rounded-[var(--chat-message-radius)]`, `px-[var(--chat-message-padding-x)]`, and `py-[var(--chat-message-padding-y)]` exist. Reload kit CSS. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.346`.
+
 ## [0.1.345] - 2026-11-10
 
 ### Added

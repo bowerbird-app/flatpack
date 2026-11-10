@@ -603,6 +603,9 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --chat-composer-background-color: var(--surface-background-color);
   --chat-composer-border-color: var(--surface-border-color);
   --chat-composer-radius: var(--radius-lg);
+  --chat-message-radius: var(--radius-md);
+  --chat-message-padding-x: 1rem;
+  --chat-message-padding-y: 0.5rem;
   --chat-input-background-color: var(--surface-background-color);
   --chat-input-border-color: var(--surface-border-color);
   --chat-input-text-color: var(--surface-content-color);

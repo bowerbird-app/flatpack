@@ -19,6 +19,7 @@
  *   (--button-border-radius, --button-group-radius, --form-control-radius, --chip-border-radius, --badge-radius,
  *   --tabs-pill-corner-radius, --card-radius, --menu-radius, --popover-radius, --modal-radius,
  *   --alert-border-radius, --toast-border-radius, --chat-composer-radius,
+ *   --chat-message-radius, --chat-message-padding-x, --chat-message-padding-y,
  *   --sidebar-item-radius, --dropdown-item-radius) are also bare :root,
  *   then overridden on [data-theme~="rounded"]. Restating the moderate value on [data-theme]
  *   would snap a dark region inside rounded back to the compact inset or the moderate corner.
@@ -445,6 +446,9 @@
   --chat-composer-background-color: var(--chat-composer-background-color);
   --chat-composer-border-color: var(--chat-composer-border-color);
   --chat-composer-radius: var(--chat-composer-radius);
+  --chat-message-radius: var(--chat-message-radius);
+  --chat-message-padding-x: var(--chat-message-padding-x);
+  --chat-message-padding-y: var(--chat-message-padding-y);
   --chat-input-background-color: var(--chat-input-background-color);
   --chat-input-border-color: var(--chat-input-border-color);
   --chat-input-text-color: var(--chat-input-text-color);
@@ -1929,6 +1933,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --alert-border-radius: var(--radius-lg);
   --toast-border-radius: var(--radius-lg);
   --chat-composer-radius: var(--radius-lg);
+  --chat-message-radius: var(--radius-md);
+  --chat-message-padding-x: 1rem;
+  --chat-message-padding-y: 0.5rem;
 }
 
 /* p-8 / default --space-6. Kept as a length so a theme that remaps --space-* does not shift the page.
@@ -2037,7 +2044,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
 
 /* Rounded shifts spacing steps 2–6 and the shape of controls and shells.
  * --space-1 stays 4px. --density stays 1. The global --radius-* steps stay
- * moderate; this block remaps component radii. Do not self-map a token here.
+ * moderate; this block remaps component radii. Chat bubbles use a 18px corner
+ * and 14px / 10px padding, as lengths, so the space remap does not inflate them.
+ * Do not self-map a token here.
  * The backdrop wash is the colour exception. This block follows
  * [data-theme~="dark"] at the same specificity, so a combined attribute keeps it.
  */
@@ -2064,6 +2073,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --badge-radius: var(--radius-full);
   --tabs-pill-corner-radius: var(--radius-full);
   --chat-composer-radius: var(--radius-full);
+  --chat-message-radius: 1.125rem;
+  --chat-message-padding-x: 0.875rem;
+  --chat-message-padding-y: 0.625rem;
   --card-border-width: 0;
   --card-shadow: var(--shadow-sm);
   --card-radius: var(--radius-xl);

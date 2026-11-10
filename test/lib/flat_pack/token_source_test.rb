@@ -182,6 +182,9 @@ module FlatPack
         --alert-border-radius
         --toast-border-radius
         --chat-composer-radius
+        --chat-message-radius
+        --chat-message-padding-x
+        --chat-message-padding-y
         --sidebar-item-radius
         --dropdown-item-radius
       ].each do |token|
@@ -253,6 +256,12 @@ module FlatPack
       assert_match(/--radius-xxl:\s*2rem/, scale_block)
       assert_match(/--radius-xxxl:\s*2\.5rem/, scale_block)
       assert_match(/--radius-full:\s*9999px/, scale_block)
+      assert_match(/--chat-message-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--chat-message-padding-x:\s*1rem/, scale_block)
+      assert_match(/--chat-message-padding-y:\s*0\.5rem/, scale_block)
+      refute_includes root_block, "--chat-message-radius:"
+      refute_includes root_block, "--chat-message-padding-x:"
+      refute_includes root_block, "--chat-message-padding-y:"
       assert_match(/--button-border-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--button-group-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--button-round-border-radius:\s*var\(--radius-full\)/, scale_block)
@@ -295,6 +304,10 @@ module FlatPack
       assert_match(/--button-group-radius:\s*var\(--radius-full\)/, rounded_block)
       refute_includes rounded_block, "--button-round-border-radius"
       assert_match(/--form-control-radius:\s*1rem/, rounded_block)
+      assert_match(/--chat-message-radius:\s*1\.125rem/, rounded_block)
+      assert_match(/--chat-message-padding-x:\s*0\.875rem/, rounded_block)
+      assert_match(/--chat-message-padding-y:\s*0\.625rem/, rounded_block)
+      refute_match(/--chat-message-radius:\s*var\(--radius-full\)/, rounded_block)
       refute_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
       refute_includes rounded_block, "--search-input-radius"
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, rounded_block)
