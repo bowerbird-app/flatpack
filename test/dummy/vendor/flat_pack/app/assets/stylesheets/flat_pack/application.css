@@ -5414,6 +5414,14 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   overflow: hidden;
 }
 
+.fp-search__input {
+  border-radius: var(--search-input-radius);
+}
+
+.fp-search--round {
+  --search-input-radius: var(--radius-full);
+}
+
 .flat-pack-carousel__frame--items {
   align-items: stretch;
   height: auto;

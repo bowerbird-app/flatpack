@@ -257,6 +257,8 @@ module FlatPack
       assert_match(/--button-group-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--button-round-border-radius:\s*var\(--radius-full\)/, scale_block)
       assert_match(/--form-control-radius:\s*var\(--radius-md\)/, scale_block)
+      assert_match(/--search-input-radius:\s*var\(--form-control-radius\)/, root_block)
+      refute_includes scale_block, "--search-input-radius:"
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, scale_block)
       assert_match(/--sidebar-item-radius:\s*var\(--radius-lg\)/, scale_block)
       assert_match(/--dropdown-item-radius:\s*var\(--radius-sm\)/, scale_block)
@@ -294,6 +296,7 @@ module FlatPack
       refute_includes rounded_block, "--button-round-border-radius"
       assert_match(/--form-control-radius:\s*1rem/, rounded_block)
       refute_match(/--form-control-radius:\s*var\(--radius-full\)/, rounded_block)
+      refute_includes rounded_block, "--search-input-radius"
       assert_match(/--chip-border-radius:\s*var\(--radius-md\)/, rounded_block)
       assert_match(/--sidebar-item-radius:\s*var\(--radius-md\)/, rounded_block)
       assert_match(/--dropdown-item-radius:\s*var\(--radius-md\)/, rounded_block)
@@ -402,6 +405,7 @@ module FlatPack
         --carousel-chevron-background-color
         --switch-track-background-color
         --comments-inline-input-radius
+        --search-input-radius
         --modal-backdrop-color
         --list-item-hover-background-color
         --list-item-active-background-color

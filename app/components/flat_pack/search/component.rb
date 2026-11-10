@@ -54,6 +54,7 @@ module FlatPack
         collapsible: false,
         collapsed: true,
         grow: :end,
+        round: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -67,12 +68,14 @@ module FlatPack
         @min_characters = min_characters
         @debounce = debounce
         @no_results_text = fp_text(no_results_text, "search.no_results")
+        @round = round
         @collapse = Collapse.resolve(collapsible: collapsible, collapsed: collapsed, grow: grow, value: @value)
         @generated_input_id = "fp-search-#{SecureRandom.hex(4)}" if @collapse.active?
 
         validate_search_url!(search_url) if search_url.present?
         validate_max_width!
         validate_size!
+        validate_round!
       end
 
       def call
@@ -195,6 +198,7 @@ module FlatPack
         classes(
           "fp-search",
           "fp-search--collapsible",
+          ("fp-search--round" if @round),
           "relative",
           "flex",
           "items-center",
@@ -239,6 +243,8 @@ module FlatPack
 
       def wrapper_classes
         classes(
+          "fp-search",
+          ("fp-search--round" if @round),
           "relative",
           "flex",
           "items-center",
@@ -302,6 +308,7 @@ module FlatPack
 
       def input_classes
         classes(
+          "fp-search__input",
           "w-full",
           ("min-w-0" if @collapse.active?),
           size_classes,
@@ -309,7 +316,6 @@ module FlatPack
           "text-[var(--search-input-text-color)]",
           "border",
           "border-[var(--search-input-border-color)]",
-          "rounded-[var(--form-control-radius)]",
           "focus:outline-none",
           "focus:ring-2",
           "focus:ring-inset",
@@ -427,6 +433,12 @@ module FlatPack
         return if SIZES.key?(@size)
 
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.keys.join(", ")}."
+      end
+
+      def validate_round!
+        return if @round == true || @round == false
+
+        raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
       end
     end
   end

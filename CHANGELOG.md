@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.345] - 2026-11-10
+
+### Added
+- `FlatPack::Search::Component` `round:` (`false` by default). `true` adds `fp-search--round`, which sets `--search-input-radius: var(--radius-full)` so the field is a pill. The collapsed round button is unchanged. The results menu still uses `--menu-radius`. `--search-input-radius` defaults to `var(--form-control-radius)`. The input paints that token in Flatpack CSS (`.fp-search__input`), not a Tailwind `rounded-[…]` class. Omit `round:` and the field still uses `--form-control-radius`.
+
+### Upgrade notes
+- Additive. Existing Search markup without `round:` looks the same. Pass `round: true` when a collapsible field should open as a pill beside round buttons. Reload Flatpack CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.345`.
+
 ## [0.1.344] - 2026-11-09
 
 ### Added
