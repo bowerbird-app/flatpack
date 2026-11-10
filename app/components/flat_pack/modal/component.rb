@@ -47,9 +47,9 @@ module FlatPack
       BODY_HEIGHT_MODES = %i[auto fixed min].freeze
       SCROLL_MODES = %i[body page].freeze
       ORIGINS = %i[center trigger].freeze
-      CLOSE_EDGE_CLASS = "-me-[var(--space-1)]".freeze
-      BACK_EDGE_CLASS = "-ms-[var(--space-1)]".freeze
-      TITLE_LINE_OFFSET_CLASS = "-mt-[calc((var(--hit-target-min)-calc(var(--text-lg)*var(--leading-normal)))/2)]".freeze
+      CLOSE_EDGE_CLASS = "-me-[var(--space-1)]"
+      BACK_EDGE_CLASS = "-ms-[var(--space-1)]"
+      TITLE_LINE_OFFSET_CLASS = "-mt-[calc((var(--hit-target-min)-calc(var(--text-lg)*var(--leading-normal)))/2)]"
 
       def self.screen_frame_id(modal_id)
         "#{modal_id}-screen"
