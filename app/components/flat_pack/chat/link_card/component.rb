@@ -68,7 +68,7 @@ module FlatPack
 
         def wrapper_attributes
           merge_attributes(
-            class: "flex #{DIRECTIONS.fetch(@direction)}"
+            class: "flex #{DIRECTIONS.fetch(@direction)} !mt-[var(--chat-link-card-gap)]"
           )
         end
 

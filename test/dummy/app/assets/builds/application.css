@@ -548,6 +548,9 @@
   .me-2 {
     margin-inline-end: calc(var(--spacing) * 2);
   }
+  .\!mt-\[var\(--chat-link-card-gap\)\] {
+    margin-top: var(--chat-link-card-gap) !important;
+  }
   .-mt-\[calc\(\(var\(--hit-target-min\)-calc\(var\(--text-lg\)\*var\(--leading-normal\)\)\)\/2\)\] {
     margin-top: calc(calc((var(--hit-target-min) - calc(var(--text-lg) * var(--leading-normal))) / 2) * -1);
   }

@@ -609,6 +609,7 @@ Do not copy decorative `--gradient-*` tokens unless this theme actually needs a 
   --chat-link-card-radius: var(--chat-message-radius);
   --chat-link-card-padding-x: var(--chat-message-padding-x);
   --chat-link-card-padding-y: var(--chat-message-padding-y);
+  --chat-link-card-gap: var(--space-2);
   --chat-input-background-color: var(--surface-background-color);
   --chat-input-border-color: var(--surface-border-color);
   --chat-input-text-color: var(--surface-content-color);

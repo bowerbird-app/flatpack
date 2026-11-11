@@ -76,6 +76,7 @@ module FlatPack
           assert_includes rendered_content, "rounded-[var(--chat-link-card-radius)]"
           assert_includes rendered_content, "px-[var(--chat-link-card-padding-x)]"
           assert_includes rendered_content, "py-[var(--chat-link-card-padding-y)]"
+          assert_includes rendered_content, "!mt-[var(--chat-link-card-gap)]"
           assert_includes rendered_content, "border-[var(--surface-border-color)]"
           assert_includes rendered_content, "bg-[var(--surface-background-color)]"
           assert_includes rendered_content, "hover:bg-[var(--surface-hover-background-color)]"

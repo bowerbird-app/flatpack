@@ -243,7 +243,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up. The message list hides its bar with `--pane-scrollbar-width`. It is a region named "Messages" and sits in the tab order, so a list with no links still scrolls from the keyboard. The fade uses `--pane-scroll-fade-size`.
 - **Avatar integration** — Seamless use of `FlatPack::Avatar::Component` and `FlatPack::AvatarGroup::Component`.
 - **Attachments** — File attachments with icons, image attachments with thumbnails, download/view links.
-- **Link cards** — A page reference in the thread. Max width matches bubbles (`max-w-[75%] sm:max-w-[500px]`). Radius and padding alias `--chat-message-*` through `--chat-link-card-*`. Surface and border use `--surface-*`. Rounded follows the chat-message tokens. There is no thumbnail.
+- **Link cards** — A page reference in the thread. Max width matches bubbles (`max-w-[75%] sm:max-w-[500px]`). Radius and padding alias `--chat-message-*` through `--chat-link-card-*`. `--chat-link-card-gap` (default `--space-2`) is important top margin on the wrapper so a card sits 8px below a bubble while `MessageGroup` `space-y-1` stays 4px for bubble-to-bubble. Surface and border use `--surface-*`. Rounded follows the chat-message tokens. There is no thumbnail.
 - **Inbox rows** — Name, preview, time, and unread count. Unread uses the primary badge. The row does not clip the count against its corner radius.
 
 ### Integration Points
@@ -253,7 +253,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 | Avatar | Used in message groups |
 | AvatarGroup | Used in chat headers |
 | BaseComponent | All components inherit from it |
-| CSS variables | Bubble fills are `--chat-message-incoming-*` and `--chat-message-outgoing-*`. Shape is `--chat-message-radius`, `--chat-message-padding-x`, and `--chat-message-padding-y`. Link cards alias those through `--chat-link-card-radius`, `--chat-link-card-padding-x`, and `--chat-link-card-padding-y`, and paint `--surface-*`. Outgoing follows the hover surface and foreground text. Also uses `--transition-*` (aliases of `--duration-*`) and `--radius-*`; named themes inherit via `data-theme` |
+| CSS variables | Bubble fills are `--chat-message-incoming-*` and `--chat-message-outgoing-*`. Shape is `--chat-message-radius`, `--chat-message-padding-x`, and `--chat-message-padding-y`. Link cards alias those through `--chat-link-card-radius`, `--chat-link-card-padding-x`, and `--chat-link-card-padding-y`, add `--chat-link-card-gap` (`var(--space-2)`), and paint `--surface-*`. Outgoing follows the hover surface and foreground text. Also uses `--transition-*` (aliases of `--duration-*`) and `--radius-*`; named themes inherit via `data-theme` |
 
 ### Source Files
 
