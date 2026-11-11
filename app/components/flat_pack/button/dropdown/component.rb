@@ -40,7 +40,7 @@ module FlatPack
           chevron: "chevron-down",
           disabled: false,
           placement: :bottom_right,
-          max_height: "384px",
+          max_height: nil,
           trigger_attributes: {},
           menu_class: nil,
           menu_attributes: {},
@@ -123,9 +123,9 @@ module FlatPack
         def dropdown_data_attributes
           {
             controller: "flat-pack--button-dropdown",
-            flat_pack__button_dropdown_max_height_value: @max_height,
+            flat_pack__button_dropdown_max_height_value: @max_height.presence,
             flat_pack__button_dropdown_placement_value: @placement
-          }
+          }.compact
         end
 
         def render_trigger_button
@@ -225,17 +225,20 @@ module FlatPack
           dropped_role = host.delete(:role) || host.delete("role")
           warn_dropped_menu_role(dropped_role)
           host_style = host.delete(:style) || host.delete("style")
+          style = join_styles(
+            ("--dropdown-max-height: #{@max_height};" if @max_height.present?),
+            host_style
+          )
 
           {
             class: menu_classes(*host_class),
             role: menu_role,
             aria: menu_aria(host_aria),
-            style: join_styles("--dropdown-max-height: #{@max_height};", host_style),
             data: merge_data_attributes(
               host_data,
               {flat_pack__button_dropdown_target: "menu"}
             )
-          }.merge(host)
+          }.tap { |attributes| attributes[:style] = style if style.present? }.merge(host)
         end
 
         def menu_role

@@ -418,12 +418,17 @@ module FlatPack
         assert_includes menu["style"], "--dropdown-max-height: 200px"
         refute_match(/(^|;)\s*max-height\s*:/, menu["style"])
         assert_includes menu["class"], "fp-button-dropdown__menu"
+        assert_selector "[data-flat-pack--button-dropdown-max-height-value='200px']"
       end
 
-      def test_default_max_height_is_384px
+      def test_omitted_max_height_does_not_emit_the_inline_variable
         render_inline(Dropdown::Component.new(text: "Actions"))
 
-        assert_includes page.find("div[role='menu']")["style"], "--dropdown-max-height: 384px"
+        menu = page.find("div[role='menu']")
+        style = menu["style"].to_s
+        refute_includes style, "--dropdown-max-height"
+        refute_match(/(^|;)\s*max-height\s*:/, style)
+        refute_selector "[data-flat-pack--button-dropdown-max-height-value]"
       end
 
       def test_menu_renders_one_max_height_style_attribute
@@ -442,7 +447,7 @@ module FlatPack
         css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css"))
 
         assert_includes css, ".fp-button-dropdown__menu"
-        assert_includes css, "max-height: var(--dropdown-max-height, 384px);"
+        assert_includes css, "max-height: var(--dropdown-max-height, calc(100dvh - var(--dropdown-viewport-margin, 2rem)));"
       end
 
       # Custom attributes

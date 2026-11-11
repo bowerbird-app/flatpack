@@ -5761,7 +5761,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-button-dropdown__menu {
-  max-height: var(--dropdown-max-height, 384px);
+  max-height: var(--dropdown-max-height, calc(100dvh - var(--dropdown-viewport-margin, 2rem)));
 }
 
 /* Joined rows only. The dropdown root is the segment. A joined group paints

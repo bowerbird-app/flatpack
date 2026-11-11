@@ -90,6 +90,7 @@
   --overlay-backdrop-color: var(--overlay-backdrop-color);
   --overlay-scrim-color: var(--overlay-scrim-color);
   --overlay-edge-offset: var(--overlay-edge-offset);
+  --dropdown-viewport-margin: var(--dropdown-viewport-margin);
   --media-radius: var(--media-radius);
   --media-outline-color: var(--media-outline-color);
   --checkbox-size: var(--checkbox-size);
@@ -1035,6 +1036,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --overlay-backdrop-color: rgb(0 0 0 / 0.5);
   --overlay-scrim-color: rgb(31 41 55 / 0.68);
   --overlay-edge-offset: 8px;
+  --dropdown-viewport-margin: 2rem;
   --media-radius: var(--card-radius);
   --media-outline-color: color-mix(in oklch, var(--surface-content-color) 12%, transparent);
   --checkbox-size: 1.25rem;

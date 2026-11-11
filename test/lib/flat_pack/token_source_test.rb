@@ -384,13 +384,15 @@ module FlatPack
         "--carousel-chevron-background-color" => "var(--overlay-scrim-color)",
         "--overlay-backdrop-color" => "rgb(0 0 0 / 0.5)",
         "--overlay-scrim-color" => "rgb(31 41 55 / 0.68)",
-        "--overlay-edge-offset" => "8px"
+        "--overlay-edge-offset" => "8px",
+        "--dropdown-viewport-margin" => "2rem"
       }.each do |token, value|
         assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, root_block)
       end
 
       theme_block = @css[/@theme inline \{.*?^\}/m]
       assert_match(/--overlay-edge-offset:\s*var\(--overlay-edge-offset\)/, theme_block)
+      assert_match(/--dropdown-viewport-margin:\s*var\(--dropdown-viewport-margin\)/, theme_block)
 
       refute_match(/--color-ghost-text:\s*#333/, root_block)
       refute_match(/--color-secondary:\s*#f5f5f5/, root_block)

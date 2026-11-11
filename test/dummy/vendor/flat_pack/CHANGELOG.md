@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.352] - 2026-11-11
+
+### Changed
+- `FlatPack::Button::Dropdown::Component` no longer defaults `max_height:` to `"384px"`. Omit it and the menu grows with its items. Kit CSS caps it at `calc(100dvh - var(--dropdown-viewport-margin, 2rem))`. The open controller then tightens that cap to the space on the side it opens toward (the 8px gap plus `--overlay-edge-offset`). Pass `max_height:` and the menu still sets `--dropdown-max-height` and skips that JS cap.
+
+### Added
+- `--dropdown-viewport-margin` (default `2rem`). Gap left at the viewport edge when the host does not pass `max_height:`.
+
+### Upgrade notes
+- Behaviour change. A menu taller than 384px used to scroll inside the panel even when the window had room. It now grows until it would leave the viewport. Pass `max_height: "384px"` to keep the old cap.
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.352`.
+
 ## [0.1.351] - 2026-11-11
 
 ### Added

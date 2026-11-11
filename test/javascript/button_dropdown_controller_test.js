@@ -66,7 +66,8 @@ function mount({
   menu = { width: 100, height: 80 },
   viewport = { width: 400, height: 400 },
   edge = "8px",
-  role = "menu"
+  role = "menu",
+  maxHeight
 } = {}) {
   const windowEvents = events()
   const windowStub = {
@@ -126,6 +127,10 @@ function mount({
   controller.triggerTarget = trigger
   controller.placementValue = placement
   controller.hasChevronTarget = false
+  if (maxHeight != null) {
+    controller.hasMaxHeightValue = true
+    controller.maxHeightValue = maxHeight
+  }
   controller.connect()
   controller.positionMenu()
   return { controller, menuElement, trigger, windowStub, windowEvents, documentStub, menuListeners }
@@ -283,6 +288,34 @@ test("an unknown placement stays bottom_right", () => {
   assert.equal(menuElement.style.top, "148px")
   assert.equal(menuElement.style.left, "120px")
   assert.equal(menuElement.style.transformOrigin, "top right")
+})
+
+test("an omitted max height caps the menu to the open side", () => {
+  const below = mount({
+    placement: "bottom_right",
+    anchor: triggerRect,
+    viewport: { width: 400, height: 400 },
+    edge: "8px"
+  })
+  const above = mount({
+    placement: "top_left",
+    anchor: triggerRect,
+    viewport: { width: 400, height: 400 },
+    edge: "8px"
+  })
+
+  assert.equal(below.menuElement.style.maxHeight, "244px")
+  assert.equal(above.menuElement.style.maxHeight, "84px")
+})
+
+test("an explicit max height leaves the menu height to CSS", () => {
+  const { menuElement } = mount({
+    placement: "bottom_right",
+    anchor: triggerRect,
+    maxHeight: "384px"
+  })
+
+  assert.equal(menuElement.style.maxHeight, undefined)
 })
 
 test("an oversized menu sticks to the edge offset", () => {
