@@ -55,6 +55,7 @@ module FlatPack
         collapsed: true,
         grow: :end,
         round: false,
+        submit_on_clear: false,
         **system_arguments
       )
         super(**system_arguments)
@@ -69,6 +70,7 @@ module FlatPack
         @debounce = debounce
         @no_results_text = fp_text(no_results_text, "search.no_results")
         @round = round
+        @submit_on_clear = submit_on_clear
         @collapse = Collapse.resolve(collapsible: collapsible, collapsed: collapsed, grow: grow, value: @value)
         @generated_input_id = "fp-search-#{SecureRandom.hex(4)}" if @collapse.active?
 
@@ -76,6 +78,7 @@ module FlatPack
         validate_max_width!
         validate_size!
         validate_round!
+        validate_submit_on_clear!
       end
 
       def call
@@ -164,7 +167,7 @@ module FlatPack
           class: wrapper_classes,
           data: {
             controller: wrapper_controller_names
-          }
+          }.merge(search_input_controller_data)
         }
 
         attrs[:data].merge!(live_search_data)
@@ -182,7 +185,7 @@ module FlatPack
             fp_collapsed: @collapse.collapsed?.to_s,
             fp_grow: @collapse.grow.to_s,
             fp_size: @size.to_s
-          })
+          }.merge(search_input_controller_data))
         }
         attrs[:data].merge!(live_search_data)
 
@@ -215,6 +218,12 @@ module FlatPack
         }
         attrs[:inert] = true if @collapse.collapsed?
         attrs
+      end
+
+      def search_input_controller_data
+        return {} unless @submit_on_clear
+
+        {flat_pack__search_input_submit_on_clear_value: true}
       end
 
       def live_search_data
@@ -439,6 +448,12 @@ module FlatPack
         return if @round == true || @round == false
 
         raise ArgumentError, "Invalid round: #{@round.inspect}. Must be true or false."
+      end
+
+      def validate_submit_on_clear!
+        return if @submit_on_clear == true || @submit_on_clear == false
+
+        raise ArgumentError, "Invalid submit_on_clear: #{@submit_on_clear.inspect}. Must be true or false."
       end
     end
   end
