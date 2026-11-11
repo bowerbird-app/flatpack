@@ -9,7 +9,7 @@ When `MessageRecord` rows are rendered inside `MessageList`, consecutive rows fr
 
 ## Class
 - Primary: `FlatPack::Chat::Panel::Component`
-- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
+- Related classes: `FlatPack::Chat::Layout::Component`, `FlatPack::Chat::Header::Component`, `FlatPack::Chat::MessageList::Component`, `FlatPack::Chat::MessageRecord::Component`, `FlatPack::Chat::Composer::Component`, `FlatPack::Chat::Textarea::Component`, `FlatPack::Chat::SendButton::Component`, `FlatPack::Chat::Attachment::Component`, `FlatPack::Chat::LinkCard::Component`, `FlatPack::Chat::Images::Component`, `FlatPack::Chat::ImageDeck::Component`, `FlatPack::Chat::InboxRow::Component`, `FlatPack::Chat::TypingIndicator::Component`
 
 ## Props
 Core container props:
@@ -43,6 +43,12 @@ High-use interaction props:
 | `FlatPack::Chat::SendButton::Component#loading` | Boolean | `false` | no | Shows sending/loading state. |
 | `FlatPack::Chat::Attachment::Component#name` | String | `nil` | yes | Attachment label; blank raises `ArgumentError`. |
 | `FlatPack::Chat::Attachment::Component#type` | Symbol | `:file` | no | Attachment type: `:file`, `:image`; invalid values raise `ArgumentError`. |
+| `FlatPack::Chat::LinkCard::Component#title` | String | n/a | yes | One-line title. Blank raises `ArgumentError`. |
+| `FlatPack::Chat::LinkCard::Component#href` | String | `nil` | no | Page URL. Omit or blank for the unavailable state. |
+| `FlatPack::Chat::LinkCard::Component#description` | String | `nil` | no | Optional summary. Clamped to two lines. |
+| `FlatPack::Chat::LinkCard::Component#meta` | String | `nil` | no | Small type label from the host (`Support`, `Press`). When `href:` is missing and `meta:` is omitted, the label is `flatpack.chat.link_card.unavailable`. |
+| `FlatPack::Chat::LinkCard::Component#icon` | String or Symbol | `nil` | no | Optional Heroicon name. |
+| `FlatPack::Chat::LinkCard::Component#direction` | Symbol | `:incoming` | no | `:incoming` or `:outgoing`. Sets self-alignment and max width the same way as sent and received bubbles. Invalid names raise `ArgumentError`. |
 | `FlatPack::Chat::InboxRow::Component#chat_group_name` | String | none | yes | Conversation name. |
 | `FlatPack::Chat::InboxRow::Component#unread_count` | Integer | `0` | no | Unread count. Positive values render a primary badge with tabular nums. Rows do not clip trailing chrome (`overflow-hidden` is not set). |
 | `FlatPack::Chat::SentMessage::Component#reveal_timestamp` | Boolean | `false` | no | When true, keeps `timestamp:` in the DOM and shows it on hover, tap, or focus. At rest the time takes no layout. Adds `tabindex="0"` and `flat-pack--chat-timestamp-reveal` unless `reveal_actions:` is also on. |
@@ -54,7 +60,7 @@ High-use interaction props:
 - `Layout`: `sidebar`, `panel`.
 - `Panel`: `header`, `right_header`, `right_header_mobile`, `messages`, `composer`. `right_header` and `right_header_mobile` are optional. When either is present the header bar is a row: `flex items-center`. `header` is `min-w-0 flex-1` and stays a block, so caller content still fills that part and truncates. Each right part is `shrink-0 w-min items-center justify-end`. The row's `items-center` lines the title block up with the actions. Omit both right slots and the header markup stays a single wrapper. The bar does not add padding. A parent can restyle the parts with `data-flat-pack-chat-panel-part="header"`, `data-flat-pack-chat-panel-part="right-header"`, and `data-flat-pack-chat-panel-part="right-header-mobile"`. A right part with no `header` also has `ml-auto`. Because the part is `w-min` and does not shrink, its content must not wrap: use `whitespace-nowrap`, icon buttons, and badges. Use `right_header` for actions beside the panel `header` slot. Use `Chat::Header`'s `right` slot for actions inside that header, next to its title. `right_header_mobile` is the compact set below the chat `sm` breakpoint (640px, the same cutoff as `Chat::Layout`'s default `split_breakpoint`). Below `sm` the mobile part is shown and `right_header` is hidden when both are passed. At `sm` and up, `right_header` is shown and the mobile part is hidden. Pass only `right_header` and it stays visible at every width. Pass only `right_header_mobile` and it shows below `sm`; with no `header` the bar hides at `sm` and up (`sm:hidden`). Both parts render into the DOM and CSS hides one, so do not repeat ids or Stimulus targets across the two slots. Pair `right_header` with `right_header_mobile` when the desktop set has four or more actions, or a long-text badge. The swap follows the viewport (`sm` = 640px), not the panel's container width. A narrow panel on a wide viewport, including a `Chat::Layout` split column, still shows the desktop set.
 - `Header`: `left_meta`, `right`.
-- `MessageGroup`: `avatar`, `messages`, optional `status` under the last message. Omit `status` and the group markup is unchanged. Put `Chat::SentAt` there for "Sent 2:30 PM", or your own seen-avatars. Flatpack does not decide read vs unread.
+- `MessageGroup`: `avatar`, `messages`, optional `status` under the last message. Omit `status` and the group markup is unchanged. Put `Chat::SentAt` there for "Sent 2:30 PM", or your own seen-avatars. Flatpack does not decide read vs unread. Put `Chat::LinkCard` in a `message` slot, on its own or after a text bubble. Do not put the card inside a sent or received bubble.
 - `ReceivedMessage`/`SentMessage`: `attachments`, `media_attachments`, `meta` (and `actions` for sent).
 - `Composer`: `left`, `center` (`textarea` alias), `right` (`actions` alias), `attachments`.
 - `TypingIndicator`: optional `avatar`.
@@ -151,6 +157,29 @@ A group can show delivery copy under the last bubble. Swap that slot for avatars
 
 Place `Chat::DateDivider` yourself when a conversation needs a time break. The kit does not infer gaps.
 
+A link card sits in the thread as its own message, not inside a bubble.
+
+```erb
+<%= render FlatPack::Chat::MessageGroup::Component.new(direction: :incoming) do |group| %>
+  <% group.message do %>
+    <%= render FlatPack::Chat::ReceivedMessage::Component.new do %>
+      Here is the help page if you get stuck.
+    <% end %>
+  <% end %>
+  <% group.message do %>
+    <%= render FlatPack::Chat::LinkCard::Component.new(
+      title: "Help centre",
+      href: "/help",
+      description: "Guides and answers.",
+      meta: "Support",
+      icon: :lifebuoy
+    ) %>
+  <% end %>
+<% end %>
+```
+
+Omit `href:` for a muted, non-interactive card. The fallback label is `Unavailable`.
+
 ## Accessibility
 - Message list jump button includes explicit `aria-label`. Its shadow is `--chat-jump-button-shadow` (the Tailwind `shadow-lg` utility, not `--shadow-lg`). Keyboard focus uses the browser outline in `--focus-outline-color` (`#101010` on light themes, `--surface-content-color` on dark), mapped through `--button-focus-ring-color` on `.fp-chat-jump`.
 - Date dividers render `role="separator"` with labels.
@@ -159,6 +188,7 @@ Place `Chat::DateDivider` yourself when a conversation needs a time break. The k
 - Reveal trays fade with `transition-opacity duration-[var(--duration-fast)]` so `prefers-reduced-motion` token collapse applies. Do not use Tailwind `duration-150` on those trays. Timestamp reveal uses the same duration and easing tokens.
 - Send button sets contextual `aria-label` (`"Send message"` / `"Sending..."`).
 - `right_header` and `right_header_mobile` do not name their controls. Icon buttons there need `title` and `aria-label`. Do not reuse the same `id` or Stimulus target on both slots; both are in the DOM.
+- `Chat::LinkCard` with `href:` is one `<a>`. That anchor is the only focusable node. Do not set `aria-label`. The accessible name is the title and meta in the link text. Focus uses `--color-ring`. Without `href:`, the card is a `div` with no `tabindex`.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
@@ -213,6 +243,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - **Smart scrolling** — Auto-scrolls to bottom; shows a jump button when scrolled up. The message list hides its bar with `--pane-scrollbar-width`. It is a region named "Messages" and sits in the tab order, so a list with no links still scrolls from the keyboard. The fade uses `--pane-scroll-fade-size`.
 - **Avatar integration** — Seamless use of `FlatPack::Avatar::Component` and `FlatPack::AvatarGroup::Component`.
 - **Attachments** — File attachments with icons, image attachments with thumbnails, download/view links.
+- **Link cards** — A page reference in the thread. Max width matches bubbles (`max-w-[75%] sm:max-w-[500px]`). Radius and padding alias `--chat-message-*` through `--chat-link-card-*`. `--chat-link-card-gap` (default `--space-2`) is important top margin on the wrapper so a card sits 8px below a bubble while `MessageGroup` `space-y-1` stays 4px for bubble-to-bubble. Surface and border use `--surface-*`. Rounded follows the chat-message tokens. There is no thumbnail.
 - **Inbox rows** — Name, preview, time, and unread count. Unread uses the primary badge. The row does not clip the count against its corner radius.
 
 ### Integration Points
@@ -222,7 +253,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 | Avatar | Used in message groups |
 | AvatarGroup | Used in chat headers |
 | BaseComponent | All components inherit from it |
-| CSS variables | Bubble fills are `--chat-message-incoming-*` and `--chat-message-outgoing-*`. Shape is `--chat-message-radius`, `--chat-message-padding-x`, and `--chat-message-padding-y`. Outgoing follows the hover surface and foreground text. Also uses `--transition-*` (aliases of `--duration-*`) and `--radius-*`; named themes inherit via `data-theme` |
+| CSS variables | Bubble fills are `--chat-message-incoming-*` and `--chat-message-outgoing-*`. Shape is `--chat-message-radius`, `--chat-message-padding-x`, and `--chat-message-padding-y`. Link cards alias those through `--chat-link-card-radius`, `--chat-link-card-padding-x`, and `--chat-link-card-padding-y`, add `--chat-link-card-gap` (`var(--space-2)`), and paint `--surface-*`. Outgoing follows the hover surface and foreground text. Also uses `--transition-*` (aliases of `--duration-*`) and `--radius-*`; named themes inherit via `data-theme` |
 
 ### Source Files
 
@@ -238,6 +269,7 @@ Required props are validated; enums are validated with descriptive `ArgumentErro
 - `app/components/flat_pack/chat/composer/component.rb`
 - `app/components/flat_pack/chat/typing_indicator/component.rb`
 - `app/components/flat_pack/chat/attachment/component.rb`
+- `app/components/flat_pack/chat/link_card/component.rb`
 
 **Tests**
 - `test/components/flat_pack/chat/message_component_test.rb`

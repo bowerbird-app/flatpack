@@ -142,6 +142,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/chat/sent_message
     /demo/chat/received_message
     /demo/chat/file_message
+    /demo/chat/link_card
     /demo/chat/images
     /demo/chat/system_message
     /demo/chat/inbox_row
@@ -1224,6 +1225,16 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Footer links were re-ordered per legal review."
     assert_includes response.body, "data-chat-group-inbox-avatar=\"true\""
     assert_includes response.body, "data-max-visible-avatars=\"2\""
+  end
+
+  test "chat link card demo renders linked and unavailable cards" do
+    get "/demo/chat/link_card"
+
+    assert_response :success
+    assert_includes response.body, "Help centre"
+    assert_includes response.body, "Unavailable"
+    assert_includes response.body, "data-flat-pack-chat-link-card"
+    assert_includes response.body, "data-flat-pack-chat-group"
   end
 
   test "chat file message demo exposes real file download links" do

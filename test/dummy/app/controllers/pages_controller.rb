@@ -948,6 +948,9 @@ class PagesController < ApplicationController
   def chat_file_message
   end
 
+  def chat_link_card
+  end
+
   def chat_file_download
     file = DEMO_CHAT_FILE_DOWNLOADS[params[:slug].to_s]
     raise ActionController::RoutingError, "Not Found" unless file

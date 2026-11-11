@@ -230,6 +230,7 @@ components:
       - FlatPack::Chat::ImageMessage::Component
       - FlatPack::Chat::InboxRow::Component
       - FlatPack::Chat::Layout::Component
+      - FlatPack::Chat::LinkCard::Component
       - FlatPack::Chat::MessageGroup::Component
       - FlatPack::Chat::MessageList::Component
       - FlatPack::Chat::MessageMeta::Component

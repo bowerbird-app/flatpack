@@ -359,6 +359,8 @@ fr:
       attachment: Pièce jointe
       sent_at: Envoyé à %{time}
       timestamp_format: "%l:%M %p"
+      link_card:
+        unavailable: Indisponible
     billing:
       status_alert:
         past_due:

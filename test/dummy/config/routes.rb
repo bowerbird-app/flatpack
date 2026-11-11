@@ -247,6 +247,7 @@ Rails.application.routes.draw do
   get "demo/chat/sent_message", to: "pages#chat_sent_message"
   get "demo/chat/received_message", to: "pages#chat_received_message"
   get "demo/chat/file_message", to: "pages#chat_file_message"
+  get "demo/chat/link_card", to: "pages#chat_link_card"
   get "demo/chat/files/:slug", to: "pages#chat_file_download", as: :demo_chat_file_download,
     constraints: {slug: /[a-z0-9-]+/}
   get "demo/chat/images", to: "pages#chat_images"

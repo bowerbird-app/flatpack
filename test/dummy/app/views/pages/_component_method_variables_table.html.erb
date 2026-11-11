@@ -369,6 +369,18 @@
         { variable: "meta", accepts: "slot", example: "message.meta { render FlatPack::Chat::MessageMeta::Component.new(...) }" }
       ]
     },
+    chat_link_card: {
+      label: "Chat Link Card",
+      method_call: "render FlatPack::Chat::LinkCard::Component.new(title: \"Help centre\", href: \"/help\", meta: \"Support\")",
+      variables: [
+        { variable: "title", accepts: "String (required)", example: "title: \"Help centre\"" },
+        { variable: "href", accepts: "String or nil", example: "href: \"/help\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"Guides and answers\"" },
+        { variable: "meta", accepts: "String or nil", example: "meta: \"Support\"" },
+        { variable: "icon", accepts: "Heroicon name or nil", example: "icon: :lifebuoy" },
+        { variable: "direction", accepts: ":incoming, :outgoing", example: "direction: :outgoing" }
+      ]
+    },
     chat_file_message: {
       label: "Chat File Message",
       method_call: "render FlatPack::Chat::FileMessage::Component.new(direction: :outgoing, file_name: \"brief.pdf\", file_meta: \"420 KB\")",

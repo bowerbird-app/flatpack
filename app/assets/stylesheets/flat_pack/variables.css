@@ -449,6 +449,10 @@
   --chat-message-radius: var(--chat-message-radius);
   --chat-message-padding-x: var(--chat-message-padding-x);
   --chat-message-padding-y: var(--chat-message-padding-y);
+  --chat-link-card-radius: var(--chat-link-card-radius);
+  --chat-link-card-padding-x: var(--chat-link-card-padding-x);
+  --chat-link-card-padding-y: var(--chat-link-card-padding-y);
+  --chat-link-card-gap: var(--chat-link-card-gap);
   --chat-input-background-color: var(--chat-input-background-color);
   --chat-input-border-color: var(--chat-input-border-color);
   --chat-input-text-color: var(--chat-input-text-color);
@@ -1443,6 +1447,10 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --chat-input-focus-ring-color: var(--color-ring);
   --chat-composer-control-height: calc(1.25rem + (var(--chat-composer-control-padding-y) * 2) + 2px);
   --chat-composer-control-padding-y: var(--button-icon-only-padding-md);
+  --chat-link-card-radius: var(--chat-message-radius);
+  --chat-link-card-padding-x: var(--chat-message-padding-x);
+  --chat-link-card-padding-y: var(--chat-message-padding-y);
+  --chat-link-card-gap: var(--space-2);
   --chat-message-incoming-background-color: var(--surface-muted-background-color);
   --chat-message-incoming-text-color: var(--surface-content-color);
   --chat-message-outgoing-background-color: var(--surface-hover-background-color);

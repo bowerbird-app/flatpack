@@ -314,6 +314,7 @@ class DemoCatalog
             {title: "Sent Message", search_title: "Chat Sent Message", path: "/demo/chat/sent_message", description: "Outgoing message examples", icon: :message_circle},
             {title: "Received Message", search_title: "Chat Received Message", path: "/demo/chat/received_message", description: "Incoming message examples", icon: :message_circle},
             {title: "File Message", search_title: "Chat File Message", path: "/demo/chat/file_message", description: "File attachment message examples", icon: :file},
+            {title: "Link Card", search_title: "Chat Link Card", path: "/demo/chat/link_card", description: "Page link cards in a chat thread", icon: :link},
             {title: "Images", search_title: "Chat Images", path: "/demo/chat/images", description: "Single and multi-image chat message examples with carousel lightbox", icon: :image},
             {title: "System Message", search_title: "Chat System Message", path: "/demo/chat/system_message", description: "System message examples", icon: :info},
             {title: "Inbox Row", search_title: "Chat Inbox Row", path: "/demo/chat/inbox_row", description: "Inbox row component examples", icon: :align_left},
