@@ -410,7 +410,6 @@ module FlatPack
         assert_selector "button[data-action='click->flat-pack--button-dropdown#toggle keydown.enter->flat-pack--button-dropdown#openFromKey keydown.space->flat-pack--button-dropdown#openFromKey']"
       end
 
-      # Max height
       def test_renders_custom_max_height
         render_inline(Dropdown::Component.new(text: "Actions", max_height: "200px"))
 
