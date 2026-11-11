@@ -55,6 +55,7 @@ module FlatPack
       {constant: :ORDERS, kwargs: %i[order]},
       {constant: :COLS, kwargs: %i[cols]},
       {constant: :ALIGNS, kwargs: %i[align]},
+      {constant: :BODY_ALIGNS, kwargs: %i[body_align]},
       {constant: :JUSTIFIES, kwargs: %i[justify]},
       {constant: :ONS, kwargs: %i[on]},
       {constant: :SEPARATORS, kwargs: %i[separator]},

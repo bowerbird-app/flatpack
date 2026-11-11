@@ -4,6 +4,7 @@ module FlatPack
   module Card
     class Component < FlatPack::BaseComponent
       VARIANTS = %i[default featured].freeze
+      BODY_ALIGNS = %i[start center end].freeze
 
       renders_one :header_slot, FlatPack::Card::Header::Component
       renders_one :body_slot, FlatPack::Card::Body::Component
@@ -140,6 +141,7 @@ module FlatPack
         inset: nil,
         radius: :default,
         variant: :default,
+        body_align: :start,
         **system_arguments
       )
         reject_removed_theme!(system_arguments)
@@ -153,6 +155,7 @@ module FlatPack
         @inset = inset&.to_sym
         @radius = radius.to_sym
         @variant = normalize_variant(variant)
+        @body_align = normalize_body_align(body_align)
 
         # Sanitize URL for security and validate
         if href
@@ -170,6 +173,7 @@ module FlatPack
         validate_inset!
         validate_radius!
         validate_variant!
+        validate_body_align!
       end
 
       def call
@@ -285,6 +289,7 @@ module FlatPack
         classes(
           "fp-card",
           ("fp-card--featured" if featured?),
+          (body_align_modifier_class unless body_align_start?),
           "rounded-[var(--card-radius)]",
           overflow_class,
           ("flex" unless featured?),
@@ -450,6 +455,27 @@ module FlatPack
         return if VARIANTS.include?(@variant)
 
         raise ArgumentError, "Invalid variant: #{@variant.inspect}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def normalize_body_align(body_align)
+        return :start if body_align.nil?
+        return body_align.to_sym if body_align.respond_to?(:to_sym)
+
+        body_align
+      end
+
+      def validate_body_align!
+        return if BODY_ALIGNS.include?(@body_align)
+
+        raise ArgumentError, "Invalid body_align: #{@body_align.inspect}. Must be one of: #{BODY_ALIGNS.join(", ")}"
+      end
+
+      def body_align_start?
+        @body_align == :start
+      end
+
+      def body_align_modifier_class
+        "fp-card--body-#{@body_align}"
       end
 
       def reject_removed_theme!(system_arguments)

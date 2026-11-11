@@ -630,6 +630,11 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes share, "h-[var(--button-round-size-md)]"
     assert_includes heart, "h-[var(--button-round-size-md)]"
     refute_includes share, 'data-fp-style="ghost"'
+    assert_includes response.body, "Body align"
+    assert_includes response.body, "fp-card--body-center"
+    assert_includes response.body, "fp-card--body-end"
+    assert_includes response.body, "body_align: :center"
+    assert_includes response.body, "Harbour stool"
   end
 
   test "cards media demo renders media gallery example" do

@@ -375,6 +375,14 @@ module FlatPack
       assert_equal "default", variant.fetch(:default)
     end
 
+    test "show Card binds BODY_ALIGNS to body_align" do
+      payload = FlatPack::ComponentCatalog.show("Card::Component")
+      body_align = parameter_named(payload, "body_align")
+
+      assert_equal %w[start center end], body_align.fetch(:enum)
+      assert_equal "start", body_align.fetch(:default)
+    end
+
     test "show Card binds INSETS to inset and leaves the default unset" do
       payload = FlatPack::ComponentCatalog.show("Card::Component")
       inset = parameter_named(payload, "inset")
