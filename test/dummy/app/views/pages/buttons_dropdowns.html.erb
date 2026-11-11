@@ -277,6 +277,43 @@
   ) %>
 </section>
 
+<section class="mb-12" id="long-menu">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Long list",
+    anchor_link: true,
+    subtitle: "Ten rows and a divider. The menu grows with them and scrolls only when it would leave the window."
+  ) %>
+  <div class="mb-4">
+    <%= render FlatPack::Button::Dropdown::Component.new(
+      text: "More actions",
+      style: :secondary,
+      menu_attributes: {id: "demo-long-dropdown-menu"}
+    ) do |dropdown| %>
+      <% dropdown.menu_item(text: "Copy", icon: "clipboard-document", href: "#") %>
+      <% dropdown.menu_item(text: "Rename", icon: "pencil", href: "#") %>
+      <% dropdown.menu_item(text: "Duplicate", icon: "document-duplicate", href: "#") %>
+      <% dropdown.menu_item(text: "Move", icon: "arrow-right", href: "#") %>
+      <% dropdown.menu_item(text: "Star", icon: "star", href: "#") %>
+      <% dropdown.menu_item(text: "Archive", icon: "archive-box", href: "#") %>
+      <% dropdown.menu_item(text: "Share", icon: "share", href: "#") %>
+      <% dropdown.menu_item(text: "Export", icon: "arrow-down-tray", href: "#") %>
+      <% dropdown.menu_item(text: "Print", icon: "printer", href: "#") %>
+      <% dropdown.menu_divider %>
+      <% dropdown.menu_item(text: "Delete", icon: "trash", destructive: true, href: "#") %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "More actions", style: :secondary) do |dropdown| %&gt;
+        &lt;% dropdown.menu_item(text: "Copy", href: "#") %&gt;
+        &lt;% dropdown.menu_item(text: "Rename", href: "#") %&gt;
+        &lt;% dropdown.menu_divider %&gt;
+        &lt;% dropdown.menu_item(text: "Delete", destructive: true, href: "#") %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12" id="host-hooks">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Host hooks",

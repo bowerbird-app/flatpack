@@ -393,12 +393,17 @@ export default class extends Controller {
 
   positionMenu() {
     const menu = this.menuElement
+    const placement = this.menuPlacement()
+    if (!this.hasMaxHeightValue) {
+      menu.style.maxHeight = `${this.spaceToward(placement)}px`
+    }
+
     const placed = place(
       this.triggerTarget.getBoundingClientRect(),
       { width: menu.offsetWidth, height: menu.offsetHeight },
       { width: window.innerWidth, height: window.innerHeight },
       {
-        placement: this.menuPlacement(),
+        placement,
         gap: MENU_GAP,
         edge: readEdgeOffset(menu),
         flip: false,
@@ -409,6 +414,17 @@ export default class extends Controller {
     menu.style.top = `${placed.top}px`
     menu.style.left = `${placed.left}px`
     menu.style.transformOrigin = this.originFor(placed.placement)
+  }
+
+  spaceToward(placement) {
+    const trigger = this.triggerTarget.getBoundingClientRect()
+    const edge = readEdgeOffset(this.menuElement)
+    const opensUp = placement === "top_left" || placement === "top_right"
+    const space = opensUp
+      ? trigger.top - MENU_GAP - edge
+      : window.innerHeight - trigger.bottom - MENU_GAP - edge
+
+    return Math.max(0, space)
   }
 
   menuPlacement() {
