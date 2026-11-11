@@ -267,8 +267,11 @@ Handles search input clear functionality.
 - `input` - The search input field
 - `clearButton` - The clear button
 
+**Values:**
+- `submitOnClear` - When true, `clear` also calls `form.requestSubmit()` if the input is in a form. Default false. `FlatPack::Search::Component` renders this only for `submit_on_clear: true`.
+
 **Actions:**
-- `clear` - Clears the input and refocuses
+- `clear` - Clears the input, refocuses, dispatches `input`, and optionally submits the enclosing form
 - `toggleClearButton` - Shows/hides clear button based on input value
 
 ### text_area_controller.js

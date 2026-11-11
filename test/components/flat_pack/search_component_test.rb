@@ -175,6 +175,38 @@ module FlatPack
         end
       end
 
+      def test_default_omits_submit_on_clear_value
+        render_inline(Component.new)
+
+        refute_includes rendered_content, "submit-on-clear"
+        refute_includes rendered_content, "submit_on_clear"
+      end
+
+      def test_submit_on_clear_false_omits_the_value_attribute
+        render_inline(Component.new(submit_on_clear: false))
+
+        refute_includes rendered_content, "submit-on-clear"
+      end
+
+      def test_submit_on_clear_adds_the_value_on_a_plain_field
+        render_inline(Component.new(submit_on_clear: true))
+
+        assert_selector "div[data-controller='flat-pack--search-input'][data-flat-pack--search-input-submit-on-clear-value='true']"
+        refute_selector "div.fp-search--collapsible"
+      end
+
+      def test_submit_on_clear_adds_the_value_on_a_collapsible_field
+        render_inline(Component.new(collapsible: true, submit_on_clear: true, id: "clear-submit"))
+
+        assert_selector "div.fp-search--collapsible[data-controller='flat-pack--search-collapse flat-pack--search-input'][data-flat-pack--search-input-submit-on-clear-value='true']"
+      end
+
+      def test_invalid_submit_on_clear_raises
+        assert_raises(ArgumentError) do
+          Component.new(submit_on_clear: :always)
+        end
+      end
+
       def test_collapsible_renders_a_round_search_button
         render_inline(Component.new(collapsible: true, id: "kit-search"))
 

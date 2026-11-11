@@ -133,6 +133,49 @@
   ) %>
 </section>
 
+<section class="mb-12" id="submit-on-clear">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Clear to search", anchor_link: true, subtitle: "The X can empty the field and run the search again.") %>
+  <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-8">
+    <div>
+      <%= render FlatPack::Text::Component.new(
+        text: params[:q].present? ? "Showing matches for #{params[:q]}." : "Showing every page.",
+        size: :sm,
+        style: :muted,
+        class: "mb-3"
+      ) %>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Click the X. The form runs again with an empty field.</p>
+      <%= form_with url: demo_search_path, method: :get, html: {id: "submit-on-clear-on-form"} do %>
+        <%= render FlatPack::Search::Component.new(
+          name: "q",
+          value: params[:q],
+          submit_on_clear: true,
+          id: "submit-on-clear-on",
+          placeholder: "Find pages"
+        ) %>
+      <% end %>
+    </div>
+    <div>
+      <p class="text-xs text-[var(--surface-muted-content-color)] mb-3">Same X, no submit. The field just empties.</p>
+      <%= form_with url: demo_search_path, method: :get, html: {id: "submit-on-clear-off-form"} do %>
+        <%= render FlatPack::Search::Component.new(
+          name: "stay",
+          value: "lamps",
+          id: "submit-on-clear-off",
+          placeholder: "Find pages"
+        ) %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= form_with url: demo_search_path, method: :get do %&gt;
+        &lt;%= render FlatPack::Search::Component.new(name: "q", value: params[:q], submit_on_clear: true, placeholder: "Find pages") %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Small, medium (default), and large. Pick the size that matches nearby controls.") %>
   <div class="rounded-lg border border-[var(--surface-border-color)] p-6 bg-[var(--surface-background-color)] mb-4 space-y-4">

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.350] - 2026-11-11
+
+### Added
+- `FlatPack::Search::Component` `submit_on_clear:` (`false` by default). `true` makes the clear X empty the field, keep focus, dispatch `input` as today, then call `form.requestSubmit()` when the input sits in a form. That works with Turbo GET forms. Typing the field empty does not submit. Escape, blur, and live search (`search_url` / `flat-pack--search`) stay as they are. The Stimulus value is `data-flat-pack--search-input-submit-on-clear-value`. Omit the flag and that attribute is not rendered.
+
+### Upgrade notes
+- Additive. Existing Search markup without `submit_on_clear:` is unchanged. Pass `submit_on_clear: true` on a Search inside a GET (or POST) form when the X should run the search again with an empty `q`.
+- Reload kit JavaScript so `search_input_controller.js` picks up `submitOnClear`. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.350`.
+
 ## [0.1.349] - 2026-11-10
 
 ### Added

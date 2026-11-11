@@ -27,6 +27,7 @@ Use Search where users need quick keyword filtering in top nav or content surfac
 | `collapsed` | Boolean | `true` | No | Starting posture when `collapsible` is on. `false` starts expanded. A present `value` stays open either way. |
 | `grow` | Symbol | `:end` | No | Which way the field grows. `:end` keeps the start edge put. `:start` keeps the end edge put, for a control on the trailing side of a toolbar. |
 | `round` | Boolean | `false` | No | `true` adds `fp-search--round` and sets `--search-input-radius` to `--radius-full`, so the open field is a pill. The focus ring follows that radius. `false` keeps `--search-input-radius` at `--form-control-radius` (`1rem` on rounded, `--radius-md` otherwise). The results dropdown still uses `--menu-radius`. Anything other than `true` or `false` raises `ArgumentError`. Off is the default for collapsible Search too. |
+| `submit_on_clear` | Boolean | `false` | No | `true` makes the clear X empty the field, keep focus, dispatch `input`, then call `form.requestSubmit()` when the input is inside a form. Works with Turbo GET forms. Typing the field empty does not submit. Escape, blur, and live search ignore this flag. Off omits `data-flat-pack--search-input-submit-on-clear-value`. Anything other than `true` or `false` raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the wrapper/input (`class`, `id`, `data`, `aria`). `aria: { label: }` names the round button. |
 
 ## Slots
@@ -98,6 +99,21 @@ Local `items:` ranking prefers exact title, then title prefix, then title substr
 ```
 
 The button's accessible name is `flatpack.common.search` ("Search"). Pass `aria: { label: }` to replace it. `aria-expanded` and `aria-controls` live on that button. Live search keeps its own `aria-expanded` on the input.
+
+## Clear and submit
+
+Search is not a form. Put it in a host GET or POST form when the X should run that form again with an empty field. Pass `submit_on_clear: true`. The existing clear button stays a `type="button"`. It empties the input, keeps focus, fires `input` for live-search listeners, then calls `this.inputTarget.form?.requestSubmit()`. Typing the field empty still only toggles the X. Omit the flag and the X behaves as it does today.
+
+```erb
+<%= form_with url: search_path, method: :get do %>
+  <%= render FlatPack::Search::Component.new(
+    name: "q",
+    value: params[:q],
+    submit_on_clear: true,
+    placeholder: "Find pages"
+  ) %>
+<% end %>
+```
 
 ## Accessibility
 When live search is enabled (`items` or `search_url`), the input includes `aria-haspopup="listbox"` and toggles `aria-expanded` as the dropdown opens/closes. `Escape` closes the dropdown. On a collapsible field that is empty, that same Escape then collapses the field.
