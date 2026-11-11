@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.351] - 2026-11-11
+
+### Added
+- `FlatPack::Card::Component` `body_align:` (`:start` by default). `:center` and `:end` add `fp-card--body-center` or `fp-card--body-end`. On `variant: :featured`, those classes move `.fp-card__featured-main` with `margin-block` auto. The header stays at the top of the copy column. The footer stays at the bottom. The stacked card is already `flex flex-col` with `flex-1` on the body, so the same argument moves the body when a grid stretches the card. Omit `body_align:` or pass `:start` and markup is unchanged.
+- Featured copy tokens `--card-featured-copy-gap` (default `var(--space-5)`) and `--card-featured-copy-padding` (default `var(--space-6)`) replace the hardcoded side-by-side values on `.fp-card__featured-copy`. `.fp-card__featured-main` now uses `--card-body-gap` (already `var(--space-4)`) for its gap. Computed defaults match 0.1.350.
+
+### Upgrade notes
+- Additive. Existing cards without `body_align:` look the same.
+- Reload Flatpack CSS so the tokens and `fp-card--body-*` rules exist. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.351`.
+
 ## [0.1.350] - 2026-11-11
 
 ### Added

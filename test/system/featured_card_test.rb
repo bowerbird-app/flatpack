@@ -214,8 +214,8 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
   test "at 1280 a featured card without a footer stacks copy from the top" do
     page.current_window.resize_to(1280, 900)
     visit "/demo/cards?footer=none"
-    assert_selector ".fp-card--featured", text: "Spring launch"
-    refute_selector ".fp-card--featured [data-fp-card-part='footer']"
+    assert_selector "#featured-cover .fp-card--featured", text: "Spring launch"
+    refute_selector "#featured-cover .fp-card--featured [data-fp-card-part='footer']"
 
     sample = featured_copy_stack
 

@@ -1227,6 +1227,91 @@ module FlatPack
         assert_includes error.message, "Invalid variant"
       end
 
+      def featured_body_align_html(**args)
+        render_inline(Component.new(variant: :featured, **args)) do |card|
+          card.header { "Share" }
+          card.badge { "Live" }
+          card.title { "Spring" }
+          card.body { "Short" }
+          card.footer { "Go" }
+        end
+        page.native.to_html
+      end
+
+      def stacked_body_align_html(**args)
+        render_inline(Component.new(**args)) do |card|
+          card.header { "Tools" }
+          card.body { "Note" }
+          card.footer { "Save" }
+        end
+        page.native.to_html
+      end
+
+      def test_omitted_and_start_body_align_keep_featured_markup
+        omitted = featured_body_align_html
+        started = featured_body_align_html(body_align: :start)
+
+        assert_equal omitted, started
+        refute_includes omitted, "fp-card--body-center"
+        refute_includes omitted, "fp-card--body-end"
+        refute_includes omitted, "fp-card--body-start"
+        refute_includes omitted, "data-fp-card-body-align"
+      end
+
+      def test_omitted_and_start_body_align_keep_stacked_markup
+        omitted = stacked_body_align_html
+        started = stacked_body_align_html(body_align: :start)
+
+        assert_equal omitted, started
+        refute_includes omitted, "fp-card--body-center"
+        refute_includes omitted, "fp-card--body-end"
+      end
+
+      def test_center_body_align_adds_the_featured_modifier
+        html = featured_body_align_html(body_align: :center)
+
+        assert_includes html, "fp-card--body-center"
+        refute_includes html, "fp-card--body-end"
+        refute_includes html, "fp-card--body-start"
+        assert_selector ".fp-card__featured-main"
+      end
+
+      def test_end_body_align_adds_the_featured_modifier
+        html = featured_body_align_html(body_align: :end)
+
+        assert_includes html, "fp-card--body-end"
+        refute_includes html, "fp-card--body-center"
+      end
+
+      def test_center_body_align_adds_the_stacked_modifier
+        html = stacked_body_align_html(body_align: :center)
+
+        assert_includes html, "fp-card--body-center"
+        refute_includes html, "fp-card--featured"
+      end
+
+      def test_end_body_align_adds_the_stacked_modifier
+        html = stacked_body_align_html(body_align: :end)
+
+        assert_includes html, "fp-card--body-end"
+      end
+
+      def test_validates_body_align
+        error = assert_raises(ArgumentError) do
+          render_inline(Component.new(body_align: :middle))
+        end
+        assert_includes error.message, "Invalid body_align"
+        assert_includes error.message, "middle"
+      end
+
+      def test_integer_body_align_raises_argument_error
+        error = assert_raises(ArgumentError) do
+          Component.new(body_align: 1)
+        end
+        assert_includes error.message, "Invalid body_align"
+        assert_includes error.message, "1"
+      end
+
       def test_integer_variant_raises_argument_error
         error = assert_raises(ArgumentError) do
           Component.new(variant: 1)
@@ -1278,6 +1363,11 @@ module FlatPack
         assert_includes css, "minmax(var(--card-featured-copy-min), 1fr)"
         assert_includes css, "min(50%, var(--card-featured-media-max))"
         assert_includes css, "--card-body-gap: var(--space-4);"
+        assert_includes css, "gap: var(--card-body-gap);"
+        assert_includes css, "gap: var(--card-featured-copy-gap);"
+        assert_includes css, "padding: var(--card-featured-copy-padding);"
+        assert_includes css, ".fp-card--body-center .fp-card__featured-main"
+        assert_includes css, ".fp-card--body-end .fp-card__featured-main"
         variables = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
         assert_includes variables, "--card-body-gap: var(--card-body-gap);"
         assert_includes variables, "--card-body-gap: var(--space-4);"
@@ -1285,6 +1375,10 @@ module FlatPack
         assert_includes variables, "--card-featured-media-max: 28rem;"
         assert_includes variables, "--card-featured-copy-min: var(--card-featured-copy-min);"
         assert_includes variables, "--card-featured-copy-min: 18rem;"
+        assert_includes variables, "--card-featured-copy-gap: var(--card-featured-copy-gap);"
+        assert_includes variables, "--card-featured-copy-gap: var(--space-5);"
+        assert_includes variables, "--card-featured-copy-padding: var(--card-featured-copy-padding);"
+        assert_includes variables, "--card-featured-copy-padding: var(--space-6);"
         assert_match(/:where\(\.fp-card__cover\)\s*\{[^}]*contain:\s*size;/m, css)
         refute_match(/:where\(\.fp-card__featured-media\) > \* \{\s*contain:\s*size;/, css)
         assert_includes css, "align-self: start;"

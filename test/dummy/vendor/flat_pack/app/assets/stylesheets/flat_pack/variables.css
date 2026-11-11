@@ -249,6 +249,8 @@
   --card-body-gap: var(--card-body-gap);
   --card-featured-media-max: var(--card-featured-media-max);
   --card-featured-copy-min: var(--card-featured-copy-min);
+  --card-featured-copy-gap: var(--card-featured-copy-gap);
+  --card-featured-copy-padding: var(--card-featured-copy-padding);
   --card-hover-subtle-background-color: var(--card-hover-subtle-background-color);
   --card-hover-strong-border-color: var(--card-hover-strong-border-color);
   --card-hover-strong-shadow: var(--card-hover-strong-shadow);
@@ -1186,6 +1188,8 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --card-body-gap: var(--space-4);
   --card-featured-media-max: 28rem;
   --card-featured-copy-min: 18rem;
+  --card-featured-copy-gap: var(--space-5);
+  --card-featured-copy-padding: var(--space-6);
   --empty-state-padding-y-sm: round(nearest, calc(var(--space-6) * var(--density)), 1px);
   --empty-state-padding-x-sm: round(nearest, calc(var(--space-3) * var(--density)), 1px);
   --empty-state-padding-y-md: round(nearest, calc((var(--space-6) + var(--space-4)) * var(--density)), 1px);
