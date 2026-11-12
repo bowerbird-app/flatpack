@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.355] - 2026-11-12
+
+### Fixed
+- A rollup row in `FlatPack::Notification::Component` uses `FlatPack::List::Item::ROW_INSET`. The parent, including its toggle, and each nested child share `--list-item-padding-x` and `--list-item-padding-y` with a normal list row. Icons and titles line up. The previous `py-2 px-3` inset was 4px further left on the default scale, and 8px further left when `--space-4` is 1.25rem. Vertical padding was 8px instead of the list row.
+
+### Upgrade notes
+- Visible on rollup parents and nested children. Those rows grow to the list row's vertical padding. Nested children line up with the parent. The old `pl-4` on a child lost to `px-3`, so it never indented the child.
+- No host action. No new arguments. Do not rerun `flat_pack:install`. `FlatPack::List::Item` already ships these classes.
+- Reload kit CSS/JS. Redeploy so `meta.gem_version` shows `0.1.355`.
+
 ## [0.1.354] - 2026-11-12
 
 ### Added

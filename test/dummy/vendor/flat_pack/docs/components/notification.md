@@ -56,12 +56,12 @@ Pass a block to render each row's content. The block is called once per notifica
 | `:children` | Array<Hash>, nil | no | Nested notification rows shown when a rollup parent is expanded. Child rows use the same shape as parent notifications. |
 
 ## Rollup behavior
-- Rollup parents render with the same notification row style as regular notifications.
+- Rollup parents and nested children use the same row inset as `FlatPack::List::Item` (`--list-item-padding-x` and `--list-item-padding-y`). The toggle sits inside that row.
 - Rollup parent icons render a red counter badge showing unread child count (`9+` cap).
 - A caret is displayed at the end of rollup rows (`chevron-down` collapsed, rotated up when expanded).
 - Rollup parent `href` is optional.
 - Only one rollup group is expanded at a time.
-- Nested children are rendered with left indentation to indicate hierarchy.
+- Nested children line up with the parent row. They do not add a separate left indent.
 
 ## Timestamp behavior
 Notification timestamps should be provided in ISO8601 format, for example:
