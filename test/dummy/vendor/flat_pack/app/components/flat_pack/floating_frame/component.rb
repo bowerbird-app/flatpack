@@ -24,6 +24,7 @@ module FlatPack
         position: :bottom_right,
         size: :md,
         padding: :md,
+        background: nil,
         sandbox: DEFAULT_SANDBOX,
         allow: nil,
         allowfullscreen: false,
@@ -39,6 +40,7 @@ module FlatPack
         @position = position.to_sym
         @size = size.to_sym
         @padding = padding.to_sym
+        @background = background
         @sandbox = sandbox.nil? ? DEFAULT_SANDBOX : sandbox
         @allow = allow
         @allowfullscreen = allowfullscreen
@@ -50,6 +52,7 @@ module FlatPack
         validate_position!
         validate_size!
         validate_padding!
+        validate_background!
         validate_embed!
       end
 
@@ -70,11 +73,24 @@ module FlatPack
       end
 
       def root_attributes
-        merge_attributes(
+        attrs = {
           id: @root_id,
           class: "fp-floating-frame",
           data: {controller: "flat-pack--floating-frame"}
-        )
+        }
+        style = background_style
+        attrs[:style] = style if style
+        merge_attributes(**attrs)
+      end
+
+      def background_style
+        return if @background.nil?
+
+        declaration = "--floating-frame-background: #{@background}"
+        host = html_attributes[:style] || html_attributes["style"]
+        return declaration if host.blank?
+
+        "#{declaration}; #{host}"
       end
 
       def render_launcher
@@ -200,6 +216,17 @@ module FlatPack
 
         keys = FlatPack::Card::Component::PADDINGS.keys.join(", ")
         raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{keys}"
+      end
+
+      def validate_background!
+        return if @background.nil?
+
+        sanitized = FlatPack::AttributeSanitizer.sanitize_css_color(@background)
+        if sanitized.nil?
+          raise ArgumentError, "Invalid background: #{@background}. Pass a CSS color."
+        end
+
+        @background = sanitized
       end
 
       def validate_embed!

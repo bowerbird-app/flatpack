@@ -5842,11 +5842,23 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   white-space: nowrap;
 }
 
+.fp-floating-frame__sentinel {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
 .fp-floating-frame__mount {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
+  background-color: var(--floating-frame-background);
 }
 
 .fp-floating-frame__mount .fp-embed {
@@ -5860,6 +5872,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   height: 100%;
   border-radius: 0;
   aspect-ratio: auto;
+  background-color: var(--floating-frame-background);
 }
 
 .fp-floating-frame__mount .fp-embed__frame iframe {

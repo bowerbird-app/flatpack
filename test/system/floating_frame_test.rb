@@ -102,6 +102,43 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     end
   end
 
+  test "a narrow opaque frame cannot tab out of the panel" do
+    with_window(390, 844) do
+      visit "/demo/floating_frame"
+      launcher.click
+      assert_selector ".fp-floating-frame__panel[aria-modal='true']"
+
+      opaque = page.evaluate_async_script(<<~JS)
+        const done = arguments[0]
+        const frame = document.querySelector(".fp-floating-frame__mount iframe")
+        const fresh = document.createElement("iframe")
+        fresh.setAttribute("sandbox", "")
+        fresh.title = frame.title
+        frame.replaceWith(fresh)
+        fresh.addEventListener("load", function() {
+          done(fresh.contentDocument === null)
+        }, { once: true })
+        fresh.src = frame.getAttribute("src")
+      JS
+      assert opaque, "expected the strict sandbox to hide the frame document"
+
+      frame = find(".fp-floating-frame__mount iframe")
+      page.driver.browser.switch_to.frame(frame.native)
+      page.driver.browser.execute_script(<<~JS)
+        const nodes = document.querySelectorAll("a[href], button, input, select, textarea")
+        const last = nodes[nodes.length - 1]
+        if (last) last.focus()
+      JS
+      page.driver.browser.action.send_keys(:tab).perform
+      page.driver.browser.switch_to.default_content
+
+      assert_equal "Close", active_label
+      assert page.evaluate_script(<<~JS)
+        document.querySelector(".fp-floating-frame__panel").contains(document.activeElement)
+      JS
+    end
+  end
+
   private
 
   def with_window(width, height)

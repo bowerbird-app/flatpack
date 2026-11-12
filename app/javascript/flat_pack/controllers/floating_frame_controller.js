@@ -21,6 +21,10 @@ export default class extends Controller {
     this.onTab = this.onTab.bind(this)
     this.onFrameKey = this.onFrameKey.bind(this)
     this.onViewport = this.onViewport.bind(this)
+    this.onFocusIn = this.onFocusIn.bind(this)
+    this.onPointerDown = this.onPointerDown.bind(this)
+    this.onStartSentinel = this.onStartSentinel.bind(this)
+    this.onEndSentinel = this.onEndSentinel.bind(this)
     this.attachFrameKey = this.attachFrameKey.bind(this)
     this.observer = new MutationObserver(this.onExpanded)
 
@@ -35,11 +39,24 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.observer?.disconnect()
-    this.observer = null
-    this.releaseFrameKey()
-    this.releaseTrap()
-    this.unwatchViewport()
+    // A cross-origin frame throws when its window is touched. One failure
+    // must not skip the document Tab trap or the viewport listener.
+    this.step(() => {
+      this.observer?.disconnect()
+      this.observer = null
+    })
+    this.step(() => this.releaseFrameKey())
+    this.step(() => this.releaseTrap())
+    this.step(() => this.releaseSentinels())
+    this.step(() => this.unwatchViewport())
+  }
+
+  step(callback) {
+    try {
+      callback()
+    } catch (_error) {
+      // Keep going. The next cleanup step still runs.
+    }
   }
 
   // Page shells often clip with overflow. Fixed positioning inside that box
@@ -68,12 +85,15 @@ export default class extends Controller {
     if (open) {
       this.mountFrame()
       this.bindFrameKey()
+      this.syncModal()
       this.focusPanel()
-    } else if (this.returnFocus) {
-      this.returnFocus = false
-      this.focusTrigger()
+    } else {
+      this.syncModal()
+      if (this.returnFocus) {
+        this.returnFocus = false
+        this.focusTrigger()
+      }
     }
-    this.syncModal()
   }
 
   mountFrame() {
@@ -108,11 +128,13 @@ export default class extends Controller {
     const modal = this.open && this.smallScreen()
     if (modal) {
       panel.setAttribute("aria-modal", "true")
+      this.ensureSentinels()
       this.ensureTrap()
       return
     }
 
     if (typeof panel.removeAttribute === "function") panel.removeAttribute("aria-modal")
+    this.releaseSentinels()
     this.releaseTrap()
   }
 
@@ -149,6 +171,8 @@ export default class extends Controller {
 
     this.trapping = true
     document.addEventListener("keydown", this.onTab, true)
+    document.addEventListener("focusin", this.onFocusIn)
+    document.addEventListener("pointerdown", this.onPointerDown, true)
   }
 
   releaseTrap() {
@@ -156,6 +180,80 @@ export default class extends Controller {
 
     this.trapping = false
     document.removeEventListener("keydown", this.onTab, true)
+    document.removeEventListener("focusin", this.onFocusIn)
+    document.removeEventListener("pointerdown", this.onPointerDown, true)
+  }
+
+  onPointerDown() {
+    this.pointerFocus = true
+  }
+
+  // The sentinels are the tab stops just outside the real controls. Tab that
+  // leaves a cross-origin frame lands on the end sentinel instead of the page.
+  ensureSentinels() {
+    const panel = this.panel()
+    if (!panel || this.endSentinel || typeof document?.createElement !== "function") return
+
+    this.startSentinel = this.makeSentinel()
+    this.endSentinel = this.makeSentinel()
+    this.startSentinel.addEventListener("focus", this.onStartSentinel)
+    this.endSentinel.addEventListener("focus", this.onEndSentinel)
+    panel.prepend(this.startSentinel)
+    panel.append(this.endSentinel)
+  }
+
+  makeSentinel() {
+    const node = document.createElement("span")
+    node.tabIndex = 0
+    node.className = "fp-floating-frame__sentinel"
+    node.setAttribute("data-flat-pack-floating-frame-sentinel", "")
+    node.setAttribute("aria-hidden", "true")
+    return node
+  }
+
+  onStartSentinel() {
+    const stops = this.tabStops(this.panel())
+    const edge = stops[stops.length - 1]
+    if (edge) edge.focus()
+  }
+
+  onEndSentinel() {
+    const stops = this.tabStops(this.panel())
+    const edge = stops[0]
+    if (edge) edge.focus()
+  }
+
+  releaseSentinels() {
+    this.startSentinel?.remove()
+    this.endSentinel?.remove()
+    this.startSentinel = null
+    this.endSentinel = null
+  }
+
+  // Tab inside a cross-origin frame never reaches the parent. The next parent
+  // control gets focus instead. Pull that focus back while the panel is modal.
+  // A pointer click sets pointerFocus first, so a click outside is left alone.
+  onFocusIn(event) {
+    if (this.pointerFocus) {
+      this.pointerFocus = false
+      return
+    }
+    if (!this.open || !this.smallScreen()) return
+
+    const panel = this.panel()
+    if (!panel) return
+    const target = event?.target
+    if (!target || this.focusInside(panel, target)) return
+
+    const stops = this.tabStops(panel)
+    if (stops.length === 0) {
+      if (typeof panel.focus === "function") panel.focus()
+      return
+    }
+
+    const fromIndex = stops.indexOf(event.relatedTarget)
+    const next = fromIndex === 0 ? stops[stops.length - 1] : stops[0]
+    next.focus()
   }
 
   onTab(event) {
@@ -232,6 +330,7 @@ export default class extends Controller {
 
   canTab(element) {
     if (!element || element.disabled) return false
+    if (element.hasAttribute?.("data-flat-pack-floating-frame-sentinel")) return false
     if (element.getAttribute("aria-hidden") === "true") return false
     if (typeof element.tabIndex === "number" && element.tabIndex < 0) return false
     if (typeof element.matches === "function" && element.matches("input[type='hidden']")) return false
@@ -287,17 +386,19 @@ export default class extends Controller {
     if (!frame) return
 
     this.releaseFrameWindow()
-    let win
     try {
-      win = frame.contentWindow
-    } catch (_error) {
-      return
-    }
-    if (!win || typeof win.addEventListener !== "function") return
+      // Cross-origin and a sandbox without allow-same-origin return null.
+      // contentWindow itself is readable, but addEventListener throws.
+      if (frame.contentDocument === null) return
 
-    win.addEventListener("keydown", this.onFrameKey, true)
-    win.addEventListener("keydown", this.onTab, true)
-    this.boundWindow = win
+      const win = frame.contentWindow
+      if (!win) return
+      win.addEventListener("keydown", this.onFrameKey, true)
+      win.addEventListener("keydown", this.onTab, true)
+      this.boundWindow = win
+    } catch (_error) {
+      this.boundWindow = null
+    }
   }
 
   onFrameKey(event) {
@@ -310,23 +411,27 @@ export default class extends Controller {
 
   releaseFrameKey() {
     const frame = this.boundFrame
-    if (frame && typeof frame.removeEventListener === "function") {
-      frame.removeEventListener("load", this.attachFrameKey)
+    this.boundFrame = null
+    if (frame) {
+      try {
+        frame.removeEventListener("load", this.attachFrameKey)
+      } catch (_error) {
+        // The frame node can throw once it is cross-origin.
+      }
     }
     this.releaseFrameWindow()
-    this.boundFrame = null
   }
 
   releaseFrameWindow() {
     const win = this.boundWindow
     this.boundWindow = null
-    if (!win || typeof win.removeEventListener !== "function") return
+    if (!win) return
 
     try {
       win.removeEventListener("keydown", this.onFrameKey, true)
       win.removeEventListener("keydown", this.onTab, true)
     } catch (_error) {
-      // The frame navigated cross-origin. The window is already gone.
+      // Reading removeEventListener throws for a cross-origin window.
     }
   }
 

@@ -56,6 +56,34 @@ module FlatPack
         refute_includes mount_class, "p-[var(--card-padding-"
       end
 
+      def test_content_fill_uses_the_page_background_token
+        css = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css"))
+        panel = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css"))
+
+        assert_match(
+          /--floating-frame-background:\s*var\(--surface-page-background-color\)/,
+          css
+        )
+        assert_includes panel, "background-color: var(--floating-frame-background)"
+
+        render_inline(frame(id: "notes-frame"))
+        root = page.find("#notes-frame")
+        assert_nil root[:style]
+      end
+
+      def test_background_sets_the_fill_variable
+        render_inline(frame(background: "var(--surface-background-color)", style: "color: red"))
+
+        style = page.find(".fp-floating-frame")[:style]
+        assert_includes style, "--floating-frame-background: var(--surface-background-color)"
+        assert_includes style, "color: red"
+      end
+
+      def test_rejects_an_unsafe_background
+        error = assert_raises(ArgumentError) { frame(background: "red; color: blue") }
+        assert_match(/Invalid background/, error.message)
+      end
+
       def test_rejects_an_unknown_padding
         error = assert_raises(ArgumentError) { frame(padding: :xl) }
         assert_match(/Invalid padding/, error.message)
