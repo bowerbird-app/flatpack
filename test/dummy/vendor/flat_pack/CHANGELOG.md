@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.356] - 2026-11-12
+
+### Fixed
+- A navigable modal no longer stays on its loading skeleton when the pointer rests on a link inside the frame. Turbo prefetches that link and sends the frame id on the request. The prefetch does not render into the frame, so the skeleton stayed up. `flat-pack--navigable` ignores `X-Sec-Purpose: prefetch` on `turbo:before-fetch-request`, `turbo:before-fetch-response`, and `turbo:fetch-request-error`. A real visit and a form aimed at the frame still show the skeleton and hide it when the frame loads.
+
+### Upgrade notes
+- No API changes. Reload kit CSS and JavaScript. Do not rerun the install generator. Do not rebuild Tailwind.
+- Redeploy so `meta.gem_version` shows `0.1.356`.
+
 ## [0.1.355] - 2026-11-12
 
 ### Fixed

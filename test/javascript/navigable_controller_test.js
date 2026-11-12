@@ -27,6 +27,7 @@ class FakeNode {
     this.listeners = {}
     this.focused = false
     this.src = attributes.src || ''
+    this.id = attributes.id || ''
     this.style = {}
   }
 
@@ -39,11 +40,13 @@ class FakeNode {
   setAttribute(name, value) {
     this.attributes[name] = String(value)
     if (name === 'src') this.src = String(value)
+    if (name === 'id') this.id = String(value)
   }
 
   removeAttribute(name) {
     delete this.attributes[name]
     if (name === 'src') this.src = ''
+    if (name === 'id') this.id = ''
   }
 
   hasAttribute(name) {
@@ -231,6 +234,20 @@ function screenNode(title, options = {}) {
   return screen
 }
 
+function assertScreenIdle(loading, frame, element) {
+  assert.equal(loading.hidden, true)
+  assert.equal(frame.style.visibility || '', '')
+  assert.equal(frame.hasAttribute('aria-busy'), false)
+  assert.equal(element.hasAttribute('data-fp-navigable-busy'), false)
+}
+
+function assertScreenLoading(loading, frame, element) {
+  assert.equal(loading.hidden, false)
+  assert.equal(frame.style.visibility, 'hidden')
+  assert.equal(frame.getAttribute('aria-busy'), 'true')
+  assert.equal(element.getAttribute('data-fp-navigable-busy'), 'true')
+}
+
 test('push records history, shows the back button, and skips duplicate consecutive urls', () => {
   const {controller, backButton} = buildController()
 
@@ -305,6 +322,119 @@ test('title, live region, and footer update from the current screen', () => {
   assert.equal(liveRegion.textContent, 'Edit image')
   assert.equal(footer.hidden, false)
   assert.equal(footer.children[0], save)
+})
+
+test('a prefetch over a link inside the frame leaves the screen in place', () => {
+  const {controller, loading, frame, element, error} = buildController()
+  const link = new FakeNode('a')
+  link.setAttribute('href', '/gallery/1')
+  frame.appendChild(link)
+
+  controller.onBeforeFetchRequest({
+    target: link,
+    detail: {
+      fetchOptions: {
+        headers: {
+          'Turbo-Frame': 'gallery-editor-screen',
+          'X-Sec-Purpose': 'prefetch'
+        }
+      }
+    }
+  })
+
+  assertScreenIdle(loading, frame, element)
+
+  controller.onBeforeFetchRequest({
+    target: link,
+    detail: {
+      fetchOptions: {
+        headers: new Headers({
+          'turbo-frame': 'gallery-editor-screen',
+          'x-sec-purpose': 'prefetch'
+        })
+      }
+    }
+  })
+
+  assertScreenIdle(loading, frame, element)
+
+  controller.onBeforeFetchResponse({
+    target: link,
+    preventDefault() {},
+    detail: {
+      fetchOptions: {
+        headers: {
+          'Turbo-Frame': 'gallery-editor-screen',
+          'x-sec-purpose': 'prefetch'
+        }
+      },
+      fetchResponse: {response: {ok: false, status: 500}}
+    }
+  })
+  controller.onFetchError({
+    target: link,
+    detail: {
+      fetchOptions: {
+        headers: {
+          'Turbo-Frame': 'gallery-editor-screen',
+          'X-Sec-Purpose': 'Prefetch'
+        }
+      }
+    }
+  })
+
+  assert.equal(error.hidden, true)
+  assertScreenIdle(loading, frame, element)
+})
+
+test('a real frame visit shows the loader and hides it when the frame loads', () => {
+  const {controller, loading, frame, element} = buildController()
+  const link = new FakeNode('a')
+  link.setAttribute('href', '/gallery/1')
+  frame.appendChild(link)
+
+  controller.onBeforeFetchRequest({
+    target: link,
+    detail: {
+      fetchOptions: {
+        headers: {'Turbo-Frame': 'gallery-editor-screen'}
+      }
+    }
+  })
+
+  assertScreenLoading(loading, frame, element)
+
+  controller.onFrameLoad({target: frame})
+
+  assertScreenIdle(loading, frame, element)
+})
+
+test('a frame-targeted form submission shows the loader', () => {
+  const form = new FakeNode('form')
+  const plain = buildController()
+
+  plain.controller.onBeforeFetchRequest({
+    target: form,
+    detail: {
+      fetchOptions: {
+        headers: {'turbo-frame': 'gallery-editor-screen'}
+      }
+    }
+  })
+
+  assertScreenLoading(plain.loading, plain.frame, plain.element)
+
+  const headed = buildController()
+  headed.controller.onBeforeFetchRequest({
+    target: form,
+    detail: {
+      fetchOptions: {
+        headers: new Headers({'Turbo-Frame': 'gallery-editor-screen'})
+      }
+    }
+  })
+
+  assertScreenLoading(headed.loading, headed.frame, headed.element)
 })
 
 test('failed responses and missing frames show the error state', () => {

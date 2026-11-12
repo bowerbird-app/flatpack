@@ -10,6 +10,27 @@ const NAV_CLOSE = "close"
 const NAV_RETRY = "retry"
 const VISIT_ACTIONS = new Set([NAV_PUSH, NAV_REPLACE, NAV_RESET])
 
+function headerValue(headers, name) {
+  if (!headers || typeof headers !== "object") return null
+  if (typeof headers.get === "function") {
+    const value = headers.get(name)
+    return value == null || value === "" ? null : String(value)
+  }
+
+  const wanted = String(name).toLowerCase()
+  for (const key of Object.keys(headers)) {
+    if (String(key).toLowerCase() !== wanted) continue
+    const value = headers[key]
+    return value == null || value === "" ? null : String(value)
+  }
+  return null
+}
+
+function prefetchRequest(headers) {
+  const purpose = headerValue(headers, "X-Sec-Purpose")
+  return purpose != null && purpose.trim().toLowerCase() === "prefetch"
+}
+
 export default class extends Controller {
   static targets = ["frame", "title", "backButton", "headerActions", "footer", "loading", "error", "liveRegion"]
   static values = {
@@ -410,10 +431,11 @@ export default class extends Controller {
   }
 
   isOurRequest(event) {
+    const headers = (event.detail && event.detail.fetchOptions && event.detail.fetchOptions.headers) || {}
+    if (prefetchRequest(headers)) return false
     if (this.isOurFrame(event.target)) return true
 
-    const headers = (event.detail && event.detail.fetchOptions && event.detail.fetchOptions.headers) || {}
-    const frameId = headers["Turbo-Frame"] || headers["turbo-frame"]
+    const frameId = headerValue(headers, "Turbo-Frame")
     return Boolean(this.hasFrameTarget && frameId && frameId === this.frameTarget.id)
   }
 
