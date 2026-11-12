@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.354] - 2026-11-12
+
+### Added
+- `FlatPack::FloatingFrame::Component` pins a Fab and opens a same-origin page in a Popover. Pass `src:`, `title:`, and `label:`. `position:` and `size:` go to the Fab (`:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`). The panel is a Popover (`:top` on a bottom corner, `:bottom` on a top corner). The page is an Embed. Below 640px the open panel is near the full viewport. From 640px up it is at most 24rem by 32rem, anchored to the launcher.
+- The iframe stays in a `<template>` until the first open, then remains mounted when the panel closes. `sandbox:` defaults to `allow-scripts allow-same-origin allow-forms allow-popups`. Pass a string to replace that list, including `""` for a strict sandbox. `allow:`, `allowfullscreen:`, `referrerpolicy:`, and `loading:` pass through to Embed.
+- The launcher is a button with `aria-label`, `aria-expanded`, `aria-controls`, and `aria-haspopup="dialog"`. The panel is `role="dialog"`. Opening focuses the close button. Escape, the close button, the launcher, or a click outside closes it. Focus returns to the launcher after Escape or the close button. A click outside leaves focus where the click put it. On connect the root moves to `document.body` and stays there, so a shell with `overflow` does not clip the launcher.
+- `padding:` matches Card (`:none`, `:sm`, `:md`, `:lg`) and defaults to `:md`. That insets the framed page with `--card-padding-md`. `:none` puts the iframe edge to edge under the title bar.
+- Below 640px an open panel sets `aria-modal="true"` and keeps Tab inside the panel. From 640px up it is not modal. Focus sentinels at both ends catch a Tab that leaves a cross-origin or strict-sandbox frame, and a `focusin` listener pulls focus back if it reaches the page. A pointer click is not.
+- Escape inside a same-origin iframe closes the panel. A cross-origin frame, or a sandbox without `allow-same-origin`, does not expose its window, so Escape in that page does not close the panel. Touching that window does not throw, and disconnect still drops the parent listeners.
+- The padded page fill is `--floating-frame-background`, default `var(--surface-background-color)` (`#fff` on the light palette). Pass `background:` with a CSS color to set the variable on the root. The title bar stays the popover surface.
+- `content_class:` adds classes to the padded page. A `bg-*` utility beats the default fill and beats `background:`. The default is in `@layer components` under `:where()`, not an inline `background-color`. Tailwind Merge applies those classes, so `p-0` replaces the padding utility.
+- The embed frame is transparent. The framed page owns its background. The mount fill shows through when that page does not paint one. Inside the floating frame, the embed wrapper and frame have no border, radius, or shadow. A standalone Embed keeps its outline.
+
+### Upgrade notes
+- Additive. Existing markup is unchanged until you render `FloatingFrame`. `padding:` defaults to `:md`. Pass `padding: :none` when the iframe should meet the panel edges.
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. The padding classes are the Card padding utilities. Do not rerun the install generator.
+- Importmap hosts that `pin_all_from` Flatpack controllers pick up `floating_frame_controller.js` on reload. A copied `build_stimulus.js` needs `FloatingFrameController` registered as `flat-pack--floating-frame`. Popover (`flat-pack--popover`) must be registered too.
+- Redeploy so `meta.gem_version` shows `0.1.354`.
+
 ## [0.1.353] - 2026-11-12
 
 ### Changed

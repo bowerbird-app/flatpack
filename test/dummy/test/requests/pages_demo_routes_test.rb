@@ -121,6 +121,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/video_preview
     /demo/embed
     /demo/fab
+    /demo/floating_frame
+    /demo/floating_frame/page
     /demo/inline_edit
     /demo/pagination
     /demo/admin

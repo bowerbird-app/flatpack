@@ -11,11 +11,11 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Literal CSS colour | `color` | ColorSwatch fill and RadioGroup `variant: :swatches` option fill. Not semantic `style`. |
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). Card uses `:default` (stacked) and `:featured` (square cover beside copy). |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
-| Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. Embed `src` is the iframe URL. Media `src` is the image URL. |
+| Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. Embed and Floating frame `src` are the iframe URL. Media `src` is the image URL. |
 | Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
 | Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts. Exception: `FlatPack::CopyButton::Component` `text` is the clipboard string. The visible label is `label`. |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy. Video preview's play button requires `label:` (for example `"Play: Launch trailer"`). The host translates it. |
-| Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups. Exception: Embed `title` is the iframe accessible name, required. |
+| Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups. Exception: Embed and Floating frame `title` is the iframe accessible name, required. Floating frame also shows it as the panel heading. |
 | Beside a heading | `trailing` | Section Title slot (`with_trailing`). After the heading element, before the copy-link icon. Outside both, so the accessible name stays `title`. Generic content. Not a count param. |
 | Supporting copy | `description` or `subtitle` | `description` for body explainer text; `subtitle` for a heading companion |
 | Floating layer anchor | `placement` | Tooltips, popovers, dropdowns, and notification menus. Typical values are `:top`, `:bottom`, `:left`, `:right`. Menu components that already list corner values keep those. |
@@ -46,10 +46,10 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | List row rule | `divider` | `FlatPack::List::Component` and `FlatPack::Notification::Component`. `true` draws the 1px rule and drops the spacing gap so the fill meets the line. On a notification, `:filled` always draws that rule. On `:plain`, `false` draws no rule. Not Table `dividers`. |
 | Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
 | Media frame ratio | `aspect_ratio` | Card media, Carousel, Video preview, and Embed. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview and Embed default to `"16/9"`. |
-| Iframe permissions | `allow` | Embed only. Permissions Policy string. Omit it to leave the attribute off. |
-| Iframe sandbox | `sandbox` | Embed only. Space-separated tokens, or `""` for the strict sandbox. Omit it to leave the iframe unsandboxed. |
-| Iframe fetch | `loading` | Embed only. `"lazy"` (default) or `"eager"`. |
-| Iframe referrer | `referrerpolicy` | Embed only. Default `"strict-origin-when-cross-origin"`. |
+| Iframe permissions | `allow` | Embed and Floating frame. Permissions Policy string. Omit it to leave the attribute off. |
+| Iframe sandbox | `sandbox` | Embed and Floating frame. Space-separated tokens, or `""` for the strict sandbox. Omit it on Embed to leave the iframe unsandboxed. Floating frame defaults to `allow-scripts allow-same-origin allow-forms allow-popups`. Pass a string to replace that list. |
+| Iframe fetch | `loading` | Embed and Floating frame. `"lazy"` (default) or `"eager"`. |
+| Iframe referrer | `referrerpolicy` | Embed and Floating frame. Default `"strict-origin-when-cross-origin"`. |
 | Chosen date-picker preset | `preset_name` | `DateRangeInput` and `DateInput` (`picker: :flatpack_date_picker`). Optional hidden field name for the selected preset key. Omit it and the picker still writes start/end or the single date. `DateInput` with `picker: :native` ignores it. |
 | Date picker Clear | host hook | The picker Panel does not render a Clear button. A host can add an element with `data-flat-pack-date-picker-command="clear"` to empty the fields and fire the same bubbling `change` events as Apply, then `flat-pack--flatpack-date-picker:apply`. |
 | Overlay enter origin | `origin` | Modal (and later Drawer). `:center` is today’s fade and scale. `:trigger` grows from the control that opened it. |
@@ -62,7 +62,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Cluster main-axis | `justify` | `FlatPack::Cluster::Component` only. `:start` (default), `:center`, `:end`, `:between`. Maps to `justify-start`, `justify-center`, `justify-end`, `justify-between`. Not Grid `align`. |
 | Masonry column count | `columns` | Masonry: integer 1–6 or a breakpoint hash (`base`, `sm`, `md`, `lg`, `xl`). Collage grid: one integer 1–6. Collage brick uses `rows` instead. Do not use Grid's `cols` here. |
 | Masonry pack direction | `order` | Masonry only. `:columns` reads down each column. `:rows` keeps left-to-right source order. |
-| FAB viewport corner | `position` | FAB only. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
+| FAB viewport corner | `position` | FAB and Floating frame. `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. Not overlay `placement`. |
 | FAB speed-dial arrangement | `layout` | FAB only. `:stack` in this release. `:arc` is reserved for a later PR. |
 | List shape | `layout` | List only. `:items` (default, `<ul>` or `<ol>`) or `:key_value` (`<dl>`). Not FAB `layout`. Not Collection `layout`. |
 | Collection arrangement | `layout` | `FlatPack::Collection::Component` only. `:stack` (default, vertical), `:grid` (auto-fill, equal height), or `:wrap` (inline flex-wrap for badges and chips). |
@@ -167,7 +167,7 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Card `variant` is `:default` or `:featured` (the cover layout), not a colour. Do not pass Card `:featured` to Hero. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
 - Do not use `url` for a clickable navigation destination. Use `href`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
-- Do not use `position` for overlay placement. Use `placement`. FAB viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
+- Do not use `position` for overlay placement. Use `placement`. FAB and Floating frame viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.
 - Keep `type` only for native HTML control types such as button `type: "submit"`. Carousel slides and lightbox items are the exception: `type` is `:image`, `:video`, or (carousel only) `:html`.
 - Do not use `plans` or `invoices` as collection prop names when `items` already covers the concept.

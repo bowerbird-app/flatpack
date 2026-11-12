@@ -738,6 +738,27 @@
         { variable: "**system_arguments", accepts: "Hash", example: "id: \"compose-fab\", data: { turbo_method: \"post\" }" }
       ]
     },
+    floating_frame: {
+      label: "Floating frame",
+      method_call: "render FlatPack::FloatingFrame::Component.new(src: \"/notes\", title: \"Notes\", label: \"Open notes\", position: :bottom_left)",
+      variables: [
+        { variable: "src", accepts: "String (required)", example: "src: \"/notes\"" },
+        { variable: "title", accepts: "String (required)", example: "title: \"Notes\"" },
+        { variable: "label", accepts: "String (required)", example: "label: \"Open notes\"" },
+        { variable: "icon", accepts: "Symbol or String", example: "icon: :pencil" },
+        { variable: "position", accepts: ":bottom_right, :bottom_left, :top_right, :top_left", example: "position: :bottom_left" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" },
+        { variable: "padding", accepts: ":none, :sm, :md, :lg", example: "padding: :md" },
+        { variable: "background", accepts: "CSS color or nil", example: "background: \"var(--surface-page-background-color)\"" },
+        { variable: "content_class", accepts: "String or nil", example: "content_class: \"bg-[var(--color-danger-background-color)]\"" },
+        { variable: "sandbox", accepts: "String", example: "sandbox: \"allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation-by-user-activation\"" },
+        { variable: "allow", accepts: "String or nil", example: "allow: \"microphone\"" },
+        { variable: "allowfullscreen", accepts: "true, false", example: "allowfullscreen: true" },
+        { variable: "referrerpolicy", accepts: "String", example: "referrerpolicy: \"strict-origin-when-cross-origin\"" },
+        { variable: "loading", accepts: "\"lazy\", \"eager\"", example: "loading: \"lazy\"" },
+        { variable: "**system_arguments", accepts: "Hash", example: "id: \"notes-frame\"" }
+      ]
+    },
     fieldset: {
       label: "Fieldset",
       method_call: "render FlatPack::Fieldset::Component.new(title: \"Shipping address\", description: \"Where should we send this order?\") { ... }",

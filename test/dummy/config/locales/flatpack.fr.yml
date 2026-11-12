@@ -415,6 +415,8 @@ fr:
       label: Ajouter
       open_actions: Ouvrir les actions
       menu: Actions
+    floating_frame:
+      close: Fermer
     clipboard:
       nothing: Rien à copier
       copied: Copié dans le presse-papiers

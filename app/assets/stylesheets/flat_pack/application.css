@@ -5802,3 +5802,107 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   outline-offset: 2px;
 }
 
+/* On the body, above an in-flow sidebar. The open panel stacks inside this context. */
+.fp-floating-frame {
+  position: relative;
+  z-index: calc(var(--fab-z-index) + 1);
+}
+
+/* Floating frame: an anchored panel on desktop, near the full viewport below 640px.
+ * The attribute selector beats Popover's one-class padding and z-index utilities.
+ * It does not apply while aria-hidden is true, so the closed panel stays hidden. */
+.fp-floating-frame__panel[aria-hidden="false"] {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  width: min(24rem, calc(100vw - (2 * var(--overlay-edge-offset))));
+  height: min(32rem, calc(100dvh - 6rem));
+  z-index: calc(var(--fab-z-index) + 1);
+}
+
+@media (max-width: 639px) {
+  .fp-floating-frame__panel[aria-hidden="false"] {
+    width: calc(100vw - (2 * var(--overlay-edge-offset)));
+    height: calc(100dvh - (2 * var(--overlay-edge-offset)));
+  }
+}
+
+.fp-floating-frame__bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--popover-border-color);
+}
+
+.fp-floating-frame__title {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-snug);
+  color: var(--popover-text-color);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fp-floating-frame__sentinel {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+.fp-floating-frame__mount {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Components layer plus :where() so one bg-* utility beats this fill.
+ * An unlayered class would beat Tailwind's utilities layer.
+ */
+@layer components {
+  :where(.fp-floating-frame__mount) {
+    background-color: var(--floating-frame-background);
+  }
+}
+
+.fp-floating-frame__mount .fp-embed,
+.fp-floating-frame__mount .fp-embed__frame {
+  border-width: 0;
+  border-radius: 0;
+  box-shadow: none;
+  outline-width: 0;
+  outline-style: none;
+}
+
+.fp-floating-frame__mount .fp-embed {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+}
+
+.fp-floating-frame__mount .fp-embed__frame {
+  height: 100%;
+  aspect-ratio: auto;
+  background-color: transparent;
+}
+
+.fp-floating-frame__mount .fp-embed__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+

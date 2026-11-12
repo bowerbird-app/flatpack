@@ -1,0 +1,45 @@
+<%
+  erb_output_open = "<" + "%="
+  erb_tag_close = "%" + ">"
+%>
+
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Floating frame",
+  subtitle: "A corner button that opens a page. Close it. The page stays put."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :floating_frame %>
+
+<section class="mb-12" id="notes">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Notes",
+    anchor_link: true,
+    subtitle: "Bottom left. The page loads the first time you open it, with room around the frame."
+  ) %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    title: "ERB",
+    language: "erb",
+    code: CGI.unescapeHTML(<<~CODE)
+      #{erb_output_open} render FlatPack::FloatingFrame::Component.new(
+        src: "/demo/floating_frame/page",
+        title: "Notes",
+        label: "Open notes",
+        icon: :pencil,
+        position: :bottom_left,
+        padding: :md
+      ) #{erb_tag_close}
+    CODE
+  ) %>
+</section>
+
+<%= render FlatPack::FloatingFrame::Component.new(
+  id: "notes-frame",
+  src: "/demo/floating_frame/page",
+  title: "Notes",
+  label: "Open notes",
+  icon: :pencil,
+  position: :bottom_left,
+  padding: :md,
+  content_class: (params[:fill].to_s == "danger" ? "bg-[var(--color-danger-background-color)]" : nil)
+) %>

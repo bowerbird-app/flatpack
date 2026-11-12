@@ -456,6 +456,17 @@ components:
       - FlatPack::Toasts::Region::Component
     status: documented
 
+  - key: floating_frame
+    title: Floating frame
+    doc: docs/components/floating-frame.md
+    primary_class: FlatPack::FloatingFrame::Component
+    related_classes:
+      - FlatPack::Fab::Component
+      - FlatPack::Popover::Component
+      - FlatPack::Embed::Component
+      - FlatPack::Button::Component
+    status: documented
+
   - key: grid
     title: Grid
     doc: docs/components/grid.md

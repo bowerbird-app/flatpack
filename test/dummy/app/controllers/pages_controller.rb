@@ -805,6 +805,23 @@ class PagesController < ApplicationController
     @fab_position = allowed.include?(params[:position].to_s) ? params[:position].to_sym : :bottom_right
   end
 
+  def floating_frame
+  end
+
+  def floating_frame_page
+    self.class.floating_frame_page_hits += 1
+    @transparent_page = true
+    render layout: "fullpage"
+  end
+
+  def self.floating_frame_page_hits
+    @floating_frame_page_hits ||= 0
+  end
+
+  def self.floating_frame_page_hits=(value)
+    @floating_frame_page_hits = value
+  end
+
   def pagination
     records = Array.new(100) do |i|
       OpenStruct.new(

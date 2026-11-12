@@ -340,6 +340,7 @@
   --range-thumb-size: var(--range-thumb-size);
   --range-track-height: var(--range-track-height);
   --popover-background-color: var(--popover-background-color);
+  --floating-frame-background: var(--floating-frame-background);
   --popover-border-color: var(--popover-border-color);
   --popover-text-color: var(--popover-text-color);
   --popover-shadow: var(--popover-shadow);
@@ -1336,6 +1337,7 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --range-thumb-size: 1.25rem;
   --range-track-height: 0.375rem;
   --popover-background-color: var(--surface-background-color);
+  --floating-frame-background: var(--surface-background-color);
   --popover-border-color: var(--surface-border-color);
   --popover-text-color: var(--surface-content-color);
   --popover-shadow: var(--shadow-lg);
