@@ -453,6 +453,40 @@ module FlatPack
         refute_selector "svg.fp-red-dot"
       end
 
+      def test_rollup_rows_share_the_list_row_inset
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          style: :plain,
+          divider: true,
+          notifications: [
+            notification(title: "Plain note"),
+            rollup_notification(title: "Rolled up", children: [notification(title: "Nested note")])
+          ]
+        )) { |row| row[:title].to_s }
+
+        plain = page.find("li", text: "Plain note", match: :prefer_exact)
+        rollup = page.find("[data-flat-pack--notification-rollup-target='trigger']").ancestor("li")
+        child = page.find("[data-flat-pack--notification-rollup-target='content'] li", text: "Nested note", visible: :all)
+
+        assert_equal row_inset(plain), row_inset(rollup)
+        assert_equal row_inset(plain), row_inset(child)
+
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          notifications: [
+            notification(title: "Filled note"),
+            rollup_notification(title: "Filled rollup", children: [notification(title: "Filled child")])
+          ]
+        ))
+
+        filled = page.find("li", text: "Filled note", match: :first)
+        filled_rollup = page.find("[data-flat-pack--notification-rollup-target='trigger']").ancestor("li")
+        filled_child = page.find("[data-flat-pack--notification-rollup-target='content'] li", text: "Filled child", visible: :all)
+
+        assert_equal row_inset(filled), row_inset(filled_rollup)
+        assert_equal row_inset(filled), row_inset(filled_child)
+      end
+
       def test_rejects_unknown_style_and_divider
         assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", style: :cards) }
         assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", divider: nil) }
@@ -468,6 +502,10 @@ module FlatPack
       end
 
       private
+
+      def row_inset(node)
+        node[:class].to_s.split.grep(/\Ap[trblxy]?-/)
+      end
 
       def notification(**overrides)
         {
