@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Below 640px an open panel sets `aria-modal="true"` and keeps Tab inside the panel. From 640px up it is not modal. Focus sentinels at both ends catch a Tab that leaves a cross-origin or strict-sandbox frame, and a `focusin` listener pulls focus back if it reaches the page. A pointer click is not.
 - Escape inside a same-origin iframe closes the panel. A cross-origin frame, or a sandbox without `allow-same-origin`, does not expose its window, so Escape in that page does not close the panel. Touching that window does not throw, and disconnect still drops the parent listeners.
 - The padded page fill is `--floating-frame-background`, default `var(--surface-background-color)` (`#fff` on the light palette). Pass `background:` with a CSS color to set the variable on the root. The title bar stays the popover surface.
-- `content_class:` adds classes to the padded page. A `bg-*` utility beats the default fill and beats `background:`. The default is in `@layer components` under `:where()`, not an inline `background-color`.
+- `content_class:` adds classes to the padded page. A `bg-*` utility beats the default fill and beats `background:`. The default is in `@layer components` under `:where()`, not an inline `background-color`. Tailwind Merge applies those classes, so `p-0` replaces the padding utility.
+- The embed frame is transparent. The framed page owns its background. The mount fill shows through when that page does not paint one.
 
 ### Upgrade notes
 - Additive. Existing markup is unchanged until you render `FloatingFrame`. `padding:` defaults to `:md`. Pass `padding: :none` when the iframe should meet the panel edges.

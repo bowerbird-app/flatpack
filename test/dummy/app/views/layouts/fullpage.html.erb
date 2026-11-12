@@ -4,7 +4,7 @@
   html_data = {}
   html_data[:theme] = page_theme if page_theme.present?
 %>
-<html <%= tag.attributes(flat_pack_html_attributes(class: "h-full", data: html_data)) %>>
+<html <%= tag.attributes(flat_pack_html_attributes(class: @transparent_page ? "h-full bg-transparent" : "h-full", data: html_data)) %>>
   <head>
     <title>FlatPack Demo</title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -15,7 +15,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 min-h-screen bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]"<% unless controller.action_name == "page_layout" %> data-controller="dark-mode"<% end %>>
+  <body class="m-0 min-h-screen <%= @transparent_page ? "bg-transparent" : "bg-[var(--surface-page-background-color)]" %> text-[var(--surface-content-color)]"<% unless controller.action_name == "page_layout" %> data-controller="dark-mode"<% end %>>
     <%= render "layouts/icon_sprite" %>
 
     <%= yield %>

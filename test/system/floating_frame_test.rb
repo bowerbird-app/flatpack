@@ -86,6 +86,8 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     visit "/demo/floating_frame"
     launcher.click
     assert_equal "rgb(255, 255, 255)", mount_fill
+    assert_transparent frame_fill
+    assert_transparent framed_page_background
 
     visit "/demo/floating_frame?fill=danger"
     launcher.click
@@ -94,6 +96,7 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     override = mount_fill
     refute_equal "rgb(255, 255, 255)", override
     assert_equal danger_utility_fill, override
+    assert_transparent frame_fill
   end
 
   test "focus sentinels are absent from 640px up and after close" do
@@ -195,6 +198,21 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
 
   def mount_fill
     page.evaluate_script("getComputedStyle(document.querySelector('.fp-floating-frame__mount')).backgroundColor")
+  end
+
+  def frame_fill
+    page.evaluate_script("getComputedStyle(document.querySelector('.fp-floating-frame__mount .fp-embed__frame')).backgroundColor")
+  end
+
+  def framed_page_background
+    within_frame(find(".fp-floating-frame__mount iframe")) do
+      assert_text "Notes"
+      page.evaluate_script("getComputedStyle(document.body).backgroundColor")
+    end
+  end
+
+  def assert_transparent(color)
+    assert_includes ["rgba(0, 0, 0, 0)", "transparent"], color
   end
 
   def danger_utility_fill

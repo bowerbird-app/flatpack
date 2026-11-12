@@ -92,6 +92,14 @@ module FlatPack
         assert_equal 1, root.scan(/\bstyle="/).size
       end
 
+      def test_content_class_padding_overrides_the_mount_padding
+        render_inline(frame(content_class: "p-0"))
+
+        classes = page.find(".fp-floating-frame__mount")[:class]
+        assert_includes classes, "p-0"
+        refute_includes classes, "p-[var(--card-padding-md)]"
+      end
+
       def test_content_class_is_added_to_the_mount
         render_inline(frame(content_class: "bg-[var(--color-danger-background-color)]"))
 

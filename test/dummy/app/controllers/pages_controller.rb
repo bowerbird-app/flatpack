@@ -810,6 +810,7 @@ class PagesController < ApplicationController
 
   def floating_frame_page
     self.class.floating_frame_page_hits += 1
+    @transparent_page = true
     render layout: "fullpage"
   end
 

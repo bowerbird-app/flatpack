@@ -5888,7 +5888,7 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   height: 100%;
   border-radius: 0;
   aspect-ratio: auto;
-  background-color: var(--floating-frame-background);
+  background-color: transparent;
 }
 
 .fp-floating-frame__mount .fp-embed__frame iframe {
