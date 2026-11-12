@@ -24,6 +24,7 @@ module FlatPack
         href: nil,
         hover: false,
         active: false,
+        rounded: true,
         link_arguments: {},
         align: nil,
         title: nil,
@@ -50,7 +51,9 @@ module FlatPack
         @href = sanitize_url(href)
         @hover = hover
         @active = active
+        @rounded = rounded
         @link_arguments = sanitize_args(link_arguments || {})
+        validate_rounded!
 
         validate_layout_arguments!(href)
         validate_href!(href)
@@ -154,7 +157,7 @@ module FlatPack
         classes(
           "flat-pack-list-key-value-row",
           KeyValueLayout.row_classes_for(@stack_below),
-          "rounded-[var(--radius-sm)]",
+          ("rounded-[var(--radius-sm)]" if @rounded),
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
@@ -293,7 +296,7 @@ module FlatPack
         classes(
           "flex",
           align_class,
-          "rounded-[var(--radius-sm)]",
+          ("rounded-[var(--radius-sm)]" if @rounded),
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
@@ -333,6 +336,12 @@ module FlatPack
         return name if ALIGNS.key?(name)
 
         raise ArgumentError, "Invalid align: #{align.inspect}. Must be one of: #{ALIGNS.keys.join(", ")}."
+      end
+
+      def validate_rounded!
+        return if @rounded == true || @rounded == false
+
+        raise ArgumentError, "rounded must be true or false"
       end
 
       def merge_class_names(*class_names)

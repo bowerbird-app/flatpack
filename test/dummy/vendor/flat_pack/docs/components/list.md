@@ -41,6 +41,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `href` | String | `nil` | no | Optional link URL. Sanitized and validated; unsafe URLs raise `ArgumentError`. Not supported when the list layout is `:key_value`. |
 | `hover` | Boolean | `false` | no | Enables hover background styling. |
 | `active` | Boolean | `false` | no | Applies active item background styling. |
+| `rounded` | Boolean | `true` | no | `true` keeps `rounded-[var(--radius-sm)]` on the row. `false` omits it. Anything other than `true` or `false` raises `ArgumentError`. |
 | `link_arguments` | Hash | `{}` | no | Extra attributes merged into internal link when `href` is present. |
 | `align` | Symbol | `:start` | no | Cross-axis alignment for the row. `:start`, `:center`, `:end`, or `:baseline`. Omit it to inherit the list `align:`. Not supported when the list layout is `:key_value`. |
 | `title` | String | `nil` | no | Primary line, rendered with `FlatPack::Text` (`size: :sm`, `weight: :medium`). Not supported when the list layout is `:key_value`. An HTML-safe string raises. |

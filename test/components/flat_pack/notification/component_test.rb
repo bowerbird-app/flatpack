@@ -369,6 +369,143 @@ module FlatPack
         assert_selector "a[href='/notifications']", text: "See all notifications"
       end
 
+      def test_default_rows_keep_the_filled_list
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [
+          notification(unread: true, title: "Unread note"),
+          notification(unread: false, title: "Read note")
+        ]))
+
+        assert_selector "ul.flat-pack-list.gap-1.flat-pack-list-divided"
+        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes page.native.to_html, "truncate text-sm font-medium text-[var(--surface-content-color)]"
+        assert_selector "li[data-flat-pack-notification-state='unread']", text: "Unread note"
+        assert_selector "li[data-flat-pack-notification-state='read']", text: "Read note"
+        refute_selector "[data-flat-pack-notification-indicator]"
+        refute_selector "[data-flat-pack-notification-unread-dot]"
+        assert_selector "li svg.fp-red-dot"
+      end
+
+      def test_plain_rows_drop_the_card_fill_radius_and_gap
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          style: :plain,
+          notifications: [notification(unread: true)]
+        ))
+
+        assert_selector "ul.flat-pack-list"
+        refute_selector "ul.flat-pack-list.gap-1"
+        refute_selector "ul.flat-pack-list-divided"
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        refute_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes page.native.to_html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_divider_replaces_the_gap_with_the_list_rule
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          style: :plain,
+          divider: true,
+          notifications: [notification, notification(title: "Second")]
+        ))
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_selector "ul.gap-1"
+      end
+
+      def test_filled_divider_drops_the_gap_and_keeps_the_card
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          divider: true,
+          notifications: [notification(unread: true)]
+        ))
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_selector "ul.gap-1"
+        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+      end
+
+      def test_emphasize_unread_weights_titles_notes_and_times
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          emphasize_unread: true,
+          notifications: [
+            notification(unread: true, title: "Unread note", time: "2026-07-03T10:30:00Z"),
+            notification(unread: false, title: "Read note", time: "2026-07-03T09:15:00Z")
+          ]
+        ))
+
+        unread = page.find("li", text: "Unread note")
+        read = page.find("li", text: "Read note")
+
+        assert_includes unread.native.to_html, "truncate text-sm font-semibold text-[var(--surface-content-color)]"
+        assert_includes unread.native.to_html, "line-clamp-2 text-xs font-semibold text-[var(--surface-muted-content-color)]"
+        assert_includes unread.native.to_html, "text-xs font-semibold text-[var(--surface-muted-content-color)]"
+        assert_includes read.native.to_html, "truncate text-sm font-normal text-[var(--surface-muted-content-color)]"
+        assert_includes read.native.to_html, "line-clamp-2 text-xs font-normal text-[var(--surface-muted-content-color)]"
+        assert_includes read.native.to_html, "text-xs font-normal text-[var(--surface-muted-content-color)]"
+      end
+
+      def test_emphasize_treats_a_rollup_as_unread_when_a_child_is_unread
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          emphasize_unread: true,
+          notifications: [
+            rollup_notification(unread: false, title: "Has unread", children: [notification(unread: true, title: "Child")]),
+            rollup_notification(unread: true, title: "All read", children: [notification(unread: false, title: "Quiet child")])
+          ]
+        ))
+
+        parent = page.find("li[data-flat-pack-notification-rollup='true']", text: "Has unread")
+        quiet = page.find("li[data-flat-pack-notification-rollup='true']", text: "All read")
+
+        assert_equal "unread", parent["data-flat-pack-notification-state"]
+        assert_equal "read", quiet["data-flat-pack-notification-state"]
+        assert_includes parent.native.to_html, "font-semibold text-[var(--surface-content-color)]"
+        assert_includes quiet.native.to_html, "font-normal text-[var(--surface-muted-content-color)]"
+      end
+
+      def test_md_unread_indicator_is_a_top_left_dot
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          unread_indicator_size: :md,
+          notifications: [notification(unread: true, icon: :bell)]
+        ))
+
+        assert_selector "li[data-flat-pack-notification-indicator='md'] [data-flat-pack-notification-unread-dot]"
+        refute_selector "svg.fp-red-dot"
+      end
+
+      def test_md_keeps_the_rollup_count_badge
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          unread_indicator_size: :md,
+          notifications: [rollup_notification(children: [notification(unread: true)])]
+        ))
+
+        assert_selector "li[data-flat-pack-notification-indicator='md'][data-flat-pack-notification-rollup='true'] .fp-rollup-counter-badge", text: "1"
+        refute_selector "[data-flat-pack--notification-rollup-target='trigger'] svg.fp-red-dot"
+      end
+
+      def test_row_hooks_mark_nested_read_state_without_the_rollup_attribute
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          notifications: [rollup_notification(children: [notification(unread: true, title: "Nested alert")])]
+        ))
+
+        child = page.find("[data-flat-pack--notification-rollup-target='content'] li", text: "Nested alert", visible: :all)
+        assert_equal "unread", child["data-flat-pack-notification-state"]
+        assert_nil child["data-flat-pack-notification-rollup"]
+      end
+
+      def test_rejects_unknown_style_divider_emphasis_and_indicator_size
+        assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", style: :cards) }
+        assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", divider: nil) }
+        assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", emphasize_unread: "yes") }
+        assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", unread_indicator_size: :lg) }
+      end
+
       def test_max_height_rejects_a_class_name_or_unsafe_value
         ["max-h-96", "", "24rem; color: red", 24, "<style>"].each do |max_height|
           error = assert_raises(ArgumentError) do

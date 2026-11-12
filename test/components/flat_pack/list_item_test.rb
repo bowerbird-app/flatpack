@@ -13,6 +13,18 @@ module FlatPack
         assert_text "Item content"
       end
 
+      def test_rounded_defaults_on_and_can_be_turned_off
+        render_inline(Item.new) { "Content" }
+        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+
+        render_inline(Item.new(rounded: false)) { "Content" }
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+      end
+
+      def test_rounded_must_be_boolean
+        assert_raises(ArgumentError) { Item.new(rounded: nil) }
+      end
+
       def test_renders_without_icon
         render_inline(Item.new) { "Content" }
 

@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.353] - 2026-11-12
+
+### Added
+- `FlatPack::Notification::Component` accepts `style:`, `divider:`, `emphasize_unread:`, and `unread_indicator_size:`.
+- `style: :filled` (default) keeps today's rounded rows, dense gap, unread active fill, and the 1px list rule. `style: :plain` removes the fill, the radius, and the gap, and keeps the hover wash.
+- `divider: false` (default) leaves that filled list as it is. `divider: true` drops the gap so the existing List rule is the only separation. On `:plain`, `false` draws no rule and `true` draws it flush.
+- `emphasize_unread: true` uses a semibold `--surface-content-color` title for unread rows, with a semibold muted note and time. Read rows use regular weight and muted ink. A rollup counts as unread when it has unread children.
+- `unread_indicator_size: :md` draws a 12px `--color-danger-background-color` dot 6px past the icon's top-left. The rollup count stays the same size and moves to that corner. `:sm` (default) keeps `fp-red-dot`.
+- Rows expose `data-flat-pack-notification-state="unread|read"`. Rollup parents also expose `data-flat-pack-notification-rollup="true"`. `:md` adds `data-flat-pack-notification-indicator="md"` and `data-flat-pack-notification-unread-dot` on the dot.
+- `FlatPack::List::Item` accepts `rounded:` (`true` by default). `false` omits the row radius. Notification `:plain` uses it.
+
+### Upgrade notes
+- Additive. Omit the new arguments and the dropdown markup for the filled list stays the same, plus the row `data-flat-pack-notification-state` hook.
+- No host action. Do not rerun `flat_pack:install`.
+- Reload Flatpack CSS so the `:md` dot and the shifted rollup count exist. Those rules live in the gem stylesheet. The emphasis weights are utilities the gem already ships (`font-semibold`, `font-normal`). Do not rebuild Tailwind.
+
 ## [0.1.352] - 2026-11-11
 
 ### Changed

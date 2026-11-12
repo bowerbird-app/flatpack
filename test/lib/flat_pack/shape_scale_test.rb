@@ -57,7 +57,8 @@ module FlatPack
       assert_includes @css, "--font-swatch-radius: 9999px"
 
       application = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
-      assert_equal 5, application.scan(/border-radius:\s*9999px/).size
+      # The sixth circle is the notification :md unread dot. It stays round on every theme.
+      assert_equal 6, application.scan(/border-radius:\s*9999px/).size
     end
 
     test "dark and ocean inherit the default shape" do
