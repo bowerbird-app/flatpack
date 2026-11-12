@@ -148,7 +148,7 @@ With `navigable: true`, only the first open and the final close use the trigger 
 
 The header is managed: title comes from the current screen, a back arrow appears only when the stack has a previous URL, and close stays. Title changes are announced (`aria-live`). Focus moves to the heading (or the remembered control on back). One dialog and one focus trap for the whole flow. Escape still closes.
 
-While a screen loads, the kit spinner and skeleton sit over the body. If the frame request fails (missing frame, network, or non-2xx), an error state with **Try again** is shown.
+While a screen loads, the kit spinner and skeleton sit over the body. A request with `X-Sec-Purpose: prefetch` does not show that skeleton. Hovering a link inside the frame is that request, and the current screen stays put. The skeleton shows for a frame visit and for a form aimed at the frame, then hides when the frame loads. If the frame request fails (missing frame, network, or non-2xx), an error state with **Try again** is shown. A prefetch failure does not show that error.
 
 Navigation lives in `flat-pack--navigable`, attached next to `flat-pack--modal` only when `navigable: true`. Drawer can reuse that controller later. `header` and `body` slots are invalid with `navigable: true`; screens supply title, body, and actions.
 
