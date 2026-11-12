@@ -40,5 +40,6 @@
   label: "Open notes",
   icon: :pencil,
   position: :bottom_left,
-  padding: :md
+  padding: :md,
+  content_class: (params[:fill].to_s == "danger" ? "bg-[var(--color-danger-background-color)]" : nil)
 ) %>

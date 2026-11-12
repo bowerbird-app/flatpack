@@ -61,7 +61,7 @@ module FlatPack
         panel = File.read(FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css"))
 
         assert_match(
-          /--floating-frame-background:\s*var\(--surface-page-background-color\)/,
+          /--floating-frame-background:\s*var\(--surface-background-color\)/,
           css
         )
         assert_includes panel, "background-color: var(--floating-frame-background)"
@@ -72,10 +72,10 @@ module FlatPack
       end
 
       def test_background_sets_the_fill_variable
-        render_inline(frame(background: "var(--surface-background-color)", style: "color: red"))
+        render_inline(frame(background: "var(--surface-page-background-color)", style: "color: red"))
 
         style = page.find(".fp-floating-frame")[:style]
-        assert_includes style, "--floating-frame-background: var(--surface-background-color)"
+        assert_includes style, "--floating-frame-background: var(--surface-page-background-color)"
         assert_includes style, "color: red"
       end
 
@@ -90,6 +90,21 @@ module FlatPack
         assert_includes style, "outline: none"
         root = rendered_content[/<div[^>]*class="fp-floating-frame"[^>]*>/]
         assert_equal 1, root.scan(/\bstyle="/).size
+      end
+
+      def test_content_class_is_added_to_the_mount
+        render_inline(frame(content_class: "bg-[var(--color-danger-background-color)]"))
+
+        mount = page.find(".fp-floating-frame__mount")
+        assert_includes mount[:class], "fp-floating-frame__mount"
+        assert_includes mount[:class], "p-[var(--card-padding-md)]"
+        assert_includes mount[:class], "bg-[var(--color-danger-background-color)]"
+        assert_nil mount[:style]
+      end
+
+      def test_rejects_a_non_string_content_class
+        error = assert_raises(ArgumentError) { frame(content_class: [:bg]) }
+        assert_match(/content_class/, error.message)
       end
 
       def test_rejects_an_unsafe_background

@@ -82,6 +82,20 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     refute_equal launcher[:id], active_id
   end
 
+  test "the panel fill is white and a background utility overrides it" do
+    visit "/demo/floating_frame"
+    launcher.click
+    assert_equal "rgb(255, 255, 255)", mount_fill
+
+    visit "/demo/floating_frame?fill=danger"
+    launcher.click
+    assert_selector ".fp-floating-frame__mount.bg-\\[var\\(--color-danger-background-color\\)\\]", visible: :all
+
+    override = mount_fill
+    refute_equal "rgb(255, 255, 255)", override
+    assert_equal danger_utility_fill, override
+  end
+
   test "focus sentinels are absent from 640px up and after close" do
     with_window(640, 900) do
       visit "/demo/floating_frame"
@@ -177,6 +191,23 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
 
   def launcher
     find("button[aria-label='Open notes']")
+  end
+
+  def mount_fill
+    page.evaluate_script("getComputedStyle(document.querySelector('.fp-floating-frame__mount')).backgroundColor")
+  end
+
+  def danger_utility_fill
+    page.evaluate_script(<<~JS)
+      (function() {
+        var probe = document.createElement("div")
+        probe.className = "bg-[var(--color-danger-background-color)]"
+        document.body.appendChild(probe)
+        var color = getComputedStyle(probe).backgroundColor
+        probe.remove()
+        return color
+      })()
+    JS
   end
 
   def active_label

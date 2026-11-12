@@ -25,6 +25,7 @@ module FlatPack
         size: :md,
         padding: :md,
         background: nil,
+        content_class: nil,
         sandbox: DEFAULT_SANDBOX,
         allow: nil,
         allowfullscreen: false,
@@ -41,6 +42,7 @@ module FlatPack
         @size = size.to_sym
         @padding = padding.to_sym
         @background = background
+        @content_class = content_class
         @sandbox = sandbox.nil? ? DEFAULT_SANDBOX : sandbox
         @allow = allow
         @allowfullscreen = allowfullscreen
@@ -53,6 +55,7 @@ module FlatPack
         validate_size!
         validate_padding!
         validate_background!
+        validate_content_class!
         validate_embed!
       end
 
@@ -176,7 +179,7 @@ module FlatPack
       end
 
       def mount_classes
-        ["fp-floating-frame__mount", padding_class].compact_blank.join(" ")
+        ["fp-floating-frame__mount", padding_class, @content_class].compact_blank.join(" ")
       end
 
       def padding_class
@@ -226,6 +229,13 @@ module FlatPack
 
         keys = FlatPack::Card::Component::PADDINGS.keys.join(", ")
         raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{keys}"
+      end
+
+      def validate_content_class!
+        return if @content_class.nil?
+        return if @content_class.is_a?(String)
+
+        raise ArgumentError, "content_class must be a String."
       end
 
       def validate_background!

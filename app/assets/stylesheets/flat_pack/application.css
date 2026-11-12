@@ -5866,7 +5866,15 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   flex: 1 1 auto;
   flex-direction: column;
   min-height: 0;
-  background-color: var(--floating-frame-background);
+}
+
+/* Components layer plus :where() so one bg-* utility beats this fill.
+ * An unlayered class would beat Tailwind's utilities layer.
+ */
+@layer components {
+  :where(.fp-floating-frame__mount) {
+    background-color: var(--floating-frame-background);
+  }
 }
 
 .fp-floating-frame__mount .fp-embed {
