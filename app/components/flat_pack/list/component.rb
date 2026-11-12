@@ -5,6 +5,7 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # :items keeps today's <ul>/<ol>. :key_value renders a <dl> of key/value rows.
       LAYOUTS = %i[items key_value].freeze
+      STYLES = %i[filled plain].freeze
       STACK_BELOWS = %i[sm md lg].freeze
       ALIGNS = %i[start center end baseline].freeze
       SPACINGS = {
@@ -21,6 +22,7 @@ module FlatPack
         ordered: false,
         spacing: :comfortable,
         align: :start,
+        style: :filled,
         divider: false,
         selectable: false,
         orderable: false,
@@ -31,6 +33,7 @@ module FlatPack
         handle_selector: nil,
         **system_arguments
       )
+        @style, system_arguments = extract_row_style(style, system_arguments)
         super(**system_arguments)
         @layout = normalize_layout(layout)
         @key_width = key_width
@@ -51,7 +54,7 @@ module FlatPack
       end
 
       def call
-        Rendering.with(layout: @layout, stack_below: @stack_below, align: @align) do
+        Rendering.with(layout: @layout, stack_below: @stack_below, align: @align, style: @style) do
           # SECURITY: Content is marked html_safe because it's expected to contain
           # Rails-generated HTML from list items captured via block. Never pass
           # unsanitized user input directly to content.
@@ -118,15 +121,43 @@ module FlatPack
           "flat-pack-list",
           "flex flex-col",
           ("flat-pack-list--orderable" if @orderable),
-          # Orderable + divided lists skip gap — gap fights the divider and looks uneven while dragging.
-          (spacing_gap_class unless @orderable && @divider),
+          spacing_gap_class,
           ("flat-pack-list-divided" if @divider)
         )
       end
 
       def spacing_gap_class
+        # A rule or a plain list sits flush. Gap would leave a strip between the row fill and the line.
+        return if @divider || plain?
+
         key = key_value? ? :key_value : :items
         SPACINGS.fetch(@spacing).fetch(key)
+      end
+
+      def plain?
+        @style == :plain
+      end
+
+      # `style: :plain` is the row chrome. A string is the HTML style attribute, which
+      # this list already accepted before the chrome option existed.
+      def extract_row_style(style, system_arguments)
+        return [:filled, system_arguments] if style.nil?
+        return [normalize_style(style), system_arguments] if style.is_a?(Symbol) || row_style_name?(style)
+
+        system_arguments[:style] = style
+        [:filled, system_arguments]
+      end
+
+      def row_style_name?(style)
+        name = style.to_s
+        style.is_a?(String) && STYLES.include?(name.to_sym) && name == name.to_sym.to_s
+      end
+
+      def normalize_style(style)
+        name = style.to_sym
+        return name if STYLES.include?(name)
+
+        raise ArgumentError, "Invalid style: #{style.inspect}. Must be one of: #{STYLES.join(", ")}."
       end
 
       def normalize_spacing(spacing)

@@ -9,19 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.353] - 2026-11-12
 
+### Changed
+- A divided `FlatPack::List` no longer adds its spacing gap. The 1px rule sits on the row, so an active fill meets the line.
+- The default notification dropdown uses that flush rule. The rounded rows, the active fill, the type, and the small `fp-red-dot` stay.
+
 ### Added
-- `FlatPack::Notification::Component` accepts `style:`, `divider:`, `emphasize_unread:`, and `unread_indicator_size:`.
-- `style: :filled` (default) keeps today's rounded rows, dense gap, unread active fill, and the 1px list rule. `style: :plain` removes the fill, the radius, and the gap, and keeps the hover wash.
-- `divider: false` (default) leaves that filled list as it is. `divider: true` drops the gap so the existing List rule is the only separation. On `:plain`, `false` draws no rule and `true` draws it flush.
-- `emphasize_unread: true` uses a semibold `--surface-content-color` title for unread rows, with a semibold muted note and time. Read rows use regular weight and muted ink. A rollup counts as unread when it has unread children.
-- `unread_indicator_size: :md` draws a 12px `--color-danger-background-color` dot 6px past the icon's top-left. The rollup count stays the same size and moves to that corner. `:sm` (default) keeps `fp-red-dot`.
-- Rows expose `data-flat-pack-notification-state="unread|read"`. Rollup parents also expose `data-flat-pack-notification-rollup="true"`. `:md` adds `data-flat-pack-notification-indicator="md"` and `data-flat-pack-notification-unread-dot` on the dot.
-- `FlatPack::List::Item` accepts `rounded:` (`true` by default). `false` omits the row radius. Notification `:plain` uses it.
+- `FlatPack::List` and `FlatPack::List::Item` accept `style: :filled` (default) or `:plain`. `:plain` removes the active fill, the row radius, and the gap, and keeps the hover wash.
+- `FlatPack::Notification::Component` passes `style:` and `divider:` through to that list. `:filled` always draws the flush rule. On `:plain`, `divider: true` draws it and `false` does not.
+- Pass a block to `FlatPack::Notification::Component` to render each row's content. The block receives the notification hash. The component keeps the row wrapper, the hover wash, and the link. Omit the block and the default icon, title, note, time, and small dot render as before.
 
 ### Upgrade notes
-- Additive. Omit the new arguments and the dropdown markup for the filled list stays the same, plus the row `data-flat-pack-notification-state` hook.
-- No host action. Do not rerun `flat_pack:install`.
-- Reload Flatpack CSS so the `:md` dot and the shifted rollup count exist. Those rules live in the gem stylesheet. The emphasis weights are utilities the gem already ships (`font-semibold`, `font-normal`). Do not rebuild Tailwind.
+- Visible change to the default dropdown. The gap between the active fill and the 1px rule is gone. Nothing else in that dropdown changes.
+- Divided lists elsewhere also lose the spacing gap. Pass `spacing:` only when `divider:` is false.
+- No host action. Do not rerun `flat_pack:install`. Do not rebuild Tailwind. The new options are arguments and classes the gem already ships.
 
 ## [0.1.352] - 2026-11-11
 

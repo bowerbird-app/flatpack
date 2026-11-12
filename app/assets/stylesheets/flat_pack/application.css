@@ -5794,23 +5794,3 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   outline-offset: 2px;
 }
 
-/* Unlayered so the dot and the shifted count beat Tailwind utilities.
-   :md matches the inbox mark: 12px danger circle, 6px past the icon's top-left.
-   The count stays h-4 and moves to that same corner. :sm does not set the attribute. */
-[data-flat-pack-notification-unread-dot] {
-  position: absolute;
-  top: -0.375rem;
-  left: -0.375rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 9999px;
-  background-color: var(--color-danger-background-color);
-  pointer-events: none;
-}
-
-[data-flat-pack-notification-indicator="md"] .fp-rollup-counter-badge {
-  top: -0.5rem;
-  right: auto;
-  left: -0.5rem;
-}
-

@@ -132,6 +132,39 @@ module FlatPack
         assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
       end
 
+      def test_divided_list_omits_the_spacing_gap
+        render_inline(Component.new(spacing: :dense, divider: true)) { "content" }
+
+        html = page.native.to_html
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_includes html, "gap-1"
+        refute_includes html, "gap-3"
+      end
+
+      def test_plain_style_omits_the_spacing_gap
+        render_inline(Component.new(style: :plain)) { "content" }
+
+        html = page.native.to_html
+        refute_includes html, "gap-3"
+        refute_includes html, "gap-1"
+        refute_selector "ul.flat-pack-list-divided"
+      end
+
+      def test_plain_list_rows_drop_radius_and_active_fill
+        render_inline(Component.new(style: :plain)) {
+          Item.new(active: true, hover: true).with_content("Row").render_in(vc_test_controller.view_context)
+        }
+
+        html = page.native.to_html
+        refute_includes html, "rounded-[var(--radius-sm)]"
+        refute_includes html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_style_must_be_filled_or_plain
+        assert_raises(ArgumentError) { Component.new(style: :cards) }
+      end
+
       def test_orderable_divided_list_skips_gap
         render_inline(Component.new(
           orderable: true,
@@ -231,7 +264,7 @@ module FlatPack
         assert_selector "dl > div.flat-pack-list-key-value-row > dd", text: "Studio B"
         html = page.native.to_html
         assert_includes html, "--fp-list-key-width: 10rem"
-        assert_includes html, "gap-y-3"
+        refute_includes html, "gap-y-3"
         assert_includes html, "grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]"
         refute_includes html, "flat-pack-list-item-marker"
       end

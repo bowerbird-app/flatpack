@@ -39,7 +39,6 @@ module FlatPack
       {constant: :STYLES, kwargs: %i[style]},
       {constant: :VARIANTS, kwargs: %i[variant style]},
       {constant: :SIZES, kwargs: %i[size]},
-      {constant: :INDICATOR_SIZES, kwargs: %i[unread_indicator_size]},
       {constant: :PUBLIC_SIZES, kwargs: %i[size]},
       {constant: :TITLE_SIZES, kwargs: %i[title_size]},
       {constant: :LEVELS, kwargs: %i[level]},

@@ -6,11 +6,9 @@ module FlatPack
       # A length such as "24rem". The default panel keeps the max-h-96 class (24rem).
       MAX_HEIGHT_PATTERN = /\A\d+(?:\.\d+)?(?:px|rem|em|ch|ex|vw|vh|vmin|vmax|%)\z/
       STYLES = %i[filled plain].freeze
-      INDICATOR_SIZES = %i[sm md].freeze
 
-      # Filled + divider false is today's dropdown: dense gap and the 1px list rule.
-      # divider true drops the gap so that rule is the only separation.
-      # Plain never uses the gap. Its rule follows divider.
+      # Filled always draws the list rule. List drops the gap whenever it draws that rule,
+      # so the active fill meets the line. Plain draws the rule only when divider is true.
       OUTER_LIST = {
         [:filled, false] => {spacing: :dense, divider: true},
         [:filled, true] => {spacing: :none, divider: true},
@@ -35,8 +33,6 @@ module FlatPack
         max_height: nil,
         style: :filled,
         divider: false,
-        emphasize_unread: false,
-        unread_indicator_size: :sm,
         **system_arguments
       )
         super(**system_arguments)
@@ -53,8 +49,6 @@ module FlatPack
         @max_height = normalize_max_height(max_height)
         @style = normalize_choice(style, STYLES, "style")
         @divider = normalize_boolean(divider, "divider")
-        @emphasize_unread = normalize_boolean(emphasize_unread, "emphasize_unread")
-        @unread_indicator_size = normalize_choice(unread_indicator_size, INDICATOR_SIZES, "unread_indicator_size")
 
         validate_placement!
       end
@@ -161,6 +155,7 @@ module FlatPack
         render FlatPack::List::Component.new(
           spacing: chrome[:spacing],
           divider: chrome[:divider],
+          style: @style,
           data: list_data_attributes
         ) do
           safe_join(render_notification_rows)
@@ -183,7 +178,7 @@ module FlatPack
       def render_rollup_parent(notification, index)
         unread_children_count = rollup_unread_children_count(notification)
 
-        content_tag(:li, role: "listitem", class: rollup_parent_item_classes(notification), data: row_data(notification, rollup: true)) do
+        content_tag(:li, role: "listitem", class: rollup_parent_item_classes(notification)) do
           content_tag(
             :button,
             type: "button",
@@ -197,11 +192,18 @@ module FlatPack
               action: "click->flat-pack--notification-rollup#toggle keydown.enter->flat-pack--notification-rollup#toggle keydown.space->flat-pack--notification-rollup#toggle"
             }
           ) do
-            safe_join([
-              render_rollup_parent_icon(notification, unread_children_count: unread_children_count, suppress_unread_indicator: true),
-              content_tag(:div, render_notification_content(notification, rollup: true), class: "min-w-0 flex-1"),
-              content_tag(:span, rollup_trailing_content(notification), class: "flex-shrink-0 ml-2")
-            ].compact)
+            if custom_row?
+              safe_join([
+                content_tag(:div, render_custom_row(notification), class: "min-w-0 flex-1"),
+                content_tag(:span, render_rollup_caret, class: "flex-shrink-0 ml-2")
+              ])
+            else
+              safe_join([
+                render_rollup_parent_icon(notification, unread_children_count: unread_children_count, suppress_unread_indicator: true),
+                content_tag(:div, render_notification_content(notification), class: "min-w-0 flex-1"),
+                content_tag(:span, rollup_trailing_content(notification), class: "flex-shrink-0 ml-2")
+              ].compact)
+            end
           end
         end
       end
@@ -217,7 +219,7 @@ module FlatPack
             data: {"flat-pack--notification-rollup-target": "content"}
           ) do
             chrome = INNER_LIST.fetch([@style, @divider])
-            render FlatPack::List::Component.new(spacing: chrome[:spacing], divider: chrome[:divider]) do
+            render FlatPack::List::Component.new(spacing: chrome[:spacing], divider: chrome[:divider], style: @style) do
               safe_join(children.map { |child| render_notification_item(child, nested: true) })
             end
           end
@@ -227,30 +229,39 @@ module FlatPack
       def render_notification_item(notification, nested: false)
         return render_nested_notification_item(notification) if nested
 
+        if custom_row?
+          return render FlatPack::List::Item.new(
+            href: notification_value(notification, :href),
+            hover: true,
+            active: filled_active?(notification),
+            class: "mb-0"
+          ) do
+            render_custom_row(notification)
+          end
+        end
+
         render FlatPack::List::Item.new(
           **list_item_icon_arguments(notification),
           href: notification_value(notification, :href),
           hover: true,
           active: filled_active?(notification),
-          rounded: filled?,
           class: "mb-0",
-          data: row_data(notification, rollup: false),
-          trailing: render_timestamp(notification_value(notification, :time), notification, rollup: false)
+          trailing: render_timestamp(notification_value(notification, :time))
         ) do
-          render_notification_content(notification, rollup: false)
+          render_notification_content(notification)
         end
       end
 
       def render_nested_notification_item(notification)
         href = nested_notification_href(notification)
 
-        content_tag(:li, role: "listitem", class: nested_notification_item_classes(notification), data: row_data(notification, rollup: false)) do
+        body = custom_row? ? render_custom_row(notification) : render_nested_notification_inner(notification)
+
+        content_tag(:li, role: "listitem", class: nested_notification_item_classes(notification)) do
           if href.present?
-            link_to href, class: nested_notification_link_classes do
-              render_nested_notification_inner(notification)
-            end
+            link_to(href, class: nested_notification_link_classes) { body }
           else
-            render_nested_notification_inner(notification)
+            body
           end
         end
       end
@@ -263,14 +274,14 @@ module FlatPack
         content_tag(:div, class: nested_notification_inner_classes) do
           safe_join([
             render_rollup_parent_icon(notification),
-            content_tag(:div, render_notification_content(notification, rollup: false), class: "min-w-0 flex-1"),
+            content_tag(:div, render_notification_content(notification), class: "min-w-0 flex-1"),
             render_nested_notification_trailing(notification)
           ].compact)
         end
       end
 
       def render_nested_notification_trailing(notification)
-        trailing = render_timestamp(notification_value(notification, :time), notification, rollup: false)
+        trailing = render_timestamp(notification_value(notification, :time))
         return if trailing.blank?
 
         content_tag(:span, trailing, class: "flex-shrink-0 ml-2")
@@ -311,7 +322,7 @@ module FlatPack
 
       def render_rollup_parent_icon(notification, unread_children_count: 0, suppress_unread_indicator: false)
         show_dot = !suppress_unread_indicator && unread_notification?(notification)
-        icon = notification_icon(notification, decorate_unread: show_dot && !indicator_md?)
+        icon = notification_icon(notification, decorate_unread: show_dot)
         return if icon.nil?
 
         content_tag(:span, class: "relative flex-shrink-0 mr-2 text-[var(--surface-muted-content-color)]") do
@@ -321,7 +332,6 @@ module FlatPack
             else
               render FlatPack::Shared::IconComponent.new(name: icon, size: :md)
             end,
-            (unread_dot if show_dot && indicator_md?),
             render_rollup_parent_counter_badge(unread_children_count)
           ].compact)
         end
@@ -344,46 +354,34 @@ module FlatPack
         count.to_s
       end
 
-      def render_notification_content(notification, rollup:)
+      def render_notification_content(notification)
         content_tag(:div, class: "space-y-0.5 text-left") do
           safe_join([
             content_tag(
               :div,
               notification_value(notification, :title).presence || fp_t("notification.fallback"),
-              class: title_classes(notification, rollup: rollup)
+              class: title_classes
             ),
-            render_notification_body(notification_value(notification, :body), notification, rollup: rollup)
+            render_notification_body(notification_value(notification, :body))
           ].compact)
         end
       end
 
-      def render_notification_body(body, notification, rollup:)
+      def render_notification_body(body)
         return if body.blank?
 
-        content_tag(:div, body, class: body_classes(notification, rollup: rollup))
+        content_tag(:div, body, class: body_classes)
       end
 
-      def title_classes(notification, rollup:)
-        return "truncate text-sm font-medium text-[var(--surface-content-color)]" unless @emphasize_unread
-
-        if row_unread?(notification, rollup: rollup)
-          "truncate text-sm font-semibold text-[var(--surface-content-color)]"
-        else
-          "truncate text-sm font-normal text-[var(--surface-muted-content-color)]"
-        end
+      def title_classes
+        "truncate text-sm font-medium text-[var(--surface-content-color)]"
       end
 
-      def body_classes(notification, rollup:)
-        return "line-clamp-2 text-xs text-[var(--surface-muted-content-color)]" unless @emphasize_unread
-
-        if row_unread?(notification, rollup: rollup)
-          "line-clamp-2 text-xs font-semibold text-[var(--surface-muted-content-color)]"
-        else
-          "line-clamp-2 text-xs font-normal text-[var(--surface-muted-content-color)]"
-        end
+      def body_classes
+        "line-clamp-2 text-xs text-[var(--surface-muted-content-color)]"
       end
 
-      def render_timestamp(timestamp, notification = nil, rollup: false)
+      def render_timestamp(timestamp)
         return if timestamp.blank?
 
         render FlatPack::Timestamp::Component.new(
@@ -391,18 +389,12 @@ module FlatPack
           tooltip_placement: @timestamp_tooltip_placement,
           fallback_text: "",
           shorten_timestamp: true,
-          class: timestamp_classes(notification, rollup: rollup)
+          class: timestamp_classes
         )
       end
 
-      def timestamp_classes(notification, rollup:)
-        return "text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap" unless @emphasize_unread && notification
-
-        if row_unread?(notification, rollup: rollup)
-          "text-xs font-semibold text-[var(--surface-muted-content-color)] whitespace-nowrap"
-        else
-          "text-xs font-normal text-[var(--surface-muted-content-color)] whitespace-nowrap"
-        end
+      def timestamp_classes
+        "text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
       end
 
       def render_footer
@@ -509,56 +501,23 @@ module FlatPack
         @style == :filled
       end
 
-      def indicator_md?
-        @unread_indicator_size == :md
-      end
-
       def filled_active?(notification)
         filled? && unread_notification?(notification)
       end
 
-      def row_unread?(notification, rollup:)
-        if rollup
-          rollup_unread_children_count(notification).positive?
-        else
-          unread_notification?(notification)
-        end
+      def custom_row?
+        __vc_render_in_block_provided?
       end
 
-      def row_data(notification, rollup:)
-        data = {
-          flat_pack_notification_state: (row_unread?(notification, rollup: rollup) ? "unread" : "read")
-        }
-        data[:flat_pack_notification_rollup] = true if rollup
-        data[:flat_pack_notification_indicator] = "md" if indicator_md?
-        data
+      def render_custom_row(notification)
+        view_context.capture(notification, &@__vc_render_in_block)
       end
 
       def list_item_icon_arguments(notification)
         icon = notification_value(notification, :icon)
         return {} if icon.respond_to?(:blank?) && icon.blank?
 
-        if indicator_md? && unread_notification?(notification)
-          {leading: md_unread_icon(icon)}
-        else
-          {icon: notification_icon(notification)}
-        end
-      end
-
-      def md_unread_icon(icon)
-        graphic = if svg_markup?(icon)
-          icon.html_safe
-        else
-          render FlatPack::Shared::IconComponent.new(name: icon, size: :md)
-        end
-
-        content_tag(:span, class: "flat-pack-list-item-icon relative") do
-          safe_join([graphic, unread_dot])
-        end
-      end
-
-      def unread_dot
-        content_tag(:span, "", data: {flat_pack_notification_unread_dot: true}, aria: {hidden: true})
+        {icon: notification_icon(notification)}
       end
 
       def notification_value(notification, key)
@@ -600,7 +559,7 @@ module FlatPack
 
       def rollup_trailing_content(notification)
         safe_join([
-          render_timestamp(notification_value(notification, :time), notification, rollup: true),
+          render_timestamp(notification_value(notification, :time)),
           render_rollup_caret
         ].compact)
       end

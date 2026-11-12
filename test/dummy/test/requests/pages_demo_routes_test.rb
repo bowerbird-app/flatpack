@@ -1090,7 +1090,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Recent notifications"
     assert_includes response.body, "Plain inbox"
     assert_includes response.body, "style: :plain"
-    assert_includes response.body, "unread_indicator_size: :md"
+    assert_includes response.body, "Host row"
     assert_includes response.body, "data-controller=\"flat-pack--popover\""
     assert_includes response.body, "data-controller=\"flat-pack--timestamp\""
     assert_includes response.body, "Rollup notifications"

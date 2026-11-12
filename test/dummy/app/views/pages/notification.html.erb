@@ -296,7 +296,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Plain inbox",
     anchor_link: true,
-    subtitle: "Same rows, flush. A line between them. Unread type is semibold, with a larger dot."
+    subtitle: "Plain rows are flush. The host draws the bold title and the dot."
   ) %>
 
   <% plain_notifications = demo_notifications + [rollup_notifications[1]] %>
@@ -319,11 +319,35 @@
         notifications: plain_notifications,
         trigger_id: "notification-plain-demo",
         style: :plain,
-        divider: true,
-        emphasize_unread: true,
-        unread_indicator_size: :md
-      ) %>
-      <p class="text-xs text-[var(--surface-muted-content-color)]">Plain</p>
+        divider: true
+      ) do |notification| %>
+        <span class="flex w-full items-start text-left">
+          <span class="relative mr-2 inline-flex shrink-0">
+            <%= render FlatPack::Shared::IconComponent.new(name: notification[:icon] || :bell, size: :md) %>
+            <% if notification[:unread] %>
+              <span class="absolute -left-1 -top-1 h-3 w-3 rounded-full bg-[var(--color-danger-background-color)]" aria-hidden="true"></span>
+            <% end %>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-sm <%= notification[:unread] ? "font-semibold text-[var(--surface-content-color)]" : "font-normal text-[var(--surface-muted-content-color)]" %>">
+              <%= notification[:title] %>
+            </span>
+            <% if notification[:body].present? %>
+              <span class="mt-0.5 block line-clamp-2 text-xs text-[var(--surface-muted-content-color)]"><%= notification[:body] %></span>
+            <% end %>
+          </span>
+          <% if notification[:time].present? %>
+            <%= render FlatPack::Timestamp::Component.new(
+              timestamp: notification[:time],
+              tooltip_placement: :left,
+              fallback_text: "",
+              shorten_timestamp: true,
+              class: "ml-2 text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
+            ) %>
+          <% end %>
+        </span>
+      <% end %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">Plain, host row</p>
     </div>
   </div>
 
@@ -335,10 +359,10 @@
         see_all_href: demo_notification_path,
         notifications: plain_notifications,
         style: :plain,
-        divider: true,
-        emphasize_unread: true,
-        unread_indicator_size: :md
-      ) %&gt;
+        divider: true
+      ) do |notification| %&gt;
+        &lt;span class="font-semibold"&gt;Host row: &lt;%= notification[:title] %&gt;&lt;/span&gt;
+      &lt;% end %&gt;
     CODE
   ) %>
 </section>
