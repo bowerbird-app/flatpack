@@ -88,6 +88,7 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     assert_equal "rgb(255, 255, 255)", mount_fill
     assert_transparent frame_fill
     assert_transparent framed_page_background
+    assert_flush_embed
 
     visit "/demo/floating_frame?fill=danger"
     launcher.click
@@ -97,6 +98,16 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     refute_equal "rgb(255, 255, 255)", override
     assert_equal danger_utility_fill, override
     assert_transparent frame_fill
+    assert_flush_embed
+  end
+
+  test "a standalone embed keeps its frame border" do
+    visit "/demo/embed"
+
+    outline = page.evaluate_script(<<~JS)
+      getComputedStyle(document.querySelector("#embed-clip .fp-embed__frame")).outlineWidth
+    JS
+    assert_equal "1px", outline
   end
 
   test "focus sentinels are absent from 640px up and after close" do
@@ -213,6 +224,33 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
 
   def assert_transparent(color)
     assert_includes ["rgba(0, 0, 0, 0)", "transparent"], color
+  end
+
+  def assert_flush_embed
+    chrome = page.evaluate_script(<<~JS)
+      (function() {
+        function read(selector) {
+          var style = getComputedStyle(document.querySelector(selector))
+          return {
+            borderWidth: style.borderTopWidth,
+            borderRadius: style.borderTopLeftRadius,
+            boxShadow: style.boxShadow,
+            outlineWidth: style.outlineWidth
+          }
+        }
+        return {
+          wrap: read(".fp-floating-frame__mount .fp-embed"),
+          frame: read(".fp-floating-frame__mount .fp-embed__frame")
+        }
+      })()
+    JS
+
+    [chrome["wrap"], chrome["frame"]].each do |box|
+      assert_equal "0px", box["borderWidth"]
+      assert_equal "0px", box["borderRadius"]
+      assert_equal "none", box["boxShadow"]
+      assert_equal "0px", box["outlineWidth"]
+    end
   end
 
   def danger_utility_fill
