@@ -76,6 +76,10 @@ module FlatPack
         assert_includes rule, "height: 1px;"
         assert_includes rule, "background-color: var(--surface-border-color);"
         assert_includes rule, "border-radius: 0;"
+        square = css[/\.flat-pack-list\.flat-pack-list-divided > li,\n\.flat-pack-list\.flat-pack-list-divided > li > a,.*?\n\}/m]
+        refute_nil square
+        assert_operator css.index(square), :>, layer_end
+        assert_includes square, "border-radius: 0;"
       end
 
       def test_renders_dense_spacing
@@ -130,6 +134,58 @@ module FlatPack
         assert_selector "ul[data-flat-pack--list-orderable-orderable-method-value='PATCH']"
         assert_selector "ul[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"
         assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
+      end
+
+      def test_divided_list_rows_are_square
+        render_inline(Component.new(divider: true)) {
+          Item.new(active: true, hover: true).with_content("Row").render_in(vc_test_controller.view_context)
+        }
+
+        html = page.native.to_html
+        refute_includes html, "rounded-[var(--radius-sm)]"
+        assert_includes html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_undivided_filled_rows_keep_the_radius
+        render_inline(Component.new) {
+          Item.new(active: true).with_content("Row").render_in(vc_test_controller.view_context)
+        }
+
+        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+      end
+
+      def test_divided_list_omits_the_spacing_gap
+        render_inline(Component.new(spacing: :dense, divider: true)) { "content" }
+
+        html = page.native.to_html
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_includes html, "gap-1"
+        refute_includes html, "gap-3"
+      end
+
+      def test_plain_style_omits_the_spacing_gap
+        render_inline(Component.new(style: :plain)) { "content" }
+
+        html = page.native.to_html
+        refute_includes html, "gap-3"
+        refute_includes html, "gap-1"
+        refute_selector "ul.flat-pack-list-divided"
+      end
+
+      def test_plain_list_rows_drop_radius_and_active_fill
+        render_inline(Component.new(style: :plain)) {
+          Item.new(active: true, hover: true).with_content("Row").render_in(vc_test_controller.view_context)
+        }
+
+        html = page.native.to_html
+        refute_includes html, "rounded-[var(--radius-sm)]"
+        refute_includes html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_style_must_be_filled_or_plain
+        assert_raises(ArgumentError) { Component.new(style: :cards) }
       end
 
       def test_orderable_divided_list_skips_gap
@@ -231,7 +287,7 @@ module FlatPack
         assert_selector "dl > div.flat-pack-list-key-value-row > dd", text: "Studio B"
         html = page.native.to_html
         assert_includes html, "--fp-list-key-width: 10rem"
-        assert_includes html, "gap-y-3"
+        refute_includes html, "gap-y-3"
         assert_includes html, "grid-cols-[max-content_var(--fp-list-key-width)_var(--stack-gap-md)_minmax(0,1fr)_max-content]"
         refute_includes html, "flat-pack-list-item-marker"
       end

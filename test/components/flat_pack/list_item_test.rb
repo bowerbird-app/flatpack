@@ -13,6 +13,27 @@ module FlatPack
         assert_text "Item content"
       end
 
+      def test_filled_style_keeps_the_radius_and_active_fill
+        render_inline(Item.new(active: true)) { "Content" }
+
+        html = page.native.to_html
+        assert_includes html, "rounded-[var(--radius-sm)]"
+        assert_includes html, "bg-[var(--list-item-active-background-color)]"
+      end
+
+      def test_plain_style_drops_the_radius_and_active_fill
+        render_inline(Item.new(style: :plain, active: true, hover: true)) { "Content" }
+
+        html = page.native.to_html
+        refute_includes html, "rounded-[var(--radius-sm)]"
+        refute_includes html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_style_must_be_filled_or_plain
+        assert_raises(ArgumentError) { Item.new(style: :cards) }
+      end
+
       def test_renders_without_icon
         render_inline(Item.new) { "Content" }
 

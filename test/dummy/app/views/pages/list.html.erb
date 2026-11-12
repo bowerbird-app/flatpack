@@ -219,7 +219,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Zero gap",
     anchor_link: true,
-    subtitle: "spacing: :none drops the list gap. Comfortable and dense keep gap-3 and gap-1."
+    subtitle: "spacing: :none drops the list gap. A divider also drops it, so the rule sits on the row."
   ) %>
 
   <%= render FlatPack::Card::Component.new do |card| %>
@@ -246,6 +246,38 @@
       &lt;% end %&gt;
     CODE
     title: "Zero gap",
+    separated: false
+  ) %>
+</section>
+
+<section class="mb-12" id="plain-rows">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Plain rows",
+    anchor_link: true,
+    subtitle: "style: :plain drops the active fill, the radius, and the gap. Hover stays. divider: true draws a flush rule."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::List::Component.new(style: :plain, divider: true) do %>
+        <%= render FlatPack::List::Item.new(icon: :bell, active: true, hover: true) do %>
+          Active row, no fill
+        <% end %>
+        <%= render FlatPack::List::Item.new(icon: :check, hover: true) do %>
+          Quiet row
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    class: "mt-6",
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::List::Component.new(style: :plain, divider: true) do %&gt;
+        &lt;%= render FlatPack::List::Item.new(icon: :bell, active: true, hover: true) { "Active row, no fill" } %&gt;
+      &lt;% end %&gt;
+    CODE
+    title: "Plain rows",
     separated: false
   ) %>
 </section>

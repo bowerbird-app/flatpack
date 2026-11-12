@@ -9,9 +9,9 @@ module FlatPack
       THREAD_KEY = :flat_pack_list_rendering
 
       class << self
-        def with(layout:, stack_below: nil, align: :start)
+        def with(layout:, stack_below: nil, align: :start, style: :filled, divider: false)
           previous = Thread.current[THREAD_KEY]
-          Thread.current[THREAD_KEY] = {layout: layout, stack_below: stack_below, align: align}
+          Thread.current[THREAD_KEY] = {layout: layout, stack_below: stack_below, align: align, style: style, divider: divider}
           yield
         ensure
           Thread.current[THREAD_KEY] = previous
@@ -29,6 +29,14 @@ module FlatPack
           current.fetch(:align)
         end
 
+        def style
+          current.fetch(:style)
+        end
+
+        def divider
+          current.fetch(:divider)
+        end
+
         def key_value?
           layout == :key_value
         end
@@ -36,7 +44,7 @@ module FlatPack
         private
 
         def current
-          Thread.current[THREAD_KEY] || {layout: :items, stack_below: nil, align: :start}
+          Thread.current[THREAD_KEY] || {layout: :items, stack_below: nil, align: :start, style: :filled, divider: false}
         end
       end
     end

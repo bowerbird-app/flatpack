@@ -369,6 +369,95 @@ module FlatPack
         assert_selector "a[href='/notifications']", text: "See all notifications"
       end
 
+      def test_default_rows_keep_the_filled_list
+        render_inline(Component.new(see_all_href: "/notifications", notifications: [
+          notification(unread: true, title: "Unread note"),
+          notification(unread: false, title: "Read note")
+        ]))
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_selector "ul.gap-1"
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes page.native.to_html, "truncate text-sm font-medium text-[var(--surface-content-color)]"
+        refute_selector "[data-flat-pack-notification-state]"
+        refute_selector "[data-flat-pack-notification-rollup]"
+        refute_selector "[data-flat-pack-notification-indicator]"
+        refute_selector "[data-flat-pack-notification-unread-dot]"
+        assert_selector "li svg.fp-red-dot"
+      end
+
+      def test_plain_rows_drop_the_card_fill_radius_and_gap
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          style: :plain,
+          notifications: [notification(unread: true)]
+        ))
+
+        assert_selector "ul.flat-pack-list"
+        refute_selector "ul.flat-pack-list.gap-1"
+        refute_selector "ul.flat-pack-list-divided"
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        refute_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes page.native.to_html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_divider_replaces_the_gap_with_the_list_rule
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          style: :plain,
+          divider: true,
+          notifications: [notification, notification(title: "Second")]
+        ))
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_selector "ul.gap-1"
+      end
+
+      def test_filled_divider_drops_the_gap_and_keeps_the_card
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          divider: true,
+          notifications: [notification(unread: true)]
+        ))
+
+        assert_selector "ul.flat-pack-list.flat-pack-list-divided"
+        refute_selector "ul.gap-1"
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+      end
+
+      def test_row_block_replaces_the_inner_content_and_keeps_the_link
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          style: :plain,
+          notifications: [notification(unread: true, title: "Unread note")]
+        )) { |row| "Host #{row[:title]}" }
+
+        assert_selector "a[href='/notifications/1']", text: "Host Unread note"
+        assert_includes page.native.to_html, "hover:bg-[var(--list-item-hover-background-color)]"
+        refute_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
+        refute_selector "svg.fp-red-dot"
+        refute_text "Marco commented on your post."
+      end
+
+      def test_row_block_on_a_rollup_keeps_the_toggle
+        render_inline(Component.new(
+          see_all_href: "/notifications",
+          notifications: [rollup_notification(title: "Build completed", children: [notification(title: "Nested alert")])]
+        )) { |row| row[:title].to_s }
+
+        assert_selector "[data-flat-pack--notification-rollup-target='trigger']", text: "Build completed"
+        assert_selector "[data-flat-pack--notification-rollup-target='icon']"
+        assert_selector "[data-flat-pack--notification-rollup-target='content']", text: "Nested alert", visible: :all
+        refute_selector "svg.fp-red-dot"
+      end
+
+      def test_rejects_unknown_style_and_divider
+        assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", style: :cards) }
+        assert_raises(ArgumentError) { Component.new(see_all_href: "/notifications", divider: nil) }
+      end
+
       def test_max_height_rejects_a_class_name_or_unsafe_value
         ["max-h-96", "", "24rem; color: red", 24, "<style>"].each do |max_height|
           error = assert_raises(ArgumentError) do

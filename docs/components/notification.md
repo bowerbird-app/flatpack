@@ -21,13 +21,15 @@ Use Notification in application navigation, top bars, dashboards, or account are
 | `empty_text` | String | `"No recent notifications"` | no | Empty state text. |
 | `timestamp_tooltip_placement` | Symbol | `:left` | no | Tooltip placement for notification timestamps. |
 | `max_height` | String or nil | `nil` | no | CSS length for the scrolling list, such as `"9rem"`. Omit it and the list keeps `max-h-96` (24rem). A class name, a blank string, or anything that is not a plain length raises `ArgumentError`. |
+| `style` | Symbol | `:filled` | no | Passed to `FlatPack::List`. `:filled` keeps the active row. The list is divided, so the row is square and the popover clips the outer corners. `:plain` removes the active fill, the radius, and the gap, and keeps the hover wash. Anything else raises `ArgumentError`. |
+| `divider` | Boolean | `false` | no | On `:plain`, `true` draws the List rule and `false` draws none. `:filled` always draws that rule. The rule is flush with the row. Anything other than `true` or `false` raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the wrapper. |
 
 ## Slots
-None.
+Pass a block to render each row's content. The block is called once per notification, including a nested rollup child, and receives that notification hash. FlatPack keeps the row wrapper, the hover wash, and the link when `href` is set. A rollup parent also keeps its toggle. Omit the block and the component renders the default icon, title, note, time, and the small `fp-red-dot`.
 
 ## Variants
-None.
+`style: :filled` is the default card row. The 1px list rule sits against the active fill. `style: :plain` is the flush row. Pass `divider: true` when that row should show the rule. Style the title, note, time, and dot in the block.
 
 ## Notification item shape
 ```ruby
@@ -48,8 +50,8 @@ None.
 | `:body` | String | no | Optional secondary text. |
 | `:href` | String | no | Optional notification URL. |
 | `:time` | String | no | ISO8601 timestamp rendered with `FlatPack::Timestamp::Component`. |
-| `:unread` | Boolean | no | Applies unread/active styling. |
-| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item`. Unread regular and nested rows automatically add the `fp-red-dot` class to this icon. |
+| `:unread` | Boolean | no | On `:filled`, paints the active row fill. The default icon adds `fp-red-dot` when this is true. A host block decides its own unread treatment. |
+| `:icon` | Symbol, String, nil | no | Optional icon passed to `FlatPack::List::Item` when no block is given. Unread rows add `fp-red-dot` on that icon. |
 | `:rollup` | Boolean | no | When `true` and `:children` are present, renders the row as an expandable rollup parent. Missing key behaves as `false`. |
 | `:children` | Array<Hash>, nil | no | Nested notification rows shown when a rollup parent is expanded. Child rows use the same shape as parent notifications. |
 
@@ -113,6 +115,18 @@ Timestamps are rendered using `FlatPack::Timestamp::Component` with `shorten_tim
     }
   ]
 ) %>
+```
+
+## Host row
+```erb
+<%= render FlatPack::Notification::Component.new(
+  see_all_href: notifications_path,
+  notifications: notifications,
+  style: :plain,
+  divider: true
+) do |notification| %>
+  <span class="font-semibold"><%= notification[:title] %></span>
+<% end %>
 ```
 
 ## List height
