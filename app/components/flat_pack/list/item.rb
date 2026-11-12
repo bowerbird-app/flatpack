@@ -16,6 +16,7 @@ module FlatPack
         baseline: "items-baseline"
       }.freeze
       STYLES = %i[filled plain].freeze
+      ROW_INSET = "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]"
 
       def initialize(
         key: nil,
@@ -159,7 +160,7 @@ module FlatPack
           "flat-pack-list-key-value-row",
           KeyValueLayout.row_classes_for(@stack_below),
           ("rounded-[var(--radius-sm)]" unless plain? || divided?),
-          "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
+          ROW_INSET,
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
           ("bg-[var(--list-item-active-background-color)]" if @active && !plain?)
@@ -298,7 +299,7 @@ module FlatPack
           "flex",
           align_class,
           ("rounded-[var(--radius-sm)]" unless plain? || divided?),
-          "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
+          ROW_INSET,
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
           ("bg-[var(--list-item-active-background-color)]" if @active && !plain?)

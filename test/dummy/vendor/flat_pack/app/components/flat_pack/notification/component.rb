@@ -300,7 +300,9 @@ module FlatPack
 
       def nested_notification_item_classes(notification)
         merge_class_names(
-          "mb-0 pl-4 flex items-start py-2 px-3 text-[var(--surface-content-color)] transition-colors hover:bg-[var(--list-item-hover-background-color)]",
+          "mb-0 flex items-start",
+          FlatPack::List::Item::ROW_INSET,
+          "text-[var(--surface-content-color)] transition-colors hover:bg-[var(--list-item-hover-background-color)]",
           ("bg-[var(--list-item-active-background-color)]" if filled_active?(notification))
         )
       end
@@ -309,7 +311,8 @@ module FlatPack
         merge_class_names(
           "mb-0",
           "cursor-pointer",
-          "flex items-start py-2 px-3",
+          "flex items-start",
+          FlatPack::List::Item::ROW_INSET,
           "text-[var(--surface-content-color)]",
           "transition-colors hover:bg-[var(--list-item-hover-background-color)]",
           ("bg-[var(--list-item-active-background-color)]" if filled_active?(notification))
