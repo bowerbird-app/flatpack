@@ -54,8 +54,9 @@ export default class extends Controller {
   step(callback) {
     try {
       callback()
-    } catch (_error) {
+    } catch (error) {
       // Keep going. The next cleanup step still runs.
+      console.warn("Floating frame cleanup failed", error)
     }
   }
 

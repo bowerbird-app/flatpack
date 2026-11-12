@@ -73,6 +73,7 @@ module FlatPack
       end
 
       def root_attributes
+        normalize_style_key!
         attrs = {
           id: @root_id,
           class: "fp-floating-frame",
@@ -83,14 +84,23 @@ module FlatPack
         merge_attributes(**attrs)
       end
 
+      # A string "style" key would survive next to :style and drop one of them.
+      def normalize_style_key!
+        return unless @system_arguments.key?("style")
+
+        string_style = @system_arguments.delete("style")
+        merged = join_styles(@system_arguments[:style], string_style)
+        if merged.present?
+          @system_arguments[:style] = merged
+        else
+          @system_arguments.delete(:style)
+        end
+      end
+
       def background_style
         return if @background.nil?
 
-        declaration = "--floating-frame-background: #{@background}"
-        host = html_attributes[:style] || html_attributes["style"]
-        return declaration if host.blank?
-
-        "#{declaration}; #{host}"
+        join_styles("--floating-frame-background: #{@background}", html_attributes[:style].presence)
       end
 
       def render_launcher

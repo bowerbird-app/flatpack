@@ -79,6 +79,19 @@ module FlatPack
         assert_includes style, "color: red"
       end
 
+      def test_background_merges_a_string_style_key
+        component = frame(background: "transparent", style: "color: red")
+        component.instance_variable_get(:@system_arguments)["style"] = "outline: none"
+        render_inline(component)
+
+        style = page.find(".fp-floating-frame")[:style]
+        assert_includes style, "--floating-frame-background: transparent"
+        assert_includes style, "color: red"
+        assert_includes style, "outline: none"
+        root = rendered_content[/<div[^>]*class="fp-floating-frame"[^>]*>/]
+        assert_equal 1, root.scan(/\bstyle="/).size
+      end
+
       def test_rejects_an_unsafe_background
         error = assert_raises(ArgumentError) { frame(background: "red; color: blue") }
         assert_match(/Invalid background/, error.message)

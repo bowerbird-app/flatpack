@@ -73,12 +73,34 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
   test "clicking outside closes the panel without focusing the launcher" do
     visit "/demo/floating_frame"
     launcher.click
+    assert_selector "button[aria-label='Close']:focus"
     assert_equal "Close", active_label
 
     find("h1", text: "Floating frame").click
 
     assert_equal "false", launcher[:"aria-expanded"]
     refute_equal launcher[:id], active_id
+  end
+
+  test "focus sentinels are absent from 640px up and after close" do
+    with_window(640, 900) do
+      visit "/demo/floating_frame"
+      launcher.click
+
+      assert_nil find(".fp-floating-frame__panel")["aria-modal"]
+      assert_no_selector "[data-flat-pack-floating-frame-sentinel]", visible: :all
+
+      find("button[aria-label='Close']").click
+      assert_no_selector "[data-flat-pack-floating-frame-sentinel]", visible: :all
+    end
+
+    with_window(390, 844) do
+      launcher.click
+      assert_selector "[data-flat-pack-floating-frame-sentinel]", visible: :all, count: 2
+
+      find("button[aria-label='Close']").click
+      assert_no_selector "[data-flat-pack-floating-frame-sentinel]", visible: :all
+    end
   end
 
   test "a narrow open panel is modal and wraps tab inside it" do
