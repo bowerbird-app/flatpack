@@ -21,7 +21,7 @@ Use Notification in application navigation, top bars, dashboards, or account are
 | `empty_text` | String | `"No recent notifications"` | no | Empty state text. |
 | `timestamp_tooltip_placement` | Symbol | `:left` | no | Tooltip placement for notification timestamps. |
 | `max_height` | String or nil | `nil` | no | CSS length for the scrolling list, such as `"9rem"`. Omit it and the list keeps `max-h-96` (24rem). A class name, a blank string, or anything that is not a plain length raises `ArgumentError`. |
-| `style` | Symbol | `:filled` | no | Passed to `FlatPack::List`. `:filled` keeps the rounded active row. `:plain` removes the active fill, the radius, and the gap, and keeps the hover wash. Anything else raises `ArgumentError`. |
+| `style` | Symbol | `:filled` | no | Passed to `FlatPack::List`. `:filled` keeps the active row. The list is divided, so the row is square and the popover clips the outer corners. `:plain` removes the active fill, the radius, and the gap, and keeps the hover wash. Anything else raises `ArgumentError`. |
 | `divider` | Boolean | `false` | no | On `:plain`, `true` draws the List rule and `false` draws none. `:filled` always draws that rule. The rule is flush with the row. Anything other than `true` or `false` raises `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the wrapper. |
 

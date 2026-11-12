@@ -76,6 +76,10 @@ module FlatPack
         assert_includes rule, "height: 1px;"
         assert_includes rule, "background-color: var(--surface-border-color);"
         assert_includes rule, "border-radius: 0;"
+        square = css[/\.flat-pack-list\.flat-pack-list-divided > li,\n\.flat-pack-list\.flat-pack-list-divided > li > a,.*?\n\}/m]
+        refute_nil square
+        assert_operator css.index(square), :>, layer_end
+        assert_includes square, "border-radius: 0;"
       end
 
       def test_renders_dense_spacing
@@ -130,6 +134,25 @@ module FlatPack
         assert_selector "ul[data-flat-pack--list-orderable-orderable-method-value='PATCH']"
         assert_selector "ul[data-flat-pack--list-orderable-param-uuid-name-value='moving_recording_id']"
         assert_selector "ul[data-flat-pack--list-orderable-param-target-position-name-value='target_position']"
+      end
+
+      def test_divided_list_rows_are_square
+        render_inline(Component.new(divider: true)) {
+          Item.new(active: true, hover: true).with_content("Row").render_in(vc_test_controller.view_context)
+        }
+
+        html = page.native.to_html
+        refute_includes html, "rounded-[var(--radius-sm)]"
+        assert_includes html, "bg-[var(--list-item-active-background-color)]"
+        assert_includes html, "hover:bg-[var(--list-item-hover-background-color)]"
+      end
+
+      def test_undivided_filled_rows_keep_the_radius
+        render_inline(Component.new) {
+          Item.new(active: true).with_content("Row").render_in(vc_test_controller.view_context)
+        }
+
+        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
       end
 
       def test_divided_list_omits_the_spacing_gap

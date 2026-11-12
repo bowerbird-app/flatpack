@@ -158,7 +158,7 @@ module FlatPack
         classes(
           "flat-pack-list-key-value-row",
           KeyValueLayout.row_classes_for(@stack_below),
-          ("rounded-[var(--radius-sm)]" unless plain?),
+          ("rounded-[var(--radius-sm)]" unless plain? || divided?),
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
@@ -297,7 +297,7 @@ module FlatPack
         classes(
           "flex",
           align_class,
-          ("rounded-[var(--radius-sm)]" unless plain?),
+          ("rounded-[var(--radius-sm)]" unless plain? || divided?),
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
@@ -341,6 +341,10 @@ module FlatPack
 
       def plain?
         @style == :plain
+      end
+
+      def divided?
+        Rendering.divider
       end
 
       def extract_row_style(style, system_arguments)

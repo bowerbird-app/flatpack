@@ -2746,6 +2746,14 @@ ol.flat-pack-list {
   }
 }
 
+/* A divided row is square. The fill runs to the rule on every edge.
+   The rounded container clips the first and last rows. The row itself has no radius. */
+.flat-pack-list.flat-pack-list-divided > li,
+.flat-pack-list.flat-pack-list-divided > li > a,
+.flat-pack-list.flat-pack-list-divided.flat-pack-list--key-value > .flat-pack-list-key-value-row {
+  border-radius: 0;
+}
+
 /* Row radius must not bend the separator. A 1px rule stays square on every theme. */
 .flat-pack-list.flat-pack-list-divided > li + li {
   position: relative;

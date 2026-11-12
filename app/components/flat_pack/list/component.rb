@@ -54,7 +54,7 @@ module FlatPack
       end
 
       def call
-        Rendering.with(layout: @layout, stack_below: @stack_below, align: @align, style: @style) do
+        Rendering.with(layout: @layout, stack_below: @stack_below, align: @align, style: @style, divider: @divider) do
           # SECURITY: Content is marked html_safe because it's expected to contain
           # Rails-generated HTML from list items captured via block. Never pass
           # unsanitized user input directly to content.

@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.353] - 2026-11-12
 
 ### Changed
-- A divided `FlatPack::List` no longer adds its spacing gap. The 1px rule sits on the row, so an active fill meets the line.
-- The default notification dropdown uses that flush rule. The rounded rows, the active fill, the type, and the small `fp-red-dot` stay.
+- A divided `FlatPack::List` no longer adds its spacing gap, and its rows are square. The active fill runs to the 1px rule on every edge, including where two shaded rows meet. The first and last rows do not round themselves. A rounded container, such as the notification popover, clips that square fill to its own corners.
+- The default notification dropdown uses that flush square rule. The active fill, the type, and the small `fp-red-dot` stay.
 
 ### Added
 - `FlatPack::List` and `FlatPack::List::Item` accept `style: :filled` (default) or `:plain`. `:plain` removes the active fill, the row radius, and the gap, and keeps the hover wash.
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pass a block to `FlatPack::Notification::Component` to render each row's content. The block receives the notification hash. The component keeps the row wrapper, the hover wash, and the link. Omit the block and the default icon, title, note, time, and small dot render as before.
 
 ### Upgrade notes
-- Visible change to the default dropdown. The gap between the active fill and the 1px rule is gone. Nothing else in that dropdown changes.
+- Visible change to the default dropdown. The white strip and the rounded row corners are gone. The active fill meets the rule edge to edge. The popover keeps its own corner radius. Nothing else in that dropdown changes.
 - Divided lists elsewhere also lose the spacing gap. Pass `spacing:` only when `divider:` is false.
 - No host action. Do not rerun `flat_pack:install`. Do not rebuild Tailwind. The new options are arguments and classes the gem already ships.
 

@@ -377,7 +377,7 @@ module FlatPack
 
         assert_selector "ul.flat-pack-list.flat-pack-list-divided"
         refute_selector "ul.gap-1"
-        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
         assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
         assert_includes page.native.to_html, "truncate text-sm font-medium text-[var(--surface-content-color)]"
         refute_selector "[data-flat-pack-notification-state]"
@@ -423,7 +423,7 @@ module FlatPack
 
         assert_selector "ul.flat-pack-list.flat-pack-list-divided"
         refute_selector "ul.gap-1"
-        assert_includes page.native.to_html, "rounded-[var(--radius-sm)]"
+        refute_includes page.native.to_html, "rounded-[var(--radius-sm)]"
         assert_includes page.native.to_html, "bg-[var(--list-item-active-background-color)]"
       end
 

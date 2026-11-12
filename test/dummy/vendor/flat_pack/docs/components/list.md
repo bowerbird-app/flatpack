@@ -21,7 +21,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `ordered` | Boolean | `false` | no | Renders `<ol>` when true, otherwise `<ul>`. Ordered lists show decimal markers via a kit slot. Not supported when `layout` is `:key_value`. |
 | `spacing` | Symbol | `:comfortable` | no | Vertical spacing. `:comfortable` is `gap-3` (`gap-y-3` on `:key_value`). `:dense` is `gap-1` / `gap-y-1`. `:none` emits no gap class. An unknown name falls back to `gap-3`. Rows keep no bottom margin. Omitted when `divider:` is true or `style:` is `:plain`, so the row fill meets the rule. |
 | `align` | Symbol | `:start` | no | Cross-axis alignment for each row in `:items`. `:start`, `:center`, `:end`, or `:baseline`. Items inherit this unless they pass their own `align:`. Not supported when `layout` is `:key_value`. |
-| `style` | Symbol | `:filled` | no | `:filled` keeps the row radius and the active fill. `:plain` removes both and the list gap. Hover stays. Anything else raises `ArgumentError`. |
+| `style` | Symbol | `:filled` | no | `:filled` keeps the active fill. An undivided row also keeps the radius. A divided list squares every row. `:plain` removes the fill, the radius, and the list gap. Hover stays. Anything else raises `ArgumentError`. |
 | `selectable` | Boolean | `false` | no | Enables active-item behavior via `flat-pack--list-selectable`. Not supported when `layout` is `:key_value`. |
 | `orderable` | Boolean | `false` | no | Enables pointer-driven reordering via `flat-pack--list-orderable`. Not supported when `layout` is `:key_value`. |
 | `orderable_url` | String | `nil` | no | PATCH/PUT endpoint used to persist the new item position after drop. |
@@ -42,7 +42,7 @@ Use List when grouped items need consistent spacing and optional active-item sel
 | `href` | String | `nil` | no | Optional link URL. Sanitized and validated; unsafe URLs raise `ArgumentError`. Not supported when the list layout is `:key_value`. |
 | `hover` | Boolean | `false` | no | Enables hover background styling. |
 | `active` | Boolean | `false` | no | Applies `--list-item-active-background-color`. `:plain` keeps the flag from painting that fill. |
-| `style` | Symbol | list style | no | `:filled` or `:plain`. Omit it to inherit the list. Outside a list, the row is `:filled`. `:plain` omits the radius and the active fill. Anything else raises `ArgumentError`. |
+| `style` | Symbol | list style | no | `:filled` or `:plain`. Omit it to inherit the list. Outside a list, the row is `:filled`. `:plain` omits the radius and the active fill. A divided list also omits the radius. Anything else raises `ArgumentError`. |
 | `link_arguments` | Hash | `{}` | no | Extra attributes merged into internal link when `href` is present. |
 | `align` | Symbol | `:start` | no | Cross-axis alignment for the row. `:start`, `:center`, `:end`, or `:baseline`. Omit it to inherit the list `align:`. Not supported when the list layout is `:key_value`. |
 | `title` | String | `nil` | no | Primary line, rendered with `FlatPack::Text` (`size: :sm`, `weight: :medium`). Not supported when the list layout is `:key_value`. An HTML-safe string raises. |
@@ -78,7 +78,7 @@ Tailwind must see the grid class literals in `FlatPack::List::KeyValueLayout`, i
 
 Ordered markers use `--list-marker-color`, `--list-marker-min-width`, and `--list-marker-gap`. Leading icons use `--surface-content-color` via `.flat-pack-list-item-icon` so they stay visible next to the number.
 
-`divider: true` draws `.flat-pack-list-divided` rules with `border-radius: 0` and drops the spacing gap, so the row fill meets the line. Rows may still use `--radius-sm` on `:filled`. That radius must not bend the rule. `style: :plain` drops the gap, the radius, and the active fill. Hover stays.
+`divider: true` draws `.flat-pack-list-divided` rules with `border-radius: 0` and drops the spacing gap. Every row in that list is square, including the first and last, so the active fill runs to the rule on every edge. A rounded container clips those square rows to its own corners. `style: :plain` drops the gap, the radius, and the active fill. Hover stays. An undivided `:filled` row keeps `--radius-sm`.
 
 ## Orderable motion
 Orderable lists use pointer-driven reorder (not HTML5 drag-and-drop). Press and drag a row:
