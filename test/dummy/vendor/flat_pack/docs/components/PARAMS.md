@@ -42,6 +42,8 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Table column wrapping | `wrap` | `FlatPack::Table::Column` only. `:wrap` (default), `:nowrap`, `:truncate`. Truncated cells expose the full text in `title`. |
 | Table column visibility | `hide_below` | `FlatPack::Table::Column` only. `:sm`, `:md`, `:lg`, `:xl`. Hides that header and its cells below the breakpoint. The column stays in `colspan`. |
 | Table frame | `style` | `FlatPack::Table::Component` `:default` (border, radius, row hover) and `:plain` (none of those). Same param name as Button and Badge. Card fill is `background`. |
+| List row chrome | `style` | `FlatPack::List::Component`, `FlatPack::List::Item`, and `FlatPack::Notification::Component`. `:filled` (default) keeps the active row. A divided list squares that row. `:plain` removes the active fill, the radius, and the gap. Not Table `:plain` and not Button `style`. |
+| List row rule | `divider` | `FlatPack::List::Component` and `FlatPack::Notification::Component`. `true` draws the 1px rule and drops the spacing gap so the fill meets the line. On a notification, `:filled` always draws that rule. On `:plain`, `false` draws no rule. Not Table `dividers`. |
 | Table row lines | `dividers` | `FlatPack::Table::Component` only. `true` (default) draws the header rule and row lines. `false` removes them. Not List `divider`. |
 | Media frame ratio | `aspect_ratio` | Card media, Carousel, Video preview, and Embed. `"16/9"`, `"4/3"`, `"1/1"`, or a custom ratio such as `"21/9"`. Video preview and Embed default to `"16/9"`. |
 | Iframe permissions | `allow` | Embed and Floating frame. Permissions Policy string. Omit it to leave the attribute off. |

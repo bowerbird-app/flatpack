@@ -15,6 +15,7 @@ module FlatPack
         end: "items-end",
         baseline: "items-baseline"
       }.freeze
+      STYLES = %i[filled plain].freeze
 
       def initialize(
         key: nil,
@@ -24,6 +25,7 @@ module FlatPack
         href: nil,
         hover: false,
         active: false,
+        style: nil,
         link_arguments: {},
         align: nil,
         title: nil,
@@ -35,6 +37,7 @@ module FlatPack
           raise ArgumentError, "system_arguments: must be a Hash."
         end
 
+        style, system_arguments = extract_row_style(style, system_arguments)
         super(**html_options.symbolize_keys.merge(system_arguments))
         validate_text_option!(title, name: :title)
         validate_text_option!(subtitle, name: :subtitle)
@@ -50,6 +53,7 @@ module FlatPack
         @href = sanitize_url(href)
         @hover = hover
         @active = active
+        @style = normalize_style(style)
         @link_arguments = sanitize_args(link_arguments || {})
 
         validate_layout_arguments!(href)
@@ -154,11 +158,11 @@ module FlatPack
         classes(
           "flat-pack-list-key-value-row",
           KeyValueLayout.row_classes_for(@stack_below),
-          "rounded-[var(--radius-sm)]",
+          ("rounded-[var(--radius-sm)]" unless plain? || divided?),
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
-          ("bg-[var(--list-item-active-background-color)]" if @active)
+          ("bg-[var(--list-item-active-background-color)]" if @active && !plain?)
         )
       end
 
@@ -293,11 +297,11 @@ module FlatPack
         classes(
           "flex",
           align_class,
-          "rounded-[var(--radius-sm)]",
+          ("rounded-[var(--radius-sm)]" unless plain? || divided?),
           "py-[var(--list-item-padding-y)] px-[var(--list-item-padding-x)]",
           "text-[var(--surface-content-color)]",
           ("transition-colors hover:bg-[var(--list-item-hover-background-color)]" if @hover),
-          ("bg-[var(--list-item-active-background-color)]" if @active)
+          ("bg-[var(--list-item-active-background-color)]" if @active && !plain?)
         )
       end
 
@@ -333,6 +337,36 @@ module FlatPack
         return name if ALIGNS.key?(name)
 
         raise ArgumentError, "Invalid align: #{align.inspect}. Must be one of: #{ALIGNS.keys.join(", ")}."
+      end
+
+      def plain?
+        @style == :plain
+      end
+
+      def divided?
+        Rendering.divider
+      end
+
+      def extract_row_style(style, system_arguments)
+        return [nil, system_arguments] if style.nil?
+        return [style, system_arguments] if style.is_a?(Symbol) || row_style_name?(style)
+
+        system_arguments[:style] = style
+        [nil, system_arguments]
+      end
+
+      def row_style_name?(style)
+        name = style.to_s
+        style.is_a?(String) && STYLES.include?(name.to_sym) && name == name.to_sym.to_s
+      end
+
+      def normalize_style(style)
+        return Rendering.style if style.nil?
+
+        name = style.to_sym
+        return name if STYLES.include?(name)
+
+        raise ArgumentError, "Invalid style: #{style.inspect}. Must be one of: #{STYLES.join(", ")}."
       end
 
       def merge_class_names(*class_names)

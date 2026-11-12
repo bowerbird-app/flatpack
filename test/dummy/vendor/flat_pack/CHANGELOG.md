@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.353] - 2026-11-12
+## [0.1.354] - 2026-11-12
 
 ### Added
 - `FlatPack::FloatingFrame::Component` pins a Fab and opens a same-origin page in a Popover. Pass `src:`, `title:`, and `label:`. `position:` and `size:` go to the Fab (`:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`). The panel is a Popover (`:top` on a bottom corner, `:bottom` on a top corner). The page is an Embed. Below 640px the open panel is near the full viewport. From 640px up it is at most 24rem by 32rem, anchored to the launcher.
@@ -22,7 +22,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additive. Existing markup is unchanged until you render `FloatingFrame`. `padding:` defaults to `:md`. Pass `padding: :none` when the iframe should meet the panel edges.
 - Reload kit CSS and JavaScript. Do not rebuild Tailwind. The padding classes are the Card padding utilities. Do not rerun the install generator.
 - Importmap hosts that `pin_all_from` Flatpack controllers pick up `floating_frame_controller.js` on reload. A copied `build_stimulus.js` needs `FloatingFrameController` registered as `flat-pack--floating-frame`. Popover (`flat-pack--popover`) must be registered too.
-- Redeploy so `meta.gem_version` shows `0.1.353`.
+- Redeploy so `meta.gem_version` shows `0.1.354`.
+
+## [0.1.353] - 2026-11-12
+
+### Changed
+- A divided `FlatPack::List` no longer adds its spacing gap, and its rows are square. The active fill runs to the 1px rule on every edge, including where two shaded rows meet. The first and last rows do not round themselves. A rounded container, such as the notification popover, clips that square fill to its own corners.
+- The default notification dropdown uses that flush square rule. The active fill, the type, and the small `fp-red-dot` stay.
+
+### Added
+- `FlatPack::List` and `FlatPack::List::Item` accept `style: :filled` (default) or `:plain`. `:plain` removes the active fill, the row radius, and the gap, and keeps the hover wash.
+- `FlatPack::Notification::Component` passes `style:` and `divider:` through to that list. `:filled` always draws the flush rule. On `:plain`, `divider: true` draws it and `false` does not.
+- Pass a block to `FlatPack::Notification::Component` to render each row's content. The block receives the notification hash. The component keeps the row wrapper, the hover wash, and the link. Omit the block and the default icon, title, note, time, and small dot render as before.
+
+### Upgrade notes
+- Visible change to the default dropdown. The white strip and the rounded row corners are gone. The active fill meets the rule edge to edge. The popover keeps its own corner radius. Nothing else in that dropdown changes.
+- Divided lists elsewhere also lose the spacing gap. Pass `spacing:` only when `divider:` is false.
+- No host action. Do not rerun `flat_pack:install`. Do not rebuild Tailwind. The new options are arguments and classes the gem already ships.
 
 ## [0.1.352] - 2026-11-11
 

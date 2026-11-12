@@ -292,6 +292,81 @@
   ) %>
 </section>
 
+<section class="mb-12" id="plain-inbox">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Plain inbox",
+    anchor_link: true,
+    subtitle: "Plain rows are flush. The host draws the bold title and the dot."
+  ) %>
+
+  <% plain_notifications = demo_notifications + [rollup_notifications[1]] %>
+
+  <div class="flex flex-wrap items-start justify-center gap-16 rounded-lg border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] p-6 pb-48">
+    <div class="space-y-2 text-center">
+      <%= render FlatPack::Notification::Component.new(
+        unread_count: 12,
+        see_all_href: demo_notification_path,
+        notifications: plain_notifications,
+        trigger_id: "notification-filled-demo"
+      ) %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">Filled</p>
+    </div>
+
+    <div class="space-y-2 text-center">
+      <%= render FlatPack::Notification::Component.new(
+        unread_count: 12,
+        see_all_href: demo_notification_path,
+        notifications: plain_notifications,
+        trigger_id: "notification-plain-demo",
+        style: :plain,
+        divider: true
+      ) do |notification| %>
+        <span class="flex w-full items-start text-left">
+          <span class="relative mr-2 inline-flex shrink-0">
+            <%= render FlatPack::Shared::IconComponent.new(name: notification[:icon] || :bell, size: :md) %>
+            <% if notification[:unread] %>
+              <span class="absolute -left-1 -top-1 h-3 w-3 rounded-full bg-[var(--color-danger-background-color)]" aria-hidden="true"></span>
+            <% end %>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-sm <%= notification[:unread] ? "font-semibold text-[var(--surface-content-color)]" : "font-normal text-[var(--surface-muted-content-color)]" %>">
+              <%= notification[:title] %>
+            </span>
+            <% if notification[:body].present? %>
+              <span class="mt-0.5 block line-clamp-2 text-xs text-[var(--surface-muted-content-color)]"><%= notification[:body] %></span>
+            <% end %>
+          </span>
+          <% if notification[:time].present? %>
+            <%= render FlatPack::Timestamp::Component.new(
+              timestamp: notification[:time],
+              tooltip_placement: :left,
+              fallback_text: "",
+              shorten_timestamp: true,
+              class: "ml-2 text-xs text-[var(--surface-muted-content-color)] whitespace-nowrap"
+            ) %>
+          <% end %>
+        </span>
+      <% end %>
+      <p class="text-xs text-[var(--surface-muted-content-color)]">Plain, host row</p>
+    </div>
+  </div>
+
+  <p class="mb-2 mt-4 text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Code Example</p>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Notification::Component.new(
+        unread_count: 12,
+        see_all_href: demo_notification_path,
+        notifications: plain_notifications,
+        style: :plain,
+        divider: true
+      ) do |notification| %&gt;
+        &lt;span class="font-semibold"&gt;Host row: &lt;%= notification[:title] %&gt;&lt;/span&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Short list",
