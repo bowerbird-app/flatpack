@@ -227,6 +227,8 @@ Rails.application.routes.draw do
   get "demo/video_preview", to: "pages#video_preview"
   get "demo/embed", to: "pages#embed"
   get "demo/fab", to: "pages#fab"
+  get "demo/floating_frame/page", to: "pages#floating_frame_page"
+  get "demo/floating_frame", to: "pages#floating_frame"
   get "demo/pagination", to: "pages#pagination"
   get "demo/charts", to: "pages#charts"
   get "demo/charts/types", to: "pages#charts_types"

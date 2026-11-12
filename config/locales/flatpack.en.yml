@@ -411,6 +411,8 @@ en:
       label: Add
       open_actions: Open actions
       menu: Actions
+    floating_frame:
+      close: Close
     clipboard:
       nothing: Nothing to copy
       copied: Copied to clipboard

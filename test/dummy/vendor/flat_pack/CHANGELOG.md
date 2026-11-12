@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.353] - 2026-11-12
+
+### Added
+- `FlatPack::FloatingFrame::Component` pins a Fab and opens a same-origin page in a Popover. Pass `src:`, `title:`, and `label:`. `position:` and `size:` go to the Fab (`:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`). The panel is a Popover (`:top` on a bottom corner, `:bottom` on a top corner). The page is an Embed. Below 640px the open panel is near the full viewport. From 640px up it is at most 24rem by 32rem, anchored to the launcher.
+- The iframe stays in a `<template>` until the first open, then remains mounted when the panel closes. `sandbox:` defaults to `allow-scripts allow-same-origin allow-forms allow-popups`. Pass a string to replace that list, including `""` for a strict sandbox. `allow:`, `allowfullscreen:`, `referrerpolicy:`, and `loading:` pass through to Embed.
+- The launcher is a button with `aria-label`, `aria-expanded`, `aria-controls`, and `aria-haspopup="dialog"`. The panel is `role="dialog"`. Opening focuses the close button. Escape, the close button, the launcher, or a click outside closes it and returns focus to the launcher. On connect the root moves to `document.body` and stays there, so a shell with `overflow` does not clip the launcher.
+
+### Upgrade notes
+- Additive. Existing markup is unchanged until you render `FloatingFrame`.
+- Reload kit CSS and JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Importmap hosts that `pin_all_from` Flatpack controllers pick up `floating_frame_controller.js` on reload. A copied `build_stimulus.js` needs `FloatingFrameController` registered as `flat-pack--floating-frame`. Popover (`flat-pack--popover`) must be registered too.
+- Redeploy so `meta.gem_version` shows `0.1.353`.
+
 ## [0.1.352] - 2026-11-11
 
 ### Changed

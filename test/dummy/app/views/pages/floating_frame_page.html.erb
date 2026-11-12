@@ -1,0 +1,8 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Notes",
+  subtitle: "Jot something. It is still here when you come back."
+) %>
+
+<div class="max-w-sm">
+  <%= render FlatPack::TextInput::Component.new(name: "scratch", id: "scratch", label: "Scratch") %>
+</div>
