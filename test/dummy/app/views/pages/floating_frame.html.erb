@@ -14,7 +14,7 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Notes",
     anchor_link: true,
-    subtitle: "Bottom left. The page loads the first time you open it."
+    subtitle: "Bottom left. The page loads the first time you open it, with room around the frame."
   ) %>
 
   <%= render FlatPack::CodeBlock::Component.new(
@@ -26,7 +26,8 @@
         title: "Notes",
         label: "Open notes",
         icon: :pencil,
-        position: :bottom_left
+        position: :bottom_left,
+        padding: :md
       ) #{erb_tag_close}
     CODE
   ) %>
@@ -38,5 +39,6 @@
   title: "Notes",
   label: "Open notes",
   icon: :pencil,
-  position: :bottom_left
+  position: :bottom_left,
+  padding: :md
 ) %>

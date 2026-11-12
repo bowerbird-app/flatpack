@@ -22,6 +22,7 @@ Use a link or a Button when the page should take over the screen. Use a Modal fo
 | `icon` | Symbol/String | `:arrow_top_right_on_square` | no | Launcher icon. `FlatPack::Shared::IconComponent` name. |
 | `position` | Symbol | `:bottom_right` | no | Viewport corner, passed to Fab. Allowed: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. |
 | `size` | Symbol | `:md` | no | Launcher size, passed to Fab. Allowed: `:sm`, `:md`, `:lg`. |
+| `padding` | Symbol | `:md` | no | Padding around the framed page. Same sizes as Card: `:none`, `:sm`, `:md`, `:lg`. `:md` uses `--card-padding-md`. `:none` puts the iframe edge to edge under the title bar. Anything else raises `ArgumentError`. |
 | `sandbox` | String | `"allow-scripts allow-same-origin allow-forms allow-popups"` | no | Iframe sandbox tokens. Replaces the default. `""` is the strict sandbox. `nil` keeps the default. Add tokens such as `allow-top-navigation-by-user-activation` by passing the full list. |
 | `allow` | String | `nil` | no | Permissions Policy string on the iframe. Omit the attribute when unset. |
 | `allowfullscreen` | Boolean | `false` | no | Sets the iframe `allowfullscreen` attribute when `true`. |
@@ -42,7 +43,19 @@ None. `position` chooses the corner. The panel opens on the inner side of that c
   src: "/notes",
   title: "Notes",
   label: "Open notes",
-  position: :bottom_left
+  position: :bottom_left,
+  padding: :md
+) %>
+```
+
+An edge-to-edge page:
+
+```erb
+<%= render FlatPack::FloatingFrame::Component.new(
+  src: "/map",
+  title: "Map",
+  label: "Open map",
+  padding: :none
 ) %>
 ```
 
@@ -60,15 +73,18 @@ A frame that may navigate the top window when the person asks it to:
 ## Accessibility
 - The launcher is a button. It has `aria-label`, `aria-expanded`, `aria-controls`, and `aria-haspopup="dialog"`.
 - The panel is `role="dialog"` and is named by the visible heading (`title:`).
+- Below 640px, an open panel sets `aria-modal="true"` and Tab stays inside it, including focus inside a same-origin iframe. From 640px up the panel is not modal, and Tab can leave it. Resizing across that line updates `aria-modal` while the panel is open.
 - The close control is a ghost icon Button with an accessible name.
-- Opening moves focus to the close control. Escape, the close control, the launcher, or a click outside closes the panel. Focus returns to the launcher.
+- Opening moves focus to the close control. Escape, the close control, the launcher, or a click outside closes the panel. Focus returns to the launcher after Escape or the close control. A click outside does not move focus.
+- Escape also closes when focus is inside a same-origin iframe. The controller listens on that frame's `contentWindow`. A cross-origin frame, or a sandbox without `allow-same-origin`, does not expose its window, so Escape inside that page does not close the panel. Use the close control, or press Escape after focus is back in the parent page.
 - The iframe is not in the document until the first open. After that it stays mounted, including while the panel is closed, so the framed page keeps its state.
 - Popover runs the open and close motion: opacity and a short offset on `--duration-base`, with `--easing-enter` and `--easing-exit`. Reduced motion drops the offset.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Stimulus controllers: `flat-pack--popover` (position, Escape, outside click, `aria-expanded`) and `flat-pack--floating-frame` (lazy iframe, focus).
+- Stimulus controllers: `flat-pack--popover` (position, Escape while focus is in the parent page, outside click, `aria-expanded`) and `flat-pack--floating-frame` (lazy iframe, focus, narrow-screen Tab trap, Escape inside a same-origin iframe).
 - Fab pins the launcher. Popover anchors the panel. Embed renders the iframe. Button renders the close control.
 - Below `640px` the open panel is near the full viewport (`100vw` / `100dvh` minus `--overlay-edge-offset`). From `640px` up it is `min(24rem, …)` by `min(32rem, …)`, anchored to the launcher.
-- On connect, the root moves to `document.body` and stays there. A comment marks the original place. Stimulus reconnects after the move and does not put the frame back, which would loop. That keeps the fixed launcher outside a shell that uses `overflow` to clip, so a bottom-left button is not stuck under a sidebar.
+- On connect, the root moves to `document.body` and stays there. Stimulus reconnects after the move and does not put the frame back. That keeps the fixed launcher outside a shell that uses `overflow` to clip, so a bottom-left button is not stuck under a sidebar.
+- The title bar keeps its own padding. `padding:` insets the framed page under that bar. The open panel itself has no padding, so `:none` meets the panel edges.
 - The root stacking level is `--fab-z-index` plus 1. The open panel uses the same level inside that context, above the launcher and Bottom Nav.

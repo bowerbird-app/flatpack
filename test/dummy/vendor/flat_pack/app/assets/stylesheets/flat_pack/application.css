@@ -5843,17 +5843,22 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-floating-frame__mount {
+  display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
   min-height: 0;
 }
 
-.fp-floating-frame__mount .fp-embed,
-.fp-floating-frame__mount .fp-embed__frame {
-  height: 100%;
+.fp-floating-frame__mount .fp-embed {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
   border-radius: 0;
 }
 
 .fp-floating-frame__mount .fp-embed__frame {
+  height: 100%;
+  border-radius: 0;
   aspect-ratio: auto;
 }
 

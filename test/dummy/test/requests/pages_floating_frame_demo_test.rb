@@ -15,8 +15,10 @@ class PagesFloatingFrameDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, 'role="dialog"'
     assert_includes response.body, "<template"
     assert_includes response.body, 'src="/demo/floating_frame/page"'
+    assert_includes response.body, "fp-floating-frame__mount p-[var(--card-padding-md)]"
+    assert_includes response.body, "padding: :md"
     assert_includes response.body, 'sandbox="allow-scripts allow-same-origin allow-forms allow-popups"'
-    refute_includes response.body, "allow-top-navigation"
+    refute_match(/sandbox="[^"]*allow-top-navigation/, response.body)
   end
 
   test "framed page is a same-origin document" do

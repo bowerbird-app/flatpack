@@ -29,7 +29,36 @@ module FlatPack
         assert_equal "notes-frame-trigger", panel[:"data-flat-pack--popover-trigger-id-value"]
         assert_equal "top", panel[:"data-flat-pack--popover-placement-value"]
         assert_selector "h2#notes-frame-title", text: "Notes"
-        assert_selector "button[aria-label='Close']"
+        close = page.find("button[aria-label='Close']")
+        action = close[:"data-action"]
+        assert_includes action, "flat-pack--floating-frame#prepareRestore"
+        assert_operator action.index("prepareRestore"), :<, action.index("popover#close")
+        assert_nil page.find("#notes-frame-panel")[:"aria-modal"]
+      end
+
+      def test_content_padding_defaults_to_the_card_md_step
+        render_inline(frame(id: "notes-frame"))
+
+        mount = page.find("#notes-frame [data-flat-pack--floating-frame-target='mount']", visible: :all)
+
+        assert_includes mount[:class], "fp-floating-frame__mount"
+        assert_includes mount[:class], "p-[var(--card-padding-md)]"
+      end
+
+      def test_padding_accepts_the_card_sizes
+        render_inline(frame(padding: :sm, id: "notes-frame"))
+        assert_includes mount_class, "p-[var(--card-padding-sm)]"
+
+        render_inline(frame(padding: :lg, id: "notes-frame"))
+        assert_includes mount_class, "p-[var(--card-padding-lg)]"
+
+        render_inline(frame(padding: :none, id: "notes-frame"))
+        refute_includes mount_class, "p-[var(--card-padding-"
+      end
+
+      def test_rejects_an_unknown_padding
+        error = assert_raises(ArgumentError) { frame(padding: :xl) }
+        assert_match(/Invalid padding/, error.message)
       end
 
       def test_top_corners_open_the_panel_downward
@@ -116,6 +145,10 @@ module FlatPack
       end
 
       private
+
+      def mount_class
+        page.find("[data-flat-pack--floating-frame-target='mount']", visible: :all)[:class].to_s
+      end
 
       def iframe_in_template
         html = rendered_content

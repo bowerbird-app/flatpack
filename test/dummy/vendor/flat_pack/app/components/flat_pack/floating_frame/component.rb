@@ -7,6 +7,7 @@ module FlatPack
       # DO NOT REMOVE:
       # "fp-floating-frame" "fp-floating-frame__panel" "fp-floating-frame__bar"
       # "fp-floating-frame__title" "fp-floating-frame__mount"
+      # "p-[var(--card-padding-sm)]" "p-[var(--card-padding-md)]" "p-[var(--card-padding-lg)]"
 
       POSITIONS = FlatPack::Fab::Component::POSITIONS
       SIZES = FlatPack::Fab::Component::SIZES
@@ -22,6 +23,7 @@ module FlatPack
         icon: :arrow_top_right_on_square,
         position: :bottom_right,
         size: :md,
+        padding: :md,
         sandbox: DEFAULT_SANDBOX,
         allow: nil,
         allowfullscreen: false,
@@ -36,6 +38,7 @@ module FlatPack
         @icon = icon
         @position = position.to_sym
         @size = size.to_sym
+        @padding = padding.to_sym
         @sandbox = sandbox.nil? ? DEFAULT_SANDBOX : sandbox
         @allow = allow
         @allowfullscreen = allowfullscreen
@@ -46,6 +49,7 @@ module FlatPack
         validate_label!
         validate_position!
         validate_size!
+        validate_padding!
         validate_embed!
       end
 
@@ -96,7 +100,8 @@ module FlatPack
           placement: panel_placement,
           class: "fp-floating-frame__panel",
           role: "dialog",
-          aria: {labelledby: @title_id}
+          aria: {labelledby: @title_id},
+          data: {flat_pack__floating_frame_target: "panel"}
         ) do |popover|
           popover.popover_content do
             safe_join([render_bar, render_embed_template, render_mount])
@@ -123,7 +128,7 @@ module FlatPack
           type: "button",
           aria: {label: fp_t("floating_frame.close")},
           data: {
-            action: "flat-pack--popover#close",
+            action: "click->flat-pack--floating-frame#prepareRestore flat-pack--popover#close",
             flat_pack__floating_frame_target: "close"
           }
         )
@@ -136,7 +141,20 @@ module FlatPack
       end
 
       def render_mount
-        content_tag(:div, "", class: "fp-floating-frame__mount", data: {flat_pack__floating_frame_target: "mount"})
+        content_tag(
+          :div,
+          "",
+          class: mount_classes,
+          data: {flat_pack__floating_frame_target: "mount"}
+        )
+      end
+
+      def mount_classes
+        ["fp-floating-frame__mount", padding_class].compact_blank.join(" ")
+      end
+
+      def padding_class
+        FlatPack::Card::Component::PADDINGS.fetch(@padding)
       end
 
       def embed_options
@@ -175,6 +193,13 @@ module FlatPack
         return if SIZES.include?(@size)
 
         raise ArgumentError, "Invalid size: #{@size}. Must be one of: #{SIZES.join(", ")}"
+      end
+
+      def validate_padding!
+        return if FlatPack::Card::Component::PADDINGS.key?(@padding)
+
+        keys = FlatPack::Card::Component::PADDINGS.keys.join(", ")
+        raise ArgumentError, "Invalid padding: #{@padding}. Must be one of: #{keys}"
       end
 
       def validate_embed!

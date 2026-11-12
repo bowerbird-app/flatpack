@@ -23,6 +23,7 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     launcher.click
 
     assert_selector ".fp-floating-frame__panel[aria-hidden='false']"
+    assert_nil find(".fp-floating-frame__panel")["aria-modal"]
     assert_equal "true", launcher[:"aria-expanded"]
     assert_equal "Close", active_label
     within_frame(find(".fp-floating-frame__mount iframe")) do
@@ -57,7 +58,63 @@ class FloatingFrameTest < ActionDispatch::SystemTestCase
     assert_selector ".fp-floating-frame__mount iframe", visible: :all
   end
 
+  test "escape inside the framed page closes the panel and restores focus" do
+    visit "/demo/floating_frame"
+    launcher.click
+
+    within_frame(find(".fp-floating-frame__mount iframe")) do
+      find("#scratch").send_keys(:escape)
+    end
+
+    assert_equal "false", launcher[:"aria-expanded"]
+    assert_equal "Open notes", active_label
+  end
+
+  test "clicking outside closes the panel without focusing the launcher" do
+    visit "/demo/floating_frame"
+    launcher.click
+    assert_equal "Close", active_label
+
+    find("h1", text: "Floating frame").click
+
+    assert_equal "false", launcher[:"aria-expanded"]
+    refute_equal launcher[:id], active_id
+  end
+
+  test "a narrow open panel is modal and wraps tab inside it" do
+    with_window(390, 844) do
+      visit "/demo/floating_frame"
+      launcher.click
+
+      panel = find(".fp-floating-frame__panel[aria-hidden='false']")
+      assert_equal "true", panel["aria-modal"]
+
+      within_frame(find(".fp-floating-frame__mount iframe")) do
+        field = find("#scratch")
+        field.click
+        field.send_keys(:tab)
+      end
+
+      assert_equal "Close", active_label
+      assert page.evaluate_script(<<~JS)
+        document.querySelector(".fp-floating-frame__panel").contains(document.activeElement)
+      JS
+    end
+  end
+
   private
+
+  def with_window(width, height)
+    original = page.current_window.size
+    page.current_window.resize_to(width, height)
+    yield
+  ensure
+    page.current_window.resize_to(original[0], original[1]) if original
+  end
+
+  def active_id
+    page.evaluate_script("document.activeElement && document.activeElement.id")
+  end
 
   def launcher
     find("button[aria-label='Open notes']")

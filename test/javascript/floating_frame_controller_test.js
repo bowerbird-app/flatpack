@@ -111,7 +111,7 @@ test("the first open mounts the iframe and focuses the close button", () => {
   assert.equal(trigger.focusCount, 0)
 })
 
-test("closing restores focus and a later open does not mount a second iframe", () => {
+test("a later open does not mount a second iframe", () => {
   const { controller, trigger, mountPoint, close } = mount()
 
   trigger.setAttribute("aria-expanded", "true")
@@ -119,7 +119,7 @@ test("closing restores focus and a later open does not mount a second iframe", (
   trigger.setAttribute("aria-expanded", "false")
   controller.onExpanded()
 
-  assert.equal(trigger.focusCount, 1)
+  assert.equal(trigger.focusCount, 0)
   assert.equal(mountPoint.childElementCount, 1)
 
   trigger.setAttribute("aria-expanded", "true")
@@ -127,6 +127,56 @@ test("closing restores focus and a later open does not mount a second iframe", (
 
   assert.equal(mountPoint.childElementCount, 1)
   assert.equal(close.focusCount, 2)
+})
+
+test("focus returns to the launcher only when the close control asks", () => {
+  const { controller, trigger } = mount()
+
+  trigger.setAttribute("aria-expanded", "true")
+  controller.onExpanded()
+  trigger.setAttribute("aria-expanded", "false")
+  controller.onExpanded()
+  assert.equal(trigger.focusCount, 0)
+
+  trigger.setAttribute("aria-expanded", "true")
+  controller.onExpanded()
+  controller.prepareRestore()
+  trigger.setAttribute("aria-expanded", "false")
+  controller.onExpanded()
+
+  assert.equal(trigger.focusCount, 1)
+})
+
+test("escape inside a same-origin frame clicks close", () => {
+  const { controller, trigger, close, iframe } = mount()
+  iframe.addEventListener = () => {}
+  iframe.contentWindow = {
+    listeners: [],
+    addEventListener(name, fn) { this.listeners.push([name, fn]) },
+    removeEventListener() {}
+  }
+  trigger.setAttribute("aria-expanded", "true")
+  controller.onExpanded()
+
+  let clicks = 0
+  close.click = () => { clicks += 1 }
+  const keys = iframe.contentWindow.listeners.filter(([name]) => name === "keydown")
+  assert.equal(keys.length, 2)
+  keys.forEach(([, fn]) => fn({ key: "Escape", preventDefault() {}, stopPropagation() {} }))
+
+  assert.equal(clicks, 1)
+})
+
+test("a cross-origin frame does not throw when binding keys", () => {
+  const { controller, trigger, iframe } = mount()
+  iframe.addEventListener = () => {}
+  Object.defineProperty(iframe, "contentWindow", {
+    get() { throw new Error("SecurityError") }
+  })
+  trigger.setAttribute("aria-expanded", "true")
+
+  assert.doesNotThrow(() => controller.onExpanded())
+  assert.equal(controller.boundWindow, null)
 })
 
 test("an unchanged aria-expanded does not move focus", () => {
