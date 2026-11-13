@@ -82,14 +82,17 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Plan Summary",
     anchor_link: true,
-    subtitle: "Current plan with status badge and actions."
+    subtitle: "Current plan with status, period end, and a scheduled change."
   ) %>
   <div class="mb-4 max-w-xl">
     <%= render FlatPack::Billing::PlanSummary::Component.new(
       plan_name: "Pro",
       price_text: "$29 / month",
       status: :active,
-      renews_on: "Renews 1 Sep 2026"
+      renews_on: "Renews 1 Dec 2026",
+      ends_on: Date.new(2026, 12, 1),
+      scheduled_change_text: "Changes to Basic on 1 Dec",
+      badges: [{text: "Annual", style: :info}]
     ) do |summary| %>
       <% summary.actions do %>
         <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>

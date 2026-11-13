@@ -389,6 +389,8 @@ fr:
         past_due: Impayé
         canceled: Annulé
         incomplete: Incomplet
+        cancels_at_period_end: Annule en fin de période
+        ends_on: Fin le %{date}
       invoice_list:
         title: Factures
         empty_title: Aucune facture pour l’instant

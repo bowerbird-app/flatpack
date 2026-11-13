@@ -386,6 +386,8 @@ en:
         past_due: Past due
         canceled: Canceled
         incomplete: Incomplete
+        cancels_at_period_end: Cancels at period end
+        ends_on: Ends %{date}
       invoice_list:
         title: Invoices
         empty_title: No invoices yet

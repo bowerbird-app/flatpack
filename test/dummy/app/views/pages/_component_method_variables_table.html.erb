@@ -51,6 +51,9 @@
         { variable: "status", accepts: ":active, :trialing, :past_due, :canceled, :incomplete", example: "status: :active" },
         { variable: "renews_on", accepts: "String or nil", example: "renews_on: \"Renews 1 Sep 2026\"" },
         { variable: "trial_ends_on", accepts: "String or nil", example: "trial_ends_on: \"Trial ends 1 Sep 2026\"" },
+        { variable: "ends_on", accepts: "Date, Time, or nil", example: "ends_on: Date.new(2026, 12, 1)" },
+        { variable: "scheduled_change_text", accepts: "String or nil", example: "scheduled_change_text: \"Changes to Basic on 1 Dec\"" },
+        { variable: "badges", accepts: "Array of {text:, style:}", example: "badges: [{text: \"Annual\", style: :info}]" },
         { variable: "description", accepts: "String or nil", example: "description: \"Includes 10 seats\"" },
         { variable: "actions", accepts: "slot", example: "summary.actions { ... }" },
         { variable: "footer", accepts: "slot", example: "summary.footer { ... }" }

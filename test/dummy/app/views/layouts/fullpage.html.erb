@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <%
-  page_theme = (controller.action_name == "page_layout") ? @page_layout_theme : "rounded"
+  page_theme = if controller.action_name == "page_layout"
+    @page_layout_theme
+  elsif @plan_summary_theme_preview
+    @plan_summary_theme
+  else
+    "rounded"
+  end
   html_data = {}
   html_data[:theme] = page_theme if page_theme.present?
 %>
@@ -15,7 +21,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 min-h-screen <%= @transparent_page ? "bg-transparent" : "bg-[var(--surface-page-background-color)]" %> text-[var(--surface-content-color)]"<% unless controller.action_name == "page_layout" %> data-controller="dark-mode"<% end %>>
+  <body class="m-0 min-h-screen <%= @transparent_page ? "bg-transparent" : "bg-[var(--surface-page-background-color)]" %> text-[var(--surface-content-color)]"<% unless controller.action_name == "page_layout" || @plan_summary_theme_preview %> data-controller="dark-mode"<% end %>>
     <%= render "layouts/icon_sprite" %>
 
     <%= yield %>

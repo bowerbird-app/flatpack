@@ -43,7 +43,10 @@ None. Do not add a monolithic `FlatPack::Billing::Component` that owns an entire
   plan_name: "Pro",
   price_text: "$29 / month",
   status: :active,
-  renews_on: "1 Sep 2026"
+  renews_on: "1 Sep 2026",
+  ends_on: Date.new(2026, 12, 1),
+  scheduled_change_text: "Changes to Basic on 1 Dec",
+  badges: [{text: "Annual", style: :info}]
 ) do |summary| %>
   <% summary.actions do %>
     <%= render FlatPack::Button::Component.new(text: "Change plan", href: "/billing/plans", style: :secondary) %>
@@ -92,6 +95,9 @@ Follow [PARAMS.md](PARAMS.md):
 | Section / empty headings | `title`, `empty_title` | Empty states and alert titles |
 | Supporting copy | `description`, `empty_description`, `subtitle` | Helper text under meters and empty states |
 | Collections | `items` | Plan picker plans and invoice rows |
+| Period end | `ends_on` | Plan summary date. Adds the “Cancels at period end” badge and an “Ends …” line. Not a `status` |
+| Scheduled change | `scheduled_change_text` | Plan summary sentence, such as “Changes to Basic on 1 Dec” |
+| Extra badges | `badges` | Plan summary `{text:, style:}` hashes. `style` matches Badge |
 
 Default copy stays short and plain: “Change plan”, “Update card”, “No invoices yet”.
 
