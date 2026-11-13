@@ -50,7 +50,7 @@ module FlatPack
 
         assert_selector ".fp-trash-button[data-fp-size='lg']"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
         assert_includes page.native.to_html, "p-[var(--button-icon-only-padding-lg)]"
       end
 

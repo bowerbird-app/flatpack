@@ -55,8 +55,8 @@ module FlatPack
         def label_classes
           classes(
             "fp-sidebar-label",
-            "text-xs",
-            "font-semibold",
+            "fp-type-control",
+            "fp-type-size-sm",
             "text-[var(--sidebar-item-text-color)]",
             "opacity-50",
             "truncate",

@@ -148,7 +148,7 @@ end %>
 ) %>
 ```
 
-Existing Hero calls stay on the product scale. `size: :display` is opt-in and renders `FlatPack::HeroTitle::Component` at `:xl`, which is `--display-size`. Pass `title_size:` to pick another Hero Title step. Display headlines set `--display-size`, `--display-weight`, `--display-tracking`, and `--display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. Default headlines stay `font-semibold` without those tokens. The centered column widens to `max-w-5xl` for wrapping cover titles.
+Existing Hero calls stay on the product scale. `size: :display` is opt-in and renders `FlatPack::HeroTitle::Component` at `:xl`, which is `--type-display-size` (aliased as `--display-size`). Pass `title_size:` to pick another Hero Title step. Display headlines set `--type-display-size`, `--type-display-weight`, `--type-display-tracking`, and `--type-display-leading` inline so Tailwind's `h1` preflight cannot collapse the type. Default headlines stay `font-semibold` without those tokens. The centered column widens to `max-w-5xl` for wrapping cover titles.
 
 ### Image tiles
 

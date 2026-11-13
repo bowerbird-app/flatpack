@@ -29,7 +29,9 @@ module FlatPack
       end
 
       referenced = assembly.load_path.find_referenced_by(asset).map { |item| item.logical_path.to_s }
-      assert_equal IMPORTED_SHEETS.map { |name| "flat_pack/#{name}.css" }.sort, referenced.sort
+      fonts = %w[400 500 600 700].map { |weight| "flat_pack/inter-latin-#{weight}.woff2" }
+      expected = IMPORTED_SHEETS.map { |name| "flat_pack/#{name}.css" } + fonts
+      assert_equal expected.sort, referenced.sort
     end
 
     test "precompile writes application.css imports as digested files that exist" do

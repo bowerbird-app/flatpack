@@ -5,36 +5,31 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "fp-heading" "fp-text-balance" "leading-tight"
-      # "text-[length:var(--text-xs)]" "text-[length:var(--text-sm)]" "text-[length:var(--text-base)]"
-      # "text-[length:var(--text-lg)]" "text-[length:var(--text-xl)]" "text-[length:var(--text-2xl)]"
-      # "text-[length:var(--text-3xl)]" "text-[length:var(--text-4xl)]" "text-[length:var(--text-5xl)]"
+      # "fp-heading" "fp-type-heading" "fp-text-balance"
+      # "fp-heading--xs" "fp-heading--sm" "fp-heading--base" "fp-heading--lg" "fp-heading--xl"
+      # "fp-heading--2xl" "fp-heading--3xl" "fp-heading--4xl" "fp-heading--5xl"
       # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
       # "text-[var(--color-primary)]"
-      # "font-normal" "font-medium" "font-semibold" "font-bold"
       LEVELS = %i[h1 h2 h3 h4 h5 h6].freeze
+      ROLE_WEIGHT = :semibold
       SIZES = {
-        xs: "text-[length:var(--text-xs)] leading-tight",
-        sm: "text-[length:var(--text-sm)] leading-tight",
-        base: "text-[length:var(--text-base)] leading-tight",
-        lg: "text-[length:var(--text-lg)] leading-tight",
-        xl: "text-[length:var(--text-xl)] leading-tight",
-        "2xl": "text-[length:var(--text-2xl)] leading-tight",
-        "3xl": "text-[length:var(--text-3xl)] leading-tight",
-        "4xl": "text-[length:var(--text-4xl)] leading-tight",
-        "5xl": "text-[length:var(--text-5xl)] leading-tight"
+        xs: "fp-heading--xs",
+        sm: "fp-heading--sm",
+        base: "fp-heading--base",
+        lg: "fp-heading--lg",
+        xl: "fp-heading--xl",
+        "2xl": "fp-heading--2xl",
+        "3xl": "fp-heading--3xl",
+        "4xl": "fp-heading--4xl",
+        "5xl": "fp-heading--5xl"
       }.freeze
       STYLES = {
         default: "text-[var(--surface-content-color)]",
         muted: "text-[var(--surface-muted-content-color)]",
         primary: "text-[var(--color-primary)]"
       }.freeze
-      WEIGHTS = {
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-        bold: "font-bold"
-      }.freeze
+      WEIGHTS = %i[normal medium semibold bold].freeze
+
       def initialize(
         text: nil,
         level: :h2,
@@ -50,6 +45,7 @@ module FlatPack
         @size = size.to_sym
         @style = style.to_sym
         @weight = weight.to_sym
+        @pin_weight = @weight != ROLE_WEIGHT
 
         validate_level!
         validate_size!
@@ -66,16 +62,18 @@ module FlatPack
       private
 
       def heading_attributes
-        merge_attributes(class: heading_classes)
+        attributes = merge_attributes(class: heading_classes)
+        attributes[:data] = (attributes[:data] || {}).merge(fp_weight: @weight) if @pin_weight
+        attributes
       end
 
       def heading_classes
         classes(
           "fp-heading",
+          "fp-type-heading",
           "fp-text-balance",
           SIZES.fetch(@size),
-          STYLES.fetch(@style),
-          WEIGHTS.fetch(@weight)
+          STYLES.fetch(@style)
         )
       end
 
@@ -113,9 +111,9 @@ module FlatPack
       end
 
       def validate_weight!
-        return if WEIGHTS.key?(@weight)
+        return if WEIGHTS.include?(@weight)
 
-        raise ArgumentError, "Invalid weight: #{@weight}. Must be one of: #{WEIGHTS.keys.join(", ")}"
+        raise ArgumentError, "Invalid weight: #{@weight}. Must be one of: #{WEIGHTS.join(", ")}"
       end
     end
   end

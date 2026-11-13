@@ -201,7 +201,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
 
       assert_response :success
       assert_select ".fp-button-group-menu a[data-fp-style=ghost]", text: "New press kit"
-      assert_select ".fp-button-group-menu a.text-sm[data-fp-style=ghost]", text: "New press kit"
+      assert_select ".fp-button-group-menu a.fp-type-control[data-fp-style=ghost]", text: "New press kit"
       assert_select ".fp-button-group-menu a[data-fp-style=secondary]", text: "Share"
       assert_select ".fp-button-group-menu__row a", count: 2
       assert_select ".fp-button-group-menu__panel .fp-menu-row", count: 2

@@ -10,8 +10,9 @@
  *
  * Tailwind @layer theme still emits --radius-md: 0.375rem (and --font-sans:
  * ui-sans-serif). Re-set kit radii on unlayered :root — not inside @theme —
- * so rich-text chrome matches kit surfaces. Fallbacks in kit CSS only apply
- * when the token is unset.
+ * so rich-text chrome matches kit surfaces. If the host also re-sets
+ * --font-sans, use :root:not([data-theme~="rounded"]) so a later :root rule
+ * does not replace Inter. Fallbacks in kit CSS only apply when the token is unset.
  */
 @source "<%= source_path %>";
 

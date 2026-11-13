@@ -20,7 +20,7 @@ module FlatPack
 
         assert_selector "h1", text: "Dashboard"
         assert_selector "p", text: "Welcome back"
-        assert_selector "p.text-lg", text: "Welcome back"
+        assert_selector "p.fp-type-body.fp-type-body--lg", text: "Welcome back"
         assert_no_selector "p[style*='font-size: var(--page-title-h1-size']"
       end
 
@@ -32,9 +32,9 @@ module FlatPack
         ))
 
         assert_selector "p[style*='font-size: var(--page-title-h1-size)']", text: "Welcome back"
-        assert_selector "p[style*='font-weight: bold']", text: "Welcome back"
+        assert_selector "p[style*='font-weight: var(--type-heading-weight)']", text: "Welcome back"
         assert_selector "p[style*='margin-top: 0']", text: "Welcome back"
-        assert_no_selector "p.text-lg"
+        assert_no_selector "p.fp-type-body--lg"
       end
 
       def test_renders_title_color_override
