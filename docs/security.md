@@ -47,6 +47,8 @@ All URLs (for buttons, links) are validated against a whitelist of safe protocol
 # => ArgumentError: Unsafe URL detected
 ```
 
+`url:` (form submit) uses that same allowlist. `href:` and `url:` together raise `ArgumentError`.
+
 **Allowed Protocols:**
 - `http://` and `https://` - Standard web links
 - `mailto:` - Email links

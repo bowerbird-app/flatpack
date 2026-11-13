@@ -17,8 +17,11 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `style` | Symbol | `:default` | no | Built-in: `:default`, `:primary`, `:secondary`, `:ghost`, `:success`, `:warning`, `:danger`. Hosts and gems may register more names with `FlatPack::Button.register_style`. Unknown names raise `ArgumentError`. |
 | `size` | Symbol | `:md` | no | `:sm`, `:md`, `:lg`, or icon-only `:xs`. `:xs` with a label raises `ArgumentError`. `:xs` stays out of `SIZES`, so SegmentedButtons, Tabs, and Button::Pill do not accept it. |
 | `round` | Boolean | `false` | no | `true` uses `--button-round-border-radius` (`--radius-full` on every theme). A label becomes a pill. `icon_only: true` also sets an equal width and height (`--button-round-size-sm`, `--button-round-size-md`, `--button-round-size-lg`, `--button-round-size-xs`) so the control is a circle at every size. `:xs` is `2rem` with no hit-target floor. `false` keeps `--button-border-radius`. Anything other than `true` or `false` raises `ArgumentError`. A host `rounded-*` class still replaces the radius. |
-| `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`; otherwise a `<button>`. |
-| `method` | Symbol, nil | `nil` | no | Link method passed to `link_to` (for non-GET link actions). |
+| `href` | String, nil | `nil` | no | When present, renders an `<a>` via `link_to`. Navigation only. Mutually exclusive with `url`. |
+| `url` | String, nil | `nil` | no | Form action. Renders a `<form class="contents">` and one submit button with the usual styles, sizes, and icons. Same allowlist as `href` (`http`, `https`, `mailto`, `tel`, relative). Mutually exclusive with `href`. |
+| `method` | Symbol, nil | `nil` | no | On a link, passed to `link_to`. On a form (`url:`), the verb. Defaults to `:post` when `url:` is set and `method:` is omitted. Form verbs: `:get`, `:post`, `:put`, `:patch`, `:delete`. The form `method` attribute is `get` or `post`. Other verbs add a `_method` hidden field. |
+| `params` | Hash, nil | `nil` | no | Hidden fields for a form. Keys become input names. Nested hashes use `name[key]`. Arrays use `name[]`. Needs `url:`. |
+| `turbo` | Boolean | `true` | no | Sets `data-turbo` on the form, the same flag TrashButton sets. `false` is a full-page submit. Anything other than `true` or `false` raises `ArgumentError`. |
 | `target` | String, nil | `nil` | no | Link target, for example `"_blank"`. |
 | `icon` | String, nil | `nil` | no | Leading mark, before text (or alone with `icon_only`). A Heroicons v2 name such as `"magnifying-glass"`, `"plus"`, or `"trash"`, including legacy short aliases. A String that starts with `<svg` (after leading whitespace) is painted as markup, the same way `FlatPack::List::Item` does. That string must be trusted host markup, not user input. The kit puts it in a Heroicon-sized box (`w-5 h-5` at `:md`, `w-4 h-4` at `:sm` and icon-only `:xs`, `w-6 h-6` at `:lg`). `icon_variant` and `icon_style` apply to Heroicon names only. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro`. Omit to use `FlatPack.configuration.default_icon_variant` (`:outline` unless the host changed it). Passed to `FlatPack::Shared::IconComponent` `variant:`. Unknown names raise `ArgumentError`. |
@@ -26,7 +29,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 | `icon_only` | Boolean | `false` | no | Uses compact icon-only padding and hides visible text. `:sm`, `:md`, and `:lg` grow the painted box with `.fp-hit-target` (44px). `:xs` paints about 32px (`--button-icon-only-padding-xs`, a 1rem icon) and keeps the 44px tap on `.fp-hit-slop`. Requires `text:` or `aria: { label: "…" }`. Always pass an `aria-label`. Adjacent `:xs` buttons need about 12px between them or the 44px tap areas overlap. |
 | `loading` | Boolean | `false` | no | Disables button and shows spinner; text becomes `Loading` when not icon-only. |
 | `disabled` | Boolean | `false` | no | Disables a `<button>` without the spinner. `true` sets the `disabled` attribute and uses the same muted opacity as loading. `nil` and `false` leave the control enabled. A link with `href` keeps its `href`. |
-| `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. |
+| `type` | String | `"button"` | no | Native button type for button mode: `button`, `submit`, `reset`. Form mode (`url:`) always uses `submit`. |
 | `align` | Symbol | `:center` | no | `:center` keeps the label in the middle. `:start` left-aligns it and lets the label fill the remaining space (`flex-1 min-w-0`). |
 | `lines` | Integer | `1` | no | `1` or `2`. Clamps the label with an ellipsis. `2` top-aligns the row so a wrapped label and the trailing slot share the first line. |
 | `current` | Boolean | `false` | no | Marks the control with the neutral active surface (`.fp-button-current`), including a primary button. On a link, also sets `aria-current="page"`. |
@@ -43,7 +46,7 @@ Use this for primary and secondary actions in forms, toolbars, dialogs, and list
 - Host-registered styles: any name added with `FlatPack::Button.register_style`
 - Sizes: `:sm`, `:md`, `:lg`. Icon-only also accepts `:xs`.
 - Round: `round: true` for a pill label or a circular icon-only button. Omit it for the theme corner.
-- Render modes: button mode (`type`) and link mode (`href`, optional `method`, optional `target`)
+- Render modes: button mode (`type`), link mode (`href`, optional `method`, optional `target`), and form mode (`url`, optional `method`, `params`, `turbo`)
 - States: loading, disabled (`disabled: true`), icon + text, icon-only, current (`current: true`)
 - Icon artwork: a Heroicon name (omit `icon_variant` for the host default, or `:outline`, `:solid`, `:mini`, `:micro`), or a trusted `<svg` string
 - Icon colour: omit `icon_style` (button text), or `:primary`, `:success`, `:warning`, `:danger`
@@ -157,6 +160,18 @@ Pass `track: true` when the row should read as a bordered group. The default is 
 ) %>
 ```
 
+`url:` submits a real form. The button keeps its style, size, and icon. The form is `class="contents"` with `data-turbo="true"`, a CSRF token, and a `_method` field when the verb is not POST or GET. Pass `href:` or `url:`, not both.
+
+```erb
+<%= render FlatPack::Button::Component.new(
+  text: "Archive",
+  style: :primary,
+  url: archive_post_path(@post),
+  method: :patch,
+  params: { reason: "stale" }
+) %>
+```
+
 ```erb
 <%= render FlatPack::Button::Component.new(
   icon: "magnifying-glass",
@@ -244,7 +259,8 @@ Buttons, links rendered as buttons, and pill items include `.fp-touch-manipulati
 - `current: true` paints `--surface-active-background-color`, `--surface-active-text-color`, and `--surface-active-border-color`, including on `style: :primary`. Hover and press stay on that fill. On a link it also sets `aria-current="page"`. A button without `href` gets the same current look and does not set `aria-current`.
 - Focus ring styles stay on for keyboard navigation, including the current control. The ring is `focus-visible`, inset, and uses `--button-focus-ring-color`.
 - In loading state, the button is disabled to prevent duplicate actions. The spinner is `FlatPack::Spinner::Component` with `label: nil` (decorative).
-- `disabled: true` is the rest state for a native button that must not be used. It does not show the spinner. Native buttons use the `disabled` attribute and the loading muted opacity. Link buttons keep `href`.
+- `disabled: true` is the rest state for a native button that must not be used. It does not show the spinner. Native buttons use the `disabled` attribute and the loading muted opacity. Link buttons keep `href`. A form button stays `type="submit"` and is disabled the same way.
+- Form mode (`url:`) is one form and one submit button. GET skips the CSRF token and the `_method` field. `turbo: false` sets `data-turbo="false"` on the form. Extra Turbo data (`turbo_frame`, `turbo_confirm`) still go through `data:` on the button.
 - Colour, border, and shadow ease on `--duration-fast` / `--easing-standard`. Press is a 1px `translateY` on `.fp-button`, not a scale. Raised styles use `.fp-button-raised`. Ghost, secondary, and `press: :flat` use `.fp-button-flat` for an inset shadow on press. Slot assignment is `[data-fp-style]`. `.fp-button` is still the chrome. Colour does not come from per-style Tailwind background classes.
 
 ## Unsaved changes

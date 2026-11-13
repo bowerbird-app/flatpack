@@ -904,6 +904,102 @@ module FlatPack
         end
       end
 
+      def test_form_submit_renders_a_post_form_and_styled_submit_button
+        render_inline(Component.new(text: "Archive", url: "/takes/1", style: :primary, icon: "archive-box"))
+
+        assert_selector "form.contents[action='/takes/1'][method='post'][accept-charset='UTF-8'][data-turbo='true']"
+        assert_selector "form.contents button.fp-button[type='submit'][data-fp-style='primary']", text: "Archive"
+        assert_selector "form.contents button svg"
+        refute_selector "form input[name='_method']"
+        refute_selector "a"
+      end
+
+      def test_form_method_defaults_to_post
+        render_inline(Component.new(text: "Save", url: "/takes"))
+
+        assert_selector "form[method='post']"
+        refute_selector "input[name='_method']"
+      end
+
+      def test_form_spoofs_non_post_methods
+        render_inline(Component.new(text: "Archive", url: "/takes/1", method: :patch))
+
+        assert_selector "form[method='post']"
+        assert_selector "input[name='_method'][value='patch']", visible: :hidden
+      end
+
+      def test_form_get_skips_method_override_and_csrf
+        render_inline(Component.new(text: "Filter", url: "/takes", method: :get))
+
+        assert_selector "form[method='get'][action='/takes']"
+        refute_selector "input[name='_method']"
+        refute_selector "input[name='authenticity_token']"
+      end
+
+      def test_form_renders_hidden_params
+        render_inline(Component.new(
+          text: "Archive",
+          url: "/takes/1",
+          params: {reason: "stale", take: {id: 4}, tags: ["live", "mix"]}
+        ))
+
+        assert_selector "input[name='reason'][value='stale']", visible: :hidden
+        assert_selector "input[name='take[id]'][value='4']", visible: :hidden
+        assert_selector "input[name='tags[]'][value='live']", visible: :hidden
+        assert_selector "input[name='tags[]'][value='mix']", visible: :hidden
+      end
+
+      def test_form_includes_csrf_token
+        render_inline(Component.new(text: "Archive", url: "/takes/1"))
+
+        token = page.find("input[name='authenticity_token']", visible: :hidden).value
+        assert_predicate token, :present?
+      end
+
+      def test_form_turbo_false
+        render_inline(Component.new(text: "Archive", url: "/takes/1", turbo: false))
+
+        assert_selector "form[data-turbo='false']"
+      end
+
+      def test_form_rejects_href_and_url_together
+        error = assert_raises(ArgumentError) do
+          Component.new(text: "Archive", href: "/takes/1", url: "/takes/1")
+        end
+        assert_match(/href: or url:/, error.message)
+      end
+
+      def test_form_rejects_unsafe_url
+        error = assert_raises(ArgumentError) do
+          Component.new(text: "Archive", url: "javascript:alert('xss')")
+        end
+        assert_match(/Unsafe URL/, error.message)
+      end
+
+      def test_form_rejects_unknown_method_and_non_hash_params
+        error = assert_raises(ArgumentError) { Component.new(text: "Archive", url: "/takes/1", method: :head) }
+        assert_match(/Invalid method/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(text: "Archive", url: "/takes/1", params: "nope") }
+        assert_match(/params:/, error.message)
+
+        error = assert_raises(ArgumentError) { Component.new(text: "Archive", params: {id: 1}) }
+        assert_match(/needs url/, error.message)
+      end
+
+      def test_form_menu_row_submits
+        component = Component.new(text: "Archive", url: "/takes/1", method: :delete, style: :danger)
+        render_inline(component)
+        html = component.menu_row
+
+        assert_includes html, "form"
+        assert_includes html, "action=\"/takes/1\""
+        assert_includes html, "name=\"_method\""
+        assert_includes html, "value=\"delete\""
+        assert_includes html, "type=\"submit\""
+        assert_includes html, "fp-menu-row"
+      end
+
       def test_invalid_align_lines_current_and_title
         error = assert_raises(ArgumentError) { Component.new(text: "Save", align: :end) }
         assert_match(/align/, error.message)
