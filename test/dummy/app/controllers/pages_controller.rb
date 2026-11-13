@@ -136,6 +136,10 @@ class PagesController < ApplicationController
   def buttons
   end
 
+  def buttons_archive
+    redirect_to demo_buttons_path(anchor: "form-submit"), status: :see_other, notice: "Archived."
+  end
+
   def links
   end
 

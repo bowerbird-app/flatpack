@@ -12,7 +12,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Structural / layout shape | `variant` | Layout or composition choices such as `:underline` vs `:pills`, `:centered` vs `:split`. Picker uses `:default` (panel chrome) and `:flush` (embedded, no chrome). Card uses `:default` (stacked) and `:featured` (square cover beside copy). |
 | Navigation destination | `href` | User-facing links the visitor clicks to go somewhere |
 | Turbo Frame source | `src` | Navigable Modal (and later Drawer) lazy-load URL. Not a clickable `href`. Embed and Floating frame `src` are the iframe URL. Media `src` is the image URL. |
-| Data / form endpoint | `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs |
+| Data / form endpoint | `url` or `*_url` | Search, upload, reorder, form submit, and other non-navigation URLs. Button and TrashButton use `url` for the form action. |
 | Compact visible copy | `text` | Primary string on buttons, badges, chips, nav items, quotes, and toasts. Exception: `FlatPack::CopyButton::Component` `text` is the clipboard string. The visible label is `label`. |
 | Form or accessible name | `label` | Field labels and dedicated accessible names that are not the primary visual copy. Video preview's play button requires `label:` (for example `"Play: Launch trailer"`). The host translates it. |
 | Section heading | `title` | Headings on pages, modals, cards, empty states, and sidebar groups. Exception: Embed and Floating frame `title` is the iframe accessible name, required. Floating frame also shows it as the panel heading. |
@@ -81,6 +81,10 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Extra menu classes | `menu_class` | `FlatPack::Button::Dropdown::Component` only. Extra classes on the menu. The wrapper still uses `class:`. |
 | Extra menu HTML | `menu_attributes` | `FlatPack::Button::Dropdown::Component` only. Extra attributes on the menu. `trigger_attributes` stays on the trigger. The visible trigger copy is the `trigger_label` slot (`with_trigger_label`), a new `renders_one` slot (main had none). A host `role` is dropped. In development that drop is written to the log. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
+| Form action | `url` | `FlatPack::Button::Component` and `FlatPack::TrashButton::Component`. The form `action`. Same allowlist as `href`. Not a navigation destination. |
+| Form verb | `method` | On Button, link mode passes it to `link_to`. Form mode (`url:`) defaults to `:post`. TrashButton defaults to `:delete`. Verbs: `:get`, `:post`, `:put`, `:patch`, `:delete`. |
+| Form hidden fields | `params` | `FlatPack::Button::Component` with `url:`. A Hash rendered as hidden inputs. Nested hashes use `name[key]`. Arrays use `name[]`. |
+| Form Turbo | `turbo` | `FlatPack::Button::Component` with `url:`. `true` (default) or `false`. Sets `data-turbo` on the form, the same flag TrashButton hard-codes. |
 | Clamped label tooltip | `title` | On Button, the full label for the HTML `title` tooltip when `lines` clamps the visible text. Elsewhere, `title` stays a section heading. |
 | Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |
 | Key column size | `key_width` | List `:key_value` only. `:fit` (widest key) or a CSS length such as `"10rem"`. |
@@ -165,7 +169,8 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 ## Do not mix
 
 - Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Card `variant` is `:default` or `:featured` (the cover layout), not a colour. Do not pass Card `:featured` to Hero. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
-- Do not use `url` for a clickable navigation destination. Use `href`.
+- Do not use `url` for a clickable navigation destination. Use `href`. On Button, do not pass `href` and `url` together.
+- Do not pass Button `params:` without `url:`. `params` is the hidden-field hash, not a grab-bag of component options.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB and Floating frame viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.

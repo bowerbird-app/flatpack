@@ -232,6 +232,43 @@
     ) %>
   </section>
 
+  <!-- Link and form -->
+  <section class="mb-12" id="form-submit">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Link and form",
+      anchor_link: true,
+      subtitle: "Same button. One goes somewhere. One posts."
+    ) %>
+    <div class="flex gap-3 mb-4 overflow-x-auto pb-2 md:overflow-visible md:pb-0" id="button-link-and-form">
+      <%= render FlatPack::Button::Component.new(
+        text: "Open takes",
+        href: demo_buttons_path,
+        style: :primary,
+        icon: "arrow-right"
+      ) %>
+      <%= render FlatPack::Button::Component.new(
+        text: "Archive take",
+        url: demo_buttons_archive_path,
+        method: :patch,
+        params: {take: "harbour"},
+        style: :primary,
+        icon: "archive-box"
+      ) %>
+    </div>
+    <%= render FlatPack::CodeBlock::Component.new(
+      code: CGI.unescapeHTML(<<~'CODE')
+        &lt;%= render FlatPack::Button::Component.new(text: "Open takes", href: demo_buttons_path, style: :primary) %&gt;
+        &lt;%= render FlatPack::Button::Component.new(
+          text: "Archive take",
+          url: demo_buttons_archive_path,
+          method: :patch,
+          params: { take: "harbour" },
+          style: :primary
+        ) %&gt;
+      CODE
+    ) %>
+  </section>
+
   <!-- Buttons as Links -->
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(title: "Buttons as Links", anchor_link: true, subtitle: "Examples for Buttons as Links.") %>

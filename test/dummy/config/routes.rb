@@ -88,6 +88,7 @@ Rails.application.routes.draw do
   get "demo/brand_theme", to: "pages#brand_theme"
   get "demo/brand_theme/:tone", to: "pages#brand_theme", constraints: {tone: /dark/}, as: :brand_theme_dark
   get "demo/buttons", to: "pages#buttons"
+  match "demo/buttons/archive", to: "pages#buttons_archive", via: [:post, :patch], as: :demo_buttons_archive
   get "demo/links", to: "pages#links"
   get "demo/buttons/pills", to: "pages#buttons_pills"
   get "demo/buttons/segmented", to: "pages#buttons_segmented"

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.358] - 2026-11-13
+
+### Added
+- `FlatPack::Button::Component` submits a real form when you pass `url:`. The control stays one styled submit button (`style`, `size`, icon). The form is `class="contents"` with `data-turbo="true"`, a CSRF token, and hidden `params:`. `method:` defaults to `:post`. `:put`, `:patch`, and `:delete` post with a `_method` field. `:get` skips the token and the override. `turbo: false` sets `data-turbo="false"`. `href:` and `url:` together raise `ArgumentError`.
+
+### Upgrade notes
+- Additive. A button with no `url:` renders as before. `method:` on a link is still the `link_to` method. Form mode uses `:post` only when `url:` is set and `method:` is omitted.
+- No new CSS or JavaScript. `contents` is already in the kit. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.358`.
+
 ## [0.1.357] - 2026-11-13
 
 ### Added

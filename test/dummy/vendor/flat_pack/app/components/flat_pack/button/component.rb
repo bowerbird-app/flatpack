@@ -39,6 +39,9 @@ module FlatPack
 
       XS_REQUIRES_ICON_ONLY = "size: :xs is only for icon-only buttons. Pass icon_only: true."
 
+      # Same verbs as TrashButton. Form mode defaults to :post. Link mode leaves method alone.
+      FORM_METHODS = %i[get post put patch delete].freeze
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "inline-flex" "gap-2" "items-center" "items-start" "justify-center" "justify-start"
@@ -75,7 +78,10 @@ module FlatPack
         size: :md,
         round: false,
         href: nil,
+        url: nil,
         method: nil,
+        params: nil,
+        turbo: true,
         target: nil,
         icon: nil,
         icon_variant: nil,
@@ -96,6 +102,8 @@ module FlatPack
         @size = size.to_sym
         @round = round
         @method = method
+        @params = params
+        @turbo = turbo
         @target = target
         @icon = icon
         @icon_variant = IconOptions.normalize_variant!(icon_variant)
@@ -109,14 +117,28 @@ module FlatPack
         @current = current
         @title = title
 
+        if href && url
+          raise ArgumentError, "Pass href: or url:, not both. href: navigates. url: submits a form."
+        end
+
         # Sanitize URL for security and validate
         if href
           @href = FlatPack::AttributeSanitizer.sanitize_url(href)
           validate_href!(href)
+          @url = nil
+        elsif url
+          @url = FlatPack::AttributeSanitizer.sanitize_url(url)
+          validate_url!(url)
+          @href = nil
+          @method = normalize_form_method(@method)
+          @type = "submit"
         else
           @href = nil
+          @url = nil
         end
 
+        validate_turbo!
+        validate_params!
         validate_style!
         validate_size!
         validate_round!
@@ -130,7 +152,9 @@ module FlatPack
       def call
         validate_trailing!
 
-        if @href
+        if @url
+          render_form { render_button }
+        elsif @href
           render_link
         else
           render_button
@@ -142,11 +166,14 @@ module FlatPack
       def menu_row
         validate_trailing!
 
-        if @href
+        row = if @href
           link_to(@href, **menu_row_attributes(link: true)) { menu_row_content }
         else
           button_tag(**menu_row_attributes(link: false)) { menu_row_content }
         end
+        return row unless @url
+
+        render_form { row }
       end
 
       def self.painted_icon_size(size)
@@ -182,6 +209,88 @@ module FlatPack
       def render_button
         button_tag(**button_attributes) do
           button_content
+        end
+      end
+
+      # Same form shape as TrashButton: real form, POST for every verb except GET,
+      # _method for the rest, CSRF except on GET, data-turbo on the form.
+      # Hidden fields sit in a hidden wrapper so display:contents does not turn
+      # them into flex items beside the button.
+      def render_form
+        content_tag(:form, **form_attributes) do
+          safe_join([
+            content_tag(:div, safe_join(form_hidden_fields), hidden: true),
+            yield
+          ])
+        end
+      end
+
+      def form_hidden_fields
+        [method_override_field, authenticity_field, hidden_param_fields].compact
+      end
+
+      def form_attributes
+        {
+          action: @url,
+          method: form_http_method,
+          "accept-charset": "UTF-8",
+          class: "contents",
+          data: {turbo: @turbo}
+        }
+      end
+
+      def form_http_method
+        (@method == :get) ? "get" : "post"
+      end
+
+      def method_override_field
+        return if @method == :get || @method == :post
+
+        tag.input(type: "hidden", name: "_method", value: @method, autocomplete: "off")
+      end
+
+      def authenticity_field
+        return if @method == :get
+
+        token = form_authenticity_token_value
+        return if token.blank?
+
+        tag.input(type: "hidden", name: "authenticity_token", value: token, autocomplete: "off")
+      end
+
+      def form_authenticity_token_value
+        return unless helpers.respond_to?(:form_authenticity_token)
+
+        helpers.form_authenticity_token
+      rescue ArgumentError, NoMethodError, ViewComponent::HelpersCalledBeforeRenderError
+        nil
+      end
+
+      def hidden_param_fields
+        return if @params.blank?
+
+        safe_join(flatten_hidden_params(@params).map { |name, value|
+          tag.input(type: "hidden", name: name, value: value, autocomplete: "off")
+        })
+      end
+
+      def flatten_hidden_params(pairs, prefix = nil)
+        pairs.flat_map do |key, value|
+          name = prefix ? "#{prefix}[#{key}]" : key.to_s
+          case value
+          when Hash
+            flatten_hidden_params(value, name)
+          when Array
+            value.flat_map do |item|
+              if item.is_a?(Hash)
+                flatten_hidden_params(item, "#{name}[]")
+              else
+                [["#{name}[]", item]]
+              end
+            end
+          else
+            [[name, value]]
+          end
         end
       end
 
@@ -489,6 +598,39 @@ module FlatPack
 
         # Use a generic error message to avoid leaking sensitive information in logs
         raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+      end
+
+      def validate_url!(original_url)
+        return if @url.present?
+
+        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+      end
+
+      def normalize_form_method(method)
+        verb = method.nil? ? :post : method.to_sym
+        return verb if FORM_METHODS.include?(verb)
+
+        raise ArgumentError, "Invalid method: #{method.inspect}. Must be one of: #{FORM_METHODS.join(", ")}."
+      rescue NoMethodError, TypeError
+        raise ArgumentError, "Invalid method: #{method.inspect}. Must be one of: #{FORM_METHODS.join(", ")}."
+      end
+
+      def validate_turbo!
+        return if @turbo == true || @turbo == false
+
+        raise ArgumentError, "Invalid turbo: #{@turbo.inspect}. Must be true or false."
+      end
+
+      def validate_params!
+        return if @params.nil?
+
+        unless @params.is_a?(Hash)
+          raise ArgumentError, "params: must be a Hash."
+        end
+
+        return if @url.present? || @params.empty?
+
+        raise ArgumentError, "params: needs url:."
       end
     end
   end
