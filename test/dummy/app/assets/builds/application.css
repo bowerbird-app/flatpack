@@ -383,6 +383,9 @@
   .bottom-full {
     bottom: 100%;
   }
+  .-left-1 {
+    left: calc(var(--spacing) * -1);
+  }
   .left-0 {
     left: calc(var(--spacing) * 0);
   }
@@ -3325,9 +3328,6 @@
   }
   .text-\[length\:var\(--text-4xl\)\] {
     font-size: var(--text-4xl);
-  }
-  .text-\[length\:var\(--text-5xl\)\] {
-    font-size: var(--text-5xl);
   }
   .text-\[length\:var\(--text-base\)\] {
     font-size: var(--text-base);
@@ -6343,7 +6343,6 @@
   }
 }
 :root {
-  --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   --radius-xs: 0.125rem;
   --radius-sm: 0.25rem;
@@ -6351,6 +6350,9 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1.25rem;
   --radius-full: 9999px;
+}
+:root:not([data-theme~="rounded"]) {
+  --font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 @layer base {
   html {

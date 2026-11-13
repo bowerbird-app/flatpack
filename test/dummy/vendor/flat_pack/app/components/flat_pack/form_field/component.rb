@@ -12,7 +12,7 @@ module FlatPack
       # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
 
       DEFAULT_WRAPPER_CLASS = "flat-pack-input-wrapper"
-      DEFAULT_LABEL_CLASS = "block text-sm font-medium text-[var(--surface-content-color)] mb-1.5"
+      DEFAULT_LABEL_CLASS = "block fp-type-control text-[var(--surface-content-color)] mb-1.5"
       DEFAULT_ERROR_CLASS = "mt-1 text-sm text-[var(--color-error)]"
       DEFAULT_HELP_TEXT_CLASS = "mt-1 text-xs text-[var(--surface-muted-content-color)]"
 

@@ -110,7 +110,7 @@ module FlatPack
         assert_selector "button"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-sm)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
-        assert_includes page.native.to_html, "text-xs"
+        assert_includes page.native.to_html, "fp-type-size-sm"
       end
 
       def test_renders_medium_size
@@ -119,7 +119,8 @@ module FlatPack
         assert_selector "button"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-md)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-control"
+        refute_includes page.native.to_html, "fp-type-size-"
       end
 
       def test_renders_large_size
@@ -128,7 +129,7 @@ module FlatPack
         assert_selector "button"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
       end
 
       # Position options

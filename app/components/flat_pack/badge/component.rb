@@ -17,12 +17,12 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-[10px]" "px-[var(--badge-padding-x-xs)]" "py-[var(--badge-padding-y-xs)]" "text-xs" "px-[var(--badge-padding-x-sm)]" "py-[var(--badge-padding-y-sm)]" "text-sm" "px-[var(--badge-padding-x-md)]" "py-[var(--badge-padding-y-md)]" "text-base" "px-[var(--badge-padding-x-lg)]" "py-[var(--badge-padding-y-lg)]"
+      # "fp-type-size-xs" "px-[var(--badge-padding-x-xs)]" "py-[var(--badge-padding-y-xs)]" "fp-type-size-sm" "px-[var(--badge-padding-x-sm)]" "py-[var(--badge-padding-y-sm)]" "px-[var(--badge-padding-x-md)]" "py-[var(--badge-padding-y-md)]" "fp-type-size-lg" "px-[var(--badge-padding-x-lg)]" "py-[var(--badge-padding-y-lg)]"
       SIZES = {
-        xs: "text-[10px] px-[var(--badge-padding-x-xs)] py-[var(--badge-padding-y-xs)]",
-        sm: "text-xs px-[var(--badge-padding-x-sm)] py-[var(--badge-padding-y-sm)]",
-        md: "text-sm px-[var(--badge-padding-x-md)] py-[var(--badge-padding-y-md)]",
-        lg: "text-base px-[var(--badge-padding-x-lg)] py-[var(--badge-padding-y-lg)]"
+        xs: "fp-type-size-xs px-[var(--badge-padding-x-xs)] py-[var(--badge-padding-y-xs)]",
+        sm: "fp-type-size-sm px-[var(--badge-padding-x-sm)] py-[var(--badge-padding-y-sm)]",
+        md: "px-[var(--badge-padding-x-md)] py-[var(--badge-padding-y-md)]",
+        lg: "fp-type-size-lg px-[var(--badge-padding-x-lg)] py-[var(--badge-padding-y-lg)]"
       }.freeze
 
       def initialize(
@@ -92,7 +92,7 @@ module FlatPack
       def badge_classes
         classes(
           "inline-flex items-center gap-1",
-          "rounded-[var(--badge-radius)] font-medium",
+          "rounded-[var(--badge-radius)] fp-type-pill",
           "transition-[color,background-color,border-color] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           VARIANTS.fetch(@style),
           SIZES.fetch(@size)

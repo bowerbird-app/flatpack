@@ -1384,9 +1384,11 @@ module FlatPack
         assert_includes css, "align-self: start;"
         refute_includes css, ":where(.fp-card__featured-media img) {\n  width: 100%;\n  height: 100%;"
         assert_includes css, "--card-title-size: var(--text-4xl);"
-        assert_includes css, "--card-title-weight: var(--display-weight);"
-        assert_includes css, "font-size: var(--card-title-size, var(--text-2xl));"
-        assert_includes css, "font-weight: var(--card-title-weight, var(--display-weight));"
+        refute_includes css, "--card-title-weight: var(--display-weight);"
+        assert_includes variables, "--card-title-size: var(--type-heading-size);"
+        assert_includes variables, "--card-title-weight: var(--type-heading-weight);"
+        assert_includes css, "font-size: var(--card-title-size, var(--type-heading-size));"
+        assert_includes css, "font-weight: var(--card-title-weight, var(--type-heading-weight));"
         assert_includes css, "flex: 1 1 calc(50% - var(--space-3));"
         refute_match(/\[data-fp-card-part="footer"\][^{]*\{\s*display:\s*contents/, css)
         refute_match(/\[data-fp-card-part="header"\][^{]*\{\s*display:\s*contents/, css)

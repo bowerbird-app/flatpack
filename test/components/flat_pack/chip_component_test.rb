@@ -75,7 +75,7 @@ module FlatPack
         render_inline(Component.new(text: "Small", size: :sm))
 
         assert_selector "span", text: "Small"
-        assert_includes page.native.to_html, "text-xs"
+        assert_includes page.native.to_html, "fp-type-size-sm"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-sm)]"
         assert_includes page.native.to_html, "py-[var(--chip-padding-y-sm)]"
       end
@@ -84,7 +84,8 @@ module FlatPack
         render_inline(Component.new(text: "Medium", size: :md))
 
         assert_selector "span", text: "Medium"
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-pill"
+        refute_includes page.native.to_html, "fp-type-size-"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-md)]"
         assert_includes page.native.to_html, "py-[var(--chip-padding-y-md)]"
       end
@@ -93,7 +94,7 @@ module FlatPack
         render_inline(Component.new(text: "Large", size: :lg))
 
         assert_selector "span", text: "Large"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
         assert_includes page.native.to_html, "px-[var(--chip-padding-x-lg)]"
         assert_includes page.native.to_html, "py-[var(--chip-padding-y-lg)]"
       end
@@ -101,7 +102,7 @@ module FlatPack
       def test_default_size_is_medium
         render_inline(Component.new(text: "Default"))
 
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-pill"
       end
 
       def test_static_type_renders_span

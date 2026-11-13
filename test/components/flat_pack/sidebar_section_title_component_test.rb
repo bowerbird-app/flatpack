@@ -59,8 +59,8 @@ module FlatPack
 
           refute_includes page.native.to_html, "uppercase"
           refute_includes page.native.to_html, "tracking-wider"
-          assert_includes page.native.to_html, "font-semibold"
-          assert_includes page.native.to_html, "text-xs"
+          assert_includes page.native.to_html, "fp-type-control"
+          assert_includes page.native.to_html, "fp-type-size-sm"
         end
 
         def test_includes_tooltip_controller_data_attributes

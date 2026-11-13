@@ -5,32 +5,24 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "fp-text" "fp-text-pretty"
-      # "text-[length:var(--text-xs)]" "text-[length:var(--text-sm)]" "text-[length:var(--text-base)]"
-      # "text-[length:var(--text-lg)]" "text-[length:var(--text-xl)]" "text-[length:var(--text-2xl)]"
-      # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
-      # "text-[var(--color-primary)]"
-      # "font-normal" "font-medium" "font-semibold" "font-bold"
+      # "fp-text" "fp-type-body" "fp-text-pretty"
+      # "fp-type-body--xs" "fp-type-body--sm" "fp-type-body--lg" "fp-type-body--xl" "fp-type-body--2xl"
       AS = %i[p span div].freeze
+      ROLE_WEIGHT = :normal
       SIZES = {
-        xs: "text-[length:var(--text-xs)]",
-        sm: "text-[length:var(--text-sm)]",
-        base: "text-[length:var(--text-base)]",
-        lg: "text-[length:var(--text-lg)]",
-        xl: "text-[length:var(--text-xl)]",
-        "2xl": "text-[length:var(--text-2xl)]"
+        xs: "fp-type-body--xs",
+        sm: "fp-type-body--sm",
+        base: nil,
+        lg: "fp-type-body--lg",
+        xl: "fp-type-body--xl",
+        "2xl": "fp-type-body--2xl"
       }.freeze
       STYLES = {
         default: "text-[var(--surface-content-color)]",
         muted: "text-[var(--surface-muted-content-color)]",
         primary: "text-[var(--color-primary)]"
       }.freeze
-      WEIGHTS = {
-        normal: "font-normal",
-        medium: "font-medium",
-        semibold: "font-semibold",
-        bold: "font-bold"
-      }.freeze
+      WEIGHTS = %i[normal medium semibold bold].freeze
 
       def initialize(
         text: nil,
@@ -46,6 +38,7 @@ module FlatPack
         @size = size.to_sym
         @style = style.to_sym
         @weight = weight.to_sym
+        @pin_weight = @weight != ROLE_WEIGHT
         @as = as.to_sym
 
         validate_size!
@@ -63,16 +56,18 @@ module FlatPack
       private
 
       def text_attributes
-        merge_attributes(class: text_classes)
+        attributes = merge_attributes(class: text_classes)
+        attributes[:data] = (attributes[:data] || {}).merge(fp_weight: @weight) if @pin_weight
+        attributes
       end
 
       def text_classes
         classes(
           "fp-text",
+          "fp-type-body",
           "fp-text-pretty",
           SIZES.fetch(@size),
-          STYLES.fetch(@style),
-          WEIGHTS.fetch(@weight)
+          STYLES.fetch(@style)
         )
       end
 
@@ -93,9 +88,9 @@ module FlatPack
       end
 
       def validate_weight!
-        return if WEIGHTS.key?(@weight)
+        return if WEIGHTS.include?(@weight)
 
-        raise ArgumentError, "Invalid weight: #{@weight}. Must be one of: #{WEIGHTS.keys.join(", ")}"
+        raise ArgumentError, "Invalid weight: #{@weight}. Must be one of: #{WEIGHTS.join(", ")}"
       end
 
       def validate_as!

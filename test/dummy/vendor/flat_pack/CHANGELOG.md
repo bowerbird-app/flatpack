@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.357] - 2026-11-13
+
+### Added
+- Semantic type roles `--type-display-*`, `--type-section-*`, `--type-heading-*`, `--type-body-*`, `--type-control-*`, and `--type-pill-*` on `:root, [data-theme]`. `--display-*` aliases the display role. `--card-title-size` and `--card-title-weight` alias the heading role. Heading, Text, Section Title, Page Title, card titles, content type, buttons, fields, tabs, nav labels, badges, chips, and pills read those roles.
+- The `rounded` theme loads Latin Inter (400, 500, 600, 700) and the Figma cover metrics: display 40px to 104px at weight 500, section 21px to 36px at weight 500, heading weight 500, body weight 400, control weight 500, pill weight 600.
+
+### Changed
+- Page titles and content `h2`–`h6` use the heading weight (600 on the default theme, 500 on rounded) instead of 700.
+- A host stylesheet that re-sets `--font-sans` on bare `:root` replaces Inter, because that rule and `[data-theme~="rounded"]` share specificity and the host file loads later. Set the host face on `:root:not([data-theme~="rounded"])`.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind unless a host utility class changed. Do not rerun the install generator.
+- Email components stay on `Arial, sans-serif`.
+- Redeploy so `meta.gem_version` shows `0.1.357`.
+
 ## [0.1.356] - 2026-11-12
 
 ### Fixed

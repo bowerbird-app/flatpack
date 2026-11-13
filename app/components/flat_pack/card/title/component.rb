@@ -3,9 +3,9 @@
 module FlatPack
   module Card
     module Title
-      # Heading supplies the tag, the balance class, and tight leading.
-      # Size, weight, and colour stay on .fp-card__title. Featured defaults
-      # are on :where(.fp-card--featured), so a card or ancestor variable wins.
+      # Heading supplies the tag and the balance class.
+      # Size, weight, leading, and tracking stay on .fp-card__title, which
+      # reads --card-title-* (the heading role, with a larger featured size).
       class Component < FlatPack::Heading::Component
         def initialize(prefix: nil, level: :h2, **system_arguments)
           @prefix = prefix.presence
@@ -37,8 +37,7 @@ module FlatPack
           classes(
             "fp-heading",
             "fp-card__title",
-            "fp-text-balance",
-            "leading-tight"
+            "fp-text-balance"
           )
         end
       end

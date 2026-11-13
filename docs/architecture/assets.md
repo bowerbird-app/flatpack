@@ -77,7 +77,9 @@ The install generator also links `variables` and `rich_text`. Those tags repeat 
 
 A bare `@import "flat_pack/variables.css"` is not rewritten. The browser resolves it from `/assets/flat_pack/` and requests `/assets/flat_pack/flat_pack/variables.css`, which 404s. Use `stylesheet_link_tag` for the layout tags. Inside a kit sheet, use `@import url()` with a path relative to that file.
 
-Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii and the kit face on unlayered `:root` in the host stylesheet so rich-text chrome and kit surfaces keep the kit scale. Rich-text `TextArea` also applies the shared `border` and `--form-control-padding-x` / `--form-control-padding-y` utilities (not only kit CSS) so preflight cannot zero the editor outline or inset. See [Theming](../theming.md).
+The engine also adds `app/assets/fonts` to the asset load path. Latin Inter (weights 400, 500, 600, and 700) lives at `app/assets/fonts/flat_pack/`. `variables.css` points at those files with a relative `url()`. Propshaft rewrites the URL. The face downloads only when computed `font-family` is Inter, which `[data-theme~="rounded"]` sets on `--font-sans`.
+
+Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` and `--font-sans: ui-sans-serif`. Re-set kit radii on unlayered `:root`. Re-set `--font-sans` on `:root:not([data-theme~="rounded"])` so the host face does not replace Inter. Rich-text `TextArea` also applies the shared `border` and `--form-control-padding-x` / `--form-control-padding-y` utilities (not only kit CSS) so preflight cannot zero the editor outline or inset. See [Theming](../theming.md).
 
 ## JavaScript
 

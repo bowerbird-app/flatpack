@@ -108,7 +108,7 @@ module FlatPack
 
       def title_classes
         classes = ["fp-text-balance"]
-        classes << (display? ? "fp-display" : "font-bold leading-tight")
+        classes << (display? ? "fp-display" : "fp-type-heading")
         classes << "text-[var(--surface-content-color)]" unless @title_color
         classes.join(" ")
       end
@@ -116,16 +116,16 @@ module FlatPack
       def title_style
         style_rules = ["font-size: #{heading_size_token}"]
         if display?
-          style_rules << "font-weight: var(--display-weight)"
-          style_rules << "letter-spacing: var(--display-tracking)"
-          style_rules << "line-height: var(--display-leading)"
+          style_rules << "font-weight: var(--type-display-weight)"
+          style_rules << "letter-spacing: var(--type-display-tracking)"
+          style_rules << "line-height: var(--type-display-leading)"
         end
         style_rules << "color: #{@title_color}" if @title_color
         style_rules.join("; ") + ";"
       end
 
       def heading_size_token
-        display? ? "var(--display-size)" : "var(--page-title-#{@variant}-size)"
+        display? ? "var(--type-display-size)" : "var(--page-title-#{@variant}-size)"
       end
 
       def render_subtitle
@@ -137,7 +137,7 @@ module FlatPack
       def subtitle_classes
         classes = []
         unless @large_subtitle
-          classes << (display? ? "fp-display-subtitle text-lg fp-text-pretty" : "mt-2 text-lg fp-text-pretty")
+          classes << (display? ? "fp-display-subtitle fp-type-body fp-type-body--lg fp-text-pretty" : "mt-2 fp-type-body fp-type-body--lg fp-text-pretty")
         end
         classes << "text-[var(--surface-muted-content-color)]" unless @subtitle_color
         classes.join(" ").presence
@@ -147,7 +147,7 @@ module FlatPack
         style_rules = []
         if @large_subtitle
           style_rules << "font-size: #{heading_size_token}"
-          style_rules << "font-weight: bold"
+          style_rules << "font-weight: var(--type-heading-weight)"
           style_rules << "margin-top: 0"
         end
         style_rules << "color: #{@subtitle_color}" if @subtitle_color

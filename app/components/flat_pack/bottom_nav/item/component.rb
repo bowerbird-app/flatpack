@@ -62,8 +62,8 @@ module FlatPack
             "gap-1",
             "px-[var(--bottom-nav-item-padding-x)]",
             "py-[var(--bottom-nav-item-padding-y)]",
-            "text-xs",
-            "font-medium",
+            "fp-type-control",
+            "fp-type-size-sm",
             "fp-touch-manipulation",
             "transition-colors",
             state_classes

@@ -11,7 +11,7 @@ module FlatPack
         assert_selector "div.fp-section-title"
         assert_selector "div.my-8"
         assert_selector "h2", text: "Overview"
-        assert_selector "h2.text-2xl", text: "Overview"
+        assert_selector "h2.fp-type-section", text: "Overview"
       end
 
       def test_renders_section_title_with_subtitle
@@ -22,7 +22,7 @@ module FlatPack
 
         assert_selector "h2", text: "Overview"
         assert_selector "p", text: "Latest metrics and progress"
-        assert_selector "p.text-base", text: "Latest metrics and progress"
+        assert_selector "p.fp-type-body", text: "Latest metrics and progress"
       end
 
       def test_does_not_render_subtitle_when_nil
@@ -101,7 +101,7 @@ module FlatPack
         html = page.native.to_html
         assert_selector "div.fp-section-title"
         assert_selector "div.my-8"
-        assert_selector "h2.text-2xl", text: "Overview"
+        assert_selector "h2.fp-type-section", text: "Overview"
         refute_includes html, "text-lg"
         refute_includes html, "my-6"
         refute_includes html, "my-4"
@@ -114,10 +114,10 @@ module FlatPack
         assert_includes html, "fp-section-title"
         assert_includes html, "min-w-0"
         assert_includes html, "my-8"
-        assert_includes html, "text-2xl"
-        assert_includes html, "font-semibold"
+        assert_includes html, "fp-type-section"
+        refute_includes html, "font-semibold"
         assert_includes html, "text-[var(--surface-content-color)]"
-        assert_includes html, "leading-tight"
+        refute_includes html, "leading-tight"
         refute_includes html, "fp-section-title-anchor"
       end
 
@@ -128,10 +128,10 @@ module FlatPack
           size: :md
         ))
 
-        assert_selector "h2.text-lg", text: "Members"
-        refute_selector "h2.text-2xl"
-        assert_selector "p.text-sm", text: "Who can access this workspace"
-        refute_selector "p.text-base"
+        assert_selector "h2.fp-type-section--md", text: "Members"
+        refute_selector "h2.fp-type-section--sm"
+        assert_selector "p.fp-type-body--sm", text: "Who can access this workspace"
+        refute_selector "p.fp-type-body--xs"
         assert_selector "div.my-8"
       end
 
@@ -142,10 +142,10 @@ module FlatPack
           size: :sm
         ))
 
-        assert_selector "h2.text-base", text: "Members"
-        refute_selector "h2.text-2xl"
-        assert_selector "p.text-xs", text: "Who can access this workspace"
-        refute_selector "p.text-base"
+        assert_selector "h2.fp-type-section--sm", text: "Members"
+        refute_selector "h2.fp-type-section--md"
+        assert_selector "p.fp-type-body--xs", text: "Who can access this workspace"
+        refute_selector "p.fp-type-body--sm"
       end
 
       def test_small_size_scales_anchor_icon
@@ -199,7 +199,7 @@ module FlatPack
       def test_size_and_spacing_are_independent
         render_inline(Component.new(title: "Members", size: :sm, spacing: :lg))
 
-        assert_selector "h2.text-base", text: "Members"
+        assert_selector "h2.fp-type-section--sm", text: "Members"
         assert_selector "div.my-8"
       end
 
@@ -214,14 +214,14 @@ module FlatPack
       def test_level_does_not_change_visual_size
         render_inline(Component.new(title: "Members", level: :h3, size: :lg))
 
-        assert_selector "h3.text-2xl", text: "Members"
+        assert_selector "h3.fp-type-section", text: "Members"
         refute_selector "h2"
       end
 
       def test_accepts_string_size_spacing_and_level
         render_inline(Component.new(title: "Members", size: "md", spacing: "sm", level: "h4"))
 
-        assert_selector "h4.text-lg", text: "Members"
+        assert_selector "h4.fp-type-section--md", text: "Members"
         assert_selector "div.my-4"
       end
 

@@ -26,12 +26,29 @@ module FlatPack
       assert_match(/--text-7xl--line-height:\s*1/, root_block)
       assert_match(/--text-8xl:\s*6rem/, root_block)
       assert_match(/--text-8xl--line-height:\s*1/, root_block)
-      assert_match(/--display-size-min:\s*var\(--text-5xl\)/, root_block)
-      assert_match(/--display-size-max:\s*5\.5rem/, root_block)
-      assert_match(/--display-size:\s*clamp\(var\(--display-size-min\), 1rem \+ 5vw, var\(--display-size-max\)\)/, root_block)
-      assert_match(/--display-tracking:\s*-0\.03em/, root_block)
-      assert_match(/--display-leading:\s*1\.05/, root_block)
-      assert_match(/--display-weight:\s*600/, root_block)
+      assert_match(/--type-display-size-min:\s*var\(--text-5xl\)/, root_block)
+      assert_match(/--type-display-size-max:\s*5\.5rem/, root_block)
+      assert_match(/--type-display-size:\s*clamp\(var\(--type-display-size-min\), 1rem \+ 5vw, var\(--type-display-size-max\)\)/, root_block)
+      assert_match(/--type-display-tracking:\s*-0\.03em/, root_block)
+      assert_match(/--type-display-leading:\s*1\.05/, root_block)
+      assert_match(/--type-display-weight:\s*600/, root_block)
+      assert_match(/--display-size-min:\s*var\(--type-display-size-min\)/, root_block)
+      assert_match(/--display-size:\s*var\(--type-display-size\)/, root_block)
+      assert_match(/--display-weight:\s*var\(--type-display-weight\)/, root_block)
+      assert_match(/--type-section-size:\s*var\(--text-2xl\)/, root_block)
+      assert_match(/--type-section-weight:\s*600/, root_block)
+      assert_match(/--type-heading-size:\s*var\(--text-2xl\)/, root_block)
+      assert_match(/--type-heading-weight:\s*600/, root_block)
+      assert_match(/--type-heading-tracking:\s*-0\.025em/, root_block)
+      assert_match(/--card-title-size:\s*var\(--type-heading-size\)/, root_block)
+      assert_match(/--card-title-weight:\s*var\(--type-heading-weight\)/, root_block)
+      assert_match(/--type-body-size:\s*var\(--text-base\)/, root_block)
+      assert_match(/--type-body-leading:\s*1\.75/, root_block)
+      assert_match(/--type-body-weight:\s*400/, root_block)
+      assert_match(/--type-control-size:\s*var\(--text-sm\)/, root_block)
+      assert_match(/--type-control-weight:\s*500/, root_block)
+      assert_match(/--type-pill-size:\s*var\(--text-sm\)/, root_block)
+      assert_match(/--type-pill-weight:\s*500/, root_block)
       assert_match(/--page-title-h1-size:\s*var\(--text-4xl\)/, root_block)
       assert_match(/--page-title-h6-size:\s*var\(--text-base\)/, root_block)
       assert_match(/--content-p-size:\s*var\(--text-lg\)/, root_block)
@@ -79,10 +96,16 @@ module FlatPack
       assert_includes css, ".fp-hero-title--xxl"
       assert_includes css, "font-size: var(--hero-title-xl-size)"
       assert_includes css, ".fp-display"
-      assert_includes css, "font-size: var(--display-size)"
-      assert_includes css, "font-weight: var(--display-weight)"
-      assert_includes css, "letter-spacing: var(--display-tracking)"
-      assert_includes css, "line-height: var(--display-leading)"
+      assert_includes css, "font-size: var(--type-display-size)"
+      assert_includes css, "font-weight: var(--type-display-weight)"
+      assert_includes css, "letter-spacing: var(--type-display-tracking)"
+      assert_includes css, "line-height: var(--type-display-leading)"
+      assert_includes css, ".fp-type-heading"
+      assert_includes css, ".fp-type-body"
+      assert_includes css, ".fp-type-control"
+      assert_includes css, ".fp-type-pill"
+      assert_includes css, "font-weight: var(--type-heading-weight)"
+      assert_includes css, "font-weight: var(--type-body-weight)"
       assert_includes css, ".fp-display-subtitle"
       assert_includes css, "/* Cover type. Unlayered so Tailwind preflight cannot collapse"
       assert_includes css, ".fp-text-pretty"
@@ -105,6 +128,59 @@ module FlatPack
       end
 
       assert_empty leftovers, "all-caps label leftover: #{leftovers.join(", ")}"
+    end
+
+    test "rounded owns Inter and the Figma cover metrics" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+      rounded = css[/^\[data-theme~="rounded"\]\s*\{.*?^\}/m]
+
+      assert_match(/--font-sans:\s*"Inter", system-ui/, rounded)
+      assert_match(/--type-display-size-min:\s*2\.5rem/, rounded)
+      assert_match(/--type-display-size-max:\s*6\.5rem/, rounded)
+      assert_match(/--type-display-leading:\s*0\.98/, rounded)
+      assert_match(/--type-display-weight:\s*500/, rounded)
+      assert_match(/--type-display-tracking:\s*-0\.03em/, rounded)
+      assert_match(/--type-section-size-min:\s*1\.3125rem/, rounded)
+      assert_match(/--type-section-size-max:\s*2\.25rem/, rounded)
+      assert_match(/--type-section-leading:\s*1\.286/, rounded)
+      assert_match(/--type-section-weight:\s*500/, rounded)
+      assert_match(/--type-section-tracking:\s*-0\.02em/, rounded)
+      assert_match(/--type-heading-weight:\s*500/, rounded)
+      assert_match(/--type-heading-tracking:\s*-0\.02em/, rounded)
+      assert_match(/--type-body-weight:\s*400/, rounded)
+      assert_match(/--type-control-weight:\s*500/, rounded)
+      assert_match(/--type-control-tracking:\s*-0\.015em/, rounded)
+      assert_match(/--type-pill-weight:\s*600/, rounded)
+      assert_match(/@media \(max-width: 639px\) \{\s*\[data-theme~="rounded"\] \{\s*--type-display-leading:\s*1\.075/m, css)
+      assert_match(/--type-display-tracking:\s*-0\.025em/, css)
+      assert_includes css, 'font-family: "Inter"'
+      assert_includes css, 'url("../flat_pack/inter-latin-400.woff2")'
+      assert_includes css, "inter-latin-500.woff2"
+      assert_includes css, "inter-latin-600.woff2"
+      assert_includes css, "inter-latin-700.woff2"
+      %w[400 500 600 700].each do |weight|
+        path = FlatPack::Engine.root.join("app/assets/fonts/flat_pack/inter-latin-#{weight}.woff2")
+        assert path.file?, "missing Inter #{weight}"
+        assert path.size > 10_000, "Inter #{weight} looks empty"
+      end
+    end
+
+    test "dark and ocean do not reset the type roles or the face" do
+      css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/variables.css").read
+
+      %w[dark ocean].each do |theme|
+        block = css[/^\[data-theme~="#{theme}"\]\s*\{.*?^\}/m]
+        refute_includes block, "--font-sans"
+        refute_includes block, "--type-display"
+        refute_includes block, "--type-heading"
+      end
+    end
+
+    test "email components stay on Arial" do
+      %w[email_button email_card email_footer_links email_template_example].each do |name|
+        source = Dir[FlatPack::Engine.root.join("app/components/flat_pack/#{name}/**/*.rb")].map { |path| File.read(path) }.join
+        assert_includes source, "Arial,sans-serif"
+      end
     end
   end
 end

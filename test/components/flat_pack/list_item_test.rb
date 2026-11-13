@@ -237,10 +237,10 @@ module FlatPack
       def test_title_and_subtitle_use_kit_type
         render_inline(Item.new(title: "Take 3", subtitle: "Room tone, no talking.", icon: :mic))
 
-        assert_selector "p.fp-text.fp-list-item-title.font-medium", text: "Take 3"
+        assert_selector "p.fp-text.fp-list-item-title[data-fp-weight=medium]", text: "Take 3"
         assert_selector "p.fp-text.fp-list-item-subtitle", text: "Room tone, no talking."
         html = page.native.to_html
-        assert_includes html, "text-[length:var(--text-sm)]"
+        assert_includes html, "fp-type-body--sm"
         assert_includes html, "text-[var(--surface-muted-content-color)]"
         assert_includes html, "fp-list-item-subtitle break-words mt-0.5"
       end

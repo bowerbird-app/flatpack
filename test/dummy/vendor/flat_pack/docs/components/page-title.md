@@ -6,7 +6,7 @@ Render a lightweight page heading block with optional subtitle and semantic head
 ## When to use
 Use Page Title for page-level headings when you do not want the bordered visual treatment of `PageHeader`.
 
-Default Page Title is product chrome (`font-bold`, `--page-title-h*-size`). For a cover headline without page chrome, use `FlatPack::HeroTitle::Component`. `size: :display` keeps working and renders Hero Title at `:xl` (today's `--display-size`). For a landing block with tagline, body, and actions, use `FlatPack::Hero::Component`. For a bare heading tag without page margin or actions, use `FlatPack::Heading::Component`.
+Default Page Title is product chrome (`--type-heading-*`, `--page-title-h*-size`). For a cover headline without page chrome, use `FlatPack::HeroTitle::Component`. `size: :display` keeps working and renders Hero Title at `:xl` (today's `--display-size`). For a landing block with tagline, body, and actions, use `FlatPack::Hero::Component`. For a bare heading tag without page margin or actions, use `FlatPack::Heading::Component`.
 
 ## Class
 - Primary: `FlatPack::PageTitle::Component`
@@ -17,8 +17,8 @@ Default Page Title is product chrome (`font-bold`, `--page-title-h*-size`). For 
 | `title` | String | `nil` | yes | Primary page heading text. |
 | `subtitle` | String | `nil` | no | Supporting text rendered below title. |
 | `variant` | Symbol, String | `:h1` | no | Semantic heading tag. One of `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`. |
-| `size` | Symbol, String | `:default` | no | Type scale. `:default` uses `--page-title-h*-size` and `font-bold`. `:display` renders `FlatPack::HeroTitle::Component` at `:xl` (`--display-size`, `--display-weight` 600, `--display-tracking`, `--display-leading` `1.05`, `fp-text-balance`). Invalid values raise `ArgumentError`. |
-| `large_subtitle` | Boolean | `false` | no | When `true`, subtitle matches the selected heading variant size (`h1`-`h6`), uses bold weight, and removes top margin. |
+| `size` | Symbol, String | `:default` | no | Type scale. `:default` uses `--page-title-h*-size` and `--type-heading-*`. `:display` renders `FlatPack::HeroTitle::Component` at `:xl` (`--type-display-*`, aliased by `--display-*`). Invalid values raise `ArgumentError`. |
+| `large_subtitle` | Boolean | `false` | no | When `true`, subtitle matches the selected heading variant size (`h1`-`h6`), uses `--type-heading-weight`, and removes top margin. |
 | `title_color` | String | `nil` | no | Optional CSS color override for the rendered heading tag (`h1`-`h6`). |
 | `subtitle_color` | String | `nil` | no | Optional CSS color override for subtitle `p` text. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for outer wrapper. |
@@ -61,7 +61,7 @@ Default Page Title is product chrome (`font-bold`, `--page-title-h*-size`). For 
 ## Behavior
 - `slot` renders immediately below the subtitle when `subtitle` is present.
 - `slot` renders immediately below the title when `subtitle` is omitted.
-- `size: :display` is opt-in. Default PageTitle output is unchanged (`font-bold`, `--page-title-h*-size`). Display titles render Hero Title at `:xl`: `.fp-display`, `--display-size` / `--display-weight` / `--display-tracking` / `--display-leading` inline, `fp-text-balance`, and subtitle spacing of `0.4em` so the gap scales with the cover size.
+- `size: :display` is opt-in. Default PageTitle uses `--type-heading-*` and `--page-title-h*-size`. Display titles render Hero Title at `:xl`: `.fp-display`, `--type-display-*` inline (`--display-*` aliases the same role), `fp-text-balance`, and subtitle spacing of `0.4em` so the gap scales with the cover size.
 
 ## Accessibility
 - Uses semantic heading tags via `variant` (`h1`-`h6`).

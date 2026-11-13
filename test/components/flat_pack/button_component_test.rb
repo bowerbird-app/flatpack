@@ -84,7 +84,8 @@ module FlatPack
         # The rendered HTML should contain the md size classes
         assert_includes page.native.to_html, "px-[var(--button-padding-x-md)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-control"
+        refute_includes page.native.to_html, "fp-type-size-"
       end
 
       def test_renders_button_with_small_size
@@ -93,7 +94,7 @@ module FlatPack
         assert_selector "button", text: "Small"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-sm)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
-        assert_includes page.native.to_html, "text-xs"
+        assert_includes page.native.to_html, "fp-type-size-sm"
       end
 
       def test_renders_button_with_medium_size
@@ -102,7 +103,8 @@ module FlatPack
         assert_selector "button", text: "Medium"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-md)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-md)]"
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-control"
+        refute_includes page.native.to_html, "fp-type-size-"
       end
 
       def test_renders_button_with_large_size
@@ -111,7 +113,7 @@ module FlatPack
         assert_selector "button", text: "Large"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
       end
 
       def test_renders_link_with_size
@@ -120,7 +122,7 @@ module FlatPack
         assert_selector "a[href='/path']", text: "Link"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
       end
 
       def test_raises_error_for_invalid_size
@@ -333,13 +335,13 @@ module FlatPack
         assert_selector "button[type='submit']", text: "Submit Small"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-sm)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-sm)]"
-        assert_includes page.native.to_html, "text-xs"
+        assert_includes page.native.to_html, "fp-type-size-sm"
 
         render_inline(Component.new(text: "Submit Large", type: "submit", size: :lg))
         assert_selector "button[type='submit']", text: "Submit Large"
         assert_includes page.native.to_html, "px-[var(--button-padding-x-lg)]"
         assert_includes page.native.to_html, "py-[var(--button-padding-y-lg)]"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
       end
 
       def test_submit_button_with_icon

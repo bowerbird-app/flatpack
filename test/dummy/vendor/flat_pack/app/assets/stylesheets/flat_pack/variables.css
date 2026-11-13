@@ -789,6 +789,36 @@
   --display-tracking: var(--display-tracking);
   --display-leading: var(--display-leading);
   --display-weight: var(--display-weight);
+  --type-display-size: var(--type-display-size);
+  --type-display-size-min: var(--type-display-size-min);
+  --type-display-size-max: var(--type-display-size-max);
+  --type-display-leading: var(--type-display-leading);
+  --type-display-weight: var(--type-display-weight);
+  --type-display-tracking: var(--type-display-tracking);
+  --type-section-size: var(--type-section-size);
+  --type-section-size-min: var(--type-section-size-min);
+  --type-section-size-max: var(--type-section-size-max);
+  --type-section-leading: var(--type-section-leading);
+  --type-section-weight: var(--type-section-weight);
+  --type-section-tracking: var(--type-section-tracking);
+  --type-heading-size: var(--type-heading-size);
+  --type-heading-leading: var(--type-heading-leading);
+  --type-heading-weight: var(--type-heading-weight);
+  --type-heading-tracking: var(--type-heading-tracking);
+  --type-body-size: var(--type-body-size);
+  --type-body-leading: var(--type-body-leading);
+  --type-body-weight: var(--type-body-weight);
+  --type-body-tracking: var(--type-body-tracking);
+  --type-control-size: var(--type-control-size);
+  --type-control-leading: var(--type-control-leading);
+  --type-control-weight: var(--type-control-weight);
+  --type-control-tracking: var(--type-control-tracking);
+  --type-pill-size: var(--type-pill-size);
+  --type-pill-leading: var(--type-pill-leading);
+  --type-pill-weight: var(--type-pill-weight);
+  --type-pill-tracking: var(--type-pill-tracking);
+  --card-title-size: var(--card-title-size);
+  --card-title-weight: var(--card-title-weight);
   --hero-title-md-size: var(--hero-title-md-size);
   --hero-title-md-size-min: var(--hero-title-md-size-min);
   --hero-title-md-size-max: var(--hero-title-md-size-max);
@@ -1750,13 +1780,49 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --leading-tight: 1.25;
   --leading-snug: 1.375;
   --leading-normal: 1.5;
-  /* ~48px on a phone, ~80px at 1280, ~88px from 1440. Override min/max without rewriting the clamp. */
-  --display-size-min: var(--text-5xl);
-  --display-size-max: 5.5rem;
-  --display-size: clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max));
-  --display-tracking: -0.03em;
-  --display-leading: 1.05;
-  --display-weight: 600;
+  /* Display role. ~48px on a phone, ~80px at 1280, ~88px from 1440.
+   * --display-* stays as an alias so existing CSS keeps resolving. */
+  --type-display-size-min: var(--text-5xl);
+  --type-display-size-max: 5.5rem;
+  --type-display-size: clamp(var(--type-display-size-min), 1rem + 5vw, var(--type-display-size-max));
+  --type-display-tracking: -0.03em;
+  --type-display-leading: 1.05;
+  --type-display-weight: 600;
+  --display-size-min: var(--type-display-size-min);
+  --display-size-max: var(--type-display-size-max);
+  --display-size: var(--type-display-size);
+  --display-tracking: var(--type-display-tracking);
+  --display-leading: var(--type-display-leading);
+  --display-weight: var(--type-display-weight);
+  /* Section titles. lg uses the role size. md and sm are smaller rungs in application.css. */
+  --type-section-size-min: var(--text-2xl);
+  --type-section-size-max: var(--text-2xl);
+  --type-section-size: var(--text-2xl);
+  --type-section-leading: var(--leading-tight);
+  --type-section-weight: 600;
+  --type-section-tracking: 0em;
+  /* Headings, page titles, and card titles. Page titles and content h2–h6 share this weight. */
+  --type-heading-size: var(--text-2xl);
+  --type-heading-leading: var(--leading-tight);
+  --type-heading-weight: 600;
+  --type-heading-tracking: -0.025em;
+  --card-title-size: var(--type-heading-size);
+  --card-title-weight: var(--type-heading-weight);
+  /* Body, leads, and subtitles. Content paragraphs keep their own size rung. */
+  --type-body-size: var(--text-base);
+  --type-body-leading: 1.75;
+  --type-body-weight: 400;
+  --type-body-tracking: 0em;
+  /* Buttons, fields, tabs, nav, and short UI labels. */
+  --type-control-size: var(--text-sm);
+  --type-control-leading: var(--leading-normal);
+  --type-control-weight: 500;
+  --type-control-tracking: 0em;
+  /* Badges, chips, pills, and the wordmark. */
+  --type-pill-size: var(--text-sm);
+  --type-pill-leading: var(--leading-normal);
+  --type-pill-weight: 500;
+  --type-pill-tracking: 0em;
   /* Cover titles. xl aliases --display-size (48px → 88px) so today's display output is unchanged. */
   --hero-title-md-size-min: var(--text-4xl);
   --hero-title-md-size-max: var(--text-6xl);
@@ -2105,6 +2171,77 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --backdrop-tint-opacity: 0.18;
   --backdrop-content-color: var(--hero-overlay-text-color);
   --backdrop-muted-content-color: var(--hero-overlay-muted-text-color);
+  /* Inter is requested only when computed font-family names it. Other themes keep the system stack. */
+  --font-sans: "Inter", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  /* 40px at 24rem, 104px at 90rem. */
+  --type-display-size-min: 2.5rem;
+  --type-display-size-max: 6.5rem;
+  --type-display-size: clamp(var(--type-display-size-min), calc(var(--type-display-size-min) + (var(--type-display-size-max) - var(--type-display-size-min)) * ((100vw - 24rem) / 66rem)), var(--type-display-size-max));
+  --type-display-leading: 0.98;
+  --type-display-weight: 500;
+  --type-display-tracking: -0.03em;
+  /* 21px at 24rem, 36px at 90rem. 27/21 is 1.286, so the leading holds on a phone. */
+  --type-section-size-min: 1.3125rem;
+  --type-section-size-max: 2.25rem;
+  --type-section-size: clamp(var(--type-section-size-min), calc(var(--type-section-size-min) + (var(--type-section-size-max) - var(--type-section-size-min)) * ((100vw - 24rem) / 66rem)), var(--type-section-size-max));
+  --type-section-leading: 1.286;
+  --type-section-weight: 500;
+  --type-section-tracking: -0.02em;
+  --type-heading-weight: 500;
+  --type-heading-tracking: -0.02em;
+  --type-body-weight: 400;
+  --type-control-weight: 500;
+  --type-control-tracking: -0.015em;
+  --type-pill-weight: 600;
+}
+
+/* Phone metrics for the rounded display and section roles. 43/40 is 1.075. */
+@media (max-width: 639px) {
+  [data-theme~="rounded"] {
+    --type-display-leading: 1.075;
+    --type-display-tracking: -0.025em;
+    --type-section-tracking: -0.015em;
+    --type-heading-tracking: -0.015em;
+  }
+}
+
+/* Latin Inter. The face is global; the file is fetched only when a computed font-family uses Inter.
+ * The url is the logical path from flat_pack/variables.css to the fonts load path
+ * (app/assets/fonts/flat_pack). Propshaft rewrites it to a digested asset URL. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../flat_pack/inter-latin-400.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../flat_pack/inter-latin-500.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../flat_pack/inter-latin-600.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../flat_pack/inter-latin-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @media (prefers-reduced-motion: reduce) {

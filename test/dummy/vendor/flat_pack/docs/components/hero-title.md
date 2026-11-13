@@ -7,7 +7,7 @@ Render a standalone cover headline: fluid jumbo type with balanced wrapping, tun
 Use Hero Title for a big cover line on its own — a press kit, a landing splash, or any page that needs the display scale without a full Hero block.
 
 - Use `FlatPack::Hero::Component` when the headline sits in a landing hero with tagline, body, image, and actions. Hero `size: :display` (or `title_size:`) renders this component for you.
-- Use `FlatPack::PageTitle::Component` for in-app page headings (`font-bold`, `--page-title-h*-size`). Pass `size: :display` when a page heading should be cover type; that path also renders Hero Title.
+- Use `FlatPack::PageTitle::Component` for in-app page headings (`--type-heading-*`, `--page-title-h*-size`). Pass `size: :display` when a page heading should be cover type; that path also renders Hero Title.
 - Do not use Hero Title for section headings inside a page. Use `FlatPack::SectionTitle::Component`. For a bare product-scale heading (`--text-5xl` and below), use `FlatPack::Heading::Component`.
 
 ## Class
@@ -17,7 +17,7 @@ Use Hero Title for a big cover line on its own — a press kit, a landing splash
 | name | type | default | required | description |
 |---|---|---|---|---|
 | `text` | String | `nil` | conditional | Headline copy. Required unless the same string is passed as block content. |
-| `size` | Symbol, String | `:xl` | no | Fluid cover step. One of `:md`, `:lg`, `:xl`, `:xxl`. `:xl` is today's `--display-size` (`clamp` from `--display-size-min` / 48px to `--display-size-max` / 88px, preferred `1rem + 5vw`). Invalid values raise `ArgumentError`. |
+| `size` | Symbol, String | `:xl` | no | Fluid cover step. One of `:md`, `:lg`, `:xl`, `:xxl`. `:xl` uses `--type-display-size` (aliased as `--display-size`: default clamp from 48px to 88px, preferred `1rem + 5vw`). Invalid values raise `ArgumentError`. |
 | `level` | Symbol, String | `:h1` | no | Semantic heading tag. One of `:h1`, `:h2`, `:h3`, `:h4`, `:h5`, `:h6`. Invalid values raise `ArgumentError`. |
 | `align` | Symbol, String | `nil` | no | Optional text alignment. One of `:left`, `:center`. Omit to inherit from the parent. Invalid values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the heading tag (`class`, `id`, `style`, and the rest). |
@@ -26,7 +26,7 @@ Use Hero Title for a big cover line on its own — a press kit, a landing splash
 None. Pass copy as `text:` or as the component block.
 
 ## Variants
-- Size: `:md` (36px → 60px), `:lg` (48px → 72px), `:xl` (48px → 88px, default, same as `--display-size`), `:xxl` (48px → 96px).
+- Size: `:md` (36px → 60px), `:lg` (48px → 72px), `:xl` (default, `--type-display-size`; 48px → 88px on the default theme), `:xxl` (48px → 96px). Weight, tracking, and leading come from `--type-display-*`.
 - Level: `:h1`–`:h6`.
 - Align: omit, `:left`, `:center`.
 

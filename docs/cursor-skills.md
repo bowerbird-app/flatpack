@@ -60,7 +60,7 @@ Use this order on Flatpack UI work:
 
 **Motion.** Advise timing, easing, and choreography. Implement with Flatpack CSS, `--duration-*`, and `--easing-*` tokens. Do not default to Framer, GSAP, or Lottie.
 
-**Type.** Use `--font-sans` / `--text-*` (through `--text-8xl`) and `--display-*` / `--hero-title-*` for opt-in cover titles (`FlatPack::HeroTitle::Component`). Bare headings are `FlatPack::Heading::Component` (`level:` vs `size:`). Body copy is `FlatPack::Text::Component`. Section chrome stays on Section Title. Labels are sentence case. Tabular nums on live numbers. Do not add tracked-out ALL-CAPS eyebrows.
+**Type.** Use `--font-sans` / `--text-*` (through `--text-8xl`) and the role tokens `--type-display-*`, `--type-section-*`, `--type-heading-*`, `--type-body-*`, `--type-control-*`, and `--type-pill-*`. `--display-*` aliases the display role. Cover titles use `FlatPack::HeroTitle::Component` and `--hero-title-*`. Bare headings are `FlatPack::Heading::Component` (`level:` vs `size:`). Body copy is `FlatPack::Text::Component`. Section chrome stays on Section Title. The rounded theme loads Inter. Labels are sentence case. Tabular nums on live numbers. Do not add tracked-out ALL-CAPS eyebrows.
 
 ## Refreshing pstack
 

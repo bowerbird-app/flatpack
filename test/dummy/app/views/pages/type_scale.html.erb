@@ -42,11 +42,29 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Display",
     anchor_link: true,
-    subtitle: "Fluid cover size. About 48px on a phone, 88px on a wide screen. A theme can raise or lower --display-size-max."
+    subtitle: "On this rounded page the cover runs 40px on a phone to 104px on a wide screen. The default theme stays near 48px to 88px."
   ) %>
 
-  <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]">display · clamp(min, 1rem + 5vw, max 5.5rem) · fp-display</p>
+  <p class="mb-1 text-sm text-[var(--surface-muted-content-color)]">display · rounded 40px to 104px · fp-display</p>
   <p class="fp-display fp-text-balance text-[var(--surface-content-color)]">A press kit for the Northlight collection</p>
+</section>
+
+<section class="mb-12" id="roles">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Roles",
+    anchor_link: true,
+    subtitle: "Display, section, heading, body, control, and pill. Rounded sets the face and the weights."
+  ) %>
+
+  <%= render FlatPack::Heading::Component.new(text: "Heading role", level: :h2) %>
+  <div class="mt-4">
+    <%= render FlatPack::Text::Component.new(text: "Body role. The Northlight collection ships stills, credits, and download packs.") %>
+  </div>
+  <div class="mt-4 flex flex-wrap items-center gap-3">
+    <%= render FlatPack::Button::Component.new(text: "Save changes") %>
+    <%= render FlatPack::Badge::Component.new(text: "New") %>
+    <%= render FlatPack::Chip::Component.new(text: "Stills") %>
+  </div>
 </section>
 
 <section class="mb-12" id="display-dark" data-theme="dark">

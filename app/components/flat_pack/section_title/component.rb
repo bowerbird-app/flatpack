@@ -5,23 +5,23 @@ module FlatPack
     class Component < FlatPack::BaseComponent
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-2xl" "text-lg" "text-base" "text-sm" "text-xs" "font-semibold" "leading-tight"
+      # "fp-type-section" "fp-type-section--md" "fp-type-section--sm" "fp-type-body" "fp-type-body--sm" "fp-type-body--xs"
       # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
       # "mt-1" "w-3" "h-3"
       SIZES = {
         lg: {
-          heading: "text-2xl font-semibold text-[var(--surface-content-color)] leading-tight",
-          subtitle: "mt-1 text-base text-[var(--surface-muted-content-color)]",
+          heading: "fp-type-section text-[var(--surface-content-color)]",
+          subtitle: "mt-1 fp-type-body text-[var(--surface-muted-content-color)]",
           icon: :sm
         },
         md: {
-          heading: "text-lg font-semibold text-[var(--surface-content-color)] leading-tight",
-          subtitle: "mt-1 text-sm text-[var(--surface-muted-content-color)]",
+          heading: "fp-type-section fp-type-section--md text-[var(--surface-content-color)]",
+          subtitle: "mt-1 fp-type-body fp-type-body--sm text-[var(--surface-muted-content-color)]",
           icon: :sm
         },
         sm: {
-          heading: "text-base font-semibold text-[var(--surface-content-color)] leading-tight",
-          subtitle: "mt-1 text-xs text-[var(--surface-muted-content-color)]",
+          heading: "fp-type-section fp-type-section--sm text-[var(--surface-content-color)]",
+          subtitle: "mt-1 fp-type-body fp-type-body--xs text-[var(--surface-muted-content-color)]",
           icon: :sm,
           icon_class: "w-3 h-3"
         }

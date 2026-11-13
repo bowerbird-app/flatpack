@@ -13,7 +13,7 @@ module FlatPack
           "p-[var(--pill-padding)]"
         ].join(" ")
         STYLES = FlatPack::Button::StyleRegistry::BUILT_IN
-        ITEM_BASE_CLASSES = "inline-flex items-center justify-center border border-transparent font-medium fp-touch-manipulation [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]"
+        ITEM_BASE_CLASSES = "inline-flex items-center justify-center border border-transparent fp-type-pill fp-touch-manipulation [border-radius:var(--tabs-pill-corner-radius)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--button-focus-ring-color)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--button-focus-ring-offset-color)]"
         ITEM_ACTIVE_CLASSES = FlatPack::Button::PillStyle::ACTIVE_CLASSES
         ITEM_INACTIVE_CLASSES = FlatPack::Button::PillStyle::INACTIVE_CLASSES
 

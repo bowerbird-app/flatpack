@@ -18,7 +18,7 @@ Section Title already splits the heading tag (`level:`) from visual size (`size:
 | `subtitle` | String | `nil` | no | Supporting copy below the heading. Blank or whitespace-only values render nothing. |
 | `anchor_link` | Boolean | `false` | no | Enables hover/focus copy-link affordance and anchor id generation. |
 | `anchor_id` | String | `nil` | no | Explicit anchor id when `anchor_link` is enabled; falls back to wrapper id or parameterized title. |
-| `size` | Symbol | `:lg` | no | Type scale for the heading, subtitle, and copy-link icon: `:lg`, `:md`, `:sm`. `:lg` is today's `text-2xl` heading and `text-base` subtitle. |
+| `size` | Symbol | `:lg` | no | Type scale for the heading, subtitle, and copy-link icon: `:lg`, `:md`, `:sm`. `:lg` uses `--type-section-*` and a body subtitle. `:md` and `:sm` keep smaller size rungs and share the section weight and tracking. |
 | `spacing` | Symbol | `:lg` | no | Vertical margin on the `.fp-section-title` wrapper: `:lg` (`my-8`), `:md` (`my-6`), `:sm` (`my-4`), `:none` (no wrapper margin). |
 | `level` | Symbol | `:h2` | no | Heading tag: `:h1` through `:h6`. Visual size stays with `size:`, not the tag. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for wrapper. |

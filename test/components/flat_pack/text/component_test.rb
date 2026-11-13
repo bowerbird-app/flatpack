@@ -10,8 +10,9 @@ module FlatPack
 
         assert_selector "p.fp-text", text: "We sent a link to your inbox."
         html = page.native.to_html
-        assert_includes html, "text-[length:var(--text-base)]"
-        assert_includes html, "font-normal"
+        assert_includes html, "fp-type-body"
+        refute_includes html, "fp-type-body--"
+        refute_includes html, "data-fp-weight"
         assert_includes html, "text-[var(--surface-content-color)]"
         assert_includes html, "fp-text-pretty"
         refute_selector "h1, h2, h3, h4, h5, h6"
@@ -26,9 +27,9 @@ module FlatPack
         ))
 
         html = page.native.to_html
-        assert_includes html, "text-[length:var(--text-sm)]"
+        assert_includes html, "fp-type-body--sm"
         assert_includes html, "text-[var(--surface-muted-content-color)]"
-        assert_includes html, "font-medium"
+        assert_includes html, 'data-fp-weight="medium"'
       end
 
       def test_primary_style
@@ -49,8 +50,13 @@ module FlatPack
         Component::SIZES.each_key do |size|
           render_inline(Component.new(text: "Saved", size: size))
 
-          token = (size == :base) ? "base" : size.to_s
-          assert_includes page.native.to_html, "text-[length:var(--text-#{token})]"
+          html = page.native.to_html
+          if size == :base
+            assert_includes html, "fp-type-body"
+            refute_includes html, "fp-type-body--"
+          else
+            assert_includes html, "fp-type-body--#{size}"
+          end
         end
       end
 

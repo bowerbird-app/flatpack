@@ -14,9 +14,11 @@
  * and --radius-* (0.125 / 0.25 / 0.375 / 0.5 / 0.75rem). Putting these in @theme
  * does not replace Tailwind's defaults. var(--radius-md, 0.5rem) fallbacks
  * in kit CSS only apply when the token is unset.
+ * Radii stay on :root. --font-sans does not: html[data-theme~="rounded"] is
+ * also :root, and this file loads after the kit, so a bare :root face would
+ * replace Inter.
  */
 :root {
-	--font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 	--font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 	--radius-xs: 0.125rem;
 	--radius-sm: 0.25rem;
@@ -24,6 +26,10 @@
 	--radius-lg: 0.75rem;
 	--radius-xl: 1.25rem;
 	--radius-full: 9999px;
+}
+
+:root:not([data-theme~="rounded"]) {
+	--font-sans: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
 @layer base {

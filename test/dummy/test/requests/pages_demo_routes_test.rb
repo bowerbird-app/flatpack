@@ -984,9 +984,9 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">Clip stats</h2>"
     assert_includes response.body, ">Heading H1</h1>"
     assert_includes response.body, ">Heading H6</h6>"
-    assert_includes response.body, "text-[length:var(--text-2xl)]"
-    assert_includes response.body, "text-[length:var(--text-lg)]"
-    assert_includes response.body, "text-[length:var(--text-5xl)]"
+    assert_includes response.body, "fp-heading--2xl"
+    assert_includes response.body, "fp-heading--lg"
+    assert_includes response.body, "fp-heading--5xl"
     refute_includes response.body, "fp-section-title\">Verify your email"
   end
 
@@ -1012,7 +1012,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "fp-hero-title--xl"
     assert_includes response.body, "fp-hero-title--xxl"
     assert_includes response.body, "fp-display"
-    assert_includes response.body, "font-size: var(--display-size)"
+    assert_includes response.body, "font-size: var(--type-display-size)"
     assert_includes response.body, "A press kit for the Northlight collection"
     assert_includes response.body, "Northlight collection"
     assert_includes response.body, "title_size"
@@ -1024,7 +1024,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_includes response.body, "fp-display"
-    assert_includes response.body, "font-size: var(--display-size)"
+    assert_includes response.body, "font-size: var(--type-display-size)"
     assert_includes response.body, "A press kit for the Northlight collection"
     refute_includes response.body, "lg:text-6xl"
   end

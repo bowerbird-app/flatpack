@@ -18,7 +18,7 @@ There was no existing body-copy primitive. Hosts that today write `<p class="tex
 | `text` | String | `nil` | conditional | Copy. Required unless the same string is passed as block content. HTML-safe strings raise `ArgumentError`. |
 | `size` | Symbol, String | `:base` | no | Type scale: `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:"2xl"`. Maps to `--text-*`. Invalid values raise `ArgumentError`. |
 | `style` | Symbol, String | `:default` | no | Ink token. `:default` is `--surface-content-color`. `:muted` is `--surface-muted-content-color`. `:primary` is `--color-primary`. Use `style`, not `tone` or `color`. Invalid values raise `ArgumentError`. |
-| `weight` | Symbol, String | `:normal` | no | Font weight: `:normal`, `:medium`, `:semibold`, `:bold`. Invalid values raise `ArgumentError`. |
+| `weight` | Symbol, String | `:normal` | no | `:normal` follows `--type-body-weight`. `:medium`, `:semibold`, and `:bold` pin `data-fp-weight`. Invalid values raise `ArgumentError`. |
 | `as` | Symbol, String | `:p` | no | Tag: `:p`, `:span`, or `:div`. Heading tags belong on Heading. Invalid values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the tag. |
 

@@ -17,11 +17,11 @@ module FlatPack
 
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
-      # "text-xs" "px-[var(--chip-padding-x-sm)]" "py-[var(--chip-padding-y-sm)]" "text-sm" "px-[var(--chip-padding-x-md)]" "py-[var(--chip-padding-y-md)]" "text-base" "px-[var(--chip-padding-x-lg)]" "py-[var(--chip-padding-y-lg)]"
+      # "fp-type-size-sm" "px-[var(--chip-padding-x-sm)]" "py-[var(--chip-padding-y-sm)]" "px-[var(--chip-padding-x-md)]" "py-[var(--chip-padding-y-md)]" "fp-type-size-lg" "px-[var(--chip-padding-x-lg)]" "py-[var(--chip-padding-y-lg)]"
       SIZES = {
-        sm: "text-xs px-[var(--chip-padding-x-sm)] py-[var(--chip-padding-y-sm)]",
-        md: "text-sm px-[var(--chip-padding-x-md)] py-[var(--chip-padding-y-md)]",
-        lg: "text-base px-[var(--chip-padding-x-lg)] py-[var(--chip-padding-y-lg)]"
+        sm: "fp-type-size-sm px-[var(--chip-padding-x-sm)] py-[var(--chip-padding-y-sm)]",
+        md: "px-[var(--chip-padding-x-md)] py-[var(--chip-padding-y-md)]",
+        lg: "fp-type-size-lg px-[var(--chip-padding-x-lg)] py-[var(--chip-padding-y-lg)]"
       }.freeze
 
       TYPES = %i[static button link].freeze
@@ -173,7 +173,7 @@ module FlatPack
       def chip_classes
         classes(
           "inline-flex items-center gap-1.5",
-          "rounded-[var(--chip-border-radius)] font-medium",
+          "rounded-[var(--chip-border-radius)] fp-type-pill",
           "border",
           "transition-[color,background-color,border-color] duration-[var(--duration-fast)] ease-[var(--easing-standard)]",
           STYLES.fetch(@style),

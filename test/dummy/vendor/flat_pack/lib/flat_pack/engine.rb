@@ -65,6 +65,7 @@ module FlatPack
     initializer "flat_pack.assets" do |app|
       if app.config.respond_to?(:assets)
         app.config.assets.paths << root.join("app/assets/stylesheets")
+        app.config.assets.paths << root.join("app/assets/fonts")
         app.config.assets.paths << root.join("app/javascript")
       end
     end

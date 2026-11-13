@@ -57,7 +57,7 @@ module FlatPack
         render_inline(Component.new(text: "Small", size: :sm))
 
         assert_selector "span", text: "Small"
-        assert_includes page.native.to_html, "text-xs"
+        assert_includes page.native.to_html, "fp-type-size-sm"
         assert_includes page.native.to_html, "px-[var(--badge-padding-x-sm)]"
       end
 
@@ -65,7 +65,7 @@ module FlatPack
         render_inline(Component.new(text: "Extra Small", size: :xs))
 
         assert_selector "span", text: "Extra Small"
-        assert_includes page.native.to_html, "text-[10px]"
+        assert_includes page.native.to_html, "fp-type-size-xs"
         assert_includes page.native.to_html, "px-[var(--badge-padding-x-xs)]"
       end
 
@@ -73,7 +73,8 @@ module FlatPack
         render_inline(Component.new(text: "Medium", size: :md))
 
         assert_selector "span", text: "Medium"
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-pill"
+        refute_includes page.native.to_html, "fp-type-size-"
         assert_includes page.native.to_html, "px-[var(--badge-padding-x-md)]"
       end
 
@@ -81,14 +82,15 @@ module FlatPack
         render_inline(Component.new(text: "Large", size: :lg))
 
         assert_selector "span", text: "Large"
-        assert_includes page.native.to_html, "text-base"
+        assert_includes page.native.to_html, "fp-type-size-lg"
         assert_includes page.native.to_html, "px-[var(--badge-padding-x-lg)]"
       end
 
       def test_default_size_is_medium
         render_inline(Component.new(text: "Default"))
 
-        assert_includes page.native.to_html, "text-sm"
+        assert_includes page.native.to_html, "fp-type-pill"
+        refute_includes page.native.to_html, "fp-type-size-"
       end
 
       def test_renders_with_dot_indicator
