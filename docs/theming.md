@@ -100,7 +100,7 @@ Do **not** put FlatPack tokens back into the Tailwind entry. A second `--color-p
 | Host wants the same primary as FlatPack | Set `--color-primary` in the host stylesheet (last). That is an override, not a clash. |
 | Host needs a different primary than FlatPack | Keep the host color as `--my-app-primary` (or similar). Leave `--color-primary` for FlatPack, or set it only if you intend FlatPack to match. |
 | Host already uses `--color-primary` for something else | Rename the **host** token. Do not rename FlatPack's. |
-| Host Tailwind loads after kit CSS | Tailwind `@layer theme` sets `--font-sans` to `ui-sans-serif` and `--radius-md` to `0.375rem`. Re-set `--font-sans` / `--font-mono` and `--radius-xs` through `--radius-full` on unlayered `:root` in the host stylesheet so the kit face and kit radii win. Putting them in `@theme` does not replace Tailwind’s defaults. `var(--radius-md, 0.5rem)` in kit CSS only applies when the token is unset. |
+| Host Tailwind loads after kit CSS | Tailwind `@layer theme` sets `--font-sans` to `ui-sans-serif` and `--radius-md` to `0.375rem`. Re-set `--font-mono` and `--radius-xs` through `--radius-full` on unlayered `:root`. Re-set `--font-sans` on `:root:not([data-theme~="rounded"])` so a later `:root` rule does not replace Inter. Putting them in `@theme` does not replace Tailwind’s defaults. `var(--radius-md, 0.5rem)` in kit CSS only applies when the token is unset. |
 
 `--brand-hue` / `--brand-chroma` / `--brand-lightness` are FlatPack-only and do not overlap Tailwind defaults. `--radius-md` and `--shadow-md` use the same names as Tailwind utilities. FlatPack's default `--radius-md` is `0.5rem`. Kit class names use `rounded-[var(--radius-*)]` so they do not collide with Tailwind's `rounded-md` scale.
 
@@ -336,19 +336,52 @@ Kit CSS defines `.fp-hit-target`, `.fp-hit-target-inline`, and `.fp-hit-slop`. `
 --leading-snug: 1.375
 --leading-normal: 1.5
 
---display-size-min: var(--text-5xl)
---display-size-max: 5.5rem
---display-size: clamp(var(--display-size-min), 1rem + 5vw, var(--display-size-max))
---display-tracking: -0.03em
---display-leading: 1.05
---display-weight: 600
+--type-display-size-min: var(--text-5xl)
+--type-display-size-max: 5.5rem
+--type-display-size: clamp(var(--type-display-size-min), 1rem + 5vw, var(--type-display-size-max))
+--type-display-tracking: -0.03em
+--type-display-leading: 1.05
+--type-display-weight: 600
+--display-size: var(--type-display-size)
+
+--type-section-size: var(--text-2xl)
+--type-section-weight: 600
+--type-heading-size: var(--text-2xl)
+--type-heading-weight: 600
+--type-heading-tracking: -0.025em
+--type-body-size: var(--text-base)
+--type-body-leading: 1.75
+--type-body-weight: 400
+--type-control-size: var(--text-sm)
+--type-control-weight: 500
+--type-pill-size: var(--text-sm)
+--type-pill-weight: 500
+--card-title-size: var(--type-heading-size)
+--card-title-weight: var(--type-heading-weight)
 ```
 
-`--font-*` and `--text-*` are set on `:root` (not only inside `@theme`). `:root` also sets `font-family: var(--font-sans)` and antialiased smoothing. Hosts override `--font-sans` with a brand face. There is no kit webfont. If host Tailwind loads last, re-set `--font-sans` and the kit `--radius-*` values on unlayered `:root` in the host stylesheet — Tailwind’s `@layer theme` stack otherwise replaces the kit face and the kit radii (rich-text chrome follows `--radius-md`).
+`--font-*`, `--text-*`, and `--type-*` are set on `:root, [data-theme]`. That block also sets `font-family: var(--font-sans)` and antialiased smoothing. `--display-*` aliases `--type-display-*`, so existing cover CSS keeps resolving.
+
+Six roles sit on top of the primitive scale:
+
+| Role | Used by | Default weight |
+| --- | --- | --- |
+| `--type-display-*` | Hero title, `.fp-display`, PageTitle `size: :display` | 600 |
+| `--type-section-*` | Section title (`:md` and `:sm` keep smaller size rungs) | 600 |
+| `--type-heading-*` | Heading, PageTitle, card titles, `.fp-content` headings | 600 |
+| `--type-body-*` | Text, content paragraphs, leads, list items, subtitles | 400 |
+| `--type-control-*` | Button, fields, tabs, nav, short UI labels | 500 |
+| `--type-pill-*` | Badge, chip, button pill, wordmark | 500 |
+
+Content headings keep `--content-h*-size`. Paragraphs keep `--content-p-size`. A featured card sets `--card-title-size` to `--text-4xl` and inherits `--card-title-weight` from the heading role. Heading `weight:` and Text `weight:` follow the role unless the caller passes a different weight, which sets `data-fp-weight`.
+
+The `rounded` theme sets `--font-sans` to Inter (`"Inter", system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`) and retunes the roles: display 40px to 104px, weight 500, tracking `-0.03em`, leading `0.98` (phone leading `1.075`, tracking `-0.025em`); section 21px to 36px, weight 500, leading `1.286`, tracking `-0.02em` (phone `-0.015em`); heading weight 500 and tracking `-0.02em`; body weight 400; control weight 500 and tracking `-0.015em`; pill weight 600. Latin Inter (400, 500, 600, 700) ships in the gem. `@font-face` is global. The browser fetches a file only when computed `font-family` names Inter, which is the rounded stack.
+
+Default, dark, and ocean stay on the system stack. A host that re-sets `--font-sans` after the kit must use `:root:not([data-theme~="rounded"])`. A bare `:root` rule has the same specificity as `[data-theme~="rounded"]` and, when it loads later, replaces Inter. Radii stay on bare `:root`. Email components stay on `Arial, sans-serif`.
 
 `--page-title-h1-size` through `--page-title-h6-size` alias `--text-4xl` down to `--text-base`. `--content-p-size` and `--content-kicker-size` are `--text-lg` (1.125rem / 18px). `--content-lead-size` is `--text-2xl`. `--content-h1-size` is `--text-5xl` (3rem). `--content-h2-size` is `--text-3xl`. `--content-h3-size` through `--content-h6-size` step down the same kit scale to `--text-lg`. Bare tags inside `.fp-content` pick these up. Hero headlines use `--text-4xl` then `sm:` `--hero-headline-size` (default `--text-5xl`). Page-surface hero body uses `--hero-description-size` (default `--text-xl`). `--text-6xl` (3.75rem / 60px), `--text-7xl` (4.5rem / 72px), and `--text-8xl` (6rem / 96px) are the display rungs; `@theme inline` maps them so `text-6xl` / `text-7xl` / `text-8xl` work after a Tailwind rebuild. Pairing `--text-*-line-height` tokens are `1`. Product PageTitle and Hero stay on `5xl` and below unless you pass `size: :display`.
 
-`--display-size` is a theme-tunable fluid cover size: `--display-size-min` (`--text-5xl` / 48px) on a phone, about 80px at 1280, and `--display-size-max` (`5.5rem` / 88px) from 1440. Preferred size is `1rem + 5vw`. Override `--display-size-max` (or `--display-size-min`) on a named theme without rewriting the clamp, or replace `--display-size` entirely. `--display-tracking` is `-0.03em`. `--display-leading` is `1.05`. `--display-weight` is `600`, matching content `h1` and Hero headlines. Kit CSS ships unlayered `.fp-display` and `.fp-hero-title` so Tailwind preflight cannot collapse heading size. `FlatPack::HeroTitle::Component` is the cover headline. `:xl` (default) aliases `--display-size`. `:md` clamps `--text-4xl` to `--text-6xl` (`1rem + 3.5vw`). `:lg` clamps `--text-5xl` to `--text-7xl` (`1rem + 4.5vw`). `:xxl` clamps `--text-5xl` to `--text-8xl` (`1rem + 5.5vw`). Override `--hero-title-<size>-size-min` / `-max` without rewriting the clamp. PageTitle `size: :display` and Hero `size: :display` render Hero Title at `:xl` and set the same tokens inline.
+`--type-display-size` (aliased as `--display-size`) is the fluid cover size. On the default theme, `--type-display-size-min` is `--text-5xl` / 48px on a phone, about 80px at 1280, and `--type-display-size-max` is `5.5rem` / 88px from 1440. Preferred size is `1rem + 5vw`. Override the min or max on a named theme without rewriting the clamp. Kit CSS ships unlayered `.fp-display`, `.fp-type-display`, and `.fp-hero-title` so Tailwind preflight cannot collapse heading size. `FlatPack::HeroTitle::Component` is the cover headline. `:xl` (default) aliases `--type-display-size`. `:md` clamps `--text-4xl` to `--text-6xl` (`1rem + 3.5vw`). `:lg` clamps `--text-5xl` to `--text-7xl` (`1rem + 4.5vw`). `:xxl` clamps `--text-5xl` to `--text-8xl` (`1rem + 5.5vw`). Override `--hero-title-<size>-size-min` / `-max` without rewriting the clamp. PageTitle `size: :display` and Hero `size: :display` render Hero Title at `:xl`.
 
 Kit CSS defines `.fp-tabular-nums` (`font-variant-numeric: tabular-nums`), `.fp-text-balance`, and `.fp-text-pretty`. Use tabular nums on live numbers (pagination, meters, timestamps, chart axes). Use balance on titles. Use pretty on short supporting copy. Labels are sentence case — do not force `uppercase tracking-widest` on taglines, table headers, or section titles. Avatar initials may stay `uppercase`.
 

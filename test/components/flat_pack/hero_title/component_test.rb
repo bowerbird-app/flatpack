@@ -14,10 +14,10 @@ module FlatPack
         assert_includes html, "fp-hero-title--xl"
         assert_includes html, "fp-display"
         assert_includes html, "fp-text-balance"
-        assert_includes html, "font-size: var(--display-size)"
-        assert_includes html, "font-weight: var(--display-weight)"
-        assert_includes html, "letter-spacing: var(--display-tracking)"
-        assert_includes html, "line-height: var(--display-leading)"
+        assert_includes html, "font-size: var(--type-display-size)"
+        assert_includes html, "font-weight: var(--type-display-weight)"
+        assert_includes html, "letter-spacing: var(--type-display-tracking)"
+        assert_includes html, "line-height: var(--type-display-leading)"
         assert_includes html, "text-[var(--surface-content-color)]"
       end
 
@@ -65,7 +65,7 @@ module FlatPack
           assert_includes html, "fp-hero-title--#{size}"
           assert_includes html, "font-size: var(#{token})"
           refute_includes html, "fp-display"
-          refute_includes html, "font-size: var(--display-size)"
+          refute_includes html, "font-size: var(--type-display-size)"
         end
       end
 
@@ -75,7 +75,7 @@ module FlatPack
 
         assert_equal omitted, explicit
         assert_includes explicit, "fp-display"
-        assert_includes explicit, "font-size: var(--display-size)"
+        assert_includes explicit, "font-size: var(--type-display-size)"
       end
 
       def test_renders_heading_levels

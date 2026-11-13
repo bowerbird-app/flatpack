@@ -82,7 +82,7 @@ module FlatPack
               render_badge,
               content_tag(:div, class: "flex items-center h-8 fp-sidebar-label") do
                 safe_join([
-                  content_tag(:div, @title, class: "font-semibold text-sm text-[var(--sidebar-header-text-color)]"),
+                  content_tag(:div, @title, class: "fp-type-pill text-[var(--sidebar-header-text-color)]"),
                   (@show_version ? content_tag(:span, sidebar_version_label, class: sidebar_version_badge_classes) : nil)
                 ].compact)
               end
@@ -131,7 +131,7 @@ module FlatPack
         end
 
         def sidebar_version_badge_classes
-          "ml-2 inline-flex items-center rounded-[var(--radius-md)] border px-2 py-0.5 text-[10px] leading-none font-medium bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)] border-[var(--badge-default-border-color)]"
+          "ml-2 inline-flex items-center rounded-[var(--radius-md)] border px-2 py-0.5 fp-type-pill fp-type-size-xs bg-[var(--badge-default-background-color)] text-[var(--badge-default-text-color)] border-[var(--badge-default-border-color)]"
         end
 
         def render_collapsed_toggle

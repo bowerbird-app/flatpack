@@ -40,8 +40,8 @@ module FlatPack
             "justify-center",
             "px-[var(--badge-padding-x-xs)]",
             "py-[var(--badge-padding-y-xs)]",
-            "text-xs",
-            "font-medium",
+            "fp-type-pill",
+            "fp-type-size-sm",
             "rounded-[var(--badge-radius)]",
             style_classes
           )

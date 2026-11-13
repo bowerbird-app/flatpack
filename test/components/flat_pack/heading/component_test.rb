@@ -10,11 +10,11 @@ module FlatPack
 
         assert_selector "h2.fp-heading", text: "Verify your email"
         html = page.native.to_html
-        assert_includes html, "text-[length:var(--text-2xl)]"
-        assert_includes html, "font-semibold"
+        assert_includes html, "fp-type-heading"
+        assert_includes html, "fp-heading--2xl"
         assert_includes html, "text-[var(--surface-content-color)]"
         assert_includes html, "fp-text-balance"
-        assert_includes html, "leading-tight"
+        refute_includes html, "data-fp-weight"
         refute_selector "div.fp-section-title"
         refute_selector "h1"
       end
@@ -24,8 +24,8 @@ module FlatPack
 
         assert_selector "h1", text: "Clip stats"
         html = page.native.to_html
-        assert_includes html, "text-[length:var(--text-lg)]"
-        refute_includes html, "text-[length:var(--text-2xl)]"
+        assert_includes html, "fp-heading--lg"
+        refute_includes html, "fp-heading--2xl"
         refute_selector "h2"
       end
 
@@ -49,8 +49,7 @@ module FlatPack
         Component::SIZES.each_key do |size|
           render_inline(Component.new(text: "Clip stats", size: size))
 
-          token = (size == :base) ? "base" : size.to_s
-          assert_includes page.native.to_html, "text-[length:var(--text-#{token})]"
+          assert_includes page.native.to_html, "fp-heading--#{size}"
         end
       end
 
@@ -59,8 +58,8 @@ module FlatPack
 
         html = page.native.to_html
         assert_includes html, "text-[var(--surface-muted-content-color)]"
-        assert_includes html, "font-bold"
-        refute_includes html, "font-semibold"
+        assert_includes html, 'data-fp-weight="bold"'
+        refute_includes html, "font-bold"
       end
 
       def test_primary_style

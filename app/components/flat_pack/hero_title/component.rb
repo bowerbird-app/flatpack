@@ -69,14 +69,14 @@ module FlatPack
         [
           html_attributes[:style],
           "font-size: #{size_token}",
-          "font-weight: var(--display-weight)",
-          "letter-spacing: var(--display-tracking)",
-          "line-height: var(--display-leading)"
+          "font-weight: var(--type-display-weight)",
+          "letter-spacing: var(--type-display-tracking)",
+          "line-height: var(--type-display-leading)"
         ].compact_blank.join("; ").presence
       end
 
       def size_token
-        (@size == :xl) ? "var(--display-size)" : "var(--hero-title-#{@size}-size)"
+        (@size == :xl) ? "var(--type-display-size)" : "var(--hero-title-#{@size}-size)"
       end
 
       def align_class

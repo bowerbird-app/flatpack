@@ -36,7 +36,7 @@ module FlatPack
         render_inline(Component.new(title: "Dashboard", subtitle: "Welcome back"))
 
         assert_selector "p", text: "Welcome back"
-        assert_selector "p.mt-2.text-lg", text: "Welcome back"
+        assert_selector "p.mt-2.fp-type-body--lg", text: "Welcome back"
         assert_no_selector "p[style*='font-size: var(--page-title-h1-size']"
       end
 
@@ -44,9 +44,9 @@ module FlatPack
         render_inline(Component.new(title: "Dashboard", subtitle: "Welcome back", large_subtitle: true))
 
         assert_selector "p[style*='font-size: var(--page-title-h1-size)']", text: "Welcome back"
-        assert_selector "p[style*='font-weight: bold']", text: "Welcome back"
+        assert_selector "p[style*='font-weight: var(--type-heading-weight)']", text: "Welcome back"
         assert_selector "p[style*='margin-top: 0']", text: "Welcome back"
-        assert_no_selector "p.mt-2.text-lg"
+        assert_no_selector "p.mt-2.fp-type-body--lg"
       end
 
       def test_large_subtitle_matches_all_variant_sizes
@@ -114,8 +114,8 @@ module FlatPack
 
         html = page.native.to_html
         assert_selector "h1[style*='font-size: var(--page-title-h1-size)']", text: "Dashboard"
-        assert_includes html, "font-bold"
-        assert_includes html, "leading-tight"
+        assert_includes html, "fp-type-heading"
+        refute_includes html, "font-bold"
         refute_includes html, "fp-display"
         refute_includes html, "--display-size"
         refute_includes html, "--display-weight"
@@ -126,10 +126,10 @@ module FlatPack
 
         html = page.native.to_html
         assert_selector "h1.fp-display", text: "Northlight"
-        assert_includes html, "font-size: var(--display-size)"
-        assert_includes html, "font-weight: var(--display-weight)"
-        assert_includes html, "letter-spacing: var(--display-tracking)"
-        assert_includes html, "line-height: var(--display-leading)"
+        assert_includes html, "font-size: var(--type-display-size)"
+        assert_includes html, "font-weight: var(--type-display-weight)"
+        assert_includes html, "letter-spacing: var(--type-display-tracking)"
+        assert_includes html, "line-height: var(--type-display-leading)"
         assert_includes html, "fp-text-balance"
         assert_includes html, "fp-hero-title"
         assert_includes html, "fp-hero-title--xl"
@@ -146,7 +146,7 @@ module FlatPack
         ))
 
         assert_selector "p.fp-display-subtitle", text: "Stills, credits, and download packs"
-        assert_selector "p.text-lg"
+        assert_selector "p.fp-type-body--lg"
         refute_selector "p.mt-2"
       end
 

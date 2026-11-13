@@ -31,7 +31,7 @@ Hosts that today write `<h1 class="text-2xl font-semibold">` or a raw `<h2>` sho
 | `level` | Symbol, String, Integer | `:h2` | no | Semantic tag. `:h1`–`:h6`, or `1`–`6`. Visual size stays with `size:`. Invalid values raise `ArgumentError`. |
 | `size` | Symbol, String | `:"2xl"` | no | Type scale: `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:"2xl"`, `:"3xl"`, `:"4xl"`, `:"5xl"`. Maps to `--text-*`. Product chrome stays at `--text-5xl` and below. Cover type stays on Hero Title. Invalid values raise `ArgumentError`. |
 | `style` | Symbol, String | `:default` | no | Ink token. `:default` is `--surface-content-color`. `:muted` is `--surface-muted-content-color`. `:primary` is `--color-primary`. Not Alert/Badge `style`. Invalid values raise `ArgumentError`. |
-| `weight` | Symbol, String | `:semibold` | no | Font weight: `:normal`, `:medium`, `:semibold`, `:bold`. Invalid values raise `ArgumentError`. |
+| `weight` | Symbol, String | `:semibold` | no | `:semibold` follows `--type-heading-weight`. `:normal`, `:medium`, and `:bold` pin `data-fp-weight`. Invalid values raise `ArgumentError`. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for the heading tag. |
 
 ## Slots

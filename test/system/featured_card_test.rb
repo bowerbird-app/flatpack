@@ -79,6 +79,11 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
 
   test "a card title weight variable changes the computed weight" do
     visit "/demo/cards"
+    page.execute_script(<<~JS)
+      localStorage.setItem("flatpack-theme", "rounded")
+      localStorage.setItem("flatpack-dummy-theme", "rounded")
+    JS
+    visit "/demo/cards"
     assert_selector ".fp-card--featured .fp-card__title", text: "Spring launch"
 
     sample = page.evaluate_script(<<~JS)
@@ -93,7 +98,7 @@ class FeaturedCardTest < ActionDispatch::SystemTestCase
     JS
 
     refute_includes sample.fetch("classes").split, "font-semibold"
-    assert_equal "600", sample.fetch("before")
+    assert_equal "500", sample.fetch("before")
     assert_equal "200", sample.fetch("after")
   end
 

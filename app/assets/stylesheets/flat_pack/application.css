@@ -1432,7 +1432,6 @@
 /* Zero specificity so a declaration on the card, or an ancestor, wins. */
 :where(.fp-card--featured) {
   --card-title-size: var(--text-4xl);
-  --card-title-weight: var(--display-weight);
   --card-title-color: var(--surface-content-color);
   --card-media-image-height: 100%;
   --card-body-gap: var(--space-4);
@@ -1467,8 +1466,10 @@
 
 .fp-card__title {
   margin: 0;
-  font-size: var(--card-title-size, var(--text-2xl));
-  font-weight: var(--card-title-weight, var(--display-weight));
+  font-size: var(--card-title-size, var(--type-heading-size));
+  font-weight: var(--card-title-weight, var(--type-heading-weight));
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
   color: var(--card-title-color, var(--surface-content-color));
 }
 
@@ -1987,8 +1988,9 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
 
 .fp-fab__text {
   display: none;
-  font-size: var(--text-sm);
-  font-weight: 600;
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
   line-height: 1;
   white-space: nowrap;
   padding-right: 0.25rem;
@@ -2133,7 +2135,8 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
   color: var(--fab-label-text-color);
   box-shadow: var(--fab-label-shadow);
   font-size: var(--text-xs);
-  font-weight: 600;
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -2233,13 +2236,91 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
   }
 }
 
+/* Semantic type roles. Unlayered so a Tailwind utility cannot reset the role.
+ * A later size modifier or [data-fp-weight] wins on equal specificity.
+ */
+.fp-type-display {
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  letter-spacing: var(--type-display-tracking);
+  line-height: var(--type-display-leading);
+}
+
+.fp-type-section {
+  font-size: var(--type-section-size);
+  font-weight: var(--type-section-weight);
+  letter-spacing: var(--type-section-tracking);
+  line-height: var(--type-section-leading);
+}
+
+.fp-type-section--md {
+  font-size: var(--text-lg);
+}
+
+.fp-type-section--sm {
+  font-size: var(--text-base);
+}
+
+.fp-type-heading {
+  font-size: var(--type-heading-size);
+  font-weight: var(--type-heading-weight);
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
+}
+
+.fp-heading--xs { font-size: var(--text-xs); }
+.fp-heading--sm { font-size: var(--text-sm); }
+.fp-heading--base { font-size: var(--text-base); }
+.fp-heading--lg { font-size: var(--text-lg); }
+.fp-heading--xl { font-size: var(--text-xl); }
+.fp-heading--2xl { font-size: var(--text-2xl); }
+.fp-heading--3xl { font-size: var(--text-3xl); }
+.fp-heading--4xl { font-size: var(--text-4xl); }
+.fp-heading--5xl { font-size: var(--text-5xl); }
+
+.fp-type-body {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-leading);
+}
+
+.fp-type-body--xs { font-size: var(--text-xs); }
+.fp-type-body--sm { font-size: var(--text-sm); }
+.fp-type-body--lg { font-size: var(--text-lg); }
+.fp-type-body--xl { font-size: var(--text-xl); }
+.fp-type-body--2xl { font-size: var(--text-2xl); }
+
+.fp-type-control {
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
+  line-height: var(--type-control-leading);
+}
+
+.fp-type-pill {
+  font-size: var(--type-pill-size);
+  font-weight: var(--type-pill-weight);
+  letter-spacing: var(--type-pill-tracking);
+  line-height: var(--type-pill-leading);
+}
+
+.fp-type-size-xs { font-size: 0.625rem; }
+.fp-type-size-sm { font-size: var(--text-xs); }
+.fp-type-size-lg { font-size: var(--text-base); }
+
+[data-fp-weight="normal"] { font-weight: 400; }
+[data-fp-weight="medium"] { font-weight: 500; }
+[data-fp-weight="semibold"] { font-weight: 600; }
+[data-fp-weight="bold"] { font-weight: 700; }
+
 /* Cover type. Unlayered so Tailwind preflight cannot collapse headings
  * to inherit. HeroTitle, PageTitle, and Hero also set the same tokens inline.
  */
 .fp-hero-title {
-  font-weight: var(--display-weight);
-  letter-spacing: var(--display-tracking);
-  line-height: var(--display-leading);
+  font-weight: var(--type-display-weight);
+  letter-spacing: var(--type-display-tracking);
+  line-height: var(--type-display-leading);
 }
 
 .fp-hero-title--md {
@@ -2259,10 +2340,10 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
 }
 
 .fp-display {
-  font-size: var(--display-size);
-  font-weight: var(--display-weight);
-  letter-spacing: var(--display-tracking);
-  line-height: var(--display-leading);
+  font-size: var(--type-display-size);
+  font-weight: var(--type-display-weight);
+  letter-spacing: var(--type-display-tracking);
+  line-height: var(--type-display-leading);
 }
 
 .fp-display + .fp-display-subtitle {
@@ -2276,44 +2357,42 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
  */
 .fp-content {
   color: var(--surface-muted-content-color);
-  line-height: 1.75;
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-leading);
 }
 
 .fp-content :where(h1, h2, h3, h4, h5, h6) {
   color: var(--surface-content-color);
-  letter-spacing: -0.025em;
-  line-height: var(--leading-tight, 1.25);
+  font-weight: var(--type-heading-weight);
+  letter-spacing: var(--type-heading-tracking);
+  line-height: var(--type-heading-leading);
   text-wrap: pretty;
 }
 
 .fp-content h1 {
   font-size: var(--content-h1-size, var(--text-5xl, 3rem));
-  font-weight: 600;
   margin-top: 0.5rem;
 }
 
 .fp-content h2 {
   font-size: var(--content-h2-size, var(--text-3xl, 1.875rem));
-  font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h3 {
   font-size: var(--content-h3-size, var(--text-2xl, 1.5rem));
-  font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h4 {
   font-size: var(--content-h4-size, var(--text-xl, 1.25rem));
-  font-weight: 700;
   margin-top: 2rem;
 }
 
 .fp-content h5,
 .fp-content h6 {
   font-size: var(--content-h5-size, var(--text-lg, 1.125rem));
-  font-weight: 700;
   margin-top: 2rem;
 }
 
@@ -2323,12 +2402,15 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
 
 .fp-content p,
 .fp-content li {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-leading);
   text-wrap: pretty;
 }
 
 .fp-content p {
   font-size: var(--content-p-size, var(--text-lg, 1.125rem));
-  line-height: 1.75;
   margin-top: 2rem;
 }
 
@@ -2336,15 +2418,18 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
 .fp-content .fp-content-kicker {
   color: var(--color-primary);
   font-size: var(--content-kicker-size, var(--text-lg, 1.125rem));
-  font-weight: 600;
-  line-height: 1.75;
+  font-weight: var(--type-section-weight);
+  letter-spacing: var(--type-section-tracking);
+  line-height: var(--type-body-leading);
   margin-top: 0;
 }
 
 .fp-content h1 + p,
 .fp-content .fp-content-lead {
   font-size: var(--content-lead-size, var(--text-2xl, 1.5rem));
-  line-height: 2;
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+  line-height: var(--type-body-leading);
   margin-top: 1.5rem;
 }
 
@@ -2587,7 +2672,8 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
 .fp-range-input-glyph {
   flex: 0 0 auto;
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
   line-height: 1;
   color: var(--surface-muted-content-color);
   user-select: none;
@@ -2656,7 +2742,8 @@ html:has([data-flat-pack-layout-scroll="page"] [data-flat-pack-content-scroll="b
 .fp-range-input-sample {
   display: inline-block;
   font-family: var(--font-sans);
-  font-weight: 600;
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
   line-height: 1;
   font-size: calc(var(--fp-range-value) * 1px);
   color: var(--surface-content-color);
@@ -3596,8 +3683,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .flat-pack-collection-editor-heading {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: var(--text-base);
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
+  line-height: var(--type-control-leading);
   color: var(--collection-editor-title-color);
 }
 
@@ -3644,8 +3733,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 .flat-pack-collection-editor-header {
   display: none;
   color: var(--collection-editor-description-color);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
 }
 
 .flat-pack-collection-editor-row:hover,
@@ -3910,8 +4000,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 
 .flat-pack-collection-editor-title {
   margin: 0;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
+  line-height: var(--type-control-leading);
   color: var(--collection-editor-title-color);
 }
 
@@ -5842,9 +5934,10 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   margin: 0;
   min-width: 0;
   overflow: hidden;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  line-height: var(--leading-snug);
+  font-size: var(--type-control-size);
+  font-weight: var(--type-control-weight);
+  letter-spacing: var(--type-control-tracking);
+  line-height: var(--type-control-leading);
   color: var(--popover-text-color);
   text-overflow: ellipsis;
   white-space: nowrap;

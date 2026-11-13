@@ -6,9 +6,9 @@ module FlatPack
       SCHEMES = StyleRegistry::BUILT_IN.transform_values { |config| config.fetch(:press) }.freeze
 
       SIZES = {
-        sm: "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] text-xs",
-        md: "px-[var(--button-padding-x-md)] py-[var(--button-padding-y-md)] text-sm",
-        lg: "px-[var(--button-padding-x-lg)] py-[var(--button-padding-y-lg)] text-base"
+        sm: "px-[var(--button-padding-x-sm)] py-[var(--button-padding-y-sm)] fp-type-size-sm",
+        md: "px-[var(--button-padding-x-md)] py-[var(--button-padding-y-md)]",
+        lg: "px-[var(--button-padding-x-lg)] py-[var(--button-padding-y-lg)] fp-type-size-lg"
       }.freeze
 
       ICON_ONLY_SIZES = {
@@ -352,7 +352,7 @@ module FlatPack
           cross_align_class,
           ALIGNS.fetch(@align),
           default_radius_class,
-          "font-medium",
+          "fp-type-control",
           "cursor-pointer",
           "fp-button",
           press_class,
