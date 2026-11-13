@@ -73,7 +73,10 @@
       variables: [
         { variable: "label", accepts: "String (required)", example: "label: \"Seats\"" },
         { variable: "used", accepts: "Numeric (required, >= 0)", example: "used: 8" },
-        { variable: "limit", accepts: "Numeric or nil", example: "limit: 10" },
+        { variable: "limit", accepts: "Numeric or nil (>= 0). 0 is None on plan. Omit when included and purchased are set.", example: "limit: 10" },
+        { variable: "included", accepts: "Numeric or nil (>= 0). Set with purchased.", example: "included: 100" },
+        { variable: "purchased", accepts: "Numeric or nil (>= 0). Set with included.", example: "purchased: 50" },
+        { variable: "warning_ratio", accepts: "Numeric from 0 to 1", example: "warning_ratio: 0.5" },
         { variable: "unit", accepts: "String or nil", example: "unit: \"seats\"" },
         { variable: "description", accepts: "String or nil", example: "description: \"Resets on your billing date.\"" },
         { variable: "tooltip_text", accepts: "String or nil", example: "tooltip_text: \"Counted for active members\"" }

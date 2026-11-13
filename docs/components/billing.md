@@ -73,6 +73,8 @@ None. Do not add a monolithic `FlatPack::Billing::Component` that owns an entire
 <%= render FlatPack::Billing::InvoiceList::Component.new(items: @invoices) %>
 ```
 
+Usage Meter treats `limit: nil` as unlimited and `limit: 0` as “None on plan” (no bar). Pass `included` and `purchased` together when the allowance is split. Their sum is the limit, and the meter keeps a single bar plus a breakdown line such as “100 included + 50 purchased”. `warning_ratio` defaults to `0.8`. At or over the limit the bar is danger. These are display counts, not payment-provider ids.
+
 ## Non-goals
 
 - No Stripe, PayPal, or other SDK scripts, Elements mounts, or webhook handling

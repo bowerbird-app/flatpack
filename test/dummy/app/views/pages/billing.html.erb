@@ -126,10 +126,12 @@
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Usage Meter",
     anchor_link: true,
-    subtitle: "Usage against a limit, or unlimited when no limit is set."
+    subtitle: "Usage against a limit, a split allowance, or none on the plan."
   ) %>
   <div class="space-y-6 mb-4 max-w-xl">
     <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Seats", used: 4, limit: 10, unit: "seats") %>
+    <%= render FlatPack::Billing::UsageMeter::Component.new(label: "API calls", used: 80, included: 100, purchased: 50, unit: "calls") %>
+    <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Exports", used: 0, limit: 0) %>
     <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Storage", used: 12, limit: 10, unit: "GB") %>
   </div>
   <%= render FlatPack::Button::Component.new(text: "Full Usage Meter demo", href: demo_billing_usage_meter_path, style: :secondary, size: :sm) %>
