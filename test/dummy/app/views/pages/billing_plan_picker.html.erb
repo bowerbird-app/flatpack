@@ -1,12 +1,12 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Plan Picker",
-  subtitle: "Compare plans with feature lists, current/popular markers, and one CTA per card."
+  subtitle: "Compare plans. Link out, or submit a form. Swap one footer. Set the columns and the card padding."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :billing_plan_picker %>
 
 
-<section class="mb-12">
+<section class="mb-12" id="choices">
   <%= render FlatPack::SectionTitle::Component.new(title: "Plan Choices", anchor_link: true, subtitle: "Highlight one popular plan and mark the current plan.") %>
   <div class="mb-4">
     <%= render FlatPack::Billing::PlanPicker::Component.new(
@@ -52,6 +52,161 @@
     CODE
     language: "erb",
     title: "Plan Choices"
+  ) %>
+</section>
+
+<section class="mb-12" id="subscribe">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Subscribe", anchor_link: true, subtitle: "url submits a form. href still navigates. Do not pass both.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      items: [
+        {
+          name: "Basic",
+          price_text: "$9 / month",
+          description: "Posts the plan name.",
+          features: ["3 seats", "Email support"],
+          url: demo_billing_plan_picker_choose_path,
+          params: {plan: "basic"},
+          cta_text: "Subscribe"
+        },
+        {
+          name: "Pro",
+          price_text: "$29 / month",
+          description: "Patches, with a seat count, and skips Turbo.",
+          features: ["10 seats", "Priority support"],
+          url: demo_billing_plan_picker_choose_path,
+          method: :patch,
+          params: {plan: "pro", seats: 10},
+          turbo: false,
+          cta_text: "Switch to Pro",
+          highlighted: true
+        },
+        {
+          name: "Enterprise",
+          price_text: "Contact us",
+          description: "This one is still a link.",
+          features: ["Unlimited seats"],
+          href: "#contact-sales",
+          cta_text: "Contact sales"
+        }
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        items: [
+          {name: "Basic", price_text: "$9 / month", url: "/billing/plans/basic", params: {plan: "basic"}, cta_text: "Subscribe"},
+          {name: "Pro", price_text: "$29 / month", url: "/billing/plans/pro", method: :patch, params: {plan: "pro", seats: 10}, turbo: false, cta_text: "Switch to Pro"},
+          {name: "Enterprise", price_text: "Contact us", href: "/billing/contact", cta_text: "Contact sales"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Subscribe"
+  ) %>
+</section>
+
+<section class="mb-12" id="custom-footer">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Custom footer", anchor_link: true, subtitle: "plan_footer replaces the button on one plan. The others keep theirs.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      items: [
+        {
+          name: "Basic",
+          price_text: "$9 / month",
+          features: ["3 seats"],
+          href: "#choose-basic",
+          cta_text: "Choose Basic"
+        },
+        {
+          name: "Enterprise",
+          price_text: "Contact us",
+          features: ["Unlimited seats", "A human"],
+          href: "#contact-sales",
+          cta_text: "Contact sales"
+        }
+      ]
+    ) do |picker| %>
+      <% picker.plan_footer(name: "Enterprise") do %>
+        <p class="mb-3 text-sm text-[var(--surface-muted-content-color)]">We reply within a day.</p>
+        <%= render FlatPack::Button::Component.new(text: "Book a call", href: "#book-a-call", style: :secondary, class: "w-full") %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        items: [
+          {name: "Basic", href: "/billing/plans/basic", cta_text: "Choose Basic"},
+          {name: "Enterprise", href: "/billing/contact", cta_text: "Contact sales"}
+        ]
+      ) do |picker| %&gt;
+        &lt;% picker.plan_footer(name: "Enterprise") do %&gt;
+          &lt;%= render FlatPack::Button::Component.new(text: "Book a call", href: "/billing/contact", style: :secondary, class: "w-full") %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+    CODE
+    language: "erb",
+    title: "Custom footer"
+  ) %>
+</section>
+
+<section class="mb-12" id="columns">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Four columns", anchor_link: true, subtitle: "cols is the desktop count. Narrow screens stack. Default is 3.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      cols: 4,
+      items: [
+        {name: "Free", price_text: "$0", features: ["1 seat"], href: "#free", cta_text: "Start free"},
+        {name: "Basic", price_text: "$9", features: ["3 seats"], href: "#basic", cta_text: "Choose Basic"},
+        {name: "Pro", price_text: "$29", features: ["10 seats"], href: "#pro", cta_text: "Choose Pro", highlighted: true},
+        {name: "Team", price_text: "$49", features: ["25 seats"], href: "#team", cta_text: "Choose Team"}
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        cols: 4,
+        items: [
+          {name: "Free", price_text: "$0", href: "/billing/plans/free"},
+          {name: "Basic", price_text: "$9", href: "/billing/plans/basic"},
+          {name: "Pro", price_text: "$29", href: "/billing/plans/pro"},
+          {name: "Team", price_text: "$49", href: "/billing/plans/team"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Four columns"
+  ) %>
+</section>
+
+<section class="mb-12" id="padding">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Roomy cards", anchor_link: true, subtitle: "padding uses the Card scale: none, sm, md, or lg. md is the default.") %>
+  <div class="mb-4">
+    <%= render FlatPack::Billing::PlanPicker::Component.new(
+      padding: :lg,
+      cols: 2,
+      items: [
+        {name: "Basic", price_text: "$9 / month", description: "More air around the copy.", features: ["3 seats"], href: "#choose-basic", cta_text: "Choose Basic"},
+        {name: "Pro", price_text: "$29 / month", description: "Same padding in the footer.", features: ["10 seats"], href: "#current-pro", cta_text: "Choose Pro", highlighted: true}
+      ]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanPicker::Component.new(
+        padding: :lg,
+        cols: 2,
+        items: [
+          {name: "Basic", price_text: "$9 / month", href: "/billing/plans/basic"},
+          {name: "Pro", price_text: "$29 / month", href: "/billing/plans/pro"}
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Roomy cards"
   ) %>
 </section>
 

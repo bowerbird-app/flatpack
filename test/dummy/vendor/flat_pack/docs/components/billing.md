@@ -4,7 +4,7 @@
 Define the presentational FlatPack billing component family so hosts can render plan, usage, payment, and invoice UI without payment-provider logic in FlatPack.
 
 ## When to use
-Use these components when a host (or a billing addon) already owns plans, invoices, and payment methods, and only needs consistent FlatPack surfaces for display and navigation actions.
+Use these components when a host (or a billing addon) already owns plans, invoices, and payment methods, and only needs consistent FlatPack surfaces for display and navigation actions. Plan Picker can also submit a host form. The host owns what that form does.
 
 Do **not** use this family to collect raw card numbers, run checkout, or mount a full billing settings app inside FlatPack.
 

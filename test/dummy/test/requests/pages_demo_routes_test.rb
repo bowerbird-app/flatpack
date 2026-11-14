@@ -514,6 +514,25 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Visa"
   end
 
+  test "billing plan picker demo renders form columns padding and a custom footer" do
+    get "/demo/billing/plan_picker"
+
+    assert_response :success
+    assert_includes response.body, "Subscribe"
+    assert_includes response.body, "action=\"#{demo_billing_plan_picker_choose_path}\""
+    assert_includes response.body, "Book a call"
+    assert_includes response.body, "lg:grid-cols-4"
+    assert_includes response.body, "data-fp-card-padding=\"lg\""
+  end
+
+  test "billing plan picker choose accepts the form" do
+    post demo_billing_plan_picker_choose_path, params: {plan: "pro"}
+
+    assert_redirected_to "#{demo_billing_plan_picker_path}#subscribe"
+    follow_redirect!
+    assert_includes response.body, "Pro it is."
+  end
+
   test "billing plan summary demo renders status variants" do
     get "/demo/billing/plan_summary"
 

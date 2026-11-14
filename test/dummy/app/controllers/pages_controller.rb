@@ -214,6 +214,13 @@ class PagesController < ApplicationController
   def billing_plan_picker
   end
 
+  def billing_plan_picker_choose
+    names = {"basic" => "Basic", "pro" => "Pro"}
+    chosen = names[params[:plan].to_s]
+    notice = chosen ? "#{chosen} it is." : "Pick a plan."
+    redirect_to demo_billing_plan_picker_path(anchor: "subscribe"), status: :see_other, notice: notice
+  end
+
   def billing_usage_meter
   end
 

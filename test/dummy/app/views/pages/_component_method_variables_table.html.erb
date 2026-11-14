@@ -76,7 +76,15 @@
       method_call: "render FlatPack::Billing::PlanPicker::Component.new(items: [{name: \"Pro\", price_text: \"$29 / month\", href: \"/plans/pro\"}])",
       variables: [
         { variable: "items", accepts: "Array of plan hashes (required keys: name)", example: "items: [{name: \"Pro\", price_text: \"$29 / month\", features: [\"10 seats\"], href: \"/plans/pro\", current: true, highlighted: true}]" },
-        { variable: "footer", accepts: "slot", example: "picker.footer { ... }" }
+        { variable: "items[].href", accepts: "String or nil. Navigation. Not with url", example: "href: \"/plans/pro\"" },
+        { variable: "items[].url", accepts: "String or nil. Form action. Not with href", example: "url: \"/billing/plans/pro\"" },
+        { variable: "items[].method", accepts: ":get, :post, :put, :patch, :delete. Form default :post", example: "method: :patch" },
+        { variable: "items[].params", accepts: "Hash or nil. Hidden fields. Needs url", example: "params: {plan: \"pro\"}" },
+        { variable: "items[].turbo", accepts: "true, false. Form data-turbo. Default true", example: "turbo: false" },
+        { variable: "cols", accepts: "1, 2, 3, 4, 6, 12, or :auto. Desktop count. Default 3", example: "cols: 4" },
+        { variable: "padding", accepts: ":none, :sm, :md, :lg. Card scale. Default :md", example: "padding: :lg" },
+        { variable: "footer", accepts: "slot", example: "picker.footer { ... }" },
+        { variable: "plan_footer", accepts: "slot per plan name. Replaces that CTA", example: "picker.plan_footer(name: \"Enterprise\") { ... }" }
       ]
     },
     billing_usage_meter: {

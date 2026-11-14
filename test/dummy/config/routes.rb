@@ -102,6 +102,7 @@ Rails.application.routes.draw do
   get "demo/billing", to: "pages#billing"
   get "demo/billing/plan_summary", to: "pages#billing_plan_summary"
   get "demo/billing/plan_picker", to: "pages#billing_plan_picker"
+  match "demo/billing/plan_picker/choose", to: "pages#billing_plan_picker_choose", via: [:post, :patch], as: :demo_billing_plan_picker_choose
   get "demo/billing/usage_meter", to: "pages#billing_usage_meter"
   get "demo/billing/payment_method", to: "pages#billing_payment_method"
   get "demo/billing/invoice_list", to: "pages#billing_invoice_list"
