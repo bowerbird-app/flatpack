@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.360] - 2026-11-14
+
+### Added
+- `FlatPack::Billing::UsageMeter::Component` accepts `warning_ratio` (default `0.8`). The bar switches to warning at that share of the limit. At or over the limit it stays danger.
+- Optional `included` and `purchased`. Pass both and omit `limit`. The limit is their sum. One line reads “100 included + 50 purchased”. There is still one progress bar.
+
+### Changed
+- `limit: 0` renders “None on plan” and no progress bar. A negative limit still raises. `included: 0` and `purchased: 0` use the same empty state.
+
+### Upgrade notes
+- `limit: 0` used to raise `ArgumentError`. It now renders the empty state. Hosts that passed `0` and rescued the error should pass `nil` for unlimited, or keep `0` for “None on plan”.
+- Pass `included` and `purchased` together. Do not also pass `limit`. Do not add a segmented bar or payment-provider ids.
+- No new CSS. Reload kit CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.360`.
+
 ## [0.1.359] - 2026-11-13
 
 ### Added

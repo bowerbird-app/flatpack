@@ -1,12 +1,12 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Usage Meter",
-  subtitle: "Show usage against a plan limit, or unlimited when no limit is set."
+  subtitle: "Show usage against a plan limit, a split allowance, or none on the plan."
 ) %>
 
 <%= render "pages/component_method_variables_table", component: :billing_usage_meter %>
 
 
-<section class="mb-12">
+<section id="usage-normal" class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Within Limit", anchor_link: true, subtitle: "Default progress style under 80% usage.") %>
   <div class="mb-4 max-w-xl">
     <%= render FlatPack::Billing::UsageMeter::Component.new(
@@ -33,12 +33,89 @@
   ) %>
 </section>
 
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "Near Limit and Over", anchor_link: true, subtitle: "Warning near the limit and danger at or over the limit.") %>
+<section id="usage-warning" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Warning", anchor_link: true, subtitle: "The bar warns from 80% of the limit. warning_ratio moves that line.") %>
   <div class="space-y-6 mb-4 max-w-xl">
     <%= render FlatPack::Billing::UsageMeter::Component.new(label: "API calls", used: 8500, limit: 10000, unit: "calls") %>
+    <%= render FlatPack::Billing::UsageMeter::Component.new(
+      label: "Build minutes",
+      used: 55,
+      limit: 100,
+      unit: "minutes",
+      warning_ratio: 0.5,
+      description: "Warns from half the allowance."
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::UsageMeter::Component.new(
+        label: "Build minutes",
+        used: 55,
+        limit: 100,
+        unit: "minutes",
+        warning_ratio: 0.5
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Warning"
+  ) %>
+</section>
+
+<section id="usage-over" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Over Limit", anchor_link: true, subtitle: "At or over the limit the bar turns danger.") %>
+  <div class="mb-4 max-w-xl">
     <%= render FlatPack::Billing::UsageMeter::Component.new(label: "Storage", used: 12, limit: 10, unit: "GB") %>
   </div>
+</section>
+
+<section id="usage-none" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "None on Plan", anchor_link: true, subtitle: "A limit of zero means the plan includes none. No bar.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::UsageMeter::Component.new(
+      label: "Exports",
+      used: 0,
+      limit: 0,
+      description: "Exports are not on this plan."
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::UsageMeter::Component.new(
+        label: "Exports",
+        used: 0,
+        limit: 0
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "None on Plan"
+  ) %>
+</section>
+
+<section id="usage-breakdown" class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Included and Purchased", anchor_link: true, subtitle: "The limit is the sum. One bar, plus a breakdown line.") %>
+  <div class="mb-4 max-w-xl">
+    <%= render FlatPack::Billing::UsageMeter::Component.new(
+      label: "API calls",
+      used: 80,
+      included: 100,
+      purchased: 50,
+      unit: "calls",
+      description: "Purchased calls last until you use them."
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::UsageMeter::Component.new(
+        label: "API calls",
+        used: 80,
+        included: 100,
+        purchased: 50,
+        unit: "calls"
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Included and Purchased"
+  ) %>
 </section>
 
 <section class="mb-12">

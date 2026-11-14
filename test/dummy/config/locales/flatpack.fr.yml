@@ -413,6 +413,8 @@ fr:
       usage_meter:
         unlimited: '%{used} · Illimité'
         of: '%{used} sur %{limit}'
+        none: Aucun dans le forfait
+        breakdown: '%{included} inclus + %{purchased} achetés'
     fab:
       label: Ajouter
       open_actions: Ouvrir les actions

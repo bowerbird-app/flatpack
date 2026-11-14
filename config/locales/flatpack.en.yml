@@ -409,6 +409,8 @@ en:
       usage_meter:
         unlimited: "%{used} · Unlimited"
         of: "%{used} of %{limit}"
+        none: None on plan
+        breakdown: "%{included} included + %{purchased} purchased"
     fab:
       label: Add
       open_actions: Open actions

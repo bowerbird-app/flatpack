@@ -168,6 +168,9 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Prefer `price_text` and `amount` as preformatted strings on billing. Do not add a billing currency formatter. `FlatPack::Number::Component` formats a single `value:` for display.
 - Prefer `cta_text` for plan-picker button copy (action label pattern via `*_text` / `text`).
 - Keep PCI out of FlatPack: never add props for full PAN, CVC, or Elements mount points.
+- Usage meter `limit: nil` is unlimited. `limit: 0` renders “None on plan” and no progress bar.
+- Usage meter `warning_ratio` (default `0.8`) is the share of the limit that switches the bar to warning. At or over the limit the bar is danger. The meter derives that progress `style`. Do not pass `style` for it.
+- Usage meter `included` and `purchased` are optional non-negative counts. Pass both or neither, and omit `limit`. Their sum is the limit. One breakdown line reads like “100 included + 50 purchased”, above one progress bar. A sum of zero is “None on plan”.
 
 ## Do not mix
 
@@ -205,3 +208,5 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not pass billing `price_text` or `amount` to `FlatPack::Number::Component`. Pass the numeric `value:`. Do not pass Number `currency:` to a billing plan.
 - Do not add cancel or scheduled values to billing `status`. A plan can be `:active` and still pass `ends_on`. `ends_on` is a date. Renewal copy stays on `renews_on`. Do not pass a formatted string to `ends_on`.
 - Do not pass Badge `size`, `dot`, or `removable` inside plan summary `badges`. Each hash is `text` and `style` only.
+- Do not pass Usage Meter `limit` together with `included` and `purchased`. The limit is the sum of those two counts.
+- Do not add a segmented usage bar, or Stripe fields such as a price id, subscription item id, or meter id. The counts are display numbers.
