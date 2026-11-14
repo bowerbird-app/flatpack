@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.368] - 2026-11-14
+
+### Added
+- `FlatPack::Button::Dropdown::Component#with_trigger_state(id:, style:, label:, press: nil)` renders a hidden node in the dropdown root. `data-press` comes from `FlatPack::Button::StyleRegistry` unless you pass `press:`. `with_trigger_label` stays the label slot.
+- `flat-pack--button-dropdown` applies that node on connect and when the node is replaced. It sets the trigger `data-fp-style`, swaps `fp-button-flat` / `fp-button-raised`, updates the visible label, and sets `aria-label` on the trigger and on a dialog menu. A missing or unknown style or press is left as it was. The trigger element is not replaced, so an open menu stays open and focus stays put.
+- Replace the node with `turbo_stream.replace` and `FlatPack::Button::Dropdown::TriggerState`. The dropdowns demo posts a status and replaces `#publish-status-state` while the menu stays open.
+- A keep-open submit stays focused when Turbo disables the submit button. The controller clears that disabled state and puts focus back on the button. The menu still stays open when focus lands on the document.
+
+### Upgrade notes
+- Additive. A dropdown without `with_trigger_state` renders and behaves as before.
+- Pass the same initial `text:` and `style:` as the state node so the first paint matches the node. After connect, the node is the label and style the controller applies.
+- Reload kit JavaScript. No new CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.368`.
+
 ## [0.1.367] - 2026-11-14
 
 ### Added

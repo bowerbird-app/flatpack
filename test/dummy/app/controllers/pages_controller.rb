@@ -37,6 +37,10 @@ class PagesController < ApplicationController
 
   PAGE_LAYOUT_VARIANTS = %w[plain float article login].freeze
   PAGE_LAYOUT_THEMES = {"light" => nil, "dark" => "dark", "rounded" => "rounded"}.freeze
+  PUBLISH_STATUSES = {
+    "draft" => {label: "Draft", style: :secondary},
+    "published" => {label: "Published", style: :success}
+  }.freeze
   PLAN_SUMMARY_THEMES = {"default" => nil, "rounded" => "rounded"}.freeze
 
   DEMO_THEME_TOKEN_MAPPINGS = [
@@ -165,6 +169,17 @@ class PagesController < ApplicationController
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to demo_buttons_dropdowns_path(anchor: "publish"), status: :see_other }
+    end
+  end
+
+  def buttons_dropdown_status
+    choice = PUBLISH_STATUSES[params[:status].to_s] || PUBLISH_STATUSES.fetch("draft")
+    @publish_status_style = choice[:style]
+    @publish_status_label = choice[:label]
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to demo_buttons_dropdowns_path(anchor: "publish-status") }
     end
   end
 

@@ -1,0 +1,7 @@
+<%= turbo_stream.replace "publish-status-state" do %>
+  <%= render FlatPack::Button::Dropdown::TriggerState.new(
+    id: "publish-status-state",
+    style: @publish_status_style,
+    label: @publish_status_label
+  ) %>
+<% end %>

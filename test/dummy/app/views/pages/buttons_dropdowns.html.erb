@@ -3,6 +3,56 @@
   subtitle: "Dropdown menus with full keyboard navigation, accessibility support, and multiple styling options."
 ) %>
 
+<section class="mb-12" id="publish-status">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Publish status",
+    anchor_link: true,
+    subtitle: "Pick a status. The trigger flips in place and the menu stays open."
+  ) %>
+  <div class="mb-4" id="publish-status-demo">
+    <%= render FlatPack::Button::Dropdown::Component.new(
+      id: "publish-status-dropdown",
+      text: "Draft",
+      style: :secondary,
+      menu_attributes: {id: "publish-status-menu"}
+    ) do |dropdown| %>
+      <% dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: "Draft") %>
+      <% [
+        {label: "Draft", status: "draft", icon: "pencil"},
+        {label: "Published", status: "published", icon: "check-circle", icon_style: :success}
+      ].each do |choice| %>
+        <% dropdown.menu_html(capture do %>
+          <%= form_with url: demo_buttons_dropdown_status_path, html: {class: "contents", data: {turbo: true, flat_pack_dropdown_keep_open: true}} do %>
+            <%= render FlatPack::Button::DropdownItem::Component.new(
+              text: choice[:label],
+              icon: choice[:icon],
+              icon_style: choice[:icon_style],
+              keep_open: true,
+              name: "status",
+              value: choice[:status]
+            ) %>
+          <% end %>
+        <% end) %>
+      <% end %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Button::Dropdown::Component.new(text: "Draft", style: :secondary) do |dropdown| %&gt;
+        &lt;% dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: "Draft") %&gt;
+        &lt;% dropdown.menu_item(text: "Published", keep_open: true) %&gt;
+      &lt;% end %&gt;
+
+      &lt;%= turbo_stream.replace "publish-status-state" do %&gt;
+        &lt;%= render FlatPack::Button::Dropdown::TriggerState.new(
+          id: "publish-status-state",
+          style: :success,
+          label: "Published"
+        ) %&gt;
+      &lt;% end %&gt;
+    CODE
+  ) %>
+</section>
 
 <!-- Button Dropdowns - Basic -->
 <section class="mb-12">

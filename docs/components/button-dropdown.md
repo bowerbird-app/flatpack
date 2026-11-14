@@ -9,7 +9,7 @@ Use Button Dropdown when multiple related actions should be grouped behind a sin
 
 ## Class
 - Primary: `FlatPack::Button::Dropdown::Component`
-- Related classes: `FlatPack::Button::DropdownItem::Component`, `FlatPack::Button::DropdownDivider::Component`
+- Related classes: `FlatPack::Button::DropdownItem::Component`, `FlatPack::Button::DropdownDivider::Component`, `FlatPack::Button::Dropdown::TriggerState`
 
 ## Props
 | name | type | default | required | description |
@@ -37,7 +37,8 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 
 | name | type | required | description |
 |---|---|---|---|
-| `trigger_label` | slot | no | A new `renders_one` slot (main had none). Replaces the visible trigger label in place (`with_trigger_label`). The trigger stays a Button. `text:` stays the accessible name when `icon_only: true`, and the collapse header. Omit the slot and the trigger shows `text:`. |
+| `trigger_label` | slot | no | A `renders_one` slot. Replaces the visible trigger label in place (`with_trigger_label`). The trigger stays a Button. `text:` stays the accessible name when `icon_only: true`, and the collapse header. Omit the slot and the trigger shows `text:`. |
+| `trigger_state` | slot | no | `with_trigger_state(id:, style:, label:, press: nil)`. Renders a hidden node inside the dropdown root (not in the menu) with `data-style`, `data-press`, `data-label`, and the `triggerState` target. `press` comes from `FlatPack::Button::StyleRegistry` unless you pass `press:` (`:flat` or `:raised`). An unknown style or press raises `ArgumentError`. `with_trigger_label` stays the label slot. Pass the same initial `style:` and `text:` as this node so the first paint matches. |
 | `menu_item` | slot | no | Adds `FlatPack::Button::DropdownItem::Component` entries. |
 | `menu_divider` | slot | no | Adds `FlatPack::Button::DropdownDivider::Component` separators. |
 | `menu_html` | method | no | Places already-rendered HTML in the menu, in call order with `menu_item`, `menu_divider`, and `menu_form`. Button Group uses it for each overflow child's `menu_row`. A hand-written `role="menuitem"` in that HTML still runs its outer `data-action` after the menu moves to `document.body`, even without `data-flat-pack-dropdown-item`. |
@@ -67,6 +68,7 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 ## Variants
 - Position variants: `:bottom_right`, `:bottom_left`, `:top_right`, `:top_left`. The menu is `fixed` and positioned from the trigger rectangle, including a small icon-only trigger. `place` in `flat_pack/positioning.js` keeps the requested corner (`flip: false`). The gap is 8px. The viewport clamp reads `--overlay-edge-offset`, and an oversized menu sticks to that edge. Without `max_height:`, the controller also sets `max-height` to the space on that side so the menu scrolls instead of running off-screen. `--dropdown-viewport-margin` (default `2rem`) is the CSS fallback before JS measures. Scroll and resize while open run the same placement. Disconnect removes those listeners.
 - Trigger visual variants come from button `style`, `size`, `round`, and `icon_only`, including host-registered button styles.
+- A later restyle replaces the `trigger_state` node. The controller sets `data-fp-style` on the existing trigger, swaps `fp-button-flat` / `fp-button-raised` from `data-press`, writes the visible label, and sets `aria-label` on the trigger. A `role="dialog"` menu gets that `aria-label` too. A missing or unknown `data-style` or `data-press` is left alone. The controller does not derive press from the style name. The trigger element is not replaced, so a menu portaled to `document.body` stays open and focus stays where it is.
 
 ## Example
 ```erb
@@ -175,6 +177,27 @@ Square icon trigger. Omit `round` and the theme corner stays.
 <% end %>
 ```
 
+Restyle the trigger after a submit. The response replaces the state node. The trigger stays the same element, so an open menu stays open.
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Draft", style: :secondary) do |dropdown| %>
+  <% dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: "Draft") %>
+  <% dropdown.menu_item(text: "Published", keep_open: true) %>
+<% end %>
+```
+
+```erb
+<%= turbo_stream.replace "publish-status-state" do %>
+  <%= render FlatPack::Button::Dropdown::TriggerState.new(
+    id: "publish-status-state",
+    style: :success,
+    label: "Published"
+  ) %>
+<% end %>
+```
+
+`TriggerState` writes `data-press` from the style registry (`secondary` is `flat`, `success` is `raised`). Pass `press: :flat` or `press: :raised` to set it yourself. Give the item `keep_open: true`, or put the form in `menu_form`, so the click does not close the menu. A keep-open submit stays focused: Turbo's default submitter disables the button, and the controller turns that off so the blur does not close the menu. The demo at `/demo/buttons/dropdowns#publish-status` posts and replaces that node.
+
 Host menu classes and a trigger label, with no subclass:
 
 ```erb
@@ -202,6 +225,7 @@ An item with `url:` is a form in that phone menu too. `method:`, `params:`, and 
 
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.
+- When a `trigger_state` node connects, its `data-label` becomes the trigger `aria-label` and the visible label. A dialog menu (`menu_form`) gets the same `aria-label`. A `role="menu"` keeps its own name. The trigger button is not replaced.
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
 - A pure action list uses `role="menu"`; items use `role="menuitem"`; the divider uses `role="separator"`.
 - An item with `url:` is a form (`class="contents"`) around a submit button. The button keeps the menu-item classes, `role="menuitem"`, `data-flat-pack-dropdown-item`, and `data-flat-pack-dropdown-keep-open` when `keep_open: true`. The menu stays `role="menu"`. This is separate from `menu_form`. Submitting that button blurs it (Turbo disables the control while the request runs) and leaves focus on the document. That blur does not close the menu. Moving focus from the item to another control still does.
