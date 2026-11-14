@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.363] - 2026-11-14
+## [0.1.361] - 2026-11-14
 
 ### Added
 - `FlatPack::Combobox::Component` accepts `search_params:`, `empty_action:`, `error_text:`, `icon:`, and `id:`. `name:` is optional. Option hashes and remote items accept a flat `data:` hash.
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Omit `name:` and nothing is submitted. `clear()` and `setSelection` still work. There is no `change` event without a hidden field.
 - `selected` now includes `data`. It is `{}` when the row has none.
 - Reload kit JavaScript. The new input class is `pl-1` when `icon:` is set. Rebuild Tailwind if the host scans utility classes. Do not rerun the install generator.
-- Redeploy so `meta.gem_version` shows `0.1.363`.
+- Redeploy so `meta.gem_version` shows `0.1.361`.
 
 ## [0.1.360] - 2026-11-14
 
