@@ -33,9 +33,8 @@ class FileInputShowFileListTest < ActionDispatch::SystemTestCase
       refute_selector "[data-flat-pack--file-input-target='fileList']", visible: :all
       attach_file("stems", stem.to_s, make_visible: true)
       refute_selector "[data-flat-pack--file-input-target='fileList']", visible: :all
+      assert_text "mix-stem.txt"
     end
-
-    assert_text "mix-stem.txt"
 
     payload = page.evaluate_script("window.fileInputEvents")
     assert_equal 1, payload.length
