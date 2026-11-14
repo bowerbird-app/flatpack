@@ -119,6 +119,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Character mood | `state` | `FlatPack::AnimatedCharacter::Component` only. A state name from `definition`, such as `:idle` or `:blink`. Not billing `status`. |
 | Icon motion | `animate` | `FlatPack::Shared::IconComponent` only. `:wiggle`, `:pop`, `:draw`, `:spin`, `:nudge`. |
 | Icon motion trigger | `trigger` | `FlatPack::Shared::IconComponent` only, with `animate`. `:hover` (default), `:click`, or `:mount`. |
+| Combobox leading icon | `icon` | `FlatPack::Combobox::Component` only for this row. Optional IconComponent name drawn inside the field, before the text. The trailing chevron stays. Not a search-only variant. |
 | Hero cover step | `title_size` | Hero only. Opt-in `FlatPack::HeroTitle::Component` size (`:md`, `:lg`, `:xl`, `:xxl`) for the headline. Omit to keep today's default or `size: :display` mapping. Not EmptyState `title_size`. |
 | Empty state heading | `title_size` | `FlatPack::EmptyState::Component` only. `:xs`, `:sm`, `:base`, `:lg`, `:xl`, `:xxl`, or `:display`. `:display` uses `.fp-display`. Omit and the heading follows `size` (`:sm` → `:base`, `:md` → `:lg`, `:lg` → `:xl`). |
 | Empty state sentence | `description_size` | `FlatPack::EmptyState::Component` only. `:sm`, `:md`, `:lg`, or `:xl` (`--text-sm`, `--text-base`, `--text-lg`, `--text-xl`). Omit and it follows `size` with those names. Not `title_size` and not `:base`. |

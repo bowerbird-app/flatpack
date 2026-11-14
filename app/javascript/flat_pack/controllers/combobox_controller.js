@@ -11,14 +11,16 @@ const OPTION_CLASSES = [
 ].join(" ")
 
 export default class extends Controller {
-  static targets = ["input", "value", "list", "option", "empty", "loading", "hint"]
+  static targets = ["input", "value", "list", "option", "empty", "loading", "hint", "emptyAction"]
   static values = {
     emptyText: { type: String, default: "No matches" },
+    errorText: { type: String, default: "Search failed" },
     loadingText: { type: String, default: "Searching..." },
     hintText: { type: String, default: "Type at least 2 characters to search" },
     searchMode: { type: String, default: "local" },
     searchEndpoint: { type: String, default: "" },
     searchParam: { type: String, default: "q" },
+    searchParams: { type: Object, default: {} },
     minSearchLength: { type: Number, default: 2 },
     debounce: { type: Number, default: 300 }
   }
@@ -26,6 +28,7 @@ export default class extends Controller {
   connect() {
     this.openList = false
     this.activeIndex = -1
+    this.editedByUser = false
     this.remote = createRemoteQuery()
     this.outsideClick = onClickOutside(document, () => this.close(), {
       event: "mousedown",
@@ -58,12 +61,32 @@ export default class extends Controller {
     playOverlayExit(this.listTarget, { placement: "bottom" })
   }
 
+  clear() {
+    this.inputTarget.value = ""
+    this.writeHidden("")
+    this.close()
+    this.dispatchHiddenChange()
+    this.dispatchCombobox("cleared")
+  }
+
+  // Sets the field without opening the list and without flat-pack:combobox:selected.
+  // Hosts that need the choice event should listen for change, or dispatch selected themselves.
+  setSelection(selection = {}) {
+    const value = selection?.value == null ? "" : String(selection.value)
+    const label = selection?.label == null ? "" : String(selection.label)
+    this.writeHidden(value)
+    this.inputTarget.value = label
+    this.dispatchHiddenChange()
+  }
+
   filter() {
+    this.editedByUser = true
     if (!this.openList) {
       this.open()
-      return
+    } else {
+      this.applyFilter()
     }
-    this.applyFilter()
+    this.editedByUser = false
   }
 
   applyFilter() {
@@ -72,28 +95,30 @@ export default class extends Controller {
       return
     }
 
-    const query = this.inputTarget.value.trim().toLowerCase()
-    const exact = this.currentOptions().find((option) => option.dataset.label.toLowerCase() === query)
-    if (!exact) this.valueTarget.value = ""
+    const query = this.inputTarget.value.trim()
+    const previous = this.hiddenValue()
+    const exact = this.currentOptions().find((option) => option.dataset.label.toLowerCase() === query.toLowerCase())
+    if (!exact) this.writeHidden("")
+    this.releaseHiddenIfEdited(previous, query)
     let visible = 0
 
     this.currentOptions().forEach((option) => {
-      const match = option.dataset.label.toLowerCase().includes(query)
+      const match = option.dataset.label.toLowerCase().includes(query.toLowerCase())
       option.classList.toggle("hidden", !match)
       if (match) visible += 1
     })
 
-    this.setStatus({ empty: visible === 0 })
-    this.activeIndex = visible > 0 ? 0 : -1
-    this.syncActive()
+    this.showEmptyState(visible === 0, this.emptyTextValue)
   }
 
   applyRemoteFilter() {
     this.remote.abort()
     const query = this.inputTarget.value.trim()
+    const previous = this.hiddenValue()
     const selected = this.currentOptions().find((option) => option.getAttribute("aria-selected") === "true")
     const selectedLabel = selected?.dataset.label || ""
-    if (query.toLowerCase() !== selectedLabel.toLowerCase()) this.valueTarget.value = ""
+    if (query.toLowerCase() !== selectedLabel.toLowerCase()) this.writeHidden("")
+    this.releaseHiddenIfEdited(previous, query)
 
     if (query.length < this.minSearchLengthValue) {
       this.remote.stop()
@@ -109,18 +134,27 @@ export default class extends Controller {
     try {
       const response = await this.remote.fetch(this.searchEndpointValue, {
         query,
-        param: this.searchParamValue
+        param: this.searchParamValue,
+        params: this.remoteParams()
       })
 
+      if (!this.queryIsCurrent(query)) return
+
       if (!response.ok) {
-        this.renderRemoteOptionsIfCurrent(query, [])
+        this.showRemoteError(response.status)
         return
       }
 
-      this.renderRemoteOptionsIfCurrent(query, this.normalizeItems(await response.json()))
+      const payload = await response.json()
+      if (!this.queryIsCurrent(query)) return
+
+      const items = this.normalizeItems(payload)
+      this.renderRemoteOptions(items)
+      this.dispatchCombobox("results", { query, items, payload })
     } catch (error) {
       if (error?.name === "AbortError") return
-      this.renderRemoteOptionsIfCurrent(query, [])
+      if (!this.queryIsCurrent(query)) return
+      this.showRemoteError(null)
     }
   }
 
@@ -138,28 +172,40 @@ export default class extends Controller {
         return {
           value,
           label,
-          subtitle: subtitle || null
+          subtitle: subtitle || null,
+          data: this.normalizeItemData(item?.data)
         }
       })
       .filter(Boolean)
   }
 
-  renderRemoteOptionsIfCurrent(query, items) {
-    if (this.inputTarget.value.trim() !== query) return
-    this.renderRemoteOptions(items)
+  normalizeItemData(raw) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {}
+
+    const data = {}
+    Object.entries(raw).forEach(([key, value]) => {
+      if (value == null) return
+      const kind = typeof value
+      if (kind === "string" || kind === "number" || kind === "boolean") data[key] = value
+    })
+    return data
   }
 
   renderRemoteOptions(items) {
     this.inputTarget.removeAttribute("aria-busy")
     this.currentOptions().forEach((option) => option.remove())
+    const anchor = this.listAnchor()
 
     items.forEach((item, index) => {
-      this.listTarget.appendChild(this.buildOption(item, index))
+      const option = this.buildOption(item, index)
+      if (anchor) {
+        this.listTarget.insertBefore(option, anchor)
+      } else {
+        this.listTarget.appendChild(option)
+      }
     })
 
-    this.setStatus({ empty: items.length === 0, hint: false, loading: false })
-    this.activeIndex = items.length > 0 ? 0 : -1
-    this.syncActive()
+    this.showEmptyState(items.length === 0, this.emptyTextValue)
   }
 
   buildOption(item, index) {
@@ -173,6 +219,9 @@ export default class extends Controller {
     option.dataset.value = item.value
     option.dataset.label = item.label
     if (item.subtitle) option.dataset.subtitle = item.subtitle
+    if (item.data && Object.keys(item.data).length > 0) {
+      option.dataset.optionData = JSON.stringify(item.data)
+    }
 
     if (item.subtitle) {
       const label = document.createElement("span")
@@ -206,10 +255,31 @@ export default class extends Controller {
     this.syncActive()
   }
 
+  showRemoteError(status) {
+    this.inputTarget.removeAttribute("aria-busy")
+    this.currentOptions().forEach((option) => option.remove())
+    this.showEmptyState(true, this.errorTextValue)
+    this.dispatchCombobox("error", { status: status ?? null })
+  }
+
+  showEmptyState(empty, message) {
+    if (this.hasEmptyTarget && empty) this.emptyTarget.textContent = message
+    this.setStatus({ hint: false, loading: false, empty })
+    const options = this.visibleOptions()
+    this.activeIndex = options.length > 0 ? 0 : -1
+    this.syncActive()
+  }
+
   setStatus({ hint = false, loading = false, empty = false } = {}) {
     if (this.hasHintTarget) this.hintTarget.classList.toggle("hidden", !hint)
     if (this.hasLoadingTarget) this.loadingTarget.classList.toggle("hidden", !loading)
     this.emptyTarget?.classList.toggle("hidden", !empty)
+    this.syncEmptyAction(empty && !hint && !loading)
+  }
+
+  syncEmptyAction(show) {
+    if (!this.hasEmptyActionTarget) return
+    this.emptyActionTarget.classList.toggle("hidden", !show)
   }
 
   keydown(event) {
@@ -240,30 +310,54 @@ export default class extends Controller {
   }
 
   select(option) {
-    this.valueTarget.value = option.dataset.value
+    if (this.isEmptyAction(option)) {
+      this.dispatchCombobox("empty-action", {
+        query: this.inputTarget.value.trim(),
+        value: option.dataset.value
+      })
+      this.close()
+      this.inputTarget.focus()
+      return
+    }
+
+    this.writeHidden(option.dataset.value)
     this.inputTarget.value = option.dataset.label
     this.currentOptions().forEach((item) => {
       item.setAttribute("aria-selected", item === option ? "true" : "false")
     })
-    this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }))
-    this.element.dispatchEvent(new CustomEvent("flat-pack:combobox:selected", {
-      bubbles: true,
-      detail: {
-        value: option.dataset.value,
-        label: option.dataset.label,
-        subtitle: option.dataset.subtitle || null
-      }
-    }))
+    this.dispatchHiddenChange()
+    this.dispatchCombobox("selected", {
+      value: option.dataset.value,
+      label: option.dataset.label,
+      subtitle: option.dataset.subtitle || null,
+      data: this.readOptionData(option)
+    })
     this.close()
     this.inputTarget.focus()
   }
 
   currentOptions() {
-    return Array.from(this.listTarget.querySelectorAll('[role="option"]'))
+    return this.optionElements().filter((option) => !this.isEmptyAction(option))
   }
 
   visibleOptions() {
-    return this.currentOptions().filter((option) => !option.classList.contains("hidden"))
+    return this.optionElements().filter((option) => !option.classList.contains("hidden"))
+  }
+
+  optionElements() {
+    return Array.from(this.listTarget.querySelectorAll('[role="option"]'))
+  }
+
+  isEmptyAction(option) {
+    return option?.dataset?.emptyAction === "true"
+  }
+
+  listAnchor() {
+    if (this.hasHintTarget) return this.hintTarget
+    if (this.hasLoadingTarget) return this.loadingTarget
+    if (this.hasEmptyTarget) return this.emptyTarget
+    if (this.hasEmptyActionTarget) return this.emptyActionTarget
+    return null
   }
 
   move(delta) {
@@ -287,10 +381,61 @@ export default class extends Controller {
   }
 
   clearActive() {
-    this.currentOptions().forEach((option) => {
+    this.optionElements().forEach((option) => {
       option.classList.remove("bg-[var(--list-item-hover-background-color)]")
     })
     this.inputTarget.removeAttribute("aria-activedescendant")
+  }
+
+  queryIsCurrent(query) {
+    return this.inputTarget.value.trim() === query
+  }
+
+  remoteParams() {
+    const params = this.searchParamsValue
+    if (!params || typeof params !== "object" || Array.isArray(params)) return {}
+    return params
+  }
+
+  hiddenValue() {
+    return this.hasValueTarget ? this.valueTarget.value : ""
+  }
+
+  writeHidden(next) {
+    if (!this.hasValueTarget) return
+    this.valueTarget.value = next ?? ""
+  }
+
+  dispatchHiddenChange() {
+    if (!this.hasValueTarget) return
+    this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }))
+  }
+
+  releaseHiddenIfEdited(previous, query) {
+    if (!this.editedByUser || query !== "" || previous === "") return
+    if (this.hiddenValue() !== "") return
+    this.dispatchHiddenChange()
+    this.dispatchCombobox("cleared")
+  }
+
+  readOptionData(option) {
+    const raw = option?.dataset?.optionData
+    if (!raw) return {}
+
+    try {
+      const parsed = JSON.parse(raw)
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {}
+      return parsed
+    } catch {
+      return {}
+    }
+  }
+
+  dispatchCombobox(name, detail) {
+    this.element.dispatchEvent(new CustomEvent(`flat-pack:combobox:${name}`, {
+      bubbles: true,
+      detail
+    }))
   }
 
   get asyncMode() {

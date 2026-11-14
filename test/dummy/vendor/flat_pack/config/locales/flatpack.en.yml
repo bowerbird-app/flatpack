@@ -82,6 +82,7 @@ en:
     combobox:
       placeholder: Search
       empty: No matches
+      error: Search failed
       searching: Searching...
       type_to_search: Type at least %{count} characters to search
     command_palette:

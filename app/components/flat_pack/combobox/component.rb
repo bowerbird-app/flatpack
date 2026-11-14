@@ -10,41 +10,50 @@ module FlatPack
       DEFAULT_SEARCH_PARAM = "q"
 
       def initialize(
-        name:,
+        name: nil,
         options: nil,
         value: nil,
         label: nil,
+        id: nil,
         placeholder: FlatPack::Copy::OMITTED,
         disabled: false,
         required: false,
         empty_text: FlatPack::Copy::OMITTED,
+        error_text: FlatPack::Copy::OMITTED,
         loading_text: FlatPack::Copy::OMITTED,
         hint_text: FlatPack::Copy::OMITTED,
         search_mode: DEFAULT_SEARCH_MODE,
         search_endpoint: nil,
         search_param: DEFAULT_SEARCH_PARAM,
+        search_params: nil,
         min_search_length: DEFAULT_MIN_SEARCH_LENGTH,
         debounce: DEFAULT_DEBOUNCE,
+        empty_action: nil,
+        icon: nil,
         **system_arguments
       )
         super(**system_arguments)
-        @name = name
+        @name = name.presence
         @options = normalize_options(options)
         @value = value.to_s.presence
         @label = label
+        @input_id = assign_input_id(id)
         @placeholder = fp_text(placeholder, "combobox.placeholder")
         @disabled = disabled
         @required = required
         @empty_text = fp_text(empty_text, "combobox.empty")
+        @error_text = fp_text(error_text, "combobox.error")
         @loading_text = fp_text(loading_text, "combobox.searching")
         @search_mode = search_mode.to_sym
         @search_endpoint = search_endpoint.present? ? FlatPack::AttributeSanitizer.sanitize_url(search_endpoint) : nil
         @search_param = search_param.presence || DEFAULT_SEARCH_PARAM
+        @search_params = normalize_scalar_hash(search_params || {}, name: "search_params")
         @min_search_length = [min_search_length.to_i, 1].max
         @debounce = [debounce.to_i, 0].max
         @hint_text = fp_text(hint_text, "combobox.type_to_search", count: @min_search_length)
+        @empty_action = normalize_empty_action(empty_action)
+        @icon = normalize_icon(icon)
         @list_id = "fp-combobox-#{SecureRandom.hex(4)}"
-        validate_name!
         validate_search_mode!
         validate_search_endpoint!(search_endpoint) if search_endpoint.present?
         validate_search_configuration!
@@ -65,17 +74,72 @@ module FlatPack
       private
 
       def normalize_options(options)
-        Array(options).map do |option|
-          if option.is_a?(Hash)
-            {
-              value: option[:value].to_s,
-              label: (option[:label] || option[:value]).to_s,
-              subtitle: option[:subtitle].to_s.presence
-            }
-          else
-            {value: option.to_s, label: option.to_s, subtitle: nil}
-          end
+        Array(options).map { |option| normalize_option(option) }
+      end
+
+      def normalize_option(option)
+        unless option.is_a?(Hash)
+          return {value: option.to_s, label: option.to_s, subtitle: nil, data: {}}
         end
+
+        {
+          value: option[:value].to_s,
+          label: (option[:label] || option[:value]).to_s,
+          subtitle: option[:subtitle].to_s.presence,
+          data: normalize_scalar_hash(option[:data] || {}, name: "data")
+        }
+      end
+
+      def normalize_scalar_hash(hash, name:)
+        raise ArgumentError, "#{name} must be a Hash" unless hash.is_a?(Hash)
+
+        hash.each_with_object({}) do |(key, entry), normalized|
+          normalized[key.to_s] = normalize_scalar(entry, name: name)
+        end
+      end
+
+      def normalize_scalar(entry, name:)
+        case entry
+        when String
+          raise ArgumentError, "#{name} values must be plain strings" if value_html_safe?(entry)
+
+          entry
+        when Symbol
+          entry.to_s
+        when Numeric, TrueClass, FalseClass
+          entry
+        else
+          raise ArgumentError, "#{name} values must be strings, numbers, or booleans"
+        end
+      end
+
+      def normalize_empty_action(action)
+        return if action.nil?
+        raise ArgumentError, "empty_action must be a Hash" unless action.is_a?(Hash)
+
+        label = action.key?(:label) ? action[:label] : action["label"]
+        value = action.key?(:value) ? action[:value] : action["value"]
+        raise ArgumentError, "empty_action requires label and value" if label.nil? || value.nil?
+
+        label = normalize_scalar(label, name: "empty_action").to_s
+        value = normalize_scalar(value, name: "empty_action").to_s
+        raise ArgumentError, "empty_action requires a label" if label.blank?
+
+        {label: label, value: value}
+      end
+
+      def normalize_icon(icon)
+        return if icon.blank?
+        raise ArgumentError, "icon must be a String" unless icon.is_a?(String) || icon.is_a?(Symbol)
+
+        icon.to_s
+      end
+
+      def assign_input_id(id)
+        return "fp-combobox-input-#{SecureRandom.hex(4)}" if id.nil?
+        raise ArgumentError, "id must be a String" unless id.is_a?(String) || id.is_a?(Symbol)
+
+        id.to_s.presence || "fp-combobox-input-#{SecureRandom.hex(4)}"
       end
 
       def selected_label
@@ -98,6 +162,7 @@ module FlatPack
         data = {
           controller: "flat-pack--combobox",
           "flat-pack--combobox-empty-text-value": @empty_text,
+          "flat-pack--combobox-error-text-value": @error_text,
           "flat-pack--combobox-loading-text-value": @loading_text,
           "flat-pack--combobox-hint-text-value": @hint_text,
           "flat-pack--combobox-search-mode-value": @search_mode,
@@ -106,23 +171,33 @@ module FlatPack
           "flat-pack--combobox-debounce-value": @debounce
         }
         data["flat-pack--combobox-search-endpoint-value"] = @search_endpoint if @search_endpoint.present?
+        data["flat-pack--combobox-search-params-value"] = @search_params.to_json if @search_params.present?
         data
       end
 
       def render_label
         return unless @label.present?
 
-        content_tag(:label, @label, for: input_id, class: "mb-1 block text-sm font-medium text-[var(--surface-content-color)]")
+        content_tag(:label, @label, for: @input_id, class: "mb-1 block text-sm font-medium text-[var(--surface-content-color)]")
       end
 
       def render_control
         content_tag(:div, class: control_classes) do
           safe_join([
+            render_leading_icon,
             content_tag(:input, nil, **input_attributes),
             content_tag(:span, class: "pointer-events-none text-[var(--surface-muted-content-color)]", "aria-hidden": "true") do
               render FlatPack::Shared::IconComponent.new(name: "chevron-down", size: :sm)
             end
-          ])
+          ].compact)
+        end
+      end
+
+      def render_leading_icon
+        return if @icon.blank?
+
+        content_tag(:span, class: "pointer-events-none shrink-0 text-[var(--surface-muted-content-color)]", "aria-hidden": "true") do
+          render FlatPack::Shared::IconComponent.new(name: @icon, size: :sm)
         end
       end
 
@@ -138,7 +213,7 @@ module FlatPack
 
       def input_attributes
         {
-          id: input_id,
+          id: @input_id,
           type: "text",
           value: selected_label,
           placeholder: @placeholder,
@@ -152,7 +227,7 @@ module FlatPack
             controls: @list_id,
             haspopup: "listbox"
           },
-          class: "min-w-0 flex-1 bg-transparent text-sm text-[var(--surface-content-color)] placeholder:text-[var(--surface-muted-content-color)] outline-none",
+          class: input_classes,
           data: {
             "flat-pack--combobox-target": "input",
             action: [
@@ -164,7 +239,17 @@ module FlatPack
         }
       end
 
+      def input_classes
+        [
+          "min-w-0 flex-1 bg-transparent text-sm text-[var(--surface-content-color)]",
+          "placeholder:text-[var(--surface-muted-content-color)] outline-none",
+          ("pl-1" if @icon.present?)
+        ].compact.join(" ")
+      end
+
       def render_hidden_field
+        return if @name.blank?
+
         hidden_field_tag(
           @name,
           @value,
@@ -180,8 +265,9 @@ module FlatPack
             @options.each_with_index.map { |option, index| render_option(option, index) } + [
               render_status_row(@hint_text, "hint"),
               render_status_row(@loading_text, "loading"),
-              render_empty_row
-            ]
+              render_empty_row,
+              render_empty_action
+            ].compact
           )
         end
       end
@@ -217,6 +303,7 @@ module FlatPack
           action: "mousedown->flat-pack--combobox#choose"
         }
         data[:subtitle] = option[:subtitle] if option[:subtitle].present?
+        data[:option_data] = option[:data].to_json if option[:data].present?
         data
       end
 
@@ -255,17 +342,26 @@ module FlatPack
         content_tag(:li,
           @empty_text,
           class: "hidden px-[var(--combobox-item-padding-x)] py-[var(--combobox-item-padding-y)] text-sm text-[var(--surface-muted-content-color)]",
+          role: "status",
+          aria: {live: "polite"},
           data: {"flat-pack--combobox-target": "empty"})
       end
 
-      def input_id
-        "#{@name.to_s.parameterize}-combobox"
-      end
+      def render_empty_action
+        return if @empty_action.blank?
 
-      def validate_name!
-        return if @name.present?
-
-        raise ArgumentError, "name is required"
+        content_tag(:li,
+          @empty_action[:label],
+          id: "#{@list_id}-empty-action",
+          role: "option",
+          class: "#{option_classes(false)} hidden",
+          aria: {selected: "false"},
+          data: {
+            "flat-pack--combobox-target": "emptyAction",
+            empty_action: "true",
+            value: @empty_action[:value],
+            action: "mousedown->flat-pack--combobox#choose"
+          })
       end
 
       def validate_options!

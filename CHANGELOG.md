@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.361] - 2026-11-14
+
+### Added
+- `FlatPack::Combobox::Component` accepts `search_params:`, `empty_action:`, `error_text:`, `icon:`, and `id:`. `name:` is optional. Option hashes and remote items accept a flat `data:` hash.
+- A successful remote response dispatches `flat-pack:combobox:results` with `{ query, items, payload }`. A failed response shows `error_text` and dispatches `flat-pack:combobox:error` with `{ status }` (`null` when the network fails).
+- The empty-action row is a real option. Choosing it dispatches `flat-pack:combobox:empty-action` with `{ query, value }` and does not set the hidden value.
+- `flat-pack:combobox:selected` detail is `{ value, label, subtitle, data }`.
+- The Stimulus controller exposes `clear()` and `setSelection({ value, label })`. `clear()` empties the field, closes the list, dispatches `change` on the hidden field, and dispatches `flat-pack:combobox:cleared`. `setSelection` sets the field without opening and does not dispatch `selected`. Deleting the text while a hidden value is set also dispatches `cleared`.
+
+### Upgrade notes
+- The text input id is no longer derived from `name`. Pass `id:` if a host stylesheet or label targets the old `name-combobox` id. Two comboboxes may share a `name`.
+- Omit `name:` and nothing is submitted. `clear()` and `setSelection` still work. There is no `change` event without a hidden field.
+- `selected` now includes `data`. It is `{}` when the row has none.
+- Reload kit JavaScript. The new input class is `pl-1` when `icon:` is set. Rebuild Tailwind if the host scans utility classes. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.361`.
+
 ## [0.1.360] - 2026-11-14
 
 ### Added
