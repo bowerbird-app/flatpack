@@ -46,7 +46,16 @@ module FlatPack
 
       def alert_nodes
         entries.map do |style, text|
-          render(FlatPack::Alert::Component.new(description: text, style: style))
+          render(status_component_for(style).new(description: text, style: style))
+        end
+      end
+
+      # Notice owns info and success. Every other allowed style stays an Alert.
+      def status_component_for(style)
+        if FlatPack::Notice::Component::VARIANTS.key?(style)
+          FlatPack::Notice::Component
+        else
+          FlatPack::Alert::Component
         end
       end
 

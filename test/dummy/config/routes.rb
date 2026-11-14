@@ -150,6 +150,7 @@ Rails.application.routes.draw do
   match "demo/chips/add_callback", to: "pages#chip_add_callback", via: [:get, :post]
   match "demo/chips/remove_callback", to: "pages#chip_remove_callback", via: [:get, :post]
   get "demo/alerts", to: "pages#alerts"
+  get "demo/notices", to: "pages#notices"
   get "demo/flash", to: "pages#flash_demo"
   get "demo/cards", to: "pages#cards"
   get "demo/cards/styles", to: "pages#cards_styles"

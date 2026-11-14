@@ -88,6 +88,7 @@ masonry | FlatPack::Masonry::Component | docs/components/masonry.md
 menu_collapse | FlatPack::Menu::Collapse::Component | docs/components/menu-collapse.md
 modal | FlatPack::Modal::Component | docs/components/modal.md
 modal_filter | FlatPack::ModalFilter::Component | docs/components/modal-filter.md
+notice | FlatPack::Notice::Component | docs/components/notice.md
 notification | FlatPack::Notification::Component | docs/components/notification.md
 number | FlatPack::Number::Component | docs/components/number.md
 overlay | FlatPack::Overlay::Component | docs/components/overlay.md

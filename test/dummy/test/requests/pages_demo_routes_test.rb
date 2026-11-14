@@ -59,6 +59,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/cluster
     /demo/divider
     /demo/alerts
+    /demo/notices
     /demo/cards
     /demo/cards/styles
     /demo/cards/media
@@ -195,6 +196,18 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "data-flat-pack--toast-timeout-value=\"5000\""
   end
 
+  test "notice demo renders info, success, and a notice next to an alert" do
+    get "/demo/notices"
+
+    assert_response :success
+    assert_includes response.body, "The take is in the library."
+    assert_includes response.body, "The mix is still on this device."
+    assert_includes response.body, "Nope. Try again."
+    assert_includes response.body, "role=\"status\""
+    assert_includes response.body, "role=\"alert\""
+    assert_includes response.body, "flat-pack--alert#dismiss"
+  end
+
   test "flash demo redirects with an alert and renders stacked alerts" do
     get "/demo/flash", params: {as: "alert", key: "both", return_to: "alerts"}
 
@@ -205,6 +218,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Saved."
     assert_includes response.body, "Nope. Try again."
     assert_includes response.body, "gap-4"
+    assert_includes response.body, "role=\"status\""
+    assert_includes response.body, "role=\"alert\""
     refute_includes response.body, "fp-toast-region"
   end
 

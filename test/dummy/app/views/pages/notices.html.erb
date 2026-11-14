@@ -1,0 +1,95 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Notice",
+  subtitle: "Polite status. Same box as an alert, announced quietly."
+) %>
+
+<%= render "pages/component_method_variables_table", component: :notice %>
+
+<section class="mb-12" id="notice-styles">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Info and success", anchor_link: true, subtitle: "Those are the only two styles.") %>
+  <div class="space-y-4 mb-4">
+    <%= render FlatPack::Notice::Component.new(
+      title: "Heads up",
+      description: "The mix is still on this device.",
+      style: :info
+    ) %>
+    <%= render FlatPack::Notice::Component.new(
+      title: "Saved",
+      description: "The take is in the library.",
+      style: :success
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Notice::Component.new(
+        title: "Heads up",
+        description: "The mix is still on this device.",
+        style: :info
+      ) %&gt;
+
+      &lt;%= render FlatPack::Notice::Component.new(
+        title: "Saved",
+        description: "The take is in the library.",
+        style: :success
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<section class="mb-12" id="notice-sizes">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Sizes", anchor_link: true, subtitle: "Small, medium, and large.") %>
+  <div class="space-y-4 mb-4">
+    <%= render FlatPack::Notice::Component.new(title: "Small", description: "A short note.", style: :info, size: :sm) %>
+    <%= render FlatPack::Notice::Component.new(title: "Medium", description: "The usual size.", style: :success, size: :md) %>
+    <%= render FlatPack::Notice::Component.new(title: "Large", description: "More room for the message.", style: :info, size: :lg) %>
+  </div>
+</section>
+
+<section class="mb-12" id="notice-dismiss">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Dismiss", anchor_link: true, subtitle: "Click the X. It fades out.") %>
+  <div class="space-y-4">
+    <%= render FlatPack::Notice::Component.new(
+      title: "Click to dismiss",
+      description: "This note leaves the page.",
+      style: :info,
+      dismissible: true
+    ) %>
+    <%= render FlatPack::Notice::Component.new(
+      title: "Saved",
+      description: "You can dismiss this one too.",
+      style: :success,
+      dismissible: true
+    ) %>
+  </div>
+</section>
+
+<section class="mb-12" id="notice-content">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Your own content", anchor_link: true, subtitle: "A block replaces the title and description.") %>
+  <%= render FlatPack::Notice::Component.new(style: :success) do %>
+    <strong>Saved.</strong> The take is in the library.
+  <% end %>
+</section>
+
+<section class="mb-12" id="notice-flash">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Notice and alert",
+    anchor_link: true,
+    subtitle: "Flash keeps a notice polite and an alert urgent."
+  ) %>
+  <div class="mb-4">
+    <%= render FlatPack::Flash::Component.new(
+      flash: {notice: "Saved.", alert: "Nope. Try again."},
+      as: :alert
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;%= render FlatPack::Flash::Component.new(
+        flash: flash,
+        as: :alert
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
+<%= render "pages/flash_demo", return_to: "notices" %>
