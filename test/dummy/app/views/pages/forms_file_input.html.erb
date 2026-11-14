@@ -19,14 +19,16 @@
           Choose or drop a file. The names show up here.
         </p>
 
-        <%= render FlatPack::FileInput::Component.new(
-          name: "avatar",
-          label: "Profile picture",
-          accept: "image/png,image/jpeg,image/gif",
-          max_size: 2_097_152,
-          help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
-          preview: true
-        ) %>
+        <div id="file-input-with-list" class="p-6">
+          <%= render FlatPack::FileInput::Component.new(
+            name: "avatar",
+            label: "Profile picture",
+            accept: "image/png,image/jpeg,image/gif",
+            max_size: 2_097_152,
+            help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
+            preview: true
+          ) %>
+        </div>
 
         <div data-file-input-host="progress">
           <%= render FlatPack::FileInput::Component.new(
@@ -52,6 +54,19 @@
               ) %>
             <% end %>
           <% end %>
+        </div>
+
+        <div id="file-input-host-list" class="space-y-[var(--stack-gap-md)] p-6">
+          <p id="file-input-host-log" role="status" aria-live="polite" data-file-input-demo-target="hostLog" class="text-sm text-[var(--surface-content-color)]">
+            Choose a stem. The name shows up here.
+          </p>
+          <%= render FlatPack::FileInput::Component.new(
+            name: "stems",
+            label: "Stems",
+            multiple: true,
+            show_file_list: false,
+            help_text: "This zone does not list files. The line above does."
+          ) %>
         </div>
       <% end %>
     <% end %>
@@ -97,6 +112,13 @@
           &lt;%= render FlatPack::Progress::Component.new(value: 0, label: &quot;Host progress&quot;, show_label: true) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
+
+      &lt;%= render FlatPack::FileInput::Component.new(
+        name: &quot;stems&quot;,
+        label: &quot;Stems&quot;,
+        multiple: true,
+        show_file_list: false
+      ) %&gt;
 
       &lt;%= render FlatPack::FileInput::Component.new(
         name: &quot;extras&quot;,

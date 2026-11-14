@@ -3,15 +3,19 @@ import { Controller } from "@hotwired/stimulus"
 // Host-only listener. Flatpack picks files and dispatches the change event.
 // This page logs the names and moves its own progress bar.
 export default class extends Controller {
-  static targets = ["log"]
+  static targets = ["log", "hostLog"]
 
   selected(event) {
     const files = Array.from(event.detail && event.detail.files ? event.detail.files : [])
     const names = files.map((file) => file.name)
     console.log("flat-pack:file-input:change", names)
 
-    if (this.hasLogTarget) {
-      this.logTarget.textContent = names.length === 0 ? "No files." : names.join(", ")
+    const line = names.length === 0 ? "No files." : names.join(", ")
+    const host = event.target.closest("#file-input-host-list")
+    if (host && this.hasHostLogTarget) {
+      this.hostLogTarget.textContent = line
+    } else if (this.hasLogTarget) {
+      this.logTarget.textContent = line
     }
 
     this.paintProgress(event, files)

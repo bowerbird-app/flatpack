@@ -59,7 +59,8 @@ Component-specific props:
 | `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`) and multi-value selection (`Select`). |
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
 | `max_files` | Integer | `nil` | no | `FileInput` cap. Extra files are ignored. The browser file list is not rewritten. See [File Input](file_input.md). |
-| `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. The button variant never shows a list or a preview. |
+| `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. The button variant never shows a list or a preview. Ignored when `show_file_list` is false. |
+| `show_file_list` | Boolean | `true` | no | `FileInput` dropzone list. `false` omits the list and previews. The change event still fires. See [File Input](file_input.md). |
 | `text` | String | `nil` | no | `FileInput` `variant: :button` label. Blank uses "Choose a file". Raises on `:dropzone`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
 | `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). Select hashes may include `icon:` (Heroicon name). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. Child hashes may include `icon:` too. |
@@ -298,7 +299,7 @@ or:
 ) %>
 ```
 
-The button variant, `max_files`, `flat-pack:file-input:change`, and the `actions` slot are in [File Input](file_input.md).
+The button variant, `show_file_list`, `max_files`, `flat-pack:file-input:change`, and the `actions` slot are in [File Input](file_input.md).
 
 ```erb
 <%= render FlatPack::RadioGroup::Component.new(

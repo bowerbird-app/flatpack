@@ -30,7 +30,8 @@ Use the dropzone when the person should drag files onto the page. Use the button
 | `multiple` | Boolean | `false` | no | Sets `multiple` on the file input. |
 | `max_size` | Integer | `nil` | no | Client-side size cap in bytes. Must be a positive number. Oversized files are left out of the event and the dropzone list. |
 | `max_files` | Integer | `nil` | no | Keeps the first N files in the event and the dropzone list. Must be a positive integer. Extra files are ignored. `input.files` is not rewritten. |
-| `preview` | Boolean | `true` | no | Dropzone image previews. The button variant never shows a preview or a file list. |
+| `preview` | Boolean | `true` | no | Dropzone image previews, drawn with the built-in list. The button variant never shows a preview or a file list. Ignored when `show_file_list` is false. |
+| `show_file_list` | Boolean | `true` | no | Dropzone file list. `false` omits the list markup and the previews. The controller does not render names. `flat-pack:file-input:change` still fires with `{ files }`. The button variant has no list either way. |
 | `disabled` | Boolean | `false` | no | Disables the file input and the button. |
 | `required` | Boolean | `false` | no | Sets `required` on the file input. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes. `id` sets the file input id. `data` and `aria` land on the file input. `class` lands on the dropzone, or on the button when `variant: :button`. |
@@ -47,7 +48,7 @@ Use the dropzone when the person should drag files onto the page. Use the button
 ```
 
 ## Variants
-- `:dropzone` is the dashed zone, the "Upload a file" control, the drag hint, the built-in list, and optional image previews.
+- `:dropzone` is the dashed zone, the "Upload a file" control, the drag hint, the built-in list, and optional image previews. `show_file_list: false` drops the list and the previews.
 - `:button` is one `FlatPack::Button` plus a visually hidden file input. The button is the only tab stop. There is no built-in list and no preview.
 
 ## Example
@@ -73,7 +74,16 @@ Use the dropzone when the person should drag files onto the page. Use the button
 ) %>
 ```
 
-Choosing files or dropping them dispatches `flat-pack:file-input:change` on the controller element. It bubbles. `detail.files` is an array of `File`. The same event fires for both variants, including an empty selection and a remove from the dropzone list.
+```erb
+<%= render FlatPack::FileInput::Component.new(
+  name: "stems[]",
+  label: "Stems",
+  multiple: true,
+  show_file_list: false
+) %>
+```
+
+Choosing files or dropping them dispatches `flat-pack:file-input:change` on the controller element. It bubbles. The payload is `detail: { files }`. `files` is an array of `File`. The same event fires for both variants on every selection, including an empty selection, a remove from the dropzone list, and a dropzone with `show_file_list: false`. A host that draws its own queue listens for that event.
 
 `max_files` keeps the first N of the raw selection, then the size check runs. The kept files are what the event and the dropzone list use. A status message says only the first file, or the first N files, were kept. The message clears when a later selection is within the cap, and when a file is removed from the list.
 

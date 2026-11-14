@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.375] - 2026-11-14
+
+### Added
+- `FlatPack::FileInput::Component` accepts `show_file_list:`. Default `true` keeps the dropzone file list and image previews. `false` omits that markup. The controller does not render names or previews. `flat-pack:file-input:change` still fires on every selection with `detail: { files }`. The button variant still has no list.
+
+### Upgrade notes
+- Additive. Omit `show_file_list:` and the dropzone list stays. Pass `false` when the host draws its own queue. Read `event.detail.files`.
+- Reload JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.375`.
+
 ## [0.1.374] - 2026-11-14
 
 ### Fixed
