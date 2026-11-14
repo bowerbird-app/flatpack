@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.374] - 2026-11-14
+
+### Fixed
+- `FlatPack::Pagination::Component` reads a Pagy 9 `series`. An Integer is a page link. A numeric String is the current page, highlighted with `aria-current="page"`. `:gap` and the older `"gap"` string are the ellipsis. A numeric current page no longer renders as an ellipsis.
+
+### Upgrade notes
+- No new arguments. Pagination that uses Pagy 9 shows the current page number again.
+- No new CSS or JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.374`.
+
 ## [0.1.373] - 2026-11-14
 
 ### Added

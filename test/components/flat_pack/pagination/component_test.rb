@@ -95,6 +95,25 @@ module FlatPack
         assert_selector "span", text: "…", count: 2
       end
 
+      def test_renders_pagy_9_series_current_page_and_gaps
+        pagy = pagy_9_with_gap
+        series = pagy.series
+        current = series.find { |item| item.is_a?(String) && item.match?(/\A\d+\z/) }
+
+        assert_kind_of Pagy, pagy
+        assert current
+        assert_includes series, :gap
+        assert series.any?(Integer)
+
+        render_inline(Component.new(pagy: pagy))
+
+        assert_selector "span[aria-current='page']", text: current
+        assert_selector "[aria-label='Page #{current}'][aria-current='page'].bg-\\[var\\(--pagination-current-background-color\\)\\]"
+        assert_selector "a[aria-label='Page #{series.find { |item| item.is_a?(Integer) }}']"
+        assert_selector "span", text: "…"
+        refute_selector "[aria-current='page']", text: "…"
+      end
+
       def test_raises_error_for_invalid_pagy
         error = assert_raises(ArgumentError) do
           Component.new(pagy: {})
@@ -154,6 +173,13 @@ module FlatPack
         render_inline(Component.new(pagy: pagy, class: "custom-pagination"))
 
         assert_selector "nav.custom-pagination"
+      end
+
+      private
+
+      def pagy_9_with_gap
+        require "pagy"
+        Pagy.new(count: 100, page: 5, limit: 10)
       end
     end
   end

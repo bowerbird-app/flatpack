@@ -144,16 +144,25 @@ module FlatPack
         when Integer
           render_page_number(item)
         when String
-          render_gap
+          render_string_page_item(item)
         when :gap
           render_gap
         end
       end
 
-      def render_page_number(page)
-        is_current = page == @pagy.page
+      # Pagy 9 series: other pages are Integers, the current page is a numeric
+      # String, and gaps are :gap. Older series used the string "gap".
+      def render_string_page_item(item)
+        page = Integer(item, exception: false)
+        if page
+          render_page_number(page, current: true)
+        elsif item == "gap"
+          render_gap
+        end
+      end
 
-        if is_current
+      def render_page_number(page, current: page == @pagy.page)
+        if current
           content_tag(
             :span,
             page.to_s,
