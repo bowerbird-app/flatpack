@@ -3,7 +3,7 @@ import { flatPackCopy } from "flat_pack/copy"
 import { createRemoteQuery } from "flat_pack/remote_query"
 
 export default class extends Controller {
-  static targets = ["searchInput", "results", "emptyState", "outputField", "formFields", "loading", "sentinel", "status"]
+  static targets = ["searchInput", "results", "emptyState", "errorState", "outputField", "formFields", "loading", "sentinel", "status"]
 
   static values = {
     pickerId: String,
@@ -222,6 +222,8 @@ export default class extends Controller {
   }
 
   async #runPageRequest({ query, page, mode, serial }) {
+    let failed = false
+
     try {
       const response = await this.remote.fetch(this.searchEndpointValue, {
         query,
@@ -232,7 +234,8 @@ export default class extends Controller {
       if (serial !== this.requestSerial) return
 
       if (!response.ok) {
-        if (mode === "append") this.nextPage = null
+        failed = true
+        this.#showLoadError(mode)
         return
       }
 
@@ -243,17 +246,14 @@ export default class extends Controller {
     } catch (error) {
       if (error?.name === "AbortError" || serial !== this.requestSerial) return
 
-      if (mode === "replace") {
-        this.filteredItems = []
-        this.nextPage = null
-        this.#renderResults(this.filteredItems)
-      } else {
-        this.nextPage = null
-      }
+      failed = true
+      this.#showLoadError(mode)
     } finally {
       if (serial !== this.requestSerial) return
 
-      if (this.#sentinelVisible() && this.#hasNextPage()) {
+      // A failed page keeps nextPage so a later scroll can try it. Do not
+      // fetch again here, or a visible sentinel would retry in a loop.
+      if (!failed && this.#sentinelVisible() && this.#hasNextPage()) {
         this.#fetchPage({ query: this.activeQuery, page: this.nextPage, mode: "append" })
         return
       }
@@ -264,6 +264,7 @@ export default class extends Controller {
   }
 
   #applyPage(payload, { page, mode }) {
+    this.#syncErrorState(false)
     const incoming = this.#normalizeItems(payload?.items || [])
 
     if (mode === "append") {
@@ -384,14 +385,49 @@ export default class extends Controller {
 
   // The empty panel is server-rendered. Show it when nothing matches.
   // Leave its markup alone, whether that is empty_text or an empty slot.
+  // A failed load shows the error panel instead, and hides this one.
   #syncEmptyState(items) {
     if (!this.hasEmptyStateTarget) {
       return
     }
 
-    const showEmpty = items.length === 0
+    const showEmpty = items.length === 0 && !this.#errorShowing()
     this.emptyStateTarget.classList.toggle("hidden", !showEmpty)
     this.emptyStateTarget.classList.toggle("flex", showEmpty)
+  }
+
+  // The error panel is server-rendered. Show it when a remote load fails.
+  // Leave its markup alone, whether that is error_text or an error slot.
+  // Keep nextPage so the next scroll can try the same page again.
+  #showLoadError(mode) {
+    if (mode === "replace") {
+      this.filteredItems = []
+      if (this.hasResultsTarget) {
+        this.resultsTarget.className = this.#resultsContainerClass()
+        this.resultsTarget.innerHTML = ""
+      }
+    }
+
+    this.#syncErrorState(true)
+    this.#syncEmptyState(this.filteredItems)
+    this.#announce(this.#errorAnnouncement())
+  }
+
+  #syncErrorState(show) {
+    if (!this.hasErrorStateTarget) return
+
+    this.errorStateTarget.classList.toggle("hidden", !show)
+    this.errorStateTarget.classList.toggle("flex", show)
+  }
+
+  #errorShowing() {
+    return this.hasErrorStateTarget && !this.errorStateTarget.classList.contains("hidden")
+  }
+
+  #errorAnnouncement() {
+    if (!this.hasErrorStateTarget) return ""
+
+    return String(this.errorStateTarget.textContent || "").replace(/\s+/g, " ").trim()
   }
 
   #itemMarkup(item) {

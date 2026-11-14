@@ -434,6 +434,45 @@ module FlatPack
         assert_no_text "No assets found"
       end
 
+      def test_renders_error_text_when_no_slot_is_given
+        render_inline(Component.new(id: "fallback-error-picker", items: [], error_text: "The library is down"))
+
+        assert_selector "[data-flat-pack--picker-target='errorState'].hidden.h-full.min-h-32.items-center.justify-center", text: "The library is down"
+        assert_no_selector "[data-flat-pack-picker-error-slot]"
+        assert_no_selector "[data-flat-pack--picker-target='errorState'] button"
+        assert_no_text "Unable to load items"
+      end
+
+      def test_error_slot_renders_hidden_and_replaces_error_text
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new(id: "slotted-error-picker", items: sample_items, error_text: "Fallback copy")) do |picker|
+          picker.with_error do
+            view.concat(
+              view.tag.div(class: "fp-empty-state") do
+                view.safe_join([
+                  view.tag.p("The library didn't answer"),
+                  view.tag.button("Try again", type: "button", data: {picker_error_action: "retry"})
+                ])
+              end
+            )
+          end
+        end
+
+        assert_selector "[data-flat-pack--picker-target='errorState'][data-flat-pack-picker-error-slot='true'].hidden"
+        assert_selector "[data-flat-pack-picker-error-slot='true'] .fp-empty-state", text: "The library didn't answer"
+        assert_selector "button[data-picker-error-action='retry']", text: "Try again"
+        assert_no_text "Fallback copy"
+        assert_no_text "Unable to load items"
+      end
+
+      def test_default_error_text_is_unable_to_load_items
+        render_inline(Component.new(id: "default-error-picker", items: sample_items))
+
+        assert_selector "[data-flat-pack--picker-target='errorState'].hidden", text: "Unable to load items"
+        assert_no_selector "[data-flat-pack-picker-error-slot]"
+      end
+
       def test_remote_picker_renders_page_sentinel_loading_row_and_live_region
         render_inline(Component.new(
           id: "paged-picker",
@@ -447,6 +486,7 @@ module FlatPack
         assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='sentinel'][aria-hidden='true']"
         assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='status'][aria-live='polite'][aria-atomic='true']"
         assert_selector "[data-flat-pack--picker-target='emptyState'].hidden"
+        assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='errorState'].hidden", text: "Unable to load items"
       end
     end
   end
