@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.373] - 2026-11-14
+
+### Added
+- `FlatPack::Billing::PlanPicker::Component` plan CTAs accept `url:`, `method:`, `params:`, and `turbo:` and forward them to `FlatPack::Button::Component`. `url:` renders that button's form. `href:` stays a link. `href:` and `url:` on the same plan raise `ArgumentError`.
+- `plan_footer` replaces the default CTA for one plan. Call `picker.plan_footer(name:)` with that plan's `name`.
+- `cols:` sets the desktop column count. Default `3`. Presets match Grid (`1`, `2`, `3`, `4`, `6`, `12`, `:auto`). Narrower widths collapse.
+- `padding:` uses the Card scale (`:none`, `:sm`, `:md`, `:lg`). Default `:md`. It pads each plan body and footer.
+
+### Upgrade notes
+- Additive. Existing pickers keep link CTAs, three columns, and `:md` padding.
+- No new CSS or JavaScript. The grid and padding classes already ship with Grid and Card. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.373`.
+
 ## [0.1.372] - 2026-11-14
 
 ### Added

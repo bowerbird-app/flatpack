@@ -165,7 +165,9 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 Planned family docs live under `docs/components/billing*.md`. When implementing `FlatPack::Billing::*`:
 
 - Prefer `items` for plan picker and invoice collections (do not invent `plans` or `invoices` as prop names).
-- Prefer `href` for Change plan, Update card, and invoice Download/View navigation.
+- Prefer `href` for Change plan, Update card, and invoice Download/View navigation. On a Plan Picker item, `href` is the link and `url` is the form action. Pass `method`, `params`, and `turbo` with `url`. Do not set `href` and `url` on the same plan.
+- Plan Picker `cols` uses the Grid presets (`1`, `2`, `3`, `4`, `6`, `12`, `:auto`). Default `3`. That number is the column count at the widest breakpoint. Narrower widths collapse.
+- Plan Picker `padding` uses the Card scale (`:none`, `:sm`, `:md`, `:lg`). Default `:md`. It pads the card body and the card footer.
 - Prefer `empty_title` / `empty_description` for payment-method and invoice empty states.
 - Prefer `price_text` and `amount` as preformatted strings on billing. Do not add a billing currency formatter. `FlatPack::Number::Component` formats a single `value:` for display.
 - Prefer `cta_text` for plan-picker button copy (action label pattern via `*_text` / `text`).
@@ -177,8 +179,8 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 ## Do not mix
 
 - Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Card `variant` is `:default` or `:featured` (the cover layout), not a colour. Do not pass Card `:featured` to Hero. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
-- Do not use `url` for a clickable navigation destination. Use `href`. On Button and DropdownItem, do not pass `href` and `url` together.
-- Do not pass Button or DropdownItem `params:` without `url:`. `params` is the hidden-field hash, not a grab-bag of component options. Do not pass DropdownItem `href:` and `url:` together. DropdownItem `method:` needs `url:`.
+- Do not use `url` for a clickable navigation destination. Use `href`. On Button, DropdownItem, and a Plan Picker item, do not pass `href` and `url` together. `href` navigates. `url` submits a form.
+- Do not pass Button, DropdownItem, or Plan Picker `params:` without `url:`. `params` is the hidden-field hash, not a grab-bag of component options. DropdownItem `method:` needs `url:`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB and Floating frame viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.

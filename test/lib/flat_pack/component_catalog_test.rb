@@ -499,6 +499,21 @@ module FlatPack
       refute_includes payload.fetch(:description), "No dedicated documentation"
     end
 
+    test "show Plan Picker documents cols padding and plan_footer" do
+      payload = FlatPack::ComponentCatalog.show("Billing::PlanPicker::Component")
+      cols = parameter_named(payload, "cols")
+      padding = parameter_named(payload, "padding")
+      slots = payload.fetch(:slots)
+      plan_footer = slots.find { |slot| slot.fetch(:name) == "plan_footer" }
+
+      assert_equal %w[1 2 3 4 6 12 auto], cols.fetch(:enum)
+      assert_equal 3, cols.fetch(:default)
+      assert_equal %w[none sm md lg], padding.fetch(:enum)
+      assert_equal "md", padding.fetch(:default)
+      assert_equal true, plan_footer.fetch(:collection)
+      assert_includes slots.map { |slot| slot.fetch(:name) }, "footer"
+    end
+
     test "show Text Stream documents the typed line" do
       payload = FlatPack::ComponentCatalog.show("Text::Stream::Component")
 
