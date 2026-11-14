@@ -323,6 +323,64 @@ module FlatPack
         end
       end
 
+      def test_menu_item_row_passes_icon_variant_and_style
+        item = DropdownItem::Component.new(
+          text: "Publish now",
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success,
+          href: "/publish"
+        )
+
+        assert_equal :solid, item.menu_row[:icon_variant]
+        assert_equal :success, item.menu_row[:icon_style]
+      end
+
+      def test_menu_row_passes_trigger_and_item_icon_variant_and_style
+        component = Dropdown::Component.new(
+          text: "Publish",
+          icon: "check-circle",
+          icon_variant: :solid,
+          icon_style: :success
+        )
+        render_inline(component) do |dropdown|
+          dropdown.menu_item(
+            text: "Publish now",
+            icon: "check-circle",
+            icon_variant: :solid,
+            icon_style: :success,
+            href: "/publish"
+          )
+          dropdown.menu_item(
+            text: "Schedule",
+            icon: "clock",
+            icon_position: :end,
+            icon_variant: :mini,
+            icon_style: :warning
+          )
+        end
+
+        fragment = Nokogiri::HTML.fragment(component.menu_row)
+        header = fragment.at_css(".fp-menu-collapse__icon svg")
+
+        assert_equal "solid", header["data-flat-pack--icon-variant-value"]
+        assert_equal "success", header["data-icon-style"]
+        assert_equal "check-circle", header["data-flat-pack--icon-name-value"]
+        assert_includes header["class"], FlatPack::Button::IconOptions::STYLES.fetch(:success)
+
+        link_icon = fragment.at_css("a.fp-menu-collapse__item svg")
+        assert_equal "solid", link_icon["data-flat-pack--icon-variant-value"]
+        assert_equal "success", link_icon["data-icon-style"]
+        assert_equal "check-circle", link_icon["data-flat-pack--icon-name-value"]
+
+        schedule = fragment.css("button.fp-menu-collapse__item").find { |node| node.text.include?("Schedule") }
+        schedule_icon = schedule.at_css("svg")
+        assert_equal "mini", schedule_icon["data-flat-pack--icon-variant-value"]
+        assert_equal "warning", schedule_icon["data-icon-style"]
+        assert_includes schedule_icon["class"], "ms-auto"
+        assert_includes schedule_icon["class"], "fp-button-icon"
+      end
+
       def test_renders_item_with_badge
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
           dropdown.menu_item(text: "Messages", badge: "5", href: "/messages")

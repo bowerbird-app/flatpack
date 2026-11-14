@@ -93,7 +93,12 @@ module FlatPack
 
         # Phone row for a collapsing button group. The wide control stays a dropdown.
         def menu_row
-          render(FlatPack::Menu::Collapse::Component.new(title: @text, icon: @icon)) do |section|
+          render(FlatPack::Menu::Collapse::Component.new(
+            title: @text,
+            icon: @icon,
+            icon_variant: @icon_variant,
+            icon_style: @icon_style
+          )) do |section|
             section.items do
               safe_join(menu.filter_map { |item|
                 next unless item.respond_to?(:menu_row)
@@ -379,8 +384,15 @@ module FlatPack
           label = content_tag(:span, row[:label].to_s)
           return label if row[:icon].blank?
 
-          icon_arguments = {name: row[:icon], size: :sm}
-          icon_arguments[:class] = "ms-auto" if row[:icon_position] == :end
+          icon_arguments = IconOptions.component_arguments(
+            name: row[:icon],
+            size: :sm,
+            icon_variant: row[:icon_variant],
+            icon_style: row[:icon_style]
+          )
+          if row[:icon_position] == :end
+            icon_arguments[:class] = [icon_arguments[:class], "ms-auto"].compact.join(" ")
+          end
           icon = render(FlatPack::Shared::IconComponent.new(**icon_arguments))
           return safe_join([label, icon]) if row[:icon_position] == :end
 

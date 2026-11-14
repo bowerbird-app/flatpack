@@ -4,14 +4,19 @@ module FlatPack
   module Menu
     module Collapse
       class Component < FlatPack::BaseComponent
+        ICON_VARIANTS = FlatPack::Button::IconOptions::VARIANTS
+        ICON_STYLES = FlatPack::Button::IconOptions::STYLES
+
         renders_one :items_slot
 
         undef_method :with_items_slot, :with_items_slot_content
 
-        def initialize(title:, icon: nil, open: false, **system_arguments)
+        def initialize(title:, icon: nil, icon_variant: nil, icon_style: nil, open: false, **system_arguments)
           super(**system_arguments)
           @title = title
           @icon = icon
+          @icon_variant = FlatPack::Button::IconOptions.normalize_variant!(icon_variant)
+          @icon_style = FlatPack::Button::IconOptions.normalize_style!(icon_style)
           @open = open
           @panel_id = "menu-collapse-#{SecureRandom.hex(6)}"
         end
@@ -50,7 +55,14 @@ module FlatPack
           return if @icon.blank?
 
           content_tag(:span, class: "fp-menu-collapse__icon") do
-            render FlatPack::Shared::IconComponent.new(name: @icon, size: :sm)
+            render FlatPack::Shared::IconComponent.new(
+              **FlatPack::Button::IconOptions.component_arguments(
+                name: @icon,
+                size: :sm,
+                icon_variant: @icon_variant,
+                icon_style: @icon_style
+              )
+            )
           end
         end
 
