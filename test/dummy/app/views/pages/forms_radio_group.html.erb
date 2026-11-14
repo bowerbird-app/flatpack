@@ -222,6 +222,86 @@
   ) %>
 </section>
 
+<section class="mb-12" id="card-row">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Cards in a row",
+    anchor_link: true,
+    subtitle: "Icon on the left. Two columns from a small screen up."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "send_how_row",
+        variant: :cards,
+        align: :start,
+        columns: 2,
+        label: "How should we send this?",
+        value: "email",
+        options: [
+          {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
+          {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
+          {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."},
+          {label: "Fax", value: "fax", icon: "printer", description: "Not offered on this plan.", disabled: true}
+        ]
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RadioGroup::Component.new(
+        name: &quot;send_how_row&quot;,
+        variant: :cards,
+        align: :start,
+        columns: 2,
+        label: &quot;How should we send this?&quot;,
+        value: &quot;email&quot;,
+        options: [
+          { label: &quot;Email&quot;, value: &quot;email&quot;, icon: &quot;envelope&quot;, description: &quot;A note in the inbox.&quot; },
+          { label: &quot;Text&quot;, value: &quot;sms&quot;, icon: &quot;chat-bubble-left&quot;, description: &quot;A short message to the phone.&quot; }
+        ]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Cards in a row"
+  ) %>
+</section>
+
+<section class="mb-12" id="hidden-label">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Hidden label",
+    anchor_link: true,
+    subtitle: "The heading already names the choice. The group label stays for screen readers."
+  ) %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body do %>
+      <%= render FlatPack::RadioGroup::Component.new(
+        name: "quiet_size",
+        label: "Choose a size",
+        hide_label: true,
+        value: "Medium",
+        options: ["Small", "Medium", "Large"]
+      ) %>
+    <% end %>
+  <% end %>
+
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::RadioGroup::Component.new(
+        name: &quot;quiet_size&quot;,
+        label: &quot;Choose a size&quot;,
+        hide_label: true,
+        value: &quot;Medium&quot;,
+        options: [&quot;Small&quot;, &quot;Medium&quot;, &quot;Large&quot;]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Hidden label"
+  ) %>
+</section>
+
 <section class="mb-12" id="colour-swatches">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Colour swatches",

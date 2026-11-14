@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.362] - 2026-11-14
+
+### Added
+- `FlatPack::RadioGroup::Component` `variant: :cards` takes `align: :center` (default) or `:start`. `:start` puts the icon on the left, with the title and description left-aligned beside it, and drops the 7rem card min-height.
+- `columns:` on cards is `nil` (auto-fit, minimum 14rem) or an integer `1`–`4`. A fixed count is one column on mobile and that many columns from the `sm` breakpoint. A numeric string such as `"2"` is accepted.
+- `hide_label: true` keeps the group legend and marks it `sr-only` when a heading already shows the title.
+
+### Fixed
+- The group `label` is a `<legend>` inside the `<fieldset>` for every variant. The fieldset is unstyled (`border-0 p-0 m-0 min-w-0`). Options sit in an inner div, so the legend is not a grid or flex item. Help text and the error stay outside the fieldset. `aria-describedby` on the fieldset points at them, and each radio keeps the same link.
+
+### Upgrade notes
+- `align:` and `columns:` apply to `variant: :cards`. Other variants ignore a valid value. An unknown `align` or a `columns` value outside `nil` and `1`–`4` raises `ArgumentError`.
+- Selected cards still use the primary border and tint.
+- Rebuild Tailwind so `sm:grid-cols-1`, `sm:grid-cols-2`, `sm:grid-cols-3`, `sm:grid-cols-4`, `flex-row`, `text-left`, and `justify-start` are generated. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.362`.
+
 ## [0.1.361] - 2026-11-14
 
 ### Added

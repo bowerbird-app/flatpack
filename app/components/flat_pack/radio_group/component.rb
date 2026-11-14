@@ -8,6 +8,8 @@ module FlatPack
       # "text-[var(--color-error)]" "h-[var(--checkbox-size)]" "w-[var(--checkbox-size)]"
       # "sr-only" "peer" "flex" "flex-wrap" "gap-2" "grid" "grid-cols-1"
       # "sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]" "gap-3"
+      # "sm:grid-cols-1" "sm:grid-cols-2" "sm:grid-cols-3" "sm:grid-cols-4"
+      # "border-0" "p-0" "m-0" "min-w-0" "flex-row" "flex-1" "w-full" "text-left" "justify-start"
       # "min-h-[7rem]" "rounded-[var(--radius-lg)]" "rounded-[var(--button-border-radius)]"
       # "border-2" "border-[var(--surface-border-color)]" "border-[var(--color-primary)]"
       # "border-[var(--color-error)]" "bg-[var(--surface-background-color)]"
@@ -56,6 +58,14 @@ module FlatPack
 
       SIZES = FlatPack::Shared::ControlSize::SIZES
       VARIANTS = %i[default inline cards swatches].freeze
+      CARD_ALIGNS = %i[center start].freeze
+      CARD_GRID_CLASSES = {
+        nil => "grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-3",
+        1 => "grid grid-cols-1 sm:grid-cols-1 gap-3",
+        2 => "grid grid-cols-1 sm:grid-cols-2 gap-3",
+        3 => "grid grid-cols-1 sm:grid-cols-3 gap-3",
+        4 => "grid grid-cols-1 sm:grid-cols-4 gap-3"
+      }.freeze
       SWATCH_SIZES = {
         sm: "h-8 w-8",
         md: "h-10 w-10",
@@ -84,6 +94,9 @@ module FlatPack
         help_text: nil,
         size: :md,
         variant: :default,
+        align: :center,
+        columns: nil,
+        hide_label: false,
         show_tooltip: true,
         tooltip_placement: :top,
         **system_arguments
@@ -101,12 +114,17 @@ module FlatPack
         @help_text = normalize_help_text!(help_text)
         @size = FlatPack::Shared::ControlSize.normalize!(size)
         @variant = (variant || :default).to_sym
+        @align = normalize_align(align)
+        @columns = normalize_columns(columns)
+        @hide_label = ActiveModel::Type::Boolean.new.cast(hide_label)
         @show_tooltip = ActiveModel::Type::Boolean.new.cast(show_tooltip)
         @tooltip_placement = tooltip_placement.to_sym
 
         validate_name!
         validate_options!
         validate_variant!
+        validate_align!
+        validate_columns!
         validate_tooltip_placement!
         resolve_swatch_colors!
       end
@@ -114,8 +132,7 @@ module FlatPack
       def call
         content_tag(:div, class: wrapper_classes) do
           safe_join([
-            render_label,
-            render_radio_group,
+            render_fieldset,
             render_help_text,
             render_error
           ].compact)
@@ -124,18 +141,36 @@ module FlatPack
 
       private
 
+      def render_fieldset
+        content_tag(:fieldset, **fieldset_attributes) do
+          safe_join([
+            render_label,
+            render_options
+          ].compact)
+        end
+      end
+
+      def fieldset_attributes
+        attributes = {class: "border-0 p-0 m-0 min-w-0"}
+        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        attributes[:aria] = {describedby: describedby} if describedby.present?
+        attributes
+      end
+
+      def render_options
+        content_tag(:div, class: options_layout_classes) do
+          safe_join(@options.map { |option| render_option(option) })
+        end
+      end
+
+      def render_option(option)
+        default_variant? ? render_radio_option(option) : render_visual_option(option)
+      end
+
       def render_label
         return unless @label
 
         content_tag(:legend, @label, class: label_classes)
-      end
-
-      def render_radio_group
-        return render_visual_radio_group unless default_variant?
-
-        content_tag(:fieldset, class: "space-y-2") do
-          safe_join(@options.map { |option| render_radio_option(option) })
-        end
       end
 
       def render_radio_option(option)
@@ -149,12 +184,6 @@ module FlatPack
             tag.input(**radio_attributes(option_value, checked, option_disabled)),
             label_tag(radio_id(option_value), option_label, class: radio_label_classes(option_disabled))
           ])
-        end
-      end
-
-      def render_visual_radio_group
-        content_tag(:fieldset, class: visual_group_classes) do
-          safe_join(@options.map { |option| render_visual_option(option) })
         end
       end
 
@@ -247,20 +276,35 @@ module FlatPack
       end
 
       def render_card_face(option)
-        content_tag(:span, class: "flex h-full min-w-0 flex-col items-center text-center gap-2 pointer-events-none") do
+        content_tag(:span, class: card_face_classes) do
           safe_join([
             render_option_icon(
               option,
               size: :lg,
-              extra_class: "text-[var(--surface-content-color)] group-has-[:checked]:text-[var(--color-primary)]"
+              extra_class: card_icon_classes
             ),
             render_card_copy(option)
           ].compact)
         end
       end
 
+      def card_face_classes
+        if card_align_start?
+          "flex h-full w-full min-w-0 flex-row items-center gap-3 text-left pointer-events-none"
+        else
+          "flex h-full min-w-0 flex-col items-center text-center gap-2 pointer-events-none"
+        end
+      end
+
+      def card_icon_classes
+        [
+          ("shrink-0" if card_align_start?),
+          "text-[var(--surface-content-color)] group-has-[:checked]:text-[var(--color-primary)]"
+        ].compact.join(" ")
+      end
+
       def render_card_copy(option)
-        content_tag(:span, class: "min-w-0 w-full text-center") do
+        content_tag(:span, class: card_copy_classes) do
           safe_join([
             content_tag(
               :span,
@@ -275,6 +319,14 @@ module FlatPack
                )
              end)
           ].compact)
+        end
+      end
+
+      def card_copy_classes
+        if card_align_start?
+          "min-w-0 flex-1 text-left"
+        else
+          "min-w-0 w-full text-center"
         end
       end
 
@@ -348,7 +400,11 @@ module FlatPack
 
       def label_classes
         classes(
-          "block text-sm font-medium text-[var(--surface-content-color)] mb-2"
+          if @hide_label
+            "sr-only"
+          else
+            "block text-sm font-medium text-[var(--surface-content-color)] mb-2"
+          end
         )
       end
 
@@ -388,9 +444,11 @@ module FlatPack
         ["sr-only", "peer", @custom_class].compact.join(" ")
       end
 
-      def visual_group_classes
-        if cards_variant?
-          "grid grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))] gap-3"
+      def options_layout_classes
+        if default_variant?
+          "space-y-2"
+        elsif cards_variant?
+          CARD_GRID_CLASSES.fetch(@columns)
         elsif swatches_variant?
           "flex flex-wrap items-center gap-3"
         else
@@ -444,7 +502,11 @@ module FlatPack
       end
 
       def visual_option_layout_classes
-        "flex min-h-[7rem] flex-col items-center justify-center p-4 rounded-[var(--radius-lg)]"
+        if card_align_start?
+          "flex w-full min-w-0 items-center justify-start p-4 rounded-[var(--radius-lg)]"
+        else
+          "flex min-h-[7rem] flex-col items-center justify-center p-4 rounded-[var(--radius-lg)]"
+        end
       end
 
       def visual_option_surface_classes(option_disabled: false)
@@ -619,6 +681,39 @@ module FlatPack
         return if VARIANTS.include?(@variant)
 
         raise ArgumentError, "Invalid variant: #{@variant}. Must be one of: #{VARIANTS.join(", ")}"
+      end
+
+      def normalize_align(align)
+        return :center if align.nil?
+
+        align.to_sym
+      rescue NoMethodError
+        align
+      end
+
+      def validate_align!
+        return if CARD_ALIGNS.include?(@align)
+
+        raise ArgumentError, "Invalid align: #{@align.inspect}. Must be one of: #{CARD_ALIGNS.join(", ")}"
+      end
+
+      def normalize_columns(columns)
+        return if columns.nil?
+        return Integer(columns) if columns.is_a?(String)
+
+        columns
+      rescue ArgumentError, TypeError
+        columns
+      end
+
+      def validate_columns!
+        return if CARD_GRID_CLASSES.key?(@columns)
+
+        raise ArgumentError, "Invalid columns: #{@columns.inspect}. Must be nil or an integer from 1 to 4."
+      end
+
+      def card_align_start?
+        cards_variant? && @align == :start
       end
 
       def default_variant?
