@@ -1112,6 +1112,7 @@ module FlatPack
         assert_nil menu_class.fetch(:default)
         refute menu_attributes.key?(:default)
         assert_includes slots.map { |row| row.fetch(:name) }, "trigger_label"
+        assert_includes slots.map { |row| row.fetch(:name) }, "trigger_state"
         assert_includes slots.map { |row| row.fetch(:name) }, "menu"
 
         item = FlatPack::ComponentCatalog.show("Button::DropdownItem::Component")
@@ -1143,6 +1144,93 @@ module FlatPack
           assert_selector "div[data-flat-pack--button-dropdown-placement-value='#{placement}']"
           assert_selector "button[data-flat-pack--button-dropdown-target='trigger'][aria-haspopup='true']"
         end
+      end
+
+      def test_trigger_state_renders_a_hidden_node_inside_the_root
+        render_inline(Dropdown::Component.new(text: "Draft", style: :secondary)) do |dropdown|
+          dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: "Draft")
+          dropdown.menu_item(text: "Published", href: "/publish")
+        end
+
+        assert_selector "button.fp-button-dropdown__trigger[data-fp-style='secondary'].fp-button-flat", text: "Draft"
+        assert_selector "[data-controller='flat-pack--button-dropdown'] > #publish-status-state[hidden]", visible: :all
+        node = page.find("#publish-status-state", visible: :all)
+        assert_equal "triggerState", node["data-flat-pack--button-dropdown-target"]
+        assert_equal "secondary", node["data-style"]
+        assert_equal "flat", node["data-press"]
+        assert_equal "Draft", node["data-label"]
+        assert_no_selector "[role='menu'] [data-flat-pack--button-dropdown-target='triggerState']", visible: :all
+      end
+
+      def test_trigger_state_computes_press_and_accepts_an_explicit_press
+        render_inline(Dropdown::Component.new(text: "Published", style: :success)) do |dropdown|
+          dropdown.with_trigger_state(id: "publish-status-state", style: :success, label: "Published")
+        end
+
+        assert_equal "raised", page.find("#publish-status-state", visible: :all)["data-press"]
+
+        FlatPack::Button.register_style(:spec_partner, press: :flat)
+        render_inline(Dropdown::Component.new(text: "Partner", style: :spec_partner)) do |dropdown|
+          dropdown.with_trigger_state(id: "partner-state", style: :spec_partner, label: "Partner")
+        end
+        assert_equal "flat", page.find("#partner-state", visible: :all)["data-press"]
+
+        render_inline(Dropdown::Component.new(text: "Draft", style: :secondary)) do |dropdown|
+          dropdown.with_trigger_state(id: "draft-state", style: :secondary, label: "Draft", press: :raised)
+        end
+        node = page.find("#draft-state", visible: :all)
+        assert_equal "secondary", node["data-style"]
+        assert_equal "raised", node["data-press"]
+      ensure
+        FlatPack::Button.unregister_style(:spec_partner)
+      end
+
+      def test_trigger_label_slot_stays_independent_of_trigger_state
+        render_inline(Dropdown::Component.new(text: "Lists", style: :secondary)) do |dropdown|
+          dropdown.with_trigger_label { "Lists · 3" }
+          dropdown.with_trigger_state(id: "lists-state", style: :success, label: "Published")
+        end
+
+        assert_selector "button.fp-button-dropdown__trigger", text: "Lists · 3"
+        assert_equal "Published", page.find("#lists-state", visible: :all)["data-label"]
+        assert_equal "raised", page.find("#lists-state", visible: :all)["data-press"]
+      end
+
+      def test_omitting_trigger_state_renders_no_state_node
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Edit", href: "/edit")
+        end
+
+        assert_no_selector "[data-flat-pack--button-dropdown-target='triggerState']", visible: :all
+      end
+
+      def test_trigger_state_rejects_unknown_style_press_and_a_blank_label
+        dropdown = Dropdown::Component.new(text: "Draft", style: :secondary)
+
+        style_error = assert_raises(ArgumentError) do
+          dropdown.with_trigger_state(id: "publish-status-state", style: :nope, label: "Draft")
+        end
+        assert_match(/Invalid style/, style_error.message)
+
+        press_error = assert_raises(ArgumentError) do
+          dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: "Draft", press: :sunk)
+        end
+        assert_match(/Invalid press/, press_error.message)
+
+        label_error = assert_raises(ArgumentError) do
+          dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: "  ")
+        end
+        assert_match(/label is required/, label_error.message)
+
+        type_error = assert_raises(ArgumentError) do
+          dropdown.with_trigger_state(id: "publish-status-state", style: :secondary, label: :draft)
+        end
+        assert_match(/label must be a String/, type_error.message)
+
+        id_error = assert_raises(ArgumentError) do
+          dropdown.with_trigger_state(id: "  ", style: :secondary, label: "Draft")
+        end
+        assert_match(/id is required/, id_error.message)
       end
     end
   end

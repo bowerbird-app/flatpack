@@ -7,6 +7,7 @@ module FlatPack
         include FlatPack::Button::FormSubmit
 
         renders_one :trigger_label
+        renders_one :trigger_state, TriggerState
 
         renders_many :menu, types: {
           item: FlatPack::Button::DropdownItem::Component,

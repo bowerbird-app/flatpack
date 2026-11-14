@@ -60,6 +60,50 @@ function events() {
   }
 }
 
+function stateNode({ style = "secondary", press = "flat", label = "Draft" } = {}) {
+  return { dataset: { style, press, label } }
+}
+
+function recordingTrigger(anchor, { style = "secondary", press = "flat", label = "Draft" } = {}) {
+  const attrs = { "data-fp-style": style }
+  if (label) attrs["aria-label"] = label
+  const classes = new Set(["fp-button", press === "raised" ? "fp-button-raised" : "fp-button-flat"])
+  const icon = {
+    textContent: "",
+    getAttribute(name) { return name === "aria-hidden" ? "true" : null },
+    querySelector() { return null }
+  }
+  const labelSpan = {
+    textContent: label,
+    getAttribute() { return null },
+    querySelector() { return null }
+  }
+  const chevron = {
+    textContent: "",
+    getAttribute() { return null },
+    querySelector(selector) { return selector === "svg" ? { tagName: "svg" } : null }
+  }
+  return {
+    rect: anchor,
+    attrs,
+    classes,
+    labelSpan,
+    chevron,
+    getBoundingClientRect() { return this.rect },
+    setAttribute(name, value) { attrs[name] = String(value) },
+    getAttribute(name) { return attrs[name] },
+    focus() {},
+    classList: {
+      add(...names) { names.forEach((name) => classes.add(name)) },
+      remove(...names) { names.forEach((name) => classes.delete(name)) },
+      contains(name) { return classes.has(name) }
+    },
+    querySelectorAll(selector) {
+      return selector === ":scope > span" ? [icon, labelSpan, chevron] : []
+    }
+  }
+}
+
 function mount({
   placement = "bottom_right",
   anchor,
@@ -67,7 +111,8 @@ function mount({
   viewport = { width: 400, height: 400 },
   edge = "8px",
   role = "menu",
-  maxHeight
+  maxHeight,
+  state = null
 } = {}) {
   const windowEvents = events()
   const windowStub = {
@@ -79,13 +124,14 @@ function mount({
     setTimeout() { return 0 },
     clearTimeout() {}
   }
-  const trigger = {
+  let trigger = {
     rect: anchor,
     getBoundingClientRect() { return this.rect },
     setAttribute() {},
     focus() {}
   }
   const menuListeners = []
+  const menuAttrs = {}
   const menuElement = {
     style: {},
     role,
@@ -100,8 +146,11 @@ function mount({
     },
     contains() { return false },
     classList: { add() {}, remove() {}, contains() { return false } },
-    setAttribute() {},
-    getAttribute(name) { return name === "role" ? this.role : null },
+    setAttribute(name, value) { menuAttrs[name] = String(value) },
+    getAttribute(name) {
+      if (Object.prototype.hasOwnProperty.call(menuAttrs, name)) return menuAttrs[name]
+      return name === "role" ? this.role : null
+    },
     querySelectorAll() { return this.tabStops }
   }
   const documentStub = {
@@ -130,6 +179,12 @@ function mount({
   if (maxHeight != null) {
     controller.hasMaxHeightValue = true
     controller.maxHeightValue = maxHeight
+  }
+  if (state) {
+    trigger = recordingTrigger(anchor)
+    controller.triggerTarget = trigger
+    controller.hasTriggerStateTarget = true
+    controller.triggerStateTarget = state
   }
   controller.connect()
   controller.positionMenu()
@@ -920,4 +975,116 @@ test("focusout leaves the menu when focus moves outside", () => {
   documentStub.activeElement = outside
   controller.handleFocusOut({ relatedTarget: null })
   assert.equal(closed, 1)
+})
+
+test("a disabled keep-open submit keeps the menu open and its focus", () => {
+  const { controller, menuElement, documentStub } = mount({ anchor: triggerRect })
+  let closed = 0
+  let focused = 0
+  controller.close = () => { closed += 1 }
+  controller.isOpen = true
+  const button = {
+    disabled: true,
+    tagName: "BUTTON",
+    focus() {
+      focused += 1
+      documentStub.activeElement = button
+    },
+    getAttribute() { return null },
+    removeAttribute() {},
+    closest(selector) {
+      return selector === "[data-flat-pack-dropdown-keep-open]" ? button : null
+    }
+  }
+  menuElement.contains = (node) => node === button
+  documentStub.activeElement = null
+
+  controller.handleFocusOut({ target: button, relatedTarget: null })
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+
+  controller.handleSubmitStart({ detail: { formSubmission: { submitter: button } } })
+  assert.equal(button.disabled, false)
+  assert.equal(focused, 1)
+  assert.equal(documentStub.activeElement, button)
+  assert.equal(closed, 0)
+})
+
+test("connect applies the trigger state without guessing a missing press", () => {
+  const state = stateNode({ style: "secondary", press: "", label: "Draft" })
+  const { controller, trigger, menuElement } = mount({ anchor: triggerRect, state, role: "dialog" })
+
+  assert.equal(trigger.attrs["data-fp-style"], "secondary")
+  assert.equal(trigger.classes.has("fp-button-flat"), true)
+  assert.equal(trigger.classes.has("fp-button-raised"), false)
+  assert.equal(trigger.labelSpan.textContent, "Draft")
+  assert.equal(trigger.attrs["aria-label"], "Draft")
+  assert.equal(menuElement.getAttribute("aria-label"), "Draft")
+  assert.equal(controller.triggerTarget, trigger)
+
+  const pressed = stateNode({ style: "success", press: "raised", label: "Published" })
+  controller.triggerStateTarget = pressed
+  controller.triggerStateTargetConnected(pressed)
+
+  assert.equal(trigger.attrs["data-fp-style"], "success")
+  assert.equal(trigger.classes.has("fp-button-raised"), true)
+  assert.equal(trigger.classes.has("fp-button-flat"), false)
+})
+
+test("replacing the trigger state restyles the trigger and leaves the menu open", () => {
+  const { controller, trigger, menuElement, documentStub } = mount({
+    anchor: triggerRect,
+    state: stateNode(),
+    role: "dialog"
+  })
+  const item = { text: "Published" }
+  documentStub.activeElement = item
+  controller.isOpen = true
+  let closed = 0
+  let focused = 0
+  controller.close = () => { closed += 1 }
+  trigger.focus = () => { focused += 1 }
+
+  const next = stateNode({ style: "success", press: "raised", label: "Published" })
+  controller.triggerStateTarget = next
+  controller.triggerStateTargetConnected(next)
+
+  assert.equal(controller.isOpen, true)
+  assert.equal(closed, 0)
+  assert.equal(focused, 0)
+  assert.equal(documentStub.activeElement, item)
+  assert.equal(controller.triggerTarget, trigger)
+  assert.equal(trigger.attrs["data-fp-style"], "success")
+  assert.equal(trigger.classes.has("fp-button-raised"), true)
+  assert.equal(trigger.classes.has("fp-button-flat"), false)
+  assert.equal(trigger.labelSpan.textContent, "Published")
+  assert.equal(trigger.chevron.textContent, "")
+  assert.equal(trigger.attrs["aria-label"], "Published")
+  assert.equal(menuElement.getAttribute("aria-label"), "Published")
+  assert.equal(menuElement.getAttribute("role"), "dialog")
+})
+
+test("an unknown style or press is ignored and a menu is not labeled as a dialog", () => {
+  const { controller, trigger, menuElement } = mount({
+    anchor: triggerRect,
+    state: stateNode({ style: "primary", press: "raised", label: "Draft" })
+  })
+  trigger.labelSpan.textContent = "Draft"
+
+  controller.triggerStateTargetConnected(stateNode({ style: "Not A Style", press: "sunk", label: "" }))
+
+  assert.equal(trigger.attrs["data-fp-style"], "primary")
+  assert.equal(trigger.classes.has("fp-button-raised"), true)
+  assert.equal(trigger.classes.has("fp-button-flat"), false)
+  assert.equal(trigger.labelSpan.textContent, "Draft")
+  assert.equal(menuElement.getAttribute("aria-label"), null)
+
+  controller.triggerStateTargetConnected(stateNode({ style: "ghost", press: "", label: "Quiet" }))
+
+  assert.equal(trigger.attrs["data-fp-style"], "ghost")
+  assert.equal(trigger.classes.has("fp-button-raised"), true)
+  assert.equal(trigger.labelSpan.textContent, "Quiet")
+  assert.equal(trigger.attrs["aria-label"], "Quiet")
+  assert.equal(menuElement.getAttribute("role"), "menu")
+  assert.equal(menuElement.getAttribute("aria-label"), null)
 })

@@ -9,8 +9,11 @@ const ITEM_HOOK = '[data-flat-pack-dropdown-item], [role="menuitem"]'
 
 const MENU_GAP = 8
 
+// Same shape as StyleRegistry::NAME_PATTERN. The registry itself stays in Ruby.
+const STYLE_NAME = /^[a-z][a-z0-9_]*$/
+
 export default class extends Controller {
-  static targets = ["trigger", "menu", "chevron"]
+  static targets = ["trigger", "menu", "chevron", "triggerState"]
   static values = {
     maxHeight: String,
     placement: { type: String, default: "bottom_right" }
@@ -27,6 +30,7 @@ export default class extends Controller {
     this.handleEscape = this.handleEscape.bind(this)
     this.handleFocusOut = this.handleFocusOut.bind(this)
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this)
+    this.handleSubmitStart = this.handleSubmitStart.bind(this)
     this.outsideClick = onClickOutside(document, () => this.close(), {
       capture: true,
       roots: () => [this.element, this.menuElement]
@@ -35,6 +39,60 @@ export default class extends Controller {
       if (!this.isOpen) return
       this.positionMenu()
     })
+
+    if (this.hasTriggerStateTarget) this.applyTriggerState(this.triggerStateTarget)
+  }
+
+  // A host replaces this node with turbo_stream.replace. The trigger element
+  // stays mounted, so an open menu and its focus survive the restyle.
+  triggerStateTargetConnected(node) {
+    this.applyTriggerState(node)
+  }
+
+  applyTriggerState(node) {
+    if (!node?.dataset || !this.triggerTarget) return
+
+    const { style, press, label } = node.dataset
+    this.applyTriggerStyle(style)
+    this.applyTriggerPress(press)
+    this.applyTriggerLabel(label)
+  }
+
+  applyTriggerStyle(style) {
+    if (typeof style !== "string" || !STYLE_NAME.test(style)) return
+
+    this.triggerTarget.setAttribute("data-fp-style", style)
+  }
+
+  applyTriggerPress(press) {
+    if (press !== "flat" && press !== "raised") return
+
+    const trigger = this.triggerTarget
+    trigger.classList.remove("fp-button-flat", "fp-button-raised")
+    trigger.classList.add(press === "flat" ? "fp-button-flat" : "fp-button-raised")
+  }
+
+  applyTriggerLabel(label) {
+    if (typeof label !== "string" || label.length === 0) return
+
+    this.writeTriggerLabel(label)
+    this.triggerTarget.setAttribute("aria-label", label)
+
+    const menu = this.menuElement || this.menuTarget
+    if (menu?.getAttribute("role") === "dialog") menu.setAttribute("aria-label", label)
+  }
+
+  writeTriggerLabel(label) {
+    const trigger = this.triggerTarget
+    if (typeof trigger.querySelectorAll !== "function") return
+
+    for (const span of trigger.querySelectorAll(":scope > span")) {
+      if (span.getAttribute("aria-hidden") === "true") continue
+      if (typeof span.querySelector === "function" && span.querySelector("svg")) continue
+
+      span.textContent = label
+      return
+    }
   }
 
   disconnect() {
@@ -204,9 +262,29 @@ export default class extends Controller {
       // Turbo disables the submit button for the request, so focus drops
       // onto the document. A keep-open item asked to stay open.
       if (this.keepsMenuOpen(source) && this.focusOnDocument(document.activeElement)) return
+      if (this.submittingKeepOpen(source)) return
 
       this.close({ returnFocus: false })
     })
+  }
+
+  // Turbo's default submitter sets disabled, which blurs the button and
+  // would close the menu. A keep-open control stays able to take focus.
+  handleSubmitStart(event) {
+    const submitter = event.detail?.formSubmission?.submitter
+    if (!submitter || !this.keepsMenuOpen(submitter)) return
+
+    if (submitter.disabled) submitter.disabled = false
+    if (typeof submitter.removeAttribute === "function") submitter.removeAttribute("aria-disabled")
+    if (document.activeElement !== submitter && typeof submitter.focus === "function") {
+      submitter.focus()
+    }
+  }
+
+  submittingKeepOpen(node) {
+    if (!this.keepsMenuOpen(node)) return false
+
+    return node.disabled === true || node.getAttribute("aria-disabled") === "true"
   }
 
   // A role=menu closes on Tab even when the current item, or the next stop,
@@ -308,6 +386,7 @@ export default class extends Controller {
   addListeners() {
     this.outsideClick.add()
     document.addEventListener("keydown", this.handleEscape, true)
+    document.addEventListener("turbo:submit-start", this.handleSubmitStart)
     this.menuElement.addEventListener("focusout", this.handleFocusOut)
     this.viewportWatch.add()
     this.menuElement.addEventListener("click", this.handleMenuItemClick)
@@ -316,6 +395,7 @@ export default class extends Controller {
   removeListeners() {
     this.outsideClick?.remove()
     document.removeEventListener("keydown", this.handleEscape, true)
+    document.removeEventListener("turbo:submit-start", this.handleSubmitStart)
     this.menuElement.removeEventListener("focusout", this.handleFocusOut)
     this.viewportWatch?.remove()
     this.menuElement.removeEventListener("click", this.handleMenuItemClick)
