@@ -342,6 +342,27 @@ module PagesHelper
     CODE
   end
 
+  def picker_demo_toolbar_erb_code
+    picker_demo_full_erb_code(<<~CODE)
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-toolbar",
+        title: "Files",
+        items: @picker_demo_items,
+        variant: :flush,
+        modal: false,
+        search_mode: :local,
+        selection_mode: :single,
+        auto_confirm: true,
+        items_height: "min-content"
+      ) do |picker| %>
+        <% picker.with_toolbar do %>
+          <%= render FlatPack::Button::Component.new(text: "Upload", icon: "arrow-up-tray", style: :secondary, size: :sm) %>
+          <%= render FlatPack::Button::Component.new(text: "New folder", icon: "folder-plus", style: :ghost, size: :sm) %>
+        <% end %>
+      <% end %>
+    CODE
+  end
+
   def picker_demo_flush_erb_code
     picker_demo_full_erb_code(<<~CODE)
       <%= render FlatPack::Picker::Component.new(
