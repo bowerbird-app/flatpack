@@ -230,7 +230,7 @@ module FlatPack
         options = [{label: "Red", value: "red", icon: "heart", description: "Warm"}]
         render_inline(Component.new(name: "color", options: options, value: "red"))
 
-        assert_selector "fieldset.space-y-2"
+        assert_selector "fieldset.border-0.p-0.m-0.min-w-0 > div.space-y-2"
         assert_selector "div.flex.items-center"
         assert_selector "input.flat-pack-radio[type='radio'][name='color'][checked]"
         assert_selector "label.ml-2", text: "Red"
@@ -272,7 +272,7 @@ module FlatPack
         assert_selector "input[type='radio'][name='cadence']", count: 2
         assert_selector "input.sr-only.peer[value='daily'][checked]"
         refute_selector "input.flat-pack-radio"
-        assert_selector "fieldset.flex.flex-wrap"
+        assert_selector "fieldset > div.flex.flex-wrap"
         assert_selector "label.fp-button[for='cadence_daily'][data-fp-style='secondary']"
         assert_selector "svg[data-flat-pack--icon-name-value='sun']"
         assert_selector "label", text: "Weekly"
@@ -308,7 +308,7 @@ module FlatPack
         assert_selector "input[type='radio'][name='channel']", count: 2
         assert_selector "input.sr-only.peer[value='email'][checked]"
         refute_selector "input.flat-pack-radio"
-        assert_selector "fieldset.grid"
+        assert_selector "fieldset > div.grid"
         assert_selector "svg[data-flat-pack--icon-name-value='envelope']"
         assert_text "A note in your inbox"
         assert_text "A short message"
@@ -434,7 +434,7 @@ module FlatPack
         refute_selector "input.flat-pack-radio"
         refute_selector "input[type='color']"
         refute_selector "[data-controller='flat-pack--color-swatch']"
-        assert_selector "fieldset.flex.flex-wrap"
+        assert_selector "fieldset > div.flex.flex-wrap"
         assert_selector "label.flat-pack-radio-swatch[for='cover_color__1d4ed8']"
         assert_selector "span.sr-only", text: "Ocean"
         assert_selector "[data-controller='flat-pack--tooltip']", count: 3
@@ -633,6 +633,173 @@ module FlatPack
         html = page.native.to_html
         refute_includes html, "flat-pack-radio-swatch"
         refute_includes html, "--color-swatch-selected-ring-color"
+      end
+
+      def test_legend_sits_inside_the_fieldset_for_every_variant
+        [
+          [:default, "Red"],
+          [:inline, "Daily"],
+          [:cards, "Email"],
+          [:swatches, "#1d4ed8"]
+        ].each do |variant, value|
+          options = (variant == :swatches) ? [{label: "Ocean", value: value}] : [value]
+          render_inline(Component.new(
+            name: "choice_#{variant}",
+            options: options,
+            variant: variant,
+            label: "Pick one"
+          ))
+
+          assert_selector "fieldset.border-0.p-0.m-0.min-w-0 > legend:first-child", text: "Pick one"
+          refute_selector ".flat-pack-radio-group-wrapper > legend"
+        end
+      end
+
+      def test_fieldset_describes_help_text_and_error
+        render_inline(Component.new(
+          name: "color",
+          options: ["Red", "Blue"],
+          label: "Colour",
+          help_text: "Pick one.",
+          error: "Need a colour."
+        ))
+
+        assert_selector "fieldset[aria-describedby='color_help_text color_error']"
+        assert_selector ".flat-pack-radio-group-wrapper > p#color_help_text"
+        assert_selector ".flat-pack-radio-group-wrapper > p#color_error"
+        assert_selector "input[aria-describedby='color_help_text color_error']", count: 2
+      end
+
+      def test_hide_label_keeps_a_screen_reader_legend
+        render_inline(Component.new(
+          name: "size",
+          options: ["Small", "Large"],
+          label: "Choose a size",
+          hide_label: true
+        ))
+
+        assert_selector "fieldset > legend.sr-only:first-child", text: "Choose a size"
+        refute_selector "legend.mb-2"
+      end
+
+      def test_cards_align_start_lays_the_icon_beside_the_copy
+        render_inline(Component.new(
+          name: "channel",
+          options: [
+            {label: "Email", value: "email", icon: "envelope", description: "A note in your inbox"},
+            {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message"}
+          ],
+          variant: :cards,
+          align: :start,
+          value: "email"
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "flex-row"
+        assert_includes html, "text-left"
+        assert_includes html, "justify-start"
+        assert_includes html, "shrink-0"
+        assert_includes html, "has-[:checked]:border-[var(--color-primary)]"
+        assert_includes html, "has-[:checked]:bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--surface-background-color))]"
+        refute_includes html, "text-center"
+        refute_includes html, "min-h-[7rem]"
+        assert_selector "input[value='email'][checked]"
+      end
+
+      def test_cards_default_align_stays_centred
+        render_inline(Component.new(
+          name: "channel",
+          options: [{label: "Email", value: "email", icon: "envelope", description: "A note"}],
+          variant: :cards,
+          align: :center
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "text-center"
+        assert_includes html, "min-h-[7rem]"
+        assert_includes html, "sm:grid-cols-[repeat(auto-fit,minmax(14rem,1fr))]"
+        refute_includes html, "flex-row"
+        refute_includes html, "text-left"
+      end
+
+      def test_cards_columns_sets_a_fixed_grid_from_sm
+        {
+          1 => "sm:grid-cols-1",
+          2 => "sm:grid-cols-2",
+          3 => "sm:grid-cols-3",
+          4 => "sm:grid-cols-4"
+        }.each do |count, utility|
+          render_inline(Component.new(
+            name: "plan_#{count}",
+            options: ["Starter", "Team"],
+            variant: :cards,
+            columns: count
+          ))
+
+          html = page.native.to_html
+          assert_includes html, "grid-cols-1"
+          assert_includes html, utility
+          refute_includes html, "minmax(14rem,1fr)"
+        end
+      end
+
+      def test_cards_columns_accepts_a_numeric_string
+        render_inline(Component.new(
+          name: "plan",
+          options: ["Starter", "Team"],
+          variant: :cards,
+          columns: "2"
+        ))
+
+        assert_includes page.native.to_html, "sm:grid-cols-2"
+      end
+
+      def test_align_and_columns_are_ignored_on_other_variants
+        render_inline(Component.new(
+          name: "cadence",
+          options: ["Daily", "Weekly"],
+          variant: :inline,
+          align: :start,
+          columns: 2
+        ))
+
+        html = page.native.to_html
+        assert_includes html, "flex flex-wrap gap-2"
+        refute_includes html, "sm:grid-cols-2"
+        refute_includes html, "min-h-[7rem]"
+        refute_includes html, "text-left"
+      end
+
+      def test_raises_for_invalid_align
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], variant: :cards, align: :end)
+        end
+
+        assert_includes error.message, "Invalid align"
+        assert_includes error.message, "center"
+        assert_includes error.message, "start"
+      end
+
+      def test_raises_for_invalid_align_on_other_variants
+        assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], align: :stretch)
+        end
+      end
+
+      def test_raises_for_invalid_columns
+        [0, 5, "many", 2.5].each do |columns|
+          error = assert_raises(ArgumentError) do
+            Component.new(name: "plan", options: ["Starter"], variant: :cards, columns: columns)
+          end
+
+          assert_includes error.message, "Invalid columns"
+        end
+      end
+
+      def test_raises_for_invalid_columns_on_other_variants
+        assert_raises(ArgumentError) do
+          Component.new(name: "color", options: ["Red"], columns: 8)
+        end
       end
     end
   end

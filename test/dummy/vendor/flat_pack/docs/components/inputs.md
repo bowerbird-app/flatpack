@@ -67,6 +67,9 @@ Component-specific props:
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
 | `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. On `variant: :swatches` it maps to ColorSwatch circle sizes (`:sm` 2rem, `:md` 2.5rem, `:lg` 3rem). |
 | `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description), `:swatches` (wrapping colour circles). Invalid names raise `ArgumentError`. |
+| `align` | Symbol | `:center` | no | RadioGroup `variant: :cards` only. `:center` stacks the icon, title, and description in the middle. `:start` puts the icon on the left and left-aligns the title and description beside it, and drops the 7rem card min-height. Other variants ignore it. `:center` and `:start` are the only values. Anything else raises `ArgumentError`. |
+| `columns` | Integer, nil | `nil` | no | RadioGroup `variant: :cards` only. `nil` keeps the auto-fit grid (minimum 14rem). An integer `1`–`4` is one column on mobile and that many columns from the `sm` breakpoint. A numeric string such as `"2"` is accepted. Other variants ignore it. Anything else raises `ArgumentError`. |
+| `hide_label` | Boolean | `false` | no | RadioGroup. When `label` is set, `true` renders that legend with `sr-only` so the group stays named when a heading already shows the title. |
 | `show_tooltip` | Boolean | `true` | no | RadioGroup `variant: :swatches` only. Wraps each circle in `FlatPack::Tooltip::Component` when the option `label` is present. Other variants ignore it. |
 | `tooltip_placement` | Symbol | `:top` | no | RadioGroup `variant: :swatches` only. Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
 
@@ -77,7 +80,7 @@ None.
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
 - TextArea looks: `:default` is the form field. `variant: :chat` is the Chat::Composer field (compact padding, composer radius, chat input colours, autogrow, `rows` 1).
 - Choice inputs: `Checkbox`, `RadioGroup`, `Select`, `Switch`
-- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, the neutral active surface when selected (`--surface-active-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`.
+- RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, the neutral active surface when selected (`--surface-active-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. `align: :start` on cards puts that icon on the left, with the title and description left-aligned beside it, and drops the 7rem min-height. `columns:` is `nil` (auto-fit, minimum 14rem) or `1`–`4` (one column on mobile, that many from `sm`). Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`. The group `label` is a `<legend>` inside an unstyled `<fieldset>` (`border-0 p-0 m-0 min-w-0`). Options sit in an inner div so the legend is not a grid or flex item. `hide_label: true` keeps the legend and marks it `sr-only`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
 - Select option `icon:` is a Heroicon name. The custom menu (including local search, remote search results, nested parent and child rows, and multiselect chips) draws it with `FlatPack::Shared::IconComponent` at size `:sm` (`w-4 h-4`), the same size as the select chevron, so it matches the `text-sm` control. The icon is decorative (`aria-hidden`). The text label stays. The closed control shows the icon for the selected value. Remote JSON may include `"icon"`. A native `<select>` cannot draw icons; the value and label still submit. An icon that is not a Heroicon name (`letter`, `letter-number` pieces) raises `ArgumentError`.
@@ -325,6 +328,22 @@ or:
     {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
     {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."},
     {label: "In the app", value: "app", icon: "bell", description: "A bell on the home screen."}
+  ]
+) %>
+```
+
+```erb
+<%= render FlatPack::RadioGroup::Component.new(
+  name: "send_how_row",
+  variant: :cards,
+  align: :start,
+  columns: 2,
+  hide_label: true,
+  label: "How should we send this?",
+  value: "email",
+  options: [
+    {label: "Email", value: "email", icon: "envelope", description: "A note in the inbox."},
+    {label: "Text", value: "sms", icon: "chat-bubble-left", description: "A short message to the phone."}
   ]
 ) %>
 ```
@@ -724,6 +743,7 @@ Use [Fieldset](fieldset.md) when several controls share one name, such as an add
 - Label-to-control association is provided when `label` is passed (`for`/`id` linkage).
 - Error state adds `aria-invalid` and `aria-describedby` for controls that receive `error`. Invalid borders and helper text use `--color-error` (danger red), not `--color-warning`. Character-count thresholds still use `--color-warning-border`.
 - Native controls are used for checkbox/radio/select/input/textarea semantics.
+- RadioGroup names the group with a `<legend>` inside the `<fieldset>` for every variant. `hide_label: true` keeps that legend and marks it `sr-only`. Help text and the error stay outside the fieldset. The fieldset `aria-describedby` points at them when they are present. Each radio keeps the same `aria-describedby` and `aria-invalid`.
 - RadioGroup `variant: :swatches` keeps a native radio per colour. The option `label` is the accessible name (visually hidden) and the default tooltip copy.
 - `SearchInput` keeps a single clear control by using the component clear button and suppressing browser-native search clear icons.
 - Password show/hide is `aria-pressed` with “Show password” / “Hide password”. The two icons crossfade on `--duration-fast` in a fixed box; they do not snap `hidden`.
