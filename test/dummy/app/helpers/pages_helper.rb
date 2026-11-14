@@ -234,6 +234,58 @@ module PagesHelper
     CODE
   end
 
+  def picker_demo_empty_state
+    render FlatPack::EmptyState::Component.new(
+      title: "Nothing in the drawer",
+      description: "Try a different word, or add an asset.",
+      icon: :search,
+      size: :sm,
+      width: :sm
+    ) do |state|
+      state.item do
+        render FlatPack::Button::Component.new(
+          text: "Add an asset",
+          style: :primary,
+          type: "button",
+          data: {picker_empty_action: "add"}
+        )
+      end
+    end
+  end
+
+  def picker_demo_empty_erb_code
+    <<~CODE
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-empty-local",
+        title: "Local drawer",
+        subtitle: "Filter the assets already on the page.",
+        items: @picker_demo_items,
+        modal: false,
+        search_mode: :local,
+        items_height: "22rem",
+        confirm_label: "Use assets"
+      ) do |picker| %>
+        <% picker.with_empty do %>
+          <%= render FlatPack::EmptyState::Component.new(
+            title: "Nothing in the drawer",
+            description: "Try a different word, or add an asset.",
+            icon: :search,
+            size: :sm,
+            width: :sm
+          ) do |state| %>
+            <% state.item do %>
+              <%= render FlatPack::Button::Component.new(
+                text: "Add an asset",
+                style: :primary,
+                type: "button"
+              ) %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    CODE
+  end
+
   def picker_demo_inline_erb_code
     picker_demo_full_erb_code(<<~CODE)
       <input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">

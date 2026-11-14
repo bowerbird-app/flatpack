@@ -20,7 +20,6 @@ export default class extends Controller {
     outputTarget: String,
     form: Object,
     context: Object,
-    emptyText: { type: String, default: "No assets found" },
     resultsLayout: { type: String, default: "list" }
   }
 
@@ -229,17 +228,19 @@ export default class extends Controller {
 
     const markup = items.map((item) => this.#itemMarkup(item)).join("")
     this.resultsTarget.innerHTML = markup
+    this.#syncEmptyState(items)
+  }
 
-    if (this.hasEmptyStateTarget) {
-      if (items.length === 0) {
-        this.emptyStateTarget.textContent = this.emptyTextValue
-        this.emptyStateTarget.classList.remove("hidden")
-        this.emptyStateTarget.classList.add("flex")
-      } else {
-        this.emptyStateTarget.classList.add("hidden")
-        this.emptyStateTarget.classList.remove("flex")
-      }
+  // The empty panel is server-rendered. Show it when nothing matches.
+  // Leave its markup alone, whether that is empty_text or an empty slot.
+  #syncEmptyState(items) {
+    if (!this.hasEmptyStateTarget) {
+      return
     }
+
+    const showEmpty = items.length === 0
+    this.emptyStateTarget.classList.toggle("hidden", !showEmpty)
+    this.emptyStateTarget.classList.toggle("flex", showEmpty)
   }
 
   #itemMarkup(item) {

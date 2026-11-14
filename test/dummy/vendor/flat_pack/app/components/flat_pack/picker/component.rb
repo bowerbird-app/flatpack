@@ -13,6 +13,8 @@ module FlatPack
       VARIANTS = %i[default flush].freeze
       ACCEPTED_KINDS = %w[image file record].freeze
 
+      renders_one :empty
+
       def initialize(
         id:,
         items: [],
@@ -140,12 +142,44 @@ module FlatPack
             content_tag(:div, **items_region_attributes) do
               safe_join([
                 content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
-                content_tag(:div, @empty_text, class: "hidden h-full min-h-32 items-center justify-center rounded-[var(--radius-md)] border border-dashed border-(--surface-border-color) p-4 text-center text-sm text-(--surface-muted-content-color)", data: {flat_pack__picker_target: "emptyState"})
+                render_empty_state
               ])
             end,
             render_actions
           ].compact)
         end
+      end
+
+      def render_empty_state
+        # Slot markup is component HTML from the caller, same as Modal slots.
+        body = empty? ? empty.to_s.html_safe : @empty_text
+
+        content_tag(:div, body, class: empty_state_classes, data: empty_state_data)
+      end
+
+      # Tailwind scans these as class literals. Keep each utility whole.
+      def empty_state_classes
+        [
+          "hidden",
+          "h-full",
+          "min-h-32",
+          "items-center",
+          "justify-center",
+          "rounded-[var(--radius-md)]",
+          "border",
+          "border-dashed",
+          "border-(--surface-border-color)",
+          "p-4",
+          "text-center",
+          "text-sm",
+          "text-(--surface-muted-content-color)"
+        ].join(" ")
+      end
+
+      def empty_state_data
+        data = {flat_pack__picker_target: "emptyState"}
+        data[:flat_pack_picker_empty_slot] = "true" if empty?
+        data
       end
 
       def render_search
@@ -220,7 +254,6 @@ module FlatPack
             flat_pack__picker_output_mode_value: @output_mode,
             flat_pack__picker_output_target_value: @output_target,
             flat_pack__picker_context_value: @context.to_json,
-            flat_pack__picker_empty_text_value: @empty_text,
             flat_pack__picker_results_layout_value: @results_layout,
             flat_pack__picker_modal_value: @modal,
             flat_pack__picker_auto_confirm_value: @auto_confirm,
