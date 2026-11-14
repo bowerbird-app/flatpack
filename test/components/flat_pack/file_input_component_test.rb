@@ -408,6 +408,34 @@ module FlatPack
         end
       end
 
+      def test_dropzone_renders_the_file_list_by_default
+        render_inline(Component.new(name: "document", preview: true))
+
+        assert_selector "[data-flat-pack--file-input-target='fileList']", visible: :all
+        assert_selector "[data-flat-pack--file-input-target='preview']", visible: :all
+        assert_selector "[data-flat-pack--file-input-show-list-value='true']"
+      end
+
+      def test_show_file_list_false_omits_list_markup
+        render_inline(Component.new(name: "stems", id: "stems", preview: true, show_file_list: false, multiple: true))
+
+        refute_selector "[data-flat-pack--file-input-target='fileList']", visible: :all
+        refute_selector "[data-flat-pack--file-input-target='preview']", visible: :all
+        assert_selector "[data-flat-pack--file-input-show-list-value='false']"
+        assert_selector "[data-flat-pack--file-input-preview-value='false']"
+        assert_selector "input#stems[type='file'][multiple]", visible: :all
+        assert_text "Upload a file"
+        assert_text "or drag and drop"
+      end
+
+      def test_button_variant_has_no_file_list_when_show_file_list_is_true
+        render_inline(Component.new(name: "document", variant: :button, text: "Choose", show_file_list: true))
+
+        refute_selector "[data-flat-pack--file-input-target='fileList']", visible: :all
+        refute_selector "[data-flat-pack--file-input-target='preview']", visible: :all
+        assert_selector "[data-flat-pack--file-input-show-list-value='false']"
+      end
+
       def test_raises_when_button_options_are_used_on_the_dropzone
         error = assert_raises(ArgumentError) do
           Component.new(name: "document", text: "Choose", style: :primary)

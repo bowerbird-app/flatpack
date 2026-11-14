@@ -40,6 +40,7 @@ module FlatPack
         max_size: nil,
         max_files: nil,
         preview: true,
+        show_file_list: true,
         **system_arguments
       )
         @custom_class = system_arguments.delete(:class)
@@ -63,6 +64,7 @@ module FlatPack
         @max_size = max_size
         @max_files = max_files
         @preview = preview
+        @show_file_list = show_file_list
 
         validate_name!
         validate_variant!
@@ -177,6 +179,8 @@ module FlatPack
       end
 
       def render_file_list
+        return unless show_built_in_list?
+
         content_tag(:div, "", {
           data: {flat_pack__file_input_target: "fileList"},
           class: "mt-4 space-y-2 hidden"
@@ -184,7 +188,7 @@ module FlatPack
       end
 
       def render_preview_area
-        return unless @preview
+        return unless @preview && show_built_in_list?
 
         content_tag(:div, "", {
           data: {flat_pack__file_input_target: "preview"},
@@ -288,11 +292,11 @@ module FlatPack
           controller: "flat-pack--file-input",
           action: DRAG_ACTIONS,
           flat_pack__file_input_max_size_value: @max_size,
-          flat_pack__file_input_preview_value: button_variant? ? false : @preview,
+          flat_pack__file_input_preview_value: show_built_in_list? ? @preview : false,
           flat_pack__file_input_multiple_value: @multiple,
           flat_pack__file_input_max_files_value: @max_files,
           flat_pack__file_input_limit_message_value: limit_message_text,
-          flat_pack__file_input_show_list_value: !button_variant?
+          flat_pack__file_input_show_list_value: show_built_in_list?
         }.compact
       end
 
@@ -413,6 +417,10 @@ module FlatPack
 
       def button_variant?
         @variant == :button
+      end
+
+      def show_built_in_list?
+        !button_variant? && @show_file_list
       end
 
       def validate_name!
