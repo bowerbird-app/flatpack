@@ -68,6 +68,8 @@ module FlatPack
             href: @href,
             icon: @icon,
             icon_position: @icon_position,
+            icon_variant: @icon_variant,
+            icon_style: @icon_style,
             destructive: @destructive,
             disabled: @disabled
           }

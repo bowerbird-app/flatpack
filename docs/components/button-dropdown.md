@@ -169,7 +169,7 @@ Host menu classes and a trigger label, with no subclass:
 ```
 
 ## Collapsing button group
-`menu_row` is the menu form used by [Button Group](button-group.md). `collapse: :menu` uses it in the phone menu. An overflow menu uses it when this dropdown did not stay in the row. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
+`menu_row` is the menu form used by [Button Group](button-group.md). `collapse: :menu` uses it in the phone menu. An overflow menu uses it when this dropdown did not stay in the row. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The header icon uses this dropdown's `icon_variant` and `icon_style`. Each item's `icon_variant` and `icon_style` paint that nested row. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
 
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.

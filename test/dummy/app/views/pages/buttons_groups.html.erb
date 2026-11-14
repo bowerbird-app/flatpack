@@ -273,6 +273,18 @@
         <%= button_tag "Archive", type: "button", data: {fp_style: "danger"} %>
       <% end %>
     <% end %>
+    <div id="menu-collapse-success" class="mt-2">
+      <%= render FlatPack::Menu::Collapse::Component.new(
+        title: "Publish",
+        icon: "check-circle",
+        icon_variant: :solid,
+        icon_style: :success
+      ) do |section| %>
+        <% section.items do %>
+          <%= link_to "Publish now", "#" %>
+        <% end %>
+      <% end %>
+    </div>
   </div>
   <%= render FlatPack::CodeBlock::Component.new(
     code: CGI.unescapeHTML(<<~'CODE')
@@ -280,6 +292,16 @@
         &lt;% section.items do %&gt;
           &lt;%= link_to "Copy link", "#" %&gt;
           &lt;%= link_to "Email", "#" %&gt;
+        &lt;% end %&gt;
+      &lt;% end %&gt;
+      &lt;%= render FlatPack::Menu::Collapse::Component.new(
+        title: "Publish",
+        icon: "check-circle",
+        icon_variant: :solid,
+        icon_style: :success
+      ) do |section| %&gt;
+        &lt;% section.items do %&gt;
+          &lt;%= link_to "Publish now", "#" %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
     CODE

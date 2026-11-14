@@ -15,6 +15,8 @@ Use Menu Collapse wherever menu rows need a nested group that stays in the flow.
 |------|------|---------|----------|-------------|
 | `title` | String | none | Yes | Header label. |
 | `icon` | String, Symbol, or nil | `nil` | No | Optional leading icon on the header. |
+| `icon_variant` | Symbol, nil | `nil` | No | `:outline`, `:solid`, `:mini`, or `:micro` on that icon. Omit to use `default_icon_variant`. Unknown names raise `ArgumentError`. |
+| `icon_style` | Symbol, nil | `nil` | No | `nil` inherits the row text. `:primary`, `:success`, `:warning`, or `:danger` use the button icon tokens. Unknown names raise `ArgumentError`. |
 | `open` | Boolean | `false` | No | Initial open state. A menu does not persist this. |
 | `**system_arguments` | Hash | `{}` | No | HTML attributes merged into the wrapper. |
 
@@ -31,6 +33,7 @@ Use Menu Collapse wherever menu rows need a nested group that stays in the flow.
 | `open: false` | Header only. The panel is hidden. |
 | `open: true` | The panel is open on first paint. |
 | `icon:` | A leading icon sits before the label. |
+| `icon_variant:` / `icon_style:` | The header glyph uses the same artwork and colour as a button icon. A solid success `check-circle` is the usual “done” mark. |
 
 ## Example
 
@@ -39,6 +42,19 @@ Use Menu Collapse wherever menu rows need a nested group that stays in the flow.
   <% section.items do %>
     <%= link_to "Copy link", "#" %>
     <%= link_to "Email", "#" %>
+  <% end %>
+<% end %>
+```
+
+```erb
+<%= render FlatPack::Menu::Collapse::Component.new(
+  title: "Publish",
+  icon: "check-circle",
+  icon_variant: :solid,
+  icon_style: :success
+) do |section| %>
+  <% section.items do %>
+    <%= link_to "Publish now", "#" %>
   <% end %>
 <% end %>
 ```

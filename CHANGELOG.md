@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.365] - 2026-11-14
+
+### Added
+- `FlatPack::Menu::Collapse::Component` accepts `icon_variant:` and `icon_style:` (both default to `nil`). The header icon renders through `Button::IconOptions`, the same path as a dropdown item. `icon_variant: :solid` and `icon_style: :success` paint a solid success glyph, such as `check-circle`.
+- A collapsing `Button::Dropdown` passes the trigger's `icon_variant` and `icon_style` into that header. Each item's `icon_variant` and `icon_style` paint the nested row.
+
+### Upgrade notes
+- Omit the new arguments and the header stays the default Heroicon weight with no icon colour. The header glyph now carries `fp-button-icon`, matching a dropdown item.
+- Unknown `icon_variant` or `icon_style` names raise `ArgumentError`.
+- No new CSS or JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.365`.
+
 ## [0.1.364] - 2026-11-14
 
 ### Fixed

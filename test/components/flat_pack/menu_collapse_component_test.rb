@@ -43,6 +43,44 @@ module FlatPack
           assert_selector ".fp-menu-collapse__icon svg"
           assert_text "Child"
         end
+
+        def test_header_icon_uses_icon_options_without_a_colour
+          render_inline(Component.new(title: "Share", icon: "pencil"))
+
+          icon = page.find(".fp-menu-collapse__icon svg")
+          chevron = page.find(".fp-menu-collapse__chevron svg")
+
+          assert_includes icon[:class], "fp-button-icon"
+          assert_equal "outline", icon["data-flat-pack--icon-variant-value"]
+          assert_nil icon["data-icon-style"]
+          refute_includes chevron[:class].to_s, "fp-button-icon"
+          assert_nil chevron["data-icon-style"]
+        end
+
+        def test_header_icon_takes_variant_and_style
+          render_inline(Component.new(
+            title: "Publish",
+            icon: "check-circle",
+            icon_variant: :solid,
+            icon_style: :success
+          ))
+
+          icon = page.find(".fp-menu-collapse__icon svg")
+
+          assert_equal "solid", icon["data-flat-pack--icon-variant-value"]
+          assert_equal "success", icon["data-icon-style"]
+          assert_equal "check-circle", icon["data-flat-pack--icon-name-value"]
+          assert_includes icon[:class], "fp-button-icon"
+          assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:success)
+          chevron = page.find(".fp-menu-collapse__chevron svg")
+          assert_nil chevron["data-icon-style"]
+          refute_includes chevron[:class].to_s, "fp-button-icon"
+        end
+
+        def test_invalid_icon_variant_and_icon_style
+          assert_raises(ArgumentError) { Component.new(title: "Share", icon_variant: :filled) }
+          assert_raises(ArgumentError) { Component.new(title: "Share", icon_style: :info) }
+        end
       end
     end
   end
