@@ -168,8 +168,11 @@ en:
       close: Close
     file_input:
       upload: Upload a file
+      choose: Choose a file
       or_drag: " or drag and drop"
       max_size: "Max size: %{size}"
+      too_many_one: Only the first file was kept.
+      too_many: "Only the first %{count} files were kept."
       size_exceeded: File "%{name}" exceeds maximum size of %{size}
       size_bytes: "%{count}B"
       size_kilobytes: "%{count}KB"

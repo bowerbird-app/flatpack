@@ -8,9 +8,28 @@ module FlatPack
       # "text-[var(--color-error)]" "border-[var(--color-error)]"
       # "border-[var(--surface-border-color)]" "bg-[var(--surface-background-color)]"
       # "text-[var(--surface-content-color)]" "text-[var(--surface-muted-content-color)]"
+      # "flex" "flex-col" "items-center" "items-start" "gap-2" "gap-4"
+      # "sm:flex-row" "sm:items-start" "min-w-0" "flex-1" "w-full" "max-w-xs" "shrink-0"
+      # "sr-only" "text-center" "text-left"
+
+      VARIANTS = %i[dropzone button].freeze
+
+      DRAG_ACTIONS = "dragover->flat-pack--file-input#dragOver dragenter->flat-pack--file-input#dragEnter dragleave->flat-pack--file-input#dragLeave drop->flat-pack--file-input#drop"
+
+      renders_one :actions
+
+      undef_method :with_actions, :with_actions_content
 
       def initialize(
         name:,
+        variant: :dropzone,
+        text: nil,
+        style: nil,
+        size: nil,
+        round: nil,
+        icon: nil,
+        icon_variant: nil,
+        icon_style: nil,
         disabled: false,
         required: false,
         label: nil,
@@ -19,12 +38,21 @@ module FlatPack
         accept: nil,
         multiple: false,
         max_size: nil,
+        max_files: nil,
         preview: true,
         **system_arguments
       )
-        @custom_class = system_arguments[:class]
+        @custom_class = system_arguments.delete(:class)
         super(**system_arguments)
         @name = name
+        @variant = variant
+        @text = text
+        @style = style
+        @size = size
+        @round = round
+        @icon = icon
+        @icon_variant = icon_variant
+        @icon_style = icon_style
         @disabled = disabled
         @required = required
         @label = label
@@ -33,10 +61,14 @@ module FlatPack
         @accept = accept
         @multiple = multiple
         @max_size = max_size
+        @max_files = max_files
         @preview = preview
 
         validate_name!
+        validate_variant!
+        validate_button_only_options!
         validate_max_size!
+        validate_max_files!
         validate_accept!
       end
 
@@ -44,11 +76,17 @@ module FlatPack
         content_tag(:div, class: wrapper_classes) do
           safe_join([
             render_label,
-            render_dropzone,
+            render_field,
             render_help_text,
             render_error
           ].compact)
         end
+      end
+
+      def actions(*args, **kwargs, &block)
+        return get_slot(:actions) if args.empty? && kwargs.empty? && !block
+
+        set_slot(:actions, nil, *args, **kwargs, &block)
       end
 
       private
@@ -59,11 +97,38 @@ module FlatPack
         label_tag(input_id, @label, class: label_classes)
       end
 
+      def render_field
+        control = button_variant? ? render_button_stack : render_dropzone
+        return content_tag(:div, control, class: "mt-2") unless actions?
+
+        content_tag(:div, class: "mt-2 flex flex-col gap-4 sm:flex-row sm:items-start") do
+          safe_join([
+            content_tag(:div, control, class: "min-w-0 flex-1"),
+            content_tag(:div, actions, **actions_attributes)
+          ])
+        end
+      end
+
+      def render_button_stack
+        content_tag(:div, class: "flex flex-col items-start gap-2", data: controller_data) do
+          safe_join([
+            render_button,
+            render_hidden_input,
+            render_limit_message
+          ])
+        end
+      end
+
+      def render_button
+        render(FlatPack::Button::Component.new(**button_arguments))
+      end
+
       def render_dropzone
         content_tag(:div, **dropzone_attributes) do
           safe_join([
             render_hidden_input,
-            render_dropzone_content
+            render_dropzone_content,
+            render_limit_message
           ])
         end
       end
@@ -134,10 +199,56 @@ module FlatPack
         })
       end
 
+      def render_limit_message
+        content_tag(
+          :p,
+          "",
+          id: limit_message_id,
+          role: "status",
+          aria: {live: "polite"},
+          data: {flat_pack__file_input_target: "limitMessage"},
+          class: limit_message_classes
+        )
+      end
+
       def render_error
         return unless @error
 
         content_tag(:p, @error, class: error_classes, id: error_id)
+      end
+
+      def button_arguments
+        args = {
+          text: button_text,
+          style: button_style,
+          size: button_size,
+          type: "button",
+          disabled: @disabled,
+          data: {
+            action: "flat-pack--file-input#clickInput",
+            flat_pack__file_input_target: "button"
+          }
+        }
+        args[:round] = @round unless @round.nil?
+        args[:icon] = @icon if @icon.present?
+        args[:icon_variant] = @icon_variant unless @icon_variant.nil?
+        args[:icon_style] = @icon_style unless @icon_style.nil?
+        args[:class] = @custom_class if @custom_class.present?
+        describedby = field_describedby
+        args[:aria] = {describedby: describedby} if describedby.present?
+        args
+      end
+
+      def button_text
+        @text.presence || fp_t("file_input.choose")
+      end
+
+      def button_style
+        (@style || :primary).to_sym
+      end
+
+      def button_size
+        (@size || :md).to_sym
       end
 
       def input_attributes
@@ -149,16 +260,18 @@ module FlatPack
           required: @required,
           accept: @accept,
           multiple: @multiple,
-          class: "hidden",
+          class: button_variant? ? "sr-only" : "hidden",
           data: {
             flat_pack__file_input_target: "input",
             action: "change->flat-pack--file-input#handleFiles"
           }
         }
+        attrs[:tabindex] = -1 if button_variant?
 
-        describedby = describedby_tokens((help_text_id if @help_text), (error_id if @error))
+        describedby = field_describedby
         attrs[:aria] = describedby.present? ? {describedby: describedby} : {}
         attrs[:aria][:invalid] = "true" if @error
+        attrs[:aria][:label] = button_text if button_variant? && @label.blank?
 
         merge_attributes(**apply_default_validation(attrs.compact, error_id: error_id, has_error: @error.present?))
       end
@@ -166,13 +279,27 @@ module FlatPack
       def dropzone_attributes
         {
           class: dropzone_classes,
-          data: {
-            controller: "flat-pack--file-input",
-            flat_pack__file_input_max_size_value: @max_size,
-            flat_pack__file_input_preview_value: @preview,
-            flat_pack__file_input_multiple_value: @multiple,
-            action: "dragover->flat-pack--file-input#dragOver dragenter->flat-pack--file-input#dragEnter dragleave->flat-pack--file-input#dragLeave drop->flat-pack--file-input#drop"
-          }.compact
+          data: controller_data
+        }
+      end
+
+      def controller_data
+        {
+          controller: "flat-pack--file-input",
+          action: DRAG_ACTIONS,
+          flat_pack__file_input_max_size_value: @max_size,
+          flat_pack__file_input_preview_value: button_variant? ? false : @preview,
+          flat_pack__file_input_multiple_value: @multiple,
+          flat_pack__file_input_max_files_value: @max_files,
+          flat_pack__file_input_limit_message_value: limit_message_text,
+          flat_pack__file_input_show_list_value: !button_variant?
+        }.compact
+      end
+
+      def actions_attributes
+        {
+          class: "w-full max-w-xs shrink-0",
+          data: {flat_pack_file_input_actions: true}
         }
       end
 
@@ -198,8 +325,7 @@ module FlatPack
       def dropzone_classes
         base_classes = [
           "flat-pack-file-input",
-          "mt-2",
-          "flex justify-center",
+          "flex flex-col items-center",
           "w-full",
           "rounded-[var(--radius-lg)]",
           "border border-dashed",
@@ -223,6 +349,11 @@ module FlatPack
         "mt-4"
       end
 
+      def limit_message_classes
+        alignment = button_variant? ? "text-left" : "text-center"
+        "mt-2 w-full #{alignment} text-sm text-[var(--surface-content-color)] hidden"
+      end
+
       def error_classes
         "mt-1 text-sm text-[var(--color-error)]"
       end
@@ -237,6 +368,28 @@ module FlatPack
 
       def help_text_id
         "#{input_id}_help_text"
+      end
+
+      def limit_message_id
+        "#{input_id}_limit"
+      end
+
+      def field_describedby
+        describedby_tokens(
+          (help_text_id if @help_text),
+          (error_id if @error),
+          (limit_message_id if @max_files)
+        )
+      end
+
+      def limit_message_text
+        return if @max_files.nil?
+
+        if @max_files == 1
+          fp_t("file_input.too_many_one")
+        else
+          fp_t("file_input.too_many", count: @max_files)
+        end
       end
 
       def file_constraints_text
@@ -258,8 +411,37 @@ module FlatPack
         end
       end
 
+      def button_variant?
+        @variant == :button
+      end
+
       def validate_name!
         raise ArgumentError, "name is required" if @name.nil? || @name.to_s.strip.empty?
+      end
+
+      def validate_variant!
+        if @variant.nil? || !VARIANTS.include?(@variant.to_sym)
+          raise ArgumentError, "variant must be one of: #{VARIANTS.join(", ")}"
+        end
+
+        @variant = @variant.to_sym
+      end
+
+      def validate_button_only_options!
+        return if button_variant?
+
+        extras = []
+        extras << "text" if @text.present?
+        extras << "style" unless @style.nil?
+        extras << "size" unless @size.nil?
+        extras << "round" unless @round.nil?
+        extras << "icon" if @icon.present?
+        extras << "icon_variant" unless @icon_variant.nil?
+        extras << "icon_style" unless @icon_style.nil?
+        return if extras.empty?
+
+        verb = extras.one? ? "is" : "are"
+        raise ArgumentError, "#{extras.join(", ")} #{verb} only for variant: :button"
       end
 
       def validate_max_size!
@@ -268,6 +450,14 @@ module FlatPack
         max_size_value = @max_size.to_i
         if max_size_value <= 0
           raise ArgumentError, "max_size must be a positive number"
+        end
+      end
+
+      def validate_max_files!
+        return if @max_files.nil?
+
+        unless @max_files.is_a?(Integer) && @max_files.positive?
+          raise ArgumentError, "max_files must be a positive integer"
         end
       end
 

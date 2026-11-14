@@ -389,7 +389,7 @@ For hierarchical parent/child checkbox selection, see the `flat-pack--nested-mul
 - **DateRangeInput** - Single control that submits start and end dates
 - **DateTimeInput** - Date and time picker input
 - **TimeInput** - Time-only picker input
-- **FileInput** - File upload input
+- **FileInput** - Dropzone or button that picks files. The host uploads them.
 - **Checkbox** - Single checkbox or checkbox groups
 - **RadioGroup** - Radio button groups, including optional inline pills and selectable cards
 - **Fieldset** - Legend and fieldset for a named cluster of controls

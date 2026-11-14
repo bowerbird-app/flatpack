@@ -1,62 +1,114 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "File Input",
-  subtitle: "Upload field examples with file constraints and previews."
+  subtitle: "A dropzone or a button. The page uploads the files."
 ) %>
 
-<%= render "pages/component_method_variables_table", component: :text_input %>
+<%= render "pages/component_method_variables_table", component: :file_input %>
 
-<section class="mb-12">
-  <%= render FlatPack::SectionTitle::Component.new(title: "File Input Examples", anchor_link: true) %>
+<div
+  id="file-input-examples"
+  data-controller="file-input-demo"
+  data-action="flat-pack:file-input:change->file-input-demo#selected"
+>
+  <section id="file-input-dropzone" class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Dropzone", anchor_link: true) %>
 
-  <%= render FlatPack::Card::Component.new do |card| %>
-    <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
-      <%= render FlatPack::FileInput::Component.new(
-        name: "avatar",
-        label: "Profile Picture",
-        accept: "image/png,image/jpeg,image/gif",
-        max_size: 2_097_152,
-        help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
-        preview: true
-      ) %>
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+        <p id="file-input-log" role="status" aria-live="polite" data-file-input-demo-target="log" class="text-sm text-[var(--surface-content-color)]">
+          Choose or drop a file. The names show up here.
+        </p>
 
-      <%= render FlatPack::FileInput::Component.new(
-        name: "documents",
-        label: "Upload Documents",
-        accept: ".pdf,.doc,.docx",
-        multiple: true,
-        max_size: 5_242_880,
-        help_text: "Upload one or more PDF or Word documents up to 5 MB each.",
-        preview: false
-      ) %>
-    <% end %>
-  <% end %>
-
-  <%= render FlatPack::CodeBlock::Component.new(
-    code: CGI.unescapeHTML(<<~'CODE'),
-      &lt;%= render FlatPack::Card::Component.new do |card| %&gt;
-        &lt;% card.body do %&gt;
-        &lt;%= render FlatPack::FileInput::Component.new(
-          name: &quot;avatar&quot;,
-          label: &quot;Profile Picture&quot;,
-          accept: &quot;image/png,image/jpeg,image/gif&quot;,
+        <%= render FlatPack::FileInput::Component.new(
+          name: "avatar",
+          label: "Profile picture",
+          accept: "image/png,image/jpeg,image/gif",
           max_size: 2_097_152,
-          help_text: &quot;PNG, JPEG, or GIF images up to 2 MB are accepted.&quot;,
+          help_text: "PNG, JPEG, or GIF images up to 2 MB are accepted.",
           preview: true
-        ) %&gt;
-    
-        &lt;%= render FlatPack::FileInput::Component.new(
-          name: &quot;documents&quot;,
-          label: &quot;Upload Documents&quot;,
-          accept: &quot;.pdf,.doc,.docx&quot;,
+        ) %>
+
+        <div data-file-input-host="progress">
+          <%= render FlatPack::FileInput::Component.new(
+            name: "documents",
+            label: "Documents",
+            accept: ".pdf,.doc,.docx",
+            multiple: true,
+            max_files: 3,
+            max_size: 5_242_880,
+            help_text: "Up to 3 documents. Extra files are ignored.",
+            preview: false
+          ) do |input| %>
+            <% input.actions do %>
+              <%= render FlatPack::Text::Component.new(
+                text: "This bar is the page's. Flatpack does not upload.",
+                size: :sm,
+                style: :muted
+              ) %>
+              <%= render FlatPack::Progress::Component.new(
+                value: 0,
+                label: "Host progress",
+                show_label: true
+              ) %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </section>
+
+  <section id="file-input-button" class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(title: "Button", anchor_link: true) %>
+
+    <%= render FlatPack::Card::Component.new do |card| %>
+      <% card.body(class: "space-y-[var(--stack-gap-md)]") do %>
+        <%= render FlatPack::FileInput::Component.new(
+          name: "attachment",
+          variant: :button,
+          label: "Attachment"
+        ) %>
+
+        <%= render FlatPack::FileInput::Component.new(
+          name: "extras",
+          variant: :button,
+          text: "Add files",
+          style: :secondary,
+          icon: "arrow-up-tray",
           multiple: true,
-          max_size: 5_242_880,
-          help_text: &quot;Upload one or more PDF or Word documents up to 5 MB each.&quot;,
-          preview: false
-        ) %&gt;
+          max_files: 2,
+          help_text: "Two files at most. The button does not list them."
+        ) %>
+      <% end %>
+    <% end %>
+  </section>
+</div>
+
+<%= render FlatPack::CodeBlock::Component.new(
+  code: CGI.unescapeHTML(<<~'CODE'),
+    &lt;div
+      data-controller=&quot;file-input-demo&quot;
+      data-action=&quot;flat-pack:file-input:change-&gt;file-input-demo#selected&quot;&gt;
+      &lt;%= render FlatPack::FileInput::Component.new(
+        name: &quot;documents&quot;,
+        multiple: true,
+        max_files: 3
+      ) do |input| %&gt;
+        &lt;% input.actions do %&gt;
+          &lt;%= render FlatPack::Progress::Component.new(value: 0, label: &quot;Host progress&quot;, show_label: true) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
-    CODE
-    language: "erb",
-    title: "File Input Examples"
-  ) %>
-</section>
+
+      &lt;%= render FlatPack::FileInput::Component.new(
+        name: &quot;extras&quot;,
+        variant: :button,
+        text: &quot;Add files&quot;,
+        style: :secondary,
+        icon: &quot;arrow-up-tray&quot;,
+        multiple: true,
+        max_files: 2
+      ) %&gt;
+    &lt;/div&gt;
+  CODE
+  language: "erb",
+  title: "File Input Examples"
+) %>

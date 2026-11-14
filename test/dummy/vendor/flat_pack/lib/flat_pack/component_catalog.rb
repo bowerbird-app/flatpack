@@ -96,7 +96,6 @@ module FlatPack
       "checkbox" => "inputs",
       "date_input" => "inputs",
       "email_input" => "inputs",
-      "file_input" => "inputs",
       "number_input" => "inputs",
       "password_input" => "inputs",
       "phone_input" => "inputs",

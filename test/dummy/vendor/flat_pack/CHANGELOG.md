@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.372] - 2026-11-14
+
+### Added
+- `FlatPack::FileInput::Component` accepts `variant:`. `:dropzone` is the current dashed zone. `:button` renders a `FlatPack::Button` plus a visually hidden file input. The button is the only tab stop. `text:` is the label. `style:`, `size:`, `round:`, `icon:`, `icon_variant:`, and `icon_style:` pass through to that button. Those options raise on `:dropzone`. The button variant does not render the built-in file list or preview.
+- Choosing or dropping files dispatches `flat-pack:file-input:change` with `detail: { files }` for both variants. `files` is an array of `File`. An empty selection and a remove from the dropzone list dispatch too.
+- `max_files:` keeps the first N files in the event and the dropzone list. Extra files are ignored. An inline status says so. The component does not rewrite `input.files`.
+- `actions` is a slot for host controls beside the dropzone or the button. A host can show its own progress there. The component still does not upload and does not know about storage.
+
+### Upgrade notes
+- Drop and remove no longer assign `input.files`. A dialog selection still fills that list, because the browser does. `max_files` does not trim it. Use `event.detail.files` for the capped set, and enforce the cap on the server.
+- Reload JavaScript. Do not rebuild Tailwind. The layout classes are already in the kit. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.372`.
+
 ## [0.1.371] - 2026-11-14
 
 ### Added
@@ -170,7 +183,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pass `ends_on:` as a date. Renewal and trial copy stay on `renews_on:` and `trial_ends_on:`.
 - Do not add a cancel or scheduled value to `status:`. Use `ends_on:` and `scheduled_change_text:` for those lines.
 - No stylesheet or JavaScript change. Do not rebuild Tailwind. Do not rerun the install generator.
-- Redeploy so `meta.gem_version` shows `0.1.359`.
 
 ## [0.1.358] - 2026-11-13
 

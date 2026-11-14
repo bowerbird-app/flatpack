@@ -2,26 +2,36 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
 
+const CHANGE_EVENT = "flat-pack:file-input:change"
+
 export default class extends Controller {
-  static targets = ["input", "fileList", "preview", "validationError"]
+  static targets = ["input", "fileList", "preview", "validationError", "limitMessage", "button"]
   static values = {
     maxSize: Number,
     preview: { type: Boolean, default: true },
-    multiple: { type: Boolean, default: false }
+    multiple: { type: Boolean, default: false },
+    maxFiles: Number,
+    limitMessage: String,
+    showList: { type: Boolean, default: true }
   }
 
   connect() {
     this.dragCounter = 0
+    this.acceptedFiles = []
   }
 
   clickInput(event) {
     event.preventDefault()
+    if (this.inputTarget.disabled) return
     this.inputTarget.click()
   }
 
   handleFiles(event) {
-    const files = Array.from(event.target.files)
+    const files = Array.from(event.target.files || [])
     this.processFiles(files)
+    if (this.hasButtonTarget && typeof this.buttonTarget.focus === "function") {
+      this.buttonTarget.focus()
+    }
   }
 
   dragOver(event) {
@@ -51,44 +61,78 @@ export default class extends Controller {
     this.element.classList.remove("border-[var(--color-primary)]")
     this.element.classList.remove("bg-[var(--color-primary)]/5")
 
-    const files = Array.from(event.dataTransfer.files)
-    
-    // Update the file input with dropped files
-    const dataTransfer = new DataTransfer()
-    files.forEach(file => dataTransfer.items.add(file))
-    this.inputTarget.files = dataTransfer.files
-
+    const files = Array.from(event.dataTransfer ? event.dataTransfer.files : [])
     this.processFiles(files)
   }
 
   processFiles(files) {
-    // Clear any previous validation errors
     this.clearError()
-    
-    // Validate files
-    const validFiles = files.filter(file => this.validateFile(file))
 
-    if (validFiles.length === 0) {
-      return
+    const selected = Array.from(files || [])
+    const capped = this.capSelection(selected)
+    const validFiles = []
+    capped.forEach((file) => {
+      if (this.validateFile(file)) validFiles.push(file)
+    })
+
+    this.acceptedFiles = validFiles
+    this.dispatchChange(validFiles)
+    this.renderSelection()
+  }
+
+  capSelection(files) {
+    if (!this.hasMaxFilesValue || files.length <= this.maxFilesValue) {
+      this.clearLimitMessage()
+      return files
     }
 
-    // Show file list
-    this.displayFileList(validFiles)
+    this.showLimitMessage()
+    return files.slice(0, this.maxFilesValue)
+  }
 
-    // Show preview if enabled and files are images
-    if (this.previewValue) {
-      this.displayPreview(validFiles)
-    }
+  dispatchChange(files) {
+    this.element.dispatchEvent(new CustomEvent(CHANGE_EVENT, {
+      bubbles: true,
+      detail: { files: files.slice() }
+    }))
   }
 
   validateFile(file) {
-    // Check file size if max_size is set
     if (this.hasMaxSizeValue && file.size > this.maxSizeValue) {
       this.showError(flatPackCopy("file_input.size_exceeded", {name: file.name, size: this.formatFileSize(this.maxSizeValue)}))
       return false
     }
 
     return true
+  }
+
+  renderSelection() {
+    if (!this.showListValue) return
+
+    const files = this.acceptedFiles || []
+    if (files.length === 0) {
+      this.hideSelection()
+      return
+    }
+
+    this.displayFileList(files)
+    if (this.previewValue) {
+      this.displayPreview(files)
+    } else if (this.hasPreviewTarget) {
+      this.previewTarget.innerHTML = ""
+      this.previewTarget.classList.add("hidden")
+    }
+  }
+
+  hideSelection() {
+    if (this.hasFileListTarget) {
+      this.fileListTarget.innerHTML = ""
+      this.fileListTarget.classList.add("hidden")
+    }
+    if (this.hasPreviewTarget) {
+      this.previewTarget.innerHTML = ""
+      this.previewTarget.classList.add("hidden")
+    }
   }
 
   displayFileList(files) {
@@ -185,28 +229,12 @@ export default class extends Controller {
   }
 
   removeFile(index) {
-    const dt = new DataTransfer()
-    const files = Array.from(this.inputTarget.files)
-
-    files.forEach((file, i) => {
-      if (i !== index) {
-        dt.items.add(file)
-      }
-    })
-
-    this.inputTarget.files = dt.files
-
-    // Refresh display
-    if (this.inputTarget.files.length > 0) {
-      this.processFiles(Array.from(this.inputTarget.files))
-    } else {
-      if (this.hasFileListTarget) {
-        this.fileListTarget.classList.add("hidden")
-      }
-      if (this.hasPreviewTarget) {
-        this.previewTarget.classList.add("hidden")
-      }
-    }
+    const remaining = (this.acceptedFiles || []).filter((_, i) => i !== index)
+    this.acceptedFiles = remaining
+    this.clearLimitMessage()
+    this.clearError()
+    this.dispatchChange(remaining)
+    this.renderSelection()
   }
 
   formatFileSize(bytes) {
@@ -219,12 +247,25 @@ export default class extends Controller {
     }
   }
 
+  showLimitMessage() {
+    if (!this.hasLimitMessageTarget) return
+
+    this.limitMessageTarget.textContent = this.hasLimitMessageValue ? this.limitMessageValue : ""
+    this.limitMessageTarget.classList.remove("hidden")
+  }
+
+  clearLimitMessage() {
+    if (!this.hasLimitMessageTarget) return
+
+    this.limitMessageTarget.textContent = ""
+    this.limitMessageTarget.classList.add("hidden")
+  }
+
   showError(message) {
     if (this.hasValidationErrorTarget) {
       this.validationErrorTarget.textContent = message
       this.validationErrorTarget.classList.remove("hidden")
-      
-      // Auto-hide error after 5 seconds
+
       setTimeout(() => {
         this.validationErrorTarget.classList.add("hidden")
       }, 5000)

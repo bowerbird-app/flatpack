@@ -1135,6 +1135,30 @@
         { variable: "tooltip_placement", accepts: ":top, :right, :bottom, :left (swatches variant)", example: "tooltip_placement: :top" }
       ]
     },
+    file_input: {
+      label: "File Input",
+      method_call: "render FlatPack::FileInput::Component.new(name: \"documents\", label: \"Documents\", multiple: true, max_files: 3)",
+      variables: [
+        { variable: "name", accepts: "String (required)", example: "name: \"documents\"" },
+        { variable: "variant", accepts: ":dropzone, :button", example: "variant: :button" },
+        { variable: "text", accepts: "String or nil", example: "text: \"Add files\"" },
+        { variable: "style", accepts: "Button style or nil", example: "style: :secondary" },
+        { variable: "size", accepts: ":sm, :md, :lg or nil", example: "size: :sm" },
+        { variable: "round", accepts: "true, false, or nil", example: "round: true" },
+        { variable: "icon", accepts: "String or nil", example: "icon: \"arrow-up-tray\"" },
+        { variable: "label", accepts: "String or nil", example: "label: \"Documents\"" },
+        { variable: "help_text", accepts: "String or nil", example: "help_text: \"PDF or Word.\"" },
+        { variable: "error", accepts: "String or nil", example: "error: \"Choose a file\"" },
+        { variable: "accept", accepts: "String or nil", example: "accept: \"image/png,image/jpeg\"" },
+        { variable: "multiple", accepts: "true, false", example: "multiple: true" },
+        { variable: "max_size", accepts: "Integer or nil", example: "max_size: 2_097_152" },
+        { variable: "max_files", accepts: "Integer or nil", example: "max_files: 3" },
+        { variable: "preview", accepts: "true, false", example: "preview: false" },
+        { variable: "disabled", accepts: "true, false", example: "disabled: true" },
+        { variable: "required", accepts: "true, false", example: "required: true" },
+        { variable: "actions", accepts: "slot", example: "input.actions { ... }" }
+      ]
+    },
     image_input: {
       label: "Image Input",
       method_call: "render FlatPack::ImageInput::Component.new(name: \"avatar\", label: \"Avatar\", src: \"https://i.pravatar.cc/150?img=5\", alt: \"A person\", remove_name: \"remove_avatar\")",

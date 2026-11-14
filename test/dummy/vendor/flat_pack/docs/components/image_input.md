@@ -4,7 +4,7 @@
 It picks one image for a profile photo, avatar, logo, or cover, with a preview and a remove control.
 
 ## When to use
-Use Image Input when the field stores one picture and the person should see that picture before submit. Use `FlatPack::FileInput::Component` for a general file dropzone.
+Use Image Input when the field stores one picture and the person should see that picture before submit. Use `FlatPack::FileInput::Component` for a dropzone or a button that picks files. The host uploads them.
 
 ## Class
 - Primary: `FlatPack::ImageInput::Component`

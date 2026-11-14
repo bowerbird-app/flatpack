@@ -302,6 +302,119 @@ module FlatPack
         assert_selector "[data-flat-pack--file-input-preview-value='true']"
         assert_selector "[data-flat-pack--file-input-multiple-value='true']"
       end
+
+      def test_defaults_to_dropzone_variant
+        render_inline(Component.new(name: "document"))
+
+        assert_selector "[data-flat-pack--file-input-target='fileList']"
+        assert_text "Upload a file"
+        assert_text "or drag and drop"
+        refute_selector "input.sr-only", visible: :all
+      end
+
+      def test_button_variant_renders_one_tab_stop_and_skips_the_file_list
+        render_inline(Component.new(name: "document", variant: :button, text: "Choose a file", id: "pick"))
+
+        assert_selector "button", text: "Choose a file", count: 1
+        assert_selector "button[data-action='flat-pack--file-input#clickInput'][data-flat-pack--file-input-target='button']"
+        assert_selector "input#pick.sr-only[type='file'][tabindex='-1']", visible: :all
+        assert_selector "input#pick[aria-label='Choose a file']", visible: :all
+        refute_selector "input.hidden", visible: :all
+        refute_selector "[data-flat-pack--file-input-target='fileList']"
+        refute_selector "[data-flat-pack--file-input-target='preview']"
+        refute_text "or drag and drop"
+        assert_equal 1, page.all("a, button, input:not([tabindex='-1']), select, textarea", visible: :all).size
+      end
+
+      def test_button_variant_uses_choose_copy_when_text_is_omitted
+        render_inline(Component.new(name: "document", variant: :button))
+
+        assert_selector "button", text: "Choose a file"
+      end
+
+      def test_button_variant_passes_style_size_round_and_icon_to_button
+        render_inline(Component.new(
+          name: "document",
+          variant: :button,
+          text: "Choose",
+          style: :secondary,
+          size: :sm,
+          round: true,
+          icon: "arrow-up-tray",
+          class: "custom-file-button"
+        ))
+
+        assert_selector "button.custom-file-button[data-fp-style='secondary']", text: "Choose"
+        assert_includes page.native.to_html, "px-[var(--button-padding-x-sm)]"
+        assert_includes page.native.to_html, "rounded-[var(--button-round-border-radius)]"
+        assert_selector "button svg"
+        assert_selector "[data-flat-pack--file-input-show-list-value='false']"
+      end
+
+      def test_button_variant_disables_the_button_and_the_input
+        render_inline(Component.new(name: "document", variant: :button, text: "Choose", disabled: true))
+
+        assert_selector "button[disabled]", text: "Choose"
+        assert_selector "input[disabled]", visible: :all
+      end
+
+      def test_actions_slot_renders_beside_the_dropzone
+        component = Component.new(name: "document")
+        component.actions { "Host progress" }
+        render_inline(component)
+
+        assert_selector "[data-flat-pack-file-input-actions]", text: "Host progress"
+        refute_selector "[data-controller='flat-pack--file-input'] [data-flat-pack-file-input-actions]"
+      end
+
+      def test_actions_slot_renders_beside_the_button
+        component = Component.new(name: "document", variant: :button, text: "Choose")
+        component.actions { "Host progress" }
+        render_inline(component)
+
+        assert_selector "[data-flat-pack-file-input-actions]", text: "Host progress"
+        refute_selector "[data-controller='flat-pack--file-input'] [data-flat-pack-file-input-actions]"
+      end
+
+      def test_max_files_exposes_the_cap_and_an_accessible_message
+        render_inline(Component.new(name: "document", id: "doc", max_files: 2, help_text: "Keep it small."))
+
+        assert_selector "[data-flat-pack--file-input-max-files-value='2']"
+        assert_selector "[data-flat-pack--file-input-limit-message-value='Only the first 2 files were kept.']"
+        assert_selector "p#doc_limit.hidden[role='status'][aria-live='polite']", visible: :all
+        assert_selector "input[aria-describedby='doc_help_text doc_limit']", visible: :all
+      end
+
+      def test_max_files_one_uses_the_singular_message
+        render_inline(Component.new(name: "document", variant: :button, text: "Choose", max_files: 1, id: "solo"))
+
+        assert_selector "[data-flat-pack--file-input-limit-message-value='Only the first file was kept.']"
+        assert_selector "input#solo[aria-describedby='solo_limit']", visible: :all
+      end
+
+      def test_raises_for_an_unknown_variant
+        error = assert_raises(ArgumentError) { Component.new(name: "document", variant: :tape) }
+
+        assert_match(/variant must be one of: dropzone, button/, error.message)
+      end
+
+      def test_raises_when_max_files_is_not_a_positive_integer
+        assert_raises(ArgumentError, match: /max_files must be a positive integer/) do
+          Component.new(name: "document", max_files: 0)
+        end
+
+        assert_raises(ArgumentError, match: /max_files must be a positive integer/) do
+          Component.new(name: "document", max_files: 2.5)
+        end
+      end
+
+      def test_raises_when_button_options_are_used_on_the_dropzone
+        error = assert_raises(ArgumentError) do
+          Component.new(name: "document", text: "Choose", style: :primary)
+        end
+
+        assert_match(/text, style are only for variant: :button/, error.message)
+      end
     end
   end
 end
