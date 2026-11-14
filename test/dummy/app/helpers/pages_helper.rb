@@ -321,6 +321,41 @@ module PagesHelper
     CODE
   end
 
+  def picker_demo_error_state
+    render FlatPack::EmptyState::Component.new(
+      title: "Nothing came back",
+      description: "Search for hero to try again.",
+      icon: :exclamation_triangle,
+      size: :sm,
+      width: :sm
+    )
+  end
+
+  def picker_demo_error_erb_code
+    <<~CODE
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-error-slot",
+        title: "Custom slot",
+        items: [],
+        modal: false,
+        search_mode: :remote,
+        search_endpoint: demo_picker_results_error_path,
+        items_height: "16rem",
+        confirm_label: "Use assets"
+      ) do |picker| %>
+        <% picker.with_error do %>
+          <%= render FlatPack::EmptyState::Component.new(
+            title: "Nothing came back",
+            description: "Search for hero to try again.",
+            icon: :exclamation_triangle,
+            size: :sm,
+            width: :sm
+          ) %>
+        <% end %>
+      <% end %>
+    CODE
+  end
+
   def picker_demo_inline_erb_code
     picker_demo_full_erb_code(<<~CODE)
       <input id="picker-inline-selected-field" type="text" readonly class="w-full rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-2 text-xs text-(--surface-muted-content-color)" placeholder="Inline selection JSON appears here">

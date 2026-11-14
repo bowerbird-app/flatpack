@@ -438,6 +438,70 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
+      title: "Load error",
+      anchor: "load-error",
+      anchor_link: true,
+      subtitle: "A failed request shows an error slot. Search for hero to try again."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-8">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            This route returns 500 until the search is hero. The message stays the one you rendered. A successful load clears it.
+          </p>
+
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Fallback text</p>
+            <%= render FlatPack::Picker::Component.new(
+              id: "picker-demo-error-fallback",
+              title: "Fallback copy",
+              subtitle: "No slot. The picker says it could not load.",
+              items: [],
+              modal: false,
+              search_mode: :remote,
+              search_endpoint: demo_picker_results_error_path,
+              items_height: "16rem",
+              confirm_label: "Use assets"
+            ) %>
+          </div>
+
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Custom slot</p>
+            <%= render FlatPack::Picker::Component.new(
+              id: "picker-demo-error-slot",
+              title: "Custom slot",
+              subtitle: "Your markup, only while the request is failing.",
+              items: [],
+              modal: false,
+              search_mode: :remote,
+              search_endpoint: demo_picker_results_error_path,
+              items_height: "16rem",
+              confirm_label: "Use assets"
+            ) do |picker| %>
+              <% picker.with_empty do %>
+                <p>Nothing matched</p>
+              <% end %>
+              <% picker.with_error do %>
+                <%= picker_demo_error_state %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-error-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
+      language: "erb",
+      code: picker_demo_error_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
       title: "Remote pages",
       anchor: "remote-pages",
       anchor_link: true,

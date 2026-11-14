@@ -233,6 +233,7 @@ en:
       close: Close
       search_placeholder: Search assets...
       empty: No assets found
+      error: Unable to load items
       search_label: Search available assets
       untitled: Untitled
       results_loaded: "%{count} loaded"

@@ -114,7 +114,7 @@ class PagesController < ApplicationController
 
   # Actions with dynamic data that must not be fully cached
   UNCACHED_ACTIONS = %i[
-    picker search_results picker_results pagination_infinite charts_composition charts_default_filter
+    picker search_results picker_results picker_results_error pagination_infinite charts_composition charts_default_filter
     modal_filter
     comments admin chat_demo chips chip_add_callback chip_remove_callback
     tables_basic tables_sortable local_time
@@ -657,6 +657,15 @@ class PagesController < ApplicationController
       items: page_items.map { |item| picker_item_payload(item) },
       pagination: {next_page: next_page}
     }
+  end
+
+  def picker_results_error
+    if params[:q].to_s.strip.casecmp("hero").zero?
+      picker_results
+      return
+    end
+
+    head :internal_server_error
   end
 
   def sidebar_layout

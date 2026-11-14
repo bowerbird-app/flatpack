@@ -34,6 +34,7 @@ Use Picker when users need to choose image assets, files, or application records
 | `variant` | Symbol | `:default` | No | Allowed: `:default`, `:flush`. Inline shells only. `:flush` drops the panel chrome (border, fill, radius, shadow, padding) so the picker can sit inside another surface. Modal pickers ignore it and keep Modal chrome. Anything else raises `ArgumentError`. |
 | `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
 | `empty_text` | String | `"No assets found"` | No | Empty-results text when the `empty` slot is omitted. |
+| `error_text` | String | `"Unable to load items"` | No | Failed-load text when the `error` slot is omitted. Remote search only. |
 | `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
 | `items_height` | String, Symbol, or Integer | `"max-content"` | No | Controls the results-region height inside the picker. Use `"max-content"` to fill the available picker body, `"min-content"` to shrink-wrap the current items up to the wrapper height, or a CSS height such as `"240px"`. Integers are converted to pixel values. |
 | `modal` | Boolean | `false` | No | When `true`, renders inside `FlatPack::Modal::Component`. When `false`, renders inline on the page. |
@@ -47,6 +48,7 @@ Use Picker when users need to choose image assets, files, or application records
 | name | type | required | description |
 |------|------|----------|-------------|
 | `empty` | slot | no | Markup for an empty result list. Rendered on the server inside the results region and hidden until nothing matches. `flat-pack--picker` only shows or hides it. It does not change the slot's contents. Omit the slot and the picker shows `empty_text`. Works for `search_mode: :local` and `:remote`. |
+| `error` | slot | no | Markup for a failed remote load. Rendered on the server inside the results region and hidden until a request returns a non-OK response or the fetch rejects. `flat-pack--picker` only shows or hides it. It does not change the slot's contents. Omit the slot and the picker shows `error_text`. A later successful load hides it. |
 | `toolbar` | slot | no | Optional actions on the same row as the search box. Call `with_toolbar`. The search field grows. The toolbar sits at the end of the row and wraps onto the next line when the row is narrow. Omit the slot and the search box renders with no extra row. The toolbar is not part of the title. Use `modal: false` and `variant: :flush` when a host modal owns the header. |
 
 List rows are rendered through four display regions derived from item data rather than record-type-specific markup.
@@ -65,7 +67,7 @@ List rows are rendered through four display regions derived from item data rathe
 | `selection_mode: :single` | One selected item at a time (radio/list behavior and single grid pressed state). |
 | `selection_mode: :multiple` | Multiple selected items (checkbox/list behavior and multi grid toggles). |
 | `search_mode: :local` | Filters initial `items` in browser. |
-| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&page=1&kinds=image,file,record`. Expects JSON `{ items, pagination: { next_page } }`. A new query replaces the list. `next_page` loads another page onto the end. `null` or a missing `pagination` stops. Always renders the search bar. |
+| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&page=1&kinds=image,file,record`. Expects JSON `{ items, pagination: { next_page } }`. A new query replaces the list. `next_page` loads another page onto the end. `null` or a missing `pagination` stops. A non-OK response or a rejected fetch shows the `error` slot (or `error_text`) and leaves `next_page` in place so the next scroll can try that page again. Always renders the search bar. |
 | `searchable: false` | Hides the search bar for local pickers regardless of item count. |
 | `minimum_searchable: 5` | For local pickers, hides the search bar when the initial item count is 5 or fewer items. |
 | `results_layout: :list` | Row-style selectable entries with metadata. Best default for record-like items such as folders. |
@@ -263,6 +265,28 @@ Give the results region a fixed height so the sentinel scrolls inside the picker
 ```
 
 Pass the same `empty` slot on a remote picker. The controller shows it when the endpoint returns no items, and hides it when items come back. The button stays the one you rendered. Leave the slot off and `empty_text` is the fallback.
+
+### Error slot
+
+```erb
+<%= render FlatPack::Picker::Component.new(
+  id: "asset-picker",
+  items: [],
+  search_mode: :remote,
+  search_endpoint: picker_results_error_path
+) do |picker| %>
+  <% picker.with_error do %>
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "Nothing came back",
+      description: "Search again. The next try starts fresh.",
+      icon: :exclamation_triangle,
+      size: :sm
+    ) %>
+  <% end %>
+<% end %>
+```
+
+Leave the slot off and `error_text` is the fallback (`"Unable to load items"` unless you pass a string). A non-OK response or a rejected fetch shows the panel and announces its text in the polite live region. The empty panel stays hidden. The next successful load hides the error panel. A new query replaces the list and tries again. A failed later page keeps the items already loaded and keeps `next_page`, so scrolling the sentinel into view tries that page again.
 
 ### Inline auto-confirm picker
 
@@ -477,7 +501,8 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
 - Remote searches are debounced by 250ms and request JSON with `Accept: application/json`. Page 1 replaces `filteredItems` from `payload.items`. A later `pagination.next_page` appends. The items region (`data-flat-pack-picker-items-region`) is the `IntersectionObserver` root, not the viewport.
 - The empty panel is in the first render, with the `hidden` class. An `empty` slot fills that panel. `empty_text` fills it when the slot is omitted. Local filtering and remote responses only toggle `hidden` and `flex`. They do not rewrite the panel.
-- The loading row is hidden until a request starts. The empty state still shows when the rendered list is empty, and hides when it is not.
+- The error panel is in the first render, with the `hidden` class. An `error` slot fills that panel. `error_text` fills it when the slot is omitted. A failed remote load only toggles `hidden` and `flex`. It does not rewrite the panel. A successful load hides it.
+- The loading row is hidden until a request starts. The empty panel shows when the rendered list is empty and the last load succeeded. It stays hidden while the error panel is showing.
 - Selected items are cached by id. Confirm uses that cache, so a selection from an earlier page or query is included after the list is replaced.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.
 - When `form:` is configured, the picker maintains hidden inputs for the current selection and submits the generated form when `auto_confirm: true` selects a new single item.
@@ -487,7 +512,7 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 Grid item badges use `--picker-badge-*`. Idle selection rings use `--picker-selection-idle-*`. The light ring and inner dot on media use `--picker-selection-indicator-*`. Selected rings stay on `--color-primary`.
 
 ## Accessibility
-Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Multiple-mode list checkboxes use the same theme primary CSS vars as `Checkbox::Component` (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Search input includes an accessible label (`"Search available assets"`). Remote pickers expose a polite live region that announces the loaded count, and mark the items region `aria-busy` while a page is loading.
+Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Multiple-mode list checkboxes use the same theme primary CSS vars as `Checkbox::Component` (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Search input includes an accessible label (`"Search available assets"`). Remote pickers expose a polite live region that announces the loaded count after a successful page, and the error panel's text after a failed load. The items region is `aria-busy` while a page is loading.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

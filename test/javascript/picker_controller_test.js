@@ -17,7 +17,10 @@ test('picker checkbox classes use theme primary CSS vars', () => {
   assert.doesNotMatch(source, /"text-primary"/)
   assert.doesNotMatch(source, /emptyStateTarget\.textContent/)
   assert.doesNotMatch(source, /emptyStateTarget\.innerHTML/)
+  assert.doesNotMatch(source, /errorStateTarget\.textContent\s*=/)
+  assert.doesNotMatch(source, /errorStateTarget\.innerHTML/)
   assert.match(source, /#syncEmptyState/)
+  assert.match(source, /#showLoadError/)
 })
 
 const vm = require('node:vm')
@@ -234,13 +237,19 @@ function loadPicker() {
         error.name = 'AbortError'
         reject(error)
       })
-      record.respond = (body, { jsonDelay = 0 } = {}) => {
+      record.respond = (body, { jsonDelay = 0, ok = true } = {}) => {
         if (settled) return
         settled = true
         resolve({
-          ok: true,
+          ok,
+          status: ok ? 200 : 500,
           json: () => new Promise((done) => setTimeout(() => done(body), jsonDelay))
         })
+      }
+      record.reject = (error) => {
+        if (settled) return
+        settled = true
+        reject(error || Object.assign(new Error('network'), { name: 'TypeError' }))
       }
     })
   }
@@ -259,6 +268,9 @@ function build({ mode = 'remote', items = [], kinds = [] } = {}) {
   const empty = element()
   empty.textContent = 'No assets found'
   empty.classList.add('hidden')
+  const error = element()
+  error.textContent = 'Unable to load items'
+  error.classList.add('hidden')
   const loading = element()
   loading.classList.add('hidden')
   const sentinel = element()
@@ -291,6 +303,8 @@ function build({ mode = 'remote', items = [], kinds = [] } = {}) {
     resultsTarget: results,
     hasEmptyStateTarget: true,
     emptyStateTarget: empty,
+    hasErrorStateTarget: mode === 'remote',
+    errorStateTarget: error,
     hasOutputFieldTarget: false,
     hasFormFieldsTarget: false,
     hasLoadingTarget: mode === 'remote',
@@ -301,7 +315,7 @@ function build({ mode = 'remote', items = [], kinds = [] } = {}) {
     statusTarget: status
   })
 
-  return { controller, requests: loaded.requests, context: loaded.context, region, results, empty, loading, status, root }
+  return { controller, requests: loaded.requests, context: loaded.context, region, results, empty, error, loading, status, root }
 }
 
 function wait(ms) {
@@ -492,6 +506,106 @@ test('an empty remote page still shows the empty state', async () => {
   assert.equal(harness.empty.textContent, 'No assets found')
   harness.context.lastObserver.intersect()
   assert.equal(harness.requests.length, 1)
+})
+
+test('a non-OK response shows the error slot and the next query clears it', async () => {
+  const harness = build()
+  const slot = '<p data-picker-error-copy>Library down</p>'
+  harness.error.innerHTML = slot
+  harness.error.textContent = 'Library down'
+  harness.controller.connect()
+
+  harness.requests[0].respond({}, { ok: false })
+  await settle()
+
+  assert.equal(harness.results.innerHTML, '')
+  assert.equal(harness.error.classList.contains('hidden'), false)
+  assert.equal(harness.error.classList.contains('flex'), true)
+  assert.equal(harness.error.innerHTML, slot)
+  assert.equal(harness.empty.classList.contains('hidden'), true)
+  assert.equal(harness.status.textContent, 'Library down')
+  assert.equal(harness.loading.classList.contains('hidden'), true)
+
+  harness.controller.search({ target: { value: 'hero' } })
+  await wait(320)
+  harness.requests.at(-1).respond({
+    items: [item('hero', 'Homepage Hero')],
+    pagination: { next_page: null }
+  })
+  await settle()
+
+  assert.match(harness.results.innerHTML, /Homepage Hero/)
+  assert.equal(harness.error.classList.contains('hidden'), true)
+  assert.equal(harness.error.classList.contains('flex'), false)
+  assert.equal(harness.error.innerHTML, slot)
+  assert.equal(harness.status.textContent, '1 loaded')
+})
+
+test('a rejected fetch shows the error slot instead of the empty slot', async () => {
+  const harness = build()
+  harness.controller.connect()
+  harness.requests[0].reject()
+  await settle()
+
+  assert.equal(harness.results.innerHTML, '')
+  assert.equal(harness.error.classList.contains('hidden'), false)
+  assert.equal(harness.error.textContent, 'Unable to load items')
+  assert.equal(harness.empty.classList.contains('hidden'), true)
+  assert.equal(harness.status.textContent, 'Unable to load items')
+})
+
+test('a failed later page keeps the list and the next scroll tries again', async () => {
+  const harness = build()
+  harness.controller.connect()
+  harness.requests[0].respond({
+    items: [item('a', 'Alpha')],
+    pagination: { next_page: 2 }
+  })
+  await settle()
+
+  harness.context.lastObserver.intersect()
+  assert.match(harness.requests.at(-1).url, /[?&]page=2(?:&|$)/)
+  harness.requests.at(-1).respond({}, { ok: false })
+  await settle()
+
+  assert.match(harness.results.innerHTML, /Alpha/)
+  assert.equal(harness.error.classList.contains('hidden'), false)
+  assert.equal(harness.empty.classList.contains('hidden'), true)
+  assert.equal(harness.status.textContent, 'Unable to load items')
+
+  const before = harness.requests.length
+  harness.context.lastObserver.intersect()
+  assert.equal(harness.requests.length, before + 1)
+  assert.match(harness.requests.at(-1).url, /[?&]page=2(?:&|$)/)
+
+  harness.requests.at(-1).respond({
+    items: [item('c', 'Gamma')],
+    pagination: { next_page: null }
+  })
+  await settle()
+
+  assert.match(harness.results.innerHTML, /Alpha/)
+  assert.match(harness.results.innerHTML, /Gamma/)
+  assert.equal(harness.error.classList.contains('hidden'), true)
+  assert.equal(harness.status.textContent, '2 loaded')
+})
+
+test('an aborted request does not show the error slot', async () => {
+  const harness = build()
+  harness.controller.connect()
+  harness.controller.search({ target: { value: 'next' } })
+  await wait(320)
+
+  assert.equal(harness.error.classList.contains('hidden'), true)
+  harness.requests.at(-1).respond({
+    items: [item('n', 'Next')],
+    pagination: { next_page: null }
+  })
+  await settle()
+
+  assert.match(harness.results.innerHTML, /Next/)
+  assert.equal(harness.error.classList.contains('hidden'), true)
+  assert.equal(harness.empty.classList.contains('hidden'), true)
 })
 
 test('local confirm still returns the selected item', () => {
