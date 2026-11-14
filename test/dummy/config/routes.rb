@@ -94,6 +94,7 @@ Rails.application.routes.draw do
   get "demo/buttons/segmented", to: "pages#buttons_segmented"
   get "demo/buttons/groups", to: "pages#buttons_groups"
   get "demo/buttons/dropdowns", to: "pages#buttons_dropdowns"
+  match "demo/buttons/dropdowns/publish", to: "pages#buttons_dropdowns_publish", via: [:post, :patch], as: :demo_buttons_dropdowns_publish
   get "demo/buttons/trash", to: "pages#buttons_trash"
   get "demo/buttons/copy", to: "pages#buttons_copy"
   match "demo/buttons/trash/:id", to: "pages#buttons_trash_destroy", via: [:post, :delete], as: :demo_buttons_trash_item

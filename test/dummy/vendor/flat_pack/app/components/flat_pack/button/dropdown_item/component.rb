@@ -19,6 +19,8 @@ module FlatPack
           info: "border border-[var(--badge-info-border-color)] bg-[var(--badge-info-background-color)] text-[var(--badge-info-text-color)]"
         }.freeze
 
+        include FlatPack::Button::FormSubmit
+
         def initialize(
           text:,
           icon: nil,
@@ -27,6 +29,10 @@ module FlatPack
           badge: nil,
           badge_style: :primary,
           href: nil,
+          url: nil,
+          method: nil,
+          params: nil,
+          turbo: true,
           disabled: false,
           destructive: false,
           icon_position: :start,
@@ -40,21 +46,20 @@ module FlatPack
           @icon_style = IconOptions.normalize_style!(icon_style)
           @badge = badge
           @badge_style = badge_style.to_sym
-          @href = href
           @disabled = disabled
           @destructive = destructive
           @icon_position = icon_position.to_sym
           @keep_open = keep_open
-
-          # Sanitize URL if provided
-          if @href
-            @href = FlatPack::AttributeSanitizer.sanitize_url(@href)
-            validate_url!
-          end
+          @turbo = turbo
+          @params = params
+          assign_destination!(href, url, method)
 
           validate_badge_style! if @badge
           validate_icon_position!
           validate_keep_open!
+          FlatPack::Button::FormSubmit.validate_turbo!(@turbo)
+          FlatPack::Button::FormSubmit.validate_params!(@params, url: @url)
+          validate_method_needs_url!(method)
           @plain_actions = false
         end
 
@@ -66,6 +71,11 @@ module FlatPack
             divider: false,
             label: @text,
             href: @href,
+            url: @url,
+            method: @method,
+            params: @params,
+            turbo: @turbo,
+            keep_open: @keep_open,
             icon: @icon,
             icon_position: @icon_position,
             icon_variant: @icon_variant,
@@ -76,7 +86,9 @@ module FlatPack
         end
 
         def call
-          if @href && !@disabled
+          if @url
+            render_submit_form(url: @url, method: @method, params: @params, turbo: @turbo) { render_button }
+          elsif @href && !@disabled
             render_link
           else
             render_button
@@ -117,6 +129,7 @@ module FlatPack
             data: item_data
           }
           attrs[:role] = "menuitem" unless @plain_actions
+          attrs[:type] = "submit" if @url
           attrs[:disabled] = true if @disabled && !@href
           merge_attributes(**attrs)
         end
@@ -191,9 +204,34 @@ module FlatPack
           raise ArgumentError, "Invalid keep_open: #{@keep_open.inspect}. Must be true or false."
         end
 
-        def validate_url!
-          # Raise error if sanitization removed the URL (meaning it was unsafe)
-          raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed." if @href.blank?
+        def assign_destination!(href, url, method)
+          if href && url
+            raise ArgumentError, "Pass href: or url:, not both. href: navigates. url: submits a form."
+          end
+
+          if href
+            @href = FlatPack::AttributeSanitizer.sanitize_url(href)
+            raise ArgumentError, FormSubmit::UNSAFE_URL if @href.blank?
+
+            @url = nil
+            @method = nil
+          elsif url
+            @url = FlatPack::AttributeSanitizer.sanitize_url(url)
+            raise ArgumentError, FormSubmit::UNSAFE_URL if @url.blank?
+
+            @href = nil
+            @method = FormSubmit.normalize_method(method)
+          else
+            @href = nil
+            @url = nil
+            @method = nil
+          end
+        end
+
+        def validate_method_needs_url!(method)
+          return if @url.present? || method.nil?
+
+          raise ArgumentError, "method: needs url:."
         end
       end
     end

@@ -39,9 +39,6 @@ module FlatPack
 
       XS_REQUIRES_ICON_ONLY = "size: :xs is only for icon-only buttons. Pass icon_only: true."
 
-      # Same verbs as TrashButton. Form mode defaults to :post. Link mode leaves method alone.
-      FORM_METHODS = %i[get post put patch delete].freeze
-
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "inline-flex" "gap-2" "items-center" "items-start" "justify-center" "justify-start"
@@ -69,6 +66,8 @@ module FlatPack
 
       ICON_VARIANTS = IconOptions::VARIANTS
       ICON_STYLES = IconOptions::STYLES
+
+      include FlatPack::Button::FormSubmit
 
       renders_one :trailing
 
@@ -212,86 +211,8 @@ module FlatPack
         end
       end
 
-      # Same form shape as TrashButton: real form, POST for every verb except GET,
-      # _method for the rest, CSRF except on GET, data-turbo on the form.
-      # Hidden fields sit in a hidden wrapper so display:contents does not turn
-      # them into flex items beside the button.
       def render_form
-        content_tag(:form, **form_attributes) do
-          safe_join([
-            content_tag(:div, safe_join(form_hidden_fields), hidden: true),
-            yield
-          ])
-        end
-      end
-
-      def form_hidden_fields
-        [method_override_field, authenticity_field, hidden_param_fields].compact
-      end
-
-      def form_attributes
-        {
-          action: @url,
-          method: form_http_method,
-          "accept-charset": "UTF-8",
-          class: "contents",
-          data: {turbo: @turbo}
-        }
-      end
-
-      def form_http_method
-        (@method == :get) ? "get" : "post"
-      end
-
-      def method_override_field
-        return if @method == :get || @method == :post
-
-        tag.input(type: "hidden", name: "_method", value: @method, autocomplete: "off")
-      end
-
-      def authenticity_field
-        return if @method == :get
-
-        token = form_authenticity_token_value
-        return if token.blank?
-
-        tag.input(type: "hidden", name: "authenticity_token", value: token, autocomplete: "off")
-      end
-
-      def form_authenticity_token_value
-        return unless helpers.respond_to?(:form_authenticity_token)
-
-        helpers.form_authenticity_token
-      rescue ArgumentError, NoMethodError, ViewComponent::HelpersCalledBeforeRenderError
-        nil
-      end
-
-      def hidden_param_fields
-        return if @params.blank?
-
-        safe_join(flatten_hidden_params(@params).map { |name, value|
-          tag.input(type: "hidden", name: name, value: value, autocomplete: "off")
-        })
-      end
-
-      def flatten_hidden_params(pairs, prefix = nil)
-        pairs.flat_map do |key, value|
-          name = prefix ? "#{prefix}[#{key}]" : key.to_s
-          case value
-          when Hash
-            flatten_hidden_params(value, name)
-          when Array
-            value.flat_map do |item|
-              if item.is_a?(Hash)
-                flatten_hidden_params(item, "#{name}[]")
-              else
-                [["#{name}[]", item]]
-              end
-            end
-          else
-            [[name, value]]
-          end
-        end
+        render_submit_form(url: @url, method: @method, params: @params, turbo: @turbo) { yield }
       end
 
       def menu_row_content
@@ -597,40 +518,25 @@ module FlatPack
         return if @href.present?
 
         # Use a generic error message to avoid leaking sensitive information in logs
-        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+        raise ArgumentError, FormSubmit::UNSAFE_URL
       end
 
       def validate_url!(original_url)
         return if @url.present?
 
-        raise ArgumentError, "Unsafe URL detected. Only http, https, mailto, tel protocols and relative URLs are allowed."
+        raise ArgumentError, FormSubmit::UNSAFE_URL
       end
 
       def normalize_form_method(method)
-        verb = method.nil? ? :post : method.to_sym
-        return verb if FORM_METHODS.include?(verb)
-
-        raise ArgumentError, "Invalid method: #{method.inspect}. Must be one of: #{FORM_METHODS.join(", ")}."
-      rescue NoMethodError, TypeError
-        raise ArgumentError, "Invalid method: #{method.inspect}. Must be one of: #{FORM_METHODS.join(", ")}."
+        FormSubmit.normalize_method(method)
       end
 
       def validate_turbo!
-        return if @turbo == true || @turbo == false
-
-        raise ArgumentError, "Invalid turbo: #{@turbo.inspect}. Must be true or false."
+        FormSubmit.validate_turbo!(@turbo)
       end
 
       def validate_params!
-        return if @params.nil?
-
-        unless @params.is_a?(Hash)
-          raise ArgumentError, "params: must be a Hash."
-        end
-
-        return if @url.present? || @params.empty?
-
-        raise ArgumentError, "params: needs url:."
+        FormSubmit.validate_params!(@params, url: @url)
       end
     end
   end

@@ -4,6 +4,8 @@ module FlatPack
   module Button
     module Dropdown
       class Component < FlatPack::BaseComponent
+        include FlatPack::Button::FormSubmit
+
         renders_one :trigger_label
 
         renders_many :menu, types: {
@@ -370,9 +372,31 @@ module FlatPack
         def menu_collapse_item(row)
           return content_tag(:div, "", class: "fp-menu-collapse__divider", role: "separator") if row[:divider]
 
+          control = menu_collapse_control(row)
+          return control if row[:url].blank?
+
+          render_submit_form(
+            url: row[:url],
+            method: row[:method],
+            params: row[:params],
+            turbo: row.fetch(:turbo, true)
+          ) { control }
+        end
+
+        def menu_collapse_control(row)
           body = menu_collapse_body(row)
           attributes = {class: "fp-menu-collapse__item"}
-          attributes[:data] = {fp_style: "danger"} if row[:destructive]
+          data = {}
+          data[:fp_style] = "danger" if row[:destructive]
+          data[:flat_pack_dropdown_keep_open] = true if row[:keep_open]
+          attributes[:data] = data if data.any?
+
+          if row[:url].present?
+            attributes[:type] = "submit"
+            attributes[:disabled] = true if row[:disabled]
+            return button_tag(body, **attributes)
+          end
+
           return link_to(body, row[:href], **attributes) if row[:href].present? && !row[:disabled]
 
           attributes[:type] = "button"

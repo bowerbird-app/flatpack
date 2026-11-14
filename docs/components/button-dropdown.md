@@ -50,13 +50,17 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
 | `text` | String | `nil` | yes | Item label text. |
 | `icon` | String/Symbol | `nil` | no | Optional leading Heroicon name. Menu items do not paint a raw `<svg` string; the trigger does, through Button. |
 | `icon_position` | Symbol | `:start` | no | `:start` paints the icon before the label. `:end` renders the icon after the label and pushes it to the trailing edge with `ms-auto` (one class, so a host class on that icon wins). Unknown names raise `ArgumentError`. |
-| `keep_open` | Boolean | `false` | no | `true` keeps the menu open when this item is used. The item stays `role="menuitem"`. Anything other than `true` or `false` raises `ArgumentError`. |
+| `keep_open` | Boolean | `false` | no | `true` keeps the menu open when this item is used, including when the item submits `url:`. The item stays `role="menuitem"`. Anything other than `true` or `false` raises `ArgumentError`. |
 | `icon_variant` | Symbol, nil | `nil` | no | `:outline`, `:solid`, `:mini`, or `:micro` on that icon. Omit to use `default_icon_variant`. Unknown names raise `ArgumentError`. |
 | `icon_style` | Symbol, nil | `nil` | no | `nil` inherits the item text. `:primary`, `:success`, `:warning`, or `:danger` use the button icon tokens. Unknown names raise `ArgumentError`. |
 | `badge` | String | `nil` | no | Optional badge content. |
 | `badge_style` | Symbol | `:primary` | no | Badge style: `:default`, `:primary`, `:secondary`, `:success`, `:warning`, `:danger`, `:info`; invalid values raise `ArgumentError` when badge is present. |
-| `href` | String | `nil` | no | Link destination. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. |
-| `disabled` | Boolean | `false` | no | Makes item non-focusable and non-interactive. |
+| `href` | String | `nil` | no | Link destination. Sanitized via `FlatPack::AttributeSanitizer`; unsafe URLs raise `ArgumentError`. Pass `href:` or `url:`, not both. |
+| `url` | String | `nil` | no | Form action. Same allowlist as `href`. The item stays a submit button with the menu-item classes, `role="menuitem"`, and `data-flat-pack-dropdown-item`. The form is `class="contents"` with `data-turbo`. Unsafe URLs raise `ArgumentError`. |
+| `method` | Symbol, nil | `nil` | no | Form verb when `url:` is set. Defaults to `:post`. `:get`, `:post`, `:put`, `:patch`, `:delete`. The form `method` is `get` or `post`. Other verbs add a `_method` field. `:get` skips the CSRF token and the override. Without `url:`, `method:` raises `ArgumentError`. |
+| `params` | Hash, nil | `nil` | no | Hidden fields for `url:`. Keys become input names. Nested hashes use `name[key]`. Arrays use `name[]`. Needs `url:`. |
+| `turbo` | Boolean | `true` | no | Sets `data-turbo` on the form. `false` sets `data-turbo="false"`. Anything other than `true` or `false` raises `ArgumentError`. |
+| `disabled` | Boolean | `false` | no | Makes item non-focusable and non-interactive. A disabled `url:` item is a disabled submit button. |
 | `destructive` | Boolean | `false` | no | Applies destructive visual treatment. |
 | `**system_arguments` | Hash | `{}` | no | HTML attributes for item element. |
 
@@ -70,6 +74,29 @@ Use `menu_item` and `menu_divider` as the slot builders (without a `with_` prefi
   <% dropdown.menu_item(text: "Edit", href: edit_post_path(@post)) %>
   <% dropdown.menu_divider %>
   <% dropdown.menu_item(text: "Delete", destructive: true) %>
+<% end %>
+```
+
+Publish and unpublish post. `keep_open: true` leaves the menu open. The phone menu from `menu_row` submits the same form.
+
+```erb
+<%= render FlatPack::Button::Dropdown::Component.new(text: "Actions") do |dropdown| %>
+  <% dropdown.menu_item(
+    text: "Publish",
+    icon: "check-circle",
+    url: publish_post_path(@post),
+    method: :patch,
+    params: { state: "live" },
+    keep_open: true
+  ) %>
+  <% dropdown.menu_item(
+    text: "Unpublish",
+    icon: "x-circle",
+    url: unpublish_post_path(@post),
+    method: :patch,
+    destructive: true,
+    keep_open: true
+  ) %>
 <% end %>
 ```
 
@@ -171,10 +198,13 @@ Host menu classes and a trigger label, with no subclass:
 ## Collapsing button group
 `menu_row` is the menu form used by [Button Group](button-group.md). `collapse: :menu` uses it in the phone menu. An overflow menu uses it when this dropdown did not stay in the row. It renders this dropdown as [Menu Collapse](menu-collapse.md): `text` and `icon` are the header, and the menu items sit underneath. The header icon uses this dropdown's `icon_variant` and `icon_style`. Each item's `icon_variant` and `icon_style` paint that nested row. The wide control stays this dropdown. A dropdown that is the group's direct child takes the segment shape on its root. The trigger copies that box. The group does not style the trigger itself.
 
+An item with `url:` is a form in that phone menu too. `method:`, `params:`, and `turbo:` match the open menu. The submit button keeps `fp-menu-collapse__item`. `keep_open: true` sets `data-flat-pack-dropdown-keep-open` on that button, so the overflow menu stays open when the form submits.
+
 ## Accessibility
 - Trigger uses `aria-haspopup="true"` and toggles `aria-expanded`.
 - `icon_only: true` sets `aria-label` from `text` unless `trigger_attributes` already has one. The visible label is omitted. A blank `text` and a blank label raise `ArgumentError`.
 - A pure action list uses `role="menu"`; items use `role="menuitem"`; the divider uses `role="separator"`.
+- An item with `url:` is a form (`class="contents"`) around a submit button. The button keeps the menu-item classes, `role="menuitem"`, `data-flat-pack-dropdown-item`, and `data-flat-pack-dropdown-keep-open` when `keep_open: true`. The menu stays `role="menu"`. This is separate from `menu_form`. Submitting that button blurs it (Turbo disables the control while the request runs) and leaves focus on the document. That blur does not close the menu. Moving focus from the item to another control still does.
 - A menu that contains `menu_form` uses `role="dialog"` with `aria-modal="false"` and an accessible name from `text`. Items in that dialog are not `menuitem`. The form is not wrapped in `role="menu"`, `role="menuitem"`, or `role="none"`. The trigger uses `aria-haspopup="dialog"`.
 - Keyboard behavior supports `Escape`, arrow navigation, `Home`, and `End`. `Enter` and `Space` on the trigger open the menu. The trigger's `data-action` includes `keydown.enter` and `keydown.space` beside `click`. Those keydowns cancel the button's follow-up click, and a repeated key is ignored, so the menu opens once. A later mouse click still toggles it. An action menu then focuses the first item. A dialog focuses the first visible form field (a hidden input such as `authenticity_token`, and a disabled control, are skipped), or the first item when the panel has no field. `Tab` closes a `role="menu"` and returns focus to the trigger, including when the item is `keep_open`. `Tab` in a `role="dialog"` leaves the panel open while the next stop is still inside it. Tabbing past the last stop closes the dialog and returns focus to the trigger. A keep-open control, including the form wrapper, does not close on `Tab`.
 - Menu origin follows placement (`top right`, `top left`, `bottom right`, or `bottom left`). Enter/exit uses `--duration-base` with `--easing-enter` / `--easing-exit` and scale-95, not scale-0. A close in flight can reverse.
