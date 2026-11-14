@@ -47,6 +47,7 @@ Use Picker when users need to choose image assets, files, or application records
 | name | type | required | description |
 |------|------|----------|-------------|
 | `empty` | slot | no | Markup for an empty result list. Rendered on the server inside the results region and hidden until nothing matches. `flat-pack--picker` only shows or hides it. It does not change the slot's contents. Omit the slot and the picker shows `empty_text`. Works for `search_mode: :local` and `:remote`. |
+| `toolbar` | slot | no | Optional actions on the same row as the search box. Call `with_toolbar`. The search field grows. The toolbar sits at the end of the row and wraps onto the next line when the row is narrow. Omit the slot and the search box renders with no extra row. The toolbar is not part of the title. Use `modal: false` and `variant: :flush` when a host modal owns the header. |
 
 List rows are rendered through four display regions derived from item data rather than record-type-specific markup.
 
@@ -132,6 +133,29 @@ Use `variant: :flush` when the picker sits inside another surface (a moveable pa
   auto_confirm: true
 ) %>
 ```
+
+### Search toolbar
+
+```erb
+<%= render FlatPack::Picker::Component.new(
+  id: "picker-demo-toolbar",
+  title: "Files",
+  items: @picker_demo_items,
+  variant: :flush,
+  modal: false,
+  search_mode: :local,
+  selection_mode: :single,
+  auto_confirm: true,
+  items_height: "min-content"
+) do |picker| %>
+  <% picker.with_toolbar do %>
+    <%= render FlatPack::Button::Component.new(text: "Upload", icon: "arrow-up-tray", style: :secondary, size: :sm) %>
+    <%= render FlatPack::Button::Component.new(text: "New folder", icon: "folder-plus", style: :ghost, size: :sm) %>
+  <% end %>
+<% end %>
+```
+
+Pass `title: ""` when the host already draws the header. The toolbar stays on the search row either way.
 
 ### Thresholded local picker
 
@@ -448,7 +472,8 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 - `modal: false` is the default, so picker content renders inline unless a consumer explicitly opts into modal presentation.
 - `modal: true` keeps the existing modal-backed behavior for trigger/button flows.
 - List rows are built from display slots instead of record-specific row branches, so records, files, and images can share the same row structure.
-- `items_height` only affects the results region that contains picker items. Search controls and action buttons keep their natural height above and below it.
+- `items_height` only affects the results region that contains picker items. Search controls, the toolbar, and action buttons keep their natural height above and below it.
+- `toolbar` renders beside search inside the picker body. It is not rendered in the inline title or the modal header. With no slot, the search box is a direct child of the picker and no toolbar row is rendered. A hidden search still renders the toolbar row when the slot is present.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
 - Remote searches are debounced by 250ms and request JSON with `Accept: application/json`. Page 1 replaces `filteredItems` from `payload.items`. A later `pagination.next_page` appends. The items region (`data-flat-pack-picker-items-region`) is the `IntersectionObserver` root, not the viewport.
 - The empty panel is in the first render, with the `hidden` class. An `empty` slot fills that panel. `empty_text` fills it when the slot is omitted. Local filtering and remote responses only toggle `hidden` and `flex`. They do not rewrite the panel.

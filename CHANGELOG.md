@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.371] - 2026-11-14
+
+### Added
+- `FlatPack::Picker::Component` accepts a `toolbar` slot (`with_toolbar`). It renders on the same row as the search box. The search field grows. The toolbar sits at the end and wraps below the field when the row is narrow. Omit the slot and the search box renders with no extra row. The toolbar is not part of the title, so a host modal can keep the header when the picker is `modal: false, variant: :flush`.
+
+### Upgrade notes
+- Additive. A picker with no toolbar renders the same search markup as before.
+- Reload kit CSS. The row is `.fp-picker__toolbar-row`. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.371`.
+
 ## [0.1.370] - 2026-11-14
 
 ### Added

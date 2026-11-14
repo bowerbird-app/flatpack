@@ -208,6 +208,64 @@ module FlatPack
         assert_includes rendered_content, "&quot;valuePath&quot;:&quot;payload.record_id&quot;"
       end
 
+      def test_omits_toolbar_row_when_slot_is_absent
+        render_inline(Component.new(id: "plain-picker", items: sample_items, title: "Assets"))
+
+        assert_selector "[data-controller='flat-pack--picker'] > .fp-search"
+        assert_selector "h2", text: "Assets"
+        assert_no_selector "[data-flat-pack-picker-toolbar-row]"
+        assert_no_selector "[data-flat-pack-picker-toolbar]"
+        assert_no_selector ".fp-picker__toolbar-row"
+        assert_no_selector ".fp-picker__search"
+        assert_no_selector ".fp-picker__toolbar"
+      end
+
+      def test_renders_toolbar_beside_search_and_outside_the_title
+        render_inline(Component.new(
+          id: "toolbar-picker",
+          items: sample_items,
+          title: "Files",
+          variant: :flush,
+          modal: false
+        )) do |picker|
+          picker.with_toolbar do
+            %(<button type="button" id="picker-toolbar-upload">Upload</button>).html_safe
+          end
+        end
+
+        assert_selector "#toolbar-picker[data-flat-pack-picker-variant='flush'] h2", text: "Files"
+        header_html = page.find("h2", text: "Files").find(:xpath, "ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' shrink-0 ')][1]").native.to_html
+        refute_includes header_html, "data-flat-pack-picker-toolbar-row"
+        refute_includes header_html, "picker-toolbar-upload"
+        assert_selector "[data-controller='flat-pack--picker'] > [data-flat-pack-picker-toolbar-row].fp-picker__toolbar-row"
+        assert_selector "[data-flat-pack-picker-toolbar-row] > .fp-picker__search .fp-search input[data-flat-pack--picker-target='searchInput']"
+        assert_selector "[data-flat-pack-picker-toolbar-row] > [data-flat-pack-picker-toolbar].fp-picker__toolbar #picker-toolbar-upload", text: "Upload"
+      end
+
+      def test_renders_toolbar_in_the_modal_body
+        render_inline(Component.new(id: "toolbar-modal-picker", items: sample_items, modal: true, title: "Files")) do |picker|
+          picker.with_toolbar do
+            %(<button type="button" id="picker-toolbar-upload">Upload</button>).html_safe
+          end
+        end
+
+        assert_selector ".flat-pack-modal__body #picker-toolbar-upload"
+        assert_no_selector ".flat-pack-modal__header #picker-toolbar-upload"
+        assert_selector ".flat-pack-modal__header h2", text: "Files"
+      end
+
+      def test_renders_toolbar_when_search_is_hidden
+        render_inline(Component.new(id: "toolbar-no-search", items: sample_items, searchable: false)) do |picker|
+          picker.with_toolbar do
+            %(<button type="button" id="picker-toolbar-upload">Upload</button>).html_safe
+          end
+        end
+
+        assert_no_selector "input[name='picker_query_toolbar-no-search']"
+        assert_no_selector "[data-flat-pack-picker-toolbar-row] .fp-search"
+        assert_selector "[data-flat-pack-picker-toolbar-row] > [data-flat-pack-picker-toolbar] #picker-toolbar-upload", text: "Upload"
+      end
+
       def test_renders_search_input_by_default_for_local_picker
         render_inline(Component.new(id: "searchable-picker", items: sample_items))
 

@@ -5,6 +5,8 @@ require "json"
 module FlatPack
   module Picker
     class Component < FlatPack::BaseComponent
+      renders_one :toolbar
+
       SELECTION_MODES = %i[single multiple].freeze
       SEARCH_MODES = %i[local remote].freeze
       OUTPUT_MODES = %i[event field].freeze
@@ -136,7 +138,7 @@ module FlatPack
       def render_picker_content
         content_tag(:div, **picker_attributes) do
           safe_join([
-            render_search,
+            render_search_row,
             (@form.present? ? content_tag(:div, "", class: "hidden", data: {flat_pack__picker_target: "formFields"}) : nil),
             tag.input(type: "hidden", data: {flat_pack__picker_target: "outputField"}),
             content_tag(:div, **items_region_attributes) do
@@ -213,6 +215,21 @@ module FlatPack
             aria: {live: "polite", atomic: "true"}
           )
         ])
+      end
+
+      def render_search_row
+        search = render_search
+        return search unless toolbar?
+
+        content_tag(:div, class: "fp-picker__toolbar-row", data: {flat_pack_picker_toolbar_row: true}) do
+          parts = []
+          parts << content_tag(:div, search, class: "fp-picker__search") if search
+          parts << content_tag(:div, class: "fp-picker__toolbar", data: {flat_pack_picker_toolbar: true}) do
+            # Slot markup is component HTML from the host. Do not pass raw user text here.
+            toolbar.to_s.html_safe
+          end
+          safe_join(parts)
+        end
       end
 
       def render_search

@@ -566,6 +566,50 @@
     ) %>
   </section>
 
+  <section class="mb-12" id="toolbar">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Toolbar",
+      anchor: "toolbar",
+      anchor_link: true,
+      subtitle: "Actions sit beside search. The title stays above them."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-4">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            Pass <code>with_toolbar</code> for actions on the search row. Leave the slot out and the search box renders alone. A host modal can keep the header: use <code>modal: false</code> and <code>variant: :flush</code>.
+          </p>
+
+          <%= render FlatPack::Picker::Component.new(
+            id: "picker-demo-toolbar",
+            title: "Files",
+            items: @picker_demo_items.first(4),
+            variant: :flush,
+            modal: false,
+            search_mode: :local,
+            selection_mode: :single,
+            auto_confirm: true,
+            items_height: "min-content"
+          ) do |picker| %>
+            <% picker.with_toolbar do %>
+              <%= render FlatPack::Button::Component.new(text: "Upload", icon: "arrow-up-tray", style: :secondary, size: :sm) %>
+              <%= render FlatPack::Button::Component.new(text: "New folder", icon: "folder-plus", style: :ghost, size: :sm) %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-toolbar-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
+      language: "erb",
+      code: picker_demo_toolbar_erb_code
+    ) %>
+  </section>
+
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
       title: "Items Height",
