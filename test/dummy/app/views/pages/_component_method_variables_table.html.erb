@@ -15,6 +15,18 @@
         { variable: "icon", accepts: "true, false", example: "icon: true" }
       ]
     },
+    notice: {
+      label: "Notice",
+      method_call: "render FlatPack::Notice::Component.new(title: \"Saved\", description: \"The take is in the library.\", style: :success)",
+      variables: [
+        { variable: "title", accepts: "String or nil", example: "title: \"Saved\"" },
+        { variable: "description", accepts: "String or nil", example: "description: \"The take is in the library.\"" },
+        { variable: "style", accepts: ":info, :success", example: "style: :success" },
+        { variable: "dismissible", accepts: "true, false", example: "dismissible: true" },
+        { variable: "icon", accepts: "true, false", example: "icon: true" },
+        { variable: "size", accepts: ":sm, :md, :lg", example: "size: :md" }
+      ]
+    },
     avatar: {
       label: "Avatar",
       method_call: "render FlatPack::Avatar::Component.new(name: \"Jane Doe\", src: \"https://...\", size: :md, show_tooltip: false)",

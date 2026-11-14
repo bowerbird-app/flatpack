@@ -5,17 +5,17 @@ require "test_helper"
 module FlatPack
   module Flash
     class ComponentTest < ViewComponent::TestCase
-      def test_maps_default_keys_to_alert_styles
+      def test_maps_default_keys_to_notice_or_alert
         render_inline(Component.new(flash: sample_flash, as: :alert))
 
-        assert_style "notice", "bg-[var(--alert-success-background-color)]", role: "alert"
+        assert_style "notice", "bg-[var(--alert-success-background-color)]", role: "status"
         assert_style "alert", "bg-[var(--alert-danger-background-color)]", role: "alert"
         assert_style "warning", "bg-[var(--alert-warning-background-color)]", role: "alert"
-        assert_style "info", "bg-[var(--alert-info-background-color)]", role: "alert"
-        assert_style "success", "bg-[var(--alert-success-background-color)]", role: "alert"
+        assert_style "info", "bg-[var(--alert-info-background-color)]", role: "status"
+        assert_style "success", "bg-[var(--alert-success-background-color)]", role: "status"
         assert_style "error", "bg-[var(--alert-danger-background-color)]", role: "alert"
         assert_style "danger", "bg-[var(--alert-danger-background-color)]", role: "alert"
-        assert_style "other", "bg-[var(--alert-info-background-color)]", role: "alert"
+        assert_style "other", "bg-[var(--alert-info-background-color)]", role: "status"
       end
 
       def test_maps_default_keys_to_toast_styles
@@ -43,7 +43,7 @@ module FlatPack
         ))
 
         assert_style "Kept", "bg-[var(--alert-warning-background-color)]", role: "alert"
-        assert_style "Custom", "bg-[var(--alert-success-background-color)]", role: "alert"
+        assert_style "Custom", "bg-[var(--alert-success-background-color)]", role: "status"
       end
 
       def test_toast_mode_uses_the_same_style_override
@@ -101,7 +101,8 @@ module FlatPack
       def test_skips_values_that_are_not_strings_or_arrays
         render_inline(Component.new(flash: {notice: "Hi", picker: {id: 1}}, as: :alert))
 
-        assert_selector "[role='alert']", count: 1
+        assert_selector "[role='status']", count: 1
+        refute_selector "[role='alert']"
         assert_text "Hi"
         refute_includes rendered_content, "{:id"
       end
@@ -127,7 +128,8 @@ module FlatPack
         assert_includes stack[:class], "flex-col"
         assert_includes stack[:class], "gap-4"
         assert_includes stack[:class], "mb-4"
-        assert_selector "#flash-stack [role='alert']", count: 2
+        assert_selector "#flash-stack [role='status']", text: "Hi", count: 1
+        assert_selector "#flash-stack [role='alert']", text: "No", count: 1
         refute_selector ".fp-toast-region"
       end
 

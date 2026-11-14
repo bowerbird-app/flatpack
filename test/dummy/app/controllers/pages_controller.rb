@@ -43,6 +43,7 @@ class PagesController < ApplicationController
     {action: /\Abuttons(_.*)?\z/, title: "Buttons", patterns: [/\A--button-/]},
     {action: /\Alinks\z/, title: "Links", patterns: [/\A--button-/]},
     {action: /\Aalerts\z/, title: "Alerts", patterns: [/\A--alert-/]},
+    {action: /\Anotices\z/, title: "Notice", patterns: [/\A--alert-/]},
     {action: /\Abadges\z/, title: "Badges", patterns: [/\A--badge-/]},
     {action: /\Achips\z/, title: "Chips", patterns: [/\A--chip-/]},
     {action: /\Achip_groups\z/, title: "Chip Groups", patterns: [/\A--chip-/]},
@@ -117,7 +118,7 @@ class PagesController < ApplicationController
     flash_demo
   ].freeze
 
-  FLASH_DEMO_PAGES = %w[alerts toasts].freeze
+  FLASH_DEMO_PAGES = %w[alerts notices toasts].freeze
   FLASH_DEMO_MODES = %w[alert toast].freeze
   FLASH_DEMO_KEYS = %w[notice alert both].freeze
 
@@ -382,6 +383,9 @@ class PagesController < ApplicationController
   end
 
   def alerts
+  end
+
+  def notices
   end
 
   def flash_demo

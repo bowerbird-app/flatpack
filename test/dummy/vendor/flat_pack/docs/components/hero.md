@@ -10,7 +10,7 @@ Render a full-width landing-page hero section in one of seven layout variants wi
 - Application dashboards that open with a key message or call-to-action.
 - Any page where a large, structured headline-plus-image block is needed.
 
-Do not use for smaller in-page promotional banners; use `FlatPack::Alert::Component` or `FlatPack::Card::Component` instead.
+Do not use for smaller in-page promotional banners; use `FlatPack::Notice::Component`, `FlatPack::Alert::Component`, or `FlatPack::Card::Component` instead.
 
 For a cover headline without the hero chrome, use `FlatPack::HeroTitle::Component`. Hero `size: :display` and `title_size:` render Hero Title for the headline. Product-scale heroes (`size: :default` without `title_size:`) stay on `--text-4xl` / `--hero-headline-size`.
 

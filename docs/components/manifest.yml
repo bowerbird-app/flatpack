@@ -451,6 +451,7 @@ components:
     doc: docs/components/flash.md
     primary_class: FlatPack::Flash::Component
     related_classes:
+      - FlatPack::Notice::Component
       - FlatPack::Alert::Component
       - FlatPack::Toast::Component
       - FlatPack::Toasts::Region::Component
@@ -628,6 +629,14 @@ components:
     title: Modal Filter
     doc: docs/components/modal-filter.md
     primary_class: FlatPack::ModalFilter::Component
+    status: documented
+
+  - key: notice
+    title: Notice
+    doc: docs/components/notice.md
+    primary_class: FlatPack::Notice::Component
+    related_classes:
+      - FlatPack::Alert::Component
     status: documented
 
   - key: notification

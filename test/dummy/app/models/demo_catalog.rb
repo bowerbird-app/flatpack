@@ -259,6 +259,7 @@ class DemoCatalog
       title: "Feedback",
       entries: [
         {type: :item, title: "Alerts", path: "/demo/alerts", description: "Status and feedback messages", icon: :alert},
+        {type: :item, title: "Notice", path: "/demo/notices", description: "Polite info and success messages", icon: :alert},
         {type: :item, title: "Spinner", path: "/demo/spinner", description: "Loading spinner for buttons and inline waits", icon: :dashboard},
         {type: :item, title: "Keyboard", path: "/demo/kbd", description: "Keyboard shortcut keycaps", icon: :type},
         {type: :item, title: "Badges", path: "/demo/badges", description: "Label and status indicators", icon: :dashboard},

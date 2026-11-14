@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.363] - 2026-11-14
+
+### Added
+- `FlatPack::Notice::Component` is the polite status box. It matches Alert: same border, icon, title, description, content block, sizes (`:sm`, `:md`, `:lg`), and dismiss control. The root is `role="status"`. Styles are `:info` (default) and `:success`. Any other style raises `ArgumentError`.
+- Alert and Notice both render through `FlatPack::Shared::StatusMessage`, so the box cannot drift. Alert still uses `role="alert"` and `:info`, `:success`, `:warning`, and `:danger`.
+
+### Changed
+- `FlatPack::Flash::Component` with `as: :alert` renders Notice or Alert from the resolved style. `notice` maps to Notice `:success`. `info` maps to Notice `:info`. `success` maps to Notice `:success`. Unknown keys map to Notice `:info`. `alert`, `error`, and `danger` map to Alert `:danger`. `warning` maps to Alert `:warning`.
+- `styles:` still overrides a key. A style Notice allows renders Notice. `:warning` and `:danger` render Alert. Toast mode is unchanged.
+
+### Upgrade notes
+- A flash `notice`, `info`, `success`, or unknown key in alert mode is `role="status"` now. It was `role="alert"`. Warning and problem keys stay `role="alert"`.
+- No new CSS or JavaScript. Dismiss still uses `flat-pack--alert` and `flatpack.alert.dismiss`. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.363`.
+
 ## [0.1.362] - 2026-11-14
 
 ### Added
