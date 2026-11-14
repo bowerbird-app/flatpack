@@ -16,6 +16,7 @@ module FlatPack
       ACCEPTED_KINDS = %w[image file record].freeze
 
       renders_one :empty
+      renders_one :error
 
       def initialize(
         id:,
@@ -37,6 +38,7 @@ module FlatPack
         output_target: nil,
         context: {},
         empty_text: FlatPack::Copy::OMITTED,
+        error_text: FlatPack::Copy::OMITTED,
         results_layout: :list,
         items_height: "max-content",
         modal: false,
@@ -66,6 +68,7 @@ module FlatPack
         @output_target = output_target
         @context = context.is_a?(Hash) ? context : {}
         @empty_text = fp_text(empty_text, "picker.empty")
+        @error_text = fp_text(error_text, "picker.error")
         @results_layout = results_layout.to_sym
         @items_height = normalize_items_height(items_height)
         @modal = !!modal
@@ -145,7 +148,8 @@ module FlatPack
               safe_join([
                 content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
                 render_remote_page_status,
-                render_empty_state
+                render_empty_state,
+                render_error_state
               ].compact)
             end,
             render_actions
@@ -182,6 +186,19 @@ module FlatPack
       def empty_state_data
         data = {flat_pack__picker_target: "emptyState"}
         data[:flat_pack_picker_empty_slot] = "true" if empty?
+        data
+      end
+
+      def render_error_state
+        # Slot markup is component HTML from the caller, same as the empty slot.
+        body = error? ? error.to_s.html_safe : @error_text
+
+        content_tag(:div, body, class: empty_state_classes, data: error_state_data)
+      end
+
+      def error_state_data
+        data = {flat_pack__picker_target: "errorState"}
+        data[:flat_pack_picker_error_slot] = "true" if error?
         data
       end
 

@@ -233,6 +233,7 @@ fr:
       close: Fermer
       search_placeholder: Rechercher des fichiers...
       empty: Aucun fichier trouvé
+      error: Impossible de charger les éléments
       search_label: Rechercher parmi les fichiers disponibles
       untitled: Sans titre
       results_loaded: "%{count} chargés"

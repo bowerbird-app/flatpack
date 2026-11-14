@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.375] - 2026-11-14
+
+### Added
+- `FlatPack::Picker::Component` accepts an `error` slot. The slot is rendered on the server, hidden, inside the results region. `flat-pack--picker` shows it when a remote search returns a non-OK response or the fetch rejects, and hides it on the next successful load. The controller does not rewrite the slot. Omit the slot and `error_text` still renders (`"Unable to load items"` unless you pass a string). A failed later page keeps the items already loaded and keeps `next_page`, so the next scroll tries that page again. A new query tries again from page 1. The polite live region announces the error panel's text.
+
+### Upgrade notes
+- Additive. A picker with no `error` slot shows `error_text` when a remote load fails. Pass `with_error` to replace that text.
+- Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.375`.
+
 ## [0.1.374] - 2026-11-14
 
 ### Fixed
