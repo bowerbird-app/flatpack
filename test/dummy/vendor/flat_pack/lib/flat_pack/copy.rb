@@ -21,6 +21,7 @@ module FlatPack
       select.remove
       search.result_fallback
       picker.untitled
+      picker.results_loaded
       pagination.error_loading
       pagination.loading
       file_input.size_exceeded

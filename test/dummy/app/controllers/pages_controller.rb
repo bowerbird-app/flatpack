@@ -10,6 +10,8 @@ class PagesController < ApplicationController
   PAGINATION_INFINITE_LOAD_DELAY_SECONDS = 3
   MODAL_FILTER_LOAD_DELAY_SECONDS = 3
   SORTABLE_TABLE_LOAD_DELAY_SECONDS = 3
+  PICKER_RESULTS_PAGE_SIZE = 4
+  PICKER_RESULTS_PAGE_DELAY_SECONDS = 0.8
 
   DEMO_CHAT_FILE_DOWNLOADS = {
     "launch-plan" => {
@@ -624,20 +626,29 @@ class PagesController < ApplicationController
   def picker_results
     query = params[:q].to_s.strip.downcase
     kinds = params[:kinds].to_s.split(",").map(&:strip).presence
+    page = params[:page].to_i
+    page = 1 if page < 1
 
-    results = picker_demo_items
+    results = picker_results_catalog
     if kinds.present?
-      results = results.select { |item| kinds.include?(item[:kind]) }
+      results = results.select { |item| kinds.include?(item[:kind].to_s) }
     end
 
     if query.present?
       results = results.select do |item|
-        [item[:label], item[:name], item[:content_type], item[:kind], item[:description], item[:path], item[:badge], item[:meta]].compact.any? { |value| value.downcase.include?(query) }
+        [item[:label], item[:name], item[:content_type], item[:kind], item[:description], item[:path], item[:badge], item[:meta]].compact.any? { |value| value.to_s.downcase.include?(query) }
       end
     end
 
+    offset = (page - 1) * PICKER_RESULTS_PAGE_SIZE
+    page_items = results.drop(offset).first(PICKER_RESULTS_PAGE_SIZE)
+    next_page = ((offset + page_items.length) < results.length) ? page + 1 : nil
+
+    delay_picker_results_page if page > 1
+
     render json: {
-      items: results.first(30).map { |item| picker_item_payload(item) }
+      items: page_items.map { |item| picker_item_payload(item) },
+      pagination: {next_page: next_page}
     }
   end
 
@@ -1625,6 +1636,26 @@ class PagesController < ApplicationController
     }.each do |legacy_name, canonical_name|
       ChatItem.where(sender_name: legacy_name).update_all(sender_name: canonical_name, updated_at: Time.current)
     end
+  end
+
+  def picker_results_catalog
+    [nil, "2", "3"].flat_map do |suffix|
+      picker_demo_items.map do |item|
+        next item if suffix.nil?
+
+        item.merge(
+          id: "#{item[:id]}-#{suffix}",
+          label: "#{item[:label]} #{suffix}",
+          name: "#{item[:name]}-#{suffix}"
+        )
+      end
+    end
+  end
+
+  def delay_picker_results_page
+    return if Rails.env.test?
+
+    sleep PICKER_RESULTS_PAGE_DELAY_SECONDS
   end
 
   def picker_demo_items

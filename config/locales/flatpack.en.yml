@@ -232,6 +232,7 @@ en:
       empty: No assets found
       search_label: Search available assets
       untitled: Untitled
+      results_loaded: "%{count} loaded"
     progress:
       label: Progress
       percent: "%{count}%"
