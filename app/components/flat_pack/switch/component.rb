@@ -73,11 +73,11 @@ module FlatPack
       end
 
       def render_track
-        content_tag(:div, nil, class: track_classes, role: "switch", "aria-checked": @checked.to_s)
+        content_tag(:div, nil, class: track_classes, aria: {hidden: true})
       end
 
       def render_thumb
-        content_tag(:div, nil, class: thumb_classes)
+        content_tag(:div, nil, class: thumb_classes, aria: {hidden: true})
       end
 
       def render_label
@@ -100,6 +100,7 @@ module FlatPack
           checked: @checked,
           disabled: @disabled,
           required: @required,
+          role: "switch",
           class: "sr-only peer"
         }
 
@@ -115,9 +116,9 @@ module FlatPack
           "pointer-events-none",
           "rounded-full transition-colors duration-[var(--duration-base)] ease-[var(--easing-standard)]",
           SIZES.fetch(@size),
+          "bg-[var(--switch-track-background-color)]",
           "peer-checked:bg-[var(--switch-track-checked-background-color)]",
-          "peer-focus-visible:ring-2 peer-focus-visible:ring-inset peer-focus-visible:ring-[var(--switch-focus-ring-color)] peer-focus-visible:ring-offset-2",
-          @checked ? "bg-[var(--switch-track-checked-background-color)]" : "bg-[var(--switch-track-background-color)]"
+          "peer-focus-visible:ring-2 peer-focus-visible:ring-inset peer-focus-visible:ring-[var(--switch-focus-ring-color)] peer-focus-visible:ring-offset-2"
         )
       end
 

@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.364] - 2026-11-14
+
+### Fixed
+- `FlatPack::Switch` no longer paints a checked track with a static background class. The track always uses `--switch-track-background-color`. The checked colour comes from the existing `peer-checked` class, so unchecking the box in the browser clears the track. The thumb still moves with `peer-checked`.
+- `role="switch"` is on the checkbox. The track and thumb are `aria-hidden`. The track no longer has `role` or a static `aria-checked`. The browser exposes checked from the input, so a screen reader hears the state after a click. No JavaScript updates that state.
+
+### Upgrade notes
+- No new arguments. A switch that was rendered checked follows the checkbox after a click.
+- No new CSS utilities. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.364`.
+
 ## [0.1.363] - 2026-11-14
 
 ### Added

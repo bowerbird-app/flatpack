@@ -8,22 +8,28 @@ module FlatPack
       def test_renders_switch_with_name
         render_inline(Component.new(name: "notifications"))
 
-        assert_selector "input[type='checkbox'][name='notifications']"
-        assert_selector "div[role='switch']"
+        assert_selector "input[type='checkbox'][name='notifications'][role='switch']"
+        refute_selector "div[role='switch']"
+        assert_selector "div[aria-hidden='true']", count: 2
+        refute_selector "[aria-checked]"
       end
 
       def test_renders_unchecked_switch_by_default
         render_inline(Component.new(name: "notifications"))
 
         refute_selector "input[checked]"
-        assert_selector "div[role='switch'][aria-checked='false']"
+        assert_selector "input[role='switch']"
+        refute_selector "[aria-checked]"
+        assert_track_follows_peer
       end
 
       def test_renders_checked_switch
         render_inline(Component.new(name: "notifications", checked: true))
 
-        assert_selector "input[checked]"
-        assert_selector "div[role='switch'][aria-checked='true']"
+        assert_selector "input[role='switch'][checked]"
+        refute_selector "div[role='switch']"
+        refute_selector "[aria-checked]"
+        assert_track_follows_peer
       end
 
       def test_renders_with_label
@@ -36,7 +42,7 @@ module FlatPack
         render_inline(Component.new(name: "notifications", help_text: "Receive product update emails."))
 
         assert_selector "p#notifications_help_text", text: "Receive product update emails."
-        assert_selector "input[aria-describedby='notifications_help_text']"
+        assert_selector "input[role='switch'][aria-describedby='notifications_help_text']"
       end
 
       def test_renders_without_label
@@ -61,6 +67,7 @@ module FlatPack
         render_inline(Component.new(name: "notifications", error: "This field is required"))
 
         assert_selector "span", text: "This field is required"
+        assert_selector "input[role='switch'][aria-invalid='true'][aria-describedby='notifications_error']"
       end
 
       def test_renders_small_size
@@ -149,6 +156,17 @@ module FlatPack
         assert_includes html, "ease-[var(--easing-standard)]"
         assert_includes html, "duration-[var(--duration-base)]"
         refute_includes html, "ease-in-out"
+      end
+
+      private
+
+      def assert_track_follows_peer
+        track = page.all("div[aria-hidden='true']").first
+        class_names = track[:class].split
+
+        assert_includes class_names, "bg-[var(--switch-track-background-color)]"
+        assert_includes class_names, "peer-checked:bg-[var(--switch-track-checked-background-color)]"
+        refute_includes class_names, "bg-[var(--switch-track-checked-background-color)]"
       end
     end
   end

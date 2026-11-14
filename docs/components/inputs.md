@@ -750,7 +750,7 @@ Use [Fieldset](fieldset.md) when several controls share one name, such as an add
 - Searchable select trigger exposes `aria-haspopup` and toggles `aria-expanded`.
 - Searchable Select, Combobox, and the FlatPack date picker open and close like Popover: opacity plus a few pixels of offset on `--duration-base`. Stimulus uses `playOverlayEnter` / `playOverlayExit`, so `hidden` is applied after the exit duration.
 - `flat-pack--nested-multiselect` uses native checkbox semantics and applies the browser indeterminate state to partially selected parents.
-- `Switch` renders a checkbox input and switch track with `role="switch"` and `aria-checked`.
+- `Switch` puts `role="switch"` on the checkbox. The browser exposes checked from that input, so the state stays current after a click. The track and thumb are `aria-hidden`. The track background is `--switch-track-background-color`, and `peer-checked` paints `--switch-track-checked-background-color`.
 
 ## Dependencies
 - Core install: `rails generate flat_pack:install`
