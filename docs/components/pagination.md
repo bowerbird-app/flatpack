@@ -49,6 +49,6 @@ None.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).
-- Pagy integration in standard mode.
+- Pagy integration in standard mode. Pagy 9 `series` uses an Integer for a page link, a numeric String for the current page, and `:gap` for a skipped range. The current page is highlighted with `aria-current="page"`. `:gap` and the older `"gap"` string render as an ellipsis.
 - Uses `FlatPack::PaginationInfinite::Component` when `mode: :infinite`.
 - Prev/next use `chevron-left` / `chevron-right` via `IconComponent`. Those glyphs flip in `[dir="rtl"]`.

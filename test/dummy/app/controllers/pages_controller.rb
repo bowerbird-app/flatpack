@@ -907,7 +907,7 @@ class PagesController < ApplicationController
       )
     end
 
-    @pagy, @records = pagy_array(records, items: 10)
+    @pagy, @records = pagy_array(records, limit: 10)
   rescue NameError
     # Pagy not initialized, create mock
     @pagy = OpenStruct.new(

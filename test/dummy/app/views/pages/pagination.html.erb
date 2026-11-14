@@ -32,7 +32,7 @@
     code: CGI.unescapeHTML(<<~'CODE'),
       <!-- In your controller -->
       def index
-        @pagy, @records = pagy(YourModel.all, items: 10)
+        @pagy, @records = pagy(YourModel.all, limit: 10)
       end
       
       <!-- In your view -->
