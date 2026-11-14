@@ -59,6 +59,9 @@ Use Menu Collapse wherever menu rows need a nested group that stays in the flow.
 <% end %>
 ```
 
+## Type
+The header and the rows inside use `--type-control-size` and `--type-control-leading`. That is the same size as a dropdown item. The rules stay outside a CSS layer so they beat a host utility. They do not set a font weight.
+
 ## Accessibility
 The header is a `button` with `aria-expanded` and `aria-controls` pointing at the panel id. The chevron is decorative. The panel is hidden when closed.
 

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.366] - 2026-11-14
+
+### Fixed
+- Collapsed menu rows use the control type size. `.fp-menu-collapse__button`, the buttons and links inside `.fp-menu-collapse__items`, and `.fp-menu-row` set `font-family: inherit`, `font-size: var(--type-control-size)`, and `line-height: var(--type-control-leading)`. They were `font: inherit`, so those rows rendered at 16px beside 14px dropdown items. The rules stay unlayered so kit chrome beats a host utility. They do not set a font weight.
+
+### Upgrade notes
+- Reload kit CSS. Do not rebuild Tailwind. Do not rerun the install generator.
+- Visible on a collapsed button group, a phone TopNav menu, and a dropdown rendered as a menu collapse. Those rows match dropdown item size on the default theme and on rounded.
+- Redeploy so `meta.gem_version` shows `0.1.366`.
+
 ## [0.1.365] - 2026-11-14
 
 ### Added
