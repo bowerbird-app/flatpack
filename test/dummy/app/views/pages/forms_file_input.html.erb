@@ -53,6 +53,20 @@
             <% end %>
           <% end %>
         </div>
+
+        <div id="file-input-host-list">
+          <%= render FlatPack::Text::Component.new(
+            text: "This zone does not list files. The status line above does.",
+            size: :sm
+          ) %>
+          <%= render FlatPack::FileInput::Component.new(
+            name: "stems",
+            label: "Stems",
+            multiple: true,
+            show_file_list: false,
+            help_text: "Your page keeps the queue."
+          ) %>
+        </div>
       <% end %>
     <% end %>
   </section>
@@ -97,6 +111,13 @@
           &lt;%= render FlatPack::Progress::Component.new(value: 0, label: &quot;Host progress&quot;, show_label: true) %&gt;
         &lt;% end %&gt;
       &lt;% end %&gt;
+
+      &lt;%= render FlatPack::FileInput::Component.new(
+        name: &quot;stems&quot;,
+        label: &quot;Stems&quot;,
+        multiple: true,
+        show_file_list: false
+      ) %&gt;
 
       &lt;%= render FlatPack::FileInput::Component.new(
         name: &quot;extras&quot;,

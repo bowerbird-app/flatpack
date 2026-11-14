@@ -470,7 +470,7 @@ All three components use `merge_attributes` which routes through `FlatPack::Attr
 
 Passing any of these in the `accept` parameter raises `ArgumentError`. Client-side file-size validation provides UX feedback; server-side validation is **always required** in addition.
 
-`max_files` keeps the first N files in `flat-pack:file-input:change` and in the dropzone list. It does not rewrite `input.files`. A dialog selection can still submit every chosen file. Enforce the cap on the server. The component does not upload and does not know about storage.
+`max_files` keeps the first N files in `flat-pack:file-input:change` and in the dropzone list. It does not rewrite `input.files`. A dialog selection can still submit every chosen file. `show_file_list: false` omits that list. The event still carries `{ files }`. Enforce the cap on the server. The component does not upload and does not know about storage.
 
 ### NumberInput Validation
 

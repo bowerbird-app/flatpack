@@ -224,6 +224,36 @@ test("remove updates the event and leaves input.files alone", () => {
   assert.equal(events[1].detail.files[0].name, "two.txt")
 })
 
+test("show_file_list false dispatches { files } on every selection and skips the list", () => {
+  let listed = false
+  const {controller, events, input} = build({
+    showListValue: false,
+    hasFileListTarget: false,
+    hasPreviewTarget: false,
+    fileListTarget: {
+      set innerHTML(_value) { listed = true },
+      classList: classList(),
+      appendChild() { listed = true }
+    }
+  })
+
+  input.files = [file("one.txt"), file("two.txt")]
+  controller.handleFiles({target: input})
+
+  input.files = [file("three.txt")]
+  controller.handleFiles({target: input})
+
+  assert.equal(listed, false)
+  assert.equal(events.length, 2)
+  assert.equal(events[0].type, "flat-pack:file-input:change")
+  assert.equal(events[0].bubbles, true)
+  assert.deepEqual(Object.keys(events[0].detail), ["files"])
+  assert.equal(events[0].detail.files.length, 2)
+  assert.equal(events[0].detail.files[0].name, "one.txt")
+  assert.equal(events[1].detail.files.length, 1)
+  assert.equal(events[1].detail.files[0].name, "three.txt")
+})
+
 test("an empty selection dispatches an empty file list", () => {
   const {controller, events, input} = build()
   input.files = []

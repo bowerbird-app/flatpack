@@ -136,7 +136,7 @@ export default class extends Controller {
   }
 
   displayFileList(files) {
-    if (!this.hasFileListTarget) return
+    if (!this.showListValue || !this.hasFileListTarget) return
 
     this.fileListTarget.innerHTML = ""
     this.fileListTarget.classList.remove("hidden")
@@ -209,7 +209,7 @@ export default class extends Controller {
   }
 
   displayPreview(files) {
-    if (!this.hasPreviewTarget) return
+    if (!this.showListValue || !this.hasPreviewTarget) return
 
     this.previewTarget.innerHTML = ""
     this.previewTarget.classList.remove("hidden")
