@@ -52,7 +52,7 @@ The comparison reads `input`, `select`, and `textarea` elements in the form. Tex
 
 Rails fields named `authenticity_token`, `utf8`, and `_method` are ignored. Disabled fields are ignored. Submit buttons are ignored.
 
-The controller listens for `input` and `change` on the form. Flatpack's custom select dispatches `change` from its hidden field. After the rich text editor is ready, later edits dispatch `input` from its hidden field. A combobox choice dispatches `change` from its hidden field.
+The controller listens for `input` and `change` on the form. Flatpack's custom select dispatches `change` from its hidden field. After the rich text editor is ready, later edits dispatch `input` from its hidden field. A combobox choice dispatches `change` from its hidden field. `clear()` and emptying the text while a value was set do too.
 
 ## Reset and save
 

@@ -82,6 +82,7 @@ fr:
     combobox:
       placeholder: Rechercher
       empty: Aucun résultat
+      error: Recherche impossible
       searching: Recherche...
       type_to_search: Saisissez au moins %{count} caractères pour rechercher
     command_palette:

@@ -106,6 +106,14 @@ class FakeElement {
     return child
   }
 
+  insertBefore(child, anchor) {
+    child.parentNode = this
+    const index = this.children.indexOf(anchor)
+    if (index === -1) this.children.push(child)
+    else this.children.splice(index, 0, child)
+    return child
+  }
+
   querySelectorAll(selector) {
     const matches = []
     const walk = (node) => {
@@ -229,6 +237,12 @@ function buildController() {
   controller.listTarget.classList.add('hidden')
   controller.hasHintTarget = false
   controller.hasLoadingTarget = false
+  controller.hasValueTarget = true
+  controller.hasEmptyTarget = true
+  controller.hasEmptyActionTarget = false
+  controller.emptyTextValue = 'No matches'
+  controller.errorTextValue = 'Search failed'
+  controller.searchParamsValue = {}
   controller.searchModeValue = 'local'
   controller.searchEndpointValue = ''
   controller.searchParamValue = 'q'
@@ -260,6 +274,12 @@ function buildRemoteController({ fetchImpl, deferTimers = false } = {}) {
   controller.listTarget.classList.add('hidden')
   controller.hasHintTarget = true
   controller.hasLoadingTarget = true
+  controller.hasValueTarget = true
+  controller.hasEmptyTarget = true
+  controller.hasEmptyActionTarget = false
+  controller.emptyTextValue = 'No matches'
+  controller.errorTextValue = 'Search failed'
+  controller.searchParamsValue = {}
   controller.searchModeValue = 'remote'
   controller.searchEndpointValue = '/demo/forms/combobox/options'
   controller.searchParamValue = 'q'
@@ -466,16 +486,54 @@ test('remote empty json shows the empty row', async () => {
   assert.equal(controller.listTarget.querySelectorAll('[role="option"]').length, 0)
 })
 
-test('failed fetch shows the empty row', async () => {
+test('failed fetch shows the error text and dispatches the error event', async () => {
   const controller = buildRemoteController({
-    fetchImpl: async () => ({ ok: false, json: async () => ({}) })
+    fetchImpl: async () => ({ ok: false, status: 502, json: async () => ({}) })
   })
+  const errors = []
+  controller.element.addEventListener('flat-pack:combobox:error', (event) => errors.push(event.detail))
 
   controller.inputTarget.value = 'mel'
   controller.filter()
   await flush()
 
   assert.equal(controller.emptyTarget.classList.contains('hidden'), false)
+  assert.equal(controller.emptyTarget.textContent, 'Search failed')
+  assert.equal(errors.length, 1)
+  assert.equal(errors[0].status, 502)
+})
+
+test('a network error dispatches status null and does not treat abort as an error', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => {
+      throw new Error('offline')
+    }
+  })
+  const errors = []
+  controller.element.addEventListener('flat-pack:combobox:error', (event) => errors.push(event.detail))
+
+  controller.inputTarget.value = 'mel'
+  controller.filter()
+  await flush()
+
+  assert.equal(errors.length, 1)
+  assert.equal(errors[0].status, null)
+  assert.equal(controller.emptyTarget.textContent, 'Search failed')
+
+  const aborted = buildRemoteController({
+    fetchImpl: async () => {
+      const error = new Error('aborted')
+      error.name = 'AbortError'
+      throw error
+    }
+  })
+  const abortedErrors = []
+  aborted.element.addEventListener('flat-pack:combobox:error', (event) => abortedErrors.push(event.detail))
+  aborted.inputTarget.value = 'mel'
+  aborted.filter()
+  await flush()
+
+  assert.deepEqual(abortedErrors, [])
 })
 
 test('a top-level array uses the same items contract as Select', async () => {
@@ -539,5 +597,252 @@ test('one click selects a remote option once', async () => {
 
   assert.equal(selections, 1)
   assert.equal(controller.valueTarget.value, 'fed-square')
+  assert.equal(controller.inputTarget.value, 'Federation Square')
+})
+
+test('remote search sends search params and dispatches the current results payload', async () => {
+  const payload = {
+    items: [
+      { value: 'fed-square', label: 'Federation Square', subtitle: 'Melbourne VIC', data: { city: 'melbourne', nested: { skip: true } } },
+      { label: 'Missing value' }
+    ],
+    page: 1
+  }
+  const fetchCalls = []
+  const controller = buildRemoteController({
+    fetchImpl: async (url) => {
+      fetchCalls.push(String(url))
+      return { ok: true, json: async () => payload }
+    }
+  })
+  controller.searchParamsValue = { region: 'au', limit: 5 }
+  const results = []
+  controller.element.addEventListener('flat-pack:combobox:results', (event) => results.push(event.detail))
+
+  controller.inputTarget.value = 'mel'
+  controller.filter()
+  await flush()
+
+  assert.equal(fetchCalls[0], 'http://example.test/demo/forms/combobox/options?q=mel&region=au&limit=5')
+  const option = controller.listTarget.querySelectorAll('[role="option"]')[0]
+  assert.equal(option.dataset.optionData, JSON.stringify({ city: 'melbourne' }))
+  assert.equal(results.length, 1)
+  assert.equal(results[0].query, 'mel')
+  assert.equal(results[0].payload, payload)
+  assert.equal(Object.hasOwn(results[0], 'meta'), false)
+  assert.equal(JSON.stringify(results[0].items), JSON.stringify([{
+    value: 'fed-square',
+    label: 'Federation Square',
+    subtitle: 'Melbourne VIC',
+    data: { city: 'melbourne' }
+  }]))
+})
+
+test('a stale remote response does not dispatch results', async () => {
+  let finishFirst
+  let calls = 0
+  const controller = buildRemoteController({
+    fetchImpl: () => new Promise((resolve) => {
+      calls += 1
+      if (calls === 1) {
+        finishFirst = () => resolve({
+          ok: true,
+          json: async () => ({ items: [{ value: 'fed-square', label: 'Federation Square' }] })
+        })
+      }
+    })
+  })
+  const results = []
+  controller.element.addEventListener('flat-pack:combobox:results', (event) => results.push(event.detail))
+
+  controller.inputTarget.value = 'mel'
+  controller.filter()
+  await flush()
+  controller.inputTarget.value = 'melbourne'
+  controller.filter()
+  finishFirst()
+  await flush()
+
+  assert.deepEqual(results, [])
+  assert.equal(controller.listTarget.querySelectorAll('[role="option"]').length, 0)
+})
+
+test('selecting an option includes its data and does not use innerHTML', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({
+        items: [{ value: 'fed-square', label: 'Federation Square', data: { city: 'melbourne' } }]
+      })
+    })
+  })
+  const selected = []
+  controller.element.addEventListener('flat-pack:combobox:selected', (event) => selected.push(event.detail))
+
+  controller.inputTarget.value = 'fed'
+  controller.filter()
+  await flush()
+  controller.keydown({ key: 'Enter', preventDefault() {} })
+
+  assert.equal(JSON.stringify(selected), JSON.stringify([{
+    value: 'fed-square',
+    label: 'Federation Square',
+    subtitle: null,
+    data: { city: 'melbourne' }
+  }]))
+  const option = controller.listTarget.querySelectorAll('[role="option"]')[0]
+  assert.equal(option.innerHTML, undefined)
+  assert.equal(option.textContent, 'Federation Square')
+})
+
+function addEmptyAction(controller) {
+  const action = new FakeElement('li')
+  action.id = 'place-empty-action'
+  action.dataset.emptyAction = 'true'
+  action.dataset.value = 'add-place'
+  action.textContent = 'Add a place'
+  action.setAttribute('role', 'option')
+  action.classList.add('hidden')
+  controller.emptyActionTarget = action
+  controller.hasEmptyActionTarget = true
+  controller.listTarget.appendChild(action)
+  return action
+}
+
+test('arrow keys and Enter reach the empty action without setting the hidden value', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => ({ ok: true, json: async () => ({ items: [] }) })
+  })
+  addEmptyAction(controller)
+  const actions = []
+  const changes = []
+  controller.element.addEventListener('flat-pack:combobox:empty-action', (event) => actions.push(event.detail))
+  controller.valueTarget.addEventListener('change', () => changes.push(controller.valueTarget.value))
+  controller.valueTarget.value = 'keep-me'
+
+  controller.inputTarget.value = 'zzz'
+  controller.filter()
+  await flush()
+  controller.valueTarget.value = 'keep-me'
+
+  const action = controller.emptyActionTarget
+  assert.equal(action.classList.contains('hidden'), false)
+  assert.equal(controller.inputTarget.attributes['aria-activedescendant'], action.id)
+
+  controller.keydown({ key: 'ArrowDown', preventDefault() {} })
+  controller.keydown({ key: 'Enter', preventDefault() {} })
+
+  assert.equal(JSON.stringify(actions), JSON.stringify([{ query: 'zzz', value: 'add-place' }]))
+  assert.equal(controller.valueTarget.value, 'keep-me')
+  assert.equal(controller.inputTarget.value, 'zzz')
+  assert.deepEqual(changes, [])
+  assert.equal(controller.openList, false)
+})
+
+test('a click on the empty action dispatches the event and leaves the hidden value', () => {
+  const controller = buildController()
+  const action = addEmptyAction(controller)
+  const actions = []
+  controller.element.addEventListener('flat-pack:combobox:empty-action', (event) => actions.push(event.detail))
+  controller.inputTarget.value = 'zzz'
+  controller.open()
+  controller.valueTarget.value = 'melbourne'
+  action.classList.remove('hidden')
+
+  controller.choose({ preventDefault() {}, currentTarget: action })
+
+  assert.equal(JSON.stringify(actions), JSON.stringify([{ query: 'zzz', value: 'add-place' }]))
+  assert.equal(controller.valueTarget.value, 'melbourne')
+  assert.equal(controller.inputTarget.value, 'zzz')
+})
+
+test('an error still offers the empty action', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => ({ ok: false, status: 500, json: async () => ({}) })
+  })
+  addEmptyAction(controller)
+
+  controller.inputTarget.value = 'mel'
+  controller.filter()
+  await flush()
+
+  assert.equal(controller.emptyTarget.textContent, 'Search failed')
+  assert.equal(controller.emptyActionTarget.classList.contains('hidden'), false)
+  assert.equal(controller.inputTarget.attributes['aria-activedescendant'], controller.emptyActionTarget.id)
+})
+
+test('clear and setSelection update the field without a selected event', () => {
+  const controller = buildController()
+  controller.open()
+  const selected = []
+  const cleared = []
+  const changes = []
+  controller.element.addEventListener('flat-pack:combobox:selected', (event) => selected.push(event.detail))
+  controller.element.addEventListener('flat-pack:combobox:cleared', () => cleared.push(true))
+  controller.valueTarget.addEventListener('change', () => changes.push(controller.valueTarget.value))
+
+  controller.setSelection({ value: 'sydney', label: 'Sydney' })
+
+  assert.equal(controller.valueTarget.value, 'sydney')
+  assert.equal(controller.inputTarget.value, 'Sydney')
+  assert.equal(controller.openList, true)
+  assert.deepEqual(selected, [])
+  assert.deepEqual(changes, ['sydney'])
+
+  controller.clear()
+
+  assert.equal(controller.inputTarget.value, '')
+  assert.equal(controller.valueTarget.value, '')
+  assert.equal(controller.openList, false)
+  assert.deepEqual(cleared, [true])
+  assert.deepEqual(changes, ['sydney', ''])
+})
+
+test('clearing the input text clears the hidden value and dispatches cleared', () => {
+  const controller = buildController()
+  controller.valueTarget.value = 'melbourne'
+  controller.inputTarget.value = 'Melbourne'
+  const cleared = []
+  const changes = []
+  controller.element.addEventListener('flat-pack:combobox:cleared', () => cleared.push(true))
+  controller.valueTarget.addEventListener('change', () => changes.push(controller.valueTarget.value))
+  controller.open()
+
+  controller.inputTarget.value = 'Mel'
+  controller.filter()
+
+  assert.equal(controller.valueTarget.value, '')
+  assert.deepEqual(cleared, [])
+
+  controller.valueTarget.value = 'melbourne'
+  controller.inputTarget.value = ''
+  controller.filter()
+
+  assert.equal(controller.valueTarget.value, '')
+  assert.deepEqual(cleared, [true])
+  assert.deepEqual(changes, [''])
+})
+
+test('clear and select work when the hidden field is missing', async () => {
+  const controller = buildRemoteController({
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ items: [{ value: 'fed-square', label: 'Federation Square' }] })
+    })
+  })
+  controller.hasValueTarget = false
+  controller.valueTarget = undefined
+  const cleared = []
+  controller.element.addEventListener('flat-pack:combobox:cleared', () => cleared.push(true))
+
+  controller.clear()
+  assert.equal(controller.inputTarget.value, '')
+  assert.deepEqual(cleared, [true])
+
+  controller.inputTarget.value = 'fed'
+  controller.filter()
+  await flush()
+  controller.keydown({ key: 'Enter', preventDefault() {} })
+
   assert.equal(controller.inputTarget.value, 'Federation Square')
 })

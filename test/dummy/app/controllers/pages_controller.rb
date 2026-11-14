@@ -468,13 +468,17 @@ class PagesController < ApplicationController
 
   def forms_combobox_options
     query = params[:q].to_s.strip.downcase
+    if query == "err"
+      head :bad_gateway
+      return
+    end
 
     options = [
-      {label: "Federation Square", value: "fed-square", subtitle: "Melbourne VIC"},
-      {label: "Sydney Opera House", value: "opera-house", subtitle: "Sydney NSW"},
-      {label: "Story Bridge", value: "story-bridge", subtitle: "Brisbane QLD"},
-      {label: "Kings Park", value: "kings-park", subtitle: "Perth WA"},
-      {label: "Rundle Mall", value: "rundle-mall", subtitle: "Adelaide SA"}
+      {label: "Federation Square", value: "fed-square", subtitle: "Melbourne VIC", city: "melbourne"},
+      {label: "Sydney Opera House", value: "opera-house", subtitle: "Sydney NSW", city: "sydney"},
+      {label: "Story Bridge", value: "story-bridge", subtitle: "Brisbane QLD", city: "brisbane"},
+      {label: "Kings Park", value: "kings-park", subtitle: "Perth WA", city: "perth"},
+      {label: "Rundle Mall", value: "rundle-mall", subtitle: "Adelaide SA", city: "adelaide"}
     ]
 
     results = if query.blank?
@@ -485,7 +489,17 @@ class PagesController < ApplicationController
       }.first(10)
     end
 
-    render json: {items: results}
+    region = params[:region].to_s.presence || "any"
+    render json: {
+      items: results.map { |option|
+        {
+          label: option[:label],
+          value: option[:value],
+          subtitle: option[:subtitle],
+          data: {city: option[:city], region: region}
+        }
+      }
+    }
   end
 
   def forms_select_options
