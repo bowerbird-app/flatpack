@@ -342,6 +342,7 @@ module FlatPack
         assert_selector "[data-flat-pack--picker-target='emptyState']", text: "No assets found"
         assert_no_selector "[data-flat-pack-picker-empty-slot]"
         assert_no_selector "[data-flat-pack--picker-empty-text-value]"
+        assert_no_selector "[data-flat-pack--picker-target='sentinel']"
       end
 
       def test_renders_empty_text_when_no_slot_is_given
@@ -373,6 +374,21 @@ module FlatPack
         assert_selector "button[data-picker-empty-action='add']", text: "Add an asset"
         assert_no_text "Fallback copy"
         assert_no_text "No assets found"
+      end
+
+      def test_remote_picker_renders_page_sentinel_loading_row_and_live_region
+        render_inline(Component.new(
+          id: "paged-picker",
+          items: [],
+          search_mode: :remote,
+          search_endpoint: "/demo/picker_results"
+        ))
+
+        assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='results']"
+        assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='loading'].hidden"
+        assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='sentinel'][aria-hidden='true']"
+        assert_selector "[data-flat-pack-picker-items-region] [data-flat-pack--picker-target='status'][aria-live='polite'][aria-atomic='true']"
+        assert_selector "[data-flat-pack--picker-target='emptyState'].hidden"
       end
     end
   end

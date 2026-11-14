@@ -9,6 +9,7 @@ const ENGLISH = {
   "select.remove": "Remove %{label}",
   "search.result_fallback": "Result",
   "picker.untitled": "Untitled",
+  "picker.results_loaded": "%{count} loaded",
   "pagination.error_loading": "Error loading. Try again.",
   "pagination.loading": "Loading…",
   "file_input.size_exceeded": "File \"%{name}\" exceeds maximum size of %{size}",

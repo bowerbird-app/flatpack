@@ -64,7 +64,7 @@ List rows are rendered through four display regions derived from item data rathe
 | `selection_mode: :single` | One selected item at a time (radio/list behavior and single grid pressed state). |
 | `selection_mode: :multiple` | Multiple selected items (checkbox/list behavior and multi grid toggles). |
 | `search_mode: :local` | Filters initial `items` in browser. |
-| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&kinds=image,file,record`; expects JSON with `items` array and always renders the search bar. |
+| `search_mode: :remote` | Fetches `GET search_endpoint?search_param=query&page=1&kinds=image,file,record`. Expects JSON `{ items, pagination: { next_page } }`. A new query replaces the list. `next_page` loads another page onto the end. `null` or a missing `pagination` stops. Always renders the search bar. |
 | `searchable: false` | Hides the search bar for local pickers regardless of item count. |
 | `minimum_searchable: 5` | For local pickers, hides the search bar when the initial item count is 5 or fewer items. |
 | `results_layout: :list` | Row-style selectable entries with metadata. Best default for record-like items such as folders. |
@@ -95,7 +95,16 @@ Use `form:` when you want the picker to submit directly to a standard Rails cont
 
 ## Example
 
-Each picker item must include `name`. The component uses `thumbnail_url` and `right_text` for picker-specific display fields, alongside `content_type`/`contentType` and `byte_size`/`byteSize` for file metadata. Remote search responses must return JSON in the shape `{ items: [...] }`.
+Each picker item must include `name`. The component uses `thumbnail_url` and `right_text` for picker-specific display fields, alongside `content_type`/`contentType` and `byte_size`/`byteSize` for file metadata. Remote responses use this JSON contract:
+
+```json
+{
+  "items": [],
+  "pagination": { "next_page": 2 }
+}
+```
+
+`items` replaces the list on a new query and is appended for a later page. The picker sends `page`, starting at `1`, on the same request as the search param. Follow only `pagination.next_page`. `null`, `""`, or a missing `pagination` object means there is no next page. Do not infer a page number from the item count.
 
 ### Default inline picker
 
@@ -186,7 +195,25 @@ Use `variant: :flush` when the picker sits inside another surface (a moveable pa
 ) %>
 ```
 
-Remote search is debounced by 250ms and always renders the search bar, even if `searchable: false` is passed. When `accepted_kinds` is present, the picker appends a `kinds=image,file,record` style query param alongside the configured `search_param`.
+Remote search is debounced by 250ms and always renders the search bar, even if `searchable: false` is passed. The first request goes out when the picker connects, with an empty query and `page=1`. When `accepted_kinds` is present, the picker appends a `kinds=image,file,record` style query param alongside the configured `search_param` and `page`.
+
+A changed or cleared query replaces the list and starts again at `page=1`. The next page is appended. An in-flight request is aborted when a newer query starts, and a response whose turn has passed is ignored. The items region is the scroll root. A sentinel at the end of the list asks for `next_page` when it enters that region. A loading row sits at the end of the list while a page is in flight. A polite live region announces how many results are loaded, for example `8 loaded`. Confirm still returns every selected item, including ones from an earlier page or query that is no longer on screen.
+
+### Remote pages
+
+Give the results region a fixed height so the sentinel scrolls inside the picker, not the page.
+
+```erb
+<%= render FlatPack::Picker::Component.new(
+  id: "asset-library",
+  title: "Asset library",
+  items: [],
+  search_mode: :remote,
+  search_endpoint: picker_results_path,
+  items_height: "240px",
+  selection_mode: :multiple
+) %>
+```
 
 ### Empty slot
 
@@ -423,8 +450,10 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 - List rows are built from display slots instead of record-specific row branches, so records, files, and images can share the same row structure.
 - `items_height` only affects the results region that contains picker items. Search controls and action buttons keep their natural height above and below it.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
-- Remote searches are debounced by 250ms, request JSON with `Accept: application/json`, and rerender the current result set from `payload.items`.
+- Remote searches are debounced by 250ms and request JSON with `Accept: application/json`. Page 1 replaces `filteredItems` from `payload.items`. A later `pagination.next_page` appends. The items region (`data-flat-pack-picker-items-region`) is the `IntersectionObserver` root, not the viewport.
 - The empty panel is in the first render, with the `hidden` class. An `empty` slot fills that panel. `empty_text` fills it when the slot is omitted. Local filtering and remote responses only toggle `hidden` and `flex`. They do not rewrite the panel.
+- The loading row is hidden until a request starts. The empty state still shows when the rendered list is empty, and hides when it is not.
+- Selected items are cached by id. Confirm uses that cache, so a selection from an earlier page or query is included after the list is replaced.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.
 - When `form:` is configured, the picker maintains hidden inputs for the current selection and submits the generated form when `auto_confirm: true` selects a new single item.
 - When `auto_confirm: true` and `modal: true`, the picker closes programmatically after dispatching `flat-pack:picker:confirm`.
@@ -433,7 +462,7 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 Grid item badges use `--picker-badge-*`. Idle selection rings use `--picker-selection-idle-*`. The light ring and inner dot on media use `--picker-selection-indicator-*`. Selected rings stay on `--color-primary`.
 
 ## Accessibility
-Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Multiple-mode list checkboxes use the same theme primary CSS vars as `Checkbox::Component` (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Search input includes an accessible label (`"Search available assets"`).
+Picker content uses native form controls (`input[type=radio|checkbox]`) for list selection and button semantics for grid selection (`aria-pressed`). Multiple-mode list checkboxes use the same theme primary CSS vars as `Checkbox::Component` (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Search input includes an accessible label (`"Search available assets"`). Remote pickers expose a polite live region that announces the loaded count, and mark the items region `aria-busy` while a page is loading.
 
 ## Dependencies
 - FlatPack install generator setup (`rails generate flat_pack:install`).

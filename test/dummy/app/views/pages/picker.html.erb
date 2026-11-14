@@ -26,6 +26,7 @@
             <li><code>description</code> renders the text below the title. When omitted, the picker falls back to <code>path</code> or file metadata.</li>
             <li><code>right_text</code> fills the trailing text and falls back to <code>meta</code> or <code>badge</code>.</li>
             <li><code>payload</code> is returned in the confirm event so your app can store signed IDs or other references.</li>
+            <li>A remote page is <code>{ items, pagination: { next_page } }</code>. Send <code>page</code>. Follow <code>next_page</code>. <code>null</code> means that is the last page.</li>
           </ul>
         </div>
       <% end %>
@@ -44,7 +45,7 @@
       collapse_title: "View Remote Search JSON",
       code_title: "Remote search JSON",
       language: "json",
-      code: picker_demo_items_json_code
+      code: picker_demo_remote_page_json_code
     ) %>
   </section>
 
@@ -352,7 +353,7 @@
       collapse_title: "View Controller Code",
       code_title: "Controller",
       language: "ruby",
-      code: picker_demo_remote_controller_code(items: @picker_demo_items.first(3))
+      code: picker_demo_remote_controller_code
     ) %>
 
     <%= render FlatPack::Picker::Component.new(
@@ -432,6 +433,54 @@
       code_title: "ERB",
       language: "erb",
       code: picker_demo_empty_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
+      title: "Remote pages",
+      anchor: "remote-pages",
+      anchor_link: true,
+      subtitle: "Scroll the list. The next page loads at the bottom."
+    ) %>
+
+    <div class="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_16rem]">
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-remote-pages",
+        title: "Asset library",
+        subtitle: "Keep scrolling. Selections stick around.",
+        items: [],
+        modal: false,
+        search_mode: :remote,
+        search_endpoint: demo_picker_results_path,
+        items_height: "240px",
+        selection_mode: :multiple,
+        confirm_label: "Use paged selection",
+        context: {target: "picker-demo-remote-pages"}
+      ) %>
+
+      <div class="rounded-md border border-(--surface-border-color) bg-(--surface-background-color) p-3">
+        <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Paged selection</p>
+        <ul id="picker-demo-remote-pages-event-output" class="mt-2 space-y-1 text-sm" data-picker-demo-output-for="picker-demo-remote-pages" data-picker-demo-target="eventOutput">
+          <li class="text-(--surface-muted-content-color)">No items selected yet.</li>
+        </ul>
+      </div>
+    </div>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-remote-pages-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
+      language: "erb",
+      code: picker_demo_remote_pages_erb_code
+    ) %>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-remote-pages-json",
+      collapse_title: "View Page JSON",
+      code_title: "JSON",
+      language: "json",
+      code: picker_demo_remote_page_json_code
     ) %>
   </section>
 

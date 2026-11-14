@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.370] - 2026-11-14
+
+### Added
+- Remote pickers send `page` with the search request and follow `pagination.next_page`. A new or cleared query replaces the list and starts at page 1. The next page is appended. The items region is the scroll root. A sentinel at the end of the list loads the next page, a loading row shows while that request is in flight, and a polite live region announces how many results are loaded.
+
+### Fixed
+- Confirm returns every selected item. Selections from an earlier page or query stay cached by id after the visible list changes.
+
+### Upgrade notes
+- Remote JSON may include `pagination: { next_page }`. `null` or a missing `pagination` means there is no next page. The picker sends `page`, starting at 1, next to the existing search param.
+- Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.370`.
+
 ## [0.1.369] - 2026-11-14
 
 ### Added

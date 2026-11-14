@@ -3,7 +3,7 @@ import { flatPackCopy } from "flat_pack/copy"
 import { createRemoteQuery } from "flat_pack/remote_query"
 
 export default class extends Controller {
-  static targets = ["searchInput", "results", "emptyState", "outputField", "formFields"]
+  static targets = ["searchInput", "results", "emptyState", "outputField", "formFields", "loading", "sentinel", "status"]
 
   static values = {
     pickerId: String,
@@ -26,13 +26,29 @@ export default class extends Controller {
   connect() {
     this.filteredItems = this.#baseItems()
     this.selectedIds = new Set()
+    this.selectedById = new Map()
+    this.activeQuery = ""
+    this.nextPage = null
+    this.requestSerial = 0
+    this.remoteLoading = false
     this.remote = createRemoteQuery()
-    this.#renderResults(this.filteredItems)
+    this.#observePages()
+
+    if (this.searchModeValue === "remote") {
+      this.#setLoading(true)
+      if (this.filteredItems.length > 0) this.#renderResults(this.filteredItems)
+      this.#fetchPage({ query: "", page: 1, mode: "replace" })
+    } else {
+      this.#renderResults(this.filteredItems)
+    }
+
     this.#syncOutputField()
     this.#syncFormFields()
   }
 
   disconnect() {
+    this.pageObserver?.disconnect()
+    this.pageObserver = null
     this.remote?.stop()
   }
 
@@ -66,10 +82,7 @@ export default class extends Controller {
     const wasSelected = this.selectedIds.has(itemId)
 
     if (this.selectionModeValue === "single") {
-      this.selectedIds.clear()
-      if (control.checked) {
-        this.selectedIds.add(itemId)
-      }
+      this.#replaceSingleSelection(itemId, control.checked)
 
       this.element.querySelectorAll("input[data-item-id]").forEach((input) => {
         if (!(input instanceof HTMLInputElement)) {
@@ -77,10 +90,8 @@ export default class extends Controller {
         }
         input.checked = input.dataset.itemId === itemId && control.checked
       })
-    } else if (control.checked) {
-      this.selectedIds.add(itemId)
     } else {
-      this.selectedIds.delete(itemId)
+      this.#setItemSelected(itemId, control.checked)
     }
 
     // Custom selection indicators need a rerender to reflect checked state.
@@ -107,12 +118,9 @@ export default class extends Controller {
     const wasSelected = this.selectedIds.has(itemId)
 
     if (this.selectionModeValue === "single") {
-      this.selectedIds.clear()
-      this.selectedIds.add(itemId)
-    } else if (this.selectedIds.has(itemId)) {
-      this.selectedIds.delete(itemId)
+      this.#replaceSingleSelection(itemId, true)
     } else {
-      this.selectedIds.add(itemId)
+      this.#setItemSelected(itemId, !this.selectedIds.has(itemId))
     }
 
     this.#renderResults(this.filteredItems)
@@ -123,6 +131,7 @@ export default class extends Controller {
 
   clearSelection() {
     this.selectedIds.clear()
+    this.selectedById.clear()
     this.element.querySelectorAll("input[data-item-id]").forEach((input) => {
       if (input instanceof HTMLInputElement) {
         input.checked = false
@@ -190,44 +199,186 @@ export default class extends Controller {
       return
     }
 
-    const params = {}
-    if (this.acceptedKindsValue.length > 0) {
-      params.kinds = this.acceptedKindsValue.join(",")
-    }
+    this.activeQuery = query
+    this.nextPage = null
+    this.remote.abort()
+    const serial = ++this.requestSerial
+    this.remoteLoading = true
+    this.#setLoading(true)
 
-    this.remote.debounce(250, async () => {
-      try {
-        const response = await this.remote.fetch(this.searchEndpointValue, {
-          query,
-          param: this.searchParamValue,
-          params
-        })
-
-        if (!response.ok) {
-          return
-        }
-
-        const payload = await response.json()
-        this.filteredItems = this.#normalizeItems(payload?.items || [])
-        this.#renderResults(this.filteredItems)
-      } catch (error) {
-        if (error?.name !== "AbortError") {
-          this.filteredItems = []
-          this.#renderResults(this.filteredItems)
-        }
-      }
+    this.remote.debounce(250, () => {
+      if (serial !== this.requestSerial) return
+      this.#runPageRequest({ query, page: 1, mode: "replace", serial })
     })
   }
 
-  #renderResults(items) {
+  #fetchPage({ query, page, mode }) {
+    if (!this.hasSearchEndpointValue) return
+
+    const serial = ++this.requestSerial
+    this.remoteLoading = true
+    this.#setLoading(true)
+    this.#runPageRequest({ query, page, mode, serial })
+  }
+
+  async #runPageRequest({ query, page, mode, serial }) {
+    try {
+      const response = await this.remote.fetch(this.searchEndpointValue, {
+        query,
+        param: this.searchParamValue,
+        params: this.#remoteParams(page)
+      })
+
+      if (serial !== this.requestSerial) return
+
+      if (!response.ok) {
+        if (mode === "append") this.nextPage = null
+        return
+      }
+
+      const payload = await response.json()
+      if (serial !== this.requestSerial) return
+
+      this.#applyPage(payload, { page, mode })
+    } catch (error) {
+      if (error?.name === "AbortError" || serial !== this.requestSerial) return
+
+      if (mode === "replace") {
+        this.filteredItems = []
+        this.nextPage = null
+        this.#renderResults(this.filteredItems)
+      } else {
+        this.nextPage = null
+      }
+    } finally {
+      if (serial !== this.requestSerial) return
+
+      if (this.#sentinelVisible() && this.#hasNextPage()) {
+        this.#fetchPage({ query: this.activeQuery, page: this.nextPage, mode: "append" })
+        return
+      }
+
+      this.remoteLoading = false
+      this.#setLoading(false)
+    }
+  }
+
+  #applyPage(payload, { page, mode }) {
+    const incoming = this.#normalizeItems(payload?.items || [])
+
+    if (mode === "append") {
+      this.filteredItems = [...this.filteredItems, ...incoming]
+      this.#renderResults(this.filteredItems, { append: true, appendItems: incoming })
+    } else {
+      this.filteredItems = incoming
+      this.#renderResults(this.filteredItems)
+    }
+
+    this.nextPage = this.#readNextPage(payload, page, incoming.length)
+    this.#announce(flatPackCopy("picker.results_loaded", { count: this.filteredItems.length }))
+  }
+
+  #remoteParams(page) {
+    const params = { page }
+    if (this.acceptedKindsValue.length > 0) {
+      params.kinds = this.acceptedKindsValue.join(",")
+    }
+    return params
+  }
+
+  #readNextPage(payload, page, count) {
+    if (count === 0) return null
+
+    const pagination = payload?.pagination
+    if (!pagination || typeof pagination !== "object") return null
+    if (!("next_page" in pagination)) return null
+
+    const next = pagination.next_page
+    if (next == null || next === "") return null
+    if (String(next) === String(page)) return null
+    return next
+  }
+
+  #hasNextPage() {
+    return this.nextPage != null && this.nextPage !== ""
+  }
+
+  #loadNextPage() {
+    if (this.searchModeValue !== "remote" || this.remoteLoading || !this.#hasNextPage()) return
+    this.#fetchPage({ query: this.activeQuery, page: this.nextPage, mode: "append" })
+  }
+
+  #observePages() {
+    if (this.searchModeValue !== "remote" || typeof IntersectionObserver === "undefined") return
+
+    const root = this.#itemsRegion()
+    if (!root || !this.hasSentinelTarget) return
+
+    this.pageObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) this.#loadNextPage()
+    }, {
+      root,
+      rootMargin: "48px",
+      threshold: 0
+    })
+    this.pageObserver.observe(this.sentinelTarget)
+  }
+
+  #itemsRegion() {
+    return this.element.querySelector("[data-flat-pack-picker-items-region]")
+  }
+
+  #sentinelVisible() {
+    if (this.searchModeValue !== "remote" || !this.hasSentinelTarget) return false
+
+    const root = this.#itemsRegion()
+    const sentinel = this.sentinelTarget
+    if (!root || typeof root.getBoundingClientRect !== "function") return false
+    if (typeof sentinel.getBoundingClientRect !== "function") return false
+
+    const rootBox = root.getBoundingClientRect()
+    const box = sentinel.getBoundingClientRect()
+    return box.top <= rootBox.bottom + 48 && box.bottom >= rootBox.top
+  }
+
+  #setLoading(loading) {
+    if (this.hasLoadingTarget) {
+      this.loadingTarget.classList.toggle("hidden", !loading)
+      this.loadingTarget.classList.toggle("flex", loading)
+      if (loading) {
+        this.loadingTarget.removeAttribute("aria-hidden")
+      } else {
+        this.loadingTarget.setAttribute("aria-hidden", "true")
+      }
+    }
+
+    const region = this.#itemsRegion()
+    if (region && typeof region.setAttribute === "function") {
+      region.setAttribute("aria-busy", loading ? "true" : "false")
+    }
+  }
+
+  #announce(message) {
+    if (!this.hasStatusTarget) return
+    this.statusTarget.textContent = ""
+    this.statusTarget.textContent = message
+  }
+
+  #renderResults(items, { append = false, appendItems = [] } = {}) {
     if (!this.hasResultsTarget) {
       return
     }
 
     this.resultsTarget.className = this.#resultsContainerClass()
 
-    const markup = items.map((item) => this.#itemMarkup(item)).join("")
-    this.resultsTarget.innerHTML = markup
+    if (append) {
+      const markup = appendItems.map((item) => this.#itemMarkup(item)).join("")
+      this.resultsTarget.insertAdjacentHTML("beforeend", markup)
+    } else {
+      const markup = items.map((item) => this.#itemMarkup(item)).join("")
+      this.resultsTarget.innerHTML = markup
+    }
+
     this.#syncEmptyState(items)
   }
 
@@ -496,12 +647,44 @@ export default class extends Controller {
     return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[unitIndex]}`
   }
 
-  #selectedItems() {
-    const base = [...this.#baseItems(), ...this.filteredItems]
-    const index = new Map(base.map((item) => [String(item.id), item]))
+  #setItemSelected(itemId, selected) {
+    const id = String(itemId || "")
+    if (!id) return
 
+    if (selected) {
+      this.selectedIds.add(id)
+      this.#rememberSelection(id)
+    } else {
+      this.selectedIds.delete(id)
+      this.#forgetSelection(id)
+    }
+  }
+
+  #replaceSingleSelection(itemId, selected) {
+    this.selectedIds.clear()
+    this.selectedById.clear()
+    if (selected) this.#setItemSelected(itemId, true)
+  }
+
+  #rememberSelection(itemId) {
+    const item = this.#findItem(itemId)
+    if (!item) return
+    this.selectedById.set(String(itemId), item)
+  }
+
+  #forgetSelection(itemId) {
+    this.selectedById.delete(String(itemId))
+  }
+
+  #findItem(itemId) {
+    const id = String(itemId)
+    return this.filteredItems.find((item) => String(item.id) === id)
+      || this.#baseItems().find((item) => String(item.id) === id)
+  }
+
+  #selectedItems() {
     return [...this.selectedIds]
-      .map((id) => index.get(id))
+      .map((id) => this.selectedById.get(String(id)))
       .filter(Boolean)
       .map((item) => ({
         id: item.id,

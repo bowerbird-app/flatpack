@@ -232,6 +232,7 @@ fr:
       empty: Aucun fichier trouvé
       search_label: Rechercher parmi les fichiers disponibles
       untitled: Sans titre
+      results_loaded: "%{count} chargés"
     progress:
       label: Progression
       percent: '%{count} %'

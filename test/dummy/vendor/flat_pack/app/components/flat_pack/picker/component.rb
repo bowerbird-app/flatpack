@@ -142,8 +142,9 @@ module FlatPack
             content_tag(:div, **items_region_attributes) do
               safe_join([
                 content_tag(:div, "", class: "space-y-2", data: {flat_pack__picker_target: "results"}),
+                render_remote_page_status,
                 render_empty_state
-              ])
+              ].compact)
             end,
             render_actions
           ].compact)
@@ -180,6 +181,38 @@ module FlatPack
         data = {flat_pack__picker_target: "emptyState"}
         data[:flat_pack_picker_empty_slot] = "true" if empty?
         data
+      end
+
+      def render_remote_page_status
+        return unless @search_mode == :remote
+
+        safe_join([
+          content_tag(
+            :div,
+            class: "hidden items-center gap-2 px-3 py-2 text-xs text-(--surface-muted-content-color)",
+            data: {flat_pack__picker_target: "loading"},
+            aria: {hidden: "true"}
+          ) do
+            safe_join([
+              render(FlatPack::Spinner::Component.new(size: :sm, label: nil)),
+              content_tag(:span, fp_t("pagination.loading"))
+            ])
+          end,
+          content_tag(
+            :div,
+            "",
+            class: "h-px w-full shrink-0",
+            data: {flat_pack__picker_target: "sentinel"},
+            aria: {hidden: "true"}
+          ),
+          content_tag(
+            :div,
+            "",
+            class: "sr-only",
+            data: {flat_pack__picker_target: "status"},
+            aria: {live: "polite", atomic: "true"}
+          )
+        ])
       end
 
       def render_search

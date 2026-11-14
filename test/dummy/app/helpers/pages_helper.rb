@@ -37,11 +37,46 @@ module PagesHelper
     JSON.pretty_generate({items: Array(items).map { |item| picker_demo_json_item(item) }})
   end
 
-  def picker_demo_remote_controller_code(items: @picker_demo_items)
+  def picker_demo_remote_controller_code
     <<~CODE
       def picker_results
-        render json: #{picker_demo_items_json_code(items)}
+        page = params[:page].to_i
+        page = 1 if page < 1
+        per_page = 4
+        offset = (page - 1) * per_page
+        page_items = filtered_items.drop(offset).first(per_page)
+        next_page = (offset + page_items.length) < filtered_items.length ? page + 1 : nil
+
+        render json: {
+          items: page_items,
+          pagination: { next_page: next_page }
+        }
       end
+    CODE
+  end
+
+  def picker_demo_remote_page_json_code
+    JSON.pretty_generate({
+      items: Array(@picker_demo_items).first(4).map { |item| picker_demo_json_item(item) },
+      pagination: {next_page: 2}
+    })
+  end
+
+  def picker_demo_remote_pages_erb_code
+    <<~CODE
+      <%= render FlatPack::Picker::Component.new(
+        id: "picker-demo-remote-pages",
+        title: "Asset library",
+        subtitle: "Keep scrolling. Selections stick around.",
+        items: [],
+        modal: false,
+        search_mode: :remote,
+        search_endpoint: demo_picker_results_path,
+        items_height: "240px",
+        selection_mode: :multiple,
+        confirm_label: "Use paged selection",
+        context: { target: "picker-demo-remote-pages" }
+      ) %>
     CODE
   end
 

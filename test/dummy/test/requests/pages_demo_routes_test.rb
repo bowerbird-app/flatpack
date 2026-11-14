@@ -974,6 +974,39 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, ">42<"
   end
 
+  test "picker results pages follow next_page and stop at the end" do
+    get "/demo/picker_results", params: {page: 1}
+
+    assert_response :success
+    first_page = JSON.parse(response.body)
+    assert_equal 4, first_page.fetch("items").length
+    assert_equal 2, first_page.dig("pagination", "next_page")
+
+    get "/demo/picker_results"
+    assert_equal first_page.fetch("items").map { |item| item.fetch("id") }, JSON.parse(response.body).fetch("items").map { |item| item.fetch("id") }
+
+    get "/demo/picker_results", params: {page: 2}
+    second_page = JSON.parse(response.body)
+    assert_equal 4, second_page.fetch("items").length
+    assert_equal 3, second_page.dig("pagination", "next_page")
+    refute_equal first_page.fetch("items").map { |item| item.fetch("id") }, second_page.fetch("items").map { |item| item.fetch("id") }
+
+    get "/demo/picker_results", params: {page: 8}
+    last_page = JSON.parse(response.body)
+    assert_equal 2, last_page.fetch("items").length
+    assert_nil last_page.dig("pagination", "next_page")
+  end
+
+  test "picker page documents the remote page contract" do
+    get "/demo/picker"
+
+    assert_response :success
+    assert_includes response.body, "picker-demo-remote-pages"
+    assert_includes response.body, "search_mode: :remote"
+    assert_includes response.body, "&quot;next_page&quot;: 2"
+    assert_includes response.body, "pagination: { next_page: next_page }"
+  end
+
   test "picker results endpoint supports record kinds" do
     get "/demo/picker_results", params: {q: "brand", kinds: "record"}
 
