@@ -1031,6 +1031,27 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "pagination: { next_page: next_page }"
   end
 
+  test "picker error endpoint fails until the query is hero" do
+    get "/demo/picker"
+
+    assert_response :success
+    assert_includes response.body, "id=\"picker-demo-error-fallback\""
+    assert_includes response.body, "id=\"picker-demo-error-slot\""
+    assert_includes response.body, "Unable to load items"
+    assert_includes response.body, "Nothing came back"
+    assert_includes response.body, "data-flat-pack-picker-error-slot=\"true\""
+    assert_includes response.body, "picker.with_error"
+    assert_includes response.body, "demo_picker_results_error_path"
+
+    get "/demo/picker_results_error"
+    assert_response :internal_server_error
+
+    get "/demo/picker_results_error", params: {q: "hero", kinds: "image,file,record"}
+    assert_response :success
+    labels = JSON.parse(response.body).fetch("items").map { |item| item.fetch("label") }
+    assert_includes labels, "Homepage Hero"
+  end
+
   test "picker results endpoint supports record kinds" do
     get "/demo/picker_results", params: {q: "brand", kinds: "record"}
 
