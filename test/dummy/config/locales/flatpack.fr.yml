@@ -168,8 +168,11 @@ fr:
       close: Fermer
     file_input:
       upload: Téléverser un fichier
+      choose: Choisir un fichier
       or_drag: ' ou glisser-déposer'
       max_size: 'Taille max. : %{size}'
+      too_many_one: Seul le premier fichier a été conservé.
+      too_many: "Seuls les %{count} premiers fichiers ont été conservés."
       size_exceeded: Le fichier « %{name} » dépasse la taille maximale de %{size}
       size_bytes: '%{count}o'
       size_kilobytes: '%{count}Ko'

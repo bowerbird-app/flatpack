@@ -10,6 +10,7 @@ Use these components when you need FlatPack-styled form controls with consistent
 - Primary: `FlatPack::TextInput::Component`
 - Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::ImageInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Combobox::Component`, `FlatPack::Switch::Component`
 - One picture with a preview and a remove control is [Image Input](image_input.md).
+- A dropzone or a button that picks files is [File Input](file_input.md). The host uploads them.
 - Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding-x` and `--form-control-padding-y`. Keep rendering the public input components above — do not switch hosts to FormField.
 - Related Stimulus controller: `flat-pack--nested-multiselect` for legacy hierarchical checkbox groups that submit hidden inputs.
 - Related docs: [Fieldset](fieldset.md) (`FlatPack::Fieldset::Component`) for a titled group of controls, [Range Input](range-input.md) (`FlatPack::RangeInput::Component`), [Combobox](combobox.md) (`FlatPack::Combobox::Component`), [Color Swatch](color-swatch.md) (`FlatPack::ColorSwatch::Component`), [Font Swatch](font-swatch.md) (`FlatPack::FontSwatch::Component`)
@@ -57,7 +58,9 @@ Component-specific props:
 | `accept` | String | `nil` | no | File MIME/extensions whitelist for `FileInput`. Dangerous executable extensions raise `ArgumentError`. |
 | `multiple` | Boolean | `false` | no | Enables multiple file selection (`FileInput`) and multi-value selection (`Select`). |
 | `max_size` | Integer | `nil` | no | Max file size in bytes for `FileInput` client-side checks. Must be positive when provided. |
-| `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. |
+| `max_files` | Integer | `nil` | no | `FileInput` cap. Extra files are ignored. The browser file list is not rewritten. See [File Input](file_input.md). |
+| `preview` | Boolean | `true` | no | Enables image preview area in `FileInput`. The button variant never shows a list or a preview. |
+| `text` | String | `nil` | no | `FileInput` `variant: :button` label. Blank uses "Choose a file". Raises on `:dropzone`. |
 | `checked` | Boolean | `false` | no | Initial checked state (`Checkbox`, `Switch`). |
 | `options` | Array | none | yes (`RadioGroup`, `Select`) | Options list. Supports `String`, `[label, value]`, or `{ label:, value:, disabled: }`. RadioGroup hashes may also include `icon:` (kit icon name), `description:` (shown on `variant: :cards`), and `color:` (fill on `variant: :swatches`; defaults to `value` when that is a CSS colour). Select hashes may include `icon:` (Heroicon name). For nested Select multiselects, hashes may include `children:` and may use `id:` instead of `value:`. Child hashes may include `icon:` too. |
 | `searchable` | Boolean | `false` | no | Uses custom searchable dropdown mode for `Select`. |
@@ -66,7 +69,7 @@ Component-specific props:
 | `search_param` | String | `"q"` | no | Query string parameter name used for remote Select requests. |
 | `min_search_length` | Integer | `2` | no | Minimum query length before remote Select requests are triggered. |
 | `size` | Symbol | `:md` | no | Control density: `:sm`, `:md`, `:lg` for `Switch`, `Checkbox`, and `RadioGroup` (Checkbox/Radio share `--checkbox-size`). RadioGroup `size:` still applies to the default radio dots. On `variant: :swatches` it maps to ColorSwatch circle sizes (`:sm` 2rem, `:md` 2.5rem, `:lg` 3rem). |
-| `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description), `:swatches` (wrapping colour circles). Invalid names raise `ArgumentError`. |
+| `variant` | Symbol | `:default` | no | RadioGroup layout: `:default` (vertical radio list), `:inline` (wrapping pills with optional icons), `:cards` (grid of cards with optional icon and description), `:swatches` (wrapping colour circles). Invalid names raise `ArgumentError`. `FileInput` uses `:dropzone` (default) or `:button`. |
 | `align` | Symbol | `:center` | no | RadioGroup `variant: :cards` only. `:center` stacks the icon, title, and description in the middle. `:start` puts the icon on the left and left-aligns the title and description beside it, and drops the 7rem card min-height. Other variants ignore it. `:center` and `:start` are the only values. Anything else raises `ArgumentError`. |
 | `columns` | Integer, nil | `nil` | no | RadioGroup `variant: :cards` only. `nil` keeps the auto-fit grid (minimum 14rem). An integer `1`–`4` is one column on mobile and that many columns from the `sm` breakpoint. A numeric string such as `"2"` is accepted. Other variants ignore it. Anything else raises `ArgumentError`. |
 | `hide_label` | Boolean | `false` | no | RadioGroup. When `label` is set, `true` renders that legend with `sr-only` so the group stays named when a heading already shows the title. |
@@ -74,7 +77,7 @@ Component-specific props:
 | `tooltip_placement` | Symbol | `:top` | no | RadioGroup `variant: :swatches` only. Tooltip placement: `:top`, `:right`, `:bottom`, `:left`. |
 
 ## Slots
-None.
+Most inputs have no slots. `FileInput` has an `actions` slot for host controls beside the dropzone or the button. See [File Input](file_input.md).
 
 ## Variants
 - Input classes by type: `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `UrlInput`, `NumberInput`, `DateInput`, `FileInput`
@@ -294,6 +297,8 @@ or:
   preview: true
 ) %>
 ```
+
+The button variant, `max_files`, `flat-pack:file-input:change`, and the `actions` slot are in [File Input](file_input.md).
 
 ```erb
 <%= render FlatPack::RadioGroup::Component.new(

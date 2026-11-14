@@ -523,6 +523,14 @@ components:
       - FlatPack::Switch::Component
     status: documented
 
+  - key: file_input
+    title: File Input
+    doc: docs/components/file_input.md
+    primary_class: FlatPack::FileInput::Component
+    related_classes:
+      - FlatPack::Button::Component
+    status: documented
+
   - key: image_input
     title: Image Input
     doc: docs/components/image_input.md
