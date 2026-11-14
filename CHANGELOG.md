@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.359] - 2026-11-13
+
+### Added
+- `FlatPack::Billing::PlanSummary::Component` accepts `ends_on:` (a date), `scheduled_change_text:`, and `badges:` (`{text:, style:}` using Badge styles).
+- When `ends_on:` is set, the card adds a warning badge, “Cancels at period end”, and a secondary line such as “Ends 1 Dec 2026”. `scheduled_change_text:` is a second line, for example “Changes to Basic on 1 Dec”. `status:` stays the subscription enum. A plan can be active and canceling at once.
+
+### Upgrade notes
+- Pass `ends_on:` as a date. Renewal and trial copy stay on `renews_on:` and `trial_ends_on:`.
+- Do not add a cancel or scheduled value to `status:`. Use `ends_on:` and `scheduled_change_text:` for those lines.
+- No stylesheet or JavaScript change. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.359`.
+
 ## [0.1.358] - 2026-11-13
 
 ### Added

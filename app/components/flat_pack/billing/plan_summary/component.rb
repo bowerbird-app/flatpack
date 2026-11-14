@@ -24,6 +24,9 @@ module FlatPack
           status: :active,
           renews_on: nil,
           trial_ends_on: nil,
+          ends_on: nil,
+          scheduled_change_text: nil,
+          badges: [],
           description: nil,
           **system_arguments
         )
@@ -33,6 +36,9 @@ module FlatPack
           @status = status.to_sym
           @renews_on = renews_on
           @trial_ends_on = trial_ends_on
+          @ends_on = normalize_ends_on(ends_on)
+          @scheduled_change_text = scheduled_change_text.to_s.strip.presence
+          @badges = normalize_badges(badges)
           @description = description
 
           validate_plan_name!
@@ -59,7 +65,7 @@ module FlatPack
                   render_heading_row,
                   render_price,
                   render_description,
-                  render_timing,
+                  render_notes,
                   render_actions_row
                 ].compact)
               end
@@ -78,12 +84,10 @@ module FlatPack
         def render_heading_row
           content_tag(:div, class: "flex items-start justify-between gap-3 mb-2") do
             safe_join([
-              content_tag(:h3, @plan_name, class: "text-lg font-semibold text-[var(--surface-content-color)]"),
-              render(FlatPack::Badge::Component.new(
-                text: fp_t("billing.plan_summary.#{status_config.fetch(:key)}"),
-                style: status_config.fetch(:style),
-                size: :sm
-              ))
+              content_tag(:h3, @plan_name, class: "min-w-0 text-lg font-semibold text-[var(--surface-content-color)]"),
+              content_tag(:div, class: "flex max-w-full flex-wrap items-center justify-end gap-2") do
+                safe_join(heading_badges.map { |badge| render_badge(badge) })
+              end
             ])
           end
         end
@@ -100,11 +104,15 @@ module FlatPack
           content_tag(:p, @description, class: "text-sm text-[var(--surface-muted-content-color)] mb-2")
         end
 
-        def render_timing
-          timing = timing_text
-          return nil if timing.blank?
+        def render_notes
+          lines = [timing_text, ends_on_text, @scheduled_change_text].compact_blank
+          return nil if lines.empty?
 
-          content_tag(:p, timing, class: "text-sm text-[var(--surface-muted-content-color)] mb-4")
+          content_tag(:div, class: "mb-4") do
+            safe_join(lines.each_with_index.map { |line, index|
+              content_tag(:p, line, class: "text-sm text-[var(--surface-muted-content-color)]#{" mt-1" unless index.zero?}")
+            })
+          end
         end
 
         def timing_text
@@ -113,6 +121,36 @@ module FlatPack
           else
             @renews_on
           end
+        end
+
+        def ends_on_text
+          return nil if @ends_on.nil?
+
+          fp_t("billing.plan_summary.ends_on", date: @ends_on.strftime("%-d %b %Y"))
+        end
+
+        def heading_badges
+          badges = [status_badge]
+          badges << cancel_badge if @ends_on
+          badges.concat(@badges)
+        end
+
+        def status_badge
+          {
+            text: fp_t("billing.plan_summary.#{status_config.fetch(:key)}"),
+            style: status_config.fetch(:style)
+          }
+        end
+
+        def cancel_badge
+          {
+            text: fp_t("billing.plan_summary.cancels_at_period_end"),
+            style: :warning
+          }
+        end
+
+        def render_badge(badge)
+          render(FlatPack::Badge::Component.new(text: badge[:text], style: badge[:style], size: :sm))
         end
 
         def render_actions_row
@@ -135,6 +173,44 @@ module FlatPack
           return if STATUSES.key?(@status)
 
           raise ArgumentError, "Invalid status: #{@status.inspect}. Must be one of: #{STATUSES.keys.join(", ")}"
+        end
+
+        def normalize_ends_on(ends_on)
+          return nil if ends_on.nil?
+          return ends_on.to_date if date_like?(ends_on)
+
+          raise ArgumentError, "ends_on must be a date"
+        end
+
+        def date_like?(ends_on)
+          return false if ends_on.is_a?(String) || ends_on.is_a?(Numeric)
+
+          ends_on.respond_to?(:to_date) && ends_on.respond_to?(:strftime)
+        end
+
+        def normalize_badges(badges)
+          list = badges.nil? ? [] : badges
+          raise ArgumentError, "badges must be an array" unless list.is_a?(Array)
+
+          list.map { |badge| normalize_badge(badge) }
+        end
+
+        def normalize_badge(badge)
+          hash = badge.respond_to?(:to_h) ? badge.to_h : nil
+          raise ArgumentError, "each badge must be a Hash" unless hash.is_a?(Hash)
+
+          normalized = hash.transform_keys(&:to_sym)
+          text = normalized[:text].to_s.strip
+          raise ArgumentError, "badge text is required" if text.blank?
+
+          raw_style = normalized[:style]
+          style = raw_style.respond_to?(:to_sym) ? raw_style.to_sym : raw_style
+          unless FlatPack::Badge::Component::VARIANTS.key?(style)
+            allowed = FlatPack::Badge::Component::VARIANTS.keys.join(", ")
+            raise ArgumentError, "Invalid badge style: #{style.inspect}. Must be one of: #{allowed}"
+          end
+
+          {text: text, style: style}
         end
       end
     end

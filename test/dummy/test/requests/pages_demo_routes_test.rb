@@ -488,6 +488,26 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, demo_billing_path
     assert_includes response.body, "Active"
     assert_includes response.body, "Past due"
+    assert_includes response.body, "Cancels at period end"
+    assert_includes response.body, "Ends 1 Dec 2026"
+    assert_includes response.body, "Changes to Basic on 1 Dec"
+    assert_includes response.body, "Annual"
+  end
+
+  test "billing plan summary theme previews keep the requested theme" do
+    get "/demo/billing/plan_summary?theme=default"
+
+    assert_response :success
+    assert_select "html:not([data-theme])"
+    assert_select "body:not([data-controller])"
+    assert_includes response.body, "Cancels at period end"
+
+    get "/demo/billing/plan_summary?theme=rounded"
+
+    assert_response :success
+    assert_select "html[data-theme=rounded]"
+    assert_select "body:not([data-controller])"
+    assert_includes response.body, "Ends 1 Dec 2026"
   end
 
   test "collapse and accordion demos link to each other" do

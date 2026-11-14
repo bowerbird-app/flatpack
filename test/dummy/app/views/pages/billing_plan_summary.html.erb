@@ -1,7 +1,12 @@
 <%= render FlatPack::PageTitle::Component.new(
   title: "Plan Summary",
-  subtitle: "Current plan card with status badge, renewal copy, and host-supplied actions."
+  subtitle: "Current plan card with status, period end, a scheduled change, and host-supplied actions."
 ) %>
+
+<div class="mb-8 flex flex-wrap gap-2">
+  <%= render FlatPack::Button::Component.new(text: "Default theme", href: demo_billing_plan_summary_path(theme: "default"), style: :secondary, size: :sm) %>
+  <%= render FlatPack::Button::Component.new(text: "Rounded theme", href: demo_billing_plan_summary_path(theme: "rounded"), style: :secondary, size: :sm) %>
+</div>
 
 <%= render "pages/component_method_variables_table", component: :billing_plan_summary %>
 
@@ -38,6 +43,47 @@
     CODE
     language: "erb",
     title: "Active Plan"
+  ) %>
+</section>
+
+<section class="mb-12" id="period-end">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Period end", anchor_link: true, subtitle: "Active, and still canceling. The warning badge comes from the date.") %>
+  <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <%= render FlatPack::Billing::PlanSummary::Component.new(
+      plan_name: "Pro",
+      price_text: "$29 / month",
+      status: :active,
+      renews_on: "Renews 1 Dec 2026",
+      ends_on: Date.new(2026, 12, 1),
+      scheduled_change_text: "Changes to Basic on 1 Dec",
+      badges: [{text: "Annual", style: :info}],
+      description: "Access stays on through the days you already paid."
+    ) do |summary| %>
+      <% summary.actions do %>
+        <%= render FlatPack::Button::Component.new(text: "Change plan", href: demo_billing_plan_picker_path, style: :secondary) %>
+      <% end %>
+    <% end %>
+    <%= render FlatPack::Billing::PlanSummary::Component.new(
+      plan_name: "Pro",
+      price_text: "$29 / month",
+      status: :active,
+      scheduled_change_text: "Changes to Basic on 1 Dec",
+      badges: [{text: "Team", style: :primary}]
+    ) %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE'),
+      &lt;%= render FlatPack::Billing::PlanSummary::Component.new(
+        plan_name: "Pro",
+        price_text: "$29 / month",
+        status: :active,
+        ends_on: Date.new(2026, 12, 1),
+        scheduled_change_text: "Changes to Basic on 1 Dec",
+        badges: [{text: "Annual", style: :info}]
+      ) %&gt;
+    CODE
+    language: "erb",
+    title: "Period end"
   ) %>
 </section>
 

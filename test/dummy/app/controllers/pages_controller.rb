@@ -37,6 +37,7 @@ class PagesController < ApplicationController
 
   PAGE_LAYOUT_VARIANTS = %w[plain float article login].freeze
   PAGE_LAYOUT_THEMES = {"light" => nil, "dark" => "dark", "rounded" => "rounded"}.freeze
+  PLAN_SUMMARY_THEMES = {"default" => nil, "rounded" => "rounded"}.freeze
 
   DEMO_THEME_TOKEN_MAPPINGS = [
     {action: /\Abuttons(_.*)?\z/, title: "Buttons", patterns: [/\A--button-/]},
@@ -174,6 +175,11 @@ class PagesController < ApplicationController
   end
 
   def billing_plan_summary
+    return unless PLAN_SUMMARY_THEMES.key?(params[:theme].to_s)
+
+    @plan_summary_theme = PLAN_SUMMARY_THEMES.fetch(params[:theme].to_s)
+    @plan_summary_theme_preview = true
+    render layout: "fullpage"
   end
 
   def billing_plan_picker

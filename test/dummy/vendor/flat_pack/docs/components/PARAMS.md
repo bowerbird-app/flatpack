@@ -131,7 +131,10 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Open / closed start state | `open` | Whether a collapse, group, or layout starts expanded |
 | Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts. Billing does not format currency. `FlatPack::Number::Component` is the counter, and its `value:` is the numeric amount. |
 | Host-formatted date copy | `renews_on`, `trial_ends_on`, `expires_text` | Billing renewal, trial, and card expiry strings the host already formatted |
-| Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component |
+| Period end date | `ends_on` | `FlatPack::Billing::PlanSummary::Component` only. A date. Renders “Ends 1 Dec 2026” and a warning badge, “Cancels at period end”. Not a status |
+| Scheduled plan copy | `scheduled_change_text` | Plan summary only. Host sentence such as “Changes to Basic on 1 Dec”. A secondary line. Not a status |
+| Extra plan badges | `badges` | Plan summary only. Array of `{text:, style:}`. `style` is a Badge style. Shown beside the status badge |
+| Subscription / invoice state | `status` | Billing enums such as `:active`, `:past_due`, `:paid`; map to Badge/Alert `style` in the component. Plan summary does not use `status` for cancel-at-period-end or a scheduled change |
 | Sliding active marker | `indicator` | Tabs, Button::Pill, and Segmented Buttons. Omit for today’s instant swap. `:slide` moves one marker on `--duration-base`. |
 | Pill group track | `track` | Button::Pill and Tabs. `false` keeps the row flush. `true` on a pill row adds the border, the transparent track fill, and `--pill-padding`. Stacked and underline tabs ignore it. |
 | Inline edit flavour | `mode` | InlineEdit only. `:text` (single line), `:plain` (multi-line), `:rich` (bubble toolbar). |
@@ -200,3 +203,5 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 - Do not pass `parallax: true` with `:fade`, `:rise`, `:blur`, `:scale`, `:words`, or `:lines`. It belongs on `:wipe` and `:zoom`.
 - Do not add `stream:` to a chat message. Render `FlatPack::Text::Stream::Component` inside the message.
 - Do not pass billing `price_text` or `amount` to `FlatPack::Number::Component`. Pass the numeric `value:`. Do not pass Number `currency:` to a billing plan.
+- Do not add cancel or scheduled values to billing `status`. A plan can be `:active` and still pass `ends_on`. `ends_on` is a date. Renewal copy stays on `renews_on`. Do not pass a formatted string to `ends_on`.
+- Do not pass Badge `size`, `dot`, or `removable` inside plan summary `badges`. Each hash is `text` and `style` only.
