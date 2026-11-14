@@ -5703,7 +5703,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   }
 }
 
-/* Inline menu collapse. A labelled row that opens the next rows in place. */
+/* Inline menu collapse. A labelled row that opens the next rows in place.
+ * Type stays unlayered so kit chrome beats a host utility. Size is the control role, same as a dropdown item. */
 .fp-menu-collapse {
   display: flex;
   flex-direction: column;
@@ -5724,7 +5725,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: transparent;
   box-shadow: none;
   color: var(--surface-content-color);
-  font: inherit;
+  font-family: inherit;
+  font-size: var(--type-control-size);
+  line-height: var(--type-control-leading);
   text-align: start;
   cursor: pointer;
   transition-property: background-color, color;
@@ -5789,7 +5792,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   background-color: transparent;
   box-shadow: none;
   color: var(--surface-content-color);
-  font: inherit;
+  font-family: inherit;
+  font-size: var(--type-control-size);
+  line-height: var(--type-control-leading);
   text-align: start;
   text-decoration: none;
   cursor: pointer;
