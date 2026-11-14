@@ -1,0 +1,6 @@
+<% live = state.to_s == "live" %>
+<%= render FlatPack::Badge::Component.new(
+  text: live ? "Live" : "Draft",
+  style: live ? :success : :default,
+  size: :sm
+) %>

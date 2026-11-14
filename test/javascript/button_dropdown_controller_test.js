@@ -436,6 +436,87 @@ test("a form inside plain menu_html still closes the menu on click", () => {
   assert.equal(closed, 1)
 })
 
+test("a keep-open form submit leaves the menu open", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  controller.dispatchDetachedActions = () => {}
+  menuElement.contains = () => true
+
+  controller.handleMenuItemClick({
+    target: clickTarget({ form: true, keepOpen: true, menuitem: true, submitButton: true }),
+    defaultPrevented: false,
+    detail: null,
+    preventDefault() {},
+    stopPropagation() {}
+  })
+
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+})
+
+test("a keep-open form submit blur leaves the menu open", () => {
+  const { controller, menuElement, documentStub } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  const button = clickTarget({ form: true, keepOpen: true, menuitem: true, submitButton: true })
+  menuElement.contains = (node) => node === button
+  documentStub.activeElement = documentStub.body
+
+  controller.handleFocusOut({ target: button, relatedTarget: null })
+
+  assert.equal(closed, 0)
+  assert.equal(controller.isOpen, true)
+})
+
+test("focus leaving a keep-open item for another control closes the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  const button = clickTarget({ keepOpen: true, menuitem: true })
+  const outside = clickTarget()
+  menuElement.contains = (node) => node === button
+
+  controller.handleFocusOut({ target: button, relatedTarget: outside })
+
+  assert.equal(closed, 1)
+})
+
+test("a form submit without keep-open closes the menu", () => {
+  const { controller, menuElement } = mount({ anchor: triggerRect })
+  let closed = 0
+  controller.close = () => {
+    closed += 1
+    controller.isOpen = false
+  }
+  controller.isOpen = true
+  controller.dispatchDetachedActions = () => {}
+  menuElement.contains = () => true
+
+  controller.handleMenuItemClick({
+    target: clickTarget({ form: true, keepOpen: false, menuitem: true, submitButton: true }),
+    defaultPrevented: false,
+    detail: null,
+    preventDefault() {},
+    stopPropagation() {}
+  })
+
+  assert.equal(closed, 1)
+  assert.equal(controller.isOpen, false)
+})
+
 test("a keep-open item does not close the menu", () => {
   const { controller, menuElement } = mount({ anchor: triggerRect })
   let closed = 0

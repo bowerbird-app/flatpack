@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.367] - 2026-11-14
+
+### Added
+- `FlatPack::Button::DropdownItem` submits a form when you pass `url:`. The row stays a menu item: same classes, `role="menuitem"`, `data-flat-pack-dropdown-item`, and `data-flat-pack-dropdown-keep-open` when `keep_open: true`. `method:` defaults to `:post`. `:put`, `:patch`, and `:delete` post with a `_method` field. `:get` skips the token and the override. `params:` are hidden fields. `turbo:` sets `data-turbo` on the form (default `true`). `href:` and `url:` together raise `ArgumentError`.
+- Those fields travel through `menu_row`. The collapsed phone menu submits the same form and keeps the menu open when `keep_open: true`.
+
+### Upgrade notes
+- Additive. A menu item with no `url:` renders as before.
+- The form matches Button (`class="contents"`). No new CSS. The dropdown controller keeps the menu open when a keep-open submit blurs onto the document. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.367`.
+
 ## [0.1.366] - 2026-11-14
 
 ### Fixed

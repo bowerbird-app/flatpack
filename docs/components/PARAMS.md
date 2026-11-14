@@ -77,14 +77,14 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Button icon artwork | `icon_variant` | Heroicon weight on a button-family leading icon, a Menu Collapse header, a collapsed dropdown row, and EmptyState `icon:`. `:outline`, `:solid`, `:mini`, `:micro`. Omit to use `default_icon_variant`. |
 | Button icon colour | `icon_style` | `nil` inherits the row text through `currentColor`. `:primary`, `:success`, `:warning`, `:danger` use `--button-icon-*` tokens. The same names colour a Menu Collapse header and each collapsed dropdown row. |
 | Menu item icon side | `icon_position` | `FlatPack::Button::DropdownItem` only. `:start` (default) or `:end`. `:end` renders the icon after the label with `ms-auto`. Not Button `align`. |
-| Keep a menu open | `keep_open` | `FlatPack::Button::DropdownItem` boolean. `true` leaves the menu open after that item. Forms use `menu_form`, which sets keep-open and switches the panel to `role="dialog"` so the form is not inside `role="menu"`. A plain `form` in `menu_html` still closes the menu. |
+| Keep a menu open | `keep_open` | `FlatPack::Button::DropdownItem` boolean. `true` leaves the menu open after that item, including a `url:` submit. The item stays `role="menuitem"`. `menu_form` sets keep-open on its wrapper and switches the panel to `role="dialog"`. A plain `form` in `menu_html` still closes the menu unless it sets `data-flat-pack-dropdown-keep-open`. |
 | Extra menu classes | `menu_class` | `FlatPack::Button::Dropdown::Component` only. Extra classes on the menu. The wrapper still uses `class:`. |
 | Extra menu HTML | `menu_attributes` | `FlatPack::Button::Dropdown::Component` only. Extra attributes on the menu. `trigger_attributes` stays on the trigger. The visible trigger copy is the `trigger_label` slot (`with_trigger_label`), a new `renders_one` slot (main had none). A host `role` is dropped. In development that drop is written to the log. |
 | Current page control | `current` | `FlatPack::Button::Component` boolean. `true` paints the current look. On a link it also sets `aria-current="page"`. Not a billing plan hash key. |
-| Form action | `url` | `FlatPack::Button::Component` and `FlatPack::TrashButton::Component`. The form `action`. Same allowlist as `href`. Not a navigation destination. |
-| Form verb | `method` | On Button, link mode passes it to `link_to`. Form mode (`url:`) defaults to `:post`. TrashButton defaults to `:delete`. Verbs: `:get`, `:post`, `:put`, `:patch`, `:delete`. |
-| Form hidden fields | `params` | `FlatPack::Button::Component` with `url:`. A Hash rendered as hidden inputs. Nested hashes use `name[key]`. Arrays use `name[]`. |
-| Form Turbo | `turbo` | `FlatPack::Button::Component` with `url:`. `true` (default) or `false`. Sets `data-turbo` on the form, the same flag TrashButton hard-codes. |
+| Form action | `url` | `FlatPack::Button::Component`, `FlatPack::Button::DropdownItem::Component`, and `FlatPack::TrashButton::Component`. The form `action`. Same allowlist as `href`. Not a navigation destination. On a menu item the submit button keeps the menu-item classes and `role="menuitem"`. |
+| Form verb | `method` | On Button, link mode passes it to `link_to`. Form mode (`url:`) defaults to `:post`. DropdownItem `method:` is form-only and raises without `url:`. TrashButton defaults to `:delete`. Verbs: `:get`, `:post`, `:put`, `:patch`, `:delete`. |
+| Form hidden fields | `params` | `FlatPack::Button::Component` and `FlatPack::Button::DropdownItem::Component` with `url:`. A Hash rendered as hidden inputs. Nested hashes use `name[key]`. Arrays use `name[]`. |
+| Form Turbo | `turbo` | `FlatPack::Button::Component` and `FlatPack::Button::DropdownItem::Component` with `url:`. `true` (default) or `false`. Sets `data-turbo` on the form, the same flag TrashButton hard-codes. |
 | Clamped label tooltip | `title` | On Button, the full label for the HTML `title` tooltip when `lines` clamps the visible text. Elsewhere, `title` stays a section heading. |
 | Key/value term | `key` | `FlatPack::List::Item` when the list `layout` is `:key_value`. The `<dt>` text. The block is the value. |
 | Key column size | `key_width` | List `:key_value` only. `:fit` (widest key) or a CSS length such as `"10rem"`. |
@@ -176,8 +176,8 @@ Planned family docs live under `docs/components/billing*.md`. When implementing 
 ## Do not mix
 
 - Do not use `variant`, `type`, `theme`, or `scheme` for color. Use `style`. Card colour fill is `background`. Card shadow, border width, and hover are `shadow`, `border`, and `hover`. Card `variant` is `:default` or `:featured` (the cover layout), not a colour. Do not pass Card `:featured` to Hero. Hero overlay contrast uses `on`, because `style` is the HTML attribute on the section.
-- Do not use `url` for a clickable navigation destination. Use `href`. On Button, do not pass `href` and `url` together.
-- Do not pass Button `params:` without `url:`. `params` is the hidden-field hash, not a grab-bag of component options.
+- Do not use `url` for a clickable navigation destination. Use `href`. On Button and DropdownItem, do not pass `href` and `url` together.
+- Do not pass Button or DropdownItem `params:` without `url:`. `params` is the hidden-field hash, not a grab-bag of component options. Do not pass DropdownItem `href:` and `url:` together. DropdownItem `method:` needs `url:`.
 - Do not use `label` for the visible string of a compact control. Use `text`. Copy Button is the exception: `text` is the clipboard string and `label` is the visible label.
 - Do not use `position` for overlay placement. Use `placement`. FAB and Floating frame viewport corners stay `position`. Overlay, Media, and Video preview use the nine-cell grid on `with_item`, not the tooltip `:top` / `:bottom` / `:left` / `:right` set.
 - Do not use `placement` for where a Modal grows from. Use `origin`.

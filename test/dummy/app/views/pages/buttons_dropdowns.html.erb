@@ -314,6 +314,69 @@
   ) %>
 </section>
 
+<section class="mb-12" id="publish">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Publish",
+    anchor_link: true,
+    subtitle: "Posts from the menu. The menu stays open."
+  ) %>
+  <div class="mb-4 flex max-w-lg items-center gap-3 rounded-[var(--radius-lg)] border border-[var(--surface-border-color)] bg-[var(--surface-background-color)] px-4 py-3" id="demo-publish-row">
+    <div class="min-w-0 flex-1">
+      <p class="text-sm font-medium text-[var(--surface-content-color)]">Harbour take</p>
+      <p class="text-sm text-[var(--surface-muted-content-color)]">Studio mix</p>
+    </div>
+    <span id="demo-publish-status">
+      <%= render "pages/demo_publish_status", state: @publish_state %>
+    </span>
+    <%= render FlatPack::Button::Dropdown::Component.new(
+      text: "Actions",
+      style: :secondary,
+      size: :sm,
+      menu_attributes: {id: "demo-publish-menu"}
+    ) do |dropdown| %>
+      <% dropdown.menu_item(
+        text: "Publish",
+        icon: "check-circle",
+        icon_style: :success,
+        url: demo_buttons_dropdowns_publish_path,
+        method: :patch,
+        params: {state: "live"},
+        keep_open: true
+      ) %>
+      <% dropdown.menu_item(
+        text: "Unpublish",
+        icon: "x-circle",
+        icon_style: :danger,
+        url: demo_buttons_dropdowns_publish_path,
+        method: :patch,
+        params: {state: "draft"},
+        destructive: true,
+        keep_open: true
+      ) %>
+    <% end %>
+  </div>
+  <%= render FlatPack::CodeBlock::Component.new(
+    code: CGI.unescapeHTML(<<~'CODE')
+      &lt;% dropdown.menu_item(
+        text: "Publish",
+        icon: "check-circle",
+        url: publish_post_path(@post),
+        method: :patch,
+        params: { state: "live" },
+        keep_open: true
+      ) %&gt;
+      &lt;% dropdown.menu_item(
+        text: "Unpublish",
+        icon: "x-circle",
+        url: unpublish_post_path(@post),
+        method: :patch,
+        destructive: true,
+        keep_open: true
+      ) %&gt;
+    CODE
+  ) %>
+</section>
+
 <section class="mb-12" id="host-hooks">
   <%= render FlatPack::SectionTitle::Component.new(
     title: "Host hooks",

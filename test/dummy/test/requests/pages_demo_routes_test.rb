@@ -245,6 +245,25 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_select "svg.ms-auto"
     assert_includes response.body, "icon_position: :end"
     assert_select "[data-flat-pack-dropdown-keep-open='true']"
+    assert_select "#demo-publish-row"
+    assert_select "#demo-publish-status", text: "Draft"
+    assert_select "#demo-publish-menu[role='menu'] form.contents[action='#{demo_buttons_dropdowns_publish_path}'][method='post'][data-turbo='true']", count: 2
+    assert_select "#demo-publish-menu input[name='_method'][value='patch']", count: 2
+    assert_select "#demo-publish-menu input[name='state'][value='live']", count: 1
+    assert_select "#demo-publish-menu button[type='submit'][role='menuitem'][data-flat-pack-dropdown-keep-open='true']", text: "Publish"
+    assert_select "#demo-publish-menu button[type='submit'][role='menuitem'][data-flat-pack-dropdown-keep-open='true']", text: "Unpublish"
+  end
+
+  test "publish menu row updates the status and stays a turbo stream" do
+    patch demo_buttons_dropdowns_publish_path, params: {state: "live"}, as: :turbo_stream
+
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
+    assert_includes response.body, "demo-publish-status"
+    assert_includes response.body, "Live"
+
+    get "/demo/buttons/dropdowns"
+    assert_select "#demo-publish-status", text: "Live"
   end
 
   test "date range input demo renders an optional preset name field" do

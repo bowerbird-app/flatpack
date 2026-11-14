@@ -155,6 +155,17 @@ class PagesController < ApplicationController
   end
 
   def buttons_dropdowns
+    @publish_state = (session[:demo_publish_state] == "live") ? "live" : "draft"
+  end
+
+  def buttons_dropdowns_publish
+    @publish_state = (params[:state].to_s == "live") ? "live" : "draft"
+    session[:demo_publish_state] = @publish_state
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to demo_buttons_dropdowns_path(anchor: "publish"), status: :see_other }
+    end
   end
 
   def buttons_copy

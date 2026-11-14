@@ -845,6 +845,183 @@ module FlatPack
         assert_match(/keep_open/, error.message)
       end
 
+      def test_form_item_keeps_menu_chrome_and_submits
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Edit", icon: "pencil", href: "/edit")
+          dropdown.menu_item(
+            text: "Publish",
+            icon: "check-circle",
+            url: "/takes/1",
+            method: :patch,
+            params: {state: "live", take: {id: 4}, tags: ["live", "mix"]},
+            keep_open: true
+          )
+          dropdown.menu_item(text: "Archive", url: "/takes/1/archive")
+        end
+
+        assert_selector "div[role='menu']"
+        refute_selector "[role='dialog']"
+        refute_selector "form[role]"
+
+        link = page.find("a[role='menuitem'][href='/edit']")
+        publish = page.find("button[role='menuitem'][type='submit']", text: "Publish")
+        assert_equal link[:class], publish[:class]
+        assert_equal "true", publish["data-flat-pack-dropdown-item"]
+        assert_equal "true", publish["data-flat-pack-dropdown-keep-open"]
+        assert_selector "button[role='menuitem'] svg[data-flat-pack--icon-name-value='check-circle']"
+
+        form = publish.find(:xpath, "ancestor::form[1]")
+        assert_equal "/takes/1", form[:action]
+        assert_equal "post", form[:method]
+        assert_equal "UTF-8", form[:"accept-charset"]
+        assert_equal "true", form["data-turbo"]
+        assert_includes form[:class].to_s.split, "contents"
+        assert_selector "form[action='/takes/1'] input[name='_method'][value='patch']", visible: :hidden
+        assert_selector "input[name='state'][value='live']", visible: :hidden
+        assert_selector "input[name='take[id]'][value='4']", visible: :hidden
+        assert_selector "input[name='tags[]'][value='live']", visible: :hidden
+        assert_selector "input[name='tags[]'][value='mix']", visible: :hidden
+        assert_predicate form.find("input[name='authenticity_token']", visible: :hidden).value, :present?
+
+        archive = page.find("button[role='menuitem'][type='submit']", text: "Archive")
+        assert_nil archive["data-flat-pack-dropdown-keep-open"]
+        archive_form = archive.find(:xpath, "ancestor::form[1]")
+        assert_equal "/takes/1/archive", archive_form[:action]
+        assert_equal "post", archive_form[:method]
+        assert_equal "true", archive_form["data-turbo"]
+        refute_selector "form[action='/takes/1/archive'] input[name='_method']"
+      end
+
+      def test_form_item_get_skips_method_override_and_csrf
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Filter", url: "/takes", method: :get, turbo: false)
+        end
+
+        assert_selector "form.contents[action='/takes'][method='get'][data-turbo='false']"
+        assert_selector "form button[role='menuitem'][type='submit'][data-flat-pack-dropdown-item='true']", text: "Filter"
+        refute_selector "input[name='_method']"
+        refute_selector "input[name='authenticity_token']"
+      end
+
+      def test_form_item_disabled_stays_a_submit_button
+        render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
+          dropdown.menu_item(text: "Publish", url: "/takes/1", method: :patch, disabled: true)
+        end
+
+        assert_selector "form[action='/takes/1'] button[role='menuitem'][type='submit'][disabled]", text: "Publish"
+        refute_selector "a", text: "Publish"
+      end
+
+      def test_form_item_rejects_href_with_url_and_bad_options
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", href: "/takes/1", url: "/takes/1")
+        end
+        assert_match(/href: or url:/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", url: "javascript:alert('xss')")
+        end
+        assert_match(/Unsafe URL/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", url: "/takes/1", method: :head)
+        end
+        assert_match(/Invalid method/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", url: "/takes/1", params: "nope")
+        end
+        assert_match(/params:/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", params: {id: 1})
+        end
+        assert_match(/needs url/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", method: :patch)
+        end
+        assert_match(/method: needs url/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", href: "/takes/1", method: :delete)
+        end
+        assert_match(/method: needs url/, error.message)
+
+        error = assert_raises(ArgumentError) do
+          DropdownItem::Component.new(text: "Publish", url: "/takes/1", turbo: "yes")
+        end
+        assert_match(/turbo/, error.message)
+      end
+
+      def test_form_item_menu_row_and_collapse_submit_and_keep_open
+        item = DropdownItem::Component.new(
+          text: "Publish",
+          icon: "check-circle",
+          url: "/takes/1",
+          method: :patch,
+          params: {state: "live"},
+          turbo: true,
+          keep_open: true
+        )
+        row = item.menu_row
+        assert_equal "/takes/1", row[:url]
+        assert_equal :patch, row[:method]
+        assert_equal({state: "live"}, row[:params])
+        assert_equal true, row[:turbo]
+        assert_equal true, row[:keep_open]
+        assert_nil row[:href]
+
+        link_row = DropdownItem::Component.new(text: "Edit", href: "/edit").menu_row
+        assert_nil link_row[:url]
+        assert_nil link_row[:method]
+        assert_nil link_row[:params]
+        assert_equal true, link_row[:turbo]
+        assert_equal false, link_row[:keep_open]
+
+        dropdown = Dropdown::Component.new(text: "Take", icon: "ellipsis-horizontal")
+        render_inline(dropdown) do |menu|
+          menu.menu_item(text: "Pin", href: "/pin", keep_open: true)
+          menu.menu_item(
+            text: "Publish",
+            icon: "check-circle",
+            url: "/takes/1",
+            method: :patch,
+            params: {state: "live"},
+            keep_open: true
+          )
+          menu.menu_item(
+            text: "Unpublish",
+            url: "/takes/1",
+            method: :patch,
+            turbo: false,
+            destructive: true,
+            keep_open: true
+          )
+        end
+
+        collapse = Capybara.string(dropdown.menu_row)
+        assert collapse.has_selector?(
+          "a.fp-menu-collapse__item[href='/pin'][data-flat-pack-dropdown-keep-open='true']",
+          visible: :all
+        )
+        assert collapse.has_selector?(
+          "form.contents[action='/takes/1'][method='post'][accept-charset='UTF-8'][data-turbo='true'] " \
+            "button.fp-menu-collapse__item[type='submit'][data-flat-pack-dropdown-keep-open='true']",
+          text: "Publish",
+          visible: :all
+        )
+        assert collapse.has_selector?("form[data-turbo='true'] input[name='_method'][value='patch']", visible: :all)
+        assert collapse.has_selector?("form[data-turbo='true'] input[name='state'][value='live']", visible: :all)
+        assert collapse.has_selector?("form[data-turbo='true'] input[name='authenticity_token']", visible: :all)
+        assert collapse.has_selector?(
+          "form.contents[data-turbo='false'] button.fp-menu-collapse__item[type='submit'][data-fp-style='danger'][data-flat-pack-dropdown-keep-open='true']",
+          text: "Unpublish",
+          visible: :all
+        )
+        assert collapse.has_selector?("form[data-turbo='false'] input[name='_method'][value='patch']", visible: :all, count: 1)
+      end
+
       def test_menu_form_is_a_dialog_without_menu_roles
         render_inline(Dropdown::Component.new(text: "Add to list")) do |dropdown|
           dropdown.menu_item(text: "Favorites", href: "/favorites")
@@ -941,9 +1118,15 @@ module FlatPack
         item_parameters = item.fetch(:parameters)
         icon_position = item_parameters.find { |row| row.fetch(:name) == "icon_position" }
         keep_open = item_parameters.find { |row| row.fetch(:name) == "keep_open" }
+        url = item_parameters.find { |row| row.fetch(:name) == "url" }
+        method_name = item_parameters.find { |row| row.fetch(:name) == "method" }
+        turbo = item_parameters.find { |row| row.fetch(:name) == "turbo" }
 
         assert_equal "start", icon_position.fetch(:default)
         assert_equal false, keep_open.fetch(:default)
+        assert_nil url.fetch(:default)
+        assert_nil method_name.fetch(:default)
+        assert_equal true, turbo.fetch(:default)
       end
 
       def test_icon_only_menu_stays_fixed_for_every_placement

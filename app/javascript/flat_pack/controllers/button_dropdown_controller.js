@@ -197,9 +197,13 @@ export default class extends Controller {
       return
     }
 
+    const source = event.target
     requestAnimationFrame(() => {
       if (!this.isOpen) return
       if (this.focusStaysInMenu(document.activeElement)) return
+      // Turbo disables the submit button for the request, so focus drops
+      // onto the document. A keep-open item asked to stay open.
+      if (this.keepsMenuOpen(source) && this.focusOnDocument(document.activeElement)) return
 
       this.close({ returnFocus: false })
     })
@@ -218,6 +222,12 @@ export default class extends Controller {
     if (next && this.menuElement.contains(next)) return true
 
     return false
+  }
+
+  focusOnDocument(node) {
+    if (!node) return true
+
+    return node === document.body || node === document.documentElement
   }
 
   focusStaysInMenu(node) {
