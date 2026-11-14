@@ -373,6 +373,70 @@
 
   <section class="mb-12">
     <%= render FlatPack::SectionTitle::Component.new(
+      title: "Empty results",
+      anchor: "empty-results",
+      anchor_link: true,
+      subtitle: "Hand the picker an empty slot. It only shows that slot when nothing matches."
+    ) %>
+
+    <%= render FlatPack::Card::Component.new(class: "mt-6") do |card| %>
+      <% card.body do %>
+        <div class="space-y-8">
+          <p class="text-sm text-(--surface-muted-content-color)">
+            Search for a word that is not in the list. The button stays the one you rendered. Clear the search and the list comes back.
+          </p>
+
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Local search</p>
+            <%= render FlatPack::Picker::Component.new(
+              id: "picker-demo-empty-local",
+              title: "Local drawer",
+              subtitle: "Filter the assets already on the page.",
+              items: @picker_demo_items,
+              modal: false,
+              search_mode: :local,
+              items_height: "22rem",
+              confirm_label: "Use assets"
+            ) do |picker| %>
+              <% picker.with_empty do %>
+                <%= picker_demo_empty_state %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <div class="space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-wide text-(--surface-muted-content-color)">Remote search</p>
+            <%= render FlatPack::Picker::Component.new(
+              id: "picker-demo-empty-remote",
+              title: "Remote drawer",
+              subtitle: "The same slot, filled from the server.",
+              items: @picker_demo_items.first(2),
+              modal: false,
+              search_mode: :remote,
+              search_endpoint: demo_picker_results_path,
+              items_height: "22rem",
+              confirm_label: "Use assets"
+            ) do |picker| %>
+              <% picker.with_empty do %>
+                <%= picker_demo_empty_state %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= picker_demo_collapsible_code_example(
+      id: "picker-demo-code-empty-erb",
+      collapse_title: "View ERB Code",
+      code_title: "ERB",
+      language: "erb",
+      code: picker_demo_empty_erb_code
+    ) %>
+  </section>
+
+  <section class="mb-12">
+    <%= render FlatPack::SectionTitle::Component.new(
       title: "Inline Picker",
       anchor: "inline-auto-confirm",
       anchor_link: true,

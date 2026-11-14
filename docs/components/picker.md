@@ -33,7 +33,7 @@ Use Picker when users need to choose image assets, files, or application records
 | `form` | Hash or nil | `nil` | No | Optional built-in Rails form wrapper. Supports `url`, `method`, `scope`, `field`, `value_mode`, `value_path`, and `turbo`. |
 | `variant` | Symbol | `:default` | No | Allowed: `:default`, `:flush`. Inline shells only. `:flush` drops the panel chrome (border, fill, radius, shadow, padding) so the picker can sit inside another surface. Modal pickers ignore it and keep Modal chrome. Anything else raises `ArgumentError`. |
 | `context` | Hash | `{}` | No | Arbitrary hash returned in confirm event payload. |
-| `empty_text` | String | `"No assets found"` | No | Empty-results text. |
+| `empty_text` | String | `"No assets found"` | No | Empty-results text when the `empty` slot is omitted. |
 | `results_layout` | Symbol | `:list` | No | Allowed: `:list`, `:grid`. |
 | `items_height` | String, Symbol, or Integer | `"max-content"` | No | Controls the results-region height inside the picker. Use `"max-content"` to fill the available picker body, `"min-content"` to shrink-wrap the current items up to the wrapper height, or a CSS height such as `"240px"`. Integers are converted to pixel values. |
 | `modal` | Boolean | `false` | No | When `true`, renders inside `FlatPack::Modal::Component`. When `false`, renders inline on the page. |
@@ -43,6 +43,10 @@ Use Picker when users need to choose image assets, files, or application records
 | `**system_arguments` | Hash | `{}` | No | Standard HTML attributes merged into the modal wrapper or inline shell. |
 
 ## Slots
+
+| name | type | required | description |
+|------|------|----------|-------------|
+| `empty` | slot | no | Markup for an empty result list. Rendered on the server inside the results region and hidden until nothing matches. `flat-pack--picker` only shows or hides it. It does not change the slot's contents. Omit the slot and the picker shows `empty_text`. Works for `search_mode: :local` and `:remote`. |
 
 List rows are rendered through four display regions derived from item data rather than record-type-specific markup.
 
@@ -183,6 +187,31 @@ Use `variant: :flush` when the picker sits inside another surface (a moveable pa
 ```
 
 Remote search is debounced by 250ms and always renders the search bar, even if `searchable: false` is passed. When `accepted_kinds` is present, the picker appends a `kinds=image,file,record` style query param alongside the configured `search_param`.
+
+### Empty slot
+
+```erb
+<%= render FlatPack::Picker::Component.new(
+  id: "asset-picker",
+  items: @assets,
+  search_mode: :local
+) do |picker| %>
+  <% picker.with_empty do %>
+    <%= render FlatPack::EmptyState::Component.new(
+      title: "Nothing in the drawer",
+      description: "Try a different word, or add an asset.",
+      icon: :search,
+      size: :sm
+    ) do |state| %>
+      <% state.item do %>
+        <%= render FlatPack::Button::Component.new(text: "Add an asset", style: :primary, type: "button") %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+```
+
+Pass the same `empty` slot on a remote picker. The controller shows it when the endpoint returns no items, and hides it when items come back. The button stays the one you rendered. Leave the slot off and `empty_text` is the fallback.
 
 ### Inline auto-confirm picker
 
@@ -395,6 +424,7 @@ Selected items preserve the optional display fields (`title`, `icon`, `descripti
 - `items_height` only affects the results region that contains picker items. Search controls and action buttons keep their natural height above and below it.
 - `auto_confirm` only applies to newly selected items in `selection_mode: :single`.
 - Remote searches are debounced by 250ms, request JSON with `Accept: application/json`, and rerender the current result set from `payload.items`.
+- The empty panel is in the first render, with the `hidden` class. An `empty` slot fills that panel. `empty_text` fills it when the slot is omitted. Local filtering and remote responses only toggle `hidden` and `flex`. They do not rewrite the panel.
 - In `output_mode: :field`, field output is written before the confirm event is emitted.
 - When `form:` is configured, the picker maintains hidden inputs for the current selection and submits the generated form when `auto_confirm: true` selects a new single item.
 - When `auto_confirm: true` and `modal: true`, the picker closes programmatically after dispatching `flat-pack:picker:confirm`.

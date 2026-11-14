@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.369] - 2026-11-14
+
+### Added
+- `FlatPack::Picker::Component` accepts an `empty` slot. The slot is rendered on the server, hidden, inside the results region. `flat-pack--picker` shows it when the current result list is empty and hides it when items are present. The controller does not rewrite the slot. Omit the slot and `empty_text` still renders (`"No assets found"` unless you pass a string). Local and remote search share that path.
+
+### Upgrade notes
+- Additive. A picker with no `empty` slot looks the same. Pass `with_empty` to replace `empty_text`.
+- Reload kit JavaScript. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.369`.
+
 ## [0.1.368] - 2026-11-14
 
 ### Added

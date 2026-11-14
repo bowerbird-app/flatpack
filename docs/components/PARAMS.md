@@ -128,7 +128,7 @@ Use these names whenever a component exposes a shared concept. Prefer an existin
 | Empty state visual | `visual` | `FlatPack::EmptyState::Component` only. One slot above the title. A block is host markup and spans the empty state. An image uses `media` (`src`, `alt`, `width`, `height`) and is not a second slot. Either one replaces `icon:`. |
 | Extra CSS | `class` | System argument. Do not add `class_name` |
 | Action button copy | `*_label` | Confirm, close, submit, cancel, and reset strings |
-| Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states |
+| Empty-state copy | `empty_text` or `empty_title` / `empty_description` | Single-line empty copy vs title-plus-body empty states. Picker also accepts an `empty` slot. When that slot is set, it replaces `empty_text`. |
 | List of records | `items` | Search catalogs, pickers, avatar groups, billing plan/invoice rows, and other collections already in the page |
 | Open / closed start state | `open` | Whether a collapse, group, or layout starts expanded |
 | Host-formatted money | `price_text` / `amount` | Display-only plan prices and invoice amounts. Billing does not format currency. `FlatPack::Number::Component` is the counter, and its `value:` is the numeric amount. |

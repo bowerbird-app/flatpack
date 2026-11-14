@@ -339,6 +339,40 @@ module FlatPack
         render_inline(Component.new(id: "stable-results-picker", items: sample_items))
 
         assert_selector "div[data-flat-pack--picker-target='emptyState'].hidden.h-full.min-h-32.items-center.justify-center"
+        assert_selector "[data-flat-pack--picker-target='emptyState']", text: "No assets found"
+        assert_no_selector "[data-flat-pack-picker-empty-slot]"
+        assert_no_selector "[data-flat-pack--picker-empty-text-value]"
+      end
+
+      def test_renders_empty_text_when_no_slot_is_given
+        render_inline(Component.new(id: "fallback-empty-picker", items: [], empty_text: "No matches in the drawer"))
+
+        assert_selector "[data-flat-pack--picker-target='emptyState'].hidden", text: "No matches in the drawer"
+        assert_no_selector "[data-flat-pack-picker-empty-slot]"
+        assert_no_selector "[data-flat-pack--picker-target='emptyState'] button"
+      end
+
+      def test_empty_slot_renders_hidden_and_replaces_empty_text
+        view = vc_test_controller.view_context
+
+        render_inline(Component.new(id: "slotted-empty-picker", items: sample_items, empty_text: "Fallback copy")) do |picker|
+          picker.with_empty do
+            view.concat(
+              view.tag.div(class: "fp-empty-state") do
+                view.safe_join([
+                  view.tag.p("Nothing in the drawer"),
+                  view.tag.button("Add an asset", type: "button", data: {picker_empty_action: "add"})
+                ])
+              end
+            )
+          end
+        end
+
+        assert_selector "[data-flat-pack--picker-target='emptyState'][data-flat-pack-picker-empty-slot='true'].hidden"
+        assert_selector "[data-flat-pack-picker-empty-slot='true'] .fp-empty-state", text: "Nothing in the drawer"
+        assert_selector "button[data-picker-empty-action='add']", text: "Add an asset"
+        assert_no_text "Fallback copy"
+        assert_no_text "No assets found"
       end
     end
   end
