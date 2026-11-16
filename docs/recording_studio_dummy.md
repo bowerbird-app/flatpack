@@ -54,8 +54,10 @@ After sign-in or sign-up, the host sends people to `/studio` (not the public dem
 
 Seed accounts after `bin/rails db:seed` are confirmed (`confirmed_at` is set) so password sign-in works. A new signup still confirms with an email code.
 
-- `admin@admin.com` / `Password` — workspace admin + Admin root access
-- `demo@example.com` / `password123` — legacy FlatPack demo user
+- `admin@admin.com` / `Password123!` — workspace admin + Admin root access
+- `demo@example.com` / `Password123!` — legacy FlatPack demo user
+
+Users requires passwords of at least 12 characters. Both seed accounts use `Password123!`.
 
 Seeds create each workspace and Admin root with `RecordingStudio.create_root_recording!`, then read it back with `root_recording_for`. That lookup does not create a root. Writes need `config.authorize_write`; the dummy allows a write when an actor is present.
 

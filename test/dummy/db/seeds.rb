@@ -383,11 +383,11 @@ def seed_demo_user!
   user = User.find_or_initialize_by(email: "demo@example.com")
   created = user.new_record?
   if created
-    user.password = "password123"
-    user.password_confirmation = "password123"
+    user.password = "Password123!"
+    user.password_confirmation = "Password123!"
   end
   confirm_seed_user!(user)
-  puts "- User: created demo@example.com (password: password123)" if created
+  puts "- User: created demo@example.com (password: Password123!)" if created
 end
 
 seed_demo_user!
@@ -435,8 +435,8 @@ def seed_recording_studio!
 
   user = User.find_or_initialize_by(email: "admin@admin.com")
   if user.new_record?
-    user.password = "Password"
-    user.password_confirmation = "Password"
+    user.password = "Password123!"
+    user.password_confirmation = "Password123!"
   end
   confirm_seed_user!(user)
 
@@ -519,7 +519,7 @@ def seed_recording_studio!
     Current.actor = previous_actor
   end
 
-  puts "- Recording Studio: admin@admin.com / Password"
+  puts "- Recording Studio: admin@admin.com / Password123!"
   puts "- Recording Studio: Seed MCP App client_id=#{oauth_client.client_id}"
   puts "- Recording Studio: Studio Workspace (Connected), Docs Workspace (Reconnect)"
   puts "- Recording Studio: MCP at /recording_studio_mcp"
