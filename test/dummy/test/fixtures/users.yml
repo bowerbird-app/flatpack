@@ -4,8 +4,10 @@ one:
   id: 11111111-1111-1111-1111-111111111111
   email: demo@example.com
   encrypted_password: "$2a$04$yJkAs5y88Sr0sw1GPgLxBe24w5XXsAJIBEQsApHo8nnuHo5vcJAA6"
+  confirmed_at: 2026-01-01 00:00:00
 
 two:
   id: 22222222-2222-2222-2222-222222222222
   email: other@example.com
   encrypted_password: "$2a$04$yJkAs5y88Sr0sw1GPgLxBe24w5XXsAJIBEQsApHo8nnuHo5vcJAA6"
+  confirmed_at: 2026-01-01 00:00:00

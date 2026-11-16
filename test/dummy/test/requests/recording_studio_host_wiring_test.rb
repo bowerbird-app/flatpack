@@ -217,10 +217,7 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
   test "password sign in with stored admin location lands on studio" do
     skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
 
-    user = User.find_or_create_by!(email: "signin-admin-bounce@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    user = find_or_create_confirmed_user!(email: "signin-admin-bounce@example.com", password: "Password123!")
 
     get "/admin"
     assert_response :redirect
@@ -238,10 +235,7 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
   test "studio shows connected apps empty state when signed in" do
     skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
 
-    user = User.find_or_create_by!(email: "studio-empty@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    user = find_or_create_confirmed_user!(email: "studio-empty@example.com", password: "Password123!")
     sign_in user
 
     get "/studio"
@@ -254,10 +248,7 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
   test "studio uses the Recording Studio host sidebar shell" do
     skip "Recording Studio Users not in this bundle" unless defined?(RecordingStudioUser)
 
-    user = User.find_or_create_by!(email: "studio-sidebar@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    user = find_or_create_confirmed_user!(email: "studio-sidebar@example.com", password: "Password123!")
     sign_in user
 
     get "/studio"
@@ -277,12 +268,11 @@ class RecordingStudioHostWiringTest < ActionDispatch::IntegrationTest
   test "recording tree shows access grants and viewer roles" do
     skip "Recording Studio Accessible not in this bundle" unless defined?(RecordingStudioAccessible)
 
-    user = User.find_or_create_by!(email: "recording-tree@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    user = find_or_create_confirmed_user!(email: "recording-tree@example.com", password: "Password123!")
 
     workspace = Workspace.find_or_create_by!(name: "Recording Tree Workspace")
+    Current.actor = user
+    RecordingStudio.create_root_recording!(workspace, actor: user)
     root = RecordingStudio.root_recording_for(workspace)
     folder = Folder.find_or_create_by!(name: "Tree Folder")
     folder_recording = RecordingStudio::Recording.find_by(

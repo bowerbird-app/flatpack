@@ -1,0 +1,6 @@
+<%# The shared shell reads register_page_nav and content_for as it renders.
+    Yield the page first so those calls land before the shell draws them. %>
+<% page = yield %>
+<%= render "recording_studio/shared/default_layout" do %>
+  <%= page %>
+<% end %>

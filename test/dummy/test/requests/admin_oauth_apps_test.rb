@@ -9,15 +9,14 @@ class AdminOauthAppsTest < ActionDispatch::IntegrationTest
   setup do
     skip "Recording Studio Admin/OAuth not in this bundle" unless defined?(RecordingStudioAdmin) && defined?(RecordingStudioOauth)
 
-    @user = User.find_or_create_by!(email: "admin-oauth-apps@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    @user = find_or_create_confirmed_user!(email: "admin-oauth-apps@example.com", password: "Password123!")
 
     @admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+    RecordingStudio.create_root_recording!(@admin_root, actor: @user)
     @admin_root_recording = RecordingStudio.root_recording_for(@admin_root)
 
     workspace = Workspace.find_or_create_by!(name: "Admin OAuth Workspace")
+    RecordingStudio.create_root_recording!(workspace, actor: @user)
     @workspace_root = RecordingStudio.root_recording_for(workspace)
 
     grant_or_bootstrap_access!(recording: @admin_root_recording, actor: @user, role: :admin)
