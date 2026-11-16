@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.377] - 2026-11-16
+
+### Changed
+- Flatpack reuses one `TailwindMerge::Merger` for the process. `FlatPack::ClassMerger` builds it on the first call. `FlatPack::BaseComponent#classes`, `FlatPack::Shared::IconComponent`, `FlatPack::List::Item`, `FlatPack::Notification::Component`, `FlatPack::Timestamp::Component`, `FlatPack::Tree::Component`, `FlatPack::Button::Pill::Component`, `FlatPack::CopyButton::Component`, `FlatPack::FloatingFrame::Component`, and `FlatPack::Chart::DefaultFilterComponent` call that merger. A new merger on every call rebuilt the Tailwind class-group trie and discarded the gem's LRU cache.
+
+### Security
+- Lockfiles move `puma` from 8.0.2 to 8.0.3. 8.0.2 is the version in GHSA-86xc-wrr9-xmmq, GHSA-jm4r-w4xx-qxw7, GHSA-m5xw-3hrw-qcmf, GHSA-r885-m39c-939g, GHSA-rf6g-xhmp-gm7v, GHSA-x646-wp7c-h9mg, and GHSA-xw3h-pgr9-3vg7. 8.0.3 is the patched release. That lock was already on main.
+
+### Upgrade notes
+- `tailwind_merge` is now `>= 1.5.2, < 2`. Release 1.5.2 makes the merger cache safe to share across threads. Bump a lock below 1.5.2. These lockfiles stay on 1.5.6.
+- Rendered class strings stay the same. Component arguments are unchanged.
+- `puma` is the dummy server, not a Flatpack runtime dependency. A host that vendors these lockfiles gets 8.0.3.
+- Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.377`.
+
 ## [0.1.376] - 2026-11-14
 
 ### Added

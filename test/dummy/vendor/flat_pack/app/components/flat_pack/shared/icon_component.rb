@@ -116,8 +116,7 @@ module FlatPack
 
       def icon_classes
         user_class = @system_arguments.delete(:class)
-        merger = TailwindMerge::Merger.new
-        merger.merge(
+        FlatPack::ClassMerger.merge(
           ["block", "shrink-0", size_classes, optical_nudge_class, directional_class, motion_class, user_class]
             .compact
             .join(" ")

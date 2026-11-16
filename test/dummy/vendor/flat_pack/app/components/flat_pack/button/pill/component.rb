@@ -162,7 +162,7 @@ module FlatPack
         end
 
         def merge_css_classes(*class_values)
-          TailwindMerge::Merger.new.merge(class_values.compact.join(" "))
+          FlatPack::ClassMerger.merge(class_values.compact.join(" "))
         end
       end
     end

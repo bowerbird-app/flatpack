@@ -131,7 +131,7 @@ module FlatPack
         ].compact.join(" ")
 
         {
-          class: TailwindMerge::Merger.new.merge(class_tokens),
+          class: FlatPack::ClassMerger.merge(class_tokens),
           data: data_attributes,
           aria: aria_attributes
         }.merge(html_attributes).compact

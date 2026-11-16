@@ -179,7 +179,7 @@ module FlatPack
       end
 
       def mount_classes
-        TailwindMerge::Merger.new.merge(
+        FlatPack::ClassMerger.merge(
           ["fp-floating-frame__mount", padding_class, @content_class].compact_blank.join(" ")
         )
       end

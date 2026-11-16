@@ -25,13 +25,11 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 3.2.0"
 
-  # Core dependencies
   spec.add_dependency "rails", ">= 7.1", "< 9"
   spec.add_dependency "view_component", ">= 4.14", "< 5"
-  spec.add_dependency "tailwind_merge", ">= 0.13", "< 2"
+  spec.add_dependency "tailwind_merge", ">= 1.5.2", "< 2"
   spec.add_dependency "pagy", "~> 9.0"
 
-  # Development dependencies
   spec.add_development_dependency "sqlite3", "~> 2.0"
   spec.add_development_dependency "standard", "~> 1.35"
   spec.add_development_dependency "propshaft", "~> 1.0"
