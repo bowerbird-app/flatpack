@@ -10,6 +10,5 @@ RecordingStudioUser.configure do |config|
   config.otp_enabled = false
   config.otp_login_enabled = false
   config.otp_registration_enabled = false
-  config.password_registration_confirmation = :existing_policy
   config.omniauth_create_account = true
 end

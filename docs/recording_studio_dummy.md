@@ -6,17 +6,18 @@ The deployable app in `test/dummy` is still the FlatPack component catalog. It a
 
 Pinned in `test/dummy/Gemfile.common`:
 
-- `recording_studio` (`v4.5.0`)
-- `recording_studio_accessible` (`v0.13.0`)
-- `recording_studio_user`
-- `recording_studio_attachable` (`v0.13.0`)
-- `recording_studio_site_settings`
-- `recording_studio_admin`
-- `recording_studio_api` (`v0.5.4`)
-- `recording_studio_oauth` (`v0.2.0`)
-- `recording_studio_mcp` (`v0.3.2`)
-- `recording_studio_root_switchable` (`v0.6.0`)
-- `recording_studio_internationalization` (`v0.1.2`) — dummy-only; FlatPack does not depend on it. The catalog top nav renders `recording_studio_language_selector` immediately left of the theme control. Catalog full-page HTML cache keys include the current locale.
+- `recording_studio` (`v7.3.0`)
+- `recording_studio_accessible` (`v0.45.1`)
+- `recording_studio_user` (`v0.32.0`)
+- `recording_studio_attachable` (`v0.31.0`)
+- `recording_studio_site_settings` (`v0.6.0`)
+- `recording_studio_admin` (`v2.18.0`)
+- `recording_studio_api` (`v1.2.1`)
+- `recording_studio_oauth` (`v0.25.0`)
+- `recording_studio_mcp` (`v0.35.0`)
+- `recording_studio_root_switchable` (`v0.16.0`)
+- `recording_studio_internationalization` (`v0.3.0`) — dummy-only; FlatPack does not depend on it. The catalog top nav renders `recording_studio_language_selector` immediately left of the theme control. Catalog full-page HTML cache keys include the current locale.
+- `recording_studio_trashable` (`v1.0.0`), `recording_studio_cache` (`v0.7.0`), `recording_studio_metrics` (`v0.9.0`), `recording_studio_logs` (`v0.8.0`), `recording_studio_moveable` (`v6.0.0`), and `recording_studio_icons` (`v0.4.0`) — git-only dependencies of that stack. They are not on RubyGems, so the dummy Gemfile pins each to its latest GitHub release.
 
 Recording Studio host gems need Ruby `>= 3.3`.
 
@@ -47,7 +48,7 @@ Staff Admin requires the current root to be **Admin**. The root switcher (`all_w
 
 ## Signup and login
 
-Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo.
+Users owns auth screens (`recording_studio_user_auth_for :users`). OTP is off in the dummy initializer for a simpler password demo. Password signups confirm with an email code; Users removed `password_registration_confirmation`.
 
 After sign-in or sign-up, the host sends people to `/studio` (not the public demo root). A stored return-to under `/admin` is ignored — Admin 403s until the current root is switched to Admin, and that bounce made the password step look like a failed login. Sign-in forms turn Turbo off so a second submit cannot hit a rotated session CSRF token. `/studio` lists **Connected apps** for the signed-in user (empty until someone Connects). The host sidebar links Connected apps, component demos, Registered apps, Recording tree, and OAuth connected apps. `/studio/recording_tree` is an unfiltered diagnostic of every recording (including Access grants) with the signed-in actor’s role on content nodes. From Connected apps: Registered apps switches to Admin and opens the OauthClient list. The full Connected apps screen also lives at `/recording_studio_oauth/connected_apps`.
 
@@ -68,7 +69,7 @@ Seed accounts after `bin/rails db:seed`:
 
 ### Discovery
 
-The host keeps the auth-server alias and draws origin protected-resource URLs with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known(self)` in `config/routes.rb`. That Oauth 0.2.0 registry maps MCP `/recording_studio_mcp` and API `/recording_studio_api/api`.
+The host keeps the auth-server alias and draws origin protected-resource URLs with `RecordingStudioOauth::ProtectedResourceRegistry.draw_origin_well_known(self)` in `config/routes.rb`. That Oauth registry maps MCP `/recording_studio_mcp` and API `/recording_studio_api/api`.
 
 - `/.well-known/oauth-authorization-server` (auth-server alias)
 - `/.well-known/oauth-protected-resource/recording_studio_mcp` (MCP metadata). `resource` is `{origin}/recording_studio_mcp`.
@@ -80,7 +81,7 @@ Cursor resource identity is the MCP URL (`…/recording_studio_mcp`), not API `/
 
 ## Recordables
 
-Host models: `Workspace`, `Folder`, `Page`, `AdminRoot`, plus Users `People` / `Profile` and Site Settings / Attachable types (`Attachment`, `Library`, `Placement`). Attachable `0.12+` registers `Library` and `Placement` as capability children, so both must appear in `config.recordable_types` for the dummy to boot. See `config/initializers/recording_studio.rb`.
+Host models: `Workspace`, `Folder`, `Page`, `AdminRoot`, plus Users `People` / `Profile`, Site Settings, and Attachable `Attachment`. Attachable `0.31` moved `Library` and `Placement` out of this gem, so they are not in `config.recordable_types`. See `config/initializers/recording_studio.rb`.
 
 ## FlatPack component catalog API
 
@@ -88,7 +89,7 @@ Host-only. These routes live in the dummy initializer and are stripped from the 
 
 The public named API registers **only** these endpoints — not Workspace, Folder, Page, or `ping`. The public API would otherwise mirror every host recordable type; the dummy prepends a registry-only rule so HTTP, OpenAPI, and MCP share an empty type list.
 
-The dummy pins `recording_studio_oauth` to tag `v0.2.0` and `recording_studio_mcp` to tag `v0.3.2`. MCP advertises one tool per `register_endpoint` and omits tree tools when the type list is empty. Default `oauth_protected_resource_path` is `/.well-known/oauth-protected-resource/recording_studio_mcp`. The dummy does not override that path. ChatGPT Connect ignores MCP `initialize.instructions` and `instructions_suffix`. The compose workflow lives in the two catalog endpoints' OpenAPI `description` fields. Those fields become the MCP tool descriptions. The MCP initializer sets `instructions_suffix` to the same `Dummy::FLATPACK_COMPOSE_WORKFLOW` string for clients that do read initialize instructions. Keep `recording_studio_api` at `v0.5.4`.
+The dummy pins `recording_studio_oauth` to tag `v0.25.0` and `recording_studio_mcp` to tag `v0.35.0`. MCP advertises one tool per `register_endpoint` and omits tree tools when the type list is empty. Default `oauth_protected_resource_path` is `/.well-known/oauth-protected-resource/recording_studio_mcp`. The dummy does not override that path. ChatGPT Connect ignores MCP `initialize.instructions` and `instructions_suffix`. The compose workflow lives in the two catalog endpoints' OpenAPI `description` fields. Those fields become the MCP tool descriptions. The MCP initializer sets `instructions_suffix` to the same `Dummy::FLATPACK_COMPOSE_WORKFLOW` string for clients that do read initialize instructions. `recording_studio_api` is pinned at `v1.2.1`.
 
 - `GET /recording_studio_api/api/v1/flatpack/components`
 - `GET /recording_studio_api/api/v1/flatpack/components/:name`
