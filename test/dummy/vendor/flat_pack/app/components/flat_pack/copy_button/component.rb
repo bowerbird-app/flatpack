@@ -140,7 +140,7 @@ module FlatPack
       end
 
       def button_classes
-        TailwindMerge::Merger.new.merge(
+        FlatPack::ClassMerger.merge(
           [
             "inline-flex items-center justify-center gap-2",
             "rounded-[var(--button-border-radius)]",

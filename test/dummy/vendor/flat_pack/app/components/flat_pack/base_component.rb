@@ -73,14 +73,11 @@ module FlatPack
       ids.compact.flat_map { |id| id.to_s.split }.reject(&:blank?).uniq.join(" ")
     end
 
-    # Extract and merge classes using tailwind_merge
     def classes(*additional_classes)
       base_classes = @system_arguments.delete(:class) || ""
-      merger = TailwindMerge::Merger.new
-      merger.merge([base_classes, *additional_classes].compact.join(" "))
+      FlatPack::ClassMerger.merge([base_classes, *additional_classes].compact.join(" "))
     end
 
-    # Extract data attributes
     def data_attributes
       @system_arguments[:data] || {}
     end

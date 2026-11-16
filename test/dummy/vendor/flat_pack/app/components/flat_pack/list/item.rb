@@ -371,7 +371,7 @@ module FlatPack
       end
 
       def merge_class_names(*class_names)
-        TailwindMerge::Merger.new.merge(class_names.compact.join(" "))
+        FlatPack::ClassMerger.merge(class_names.compact.join(" "))
       end
 
       def sanitize_url(url)

@@ -146,19 +146,18 @@ FlatPack::Button::Component.new(
 )
 ```
 
-### TailwindMerge Integration
+### Tailwind Merge
 
-Intelligently merges Tailwind classes:
+`FlatPack::ClassMerger` holds one `TailwindMerge::Merger` for the process. The first call builds the Tailwind class-group trie. Later calls reuse that trie and the gem's LRU cache. `tailwind_merge` 1.5.2 makes that cache safe to share across threads.
 
 ```ruby
 def classes(*additional_classes)
   base_classes = @system_arguments.delete(:class) || ""
-  merger = TailwindMerge::Merger.new
-  merger.merge([base_classes, *additional_classes].compact.join(" "))
+  FlatPack::ClassMerger.merge([base_classes, *additional_classes].compact.join(" "))
 end
 ```
 
-Allows overriding without `!important`.
+A later utility in the same group wins, so a host class can override a kit class without `!important`.
 
 ### Composition with Slots
 

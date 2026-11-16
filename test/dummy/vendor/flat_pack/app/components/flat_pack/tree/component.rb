@@ -242,7 +242,7 @@ module FlatPack
         node_aria = node_attributes.delete(:aria) || {}
 
         {
-          class: TailwindMerge::Merger.new.merge([additional_attrs.delete(:class), node_class].compact.join(" ")),
+          class: FlatPack::ClassMerger.merge([additional_attrs.delete(:class), node_class].compact.join(" ")),
           data: node_data.merge(additional_attrs.delete(:data) || {}),
           aria: node_aria.merge(additional_attrs.delete(:aria) || {})
         }.merge(node_attributes).merge(additional_attrs).compact
