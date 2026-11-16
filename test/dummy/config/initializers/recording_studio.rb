@@ -11,13 +11,14 @@ RecordingStudio.configure do |config|
     "RecordingStudioUser::People",
     "RecordingStudioUser::Profile",
     "RecordingStudioSiteSettings::SiteSetting",
-    "RecordingStudioAttachable::Attachment",
-    "RecordingStudioAttachable::Library",
-    "RecordingStudioAttachable::Placement"
+    "RecordingStudioAttachable::Attachment"
   ]
   config.require_recordable_declarations = true
   config.app_name = "FlatPack" if config.respond_to?(:app_name=)
   config.actor = -> { Current.actor }
+  # Recording Studio 7 refuses writes until an authorizer is set. The dummy
+  # allows a write when an actor is present. Accessible still gates Admin.
+  config.authorize_write = ->(actor:, **) { actor.present? }
   config.event_notifications_enabled = true
   config.idempotency_mode = :return_existing
   config.recordable_dup_strategy = :dup

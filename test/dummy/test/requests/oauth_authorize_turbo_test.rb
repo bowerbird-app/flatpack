@@ -12,12 +12,10 @@ class OauthAuthorizeTurboTest < ActionDispatch::IntegrationTest
   setup do
     skip "Recording Studio OAuth not in this bundle" unless defined?(RecordingStudioOauth)
 
-    @user = User.find_or_create_by!(email: "oauth-turbo@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    @user = find_or_create_confirmed_user!(email: "oauth-turbo@example.com", password: "Password123!")
 
     workspace = Workspace.find_or_create_by!(name: "OAuth Turbo Workspace")
+    RecordingStudio.create_root_recording!(workspace, actor: @user)
     @workspace_root = RecordingStudio.root_recording_for(workspace)
     grant_or_bootstrap_access!(recording: @workspace_root, actor: @user, role: :admin)
 

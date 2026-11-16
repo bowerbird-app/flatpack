@@ -7,13 +7,11 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
   setup do
     skip "Recording Studio API not in this bundle" unless defined?(RecordingStudioApi)
 
-    @user = User.find_or_create_by!(email: "catalog-api@example.com") do |record|
-      record.password = "Password123!"
-      record.password_confirmation = "Password123!"
-    end
+    @user = find_or_create_confirmed_user!(email: "catalog-api@example.com", password: "Password123!")
     Current.actor = @user
 
     workspace = Workspace.find_or_create_by!(name: "Catalog API Workspace")
+    RecordingStudio.create_root_recording!(workspace, actor: @user)
     @workspace_root = RecordingStudio.root_recording_for(workspace)
     @access = grant_or_bootstrap_access!(recording: @workspace_root, actor: @user, role: :admin)
     @access_token = issue_catalog_access_token
@@ -79,10 +77,12 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
     assert_equal "Card::Component", payload.fetch("name")
     assert_equal(
       [
+        {"name" => "badge", "collection" => false},
         {"name" => "body", "collection" => false},
         {"name" => "footer", "collection" => false},
         {"name" => "header", "collection" => false},
-        {"name" => "media", "collection" => false}
+        {"name" => "media", "collection" => false},
+        {"name" => "title", "collection" => false}
       ],
       slots
     )
@@ -138,9 +138,9 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
   test "MCP pin and instructions_suffix guide FlatPack screen building" do
     skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
 
-    assert_equal "0.3.2", RecordingStudioMcp::VERSION
-    assert_equal "0.3.2", Gem.loaded_specs.fetch("recording_studio_mcp").version.to_s
-    assert_equal "0.2.0", RecordingStudioOauth::VERSION
+    assert_equal "0.35.0", RecordingStudioMcp::VERSION
+    assert_equal "0.35.0", Gem.loaded_specs.fetch("recording_studio_mcp").version.to_s
+    assert_equal "0.25.0", RecordingStudioOauth::VERSION
     assert_equal(
       "/.well-known/oauth-protected-resource/recording_studio_mcp",
       RecordingStudioMcp.configuration.oauth_protected_resource_path

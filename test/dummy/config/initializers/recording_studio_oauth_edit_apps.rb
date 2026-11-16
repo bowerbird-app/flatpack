@@ -78,8 +78,8 @@ end
 
 Rails.application.config.to_prepare do
   controller = RecordingStudioOauth::Admin::OauthClientsController
-  unless controller.included_modules.include?(DummyOauthClientEditActions)
-    controller.include(DummyOauthClientEditActions)
+  unless controller.ancestors.include?(DummyOauthClientEditActions)
+    controller.prepend(DummyOauthClientEditActions)
   end
 
   resource = RecordingStudioOauth::Admin::OauthClientsResource

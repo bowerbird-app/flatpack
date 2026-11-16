@@ -361,17 +361,33 @@ seed_demo_comments!
 seed_chat_data!
 seed_articles!
 
-# Seed demo login user
+# Seed demo login user. Users confirmable blocks password sign-in until confirmed_at is set.
+def confirm_seed_user!(user)
+  return user if user.respond_to?(:confirmed?) && user.confirmed?
+
+  if user.new_record? && user.respond_to?(:skip_confirmation!)
+    user.skip_confirmation!
+  elsif user.respond_to?(:confirm) && user.confirmation_token.present?
+    user.confirm
+    return user if user.confirmed?
+  end
+
+  user.confirmed_at ||= Time.current
+  user.save!
+  user
+end
+
 def seed_demo_user!
   return unless User.table_exists?
-  return if User.exists?(email: "demo@example.com")
 
-  User.create!(
-    email: "demo@example.com",
-    password: "password123",
-    password_confirmation: "password123"
-  )
-  puts "- User: created demo@example.com (password: password123)"
+  user = User.find_or_initialize_by(email: "demo@example.com")
+  created = user.new_record?
+  if created
+    user.password = "Password123!"
+    user.password_confirmation = "Password123!"
+  end
+  confirm_seed_user!(user)
+  puts "- User: created demo@example.com (password: Password123!)" if created
 end
 
 seed_demo_user!
@@ -417,10 +433,12 @@ def seed_recording_studio!
     bootstrap.value
   end
 
-  user = User.find_or_create_by!(email: "admin@admin.com") do |u|
-    u.password = "Password"
-    u.password_confirmation = "Password"
+  user = User.find_or_initialize_by(email: "admin@admin.com")
+  if user.new_record?
+    user.password = "Password123!"
+    user.password_confirmation = "Password123!"
   end
+  confirm_seed_user!(user)
 
   studio = Workspace.find_or_create_by!(name: "Studio Workspace")
   docs = Workspace.find_or_create_by!(name: "Docs Workspace")
@@ -438,6 +456,9 @@ def seed_recording_studio!
   Current.actor = user
 
   begin
+    RecordingStudio.create_root_recording!(studio, actor: user)
+    RecordingStudio.create_root_recording!(docs, actor: user)
+    RecordingStudio.create_root_recording!(admin_root, actor: user)
     studio_root = RecordingStudio.root_recording_for(studio)
     docs_root = RecordingStudio.root_recording_for(docs)
     admin_recording = RecordingStudio.root_recording_for(admin_root)
@@ -498,7 +519,7 @@ def seed_recording_studio!
     Current.actor = previous_actor
   end
 
-  puts "- Recording Studio: admin@admin.com / Password"
+  puts "- Recording Studio: admin@admin.com / Password123!"
   puts "- Recording Studio: Seed MCP App client_id=#{oauth_client.client_id}"
   puts "- Recording Studio: Studio Workspace (Connected), Docs Workspace (Reconnect)"
   puts "- Recording Studio: MCP at /recording_studio_mcp"

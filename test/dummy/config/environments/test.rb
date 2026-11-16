@@ -49,4 +49,11 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Users applies Devise confirmable and sends a confirmation mail on create.
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.default_url_options = {host: "example.com"}
+
+  # CI eager-loads Action Mailbox, which attaches a file. Disk storage is in storage.yml.
+  config.active_storage.service = :test
 end
