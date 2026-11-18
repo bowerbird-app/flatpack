@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio.git
-  revision: e14e0665a80bc509be082cb2dcd9f292ed7e43bb
-  tag: v7.7.0
+  revision: 332ba217cb0dd610a411f92137a54109673ad026
+  tag: v7.7.1
   specs:
-    recording_studio (7.7.0)
+    recording_studio (7.7.1)
       flat_pack (>= 0.1.315)
       rails (>= 8.1.4.1)
 
@@ -190,10 +190,10 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_users.git
-  revision: ad3b086f72b498ab150b4b065b6ce0c1c9ba755f
-  tag: v0.35.0
+  revision: ba2806f7da61782aefe3cc0839b33ef40f11150d
+  tag: v0.36.0
   specs:
-    recording_studio_user (0.35.0)
+    recording_studio_user (0.36.0)
       devise (~> 5.0)
       flat_pack (>= 0.1.328)
       omniauth (~> 2.1)

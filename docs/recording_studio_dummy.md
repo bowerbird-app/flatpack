@@ -6,9 +6,9 @@ The deployable app in `test/dummy` is still the FlatPack component catalog. It a
 
 Pinned in `test/dummy/Gemfile.common`:
 
-- `recording_studio` (`v7.7.0`)
+- `recording_studio` (`v7.7.1`)
 - `recording_studio_accessible` (`v0.54.0`)
-- `recording_studio_user` (`v0.35.0`)
+- `recording_studio_user` (`v0.36.0`)
 - `recording_studio_attachable` (`v0.32.1`)
 - `recording_studio_site_settings` (`v0.6.0`)
 - `recording_studio_admin` (`v2.19.0`)
@@ -97,7 +97,7 @@ Host-only. These routes live in the dummy initializer and are stripped from the 
 
 The public named API registers **only** these endpoints — not Workspace, Folder, Page, or `ping`. The public API would otherwise mirror every host recordable type; the dummy prepends a registry-only rule so HTTP, OpenAPI, and MCP share an empty type list.
 
-`config/recording_studio_api.yml` is an empty shared hash. API 1.12 raises on boot when that file is missing. The settings stay in `config/initializers/recording_studio_api.rb`.
+`config/recording_studio_api.yml` is a minimal config (`shared: {}`). API 1.12 and newer raise on boot when that file is missing. The settings stay in `config/initializers/recording_studio_api.rb`.
 
 The dummy copies two migrations the new gems need at boot or in tests: API `add_owner_to_recording_studio_api_api_clients` (`owner_type`, `owner_id`) and Users `create_recording_studio_user_sign_in_lockouts` plus `create_recording_studio_user_sign_in_links`. Recording Studio `root_type_creation_index`, `enforce_root_invariant`, and `replace_root_index` stay out.
 
