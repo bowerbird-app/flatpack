@@ -147,9 +147,9 @@ module FlatPack
           search_endpoint: "/demo/forms/combobox/options"
         ))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='map-pin']"
+        assert_heroicon "map-pin"
         assert_selector "input.pl-1[role='combobox']"
-        assert_selector "svg[data-flat-pack--icon-name-value='chevron-down']"
+        assert_heroicon "chevron-down"
         assert_selector "[data-flat-pack--combobox-error-text-value='Search failed']"
         assert_selector "[data-flat-pack--combobox-target='empty'][role='status'][aria-live='polite']", text: "No matches", visible: :all
         assert_selector "[role='option'][data-empty-action='true']", text: "Add a place", visible: :all

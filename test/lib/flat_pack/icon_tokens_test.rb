@@ -20,10 +20,10 @@ module FlatPack
       assert_includes css, "scale: -1 1"
     end
 
-    test "icon controller outline stroke uses the token" do
-      js = FlatPack::Engine.root.join("app/javascript/flat_pack/controllers/icon_controller.js").read
+    test "outline icons set the stroke token on the svg" do
+      source = FlatPack::Engine.root.join("app/components/flat_pack/shared/icon_component.rb").read
 
-      assert_includes js, '"stroke-width": "var(--icon-stroke-width, 1.5)"'
+      assert_includes source, '"stroke-width": "var(--icon-stroke-width, 1.5)"'
     end
 
     test "components do not ship lucide leftover class names" do

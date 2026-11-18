@@ -139,7 +139,7 @@ module FlatPack
         assert_selector "textarea[data-action='input->flat-pack--text-area#autoExpand input->flat-pack--text-area#updateCharacterCount']"
         assert_selector "button[aria-label='Copy textarea value'][data-flat-pack--clipboard-target='button'].top-2"
         refute_selector "button[data-action]"
-        assert_selector "svg[data-flat-pack--icon-name-value='clipboard-document']"
+        assert_heroicon "clipboard-document"
       end
 
       def test_combines_character_count_submit_on_enter_and_quick_copy_actions

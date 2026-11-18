@@ -3,6 +3,8 @@
 module FlatPack
   module SectionTitle
     class Component < FlatPack::BaseComponent
+      include FlatPack::Clipboard::StateIcons
+
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "fp-type-section" "fp-type-section--md" "fp-type-section--sm" "fp-type-body" "fp-type-body--sm" "fp-type-body--xs"
@@ -152,7 +154,7 @@ module FlatPack
               label: fp_t("section_title.copy_link_to", title: @title)
             }) do
             safe_join([
-              render(FlatPack::Shared::IconComponent.new(**icon_arguments)),
+              render_anchor_icons,
               content_tag(
                 :span,
                 "",
@@ -200,6 +202,11 @@ module FlatPack
         icon_class = size_config[:icon_class]
         arguments[:class] = icon_class if icon_class
         arguments
+      end
+
+      def render_anchor_icons
+        arguments = icon_arguments
+        render_clipboard_state_icons(arguments.delete(:name), size: arguments.delete(:size), **arguments)
       end
 
       def validate_title!

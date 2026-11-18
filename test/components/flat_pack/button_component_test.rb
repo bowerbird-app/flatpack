@@ -583,7 +583,7 @@ module FlatPack
       def test_leading_icon_stays_hidden_from_assistive_tech
         render_inline(Component.new(text: "Search", icon: "magnifying-glass"))
 
-        assert_selector "button svg[aria-hidden='true'][data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_heroicon "magnifying-glass", selector: "button svg[aria-hidden='true']"
         refute_selector "button svg[aria-label]"
       end
 
@@ -591,7 +591,8 @@ module FlatPack
         FlatPack.configuration = nil
         render_inline(Component.new(text: "Search", icon: "magnifying-glass"))
 
-        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='outline']"
+        assert_heroicon "magnifying-glass", selector: "button svg.fp-button-icon[fill='none']"
+        assert_selector "button svg.fp-button-icon[stroke-width='var(--icon-stroke-width, 1.5)']"
         refute_selector "button svg[data-icon-style]"
       ensure
         FlatPack.configuration = nil
@@ -605,14 +606,15 @@ module FlatPack
           icon_style: :success
         ))
 
-        assert_selector "button[data-fp-style='default'] svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-flat-pack--icon-name-value='check-circle'][data-icon-style='success']"
+        assert_heroicon "check-circle", variant: "solid", selector: "button[data-fp-style='default'] svg.fp-button-icon[data-icon-style='success']"
         assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:success)
       end
 
       def test_icon_variant_accepts_a_string_and_icon_style_can_be_omitted
         render_inline(Component.new(text: "Add", icon: "plus", icon_variant: "mini"))
 
-        assert_selector "button svg[data-flat-pack--icon-variant-value='mini'][viewbox='0 0 20 20']"
+        assert_heroicon "plus", variant: "mini", selector: "button svg[viewbox='0 0 20 20']"
+        refute_selector "button svg[stroke-width]"
         refute_selector "button svg[data-icon-style]"
       end
 
@@ -650,7 +652,8 @@ module FlatPack
 
         render_inline(component)
 
-        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-icon-style='success']"
+        assert_heroicon "check-circle", variant: "solid", selector: "button svg.fp-button-icon[data-icon-style='success']"
+        refute_selector "button svg[stroke-width]"
       end
 
       def test_inline_svg_icon_renders_as_an_svg_element
@@ -658,7 +661,7 @@ module FlatPack
 
         html = page.native.to_html
         assert_selector "button > span[aria-hidden='true'] > svg[data-logo='mark']"
-        refute_selector "button svg[data-flat-pack--icon-name-value]"
+        refute_selector "[data-controller*='flat-pack--icon']"
         refute_includes html, "&lt;svg"
         refute_selector "button", text: /<svg/
         assert_includes html, "w-5"
@@ -675,14 +678,14 @@ module FlatPack
       def test_heroicon_name_still_renders_a_kit_icon
         render_inline(Component.new(text: "Search", icon: "magnifying-glass"))
 
-        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_heroicon "magnifying-glass", selector: "button svg.fp-button-icon"
         refute_selector "button > svg[data-logo]"
       end
 
       def test_short_icon_alias_still_maps_to_a_heroicon
         render_inline(Component.new(text: "Search", icon: "search"))
 
-        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_heroicon "magnifying-glass", selector: "button svg.fp-button-icon"
       end
 
       def test_inline_svg_icon_uses_the_heroicon_box_at_each_size
@@ -704,7 +707,7 @@ module FlatPack
         assert_selector "button[aria-label='Google'] > span[aria-hidden='true'] > svg[data-logo='mark']"
         refute_selector "button span", text: "Google"
         assert_includes page.native.to_html, "fp-hit-target"
-        refute_selector "button svg[data-flat-pack--icon-name-value]"
+        refute_selector "[data-controller*='flat-pack--icon']"
       end
 
       def test_inline_svg_link_button_keeps_the_icon_ahead_of_the_label
@@ -721,7 +724,7 @@ module FlatPack
         render_inline(component)
 
         assert_selector "#host-logo", text: "logo"
-        refute_selector "svg[data-flat-pack--icon-name-value]"
+        refute_selector "svg"
       end
 
       def test_invalid_icon_variant_and_icon_style

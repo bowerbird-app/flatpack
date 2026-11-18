@@ -39,30 +39,33 @@ module FlatPack
 
       # --- Stimulus controller wiring ------------------------------------------
 
-      def test_has_icon_stimulus_controller
+      def test_does_not_mount_the_removed_icon_controller
         render_inline(IconComponent.new(name: :search))
-        assert_selector "svg[data-controller='flat-pack--icon']"
+
+        refute_selector "svg[data-controller*='flat-pack--icon']"
       end
 
       def test_name_value_uses_heroicons_canonical_name
         # :search maps to "magnifying-glass" via NAME_MAP
         render_inline(IconComponent.new(name: :search))
-        assert_selector "svg[data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_heroicon "magnifying-glass"
       end
 
       def test_dash_name_passed_through_directly
         render_inline(IconComponent.new(name: "chevron-down"))
-        assert_selector "svg[data-flat-pack--icon-name-value='chevron-down']"
+        assert_heroicon "chevron-down"
       end
 
       def test_underscore_name_converted_to_dash
         render_inline(IconComponent.new(name: :chevron_left))
-        assert_selector "svg[data-flat-pack--icon-name-value='chevron-left']"
+        assert_heroicon "chevron-left"
       end
 
       def test_default_variant_is_outline
         render_inline(IconComponent.new(name: :search))
-        assert_selector "svg[data-flat-pack--icon-variant-value='outline']"
+
+        assert_heroicon "magnifying-glass"
+        assert_selector "svg[fill='none'][stroke='currentColor'][stroke-width='var(--icon-stroke-width, 1.5)'][viewbox='0 0 24 24']"
       end
 
       def test_default_variant_uses_flat_pack_configuration
@@ -70,12 +73,16 @@ module FlatPack
 
         render_inline(IconComponent.new(name: :search))
 
-        assert_selector "svg[data-flat-pack--icon-variant-value='mini'][viewbox='0 0 20 20']"
+        assert_heroicon "magnifying-glass", variant: "mini", selector: "svg[viewbox='0 0 20 20'][fill='currentColor']"
+        refute_selector "svg[stroke-width]"
       end
 
       def test_solid_variant_is_passed_through
         render_inline(IconComponent.new(name: :search, variant: :solid))
-        assert_selector "svg[data-flat-pack--icon-variant-value='solid']"
+
+        assert_heroicon "magnifying-glass", variant: "solid", selector: "svg[fill='currentColor'][viewbox='0 0 24 24']"
+        refute_selector "svg[stroke-width]"
+        refute_selector "svg[stroke]"
       end
 
       def test_explicit_variant_overrides_configured_default
@@ -83,13 +90,15 @@ module FlatPack
 
         render_inline(IconComponent.new(name: :search, variant: :solid))
 
-        assert_selector "svg[data-flat-pack--icon-variant-value='solid'][viewbox='0 0 24 24']"
+        assert_heroicon "magnifying-glass", variant: "solid", selector: "svg[viewbox='0 0 24 24'][fill='currentColor']"
+        refute_selector "svg[stroke-width]"
       end
 
       def test_micro_variant_sets_micro_viewbox
         render_inline(IconComponent.new(name: :search, variant: :micro))
 
-        assert_selector "svg[data-flat-pack--icon-variant-value='micro'][viewbox='0 0 16 16']"
+        assert_heroicon "magnifying-glass", variant: "micro", selector: "svg[viewbox='0 0 16 16'][fill='currentColor']"
+        refute_selector "svg[stroke-width]"
       end
 
       # --- Size classes ---------------------------------------------------------
@@ -141,20 +150,20 @@ module FlatPack
         render_inline(IconComponent.new(name: :send))
 
         assert_includes CGI.unescapeHTML(rendered_content), "-translate-y-0.5"
-        assert_selector "svg[data-flat-pack--icon-name-value='paper-airplane']"
+        assert_heroicon "paper-airplane"
       end
 
       def test_left_right_travel_icons_are_directional
         render_inline(IconComponent.new(name: "chevron-left"))
-        assert_selector "svg.fp-icon-directional[data-flat-pack--icon-name-value='chevron-left']"
+        assert_heroicon "chevron-left", selector: "svg.fp-icon-directional"
 
         render_inline(IconComponent.new(name: "arrow-right"))
-        assert_selector "svg.fp-icon-directional[data-flat-pack--icon-name-value='arrow-right']"
+        assert_heroicon "arrow-right", selector: "svg.fp-icon-directional"
       end
 
       def test_alignment_icons_are_directional
         render_inline(IconComponent.new(name: "align-left"))
-        assert_selector "svg.fp-icon-directional[data-flat-pack--icon-name-value='bars-3-bottom-left']"
+        assert_heroicon "bars-3-bottom-left", selector: "svg.fp-icon-directional"
       end
 
       def test_vertical_chevrons_and_marks_are_not_directional
@@ -168,7 +177,7 @@ module FlatPack
       def test_chat_bubble_tails_are_not_directional
         render_inline(IconComponent.new(name: :chat))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='chat-bubble-left-ellipsis']"
+        assert_heroicon "chat-bubble-left-ellipsis"
         refute_includes rendered_content, "fp-icon-directional"
       end
 
@@ -190,28 +199,28 @@ module FlatPack
 
       def test_cog_maps_to_cog_6_tooth
         render_inline(IconComponent.new(name: :cog))
-        assert_selector "svg[data-flat-pack--icon-name-value='cog-6-tooth']"
+        assert_heroicon "cog-6-tooth"
       end
 
       def test_menu_maps_to_bars_3
         render_inline(IconComponent.new(name: :menu))
-        assert_selector "svg[data-flat-pack--icon-name-value='bars-3']"
+        assert_heroicon "bars-3"
       end
 
       def test_dashboard_maps_to_squares_2x2
         render_inline(IconComponent.new(name: :dashboard))
-        assert_selector "svg[data-flat-pack--icon-name-value='squares-2x2']"
+        assert_heroicon "squares-2x2"
       end
 
       def test_chat_maps_to_chat_bubble_left_ellipsis
         render_inline(IconComponent.new(name: :chat))
-        assert_selector "svg[data-flat-pack--icon-name-value='chat-bubble-left-ellipsis']"
+        assert_heroicon "chat-bubble-left-ellipsis"
       end
 
       def test_unknown_name_passes_through_unchanged
         # Names not in NAME_MAP are passed directly (heroicons may handle them)
         render_inline(IconComponent.new(name: "academic-cap"))
-        assert_selector "svg[data-flat-pack--icon-name-value='academic-cap']"
+        assert_heroicon "academic-cap"
       end
 
       # --- Extra HTML attributes -----------------------------------------------
@@ -236,18 +245,53 @@ module FlatPack
 
       def test_nil_data_does_not_raise
         render_inline(IconComponent.new(name: :search, data: nil))
-        assert_selector "svg[data-controller='flat-pack--icon']"
+        assert_heroicon "magnifying-glass"
+        refute_selector "svg[data-controller]"
       end
 
       def test_accepts_fp_red_dot_utility_class
         render_inline(IconComponent.new(name: :search, class: "fp-red-dot"))
-        assert_selector "svg.fp-red-dot"
+
+        assert_selector "svg.fp-red-dot circle.fp-red-dot-indicator"
+        assert_heroicon "magnifying-glass", selector: "svg.fp-red-dot"
+      end
+
+      def test_unknown_name_raises_in_test
+        error = assert_raises(ArgumentError) { render_inline(IconComponent.new(name: "not-a-real-icon")) }
+
+        assert_includes error.message, "not-a-real-icon"
+      end
+
+      def test_unknown_name_warns_and_renders_an_empty_svg_in_production
+        warnings = []
+        logger = Object.new
+        logger.define_singleton_method(:warn) { |message| warnings << message }
+        with_rails_env("production", logger) do
+          render_inline(IconComponent.new(name: "not-a-real-icon"))
+        end
+
+        assert_includes warnings.join, '[FlatPack] Unknown heroicon: "not-a-real-icon"'
+        assert_selector "svg.w-5.h-5[viewbox='0 0 24 24'][fill='none'][stroke='currentColor']"
+        refute_selector "svg path"
+      end
+
+      def with_rails_env(name, logger)
+        singleton = Rails.singleton_class
+        original_env = Rails.method(:env)
+        original_logger = Rails.method(:logger)
+        singleton.define_method(:env) { ActiveSupport::StringInquirer.new(name) }
+        singleton.define_method(:logger) { logger }
+        yield
+      ensure
+        singleton.define_method(:env) { original_env.call }
+        singleton.define_method(:logger) { original_logger.call }
       end
 
       def test_animate_opts_into_svg_motion
         render_inline(IconComponent.new(name: :bell, animate: :wiggle, trigger: :hover))
 
-        assert_selector "svg[data-controller='flat-pack--icon flat-pack--svg-motion']"
+        assert_selector "svg[data-controller='flat-pack--svg-motion']"
+        refute_selector "svg[data-controller*='flat-pack--icon']"
         assert_selector "svg[data-flat-pack--svg-motion-state-value='play']"
         assert_selector "svg[data-flat-pack--svg-motion-trigger-value='hover']"
         assert_selector "svg.fp-icon-motion.cursor-pointer"

@@ -20,12 +20,12 @@ module FlatPack
       end
 
       def test_chevron_name_sits_after_the_label
-        render_inline(Dropdown::Component.new(text: "More", chevron: "archive"))
+        render_inline(Dropdown::Component.new(text: "More", chevron: "archive-box"))
 
         trigger = page.find("button")
         assert_equal ["span", "span"], trigger.native.element_children.map(&:name)
         chevron = trigger.find("span:last-child svg")
-        assert_equal "archive", chevron["data-flat-pack--icon-name-value"]
+        assert_heroicon_html chevron.native.inner_html, "archive-box"
         assert_nil chevron["data-flat-pack--button-dropdown-target"]
 
         error = assert_raises(ArgumentError) { Dropdown::Component.new(text: "More", chevron: true) }
@@ -168,8 +168,8 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Actions", icon: "settings"))
 
         assert_selector "button", text: "Actions"
-        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-name-value='cog-6-tooth']"
-        assert_selector "button svg[data-flat-pack--icon-name-value='chevron-down']:not(.fp-button-icon)"
+        assert_heroicon "cog-6-tooth", selector: "button svg.fp-button-icon"
+        assert_heroicon "chevron-down", selector: "button svg:not(.fp-button-icon)"
       end
 
       def test_trigger_picks_up_an_inline_svg_icon
@@ -177,8 +177,8 @@ module FlatPack
         render_inline(Dropdown::Component.new(text: "Google", icon: svg))
 
         assert_selector "button > span[aria-hidden='true'] > svg[data-logo='mark']"
-        assert_selector "button svg[data-flat-pack--icon-name-value='chevron-down']"
-        refute_selector "button svg[data-flat-pack--icon-name-value][data-logo]"
+        assert_heroicon "chevron-down", selector: "button svg"
+        assert_empty page.find("button svg[data-logo='mark']").native.element_children
       end
 
       def test_leading_icon_takes_variant_and_style_and_the_chevron_does_not
@@ -189,11 +189,11 @@ module FlatPack
           icon_style: :success
         ))
 
-        assert_selector "button svg.fp-button-icon[data-flat-pack--icon-variant-value='solid'][data-icon-style='success'][data-flat-pack--icon-name-value='check-circle']"
+        assert_heroicon "check-circle", variant: "solid", selector: "button svg.fp-button-icon[data-icon-style='success']"
         assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:success)
-        assert_selector "button svg[data-flat-pack--icon-name-value='chevron-down'][data-flat-pack--icon-variant-value='outline']"
-        refute_selector "button svg[data-flat-pack--icon-name-value='chevron-down'][data-icon-style]"
-        refute_selector "button svg[data-flat-pack--icon-name-value='chevron-down'].fp-button-icon"
+        assert_heroicon "chevron-down", variant: "outline", selector: "button svg"
+        refute_heroicon "chevron-down", selector: "button svg[data-icon-style]"
+        refute_heroicon "chevron-down", selector: "button svg.fp-button-icon"
       end
 
       def test_invalid_dropdown_icon_variant_and_icon_style
@@ -232,7 +232,7 @@ module FlatPack
         ))
 
         assert_selector "button.fp-button[data-fp-style='primary'][type='submit'][title='Conversation actions']", text: "Actions"
-        assert_selector "button svg[data-flat-pack--icon-name-value='cog-6-tooth']"
+        assert_heroicon "cog-6-tooth", selector: "button svg"
         refute_selector "button", text: "Nope"
       end
 
@@ -293,11 +293,11 @@ module FlatPack
 
       def test_renders_item_with_icon
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.menu_item(text: "Edit", icon: "edit", href: "/edit")
+          dropdown.menu_item(text: "Edit", icon: "pencil", href: "/edit")
         end
 
         assert_selector "a[href='/edit']", text: "Edit"
-        assert_selector "a[href='/edit'] svg.fp-button-icon[data-flat-pack--icon-name-value='edit']"
+        assert_heroicon "pencil", selector: "a[href='/edit'] svg.fp-button-icon"
       end
 
       def test_menu_item_icon_takes_variant_and_style
@@ -311,7 +311,7 @@ module FlatPack
           )
         end
 
-        assert_selector "a[href='/unpublish'] svg.fp-button-icon[data-flat-pack--icon-variant-value='mini'][data-icon-style='danger'][data-flat-pack--icon-name-value='x-circle']"
+        assert_heroicon "x-circle", variant: "mini", selector: "a[href='/unpublish'] svg.fp-button-icon[data-icon-style='danger']"
         assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:danger)
       end
 
@@ -363,19 +363,23 @@ module FlatPack
         fragment = Nokogiri::HTML.fragment(component.menu_row)
         header = fragment.at_css(".fp-menu-collapse__icon svg")
 
-        assert_equal "solid", header["data-flat-pack--icon-variant-value"]
+        assert_equal "currentColor", header["fill"]
+        assert_nil header["stroke-width"]
         assert_equal "success", header["data-icon-style"]
-        assert_equal "check-circle", header["data-flat-pack--icon-name-value"]
+        assert_heroicon_html header.inner_html, "check-circle", "solid"
         assert_includes header["class"], FlatPack::Button::IconOptions::STYLES.fetch(:success)
 
         link_icon = fragment.at_css("a.fp-menu-collapse__item svg")
-        assert_equal "solid", link_icon["data-flat-pack--icon-variant-value"]
+        assert_equal "currentColor", link_icon["fill"]
+        assert_nil link_icon["stroke-width"]
         assert_equal "success", link_icon["data-icon-style"]
-        assert_equal "check-circle", link_icon["data-flat-pack--icon-name-value"]
+        assert_heroicon_html link_icon.inner_html, "check-circle", "solid"
 
         schedule = fragment.css("button.fp-menu-collapse__item").find { |node| node.text.include?("Schedule") }
         schedule_icon = schedule.at_css("svg")
-        assert_equal "mini", schedule_icon["data-flat-pack--icon-variant-value"]
+        assert_equal "0 0 20 20", schedule_icon["viewbox"]
+        assert_nil schedule_icon["stroke-width"]
+        assert_heroicon_html schedule_icon.inner_html, "clock", "mini"
         assert_equal "warning", schedule_icon["data-icon-style"]
         assert_includes schedule_icon["class"], "ms-auto"
         assert_includes schedule_icon["class"], "fp-button-icon"
@@ -767,7 +771,7 @@ module FlatPack
 
       def test_omitting_host_hooks_keeps_the_default_menu_and_trigger
         render_inline(Dropdown::Component.new(text: "Actions")) do |dropdown|
-          dropdown.menu_item(text: "Edit", icon: "edit", href: "/edit")
+          dropdown.menu_item(text: "Edit", icon: "pencil", href: "/edit")
         end
         default_html = page.native.to_html
 
@@ -776,7 +780,7 @@ module FlatPack
           menu_class: nil,
           menu_attributes: {}
         )) do |dropdown|
-          dropdown.menu_item(text: "Edit", icon: "edit", href: "/edit", icon_position: :start, keep_open: false)
+          dropdown.menu_item(text: "Edit", icon: "pencil", href: "/edit", icon_position: :start, keep_open: false)
         end
 
         assert_equal default_html, page.native.to_html
@@ -795,7 +799,7 @@ module FlatPack
         link = page.find("a[role='menuitem'][href='/favorites']")
         children = link.native.element_children
         assert_equal "svg", children[0].name
-        assert_equal "heart", children[0]["data-flat-pack--icon-name-value"]
+        assert_heroicon_html children[0].inner_html, "heart"
         refute_includes children[0]["class"].to_s, "ms-auto"
         assert_equal "span", children[1].name
         assert_equal "Favorites", children[1].text
@@ -812,7 +816,7 @@ module FlatPack
         assert_equal "Favorites", children[0].text
         assert_equal "svg", children[1].name
         assert_includes children[1]["class"], "ms-auto"
-        assert_equal "heart", children[1]["data-flat-pack--icon-name-value"]
+        assert_heroicon_html children[1].inner_html, "heart"
         refute_includes link.native.to_html, "order-last"
       end
 
@@ -820,7 +824,7 @@ module FlatPack
         dropdown = Dropdown::Component.new(text: "Actions")
 
         error = assert_raises(ArgumentError) do
-          dropdown.menu_item(text: "Edit", icon: "edit", icon_position: :middle)
+          dropdown.menu_item(text: "Edit", icon: "pencil", icon_position: :middle)
         end
         assert_match(/icon_position/, error.message)
       end
@@ -868,7 +872,7 @@ module FlatPack
         assert_equal link[:class], publish[:class]
         assert_equal "true", publish["data-flat-pack-dropdown-item"]
         assert_equal "true", publish["data-flat-pack-dropdown-keep-open"]
-        assert_selector "button[role='menuitem'] svg[data-flat-pack--icon-name-value='check-circle']"
+        assert_heroicon "check-circle", selector: "button[role='menuitem'] svg"
 
         form = publish.find(:xpath, "ancestor::form[1]")
         assert_equal "/takes/1", form[:action]

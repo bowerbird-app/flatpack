@@ -33,7 +33,7 @@ class ButtonDropdownTriggerStateTest < ActionDispatch::SystemTestCase
     refute_includes trigger[:class], "fp-button-flat"
     assert_equal "Published", trigger.text.squish
     assert_equal "Published", trigger["aria-label"]
-    assert_selector "#publish-status-dropdown .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value='chevron-down']"
+    assert_heroicon "chevron-down", selector: "#publish-status-dropdown .fp-button-dropdown__trigger svg"
     assert_equal "menu", find("#publish-status-menu", visible: :all)["data-fp-identity"]
     assert_equal "false", find("#publish-status-menu")["aria-hidden"]
     assert_equal "true", trigger["aria-expanded"]

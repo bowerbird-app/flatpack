@@ -243,10 +243,10 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Outline icons follow --icon-stroke-width (Heroicons 1.5). Solid/mini/micro
-   * drop the stroke attribute in icon_controller, so this does not thicken fills.
+  /* Outline icons follow --icon-stroke-width (Heroicons 1.5). Solid, mini, and
+   * micro omit the stroke attribute, so this does not thicken fills.
    */
-  svg[data-controller~="flat-pack--icon"][stroke] {
+  svg[stroke-width="var(--icon-stroke-width, 1.5)"] {
     stroke-width: var(--icon-stroke-width, 1.5);
   }
 

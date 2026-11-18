@@ -51,7 +51,9 @@ module FlatPack
           chevron = page.find(".fp-menu-collapse__chevron svg")
 
           assert_includes icon[:class], "fp-button-icon"
-          assert_equal "outline", icon["data-flat-pack--icon-variant-value"]
+          assert_heroicon_html icon.native.inner_html, "pencil"
+          assert_equal "none", icon["fill"]
+          assert_equal "var(--icon-stroke-width, 1.5)", icon["stroke-width"]
           assert_nil icon["data-icon-style"]
           refute_includes chevron[:class].to_s, "fp-button-icon"
           assert_nil chevron["data-icon-style"]
@@ -67,9 +69,10 @@ module FlatPack
 
           icon = page.find(".fp-menu-collapse__icon svg")
 
-          assert_equal "solid", icon["data-flat-pack--icon-variant-value"]
+          assert_equal "currentColor", icon["fill"]
+          assert_nil icon["stroke-width"]
           assert_equal "success", icon["data-icon-style"]
-          assert_equal "check-circle", icon["data-flat-pack--icon-name-value"]
+          assert_heroicon_html icon.native.inner_html, "check-circle", "solid"
           assert_includes icon[:class], "fp-button-icon"
           assert_includes page.native.to_html, FlatPack::Button::IconOptions::STYLES.fetch(:success)
           chevron = page.find(".fp-menu-collapse__chevron svg")

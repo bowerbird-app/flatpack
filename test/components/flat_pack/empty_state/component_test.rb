@@ -43,13 +43,13 @@ module FlatPack
       def test_renders_explicit_inbox_icon
         render_inline(Component.new(title: "Empty", icon: :inbox))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='inbox']"
+        assert_heroicon "inbox"
       end
 
       def test_renders_icon_variant
         render_inline(Component.new(title: "Empty", icon: :sparkles, icon_variant: :solid))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='sparkles'][data-flat-pack--icon-variant-value='solid']"
+        assert_heroicon "sparkles", variant: "solid"
       end
 
       def test_does_not_render_icon_when_icon_is_nil
@@ -61,13 +61,13 @@ module FlatPack
       def test_renders_search_icon
         render_inline(Component.new(title: "No results", icon: :search))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_heroicon "magnifying-glass"
       end
 
       def test_renders_custom_icon_name
         render_inline(Component.new(title: "No uploads", icon: :upload))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='arrow-up-tray']"
+        assert_heroicon "arrow-up-tray"
       end
 
       def test_renders_items_in_a_wrapping_collection

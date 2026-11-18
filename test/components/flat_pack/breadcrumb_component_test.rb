@@ -114,7 +114,7 @@ module FlatPack
           breadcrumb.item(text: "Products")
         end
 
-        assert_selector "svg[data-flat-pack--icon-name-value='chevron-right']"
+        assert_heroicon "chevron-right"
       end
 
       def test_validates_separator
@@ -139,7 +139,7 @@ module FlatPack
         end
 
         assert_selector "a[href='/']", text: "Home", count: 1
-        assert_selector "svg[data-flat-pack--icon-name-value='home']"
+        assert_heroicon "home"
       end
 
       def test_does_not_render_home_when_disabled
@@ -168,11 +168,11 @@ module FlatPack
       end
 
       def test_renders_home_with_icon
-        render_inline(Component.new(show_home: true, home_icon: "house")) do |breadcrumb|
+        render_inline(Component.new(show_home: true, home_icon: "home")) do |breadcrumb|
           breadcrumb.item(text: "Products")
         end
 
-        assert_selector "svg[data-flat-pack--icon-name-value='house']"
+        assert_heroicon "home"
         assert_text "Home"
       end
 
@@ -184,7 +184,7 @@ module FlatPack
         assert_selector "a[href='/previous']", text: "Back"
         assert_selector "nav ol li:first-child a[href='/previous']", text: "Back"
         assert_selector "a[href='/previous'].mr-3", text: "Back", count: 1
-        assert_selector "svg[data-flat-pack--icon-name-value='chevron-left']"
+        assert_heroicon "chevron-left"
       end
 
       def test_renders_back_item_from_previous_breadcrumb_link
@@ -401,7 +401,7 @@ module FlatPack
       def test_item_with_icon
         render_inline(Item::Component.new(text: "Home", href: "/", icon: "home"))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='home']"
+        assert_heroicon "home"
         assert_text "Home"
       end
 

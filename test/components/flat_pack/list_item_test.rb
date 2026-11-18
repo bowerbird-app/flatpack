@@ -43,7 +43,7 @@ module FlatPack
       def test_renders_with_icon
         render_inline(Item.new(icon: :check)) { "Content" }
 
-        assert_selector "span svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
+        assert_heroicon "check", selector: "span svg"
       end
 
       def test_inline_svg_icon_renders_as_an_svg_element
@@ -51,7 +51,8 @@ module FlatPack
         render_inline(Item.new(icon: svg)) { "Content" }
 
         assert_selector "span.flat-pack-list-item-icon > svg[data-logo='mark']"
-        refute_selector "svg[data-flat-pack--icon-name-value]"
+        refute_selector "[data-controller*='flat-pack--icon']"
+        assert_empty page.find("svg[data-logo='mark']").native.element_children
         refute_includes page.native.to_html, "&lt;svg"
       end
 
@@ -142,7 +143,7 @@ module FlatPack
 
         assert_selector "div.flat-pack-list-key-value-row > dt > span.flat-pack-list-key", text: "Guest code"
         assert_selector "div.flat-pack-list-key-value-row > dd .flat-pack-list-value", text: "morning-b"
-        assert_selector "dt span.flat-pack-list-item-icon[aria-hidden='true'] svg[data-flat-pack--icon-name-value='key']"
+        assert_heroicon "key", selector: "dt span.flat-pack-list-item-icon[aria-hidden='true'] svg"
         assert_selector "dd span.flat-pack-list-key-value-trailing", text: "Copy"
         html = page.native.to_html
         assert_includes html, "sm:grid-cols-subgrid"
@@ -205,7 +206,7 @@ module FlatPack
         render_inline(Item.new(icon: :check)) { "Content" }
 
         assert_selector "span.flat-pack-list-item-marker[aria-hidden='true']"
-        assert_selector "span.flat-pack-list-item-icon svg[data-controller='flat-pack--icon'][data-flat-pack--icon-name-value='check']"
+        assert_heroicon "check", selector: "span.flat-pack-list-item-icon svg"
         assert_selector "div.min-w-0.flex-1", text: "Content"
       end
 
@@ -235,7 +236,7 @@ module FlatPack
       end
 
       def test_title_and_subtitle_use_kit_type
-        render_inline(Item.new(title: "Take 3", subtitle: "Room tone, no talking.", icon: :mic))
+        render_inline(Item.new(title: "Take 3", subtitle: "Room tone, no talking.", icon: :microphone))
 
         assert_selector "p.fp-text.fp-list-item-title[data-fp-weight=medium]", text: "Take 3"
         assert_selector "p.fp-text.fp-list-item-subtitle", text: "Room tone, no talking."

@@ -168,7 +168,7 @@ module FlatPack
 
         assert_selector "[data-controller='flat-pack--notification-rollup']"
         assert_selector "[data-flat-pack--notification-rollup-target='trigger'][aria-expanded='false']"
-        assert_selector "[data-flat-pack--notification-rollup-target='icon'][data-flat-pack--icon-name-value='chevron-down']"
+        assert_heroicon "chevron-down", selector: "[data-flat-pack--notification-rollup-target='icon']"
       end
 
       def test_rollup_parent_does_not_require_href
@@ -234,13 +234,13 @@ module FlatPack
       def test_adds_fp_red_dot_class_to_unread_notification_icon
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: true, icon: :bell)]))
 
-        assert_selector "li svg.fp-red-dot[data-flat-pack--icon-name-value='bell']"
+        assert_heroicon "bell", selector: "li svg.fp-red-dot"
       end
 
       def test_does_not_add_fp_red_dot_class_to_read_notification_icon
         render_inline(Component.new(see_all_href: "/notifications", notifications: [notification(unread: false, icon: :bell)]))
 
-        refute_selector "li svg.fp-red-dot[data-flat-pack--icon-name-value='bell']"
+        refute_heroicon "bell", selector: "li svg.fp-red-dot"
       end
 
       def test_renders_empty_state_when_notifications_are_empty

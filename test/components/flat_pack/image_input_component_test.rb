@@ -50,7 +50,7 @@ module FlatPack
         empty = page.find("[data-flat-pack--image-input-target='empty']", visible: :all)
         assert_includes empty[:class], "bg-[var(--avatar-background-color)]"
         refute_includes empty[:class], "border"
-        assert_selector "svg[data-flat-pack--icon-name-value='camera']", visible: :all
+        assert_heroicon "camera", visible: :all
         assert_no_selector "button"
         assert_selector "button[hidden][aria-label='Remove image']", visible: :all
       end
@@ -72,7 +72,7 @@ module FlatPack
         ))
 
         assert_selector "img[src='#{PORTRAIT}'][alt='A person']"
-        assert_selector "[data-flat-pack--image-input-target='overlay'] svg[data-flat-pack--icon-name-value='pencil']"
+        assert_heroicon "pencil", selector: "[data-flat-pack--image-input-target='overlay'] svg"
         assert_selector "button[aria-label='Remove image']"
         assert_selector "input[type='hidden'][name='remove_avatar'][value='0'][autocomplete='off']", visible: :all
         assert_selector "[data-flat-pack--image-input-initial-src-value='#{PORTRAIT}']"

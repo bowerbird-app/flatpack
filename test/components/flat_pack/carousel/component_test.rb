@@ -105,8 +105,8 @@ module FlatPack
         assert_equal "secondary", prev_button["data-fp-style"]
         assert_equal "Previous slide", prev_button["aria-label"]
         assert_selector ".fp-overlay-icon-button button[data-action='click->flat-pack--carousel#prev']", visible: :all
-        assert_selector "button[data-action='click->flat-pack--carousel#prev'] svg[data-flat-pack--icon-name-value='chevron-left']", visible: :all
-        assert_selector "button[data-action='click->flat-pack--carousel#next'] svg[data-flat-pack--icon-name-value='chevron-right']", visible: :all
+        assert_heroicon "chevron-left", selector: "button[data-action='click->flat-pack--carousel#prev'] svg", visible: :all
+        assert_heroicon "chevron-right", selector: "button[data-action='click->flat-pack--carousel#next'] svg", visible: :all
         css = FlatPack::Engine.root.join("app/assets/stylesheets/flat_pack/application.css").read
         assert_includes css, ".fp-overlay-icon-button svg {\n  pointer-events: none;\n}"
         assert_includes css, "--button-secondary-background-color: var(--carousel-control-background-color);"
@@ -176,7 +176,7 @@ module FlatPack
         assert_equal "click->flat-pack--carousel#openLightbox", lightbox_toggle["data-action"]
         assert_equal "lightboxToggle", lightbox_toggle["data-flat-pack--carousel-target"]
         refute_includes lightbox_toggle[:class], "top-12"
-        assert_selector "button[data-flat-pack--carousel-target='lightboxToggle'] svg[data-flat-pack--icon-name-value='arrows-pointing-out']", visible: :all
+        assert_heroicon "arrows-pointing-out", selector: "button[data-flat-pack--carousel-target='lightboxToggle'] svg", visible: :all
       end
 
       def test_renders_shared_lightbox_dialog_for_enabled_image_and_video_slides

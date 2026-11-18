@@ -7,6 +7,6 @@
     "build:heroicons": "node scripts/build_heroicons.js"
   },
   "devDependencies": {
-    "heroicons": "^2.0.0"
+    "heroicons": "2.2.0"
   }
 }

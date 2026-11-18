@@ -169,7 +169,7 @@ module FlatPack
           assert_includes css, "--button-focus-ring-color: var(--comments-composer-submit-focus-ring-color, var(--focus-outline-color, #101010));"
           assert_includes css, "outline: 1px auto var(--button-focus-ring-color, #101010);"
           refute_includes css, "outline: 1px auto #101010;"
-          assert_selector ".fp-comments-composer-submit button svg[data-flat-pack--icon-name-value='paper-airplane']"
+          assert_heroicon "paper-airplane", selector: ".fp-comments-composer-submit button svg"
         end
 
         def test_renders_avatar_in_default_mode

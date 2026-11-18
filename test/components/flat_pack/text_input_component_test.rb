@@ -175,7 +175,7 @@ module FlatPack
         assert_selector "button[aria-label='Copy input value'][data-flat-pack--clipboard-target='button']"
         refute_selector "button[data-action]"
         assert_includes page.native.to_html, "top-1/2"
-        assert_selector "svg[data-flat-pack--icon-name-value='clipboard-document']"
+        assert_heroicon "clipboard-document"
       end
 
       def test_combines_character_count_and_quick_copy_actions

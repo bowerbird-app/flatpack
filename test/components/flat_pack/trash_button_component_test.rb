@@ -14,7 +14,7 @@ module FlatPack
         assert_selector ".fp-trash-button[data-fp-expand='right']"
         assert_selector ".fp-trash-button[role='group'][aria-label='Trash']"
         assert_selector "button.fp-trash-button__arm[data-fp-style='default'][aria-label='Trash']"
-        assert_selector "button.fp-trash-button__arm svg[data-flat-pack--icon-name-value='trash']"
+        assert_heroicon "trash", selector: "button.fp-trash-button__arm svg"
         refute_selector "button.fp-trash-button__arm", text: "Trash"
       end
 
@@ -22,7 +22,7 @@ module FlatPack
         render_inline(Component.new(text: "Trash"))
 
         assert_selector "button.fp-trash-button__arm", text: "Trash"
-        assert_selector "button.fp-trash-button__arm svg[data-flat-pack--icon-name-value='trash']"
+        assert_heroicon "trash", selector: "button.fp-trash-button__arm svg"
       end
 
       def test_confirm_uses_danger_style_and_default_copy
@@ -30,7 +30,7 @@ module FlatPack
 
         assert_selector "button.fp-trash-button__confirm-btn[data-fp-style='danger']", text: "Confirm"
         assert_selector "button.fp-trash-button__cancel-btn[data-fp-style='default'][aria-label='Cancel']"
-        assert_selector "button.fp-trash-button__cancel-btn svg[data-flat-pack--icon-name-value='x-mark']"
+        assert_heroicon "x-mark", selector: "button.fp-trash-button__cancel-btn svg"
       end
 
       def test_confirm_label_override

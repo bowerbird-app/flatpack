@@ -58,7 +58,7 @@ module FlatPack
           nav.item(text: "Home", href: "/", icon: :home)
         end
 
-        assert_selector "svg[data-flat-pack--icon-name-value='home']"
+        assert_heroicon "home"
       end
 
       def test_merges_component_system_arguments_class_data_and_aria

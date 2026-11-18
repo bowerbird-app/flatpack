@@ -18,9 +18,9 @@ module FlatPack
         assert_selector "button[aria-label='Copy'][data-action='click->flat-pack--clipboard#copy']"
         assert_selector "button.fp-button.fp-copy-button"
         assert_selector "[data-flat-pack--clipboard-target='label']", text: "Copy"
-        assert_selector "[data-icon='idle'] svg[data-flat-pack--icon-name-value='clipboard-document']"
-        assert_selector "[data-icon='copied'] svg[data-flat-pack--icon-name-value='check']"
-        assert_selector "[data-icon='error'] svg[data-flat-pack--icon-name-value='exclamation-circle']"
+        assert_heroicon "clipboard-document", selector: "[data-icon='idle'] svg"
+        assert_heroicon "check", selector: "[data-icon='copied'] svg"
+        assert_heroicon "exclamation-circle", selector: "[data-icon='error'] svg"
         assert_selector "[data-flat-pack--clipboard-target='live'][aria-live='polite']", text: ""
         assert_includes page.native.to_html, %(data-flat-pack--clipboard-error-label-value="#{I18n.t("flatpack.clipboard.error_label")}")
       end

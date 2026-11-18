@@ -63,6 +63,38 @@ class FakeElement {
     this.children = []
   }
 
+  replaceChildren(...nodes) {
+    this.children = []
+    nodes.forEach((node) => this.appendChild(node))
+  }
+
+  cloneNode() {
+    const copy = new FakeElement(this.tagName)
+    copy.attributes = { ...this.attributes }
+    copy.dataset = { ...this.dataset }
+    copy.innerMarkup = this.innerMarkup
+    copy.classList = new FakeClassList([...this.classList.classes])
+    this.children.forEach((child) => copy.appendChild(child.cloneNode()))
+    return copy
+  }
+
+  get firstChild() {
+    return this.children[0] || null
+  }
+
+  insertBefore(node, reference) {
+    const index = this.children.indexOf(reference)
+    if (index === -1) this.children.push(node)
+    else this.children.splice(index, 0, node)
+    node.parentNode = this
+    return node
+  }
+
+  remove() {
+    if (!this.parentNode) return
+    this.parentNode.children = this.parentNode.children.filter((child) => child !== this)
+  }
+
   appendChild(child) {
     this.children.push(child)
     child.parentNode = this
@@ -110,6 +142,10 @@ function matchesSelector(element, selector) {
     return element.tagName === 'span'
   }
 
+  if (selector === 'svg') {
+    return element.tagName === 'svg'
+  }
+
   if (selector === "[role='option']") {
     return element.attributes.role === 'option'
   }
@@ -135,10 +171,67 @@ function matchesSelector(element, selector) {
   return false
 }
 
+function parseMarkup(markup) {
+  const root = { tagName: 'root', children: [], attributes: [], parentNode: null }
+  const pattern = /<\/?([a-zA-Z0-9:-]+)([^>]*)\/?>/g
+  const stack = [root]
+  let match
+  while ((match = pattern.exec(markup))) {
+    const token = match[0]
+    if (token.startsWith('</')) {
+      stack.pop()
+      continue
+    }
+    const attrs = []
+    const attrPattern = /([:@a-zA-Z0-9-]+)="([^"]*)"/g
+    let attr
+    while ((attr = attrPattern.exec(match[2] || ''))) attrs.push({ name: attr[1], value: attr[2] })
+    const node = {
+      tagName: match[1],
+      attributes: attrs,
+      children: [],
+      parentNode: stack[stack.length - 1],
+      remove() {
+        this.parentNode.children = this.parentNode.children.filter((child) => child !== this)
+      },
+      removeAttribute(name) {
+        this.attributes = this.attributes.filter((item) => item.name !== name)
+      },
+      querySelector(selector) {
+        if (selector === 'parsererror') return null
+        if (String(this.tagName).toLowerCase() === selector) return this
+        for (const child of this.children) {
+          const found = child.querySelector(selector)
+          if (found) return found
+        }
+        return null
+      },
+      get outerHTML() {
+        const rendered = this.attributes.map((item) => ` ${item.name}="${item.value}"`).join('')
+        const inner = this.children.map((child) => child.outerHTML).join('')
+        return `<${this.tagName}${rendered}>${inner}</${this.tagName}>`
+      }
+    }
+    stack[stack.length - 1].children.push(node)
+    if (!token.endsWith('/>')) stack.push(node)
+  }
+  root.querySelector = (selector) => {
+    for (const child of root.children) {
+      const found = child.querySelector(selector)
+      if (found) return found
+    }
+    return null
+  }
+  return root
+}
+
 function loadController() {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'select_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
+  const svgMarkupPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'svg_markup.js')
+  const svgMarkupSource = fs.readFileSync(svgMarkupPath, 'utf8').replace('export function ', 'function ')
   const transformedSource = source
+    .replace('import { allowlistedIconSvg } from "flat_pack/svg_markup"\n', '')
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace('import { flatPackCopy } from "flat_pack/copy"', 'function flatPackCopy(key, vars = {}) { const t = ({ "select.remove": "Remove %{label}" })[key] || key; return String(t).replace(/%\\{(\\w+)\\}/g, (_, n) => vars[n] == null ? "" : String(vars[n])) }')
     .replace(
@@ -188,7 +281,12 @@ function cancelOverlayHide() {}`
     }
   }
 
-  vm.runInNewContext(clickOutsideSource + '\n' + remoteQuerySource + '\n' + transformedSource, context, { filename: filePath })
+  context.DOMParser = class DOMParser {
+    parseFromString(markup) {
+      return { querySelector: (selector) => parseMarkup(markup).querySelector(selector) }
+    }
+  }
+  vm.runInNewContext(clickOutsideSource + '\n' + remoteQuerySource + '\n' + svgMarkupSource + '\n' + transformedSource, context, { filename: filePath })
 
   return context.module.exports
 }
@@ -419,10 +517,12 @@ test('remote results keep an optional icon and the menu markup', () => {
   assert.equal(items[0].icon, 'user')
   assert.equal(items[1].icon, '')
 
+  items[0].icon_svg = '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 1"/><script>alert(1)</script></svg>'
   const markup = controller.optionMarkup(items[0])
   assert.match(markup, /data-icon="user"/)
-  assert.match(markup, /data-flat-pack--icon-name-value="user"/)
+  assert.match(markup, /<path/)
   assert.match(markup, /aria-hidden="true"/)
+  assert.doesNotMatch(markup, /script/)
   assert.match(markup, />Alice Johnson</)
   assert.match(markup, /class="[^"]*flex items-center gap-\[var\(--dropdown-item-gap\)\]/)
 })
@@ -452,14 +552,18 @@ test('a selected value icon renders in the closed control', () => {
   controller.defaultTriggerText = 'Choose'
 
   const rails = option(controller, 'rails')
-  rails.dataset.icon = 'cube'
+  const glyph = new FakeElement('svg')
+  glyph.innerMarkup = '<path d="M4 4"/>'
+  glyph.setAttribute('aria-hidden', 'true')
+  rails.appendChild(glyph)
   controller.selectOption({ currentTarget: rails })
 
   assert.equal(label.textContent, 'Rails')
   assert.equal(iconSlot.classList.contains('hidden'), false)
-  assert.match(markup, /data-flat-pack--icon-name-value="cube"/)
-  assert.match(markup, /aria-hidden="true"/)
-  assert.match(markup, /class="block shrink-0 w-4 h-4/)
+  assert.equal(iconSlot.children.length, 1)
+  assert.notEqual(iconSlot.children[0], glyph)
+  assert.equal(iconSlot.children[0].innerMarkup, '<path d="M4 4"/>')
+  assert.equal(iconSlot.children[0].attributes['aria-hidden'], 'true')
 })
 
 test('close is a no-op when the dropdown is already closed', () => {
