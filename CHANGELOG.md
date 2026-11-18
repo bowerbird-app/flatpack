@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remote select items and picker items draw an icon from `icon_svg` (the IconComponent HTML). A name alone does not become a glyph in the browser.
 
 ### Upgrade notes
+- Any component, FlatPack's own or a host's, that switches icons with JavaScript has to declare every icon it might switch to by rendering them on the server ahead of time, for example as hidden SVGs or `<template>`s. The JavaScript then shows or hides them. A name set from JavaScript no longer draws an icon.
 - `flat-pack--icon` is removed. There is no alias.
 - The `flat_pack/heroicons` pin and `heroicons.js` are removed.
 - Hosts that set `data-flat-pack--icon-name-value` from their own JS must render icons on the server.
