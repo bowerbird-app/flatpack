@@ -302,6 +302,13 @@
   --carousel-media-background-color: var(--carousel-media-background-color);
   --carousel-lightbox-image-background-color: var(--carousel-lightbox-image-background-color);
   --carousel-peek: var(--carousel-peek);
+  --carousel-per-view: var(--carousel-per-view);
+  --carousel-per-view-mobile: var(--carousel-per-view-mobile);
+  --carousel-per-view-tablet: var(--carousel-per-view-tablet);
+  --carousel-per-view-desktop: var(--carousel-per-view-desktop);
+  --carousel-peek-slots: var(--carousel-peek-slots);
+  --carousel-initial-index: var(--carousel-initial-index);
+  --carousel-slide-count: var(--carousel-slide-count);
   --modal-backdrop-color: var(--modal-backdrop-color);
   --modal-surface-color: var(--modal-surface-color);
   --modal-border-color: var(--modal-border-color);
@@ -1328,6 +1335,13 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --carousel-media-background-color: oklch(0 0 0);
   --carousel-lightbox-image-background-color: rgb(0 0 0 / 0.2);
   --carousel-peek: 0.25;
+  --carousel-per-view: 1;
+  --carousel-per-view-mobile: 1;
+  --carousel-per-view-tablet: 1;
+  --carousel-per-view-desktop: 1;
+  --carousel-peek-slots: 0;
+  --carousel-initial-index: 0;
+  --carousel-slide-count: 1;
   --modal-backdrop-color: var(--overlay-backdrop-color);
   --modal-surface-color: var(--surface-background-color);
   --modal-border-color: var(--surface-border-color);

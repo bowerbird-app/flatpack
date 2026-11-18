@@ -1,0 +1,91 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Carousel sizes",
+  subtitle: "One slide, a peek of the next, and a row that opens further along."
+) %>
+
+<section class="mb-10" id="one-up">
+  <%= render FlatPack::SectionTitle::Component.new(title: "One at a time", anchor_link: true) %>
+  <%= render FlatPack::Carousel::Component.new(
+    id: "carousel-one-up",
+    aria_label: "One at a time",
+    items_per_view_mobile: 1,
+    items_per_view_tablet: 1,
+    items_per_view_desktop: 1,
+    side_preview: false,
+    show_controls: true,
+    controls_on_touch: true,
+    show_indicators: false,
+    show_counter: true,
+    show_captions: false,
+    autoplay: false,
+    loop: false
+  ) do |carousel| %>
+    <% carousel.with_item do %>
+      <div style="height: 90px">Short note</div>
+    <% end %>
+    <% carousel.with_item do %>
+      <div style="height: 220px">The tall card</div>
+    <% end %>
+    <% carousel.with_item do %>
+      <div style="height: 140px">Middle card</div>
+    <% end %>
+    <% carousel.with_item do %>
+      <div style="height: 110px">Fourth card</div>
+    <% end %>
+    <% carousel.with_item do %>
+      <div style="height: 160px">Fifth card</div>
+    <% end %>
+    <% carousel.with_item do %>
+      <div style="height: 100px">Sixth card</div>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-10" id="preview">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Peek the next card", anchor_link: true) %>
+  <%= render FlatPack::Carousel::Component.new(
+    id: "carousel-preview",
+    aria_label: "Peek the next card",
+    items_per_view_mobile: 1,
+    items_per_view_tablet: 2,
+    items_per_view_desktop: 4,
+    side_preview: true,
+    show_controls: false,
+    show_indicators: false,
+    show_counter: false,
+    show_captions: false,
+    autoplay: false,
+    loop: false
+  ) do |carousel| %>
+    <% [90, 220, 140, 110, 160, 100].each do |height| %>
+      <% carousel.with_item do %>
+        <div style="height: <%= height %>px">Card</div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-10" id="offset">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Opens on the third card", anchor_link: true) %>
+  <%= render FlatPack::Carousel::Component.new(
+    id: "carousel-offset",
+    aria_label: "Opens on the third card",
+    initial_index: 2,
+    items_per_view_mobile: 1,
+    items_per_view_tablet: 2,
+    items_per_view_desktop: 4,
+    side_preview: true,
+    show_controls: false,
+    show_indicators: false,
+    show_counter: false,
+    show_captions: false,
+    autoplay: false,
+    loop: false
+  ) do |carousel| %>
+    <% [90, 220, 140, 110, 160, 100].each do |height| %>
+      <% carousel.with_item do %>
+        <div style="height: <%= height %>px">Card</div>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>

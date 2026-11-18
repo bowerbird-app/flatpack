@@ -1089,6 +1089,9 @@ class PagesController < ApplicationController
   def lightbox
   end
 
+  def carousel_first_paint
+  end
+
   def carousel
     @carousel_slides = carousel_demo_slides
     @carousel_single_slide = carousel_demo_single_slide

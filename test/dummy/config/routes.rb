@@ -269,6 +269,7 @@ Rails.application.routes.draw do
   get "demo/chat/composer", to: "pages#chat_composer"
 
   get "demo/carousel", to: "pages#carousel"
+  get "demo/carousel/first-paint", to: "pages#carousel_first_paint"
   get "demo/lightbox", to: "pages#lightbox"
 
   namespace :demo do

@@ -842,6 +842,100 @@ module FlatPack
         refute_includes touch_rule, "data-theme="
         assert_includes controller, 'getPropertyValue("--carousel-peek")'
         refute_includes controller, "perView + 0.25"
+        assert_includes variables, "--carousel-per-view:"
+        assert_includes variables, "--carousel-peek-slots:"
+        assert_includes application, ".flat-pack-carousel--slide .flat-pack-carousel__slide"
+        assert_includes application, "calc(100% / (var(--carousel-per-view) + var(--carousel-peek-slots)))"
+        assert_includes application, "--carousel-peek-slots: var(--carousel-peek, 0.25)"
+        assert_equal "0.25", variables[/--carousel-peek:\s*([0-9.]+);/, 1]
+        assert_equal Component::DEFAULT_PEEK_SLOTS, variables[/--carousel-peek:\s*([0-9.]+);/, 1].to_f
+      end
+
+      def test_slide_track_paints_every_slide_and_the_initial_range
+        render_inline(
+          Component.new(
+            slides: sample_slides + [
+              {type: :image, src: "https://images.example.com/four.jpg", alt: "Four"},
+              {type: :image, src: "https://images.example.com/five.jpg", alt: "Five"},
+              {type: :image, src: "https://images.example.com/six.jpg", alt: "Six"}
+            ],
+            initial_index: 1,
+            transition: :slide,
+            side_preview: true,
+            items_per_view_mobile: 1,
+            items_per_view_tablet: 2,
+            items_per_view_desktop: 4,
+            style: "color: red"
+          )
+        )
+
+        root = page.find("section.flat-pack-carousel", match: :first)
+        assert_includes root[:class], "flat-pack-carousel--slide"
+        assert_includes root[:class], "flat-pack-carousel--side-preview"
+        assert_includes root[:style], "--carousel-per-view-mobile: 1"
+        assert_includes root[:style], "--carousel-per-view-tablet: 2"
+        assert_includes root[:style], "--carousel-per-view-desktop: 4"
+        assert_includes root[:style], "--carousel-initial-index: 1"
+        assert_includes root[:style], "--carousel-slide-count: 6"
+        assert_includes root[:style], "color: red"
+        refute_includes root[:style], "--carousel-per-view:"
+
+        slides = root.all("[data-flat-pack--carousel-target='slide']", visible: :all)
+        assert_equal 6, slides.size
+        slides.each do |slide|
+          assert_nil slide[:hidden]
+          assert_includes slide[:class], "flat-pack-carousel__slide"
+        end
+        assert_equal "true", slides[0][:"aria-hidden"]
+        assert_equal "false", slides[1][:"aria-hidden"]
+        assert_equal "false", slides[2][:"aria-hidden"]
+        assert_equal "true", slides[3][:"aria-hidden"]
+      end
+
+      def test_one_up_slide_without_peek_still_renders_every_slide
+        render_inline(Component.new(slides: sample_slides, initial_index: 2))
+
+        root = page.find("section.flat-pack-carousel", match: :first)
+        slides = root.all("[data-flat-pack--carousel-target='slide']", visible: :all)
+        assert_equal 3, slides.size
+        slides.each { |slide| assert_nil slide[:hidden] }
+        assert_equal "true", slides[0][:"aria-hidden"]
+        assert_equal "true", slides[1][:"aria-hidden"]
+        assert_equal "false", slides[2][:"aria-hidden"]
+        assert_includes root[:style], "--carousel-initial-index: 2"
+        refute_includes root[:class], "flat-pack-carousel--side-preview"
+      end
+
+      def test_fade_and_logo_slider_keep_their_slide_visibility
+        render_inline(Component.new(slides: sample_slides, transition: :fade, initial_index: 1))
+
+        root = page.find("section.flat-pack-carousel", match: :first)
+        refute_includes root[:class], "flat-pack-carousel--slide"
+        slides = root.all("[data-flat-pack--carousel-target='slide']", visible: :all)
+        slides.each { |slide| assert_nil slide[:hidden] }
+        assert_equal "true", slides[0][:"aria-hidden"]
+        assert_equal "false", slides[1][:"aria-hidden"]
+        refute_includes slides[0][:class], "flat-pack-carousel__slide"
+
+        render_inline(
+          Component.new(
+            slides: [
+              {type: :image, src: "https://images.example.com/a.svg", alt: "A"},
+              {type: :image, src: "https://images.example.com/b.svg", alt: "B"}
+            ],
+            variant: :logo_slider,
+            loop: false
+          )
+        )
+
+        logo = page.find("section.flat-pack-carousel", match: :first)
+        refute_includes logo[:class], "flat-pack-carousel--slide"
+        refute_includes logo[:style].to_s, "--carousel-per-view-mobile"
+        logo.all("[data-flat-pack--carousel-target='slide']", visible: :all).each do |slide|
+          assert_nil slide[:hidden]
+          assert_equal "false", slide[:"aria-hidden"]
+          assert_includes slide[:class], "basis-1/3"
+        end
       end
     end
   end
