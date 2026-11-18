@@ -138,8 +138,8 @@ class FlatpackComponentsApiTest < ActionDispatch::IntegrationTest
   test "MCP pin and instructions_suffix guide FlatPack screen building" do
     skip "Recording Studio MCP not in this bundle" unless defined?(RecordingStudioMcp)
 
-    assert_equal "0.35.0", RecordingStudioMcp::VERSION
-    assert_equal "0.35.0", Gem.loaded_specs.fetch("recording_studio_mcp").version.to_s
+    assert_equal "0.37.0", RecordingStudioMcp::VERSION
+    assert_equal "0.37.0", Gem.loaded_specs.fetch("recording_studio_mcp").version.to_s
     assert_equal "0.25.0", RecordingStudioOauth::VERSION
     assert_equal(
       "/.well-known/oauth-protected-resource/recording_studio_mcp",

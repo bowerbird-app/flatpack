@@ -6,18 +6,18 @@ The deployable app in `test/dummy` is still the FlatPack component catalog. It a
 
 Pinned in `test/dummy/Gemfile.common`:
 
-- `recording_studio` (`v7.3.0`)
-- `recording_studio_accessible` (`v0.45.1`)
-- `recording_studio_user` (`v0.32.0`)
-- `recording_studio_attachable` (`v0.31.0`)
+- `recording_studio` (`v7.7.1`)
+- `recording_studio_accessible` (`v0.54.0`)
+- `recording_studio_user` (`v0.36.0`)
+- `recording_studio_attachable` (`v0.32.1`)
 - `recording_studio_site_settings` (`v0.6.0`)
-- `recording_studio_admin` (`v2.18.0`)
-- `recording_studio_api` (`v1.2.1`)
+- `recording_studio_admin` (`v2.19.0`)
+- `recording_studio_api` (`v1.15.0`)
 - `recording_studio_oauth` (`v0.25.0`)
-- `recording_studio_mcp` (`v0.35.0`)
+- `recording_studio_mcp` (`v0.37.0`)
 - `recording_studio_root_switchable` (`v0.16.0`)
 - `recording_studio_internationalization` (`v0.3.0`) — dummy-only; FlatPack does not depend on it. The catalog top nav renders `recording_studio_language_selector` immediately left of the theme control. Catalog full-page HTML cache keys include the current locale.
-- `recording_studio_trashable` (`v1.0.0`), `recording_studio_cache` (`v0.7.0`), `recording_studio_metrics` (`v0.9.0`), `recording_studio_logs` (`v0.8.0`), `recording_studio_moveable` (`v6.0.0`), and `recording_studio_icons` (`v0.4.0`) — git-only dependencies of that stack. They are not on RubyGems, so the dummy Gemfile pins each to its latest GitHub release.
+- `recording_studio_trashable` (`v1.2.0`), `recording_studio_cache` (`v0.7.0`), `recording_studio_metrics` (`v0.9.1`), `recording_studio_logs` (`v0.8.1`), `recording_studio_moveable` (`v6.0.1`), and `recording_studio_icons` (`v0.4.1`) — git-only dependencies of that stack. They are not on RubyGems, so the dummy Gemfile pins each to its latest GitHub release.
 
 Recording Studio host gems need Ruby `>= 3.3`.
 
@@ -97,7 +97,11 @@ Host-only. These routes live in the dummy initializer and are stripped from the 
 
 The public named API registers **only** these endpoints — not Workspace, Folder, Page, or `ping`. The public API would otherwise mirror every host recordable type; the dummy prepends a registry-only rule so HTTP, OpenAPI, and MCP share an empty type list.
 
-The dummy pins `recording_studio_oauth` to tag `v0.25.0` and `recording_studio_mcp` to tag `v0.35.0`. MCP advertises one tool per `register_endpoint` and omits tree tools when the type list is empty. Default `oauth_protected_resource_path` is `/.well-known/oauth-protected-resource/recording_studio_mcp`. The dummy does not override that path. ChatGPT Connect ignores MCP `initialize.instructions` and `instructions_suffix`. The compose workflow lives in the two catalog endpoints' OpenAPI `description` fields. Those fields become the MCP tool descriptions. The MCP initializer sets `instructions_suffix` to the same `Dummy::FLATPACK_COMPOSE_WORKFLOW` string for clients that do read initialize instructions. `recording_studio_api` is pinned at `v1.2.1`.
+`config/recording_studio_api.yml` is a minimal config (`shared: {}`). API 1.12 and newer raise on boot when that file is missing. The settings stay in `config/initializers/recording_studio_api.rb`.
+
+The dummy copies two migrations the new gems need at boot or in tests: API `add_owner_to_recording_studio_api_api_clients` (`owner_type`, `owner_id`) and Users `create_recording_studio_user_sign_in_lockouts` plus `create_recording_studio_user_sign_in_links`. Recording Studio `root_type_creation_index`, `enforce_root_invariant`, and `replace_root_index` stay out.
+
+The dummy pins `recording_studio_oauth` to tag `v0.25.0` and `recording_studio_mcp` to tag `v0.37.0`. MCP 0.36 accepts a type's public name and rejects a full class name. This host sends no MCP `type`, and the public catalog's type list stays empty. MCP advertises one tool per `register_endpoint` and omits tree tools when the type list is empty. Default `oauth_protected_resource_path` is `/.well-known/oauth-protected-resource/recording_studio_mcp`. The dummy does not override that path. ChatGPT Connect ignores MCP `initialize.instructions` and `instructions_suffix`. The compose workflow lives in the two catalog endpoints' OpenAPI `description` fields. Those fields become the MCP tool descriptions. The MCP initializer sets `instructions_suffix` to the same `Dummy::FLATPACK_COMPOSE_WORKFLOW` string for clients that do read initialize instructions. `recording_studio_api` is pinned at `v1.15.0`.
 
 - `GET /recording_studio_api/api/v1/flatpack/components`
 - `GET /recording_studio_api/api/v1/flatpack/components/:name`
