@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.378] - 2026-11-18
+
+### Changed
+- Dummy app: bump Recording Studio gems to latest tags (dependency update only)
+
+### Upgrade notes
+- Dummy host pins only. Flatpack's public API, arguments, CSS, and JavaScript are unchanged.
+- The dummy adds an empty `config/recording_studio_api.yml`. API 1.12 raises on boot when that file is missing. Settings stay in the dummy initializer.
+- The dummy copies API's `add_owner_to_recording_studio_api_api_clients` migration (`owner_type`, `owner_id`). Catalog token setup writes those columns.
+- The dummy copies Users' `create_recording_studio_user_sign_in_lockouts` and `create_recording_studio_user_sign_in_links` migrations. Password sign-in reads those tables.
+- Leave Recording Studio migrations `root_type_creation_index`, `enforce_root_invariant`, and `replace_root_index` out of the host. Do not rebuild Tailwind. Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.378`.
+
 ## [0.1.377] - 2026-11-16
 
 ### Changed
