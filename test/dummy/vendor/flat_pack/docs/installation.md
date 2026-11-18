@@ -354,9 +354,7 @@ pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
 
 # Shared reorder item list for table and grid sortable
 pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
-
-# Heroicons icon banks — used by FlatPack::Icon::Component
-pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
+pin "flat_pack/svg_markup", to: "flat_pack/svg_markup.js", preload: false
 ```
 
 **In `app/javascript/application.js`:**
@@ -410,7 +408,7 @@ If you need to manually configure JavaScript:
    pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
    pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
    pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
-   pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
+   pin "flat_pack/svg_markup", to: "flat_pack/svg_markup.js", preload: false
    ```
 
 2. Add to `app/javascript/application.js`:
@@ -459,7 +457,7 @@ const path = require("path")
 
 const flatpackRoot = execSync("bundle show flat_pack").toString().trim()
 const controllersDir = path.join(flatpackRoot, "app/javascript/flat_pack/controllers")
-const heroiconsPath = path.join(flatpackRoot, "app/javascript/flat_pack/heroicons.js")
+const svgMarkupPath = path.join(flatpackRoot, "app/javascript/flat_pack/svg_markup.js")
 
 // Import all FlatPack controllers.
 const entry = `
@@ -486,7 +484,6 @@ import FabController              from "${controllersDir}/fab_controller.js";
 import FileInputController        from "${controllersDir}/file_input_controller.js";
 import FormValidationController   from "${controllersDir}/form_validation_controller.js";
 import GridSortableController     from "${controllersDir}/grid_sortable_controller.js";
-import IconController             from "${controllersDir}/icon_controller.js";
 import ListSelectableController   from "${controllersDir}/list_selectable_controller.js";
 import ModalController            from "${controllersDir}/modal_controller.js";
 import NestedMultiselectController from "${controllersDir}/nested_multiselect_controller.js";
@@ -540,7 +537,6 @@ application.register("flat-pack--fab",                 FabController);
 application.register("flat-pack--file-input",          FileInputController);
 application.register("flat-pack--form-validation",     FormValidationController);
 application.register("flat-pack--grid-sortable",       GridSortableController);
-application.register("flat-pack--icon",                IconController);
 application.register("flat-pack--list-selectable",     ListSelectableController);
 application.register("flat-pack--modal",               ModalController);
 application.register("flat-pack--nested-multiselect",  NestedMultiselectController);
@@ -583,8 +579,7 @@ const result = spawnSync(
     "esbuild", entryPath,
     "--bundle",
     "--format=iife",
-    // Resolve flat_pack/heroicons to the local gem file (used by IconController)
-    `--alias:flat_pack/heroicons=${heroiconsPath}`,
+    `--alias:flat_pack/svg_markup=${svgMarkupPath}`,
     "--outfile=app/assets/javascripts/stimulus_controllers.js"
   ],
   { stdio: "inherit" }
@@ -977,7 +972,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 
 1. ✅ Add gem to Gemfile
 2. ✅ Run `bundle install`
-3. ✅ Run `rails generate flat_pack:install` — automatically wires up CSS, JS, Heroicons, and Tailwind
+3. ✅ Run `rails generate flat_pack:install` — automatically wires up CSS, JS, and Tailwind
 4. ✅ **Rebuild CSS: `bin/rails tailwindcss:build`** ← do this after every install or gem update
 5. ✅ Restart Rails server
 6. ✅ Start using FlatPack components in your views
@@ -987,7 +982,7 @@ The installation process for FlatPack is fully automated. Quick checklist:
 - ✨ `@source` directive in your Tailwind file so Tailwind scans FlatPack components
 - ✨ Tokens from `flat_pack/variables` (no host `--color-fp-*` fork)
 - ✨ Optional `rails g flat_pack:theme NAME --hue=… --chroma=… --lightness=…` for brand overrides
-- ✨ Heroicons importmap pin (`flat_pack/heroicons`) for the Icon component
+- ✨ Icons render on the server from `FlatPack::Shared::IconComponent`. There is no Heroicons JavaScript pin.
 - ✨ Optional app-wide FlatPack settings via `config/initializers/flat_pack.rb`, including `config.default_icon_variant = :outline`
 - ✨ Stimulus lazy-loading for all FlatPack controllers via importmap
 

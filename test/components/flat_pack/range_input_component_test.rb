@@ -258,8 +258,8 @@ module FlatPack
         ))
 
         assert_selector ".fp-range-input-ends"
-        assert_selector ".fp-range-input-end-icon--start[data-flat-pack--icon-name-value='magnifying-glass-minus'][aria-hidden='true']"
-        assert_selector ".fp-range-input-end-icon--end[data-flat-pack--icon-name-value='magnifying-glass-plus'][aria-hidden='true']"
+        assert_heroicon "magnifying-glass-minus", selector: ".fp-range-input-end-icon--start[aria-hidden='true']"
+        assert_heroicon "magnifying-glass-plus", selector: ".fp-range-input-end-icon--end[aria-hidden='true']"
         assert_selector "input.fp-range-input[aria-label='Icon size'][step='0.5']"
         assert_selector ".fp-range-input-tick", count: 5
       end
@@ -271,8 +271,8 @@ module FlatPack
           end_icon: :plus
         ))
 
-        assert_selector ".fp-range-input-end-icon--start[data-flat-pack--icon-name-value='minus']"
-        assert_selector ".fp-range-input-end-icon--end[data-flat-pack--icon-name-value='plus']"
+        assert_heroicon "minus", selector: ".fp-range-input-end-icon--start"
+        assert_heroicon "plus", selector: ".fp-range-input-end-icon--end"
         refute_selector ".fp-range-input-glyph"
       end
 
@@ -283,7 +283,7 @@ module FlatPack
           start_icon: :minus
         ))
 
-        assert_selector ".fp-range-input-end-icon--start[data-flat-pack--icon-name-value='minus']"
+        assert_heroicon "minus", selector: ".fp-range-input-end-icon--start"
         assert_selector ".fp-range-input-glyph--end", text: "A"
       end
 

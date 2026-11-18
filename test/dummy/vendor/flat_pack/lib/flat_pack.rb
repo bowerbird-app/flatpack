@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "flat_pack/version"
+require "flat_pack/heroicons"
 require "flat_pack/class_merger"
 require "flat_pack/copy"
 require "flat_pack/engine"

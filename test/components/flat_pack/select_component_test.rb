@@ -255,7 +255,7 @@ module FlatPack
         ))
 
         assert_selector "[data-flat-pack--select-target='chip'][data-value='rails'] [data-action*='flat-pack--select#removeChip']"
-        assert_selector "[data-flat-pack--select-target='chip'][data-value='rails'] svg[data-flat-pack--icon-name-value='x-mark']"
+        assert_heroicon "x-mark", selector: "[data-flat-pack--select-target='chip'][data-value='rails'] svg"
       end
 
       def test_nested_multiselect_forces_custom_select_and_renders_parent_child_options
@@ -423,7 +423,7 @@ module FlatPack
 
         assert_selector "select option", text: "High"
         refute_selector "option svg"
-        refute_selector "[data-flat-pack--icon-name-value='arrow-up']"
+        refute_heroicon "arrow-up"
       end
 
       def test_searchable_select_shows_icon_in_menu_and_closed_control
@@ -437,9 +437,9 @@ module FlatPack
           searchable: true
         ))
 
-        assert_selector "[data-flat-pack--select-target='valueIcon'] svg[data-flat-pack--icon-name-value='arrow-up'][aria-hidden='true']"
+        assert_heroicon "arrow-up", selector: "[data-flat-pack--select-target='valueIcon'] svg[aria-hidden='true']"
         assert_selector "[data-flat-pack--select-target='valueLabel']", text: "High"
-        assert_selector "[role='option'][data-value='low'][data-icon='arrow-down'] svg[data-flat-pack--icon-name-value='arrow-down'][aria-hidden='true']"
+        assert_heroicon "arrow-down", selector: "[role='option'][data-value='low'][data-icon='arrow-down'] svg[aria-hidden='true']"
         assert_selector "[role='option'][data-value='high'] span", text: "High"
         assert_selector "[role='option'][data-value='high'].flex.items-center"
       end
@@ -453,7 +453,7 @@ module FlatPack
           multiple: true
         ))
 
-        assert_selector "[data-flat-pack--select-target='chip'][data-value='high'] svg[data-flat-pack--icon-name-value='arrow-up'][aria-hidden='true']"
+        assert_heroicon "arrow-up", selector: "[data-flat-pack--select-target='chip'][data-value='high'] svg[aria-hidden='true']"
         assert_selector "[data-flat-pack--select-target='chip'][data-value='high']", text: "High"
       end
 
@@ -472,8 +472,8 @@ module FlatPack
           searchable: true
         ))
 
-        assert_selector "[role='option'][data-option-type='parent'][data-icon='globe-alt'] svg[data-flat-pack--icon-name-value='globe-alt']"
-        assert_selector "[role='option'][data-option-type='child'][data-icon='map-pin'] svg[data-flat-pack--icon-name-value='map-pin']"
+        assert_heroicon "globe-alt", selector: "[role='option'][data-option-type='parent'][data-icon='globe-alt'] svg"
+        assert_heroicon "map-pin", selector: "[role='option'][data-option-type='child'][data-icon='map-pin'] svg"
         assert_selector "[role='option'][data-value='australia']", text: "Australia"
       end
 
@@ -487,7 +487,7 @@ module FlatPack
           chrome: :cell
         ))
 
-        assert_selector "button.flat-pack-select-trigger.border-0 svg[data-flat-pack--icon-name-value='swatch'][aria-hidden='true']"
+        assert_heroicon "swatch", selector: "button.flat-pack-select-trigger.border-0 svg[aria-hidden='true']"
         assert_selector "[data-flat-pack--select-target='valueLabel']", text: "Designer"
         assert_selector ".flat-pack-select-wrapper.flat-pack-input-wrapper"
       end

@@ -21,7 +21,7 @@ module FlatPack
         assert_selector "nav > div.flex.items-center.gap-2"
         assert_selector "button[data-action='click->flat-pack--page-nav#back']"
         assert_selector "button[aria-label='Go back']"
-        assert_selector "button svg[data-flat-pack--icon-name-value='chevron-left']"
+        assert_heroicon "chevron-left", selector: "button svg"
         refute_selector "nav[data-flat-pack--page-nav-fallback-url-value]"
       end
 
@@ -60,8 +60,8 @@ module FlatPack
           nav.with_action(icon: "plus", icon_only: true, href: "/add", aria: {label: "Add"})
         end
 
-        assert_selector "a[href='/demo'][aria-label='Dismiss'] svg[data-flat-pack--icon-name-value='trash']"
-        assert_selector "a[href='/add'][aria-label='Add'] svg[data-flat-pack--icon-name-value='plus']"
+        assert_heroicon "trash", selector: "a[href='/demo'][aria-label='Dismiss'] svg"
+        assert_heroicon "plus", selector: "a[href='/add'][aria-label='Add'] svg"
         refute_selector "[data-controller='flat-pack--page-nav']"
       end
 
@@ -114,8 +114,8 @@ module FlatPack
         assert_selector "[data-controller='flat-pack--tooltip'] a[href='/home']"
         assert_selector "[role='tooltip']", text: "Home"
         assert_selector "[role='tooltip']", text: "Admin"
-        assert_selector "a[href='/home'] svg[data-flat-pack--icon-name-value='home']"
-        assert_selector "a[href='/admin'] svg[data-flat-pack--icon-name-value='squares-2x2']"
+        assert_heroicon "home", selector: "a[href='/home'] svg"
+        assert_heroicon "squares-2x2", selector: "a[href='/admin'] svg"
         assert_includes page.find("a[href='/home']")[:class], "p-[var(--button-icon-only-padding-sm)]"
         refute_selector ".ml-auto"
 

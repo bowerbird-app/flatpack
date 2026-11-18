@@ -25,7 +25,7 @@ module FlatPack
       def test_renders_search_icon
         render_inline(Component.new)
 
-        assert_selector "svg[data-flat-pack--icon-name-value='magnifying-glass']"
+        assert_heroicon "magnifying-glass"
         assert_selector "svg.block.shrink-0"
         assert_includes CGI.unescapeHTML(rendered_content), "-translate-y-0.5"
       end

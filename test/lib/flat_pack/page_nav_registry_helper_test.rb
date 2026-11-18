@@ -142,13 +142,13 @@ class PageNavRegistryHelperProbesController < ApplicationController
   def render_overflow_icon
     helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
     helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
-    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_icon: \"archive\") %>", layout: false
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_icon: \"archive-box\") %>", layout: false
   end
 
   def render_overflow_icon_label
     helpers.register_page_nav "Share", "/press-kits/share", role: :secondary
     helpers.register_page_nav "Delete", "/press-kits/delete", role: :destructive, overflow: true
-    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_label: \"More\", overflow_icon: \"archive\") %>", layout: false
+    render inline: "<%= page_nav_button_group(styles: FlatPack::PageNavRoleStyles::QUIET, overflow_label: \"More\", overflow_icon: \"archive-box\") %>", layout: false
   end
 
   def render_bad_overflow_icon
@@ -330,7 +330,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       assert_response :success
       trigger = css_select(".fp-button-group__overflow > .fp-button-dropdown__trigger").first
       assert_equal "More", trigger["aria-label"]
-      assert_equal "archive", trigger.at_css("svg")["data-flat-pack--icon-name-value"]
+      assert_heroicon_html trigger.at_css("svg").inner_html, "archive-box"
       assert_nil trigger.at_css("span")
 
       get "/demo/page_nav_registry_helper/render_overflow_icon_label"
@@ -338,7 +338,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       labeled = css_select(".fp-button-group__overflow > .fp-button-dropdown__trigger").first
       assert_equal "More", labeled.at_css("span").text
       assert_equal %w[span span], labeled.element_children.map(&:name)
-      assert_equal "archive", labeled.at_css("svg")["data-flat-pack--icon-name-value"]
+      assert_heroicon_html labeled.at_css("svg").inner_html, "archive-box"
 
       error = assert_raises(ArgumentError) { get "/demo/page_nav_registry_helper/render_bad_overflow_icon" }
       assert_equal "overflow_icon must be a string", error.message
@@ -352,7 +352,7 @@ class PageNavRegistryHelperTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select ".fp-button-group > a", text: "Share"
       assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "Extras"
-      assert_select ".fp-button-group__overflow > .fp-button-dropdown__trigger svg[data-flat-pack--icon-name-value=chevron-down]"
+      assert_heroicon "chevron-down", selector: ".fp-button-group__overflow > .fp-button-dropdown__trigger svg"
       assert_select ".fp-button-group__overflow .fp-menu-row", text: "Delete"
     end
   end

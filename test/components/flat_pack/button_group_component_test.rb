@@ -55,8 +55,8 @@ module FlatPack
         children = trigger.native.element_children
         assert_equal %w[span span], children.map(&:name)
         assert_equal "More", children.first.text
-        assert_equal "chevron-down", children.last.at_css("svg")["data-flat-pack--icon-name-value"]
-        assert_no_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='bars-3']"
+        assert_heroicon_html children.last.at_css("svg").inner_html, "chevron-down"
+        refute_heroicon "bars-3", selector: ".fp-button-group-menu__trigger svg"
         refute trigger["aria-label"]
         assert_equal "false", page.find(".fp-button-group-menu")["data-open"]
       end
@@ -95,7 +95,7 @@ module FlatPack
 
         trigger = page.find(".fp-button-group-menu__trigger")
         assert_equal ["svg"], trigger_child_names(trigger)
-        assert_equal "plus", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_heroicon_html trigger.find("svg").native.inner_html, "plus"
         assert_equal "Menu", trigger["aria-label"]
       end
 
@@ -108,9 +108,9 @@ module FlatPack
         children = trigger.native.element_children
         assert_equal %w[span span], children.map(&:name)
         assert_equal "View", children.first.text
-        assert_equal "plus", children.last.at_css("svg")["data-flat-pack--icon-name-value"]
-        assert_no_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='chevron-down']"
-        assert_no_selector ".fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value='bars-3']"
+        assert_heroicon_html children.last.at_css("svg").inner_html, "plus"
+        refute_heroicon "chevron-down", selector: ".fp-button-group-menu__trigger svg"
+        refute_heroicon "bars-3", selector: ".fp-button-group-menu__trigger svg"
         refute trigger["aria-label"]
 
         error = assert_raises(ArgumentError) { Component.new(menu_icon: true) }
@@ -264,7 +264,7 @@ module FlatPack
         trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger")
         assert_equal "More", trigger["aria-label"]
         assert_equal ["svg"], trigger_child_names(trigger)
-        assert_equal "ellipsis-horizontal", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_heroicon_html trigger.find("svg").native.inner_html, "ellipsis-horizontal"
         assert_no_selector ".fp-button-group__overflow > .fp-button-dropdown__trigger", text: "More"
         assert_selector ".fp-button-group__overflow .fp-menu-row[href='/share']", text: "Share"
         assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Archive"
@@ -286,8 +286,8 @@ module FlatPack
         trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger")
         assert_equal ["span", "span"], trigger_child_names(trigger)
         assert_equal "Extras", trigger.find("span", match: :first).text
-        assert_equal "chevron-down", trigger.find("svg")["data-flat-pack--icon-name-value"]
-        assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
+        assert_heroicon_html trigger.find("svg").native.inner_html, "chevron-down"
+        refute_heroicon "ellipsis-horizontal", selector: ".fp-button-group__overflow svg"
         assert_selector ".fp-button-group__overflow .fp-menu-row[data-fp-style=danger]", text: "Delete"
         assert_no_selector ".fp-button-group > .fp-button", text: "Delete"
       end
@@ -508,7 +508,7 @@ module FlatPack
         trigger = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]")
         assert_equal ["span", "span"], trigger_child_names(trigger)
         assert_equal "More", trigger.find("span", match: :first).text
-        assert_equal "chevron-down", trigger.find("svg")["data-flat-pack--icon-name-value"]
+        assert_heroicon_html trigger.find("svg").native.inner_html, "chevron-down"
         assert_equal "chevron", trigger.find("svg")["data-flat-pack--button-dropdown-target"]
         refute trigger["aria-label"]
 
@@ -523,7 +523,7 @@ module FlatPack
       end
 
       def test_overflow_icon_replaces_the_default_in_both_modes
-        render_inline(Component.new(variant: :outlined, visible: 1, overflow_icon: "archive")) do |group|
+        render_inline(Component.new(variant: :outlined, visible: 1, overflow_icon: "archive-box")) do |group|
           group.button(FlatPack::Button::Component.new(text: "Edit", style: :ghost, size: :sm))
           group.button(FlatPack::Button::Component.new(text: "Share", style: :ghost, size: :sm))
         end
@@ -531,9 +531,9 @@ module FlatPack
         icon_only = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=ghost]")
         assert_equal "More", icon_only["aria-label"]
         assert_equal ["svg"], trigger_child_names(icon_only)
-        assert_equal "archive", icon_only.find("svg")["data-flat-pack--icon-name-value"]
+        assert_heroicon_html icon_only.find("svg").native.inner_html, "archive-box"
 
-        render_inline(Component.new(variant: :joined, visible: 1, overflow_label: "More", overflow_icon: :archive)) do |group|
+        render_inline(Component.new(variant: :joined, visible: 1, overflow_label: "More", overflow_icon: :archive_box)) do |group|
           group.button(FlatPack::Button::Component.new(text: "Edit", style: :secondary, size: :sm))
           group.button(FlatPack::Button::Component.new(text: "Share", style: :secondary, size: :sm))
         end
@@ -541,9 +541,9 @@ module FlatPack
         labeled = page.find(".fp-button-group__overflow > .fp-button-dropdown__trigger[data-fp-style=secondary]")
         assert_equal ["span", "span"], trigger_child_names(labeled)
         assert_equal "More", labeled.find("span", match: :first).text
-        assert_equal "archive", labeled.find("svg")["data-flat-pack--icon-name-value"]
-        assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='chevron-down']"
-        assert_no_selector ".fp-button-group__overflow svg[data-flat-pack--icon-name-value='ellipsis-horizontal']"
+        assert_heroicon_html labeled.find("svg").native.inner_html, "archive-box"
+        refute_heroicon "chevron-down", selector: ".fp-button-group__overflow svg"
+        refute_heroicon "ellipsis-horizontal", selector: ".fp-button-group__overflow svg"
 
         error = assert_raises(ArgumentError) { Component.new(overflow_icon: true) }
         assert_equal "overflow_icon must be a string", error.message

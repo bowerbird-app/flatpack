@@ -58,6 +58,16 @@ function loadContext(options = {}) {
       attributes: {},
       style: {},
       tabIndex: 0,
+      classList: {
+        toggle(name, force) {
+          const parts = new Set(node.className.split(/\s+/).filter(Boolean))
+          const on = force === undefined ? !parts.has(name) : Boolean(force)
+          if (on) parts.add(name)
+          else parts.delete(name)
+          node.className = [...parts].join(" ")
+          return on
+        }
+      },
       setAttribute(name, value) {
         this.attributes[name] = String(value)
         if (name === "id") this.id = String(value)
@@ -94,6 +104,17 @@ function loadContext(options = {}) {
       },
       querySelector(selector) {
         return find(this, selector)
+      },
+      querySelectorAll(selector) {
+        const found = []
+        const walk = (current) => {
+          for (const child of current.children || []) {
+            if (child.matches(selector)) found.push(child)
+            walk(child)
+          }
+        }
+        walk(this)
+        return found
       }
     }
     created.push(node)
@@ -217,10 +238,15 @@ function mount(context, options = {}) {
   const button = context.document.createElement("button")
   const label = context.document.createElement("span")
   const live = context.document.createElement("span")
-  const icon = context.document.createElement("svg")
   label.textContent = options.labelText || "Copy"
-  icon.setAttribute("data-flat-pack--icon-name-value", options.icon || "clipboard-document")
-  button.appendChild(icon)
+  const icons = ["idle", "copied", "error"].map((state) => {
+    const icon = context.document.createElement("svg")
+    icon.setAttribute("data-flat-pack-clipboard-icon", state)
+    icon.className = state === "idle" ? "" : "hidden"
+    button.appendChild(icon)
+    return icon
+  })
+  const icon = icons[0]
   host.appendChild(button)
   host.events = []
   host.dispatchEvent = (event) => {
@@ -254,6 +280,12 @@ function mount(context, options = {}) {
   controller.connect()
 
   return { controller, host, button, label, live, icon }
+}
+
+function clipboardIcon(button, state) {
+  return button.querySelectorAll("[data-flat-pack-clipboard-icon]").find((node) => {
+    return node.getAttribute("data-flat-pack-clipboard-icon") === state
+  })
 }
 
 function clickEvent(target) {
@@ -447,13 +479,15 @@ test("toast feedback uses toasts and leaves the live region alone", async () => 
   assert.equal(context.document.events[0].detail.text, "Copied to clipboard")
   assert.equal(live.textContent, "")
   assert.equal(button.style.color, "")
-  assert.equal(icon.getAttribute("data-flat-pack--icon-name-value"), "check")
+  assert.equal(clipboardIcon(button, "copied").className.includes("hidden"), false)
+  assert.equal(clipboardIcon(button, "idle").className.includes("hidden"), true)
   assert.equal(context.writeCalls[0], "sk_live")
 
   input.value = ""
   await controller.copy(clickEvent(input))
   assert.equal(button.style.color, "var(--color-error)")
-  assert.equal(icon.getAttribute("data-flat-pack--icon-name-value"), "exclamation-circle")
+  assert.equal(clipboardIcon(button, "error").className.includes("hidden"), false)
+  assert.equal(clipboardIcon(button, "copied").className.includes("hidden"), true)
 })
 
 test("quiet anchor copy updates the hash and a non-hash link is ignored", async () => {
@@ -480,7 +514,8 @@ test("quiet anchor copy updates the hash and a non-hash link is ignored", async 
   )
   assert.equal(live.textContent, "Copied to clipboard")
   assert.equal(button.style.color, "")
-  assert.equal(icon.getAttribute("data-flat-pack--icon-name-value"), "check")
+  assert.equal(clipboardIcon(button, "copied").className.includes("hidden"), false)
+  assert.equal(clipboardIcon(button, "idle").className.includes("hidden"), true)
   assert.equal(context.document.events.length, 0)
 
   const ignored = loadContext()

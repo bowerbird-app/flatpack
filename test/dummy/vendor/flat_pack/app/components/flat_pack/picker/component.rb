@@ -305,13 +305,28 @@ module FlatPack
         @selection_mode == :single && @auto_confirm
       end
 
+      def items_for_client
+        @items.map { |item| item_with_icon_svg(item) }
+      end
+
+      def item_with_icon_svg(item)
+        name = item["icon"]
+        return item if name.blank?
+
+        item.merge(
+          "icon_svg" => render(
+            FlatPack::Shared::IconComponent.new(name: name, size: :md, class: "block shrink-0")
+          )
+        )
+      end
+
       def picker_attributes
         {
           class: "flex h-full min-h-0 flex-col gap-4",
           data: {
             controller: "flat-pack--picker",
             flat_pack__picker_picker_id_value: @id,
-            flat_pack__picker_items_value: @items.to_json,
+            flat_pack__picker_items_value: items_for_client.to_json,
             flat_pack__picker_selection_mode_value: @selection_mode,
             flat_pack__picker_accepted_kinds_value: @accepted_kinds.to_json,
             flat_pack__picker_searchable_value: effective_searchable?,

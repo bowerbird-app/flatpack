@@ -45,15 +45,14 @@ module FlatPack
       def test_renders_named_icon_when_empty
         render_inline(Component.new(icon: "photo"))
 
-        assert_selector "[data-controller='flat-pack--icon']"
-        assert_selector "[data-flat-pack--icon-name-value='photo']"
+        assert_heroicon "photo"
         refute_selector "img"
       end
 
       def test_renders_image_alias_as_photo_icon
         render_inline(Component.new(icon: :image))
 
-        assert_selector "[data-flat-pack--icon-name-value='photo']"
+        assert_heroicon "photo"
       end
 
       def test_image_src_wins_over_icon
@@ -74,7 +73,7 @@ module FlatPack
         %i[circle square].each do |shape|
           render_inline(Component.new(icon: "photo", shape: shape, size: :lg))
 
-          assert_selector "[data-controller='flat-pack--icon']"
+          assert_heroicon "photo"
           assert_includes page.native.to_html, Component::SHAPES.fetch(shape)
         end
       end

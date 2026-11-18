@@ -12,9 +12,7 @@ pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
 pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
 pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
-
-# Heroicons curated subset — served as a local JS module, no gem required
-pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
+pin "flat_pack/svg_markup", to: "flat_pack/svg_markup.js", preload: false
 
 # Third-party libraries. preload: false so a page that never imports them does not modulepreload these files.
 pin "apexcharts", to: "https://cdn.jsdelivr.net/npm/apexcharts@3.45.1/dist/apexcharts.esm.js", preload: false

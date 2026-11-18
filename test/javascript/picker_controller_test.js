@@ -49,9 +49,11 @@ function loadController({ fetchImpl } = {}) {
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace('import { flatPackCopy } from "flat_pack/copy"', 'const flatPackCopy = (key) => key')
     .replace('import { createRemoteQuery } from "flat_pack/remote_query"', '')
+    .replace('import { allowlistedIconSvg } from "flat_pack/svg_markup"\n', '')
     .replace('export default class extends Controller', 'class PickerController extends Controller') + '\nmodule.exports = PickerController\n'
   const remoteQueryPath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'remote_query.js')
   const remoteQuerySource = fs.readFileSync(remoteQueryPath, 'utf8').replaceAll('export function ', 'function ')
+  const svgMarkupSource = fs.readFileSync(path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'svg_markup.js'), 'utf8').replace('export function ', 'function ')
   const bridge = { pending: Promise.resolve() }
   const context = {
     module: { exports: {} },
@@ -68,7 +70,7 @@ function loadController({ fetchImpl } = {}) {
     clearTimeout() {}
   }
 
-  vm.runInNewContext(`${remoteQuerySource}\n${transformed}`, context, { filename: filePath })
+  vm.runInNewContext(`${svgMarkupSource}\n${remoteQuerySource}\n${transformed}`, context, { filename: filePath })
   context.module.exports.bridge = bridge
   return context.module.exports
 }
@@ -131,6 +133,36 @@ test('local search shows the empty slot and hides it without rewriting the slot'
   assert.match(controller.resultsTarget.innerHTML, /Homepage Hero/)
 })
 
+test('a picker row draws icon_svg and drops a script', () => {
+  const { controller } = buildController()
+  controller.itemsValue = [{
+    id: 'hero',
+    kind: 'image',
+    name: 'hero.png',
+    label: 'Homepage Hero',
+    title: 'Homepage Hero',
+    icon: 'photo',
+    icon_svg: '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 1"/></svg>'
+  }]
+  controller.search({ target: { value: 'Hero' } })
+
+  assert.match(controller.resultsTarget.innerHTML, /<path d="M1 1"\/>/)
+  assert.doesNotMatch(controller.resultsTarget.innerHTML, /<script/)
+
+  controller.itemsValue = [{
+    id: 'hero',
+    kind: 'image',
+    name: 'hero.png',
+    label: 'Homepage Hero',
+    title: 'Homepage Hero',
+    icon: 'photo',
+    icon_svg: '<svg xmlns="http://www.w3.org/2000/svg"><path d="M1 1"/><script>alert(1)</script></svg>'
+  }]
+  controller.search({ target: { value: 'Hero' } })
+  assert.doesNotMatch(controller.resultsTarget.innerHTML, /<script/)
+  assert.doesNotMatch(controller.resultsTarget.innerHTML, /<path d="M1 1"/)
+})
+
 test('remote search shows and hides the empty slot without rewriting it', async () => {
   const responses = [
     { items: [] },
@@ -191,6 +223,7 @@ function loadPicker() {
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace('import { flatPackCopy } from "flat_pack/copy"', '')
     .replace('import { createRemoteQuery } from "flat_pack/remote_query"', '')
+    .replace('import { allowlistedIconSvg } from "flat_pack/svg_markup"\n', '')
     .replace('export default class extends Controller', 'class PickerController extends Controller')
   const copySource = `
     function flatPackCopy(key, vars = {}) {
@@ -253,8 +286,9 @@ function loadPicker() {
       }
     })
   }
+  const svgMarkupSource = fs.readFileSync(path.join(root, 'app/javascript/flat_pack/svg_markup.js'), 'utf8').replace('export function ', 'function ')
   vm.runInNewContext(
-    `${copySource}\n${remoteSource}\n${controllerSource}\nmodule.exports = PickerController\n`,
+    `${svgMarkupSource}\n${copySource}\n${remoteSource}\n${controllerSource}\nmodule.exports = PickerController\n`,
     context,
     { filename: 'picker_controller.js' }
   )

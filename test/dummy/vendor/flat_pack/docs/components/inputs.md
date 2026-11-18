@@ -87,7 +87,7 @@ Most inputs have no slots. `FileInput` has an `actions` slot for host controls b
 - RadioGroup layouts: default vertical radios, `variant: :inline` pills, `variant: :cards` selectable cards, `variant: :swatches` colour circles. Visual variants hide the radio dot, keep a native radio for form submit and keyboard. Inline options reuse Button chrome: secondary tokens when unselected, the neutral active surface when selected (`--surface-active-*`, `.fp-button`, `--button-border-radius`, Button padding). Cards centre a plain icon above the title (no icon tile) and paint selected state with `--color-primary` plus `--surface-*`. `align: :start` on cards puts that icon on the left, with the title and description left-aligned beside it, and drops the 7rem min-height. `columns:` is `nil` (auto-fit, minimum 14rem) or `1`–`4` (one column on mobile, that many from `sm`). Swatches paint a filled circle with ColorSwatch ring tokens (`--color-swatch-*`), a selected offset ring, a check that flips ink on light vs dark fills, and an optional name tooltip. Help and error copy under visual variants uses `mt-4`; the default radio list keeps `mt-1` / `mt-2`. The group `label` is a `<legend>` inside an unstyled `<fieldset>` (`border-0 p-0 m-0 min-w-0`). Options sit in an inner div so the legend is not a grid or flex item. `hide_label: true` keeps the legend and marks it `sr-only`.
 - Checkbox and RadioGroup checked paint follows `--color-primary` / `--color-primary-text` via Tailwind arbitrary values (`accent-[var(--color-primary)]`, `checked:bg-[var(--color-primary)]`, `checked:border-[var(--color-primary)]`, `checked:text-[var(--color-primary-text)]`). Rebuild host Tailwind after upgrading if you `@import` FlatPack CSS so those classes are generated.
 - Select rendering modes: native select (`searchable: false`) and custom searchable select (`searchable: true`)
-- Select option `icon:` is a Heroicon name. The custom menu (including local search, remote search results, nested parent and child rows, and multiselect chips) draws it with `FlatPack::Shared::IconComponent` at size `:sm` (`w-4 h-4`), the same size as the select chevron, so it matches the `text-sm` control. The icon is decorative (`aria-hidden`). The text label stays. The closed control shows the icon for the selected value. Remote JSON may include `"icon"`. A native `<select>` cannot draw icons; the value and label still submit. An icon that is not a Heroicon name (`letter`, `letter-number` pieces) raises `ArgumentError`.
+- Select option `icon:` is a Heroicon name. The custom menu (including local search, remote search results, nested parent and child rows, and multiselect chips) draws it with `FlatPack::Shared::IconComponent` at size `:sm` (`w-4 h-4`), the same size as the select chevron, so it matches the `text-sm` control. The icon is decorative (`aria-hidden`). The text label stays. The closed control shows the icon for the selected value. Remote JSON that draws an icon includes `icon_svg`, the HTML from `FlatPack::Shared::IconComponent`. `icon` stays the name. A name alone does not become a glyph in the browser. A native `<select>` cannot draw icons; the value and label still submit. An unknown Heroicon name raises `ArgumentError` in development and test.
 - Select selection modes: single-value (`multiple: false`) and multi-value (`multiple: true`)
 - In searchable multiselect mode, selected options render as chips inside the trigger
 - In searchable single select, the selected option uses `--surface-active-background-color` and `--surface-active-text-color`. Hover, multiselect, and indeterminate rows use `--surface-hover-background-color`.
@@ -278,16 +278,16 @@ Nested Select options require `multiple: true`. Selecting a parent selects the p
 Remote endpoint response format for `Select` supports either:
 
 ```json
-[{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }]
+[{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user", "icon_svg": "<svg>...</svg>" }]
 ```
 
 or:
 
 ```json
-{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user" }] }
+{ "items": [{ "label": "Alice Johnson", "value": "alice-johnson", "icon": "user", "icon_svg": "<svg>...</svg>" }] }
 ```
 
-`icon` is optional. When present it is a Heroicon name. The menu and the closed control use it. A native select ignores it. Combobox remote search accepts the same `items` array (or a top-level array) and may include `subtitle` on each row. It does not read `icon`.
+`icon` is the Heroicon name. `icon_svg` is the HTML from `FlatPack::Shared::IconComponent`. The menu and the closed control draw `icon_svg`. A name alone does not become a glyph. A native select ignores both. Combobox remote search accepts the same `items` array (or a top-level array) and may include `subtitle` on each row. It does not read `icon`.
 
 ```erb
 <%= render FlatPack::FileInput::Component.new(

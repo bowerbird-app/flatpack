@@ -60,17 +60,17 @@ module FlatPack
       def test_renders_eye_icons
         render_inline(Component.new(name: "password"))
 
-        assert_selector "svg[data-flat-pack--icon-name-value='eye']"
-        assert_selector "svg[data-flat-pack--icon-name-value='eye-slash']"
+        assert_heroicon "eye"
+        assert_heroicon "eye-slash"
       end
 
       def test_eye_icons_stack_for_crossfade
         render_inline(Component.new(name: "password"))
 
         assert_selector "button.fp-password-toggle .fp-password-toggle-icons"
-        assert_selector "svg[data-flat-pack--icon-name-value='eye']"
-        assert_selector "svg[data-flat-pack--icon-name-value='eye-slash']"
-        refute_selector "svg[data-flat-pack--icon-name-value='eye-slash'].hidden"
+        assert_heroicon "eye"
+        assert_heroicon "eye-slash"
+        refute_heroicon "eye-slash", selector: "svg.hidden"
       end
 
       def test_renders_disabled_input

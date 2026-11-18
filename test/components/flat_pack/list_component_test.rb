@@ -438,8 +438,8 @@ module FlatPack
 
         assert_selector "ol.flat-pack-list > li > span.flat-pack-list-item-marker", count: 2
         assert_selector "ol.flat-pack-list > li > span.flat-pack-list-item-icon", count: 2
-        assert_selector "span.flat-pack-list-item-icon svg[data-flat-pack--icon-name-value='sun']"
-        assert_selector "span.flat-pack-list-item-icon svg[data-flat-pack--icon-name-value='star']"
+        assert_heroicon "sun", selector: "span.flat-pack-list-item-icon svg"
+        assert_heroicon "star", selector: "span.flat-pack-list-item-icon svg"
       end
 
       private

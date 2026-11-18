@@ -37,7 +37,7 @@ module FlatPack
           tree.node(label: "app", icon: "code-bracket-square", meta: "12 files")
         end
 
-        assert_includes page.native.to_html, "code-bracket-square"
+        assert_heroicon "code-bracket-square"
         assert_text "12 files"
       end
 

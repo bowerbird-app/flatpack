@@ -146,7 +146,6 @@ flat_pack/
 │       │   ├── flatpack_date_picker_controller.js
 │       │   ├── form_validation_controller.js
 │       │   ├── grid_sortable_controller.js
-│       │   ├── icon_controller.js
 │       │   ├── list_orderable_controller.js
 │       │   ├── list_selectable_controller.js
 │       │   ├── modal_controller.js
@@ -178,7 +177,7 @@ flat_pack/
 │       │   ├── toast_controller.js
 │       │   ├── toasts_region_controller.js
 │       │   └── tooltip_controller.js
-│       ├── heroicons.js
+│       ├── svg_markup.js
 │       └── tiptap/
 ├── config/
 │   ├── importmap.rb
@@ -209,6 +208,8 @@ flat_pack/
 │   ├── flat_pack.rb
 │   ├── flat_pack/
 │   │   ├── attribute_sanitizer.rb
+│   │   ├── heroicons.rb
+│   │   ├── heroicons/
 │   │   ├── engine.rb
 │   │   ├── install_contract.rb
 │   │   ├── install_verifier.rb
