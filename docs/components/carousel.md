@@ -87,6 +87,15 @@ Previous, next, and the expand toggle are `FlatPack::Button::Component` (seconda
 - Keep per-breakpoint full-card counts with `items_per_view_desktop`, `items_per_view_tablet`, and `items_per_view_mobile`.
 - Previous and next are overlays (`absolute`). They do not sit beside the track.
 
+## Slide track
+`:slide` (the default) sizes the track in CSS, before the controller connects. `--carousel-per-view` follows the breakpoint. Below 768px it is `--carousel-per-view-mobile`. From 768px it is `--carousel-per-view-tablet`. From 1024px it is `--carousel-per-view-desktop`. The component writes those three counts on the root. `--carousel-peek-slots` is `0`, or `var(--carousel-peek)` when `side_preview` is on. Each slide's flex basis and max width are `calc(100% / (per view + peek slots))`. The gap after a card row stays `padding-inline-end: var(--space-3)` inside the slide's border box.
+
+Inactive slides stay in the track. The viewport's `overflow: hidden` clips them. A later, taller card sets the row height on first paint. `initial_index` also sets the first translate, including when that index is not `0`, and the controller clamps it the same way at each breakpoint.
+
+`:fade` and `:logo_slider` do not use this track. Fade still stacks slides and fades the active one. The logo slider still uses its basis classes.
+
+The controller still moves the frame and updates `aria-hidden` for the slides in view. It does not write a flex basis. The first `aria-hidden` range uses the mobile count plus the default peek (`0.25`) so it matches the mobile track. On a wider viewport the controller updates `aria-hidden` when it connects. That does not change the widths.
+
 ## Interactive Demo
 - `/demo/carousel`
 

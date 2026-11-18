@@ -88,6 +88,9 @@ function loadController() {
       }
     }
   }
+  context.getComputedStyle = function () {
+    return context.window.getComputedStyle()
+  }
   context.globalThis = context
   vm.runInNewContext(source, context, { filename: filePath })
   return { Controller: context.module.exports, document, context, opens, intervals, timeouts }
@@ -136,7 +139,9 @@ function slide(index, options = {}) {
     classList: classList(),
     style: {},
     hidden: false,
-    setAttribute() {}
+    attributes: {},
+    setAttribute(name, value) { this.attributes[name] = String(value) },
+    getAttribute(name) { return this.attributes[name] }
   }
 }
 
@@ -412,6 +417,37 @@ test("a swipe that never clicks drops the suppression on its timer", () => {
   timeouts[0].fn()
   assert.equal(controller.suppressLightboxClick, false)
   assert.equal(controller.swipeClickSuppressTimer, null)
+})
+
+test("slide mode keeps the CSS basis and writes the same translate the server paints", () => {
+  const slides = [0, 1, 2, 3, 4, 5].map((index) => slide(index))
+  const { controller } = mount({ slides, initialIndex: 2 })
+  const frame = { style: { transform: "", transition: "" }, offsetHeight: 0 }
+  controller.frameTarget = frame
+  controller.hasFrameTarget = true
+  controller.itemsPerViewMobileValue = 1
+  controller.itemsPerViewTabletValue = 2
+  controller.itemsPerViewDesktopValue = 4
+  controller.sidePreviewValue = true
+  controller.currentIndex = 2
+  controller.render({ emit: false })
+
+  slides.forEach((item) => {
+    assert.equal(item.style.flexBasis, "")
+    assert.equal(item.style.maxWidth, "")
+    assert.equal(item.hidden, false)
+  })
+  assert.equal(frame.style.transform, "translate3d(calc(2 * -100% / (4 + 0.25)), 0, 0)")
+  assert.equal(slides[0].getAttribute("aria-hidden"), "true")
+  assert.equal(slides[1].getAttribute("aria-hidden"), "true")
+  assert.equal(slides[2].getAttribute("aria-hidden"), "false")
+  assert.equal(slides[5].getAttribute("aria-hidden"), "false")
+  assert.equal(slides[6], undefined)
+
+  controller.sidePreviewValue = false
+  controller.render({ emit: false })
+  assert.equal(frame.style.transform, "translate3d(calc(2 * -100% / (4 + 0)), 0, 0)")
+  assert.equal(slides[5].getAttribute("aria-hidden"), "false")
 })
 
 test("disconnect removes the click and close listeners", () => {

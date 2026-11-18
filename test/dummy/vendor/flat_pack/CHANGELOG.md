@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.380] - 2026-11-18
+
+### Fixed
+- `FlatPack::Carousel` with `transition: :slide` sizes each slide in CSS before the controller connects. Inactive slides stay in the track and the viewport clips them, including a 1-up row with no peek. The row is as tall as the tallest slide on first paint. `initial_index` other than `0` is translated on the server as well. `:fade` and `:logo_slider` are unchanged.
+
+### Upgrade notes
+- Bump the gem and rebuild CSS. The new rules live in `flat_pack/application.css` and the new tokens live in `flat_pack/variables.css` (`--carousel-per-view`, `--carousel-peek-slots`, and the per-breakpoint counts). Reload JavaScript so the controller stops writing an inline flex basis.
+- Arguments are unchanged. A host that already set `--carousel-peek` keeps that peek.
+- Do not rerun the install generator.
+- Redeploy so `meta.gem_version` shows `0.1.380`.
+
 ## [0.1.379] - 2026-11-18
 
 ### Changed

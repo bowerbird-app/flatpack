@@ -237,43 +237,37 @@ export default class extends Controller {
           ? index >= this.currentIndex && index < this.currentIndex + effectivePerView
           : isActive
 
+      slide.hidden = false
+      slide.style.flexBasis = ""
+      slide.style.maxWidth = ""
+
       if (useFade) {
-        slide.hidden = false
         slide.classList.toggle("opacity-0", !isActive)
         slide.classList.toggle("opacity-100", isActive)
         slide.classList.toggle("pointer-events-none", !isActive)
-        slide.style.flexBasis = ""
-        slide.style.maxWidth = ""
-      } else {
-        slide.hidden = false
-
-        if (this.#isDefaultSlideVariant()) {
-          const slideWidthPercent = 100 / effectivePerView
-          slide.style.flexBasis = `${slideWidthPercent}%`
-          slide.style.maxWidth = `${slideWidthPercent}%`
-        } else {
-          slide.style.flexBasis = ""
-          slide.style.maxWidth = ""
-        }
       }
 
       slide.setAttribute("aria-hidden", (!isVisibleRange).toString())
     })
 
     if (!useFade && this.hasFrameTarget) {
-      const effectivePerView = this.#effectivePerView(perView)
-      const shiftPercent = this.#isLogoSliderVariant() || this.#isDefaultSlideVariant()
-        ? this.currentIndex * (100 / effectivePerView)
-        : this.currentIndex * 100
-
-      if (skipAnimation) {
-        const previousTransition = this.frameTarget.style.transition
-        this.frameTarget.style.transition = "none"
-        this.frameTarget.style.transform = `translate3d(-${shiftPercent}%, 0, 0)`
-        this.frameTarget.offsetHeight // force style flush for transition reset
-        this.frameTarget.style.transition = previousTransition
+      if (this.#isDefaultSlideVariant()) {
+        this.#placeSlideFrame(skipAnimation)
       } else {
-        this.frameTarget.style.transform = `translate3d(-${shiftPercent}%, 0, 0)`
+        const effectivePerView = this.#effectivePerView(perView)
+        const shiftPercent = this.#isLogoSliderVariant()
+          ? this.currentIndex * (100 / effectivePerView)
+          : this.currentIndex * 100
+
+        if (skipAnimation) {
+          const previousTransition = this.frameTarget.style.transition
+          this.frameTarget.style.transition = "none"
+          this.frameTarget.style.transform = `translate3d(-${shiftPercent}%, 0, 0)`
+          this.frameTarget.offsetHeight // force style flush for transition reset
+          this.frameTarget.style.transition = previousTransition
+        } else {
+          this.frameTarget.style.transform = `translate3d(-${shiftPercent}%, 0, 0)`
+        }
       }
     }
 
@@ -700,6 +694,23 @@ export default class extends Controller {
     }
 
     return Math.max(1, this.itemsPerViewMobileValue)
+  }
+
+  #placeSlideFrame(skipAnimation) {
+    const perView = this.#currentPerView()
+    const peekSlots = this.#effectivePerView(perView) - perView
+    const transform = `translate3d(calc(${this.currentIndex} * -100% / (${perView} + ${peekSlots})), 0, 0)`
+
+    if (!skipAnimation) {
+      this.frameTarget.style.transform = transform
+      return
+    }
+
+    const previousTransition = this.frameTarget.style.transition
+    this.frameTarget.style.transition = "none"
+    this.frameTarget.style.transform = transform
+    this.frameTarget.offsetHeight // force style flush for transition reset
+    this.frameTarget.style.transition = previousTransition
   }
 
   #effectivePerView(perView = this.#currentPerView()) {

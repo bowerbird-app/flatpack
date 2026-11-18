@@ -11,6 +11,7 @@ module FlatPack
       CAPTION_MODES = %i[below overlay].freeze
       FITS = %i[cover contain].freeze
       DEFAULT_ARIA_LABEL = "Carousel"
+      DEFAULT_PEEK_SLOTS = 0.25
       # Tailwind CSS scanning requires these classes to be present as string literals.
       # DO NOT REMOVE - These duplicates ensure CSS generation:
       # "h-full" "object-contain" "object-cover" "tabular-nums" "flex" "flex-col" "min-h-0" "flex-1" "shrink-0" "w-full"
@@ -204,13 +205,27 @@ module FlatPack
           stage_layout? ? "flex min-h-0 w-full flex-1 flex-col" : nil,
           stage_thumbs? ? "pb-20" : nil,
           (@variant == :logo_slider) ? "m-0 p-0 bg-transparent" : nil,
+          slide_track? ? "flat-pack-carousel--slide" : nil,
+          side_preview_enabled? ? "flat-pack-carousel--side-preview" : nil,
           @show_thumbs ? "overflow-visible" : nil,
           @responsive ? "max-w-full" : nil
         )
       end
 
       def root_style
-        html_attributes[:style].presence
+        [html_attributes[:style].presence, slide_track_style].compact.join("; ").presence
+      end
+
+      def slide_track_style
+        return nil unless slide_track?
+
+        [
+          "--carousel-per-view-mobile: #{@items_per_view_mobile}",
+          "--carousel-per-view-tablet: #{@items_per_view_tablet}",
+          "--carousel-per-view-desktop: #{@items_per_view_desktop}",
+          "--carousel-initial-index: #{@initial_index}",
+          "--carousel-slide-count: #{slide_entries.size}"
+        ].join("; ")
       end
 
       def render_viewport
@@ -256,16 +271,12 @@ module FlatPack
       end
 
       def render_slide(slide, index)
-        is_active = index == @initial_index
-        aria_hidden = (@variant == :logo_slider) ? false : !is_active
-
         content_tag(:div,
           render_slide_content(slide),
-          class: [slide_classes, slide_state_classes(is_active)].compact.join(" "),
-          hidden: hide_slide?(is_active),
+          class: [slide_classes, slide_state_classes(index == @initial_index)].compact.join(" "),
           data: slide_data(slide, index),
           aria: {
-            hidden: aria_hidden.to_s,
+            hidden: slide_aria_hidden?(index).to_s,
             label: fp_t("carousel.slide", current: index + 1, total: slide_entries.size)
           })
       end
@@ -626,7 +637,7 @@ module FlatPack
         base = "h-full w-full shrink-0"
         return "absolute inset-0 transition-opacity duration-[var(--duration-slow)] #{base}" if @transition == :fade
 
-        base
+        "flat-pack-carousel__slide #{base}"
       end
 
       def slide_state_classes(is_active)
@@ -713,11 +724,26 @@ module FlatPack
         !item_layout?
       end
 
-      def hide_slide?(is_active)
-        return false if @variant == :logo_slider
-        return false if @transition == :fade
+      def slide_track?
+        @variant == :default && @transition == :slide
+      end
 
-        !is_active
+      def slide_aria_hidden?(index)
+        return false if @variant == :logo_slider
+        return index != @initial_index unless slide_track?
+
+        start = initial_slide_start
+        index < start || index >= start + initial_visible_count
+      end
+
+      def initial_slide_start
+        max_start = [slide_entries.size - @items_per_view_mobile, 0].max
+        @initial_index.clamp(0, max_start)
+      end
+
+      def initial_visible_count
+        slots = side_preview_enabled? ? DEFAULT_PEEK_SLOTS : 0
+        (@items_per_view_mobile + slots).ceil
       end
 
       def normalize_slides(slides)
