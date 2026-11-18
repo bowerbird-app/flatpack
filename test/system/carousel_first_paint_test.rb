@@ -11,6 +11,13 @@ class CarouselFirstPaintTest < ActionDispatch::SystemTestCase
     options.add_argument("--disable-gpu")
   end
 
+  def teardown
+    remove_paint_probe
+    page.current_window.resize_to(1280, 900)
+  ensure
+    super
+  end
+
   WIDTHS = {
     "mobile" => 375,
     "tablet" => 800,
@@ -68,7 +75,7 @@ class CarouselFirstPaintTest < ActionDispatch::SystemTestCase
 
   test "the demo card row does not grow when the controller connects" do
     page.current_window.resize_to(390, 900)
-    page.driver.browser.execute_cdp("Page.addScriptToEvaluateOnNewDocument", source: <<~JS)
+    @paint_probe_id = page.driver.browser.execute_cdp("Page.addScriptToEvaluateOnNewDocument", source: <<~JS)
       window.__cls = 0
       window.__carouselSamples = []
       new PerformanceObserver((list) => {
@@ -109,6 +116,15 @@ class CarouselFirstPaintTest < ActionDispatch::SystemTestCase
   end
 
   private
+
+  def remove_paint_probe
+    identifier = @paint_probe_id.is_a?(Hash) ? @paint_probe_id["identifier"] : nil
+    return if identifier.blank?
+
+    page.driver.browser.execute_cdp("Page.removeScriptToEvaluateOnNewDocument", identifier: identifier)
+  rescue
+    nil
+  end
 
   def freeze_motion
     page.execute_script(<<~JS)
