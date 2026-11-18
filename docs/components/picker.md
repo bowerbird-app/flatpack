@@ -55,7 +55,7 @@ List rows are rendered through four display regions derived from item data rathe
 
 | region | item fields | fallback behavior |
 |--------|-------------|-------------------|
-| Leading media/icon | `thumbnail_url`, `icon` | Falls back to `photo`, `document-text`, or `folder` based on `kind` when no thumbnail/icon is provided. |
+| Leading media/icon | `thumbnail_url`, `icon`, `icon_svg` | `icon_svg` is the server-rendered glyph. A name alone does not become a glyph. Missing artwork falls back to `photo`, `document-text`, or `folder` when the picker serialized that SVG, otherwise a letter preview. |
 | Title | `title`, `label`, `name` | Uses the first present value in that order. |
 | Description | `description` | Falls back to `path` or file metadata built from `content_type` and `byte_size`. |
 | Right text | `right_text` | Falls back to `meta`, then `badge`. |

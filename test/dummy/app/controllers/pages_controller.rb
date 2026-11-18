@@ -560,7 +560,11 @@ class PagesController < ApplicationController
       options.select { |option| option[:label].downcase.include?(query) }.first(10)
     end
 
-    render json: {items: results}
+    render json: {
+      items: results.map { |option|
+        option.merge(icon_svg: select_option_icon_svg(option[:icon]))
+      }
+    }
   end
 
   def forms_nested_multiselect
@@ -747,6 +751,9 @@ class PagesController < ApplicationController
   end
 
   def spinner
+  end
+
+  def icons
   end
 
   def popovers
@@ -2388,6 +2395,22 @@ class PagesController < ApplicationController
     end
   end
 
+  def select_option_icon_svg(name)
+    return if name.blank?
+
+    view_context.render(
+      FlatPack::Shared::IconComponent.new(name: name, size: :sm, class: "pointer-events-none")
+    )
+  end
+
+  def picker_icon_svg(name)
+    return if name.blank?
+
+    view_context.render(
+      FlatPack::Shared::IconComponent.new(name: name, size: :md, class: "block shrink-0")
+    )
+  end
+
   def picker_item_payload(item)
     {
       id: item[:id],
@@ -2399,6 +2422,7 @@ class PagesController < ApplicationController
       byteSize: item[:byte_size],
       thumbnail_url: item[:thumbnail_url],
       icon: item[:icon],
+      icon_svg: picker_icon_svg(item[:icon]),
       description: item[:description],
       right_text: item[:right_text],
       path: item[:path],

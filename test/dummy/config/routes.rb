@@ -195,6 +195,7 @@ Rails.application.routes.draw do
   get "demo/skip_link", to: "pages#skip_link"
   get "demo/stepper", to: "pages#stepper"
   get "demo/spinner", to: "pages#spinner"
+  get "demo/icons", to: "pages#icons"
   get "demo/popovers", to: "pages#popovers"
   get "demo/tooltips", to: "pages#tooltips"
   get "demo/tabs", to: "pages#tabs"

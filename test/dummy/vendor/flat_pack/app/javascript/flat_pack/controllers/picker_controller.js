@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { flatPackCopy } from "flat_pack/copy"
 import { createRemoteQuery } from "flat_pack/remote_query"
+import { allowlistedIconSvg } from "flat_pack/svg_markup"
 
 export default class extends Controller {
   static targets = ["searchInput", "results", "emptyState", "errorState", "outputField", "formFields", "loading", "sentinel", "status"]
@@ -494,21 +495,14 @@ export default class extends Controller {
         </span>`
     }
 
-    const icon = this.#escapeHtml(String(item.icon || ""))
-    if (!icon) {
+    const iconSvg = allowlistedIconSvg(item.icon_svg)
+    if (!iconSvg) {
       return this.#listFallbackPreviewMarkup(this.#normalizedKind(item.kind), item)
     }
 
     return `
       <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-(--surface-subtle-background-color) text-(--surface-muted-content-color)">
-        <svg
-          class="h-5 w-5"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-          data-controller="flat-pack--icon"
-          data-flat-pack--icon-name-value="${icon}"
-          data-flat-pack--icon-variant-value="outline"
-        ></svg>
+        ${iconSvg}
       </span>
     `
   }
@@ -822,6 +816,7 @@ export default class extends Controller {
         byteSize,
         thumbnail_url: thumbnailUrl,
         icon: this.#displayIcon(source, kind, thumbnailUrl),
+        icon_svg: allowlistedIconSvg(source.icon_svg || source.iconSvg || ""),
         description,
         right_text: this.#displayRightText(source),
         path: source.path || null,

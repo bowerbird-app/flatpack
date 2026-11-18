@@ -17,13 +17,13 @@ description: Prefer FlatPack components over raw HTML and enforce component-firs
 
 ## Icon usage
 
-FlatPack icons are rendered via `FlatPack::Shared::IconComponent` (or the `icon:` prop on components that accept one). Icons load their paths client-side from the importmap-pinned `flat_pack/heroicons` module — **no SVG sprite partial is required in the host layout**.
+FlatPack icons are rendered via `FlatPack::Shared::IconComponent` (or the `icon:` prop on components that accept one). The component inlines Heroicons paths on the server. There is no icon sprite and no `flat_pack/heroicons` JavaScript module.
 
 - Use [Heroicons v2](https://heroicons.com) canonical dash-separated names: `"magnifying-glass"`, `"cog-6-tooth"`, `"exclamation-triangle"`, etc.
 - Ruby symbol form is also accepted (underscores converted): `:magnifying_glass`, `:cog_6_tooth`.
 - Icons render as `block shrink-0` so they do not pick up a text-baseline gap. If an icon sits in inline text, wrap the row in `inline-flex items-center`.
 - Handle-heavy icons (magnifying-glass, plus, minus) get a 2px optical lift via `FlatPack::Shared::IconComponent::OPTICAL_NUDGES`. Add other names there instead of per-component CSS.
-- The `:variant` option accepts `:outline` (default) or `:solid`.
+- The `:variant` option accepts `:outline` (default), `:solid`, `:mini`, or `:micro`.
 - A set of legacy shorthand aliases (`"search"` → `"magnifying-glass"`, `"settings"` → `"cog-6-tooth"`, etc.) are mapped internally; prefer canonical names in new code.
 - Do **not** add raw `<svg>` markup or `<use xlink:href>` when `FlatPack::Shared::IconComponent` can be used instead.
 

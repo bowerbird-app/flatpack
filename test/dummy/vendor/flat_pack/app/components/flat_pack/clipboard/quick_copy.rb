@@ -5,6 +5,8 @@ module FlatPack
     # Shared trailing control for TextInput and TextArea quick_copy.
     # The field click and the icon button both hit flat-pack--clipboard.
     module QuickCopy
+      include FlatPack::Clipboard::StateIcons
+
       private
 
       def render_quick_copy_field(target_id:, button_label:, disabled:, button_position: :middle)
@@ -36,7 +38,7 @@ module FlatPack
           data: {flat_pack__clipboard_target: "button"},
           aria: {label: button_label}
         ) do
-          render FlatPack::Shared::IconComponent.new(name: "clipboard-document", size: :sm)
+          render_clipboard_state_icons("clipboard-document", size: :sm)
         end
       end
 

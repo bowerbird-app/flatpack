@@ -213,7 +213,8 @@ class DemoCatalog
       title: "Helpers",
       entries: [
         {type: :item, title: "Local Time", path: "/demo/local_time", description: "Local time helper formatting", icon: :clock},
-        {type: :item, title: "Red Dot", path: "/demo/red_dot", description: "Unread and attention indicator dots", icon: :bell}
+        {type: :item, title: "Red Dot", path: "/demo/red_dot", description: "Unread and attention indicator dots", icon: :bell},
+        {type: :item, title: "Icons", path: "/demo/icons", description: "Heroicons drawn on the server", icon: :sparkles}
       ]
     },
     {

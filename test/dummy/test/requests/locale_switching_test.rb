@@ -72,7 +72,7 @@ class LocaleSwitchingTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "header.fp-top-nav .fp-button-group-menu__trigger", text: "View", count: 1
-    assert_select "header.fp-top-nav .fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value=chevron-down]", count: 1
-    assert_select "header.fp-top-nav .fp-button-group-menu__trigger svg[data-flat-pack--icon-name-value=bars-3]", count: 0
+    assert_heroicon "chevron-down", selector: "header.fp-top-nav .fp-button-group-menu__trigger svg", count: 1
+    refute_heroicon "bars-3", selector: "header.fp-top-nav .fp-button-group-menu__trigger svg"
   end
 end

@@ -146,9 +146,13 @@ export default class extends Controller {
 
   swapIcon(name) {
     const button = this.buttonElement()
-    const icon = button?.querySelector?.("[data-flat-pack--icon-name-value]")
-    if (!icon) return
-    icon.setAttribute("data-flat-pack--icon-name-value", name)
+    const icons = button?.querySelectorAll?.("[data-flat-pack-clipboard-icon]")
+    if (!icons || icons.length === 0) return
+
+    const state = name === "check" ? "copied" : (name === "exclamation-circle" ? "error" : "idle")
+    icons.forEach((icon) => {
+      icon.classList.toggle("hidden", icon.getAttribute("data-flat-pack-clipboard-icon") !== state)
+    })
   }
 
   showLabel(state) {

@@ -20,7 +20,7 @@ class PagesOverlayDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Bottom right"
     assert_includes response.body, ">New<"
     assert_includes response.body, ">Share<"
-    assert_includes response.body, 'data-flat-pack--icon-name-value="heart"'
+    assert_includes response.body, heroicon_inner("heart")
   end
 
   test "sidebar includes overlay" do

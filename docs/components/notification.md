@@ -147,4 +147,3 @@ Timestamps are rendered using `FlatPack::Timestamp::Component` with `shorten_tim
 - `FlatPack::Shared::IconComponent`
 - Stimulus controller: `flat-pack--popover`
 - Stimulus controller: `flat-pack--timestamp`
-- Stimulus controller: `flat-pack--icon`

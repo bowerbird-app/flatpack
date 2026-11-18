@@ -166,6 +166,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/timestamp
     /demo/local_time
     /demo/red_dot
+    /demo/icons
     /demo/notification
     /mobile
     /mobile/bottom_nav
@@ -638,8 +639,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_includes response.body, "Page Nav Component"
     assert_includes response.body, "flat-pack--page-nav#back"
-    assert_includes response.body, "x-mark"
-    assert_includes response.body, "plus"
+    assert_includes response.body, heroicon_inner("x-mark")
+    assert_includes response.body, heroicon_inner("plus")
   end
 
   test "demo shell keeps sidebar current item and scroll across visits" do
@@ -701,8 +702,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     heart = response.body[/<button[^>]*aria-label="Add to list"[^>]*>.*?<\/button>/m]
     assert_includes share, 'data-fp-style="secondary"'
     assert_includes heart, 'data-fp-style="secondary"'
-    assert_includes share, 'data-flat-pack--icon-name-value="share"'
-    assert_includes heart, 'data-flat-pack--icon-name-value="heart"'
+    assert_includes share, heroicon_inner("share")
+    assert_includes heart, heroicon_inner("heart")
     assert_includes share, "h-[var(--button-round-size-md)]"
     assert_includes heart, "h-[var(--button-round-size-md)]"
     refute_includes share, 'data-fp-style="ghost"'
@@ -806,7 +807,8 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     get "/demo/tooltips"
 
     assert_response :success
-    assert_includes response.body, 'data-flat-pack--icon-variant-value="outline"'
+    assert_includes response.body, heroicon_inner("link")
+    assert_includes response.body, 'stroke-width="var(--icon-stroke-width, 1.5)"'
     assert_includes response.body, 'viewBox="0 0 24 24"'
   end
 
@@ -1540,7 +1542,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     assert_match(/data-controller="[^"]*flat-pack--search[^"]*"/, response.body)
     assert_includes response.body, "data-flat-pack--search-items-value"
     assert_includes response.body, "Accordion"
-    assert_includes response.body, "data-flat-pack--icon-name-value=\"magnifying-glass\""
+    assert_includes response.body, heroicon_inner("magnifying-glass")
     assert_includes response.body, "-translate-y-0.5"
     refute_includes response.body, "data-flat-pack--search-url-value=\"/demo/search_results\""
   end

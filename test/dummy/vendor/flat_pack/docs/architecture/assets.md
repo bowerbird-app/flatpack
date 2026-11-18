@@ -89,7 +89,7 @@ Host Tailwind usually loads last. `@layer theme` writes `--radius-md: 0.375rem` 
 app/javascript/flat_pack/
 ├── controllers/
 │   └── ..._controller.js   # Stimulus controllers
-├── heroicons.js            # Generated Heroicons v2 icon banks for FlatPack icons
+├── svg_markup.js           # Allowlist for icon HTML inserted from remote JSON
 ├── local_time.js           # Framework-independent local/relative time enhancer
 ├── focus_trap.js           # Shared Tab cycle for Drawer, Command palette, and Modal
 ├── click_outside.js        # Shared outside-click listener and dialog backdrop check
@@ -135,25 +135,26 @@ pin "flat_pack/click_outside", to: "flat_pack/click_outside.js", preload: false
 pin "flat_pack/positioning", to: "flat_pack/positioning.js", preload: false
 pin "flat_pack/remote_query", to: "flat_pack/remote_query.js", preload: false
 pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
-
-# Heroicons icon banks — served as a local JS module, no gem required
-pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
+pin "flat_pack/svg_markup", to: "flat_pack/svg_markup.js", preload: false
 ```
 
 `apexcharts`, `lowlight`, and each `@tiptap/*` pin in that file also use `preload: false`. `chart_controller` loads ApexCharts with `import("apexcharts")`. The TipTap registry imports `@tiptap/*` and `lowlight` when an editor needs them. importmap-rails draws the host `config/importmap.rb` after this file. A host pin with the same name replaces the engine pin. A copied pin needs `preload: false`, or the browser modulepreloads that package on every page.
 
 ### Icon Rendering
 
-FlatPack icons are rendered entirely client-side via the `flat-pack--icon` Stimulus controller. The component emits an SVG shell with `data-controller`, `data-flat-pack--icon-name-value`, and `data-flat-pack--icon-variant-value` attributes. The controller imports icon path data from `flat_pack/heroicons` (an importmap-pinned module) and injects the correct SVG paths at runtime.
+`FlatPack::Shared::IconComponent` inlines Heroicons 2.2.0 paths from `FlatPack::Heroicons` (`lib/flat_pack/heroicons/paths.json`). There is no `flat-pack--icon` controller and no `flat_pack/heroicons` module.
 
 This means:
-- No server-side SVG sprite partial is required in the host layout.
+- No SVG sprite partial is required in the host layout.
 - Icons support `:outline`, `:solid`, `:mini`, and `:micro` variants.
-- Outline stroke is `--icon-stroke-width` (default `1.5`, the Heroicons outline weight). The Stimulus controller writes the same token; kit CSS reapplies it on `svg[data-controller~="flat-pack--icon"][stroke]` so solid/mini/micro fills are not thickened after they drop the `stroke` attribute.
+- Outline stroke is `--icon-stroke-width` (default `1.5`, the Heroicons outline weight), set on the SVG. Filled variants omit `stroke`. Kit CSS reapplies the token on `svg[stroke-width="var(--icon-stroke-width, 1.5)"]`.
 - Host apps can set a global default with `FlatPack.configure { |config| config.default_icon_variant = :outline }`.
 - Icon names follow [Heroicons v2](https://heroicons.com) canonical names (e.g. `magnifying-glass`, `cog-6-tooth`, `exclamation-triangle`). A set of legacy shorthand aliases (e.g. `search`, `settings`, `alert`) are mapped internally for backward compatibility.
+- An unknown name raises in development and test. Elsewhere it logs a warning and renders an empty SVG.
+- `class: "fp-red-dot"` appends `circle.fp-red-dot-indicator`.
 - Handle-heavy artwork (`magnifying-glass`, `paper-airplane`, `pencil`, `pencil-square`, `arrow-up-tray`, `arrow-down-tray`) gets `-translate-y-0.5` via `IconComponent::OPTICAL_NUDGES`. Add names there instead of per-component CSS.
 - Names that include `-left` or `-right` as a travel or alignment direction get `fp-icon-directional` and flip in `[dir="rtl"]` with CSS `scale` (so a translate nudge still applies). Chat-bubble tails (`chat-bubble-left*`) are excluded. Vertical chevrons, checks, and media playback do not flip.
+- Remote select and picker JSON that draws an icon sends `icon_svg`. `flat_pack/svg_markup` keeps `svg`, `path`, `circle`, `g`, `rect`, `line`, `polyline`, `polygon`, and `ellipse`.
 
 ## Tailwind CSS 4 Integration
 

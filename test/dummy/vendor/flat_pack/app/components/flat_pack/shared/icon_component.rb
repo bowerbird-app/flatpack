@@ -43,6 +43,13 @@ module FlatPack
         micro: "0 0 16 16"
       }.freeze
 
+      RED_DOT = {
+        outline: {cx: "20", cy: "4", r: "3"},
+        solid: {cx: "20", cy: "4", r: "3"},
+        mini: {cx: "16.5", cy: "3.5", r: "2.5"},
+        micro: {cx: "13", cy: "3", r: "2"}
+      }.freeze
+
       # Maps legacy/shorthand names to canonical Heroicons v2 names.
       # Keys use dash-separated strings (underscores are converted before lookup).
       NAME_MAP = {
@@ -94,9 +101,7 @@ module FlatPack
       end
 
       def call
-        # Render an SVG shell; the icon_controller Stimulus controller fills in
-        # the paths from the flat_pack/heroicons.js module (importmap-pinned).
-        tag.svg(**svg_attributes)
+        content_tag(:svg, icon_body, **svg_attributes)
       end
 
       private
@@ -106,21 +111,59 @@ module FlatPack
           class: icon_classes,
           xmlns: "http://www.w3.org/2000/svg",
           viewBox: VIEWBOXES.fetch(@variant),
-          fill: "none",
-          stroke: "currentColor",
-          "stroke-width": "var(--icon-stroke-width, 1.5)",
           aria: {hidden: "true"},
-          data: icon_data
+          data: icon_data,
+          **presentation_attributes
         )
       end
 
+      def presentation_attributes
+        return {fill: "currentColor"} unless @variant == :outline
+
+        {
+          fill: "none",
+          stroke: "currentColor",
+          "stroke-width": "var(--icon-stroke-width, 1.5)"
+        }
+      end
+
+      def icon_body
+        safe_join([registry_markup, red_dot_markup].compact)
+      end
+
+      def registry_markup
+        inner = FlatPack::Heroicons.fetch(@variant, heroicon_name)
+        return inner.html_safe if inner
+
+        message = %([FlatPack] Unknown heroicon: "#{heroicon_name}")
+        if Rails.env.development? || Rails.env.test?
+          raise ArgumentError, message
+        end
+
+        Rails.logger.warn(message)
+        nil
+      end
+
+      def red_dot_markup
+        return unless red_dot?
+
+        config = RED_DOT.fetch(@variant)
+        tag.circle(class: "fp-red-dot-indicator", **config)
+      end
+
+      def red_dot?
+        icon_classes.split(/\s+/).include?("fp-red-dot")
+      end
+
       def icon_classes
-        user_class = @system_arguments.delete(:class)
-        FlatPack::ClassMerger.merge(
-          ["block", "shrink-0", size_classes, optical_nudge_class, directional_class, motion_class, user_class]
-            .compact
-            .join(" ")
-        )
+        @icon_classes ||= begin
+          user_class = @system_arguments.delete(:class)
+          FlatPack::ClassMerger.merge(
+            ["block", "shrink-0", size_classes, optical_nudge_class, directional_class, motion_class, user_class]
+              .compact
+              .join(" ")
+          )
+        end
       end
 
       def optical_nudge_class
@@ -147,24 +190,14 @@ module FlatPack
       end
 
       def icon_data
-        data = {
-          controller: stimulus_controllers,
-          "flat-pack--icon-name-value": heroicon_name,
-          "flat-pack--icon-variant-value": @variant.to_s
-        }
-        return data unless @animate
+        return {} unless @animate
 
-        data.merge(
+        {
+          controller: "flat-pack--svg-motion",
           "flat-pack--svg-motion-definition-value": motion_definition.to_json,
           "flat-pack--svg-motion-state-value": "play",
           "flat-pack--svg-motion-trigger-value": @trigger.to_s
-        )
-      end
-
-      def stimulus_controllers
-        controllers = ["flat-pack--icon"]
-        controllers << "flat-pack--svg-motion" if @animate
-        controllers.join(" ")
+        }
       end
 
       def motion_definition

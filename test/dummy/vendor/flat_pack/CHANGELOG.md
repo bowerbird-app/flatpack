@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-18
+
+### Changed
+- Icons render on the server. `FlatPack::Shared::IconComponent` inlines Heroicons 2.2.0 paths from `FlatPack::Heroicons`. `flat-pack--icon` and `app/javascript/flat_pack/heroicons.js` are gone.
+- Section-title anchors and quick copy render idle, copied, and error icons together. The clipboard controller shows the matching one. Copy button CSS is unchanged.
+- Remote select items and picker items draw an icon from `icon_svg` (the IconComponent HTML). A name alone does not become a glyph in the browser.
+
+### Upgrade notes
+- `flat-pack--icon` is removed. There is no alias.
+- The `flat_pack/heroicons` pin and `heroicons.js` are removed.
+- Hosts that set `data-flat-pack--icon-name-value` from their own JS must render icons on the server.
+- Hosts must remove any manual heroicons pin or preload. Esbuild users drop the `flat_pack/heroicons` alias and point `flat_pack/svg_markup` at `app/javascript/flat_pack/svg_markup.js`. Importmap hosts get that pin from the engine.
+- Do not rerun `flat_pack:install`. Do not rebuild Tailwind for this change. Reload kit CSS and JS.
+- Remote select items and picker items that draw an icon should include `icon_svg` from `FlatPack::Shared::IconComponent`. A name alone no longer becomes a glyph in the browser.
+
 ## [0.1.380] - 2026-11-18
 
 ### Fixed

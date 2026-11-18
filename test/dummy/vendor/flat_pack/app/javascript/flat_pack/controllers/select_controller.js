@@ -3,6 +3,7 @@ import { playOverlayEnter, playOverlayExit, cancelOverlayHide } from "controller
 import { flatPackCopy } from "flat_pack/copy"
 import { onClickOutside } from "flat_pack/click_outside"
 import { createRemoteQuery } from "flat_pack/remote_query"
+import { allowlistedIconSvg } from "flat_pack/svg_markup"
 
 export default class extends Controller {
   static targets = ["trigger", "dropdown", "hiddenInput", "hiddenInputs", "searchInput", "optionsList", "chevron", "chip", "placeholder", "chipsContainer", "searchStatus", "searchHint", "loadingState", "emptyState", "nestedCheckbox", "valueLabel", "valueIcon"]
@@ -444,7 +445,7 @@ export default class extends Controller {
 
     if (!firstValue) {
       labelTarget.textContent = this.defaultTriggerText
-      this.renderTriggerIcon("")
+      this.renderTriggerIcon(null)
       return
     }
 
@@ -452,41 +453,25 @@ export default class extends Controller {
       ? this.optionsListTarget.querySelector(`[data-value='${CSS.escape(firstValue)}']`)
       : null
     const label = selectedOption?.dataset?.label || this.optionLabels.get(firstValue) || this.defaultTriggerText
-    const icon = selectedOption?.dataset?.icon || this.optionIcons.get(firstValue) || ""
 
     labelTarget.textContent = label
-    this.renderTriggerIcon(icon)
+    this.renderTriggerIcon(selectedOption)
   }
 
-  renderTriggerIcon(name) {
+  renderTriggerIcon(optionElement) {
     if (!this.hasValueIconTarget) {
       return
     }
 
-    const icon = this.normalizeIcon(name)
-    if (!icon) {
+    const svg = optionElement?.querySelector?.("svg")
+    if (!svg) {
       this.valueIconTarget.classList.add("hidden")
       this.valueIconTarget.replaceChildren()
       return
     }
 
     this.valueIconTarget.classList.remove("hidden")
-    const existing = this.valueIconTarget.querySelector("[data-flat-pack--icon-name-value]")
-    if (existing) {
-      existing.setAttribute("data-flat-pack--icon-name-value", icon)
-      return
-    }
-
-    this.valueIconTarget.innerHTML = this.iconMarkup(icon)
-  }
-
-  iconMarkup(name) {
-    const icon = this.normalizeIcon(name)
-    if (!icon) {
-      return ""
-    }
-
-    return `<svg class="block shrink-0 w-4 h-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="var(--icon-stroke-width, 1.5)" aria-hidden="true" data-controller="flat-pack--icon" data-flat-pack--icon-name-value="${this.escapeHtml(icon)}" data-flat-pack--icon-variant-value="outline"></svg>`
+    this.valueIconTarget.replaceChildren(svg.cloneNode(true))
   }
 
   normalizeIcon(name) {
@@ -523,13 +508,12 @@ export default class extends Controller {
       return
     }
 
-    const icon = this.iconMarkup(this.optionIcons.get(value))
+    const sourceIcon = this.optionElement(value)?.querySelector("svg")
     const chip = document.createElement("span")
     chip.setAttribute("data-flat-pack--select-target", "chip")
     chip.dataset.value = value
     chip.innerHTML = `
       <span class="inline-flex items-center gap-1.5 rounded-(--chip-border-radius) font-medium border transition-colors duration-base bg-(--surface-muted-background-color) text-(--surface-content-color) border-(--surface-border-color) text-xs px-(--chip-padding-x-sm) py-(--button-padding-y-sm)">
-        ${icon}
         <span>${this.escapeHtml(label)}</span>
         <span class="inline-flex items-center justify-center cursor-pointer rounded-(--chip-border-radius)" role="button" tabindex="0" aria-label="${this.escapeHtml(flatPackCopy("select.remove", {label}))}" data-action="click->flat-pack--select#removeChip keydown->flat-pack--select#removeChipKeydown" data-value="${this.escapeHtml(value)}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
@@ -538,6 +522,11 @@ export default class extends Controller {
         </span>
       </span>
     `
+
+    if (sourceIcon) {
+      const row = chip.querySelector("span")
+      row?.insertBefore(sourceIcon.cloneNode(true), row.firstChild)
+    }
 
     this.chipsContainerTarget.appendChild(chip)
   }
@@ -654,7 +643,8 @@ export default class extends Controller {
           value,
           label,
           disabled: item?.disabled === true,
-          icon: this.normalizeIcon(item?.icon)
+          icon: this.normalizeIcon(item?.icon),
+          icon_svg: typeof item?.icon_svg === "string" ? item.icon_svg : ""
         }
       })
       .filter(Boolean)
@@ -681,6 +671,7 @@ export default class extends Controller {
     const value = this.escapeHtml(item.value)
     const label = this.escapeHtml(item.label)
     const icon = this.normalizeIcon(item.icon)
+    const iconSvg = allowlistedIconSvg(item.icon_svg)
     const selected = this.selectedValues.has(item.value)
     const disabled = item.disabled === true
     const optionClasses = disabled
@@ -692,7 +683,7 @@ export default class extends Controller {
       : "flex items-center gap-[var(--dropdown-item-gap)] px-[var(--select-option-padding-x)] py-[var(--select-option-padding-y)] text-sm rounded-[var(--dropdown-item-radius)] transition-colors duration-base hover:bg-[var(--surface-hover-background-color)] cursor-pointer text-[var(--surface-content-color)]"
     const iconAttr = icon ? ` data-icon="${this.escapeHtml(icon)}"` : ""
 
-    return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}"${iconAttr} data-disabled="${disabled}" aria-selected="${selected}">${this.iconMarkup(icon)}<span class="min-w-0 truncate">${label}</span></div>`
+    return `<div role="option" class="${optionClasses}" data-action="click->flat-pack--select#selectOption" data-value="${value}" data-label="${label}"${iconAttr} data-disabled="${disabled}" aria-selected="${selected}">${iconSvg}<span class="min-w-0 truncate">${label}</span></div>`
   }
 
   setSearchState(state) {

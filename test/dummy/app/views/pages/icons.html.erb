@@ -1,0 +1,21 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Icons",
+  subtitle: "Heroicons drawn on the server."
+) %>
+
+<section class="mb-12">
+  <%= render FlatPack::SectionTitle::Component.new(title: "Variants", anchor_link: true) %>
+
+  <%= render FlatPack::Card::Component.new do %>
+    <div class="flex flex-wrap items-center gap-6 text-(--surface-content-color)">
+      <%= render FlatPack::Shared::IconComponent.new(name: "bell") %>
+      <%= render FlatPack::Shared::IconComponent.new(name: "heart") %>
+      <%= render FlatPack::Shared::IconComponent.new(name: "star", variant: :solid) %>
+      <%= render FlatPack::Shared::IconComponent.new(name: "user", variant: :mini) %>
+      <%= render FlatPack::Shared::IconComponent.new(name: "check", variant: :micro) %>
+      <%= render FlatPack::Shared::IconComponent.new(name: :search) %>
+      <%= render FlatPack::Shared::IconComponent.new(name: "bell", class: "fp-red-dot") %>
+      <%= render FlatPack::Shared::IconComponent.new(name: "arrow-left") %>
+    </div>
+  <% end %>
+</section>

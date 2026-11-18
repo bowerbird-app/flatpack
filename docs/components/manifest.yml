@@ -499,6 +499,12 @@ components:
     primary_class: FlatPack::HeroTitle::Component
     status: documented
 
+  - key: icon
+    title: Icon
+    doc: docs/components/icon.md
+    primary_class: FlatPack::Shared::IconComponent
+    status: documented
+
   - key: inputs
     title: Input Components
     doc: docs/components/inputs.md
