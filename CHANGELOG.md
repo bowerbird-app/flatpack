@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.379] - 2026-11-18
+
+### Changed
+- The engine importmap sets `preload: false` on `apexcharts`, `lowlight`, and every `@tiptap/*` pin. importmap-rails modulepreloads a pin that omits the option, so those libraries were fetched on every host page. A chart still loads ApexCharts with `import("apexcharts")`. An editor still imports TipTap and lowlight when it opens.
+
+### Upgrade notes
+- A host that copied TipTap pins into `config/importmap.rb` adds `preload: false` to each of those pins. Do the same for a copied `lowlight` pin and a copied `apexcharts` pin. The host file is drawn after the engine file, so the copied pin is the one the browser uses.
+- `bin/rails generate flat_pack:install` writes `preload: false` on TipTap pins it adds. It does not rewrite pins that are already in the file.
+- No CSS change. No new JavaScript behavior. Do not rebuild Tailwind.
+- Redeploy so `meta.gem_version` shows `0.1.379`.
+
 ## [0.1.378] - 2026-11-18
 
 ### Changed
