@@ -140,6 +140,8 @@ pin "flat_pack/reorder_items", to: "flat_pack/reorder_items.js", preload: false
 pin "flat_pack/heroicons", to: "flat_pack/heroicons.js", preload: false
 ```
 
+`apexcharts`, `lowlight`, and each `@tiptap/*` pin in that file also use `preload: false`. `chart_controller` loads ApexCharts with `import("apexcharts")`. The TipTap registry imports `@tiptap/*` and `lowlight` when an editor needs them. importmap-rails draws the host `config/importmap.rb` after this file. A host pin with the same name replaces the engine pin. A copied pin needs `preload: false`, or the browser modulepreloads that package on every page.
+
 ### Icon Rendering
 
 FlatPack icons are rendered entirely client-side via the `flat-pack--icon` Stimulus controller. The component emits an SVG shell with `data-controller`, `data-flat-pack--icon-name-value`, and `data-flat-pack--icon-variant-value` attributes. The controller imports icon path data from `flat_pack/heroicons` (an importmap-pinned module) and injects the correct SVG paths at runtime.

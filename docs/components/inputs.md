@@ -476,7 +476,7 @@ registerTiptapAddon("tiptap-image", {
 })
 ```
 
-If you use Importmap, pin any third-party TipTap package in your app's `config/importmap.rb`. If you use npm, install the package into your app bundle as usual.
+If you use Importmap, pin any third-party TipTap package in your app's `config/importmap.rb` with `preload: false`. importmap-rails modulepreloads a pin that omits the option. If you use npm, install the package into your app bundle as usual.
 
 #### 2. Opt into the addon from Ruby
 

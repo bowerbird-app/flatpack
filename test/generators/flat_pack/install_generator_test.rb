@@ -60,6 +60,11 @@ module FlatPack
           assert_includes content, "flat_pack/remote_query"
           assert_includes content, "flat_pack/reorder_items"
           assert_includes content, "preload: false"
+          tiptap_pins = content.lines.grep(/pin "@tiptap\//)
+          assert_operator tiptap_pins.size, :>, 0
+          tiptap_pins.each do |line|
+            assert_includes line, "preload: false"
+          end
         end
       end
 
