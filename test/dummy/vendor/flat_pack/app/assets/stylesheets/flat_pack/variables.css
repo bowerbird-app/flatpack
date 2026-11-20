@@ -35,6 +35,9 @@
  *   Cards, menus, popovers, modals, alerts, and toasts step up to --radius-xl.
  * The page token is the tinted canvas. The surface token is the raised layer.
  *   Rounded does not set either colour. It keeps the light or dark palette it is paired with.
+ *   Rounded toasts are the exception. Their background and border point at the surface.
+ *   The icon points at the status fill. Info has no status colour, so that icon stays muted.
+ *   Text stays the surface content colour through the default alias. Alert is not part of this.
  * --card-border-width and --card-shadow live on bare :root, then on [data-theme~="rounded"].
  *   Do not restate them on [data-theme]. A dark region inside rounded would snap
  *   the card back to a 1px border and no shadow.
@@ -2143,8 +2146,9 @@ input.flat-pack-input[type="search"]::-ms-reveal {
  * moderate; this block remaps component radii. Chat bubbles use a 18px corner
  * and 14px / 10px padding, as lengths, so the space remap does not inflate them.
  * Do not self-map a token here.
- * The backdrop wash is the colour exception. This block follows
- * [data-theme~="dark"] at the same specificity, so a combined attribute keeps it.
+ * The backdrop wash is one colour exception. Toast shell and icon tokens are the other.
+ * This block follows [data-theme~="dark"] at the same specificity, so a combined
+ * attribute keeps the wash and resolves the toast shell from the dark surface.
  */
 [data-theme~="rounded"] {
   --space-1: 0.25rem;
@@ -2207,6 +2211,18 @@ input.flat-pack-input[type="search"]::-ms-reveal {
   --type-control-weight: 500;
   --type-control-tracking: -0.015em;
   --type-pill-weight: 600;
+  --toast-info-background-color: var(--surface-background-color);
+  --toast-info-border-color: var(--surface-border-color);
+  --toast-info-icon-color: var(--surface-muted-content-color);
+  --toast-success-background-color: var(--surface-background-color);
+  --toast-success-border-color: var(--surface-border-color);
+  --toast-success-icon-color: var(--color-success-background-color);
+  --toast-warning-background-color: var(--surface-background-color);
+  --toast-warning-border-color: var(--surface-border-color);
+  --toast-warning-icon-color: var(--color-warning-background-color);
+  --toast-danger-background-color: var(--surface-background-color);
+  --toast-danger-border-color: var(--surface-border-color);
+  --toast-danger-icon-color: var(--color-danger-background-color);
 }
 
 /* Phone metrics for the rounded display and section roles. 43/40 is 1.075. */

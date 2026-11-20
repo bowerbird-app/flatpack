@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-20
+
+### Changed
+- On the rounded theme, `FlatPack::Toast` uses the neutral surface and the normal border for info, success, warning, and danger. The icon uses the status colour. Success, warning, and danger use the status fill. Info stays muted. Text stays the surface content colour. `data-theme="dark rounded"` keeps that shell on the dark surface. Alert is unchanged. Other themes keep the tinted toast.
+
+### Upgrade notes
+- Bump the gem and reload Flatpack CSS. Arguments are unchanged. There is no JavaScript change.
+- The new values live on `[data-theme~="rounded"]`. A host that already sets `--toast-success-background-color`, the matching border token, or the matching icon token on a more specific rule still wins.
+- Do not rerun `flat_pack:install`.
+
 ## [0.2.1] - 2026-11-20
 
 ### Added
