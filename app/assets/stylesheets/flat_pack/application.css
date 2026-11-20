@@ -6074,7 +6074,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   max-height: min(20rem, calc(100vh - 1rem));
   padding: 0.5rem;
   overflow: hidden;
-  border: 1px solid var(--surface-border-color);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--surface-border-color);
   border-radius: var(--menu-radius);
   background: var(--surface-background-color);
   color: var(--surface-content-color);
@@ -6089,7 +6091,9 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  border: 1px solid var(--surface-border-color);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--surface-border-color);
   border-radius: var(--form-control-radius);
   background: var(--surface-background-color);
   color: var(--surface-content-color);
@@ -6139,9 +6143,8 @@ ol.flat-pack-list > li > a.flat-pack-list-item-link > .flat-pack-list-item-icon 
 }
 
 .fp-icon-picker__option {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 2.25rem;
   height: 2.25rem;
   margin: 0;
