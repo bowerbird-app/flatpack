@@ -75,6 +75,7 @@ hero | FlatPack::Hero::Component | docs/components/hero.md
 heading | FlatPack::Heading::Component | docs/components/heading.md
 hero_title | FlatPack::HeroTitle::Component | docs/components/hero-title.md
 icon | FlatPack::Shared::IconComponent | docs/components/icon.md
+icon_picker | FlatPack::IconPicker::Component | docs/components/icon_picker.md
 inputs | FlatPack::TextInput::Component | docs/components/inputs.md
 inline_edit | FlatPack::InlineEdit::Component | docs/components/inline-edit.md
 kbd | FlatPack::Kbd::Component | docs/components/kbd.md

@@ -505,6 +505,12 @@ components:
     primary_class: FlatPack::Shared::IconComponent
     status: documented
 
+  - key: icon_picker
+    title: Icon Picker
+    doc: docs/components/icon_picker.md
+    primary_class: FlatPack::IconPicker::Component
+    status: documented
+
   - key: inputs
     title: Input Components
     doc: docs/components/inputs.md
