@@ -41,6 +41,7 @@ class PagesDemoRoutesTest < ActionDispatch::IntegrationTest
     /demo/forms/fieldset
     /demo/forms/radio_group
     /demo/forms/select
+    /demo/forms/icon_picker
     /demo/forms/combobox
     /demo/collection_editor
     /demo/forms/nested_multiselect

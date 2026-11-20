@@ -1,0 +1,90 @@
+<%= render FlatPack::PageTitle::Component.new(
+  title: "Icon picker",
+  subtitle: "Pick a glyph. The form still submits its name."
+) %>
+
+<section class="mb-12" id="field">
+  <%= render FlatPack::SectionTitle::Component.new(title: "On a form", anchor_link: true, subtitle: "Label, help, and a clear choice.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "space-y-[var(--stack-gap-md)] max-w-md") do %>
+      <%= render FlatPack::IconPicker::Component.new(
+        name: "category[icon]",
+        id: "icon-field",
+        label: "Icon",
+        value: "star",
+        include_blank: true,
+        help_text: "Shown beside the name."
+      ) %>
+
+      <%= render FlatPack::IconPicker::Component.new(
+        name: "category[icon_required]",
+        id: "icon-field-error",
+        label: "Required icon",
+        error: "Pick an icon"
+      ) %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="cell">
+  <%= render FlatPack::SectionTitle::Component.new(title: "In a table", anchor_link: true, subtitle: "Open a row. The grid sits above the table, even inside this window.") %>
+
+  <%= render FlatPack::Button::Component.new(
+    text: "Edit rows",
+    style: :secondary,
+    data: {"modal-id": "icon-picker-rows"}
+  ) %>
+
+  <%= render FlatPack::Modal::Component.new(id: "icon-picker-rows", title: "Row icons", size: :lg) do |modal| %>
+    <% modal.body do %>
+      <%= render FlatPack::Table::Component.new(data: [
+        {name: "Inbox", icon: "inbox"},
+        {name: "Calendar", icon: "calendar"},
+        {name: "Unassigned", icon: nil}
+      ]) do |table| %>
+        <% table.column(title: "Name", html: ->(row) { row[:name] }) %>
+        <% table.column(title: "Icon", width: "12rem", html: ->(row) {
+          render(FlatPack::IconPicker::Component.new(
+            name: "rows[#{row[:name].downcase}][icon]",
+            id: "icon-cell-#{row[:name].downcase}",
+            value: row[:icon],
+            chrome: :cell,
+            include_blank: true
+          ))
+        }) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="short-list">
+  <%= render FlatPack::SectionTitle::Component.new(title: "A short list", anchor_link: true, subtitle: "Only the icons this list allows.") %>
+
+  <%= render FlatPack::Card::Component.new do |card| %>
+    <% card.body(class: "max-w-md") do %>
+      <%= render FlatPack::IconPicker::Component.new(
+        name: "nav[icon]",
+        id: "icon-restricted",
+        label: "Nav icon",
+        value: "bolt",
+        icons: %w[star heart bolt inbox calendar magnifying-glass]
+      ) %>
+    <% end %>
+  <% end %>
+</section>
+
+<section class="mb-12" id="weight">
+  <%= render FlatPack::SectionTitle::Component.new(title: "A long list", anchor_link: true, subtitle: "Twenty rows. Icons appear when you open one.") %>
+
+  <%= render FlatPack::Table::Component.new(data: (1..20).map { |number| {name: "Row #{number}"} }) do |table| %>
+    <% table.column(title: "Name", html: ->(row) { row[:name] }) %>
+    <% table.column(title: "Icon", width: "5rem", html: ->(row) {
+      render(FlatPack::IconPicker::Component.new(
+        name: "weights[#{row[:name].parameterize}][icon]",
+        id: "weight-icon-#{row[:name].split.last}",
+        chrome: :cell
+      ))
+    }) %>
+  <% end %>
+</section>
