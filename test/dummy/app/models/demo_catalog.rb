@@ -110,6 +110,7 @@ class DemoCatalog
             {title: "Fieldset", path: "/demo/forms/fieldset", description: "Name a group of related fields", icon: :square},
             {title: "Radio Group", path: "/demo/forms/radio_group", description: "Single-choice radios, pills, cards, or colour dots", icon: :square},
             {title: "Select", path: "/demo/forms/select", description: "Dropdown select input examples", icon: :chevron_down},
+            {title: "Icon picker", path: "/demo/forms/icon_picker", description: "Choose a Heroicon from a grid", icon: :sparkles},
             {title: "Combobox", path: "/demo/forms/combobox", description: "Searchable single-choice field with a typed filter", icon: :search},
             {title: "Collection Editor", path: "/demo/collection_editor", description: "Ordered related records with a person picker, a library image join, and join fields", icon: :users},
             {title: "Nested Multiselect", path: "/demo/forms/nested_multiselect", description: "Parent and child checkbox multiselect examples", icon: :square},

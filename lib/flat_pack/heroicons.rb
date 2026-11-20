@@ -15,6 +15,10 @@ module FlatPack
         banks[variant.to_s]&.[](name.to_s)
       end
 
+      def names(variant = "outline")
+        banks[variant.to_s]&.keys || []
+      end
+
       def banks
         return @banks if @banks
 

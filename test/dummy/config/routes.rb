@@ -127,6 +127,7 @@ Rails.application.routes.draw do
   get "demo/forms/fieldset", to: "pages#forms_fieldset"
   get "demo/forms/radio_group", to: "pages#forms_radio_group"
   get "demo/forms/select", to: "pages#forms_select"
+  get "demo/forms/icon_picker", to: "pages#forms_icon_picker"
   get "demo/forms/select/options", to: "pages#forms_select_options"
   get "demo/forms/combobox", to: "pages#forms_combobox"
   get "demo/forms/combobox/options", to: "pages#forms_combobox_options"

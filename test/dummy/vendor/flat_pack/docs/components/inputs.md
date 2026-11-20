@@ -8,7 +8,8 @@ Use these components when you need FlatPack-styled form controls with consistent
 
 ## Class
 - Primary: `FlatPack::TextInput::Component`
-- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::ImageInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Combobox::Component`, `FlatPack::Switch::Component`
+- Related classes: `FlatPack::PasswordInput::Component`, `FlatPack::EmailInput::Component`, `FlatPack::PhoneInput::Component`, `FlatPack::SearchInput::Component`, `FlatPack::TextArea::Component`, `FlatPack::UrlInput::Component`, `FlatPack::NumberInput::Component`, `FlatPack::DateInput::Component`, `FlatPack::DateRangeInput::Component`, `FlatPack::DateTimeInput::Component`, `FlatPack::TimeInput::Component`, `FlatPack::FileInput::Component`, `FlatPack::ImageInput::Component`, `FlatPack::Checkbox::Component`, `FlatPack::RadioGroup::Component`, `FlatPack::Select::Component`, `FlatPack::Combobox::Component`, `FlatPack::Switch::Component`, `FlatPack::IconPicker::Component`
+- Choosing a Heroicon by sight is [Icon Picker](icon_picker.md).
 - One picture with a preview and a remove control is [Image Input](image_input.md).
 - A dropzone or a button that picks files is [File Input](file_input.md). The host uploads them.
 - Internal (not a host-facing API): text-like inputs and Select compose `FlatPack::FormField::Component` for the shared label / help_text / error wrapper, and `FlatPack::FormField::ControlStyles` for the box class list that uses `--form-control-padding-x` and `--form-control-padding-y`. Keep rendering the public input components above — do not switch hosts to FormField.
@@ -26,7 +27,7 @@ Common props used across most input components:
 | `label` | String | `nil` | no | Visible label text. |
 | `help_text` | String | `nil` | no | Optional plain-text guidance rendered below the control using the same muted text style as character counts. Only plain `String` values are accepted; HTML-like content is escaped as text. |
 | `error` | String | `nil` | no | Error message; enables invalid styling and `aria-describedby`. |
-| `chrome` | Symbol | `:field` | no | `:field` keeps the bordered control. `:cell` drops the border, radius, and background so a collection editor cell can draw them. Text input, email, phone, URL, number, password, search, text area, date, time, date-time, and select accept it. Any other name raises `ArgumentError`. |
+| `chrome` | Symbol | `:field` | no | `:field` keeps the bordered control. `:cell` drops the border, radius, and background so a collection editor cell can draw them. Text input, email, phone, URL, number, password, search, text area, date, time, date-time, select, and icon picker accept it. Any other name raises `ArgumentError`. |
 | `disabled` | Boolean | `false` | no | Disables interaction and submission for the control. |
 | `required` | Boolean | `false` | no | Marks the control as required. |
 | `**system_arguments` | Hash | `{}` | no | Standard HTML attributes (`id`, `class`, `data`, `aria`, etc.). |

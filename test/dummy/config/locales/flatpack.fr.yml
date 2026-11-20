@@ -177,6 +177,13 @@ fr:
       size_bytes: '%{count}o'
       size_kilobytes: '%{count}Ko'
       size_megabytes: '%{count}Mo'
+    icon_picker:
+      placeholder: Choisir une icône
+      search_placeholder: Rechercher des icônes
+      empty: Aucune icône trouvée
+      clear: Aucune
+      dialog: Choisir une icône
+      icons: Icônes
     image_input:
       choose: Choisir une image
       clear: Retirer l’image

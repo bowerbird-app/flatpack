@@ -502,6 +502,9 @@ class PagesController < ApplicationController
   def forms_select
   end
 
+  def forms_icon_picker
+  end
+
   def forms_combobox
   end
 

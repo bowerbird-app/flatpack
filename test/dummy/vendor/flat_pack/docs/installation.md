@@ -384,7 +384,7 @@ lazyLoadControllersFrom("controllers", application)
 
 The engine importmap sets the same option on `apexcharts`, `lowlight`, and each `@tiptap/*` pin. A chart or an editor still imports the package when the page uses it. importmap-rails draws the host `config/importmap.rb` after the engine file, and a later pin replaces the earlier one. A copied pin that omits `preload: false` modulepreloads that package on every page. Add `preload: false` to each copied TipTap, lowlight, and ApexCharts pin. The install generator writes the option on new pins. It leaves pins that are already in the file alone.
 
-importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading. `flat_pack/click_outside` is imported by Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. A missing pin stops those controllers. `flat_pack/positioning` is imported by Popover, Button dropdown, Date picker, and Collection editor, so a missing pin stops those four controllers and leaves the others loading. `flat_pack/remote_query` is imported by Select, Picker, Search, and Combobox. A missing pin stops those four controllers. `flat_pack/reorder_items` is imported by table sortable and grid sortable. A missing pin stops those two controllers.
+importmap-rails hosts also receive the same pins from the engine. `initializer "flat_pack.importmap"` appends the engine `config/importmap.rb`. The host pin list is for a host that bypasses that importmap, or for the copy the generator writes. `flat_pack/focus_trap` is imported only by Drawer, Command palette, and Modal, so a missing pin stops those three controllers and leaves the others loading. `flat_pack/click_outside` is imported by Popover, Search, Select, Button dropdown, Date picker, Collection editor, Combobox, FAB, the button-group menu, Trash button, collapsible Search, Chat message actions, Modal, Drawer, Command palette, and Lightbox. A missing pin stops those controllers. `flat_pack/positioning` is imported by Popover, Button dropdown, Date picker, Collection editor, and Icon picker, so a missing pin stops those five controllers and leaves the others loading. `flat_pack/icon_picker` is imported by Icon picker. A missing pin stops that controller. `flat_pack/remote_query` is imported by Select, Picker, Search, and Combobox. A missing pin stops those four controllers. `flat_pack/reorder_items` is imported by table sortable and grid sortable. A missing pin stops those two controllers.
 
 **Manual Configuration (if needed):**
 
@@ -498,6 +498,7 @@ import SearchController           from "${controllersDir}/search_controller.js";
 import SearchCollapseController   from "${controllersDir}/search_collapse_controller.js";
 import SearchInputController      from "${controllersDir}/search_input_controller.js";
 import SectionTitleAnchorController from "${controllersDir}/section_title_anchor_controller.js";
+import IconPickerController      from "${controllersDir}/icon_picker_controller.js";
 import SelectController           from "${controllersDir}/select_controller.js";
 import SidebarController          from "${controllersDir}/sidebar_controller.js";
 import SidebarGroupController     from "${controllersDir}/sidebar_group_controller.js";
@@ -551,6 +552,7 @@ application.register("flat-pack--search",              SearchController);
 application.register("flat-pack--search-collapse",     SearchCollapseController);
 application.register("flat-pack--search-input",        SearchInputController);
 application.register("flat-pack--section-title-anchor", SectionTitleAnchorController);
+application.register("flat-pack--icon-picker",         IconPickerController);
 application.register("flat-pack--select",              SelectController);
 application.register("flat-pack--sidebar",             SidebarController);
 application.register("flat-pack--sidebar-group",       SidebarGroupController);

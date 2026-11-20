@@ -177,6 +177,13 @@ en:
       size_bytes: "%{count}B"
       size_kilobytes: "%{count}KB"
       size_megabytes: "%{count}MB"
+    icon_picker:
+      placeholder: Choose an icon
+      search_placeholder: Search icons
+      empty: No icons found
+      clear: None
+      dialog: Choose an icon
+      icons: Icons
     image_input:
       choose: Choose an image
       clear: Remove image

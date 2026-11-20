@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-20
+
+### Added
+- `FlatPack::IconPicker::Component` is a form control that picks a Heroicon from a searchable grid. `chrome: :field` is a labelled field. `chrome: :cell` is the compact table-cell control. The submitted value is the icon name on a hidden input.
+- The icon grid is one shared `<template>` per variant and allow-list for the request. A closed picker does not inline the set. The panel opens on `document.body` with the same fixed placement as the date picker, so a modal or an overflow cell does not clip it.
+
+### Upgrade notes
+- Bump the gem and reload Flatpack CSS and JavaScript. Arguments on existing components are unchanged.
+- Importmap hosts pick up `flat-pack--icon-picker` and the `flat_pack/icon_picker` pin from the engine importmap.
+- Esbuild hosts that copied the register list in the installation guide add `icon_picker_controller` and register `flat-pack--icon-picker`.
+- Do not rerun `flat_pack:install`.
+
 ## [0.2.0] - 2026-11-18
 
 ### Changed
