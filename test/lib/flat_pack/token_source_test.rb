@@ -545,6 +545,35 @@ module FlatPack
       )
     end
 
+    test "rounded toasts use a neutral shell and the status fill on the icon" do
+      rounded_block = rounded_body
+
+      refute_nil rounded_block
+      {
+        "--toast-info-background-color" => "var(--surface-background-color)",
+        "--toast-info-border-color" => "var(--surface-border-color)",
+        "--toast-info-icon-color" => "var(--surface-muted-content-color)",
+        "--toast-success-background-color" => "var(--surface-background-color)",
+        "--toast-success-border-color" => "var(--surface-border-color)",
+        "--toast-success-icon-color" => "var(--color-success-background-color)",
+        "--toast-warning-background-color" => "var(--surface-background-color)",
+        "--toast-warning-border-color" => "var(--surface-border-color)",
+        "--toast-warning-icon-color" => "var(--color-warning-background-color)",
+        "--toast-danger-background-color" => "var(--surface-background-color)",
+        "--toast-danger-border-color" => "var(--surface-border-color)",
+        "--toast-danger-icon-color" => "var(--color-danger-background-color)"
+      }.each do |token, value|
+        assert_match(/#{Regexp.escape(token)}:\s*#{Regexp.escape(value)}/, rounded_block)
+      end
+
+      refute_includes rounded_block, "78%, black"
+      refute_includes rounded_block, "--toast-info-text-color"
+      refute_includes rounded_block, "--toast-success-text-color"
+      refute_includes rounded_block, "--alert-success-"
+      refute_includes rounded_block, "--alert-info-"
+      refute_match(/--toast-success-icon-color:\s*var\(--color-success-background-color\)/, root_block)
+    end
+
     test "active pill colours alias the neutral active surface" do
       assert_match(/--tabs-pill-active-background-color:\s*var\(--surface-active-background-color\)/, root_block)
       assert_match(/--tabs-pill-active-border-color:\s*var\(--surface-active-border-color\)/, root_block)
