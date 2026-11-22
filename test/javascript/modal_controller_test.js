@@ -4,7 +4,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const vm = require('node:vm')
 
-function loadModalController(documentStub) {
+function loadModalController(documentStub, { reduceMotion = false } = {}) {
   const filePath = path.join(__dirname, '..', '..', 'app', 'javascript', 'flat_pack', 'controllers', 'modal_controller.js')
   const source = fs.readFileSync(filePath, 'utf8')
   const focusTrapPath = path.join(__dirname, "..", "..", "app", "javascript", "flat_pack", "focus_trap.js")
@@ -18,7 +18,7 @@ function loadModalController(documentStub) {
     .replace('import { Controller } from "@hotwired/stimulus"', 'class Controller {}')
     .replace(
       'import { prefersReducedMotion, motionDuration, motionTransition } from "controllers/flat_pack/reduced_motion"',
-      'function prefersReducedMotion() { return false }\nfunction motionDuration() { return 0 }\nfunction motionTransition() { return "" }'
+      'function prefersReducedMotion() { return Boolean(globalThis.flatPackReduceMotion) }\nfunction motionDuration() { return globalThis.flatPackReduceMotion ? 0 : 300 }\nfunction motionTransition() { return "" }'
     )
     .replace(
       'import { focusableElements as sharedFocusableElements, trapTab as trapTabWithin } from "flat_pack/focus_trap"',
@@ -55,14 +55,28 @@ function loadModalController(documentStub) {
     )
     .replace('export default class extends Controller', 'class ModalController extends Controller') + '\nmodule.exports = ModalController\n'
 
+  documentStub.scheduled = []
   const context = {
     module: { exports: {} },
     exports: {},
     document: documentStub,
     window: { innerWidth: 1024 },
+    flatPackReduceMotion: reduceMotion,
+    CustomEvent: class CustomEvent {
+      constructor(type, init = {}) {
+        this.type = type
+        this.bubbles = Boolean(init.bubbles)
+      }
+    },
     requestAnimationFrame: (fn) => fn(),
-    setTimeout: (fn) => 1,
-    clearTimeout: () => {}
+    setTimeout: (fn) => {
+      documentStub.scheduled.push(fn)
+      return documentStub.scheduled.length
+    },
+    clearTimeout: (id) => {
+      if (!id) return
+      documentStub.scheduled[id - 1] = null
+    }
   }
 
   vm.runInNewContext(transformedSource, context, { filename: filePath })
@@ -120,15 +134,34 @@ function buildDocumentStub() {
   }
 }
 
-function buildController({ buttons, hidden = false, documentStub } = {}) {
+function buildController({ buttons, hidden = false, documentStub, reduceMotion = false } = {}) {
   const doc = documentStub || buildDocumentStub()
-  const ModalController = loadModalController(doc)
+  const ModalController = loadModalController(doc, { reduceMotion })
   const focusable = buttons || [button('first'), button('middle'), button('last')]
+  const listeners = {}
   const dialog = {
-    style: {},
+    style: {
+      removeProperty(name) {
+        const key = name.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+        this[key] = ""
+      }
+    },
+    classList: classListStub(["scale-95", "motion-reduce:scale-100"]),
+    listeners,
     contains(node) { return focusable.includes(node) },
     focus() { this.focused = true },
-    querySelectorAll() { return focusable }
+    querySelectorAll() { return focusable },
+    addEventListener(type, handler) {
+      listeners[type] = listeners[type] || []
+      listeners[type].push(handler)
+    },
+    removeEventListener(type, handler) {
+      listeners[type] = (listeners[type] || []).filter((item) => item !== handler)
+    },
+    dispatch(type, event) {
+      ;(listeners[type] || []).slice().forEach((handler) => handler(event))
+    },
+    dispatchEvent(event) { this.dispatched = event }
   }
   const classList = classListStub(hidden ? ['hidden'] : [])
 
@@ -371,4 +404,104 @@ test('a backdrop click closes and a click inside the dialog does not', () => {
   controller.closeOnBackdropValue = false
   controller.clickBackdrop({ target: backdrop, currentTarget: backdrop })
   assert.equal(closed, 1)
+})
+
+test('enter transition clears scale so the dialog is not a fixed containing block', () => {
+  const { controller, dialog } = buildController({ hidden: true })
+
+  controller.open()
+
+  assert.equal(dialog.style.scale, '1')
+  assert.equal(dialog.classList.contains('scale-95'), true)
+  assert.equal(dialog.style.opacity, '1')
+
+  dialog.dispatch('transitionend', { target: dialog, propertyName: 'scale' })
+
+  assert.equal(dialog.style.scale, '')
+  assert.equal(dialog.style.transition, '')
+  assert.equal(dialog.classList.contains('scale-95'), false)
+  assert.equal(dialog.classList.contains('motion-reduce:scale-100'), false)
+  assert.equal(dialog.style.opacity, '1')
+  assert.equal(dialog.dispatched.type, 'flat-pack:overlay-settled')
+  assert.equal(dialog.dispatched.bubbles, true)
+  assert.equal(dialog.listeners.transitionend.length, 0)
+})
+
+test('a child transition does not clear the dialog scale', () => {
+  const { controller, dialog } = buildController({ hidden: true })
+
+  controller.open()
+  dialog.dispatch('transitionend', { target: { id: 'menu' }, propertyName: 'opacity' })
+
+  assert.equal(dialog.style.scale, '1')
+  assert.equal(dialog.classList.contains('scale-95'), true)
+})
+
+test('settle falls back to the slow duration when transitionend never fires', () => {
+  const { controller, dialog, documentStub } = buildController({ hidden: true })
+
+  controller.open()
+  assert.equal(dialog.style.scale, '1')
+
+  documentStub.scheduled.filter(Boolean).forEach((fn) => fn())
+
+  assert.equal(dialog.style.scale, '')
+  assert.equal(dialog.classList.contains('scale-95'), false)
+})
+
+test('reduced motion clears scale immediately', () => {
+  const { controller, dialog } = buildController({ hidden: true, reduceMotion: true })
+
+  controller.open()
+
+  assert.equal(dialog.style.scale, '')
+  assert.equal(dialog.style.opacity, '1')
+  assert.equal(dialog.classList.contains('scale-95'), false)
+  assert.equal(dialog.classList.contains('motion-reduce:scale-100'), false)
+})
+
+test('close cancels settle so the exit scale stays', () => {
+  const { controller, dialog, documentStub } = buildController({ hidden: true })
+
+  controller.open()
+  controller.close()
+
+  assert.equal(dialog.style.scale, '0.95')
+  documentStub.scheduled.filter(Boolean).forEach((fn) => fn())
+
+  assert.equal(dialog.classList.contains('scale-95'), true)
+  assert.equal(dialog.style.opacity, '0')
+})
+
+test('trigger origin settle clears transform and keeps opacity', () => {
+  const { controller, dialog } = buildController({ hidden: true })
+  controller.originValue = 'trigger'
+  controller.triggerElement = { useTriggerOrigin: true, nodeType: 1 }
+
+  controller.open()
+  assert.equal(dialog.style.transform, 'none')
+  assert.equal(dialog.style.scale, 'none')
+
+  dialog.dispatch('transitionend', { target: dialog, propertyName: 'transform' })
+
+  assert.equal(dialog.style.transform, '')
+  assert.equal(dialog.style.scale, '')
+  assert.equal(dialog.style.opacity, '1')
+  assert.equal(dialog.classList.contains('scale-95'), false)
+})
+
+test('a later open restores the scale start classes', () => {
+  const { controller, dialog } = buildController({ hidden: true })
+
+  controller.open()
+  dialog.dispatch('transitionend', { target: dialog, propertyName: 'scale' })
+  assert.equal(dialog.classList.contains('scale-95'), false)
+
+  controller.element.classList.add('hidden')
+  controller.element.classList.remove('flex')
+  controller.open()
+
+  assert.equal(dialog.classList.contains('scale-95'), true)
+  assert.equal(dialog.classList.contains('motion-reduce:scale-100'), true)
+  assert.equal(dialog.style.scale, '1')
 })

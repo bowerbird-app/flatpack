@@ -993,6 +993,13 @@
       -webkit-mask-image: none;
     }
   }
+
+  /* The pane mask clips every descendant, including a position: fixed menu
+     that paints outside the body. Drop it while a Popover in the modal is open. */
+  .flat-pack-modal__body.fp-pane-scroll:has([data-controller~="flat-pack--popover"]:not(.hidden)) {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
 }
 
 .fp-read-more {

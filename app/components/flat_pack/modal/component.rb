@@ -101,7 +101,7 @@ module FlatPack
         validate_navigable_slots! if navigable?
 
         content_tag(:div, **backdrop_attributes) do
-          render_dialog
+          safe_join([render_frost, render_dialog])
         end
       end
 
@@ -179,11 +179,20 @@ module FlatPack
           "z-50",
           "hidden",
           "overflow-y-auto",
-          "bg-[var(--modal-backdrop-color)]",
-          "backdrop-blur-[var(--modal-backdrop-blur)]",
           "transition-opacity",
           "duration-[var(--duration-slow)]",
           "ease-[var(--easing-enter)]"
+        )
+      end
+
+      def render_frost
+        # The blur is a sibling of the dialog, not an ancestor. backdrop-filter
+        # would otherwise be the containing block for position: fixed menus.
+        content_tag(
+          :div,
+          nil,
+          class: "fixed inset-0 pointer-events-none bg-[var(--modal-backdrop-color)] backdrop-blur-[var(--modal-backdrop-blur)]",
+          aria: {hidden: "true"}
         )
       end
 
