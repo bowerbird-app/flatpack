@@ -25,6 +25,8 @@ export default class extends Controller {
     this.previousActiveElement = null
     this.triggerElement = null
     this.hideTimeout = null
+    this.settleTimer = null
+    this.settleListener = null
     this.closing = false
     this.usedTriggerOrigin = false
     this.handleDocumentTriggerClick = this.handleDocumentTriggerClick.bind(this)
@@ -41,6 +43,7 @@ export default class extends Controller {
     document.removeEventListener("click", this.handleDocumentTriggerClick)
     document.removeEventListener("turbo:before-cache", this.handleTurboBeforeCache)
     this.clearHideTimeout()
+    this.clearSettle()
 
     // Restore scroll if modal was open when disconnected
     if (this.element.classList.contains("flex")) {
@@ -53,6 +56,7 @@ export default class extends Controller {
   open() {
     const wasClosing = this.closing
     this.clearHideTimeout()
+    this.clearSettle()
     this.closing = false
 
     if (!this.element.classList.contains("hidden") && !wasClosing) return
@@ -82,8 +86,12 @@ export default class extends Controller {
         if (!this.hasDialogTarget) return
 
         playTriggerOriginEnter(this.dialogTarget)
+        this.scheduleSettleEnterMotion()
       })
     } else {
+      if (this.hasDialogTarget) {
+        this.dialogTarget.classList?.add("scale-95", "motion-reduce:scale-100")
+      }
       this.applyEnterMotion()
       this.element.style.opacity = "1"
 
@@ -92,6 +100,7 @@ export default class extends Controller {
 
         this.dialogTarget.style.opacity = "1"
         this.dialogTarget.style.scale = prefersReducedMotion() ? "none" : "1"
+        this.scheduleSettleEnterMotion()
       })
     }
 
@@ -104,6 +113,7 @@ export default class extends Controller {
 
     this.closing = true
     this.clearHideTimeout()
+    this.clearSettle()
     this.applyExitMotion()
     this.element.style.opacity = "0"
     this.restoreBodyScroll()
@@ -146,6 +156,7 @@ export default class extends Controller {
     if (this.element.classList.contains("hidden") && !this.closing) return
 
     this.clearHideTimeout()
+    this.clearSettle()
 
     const holdsLock = !this.closing && this.element.classList.contains("flex")
     this.closing = false
@@ -277,6 +288,64 @@ export default class extends Controller {
     return sharedFocusableElements(this.dialogTarget, { modal: true })
   }
 
+  scheduleSettleEnterMotion() {
+    this.clearSettle()
+    if (!this.hasDialogTarget) return
+    if (prefersReducedMotion()) {
+      this.settleEnterMotion()
+      return
+    }
+
+    const dialog = this.dialogTarget
+    const finish = (event) => {
+      if (event && event.target && event.target !== dialog) return
+      if (event && !isEnterMotionProperty(event.propertyName)) return
+
+      this.clearSettle()
+      this.settleEnterMotion()
+    }
+
+    this.settleListener = finish
+    dialog.addEventListener("transitionend", finish)
+    this.settleTimer = setTimeout(finish, motionDuration("slow") + 50)
+  }
+
+  // scale-95 and motion-reduce:scale-100 are only the enter start. Left on,
+  // they keep this dialog as the containing block for position: fixed menus.
+  settleEnterMotion() {
+    if (this.closing || !this.hasDialogTarget) return
+    if (this.element.classList.contains("hidden")) return
+
+    const dialog = this.dialogTarget
+    dialog.classList?.remove("scale-95", "motion-reduce:scale-100")
+    dialog.style.transition = "none"
+    clearInlineProperty(dialog.style, "scale")
+    clearInlineProperty(dialog.style, "translate")
+    clearInlineProperty(dialog.style, "rotate")
+    clearInlineProperty(dialog.style, "transform")
+    clearInlineProperty(dialog.style, "transform-origin")
+    void dialog.offsetHeight
+    clearInlineProperty(dialog.style, "transition")
+    this.element.style.transition = ""
+
+    if (typeof CustomEvent === "function" && typeof dialog.dispatchEvent === "function") {
+      dialog.dispatchEvent(new CustomEvent("flat-pack:overlay-settled", { bubbles: true }))
+    }
+  }
+
+  clearSettle() {
+    if (this.settleTimer) {
+      clearTimeout(this.settleTimer)
+      this.settleTimer = null
+    }
+
+    if (this.settleListener && this.hasDialogTarget) {
+      this.dialogTarget.removeEventListener("transitionend", this.settleListener)
+    }
+
+    this.settleListener = null
+  }
+
   applyEnterMotion() {
     this.element.style.transition = motionTransition("opacity", { duration: "slow", easing: "enter" })
     if (!this.hasDialogTarget) return
@@ -303,4 +372,22 @@ export default class extends Controller {
     clearTimeout(this.hideTimeout)
     this.hideTimeout = null
   }
+}
+
+const ENTER_MOTION_PROPERTIES = new Set(["scale", "transform", "opacity", "translate", "rotate"])
+
+function isEnterMotionProperty(name) {
+  return name == null || name === "" || ENTER_MOTION_PROPERTIES.has(name)
+}
+
+function clearInlineProperty(style, property) {
+  if (!style) return
+
+  if (typeof style.removeProperty === "function") {
+    style.removeProperty(property)
+    return
+  }
+
+  const key = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+  style[key] = ""
 }

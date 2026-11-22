@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-11-22
+
+### Fixed
+- A `position: fixed` menu inside a default `FlatPack::Modal` (`scroll: :body`) opens under its trigger and stays clickable. `FlatPack::FontSwatch` uses Popover, and that menu was the one that failed.
+- After the enter transition, the dialog clears inline `scale`, `translate`, `rotate`, `transform`, and `transition`. It also drops `scale-95` and `motion-reduce:scale-100`. Those utilities exist only while the dialog is moving. A leftover `scale: 1` makes the dialog the containing block, so the menu shifts by the dialog padding edge and the dialog clips it.
+- The dim and the blur sit on a fixed sibling of the dialog. `backdrop-filter` on the overlay is no longer an ancestor of the menu.
+- The modal body edge fade is a mask. That mask clips a fixed menu that paints outside the body. The fade turns off while a Popover inside the body is open.
+- `applyFixedPosition` subtracts a transformed ancestor's padding edge while one is still there, including during the enter transition.
+- `FlatPack::IconPicker` already moves its panel to `document.body`. That component is unchanged.
+- The development lockfile moves Puma from 8.0.3 to 8.0.4. That covers GHSA-4v6q-hvv7-49h9 and GHSA-rhww-p99c-hgj9. The gem does not depend on Puma.
+
+### Upgrade notes
+- Bump the gem and reload Flatpack JavaScript. Arguments are unchanged. The dim and the blur moved from the overlay root onto a fixed sibling of the dialog. Rebuild Tailwind only if a host stylesheet scans that component and was not already generating `bg-[var(--modal-backdrop-color)]` and `backdrop-blur-[var(--modal-backdrop-blur)]`. Those literals were already in the file.
+- Hosts that read `dialog.style.scale` after open see an empty string once the enter transition ends (immediately when reduced motion is on). During the animation the value is still `1`, or `none` for reduced motion.
+- Do not rerun `flat_pack:install`.
+- Hosts do not need to change Puma. The 8.0.4 bump is only in this repository's development lockfile.
+
 ## [0.2.2] - 2026-11-20
 
 ### Changed

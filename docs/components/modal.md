@@ -34,7 +34,7 @@ Use Modal for confirmation flows, forms, and detailed contextual content that sh
 | name | type | required | description |
 |---|---|---|---|
 | `header` | method/slot | no | Provides custom header content (replaces title text area). |
-| `body` | method/slot | no | Provides main dialog body content. Scrolls inside the card when `scroll: :body`. A hidden bar is a named region ("Dialog") in the tab order. The width is `--pane-scrollbar-width`. A fade on `--pane-scroll-fade-size` marks the edge that has more content. |
+| `body` | method/slot | no | Provides main dialog body content. Scrolls inside the card when `scroll: :body`. A hidden bar is a named region ("Dialog") in the tab order. The width is `--pane-scrollbar-width`. A fade on `--pane-scroll-fade-size` marks the edge that has more content. The fade is a mask, so it turns off while a Popover inside the body is open. The menu can then paint past the card. |
 | `footer` | method/slot | no | Provides footer action row content. |
 
 ## Variants
@@ -153,7 +153,7 @@ While a screen loads, the kit spinner and skeleton sit over the body. A request 
 Navigation lives in `flat-pack--navigable`, attached next to `flat-pack--modal` only when `navigable: true`. Drawer can reuse that controller later. `header` and `body` slots are invalid with `navigable: true`; screens supply title, body, and actions.
 
 ## Overlay scroll and insets
-Opening a modal locks `document.body` (`overflow: hidden` and `overscroll-behavior: none`, same lock count as Drawer and Command palette). The overlay itself is `overflow-y-auto` and uses `overscroll-behavior: contain`, so a fling does not scroll the page underneath. On `turbo:before-cache` the controller hides itself immediately (no exit animation) and releases its own lock count, so a restored page is never an open dialog or a stuck `overflow: hidden`. Nested open modals each decrement once. A close already in flight does not decrement again.
+Opening a modal locks `document.body` (`overflow: hidden` and `overscroll-behavior: none`, same lock count as Drawer and Command palette). The overlay itself is `overflow-y-auto` and uses `overscroll-behavior: contain`, so a fling does not scroll the page underneath. The dim and the blur sit on a fixed sibling of the dialog (`pointer-events: none`). That sibling is not an ancestor of the menu, so `backdrop-filter` leaves the menu's fixed position on the viewport. Clicks on the dim still use the layer inside the scrolling wrapper. On `turbo:before-cache` the controller hides itself immediately (no exit animation) and releases its own lock count, so a restored page is never an open dialog or a stuck `overflow: hidden`. Nested open modals each decrement once. A close already in flight does not decrement again.
 
 `scroll: :body` (default) keeps today’s card: the dialog is capped with `.fp-modal-dialog-cap` (`100dvh` minus padding, `100vh` fallback) and `.flat-pack-modal__body` scrolls inside.
 
@@ -170,6 +170,7 @@ The dialog wrapper uses `.fp-overlay-pad` so padding is at least `1rem` (`1.5rem
 - Tab cycles inside the dialog. The trap is wired as `keydown.tab->flat-pack--modal#handleKeydown` even when Escape close is off. The cycle is `trapTab` in `flat_pack/focus_trap.js` with `{ modal: true }`: disabled controls, hidden inputs, and `aria-hidden` controls are skipped, focus returns to the dialog when nothing inside can take Tab, and Tab wraps when focus is outside the dialog. The dialog itself is `tabindex="-1"` so it can take focus when nothing else inside is focusable.
 - Ensure trigger and focus-management behavior are implemented in the modal controller usage flow.
 - Under `prefers-reduced-motion: reduce`, the dialog fades without scale. Enter uses `--duration-slow` / `--easing-enter`; exit uses `--duration-base` / `--easing-exit`. A close in flight can reverse. `:center` writes the Tailwind v4 `scale` property (not `transform`). `:trigger` writes `transform` and `opacity` from `trigger_origin.js` and falls back to that fade when the trigger cannot be used.
+- When the enter transition ends, the dialog clears that inline motion (`scale`, `translate`, `rotate`, `transform`, and `transition`) and drops the `scale-95` and `motion-reduce:scale-100` utilities. Those utilities exist only while the dialog is moving. A `position: fixed` menu inside the dialog, such as Popover or a font swatch, then sits under its trigger and stays visible. Exit and `origin: :trigger` still animate. Reduced motion clears the same styles immediately. If the transition never ends, a timeout at `--duration-slow` plus 50ms clears them.
 - Navigable modals keep one `role="dialog"` and update `aria-labelledby` through the stable title id. A polite live region announces the new title. The back button is omitted from the tab order until there is a previous screen.
 
 ## Dependencies

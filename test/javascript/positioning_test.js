@@ -214,6 +214,114 @@ test("applyFixedPosition writes fixed top and left", () => {
   assert.equal(element.style.left, "24px")
 })
 
+function paintStyle(overrides = {}) {
+  return {
+    transform: "none",
+    scale: "none",
+    translate: "none",
+    rotate: "none",
+    filter: "none",
+    backdropFilter: "none",
+    perspective: "none",
+    contain: "none",
+    willChange: "auto",
+    borderTopWidth: "0px",
+    borderLeftWidth: "0px",
+    ...overrides
+  }
+}
+
+test("applyFixedPosition subtracts a scaled ancestor padding edge", () => {
+  const context = loadPositioning()
+  const { applyFixedPosition } = context.module.exports
+  const ancestor = {
+    parentElement: null,
+    getBoundingClientRect() {
+      return { top: 100, left: 40, width: 200, height: 180 }
+    }
+  }
+  const element = { style: {}, parentElement: ancestor }
+  context.getComputedStyle = (node) => {
+    if (node === ancestor) return paintStyle({ scale: "1", borderTopWidth: "2px", borderLeftWidth: "4px" })
+    return paintStyle()
+  }
+
+  applyFixedPosition(element, { top: 180, left: 90 })
+
+  assert.equal(element.style.top, "78px")
+  assert.equal(element.style.left, "46px")
+})
+
+test("applyFixedPosition ignores scale none and contain size", () => {
+  const context = loadPositioning()
+  const { applyFixedPosition } = context.module.exports
+  const ancestor = {
+    parentElement: null,
+    getBoundingClientRect() {
+      return { top: 100, left: 40, width: 200, height: 180 }
+    }
+  }
+  const element = { style: {}, parentElement: ancestor }
+  context.getComputedStyle = () => paintStyle({ scale: "none", contain: "size" })
+
+  applyFixedPosition(element, { top: 180, left: 90 })
+
+  assert.equal(element.style.top, "180px")
+  assert.equal(element.style.left, "90px")
+})
+
+test("applyFixedPosition subtracts a backdrop-filter ancestor", () => {
+  const context = loadPositioning()
+  const { applyFixedPosition } = context.module.exports
+  const ancestor = {
+    parentElement: null,
+    getBoundingClientRect() {
+      return { top: 8, left: 0, width: 400, height: 400 }
+    }
+  }
+  const element = { style: {}, parentElement: ancestor }
+  context.getComputedStyle = (node) => {
+    if (node === ancestor) return paintStyle({ backdropFilter: "blur(8px)" })
+    return paintStyle()
+  }
+
+  applyFixedPosition(element, { top: 40, left: 16 })
+
+  assert.equal(element.style.top, "32px")
+  assert.equal(element.style.left, "16px")
+})
+
+test("watchViewport also follows overlay settled", () => {
+  const context = loadPositioning()
+  const { watchViewport } = context.module.exports
+  const entries = []
+  context.document = {
+    addEventListener(type, listener) {
+      entries.push({ type, listener })
+    },
+    removeEventListener(type, listener) {
+      const index = entries.findIndex((entry) => entry.type === type && entry.listener === listener)
+      if (index >= 0) entries.splice(index, 1)
+    }
+  }
+  context.window = {
+    addEventListener() {},
+    removeEventListener() {}
+  }
+
+  let moves = 0
+  const watch = watchViewport(() => { moves += 1 })
+  watch.add()
+  assert.equal(entries.length, 1)
+  assert.equal(entries[0].type, "flat-pack:overlay-settled")
+
+  entries[0].listener()
+  assert.equal(moves, 1)
+
+  watch.remove()
+  assert.equal(entries.length, 0)
+})
+
 test("watchViewport follows scroll and resize, ignores a second add, and remove drops both", () => {
   const context = loadPositioning()
   const { watchViewport } = context.module.exports

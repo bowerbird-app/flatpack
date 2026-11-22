@@ -19,8 +19,11 @@
 //
 // readEdgeOffset(node) reads --overlay-edge-offset as px. Anything else is 8.
 // applyFixedPosition(element, { top, left }) sets position, top, and left.
-// watchViewport(onChange) listens for window resize and window scroll (capture).
-//   add() twice is a no-op. remove() drops both listeners.
+//   top and left are viewport coordinates. If an ancestor is the fixed
+//   containing block, those coordinates are shifted by its padding edge.
+// watchViewport(onChange) listens for window resize, window scroll (capture),
+//   and document flat-pack:overlay-settled.
+//   add() twice is a no-op. remove() drops the listeners.
 
 const OPPOSITE_SIDE = {
   top: "bottom",
@@ -114,9 +117,64 @@ export function readEdgeOffset(node) {
 }
 
 export function applyFixedPosition(element, { top, left }) {
+  const origin = fixedContainingOrigin(element)
   element.style.position = "fixed"
-  element.style.top = `${top}px`
-  element.style.left = `${left}px`
+  element.style.top = `${top - origin.top}px`
+  element.style.left = `${left - origin.left}px`
+}
+
+// position: fixed is viewport-relative until an ancestor paints a transform,
+// filter, or containment. scale: 1 counts. scale: none does not. top/left are
+// then offsets from that ancestor's padding edge, so subtract it.
+function fixedContainingOrigin(element) {
+  const block = fixedContainingBlock(element)
+  if (!block || typeof block.getBoundingClientRect !== "function") return { top: 0, left: 0 }
+
+  const rect = block.getBoundingClientRect()
+  const style = getComputedStyle(block)
+
+  return {
+    top: rect.top + borderWidth(style, "borderTopWidth"),
+    left: rect.left + borderWidth(style, "borderLeftWidth")
+  }
+}
+
+function fixedContainingBlock(element) {
+  if (!element || typeof getComputedStyle !== "function") return null
+
+  let node = element.parentElement
+  while (node) {
+    if (createsFixedContainingBlock(getComputedStyle(node))) return node
+    node = node.parentElement
+  }
+
+  return null
+}
+
+function createsFixedContainingBlock(style) {
+  if (!style) return false
+  if (painted(style.transform)) return true
+  if (painted(style.scale)) return true
+  if (painted(style.translate)) return true
+  if (painted(style.rotate)) return true
+  if (painted(style.filter)) return true
+  if (painted(style.backdropFilter)) return true
+  if (painted(style.perspective)) return true
+  if (/(^|\s)(paint|layout|strict|content)(\s|$)/.test(style.contain || "")) return true
+
+  return /transform|scale|translate|rotate|filter|perspective|contain/.test(style.willChange || "")
+}
+
+function painted(value) {
+  if (value == null) return false
+
+  const text = String(value).trim()
+  return text !== "" && text !== "none"
+}
+
+function borderWidth(style, name) {
+  const parsed = Number.parseFloat(style?.[name])
+  return Number.isFinite(parsed) ? parsed : 0
 }
 
 export function watchViewport(onChange) {
@@ -129,12 +187,18 @@ export function watchViewport(onChange) {
       listening = true
       window.addEventListener("resize", listener)
       window.addEventListener("scroll", listener, true)
+      if (typeof document !== "undefined" && document.addEventListener) {
+        document.addEventListener("flat-pack:overlay-settled", listener)
+      }
     },
     remove() {
       if (!listening) return
       listening = false
       window.removeEventListener("resize", listener)
       window.removeEventListener("scroll", listener, true)
+      if (typeof document !== "undefined" && document.removeEventListener) {
+        document.removeEventListener("flat-pack:overlay-settled", listener)
+      }
     }
   }
 }

@@ -771,6 +771,42 @@
   ) %>
 </section>
 
+<section class="mb-12" id="choices">
+  <%= render FlatPack::SectionTitle::Component.new(
+    title: "Choices in a dialog",
+    anchor_link: true,
+    subtitle: "A type sample and an icon. Both open from inside the window."
+  ) %>
+  <div class="mb-4">
+    <%= render FlatPack::Button::Component.new(
+      text: "Open style",
+      style: :primary,
+      data: {action: "click->flat-pack--modal#open", "modal-id": "style-choices"}
+    ) %>
+  </div>
+
+  <%= render FlatPack::Modal::Component.new(id: "style-choices", title: "Style", size: :md) do |modal| %>
+    <% modal.body do %>
+      <div class="flex flex-wrap items-end gap-[var(--stack-gap-lg)]">
+        <%= render FlatPack::FontSwatch::Component.new(
+          id: "style-font",
+          font: "ui-sans-serif",
+          name: "style[font]",
+          text: "Sans",
+          options: [["Sans", "ui-sans-serif"], ["Serif", "ui-serif"], ["Mono", "ui-monospace"]]
+        ) %>
+        <%= render FlatPack::IconPicker::Component.new(
+          name: "style[icon]",
+          id: "style-icon",
+          label: "Icon",
+          value: "star",
+          icons: %w[star heart bolt inbox]
+        ) %>
+      </div>
+    <% end %>
+  <% end %>
+</section>
+
 <!-- Features -->
 <section class="mb-12">
   <%= render FlatPack::SectionTitle::Component.new(title: "Features", anchor_link: true, subtitle: "Examples for Features.") %>
